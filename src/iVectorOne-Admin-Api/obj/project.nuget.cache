@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "0YGNngQIcn+FVvgU2NnD26FBCmhr0VfQoQtKAvJY5g7GF9ZuAKAsYZXj6d3Gi6arAyrvmFr9MAygyMAwug8oOA==",
+  "success": true,
+  "projectFilePath": "C:\\source\\az-idt\\iVectorOne\\src\\iVectorOne-Admin-Api\\iVectorOne-Admin-Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\craig\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.15.1\\microsoft.visualstudio.azure.containers.tools.targets.1.15.1.nupkg.sha512"
+  ],
+  "logs": []
+}
