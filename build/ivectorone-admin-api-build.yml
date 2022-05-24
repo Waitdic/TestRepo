@@ -27,19 +27,14 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '$(solution)'
-    
+    projects: '$(project)'
+  displayName: 'Build'
+
 - task: SonarCloudAnalyze@1
 
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
-  displayName: 'Build'
-
-# - task: VSTest@2
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '
 
 - task: DotNetCoreCLI@2
   inputs:
@@ -49,4 +44,8 @@ steps:
     testRunTitle: 'Unit Tests'
   displayName: 'Unit Tests'
     
-
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
