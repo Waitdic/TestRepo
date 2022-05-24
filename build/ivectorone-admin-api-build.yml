@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'src/iVectorOne-Admin-Api/iVectorOne-Admin-Api.csproj'
+  project: 'src/iVectorOne-Admin-Api/iVectorOne-Admin-Api.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
