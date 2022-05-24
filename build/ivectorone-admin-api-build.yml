@@ -21,7 +21,7 @@ steps:
     SonarCloud: 'SonarCloud'
     organization: 'intuitive-systems'
     scannerMode: 'MSBuild'
-    projectKey: 'Intuitive_Development_iVectorOne_Admin-Api'
+    projectKey: 'Intuitive_iVectorOne_Admin_Api'
     projectName: 'iVectorOne Admin Api'
 
 - task: MSBuild@1
