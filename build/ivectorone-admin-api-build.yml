@@ -18,7 +18,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   inputs:
-    SonarCloud: 'Sonar Cloud'
+    SonarCloud: 'SonarCloud'
     organization: 'intuitive-systems'
     scannerMode: 'MSBuild'
     projectKey: 'Intuitive_Development_iVectorOne_Admin-Api'
