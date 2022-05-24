@@ -16,12 +16,26 @@ variables:
 
 steps:
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonar Cloud'
+    organization: 'intuitive-systems'
+    scannerMode: 'MSBuild'
+    projectKey: 'Intuitive_Development_iVectorOne_Admin-Api'
+    projectName: 'iVectorOne Admin Api'
+
 - task: MSBuild@1
   inputs:
     solution: '$(solution)'
     msbuildArguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
     
 - task: VSTest@2
   inputs:
