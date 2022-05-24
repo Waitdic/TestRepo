@@ -34,8 +34,19 @@ steps:
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
-    
-- task: VSTest@2
+  displayName: 'Build'
+
+# - task: VSTest@2
+#   inputs:
+#     platform: '$(buildPlatform)'
+#     configuration: '
+
+- task: DotNetCoreCLI@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'test'
+    projects: '$(solution)'
+    arguments: '-c $(buildConfiguration)'
+    testRunTitle: 'Unit Tests'
+  displayName: 'Unit Tests'
+    
+
