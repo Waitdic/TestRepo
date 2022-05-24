@@ -28,13 +28,6 @@ steps:
   inputs:
     command: 'build'
     projects: '$(solution)'
-
-# - task: MSBuild@1
-#   inputs:
-#     solution: '
-#     msbuildArguments: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
     
 - task: SonarCloudAnalyze@1
 
