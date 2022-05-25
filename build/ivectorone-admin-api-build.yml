@@ -29,14 +29,14 @@ steps:
       $Build = $TotalMinutes
 
       $buildNumber = $Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId)
-      $pattern = '\[assembly: AssemblyVersion\("(.*)"\)\]'
+      $pattern = '\[assembly: FileVersion\("(.*)"\)\]'
       $AssemblyFiles = Get-ChildItem . AssemblyInfo.cs -rec
 
       foreach ($file in $AssemblyFiles)
       {
         (Get-Content $file.PSPath) | ForEach-Object{
             if($_ -match $pattern){
-                '[assembly: AssemblyVersion("{0}")]' -f $buildNumber
+                '[assembly: FileVersion("{0}")]' -f $buildNumber
             } else {
                 # Output line as is
                 $_
