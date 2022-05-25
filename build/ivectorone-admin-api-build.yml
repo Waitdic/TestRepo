@@ -24,7 +24,7 @@ variables:
 steps:
 
 - task: PowerShell@2
-  displayName: 'Set version number'
+  displayName: 'Set Version Number'
   inputs:
     targetType: 'inline'
     script: |
@@ -68,7 +68,7 @@ steps:
     projectName: 'iVectorOne Admin Api'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build'
+  displayName: 'Build Project'
   inputs:
     command: 'build'
     projects: 'src/$(project)/**/*.csproj'
@@ -76,7 +76,7 @@ steps:
 
 
 - task: DotNetCoreCLI@2
-  displayName: 'Test'
+  displayName: 'Test Project'
   inputs:
     command: 'test'
     projects: 'test/$(project)**/*.csproj'
@@ -90,7 +90,7 @@ steps:
     pollingTimeoutSec: '300'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish'
+  displayName: 'Publish Project'
   inputs:
     command: 'publish'
     publishWebProjects: false
@@ -100,7 +100,8 @@ steps:
     modifyOutputPath: false
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(AssemblyInfo.FileVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)/path_$(project)_$(AssemblyInfo.FileVersion)'
     ArtifactName: 'art_$(project)_$(AssemblyInfo.FileVersion)'
     publishLocation: 'Container'
