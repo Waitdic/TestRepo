@@ -48,7 +48,7 @@ steps:
 
 - task: SonarCloudPrepare@1
   inputs:
-    SonarCloud: 'Sonar Cloud'
+    SonarCloud: 'SonarCloud'
     organization: 'intuitive-systems'
     scannerMode: 'CLI'
     configMode: 'manual'
