@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Search-Api", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iVectorOne-Admin-Api-BuildTests", "tests\iVectorOne-Admin-Api-BuildTests\iVectorOne-Admin-Api-BuildTests.csproj", "{7402C8A6-B4CD-48FF-9217-B8AB99C147EA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D56C1A0E-5ADC-4704-99BF-3D9A1C46F5C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7402C8A6-B4CD-48FF-9217-B8AB99C147EA} = {D56C1A0E-5ADC-4704-99BF-3D9A1C46F5C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2D2B01E8-63B0-456E-89DD-3110D3CC2BF9}
