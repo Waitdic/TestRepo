@@ -5,7 +5,7 @@ trigger:
   paths:
     include:
     - src/iVectorOne-Admin-Api
-    - tests/iVectorOne-Admin-Api
+    - tests/iVectorOne-Admin-Api-BuildTests
 
 pool:
   vmImage: 'windows-latest'
@@ -13,6 +13,8 @@ pool:
 variables:
 - name : project
   value: 'iVectorOne-Admin-Api'
+- name : testProject
+  value: 'iVectorOne-Admin-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
@@ -80,7 +82,7 @@ steps:
   displayName: 'Test Project'
   inputs:
     command: 'test'
-    projects: 'test/$(project)**/*.csproj'
+    projects: 'tests/$(testProject)**/*.csproj'
     arguments: '-c $(buildConfiguration)'
     testRunTitle: 'Unit Tests'
 
