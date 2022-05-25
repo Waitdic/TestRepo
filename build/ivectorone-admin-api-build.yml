@@ -17,7 +17,7 @@ variables:
 - name: buildConfiguration
   value: 'Release'
 - name:  majorVersion
-  value: 2
+  value: '2'
 - name:  appVersion
   value : ''
 
