@@ -65,6 +65,7 @@ steps:
     echo "Debugging"
     echo "---------"
     echo  "AssemblyInfo.FileVersion: $(AssemblyInfo.FileVersion)"
+    echo  "App Version: $(appVersion)"
   displayName: Debug
 
 - task: SonarCloudPrepare@1
