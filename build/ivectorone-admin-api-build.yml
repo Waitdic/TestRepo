@@ -94,13 +94,13 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
     zipAfterPublish: True
     modifyOutputPath: false
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
     ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
