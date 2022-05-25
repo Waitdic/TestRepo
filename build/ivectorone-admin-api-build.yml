@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  project: 'src/iVectorOne-Admin-Api/iVectorOne-Admin-Api.csproj'
+  project: 'iVectorOne-Admin-Api'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -25,26 +25,34 @@ steps:
     projectName: 'iVectorOne Admin Api'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build'
   inputs:
     command: 'build'
-    projects: '$(project)'
-    arguments: '-o $(build.artifactStagingDirectory)'
-  displayName: 'Build'
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Unit Tests'
+  inputs:
+    command: 'test'
+    projects: 'test/$(project)**/*.csproj'
+    arguments: '-c $(buildConfiguration)'
+    testRunTitle: 'Unit Tests'
 
 - task: SonarCloudAnalyze@1
 
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
-
+    
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'test'
-    projects: '$(project)'
-    arguments: '-c $(buildConfiguration)'
-    testRunTitle: 'Unit Tests'
-  displayName: 'Unit Tests'
-    
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
