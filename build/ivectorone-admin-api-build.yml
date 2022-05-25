@@ -13,41 +13,14 @@ variables:
   project: 'iVectorOne-Admin-Api'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  appVersion: ''
+  appVersion: '10.9.8.7'
 
 steps:
-- task: PowerShell@2
-  displayName: 'Create version number'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $Year = (Get-Date).Year.ToString().SubString(2, 2)
-      $DayOfYear = (Get-Date).DayOfYear
-      $TotalMinutes = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-
-      $Major = $Year + $DayOfYear
-      $Minor = 0
-      $Build = $TotalMinutes
-      ##vso[task.setvariable variable=appVersion;]($Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId))
-      # $pattern = '\[assembly: FileVersion\("(.*)"\)\]'
-      # $AssemblyFiles = Get-ChildItem . AssemblyInfo.cs -rec
-
-      # foreach ($file in $AssemblyFiles)
-      # {
-      #   (Get-Content $file.PSPath) | ForEach-Object{
-      #       if($_ -match $pattern){
-      #           '[assembly: FileVersion("{0}")]' -f $buildNumber
-      #       } else {
-      #           # Output line as is
-      #           $_
-      #       }
-      # } | Set-Content $file.PSPath
-      # }
 
 - task: Assembly-Info-NetCore@3
   displayName: 'Set Assembly Metadata'
   inputs:
-    Path: 'src/$(project)'
+    Path: '$(Build.SourcesDirectory)/src/$(project)'
     FileNames: '**/*.csproj'
     InsertAttributes: false
     FileEncoding: 'auto'
