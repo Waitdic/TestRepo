@@ -9,13 +9,23 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+parameters:
+- name : minorVersion
+  displayName: Minor Version
+  type: number
+  default: 0
+
 variables:
-  project: 'iVectorOne-Admin-Api'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  majorVersion: 2
-  minorVersion: 0
-  appVersion: ''
+- name : project
+  value: 'iVectorOne-Admin-Api'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: buildConfiguration
+  value: 'Release'
+- name:  majorVersion
+  value: 2
+- name:  appVersion
+  value : ''
 
 steps:
 
