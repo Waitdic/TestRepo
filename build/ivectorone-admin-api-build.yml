@@ -82,7 +82,7 @@ steps:
   displayName: 'Test Project'
   inputs:
     command: 'test'
-    projects: 'test/$(testProject)**/*.csproj'
+    projects: 'tests/$(testProject)**/*.csproj'
     arguments: '-c $(buildConfiguration)'
     testRunTitle: 'Unit Tests'
 
