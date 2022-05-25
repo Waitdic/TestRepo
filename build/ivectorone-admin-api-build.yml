@@ -32,7 +32,7 @@ steps:
       $DayOfYear = (Get-Date).DayOfYear
       $minorVersion =  $Year + $DayOfYear
       $Build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-      $VersionString = $(majorVersion) + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
+      $VersionString = $(majorVersion).ToString() + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
       echo $VersionString
       Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
