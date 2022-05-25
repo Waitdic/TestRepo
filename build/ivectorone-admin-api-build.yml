@@ -22,7 +22,7 @@ steps:
   inputs:
     Path: '$(Build.SourcesDirectory)/src/$(project)'
     FileNames: '**/*.csproj'
-    InsertAttributes: false
+    InsertAttributes: true
     FileEncoding: 'auto'
     WriteBOM: false
     LogLevel: 'normal'
