@@ -12,7 +12,7 @@ pool:
 parameters:
 - name : minorVersion
   displayName: Minor Version
-  type: number
+  type: string
   default: 0
 
 variables:
