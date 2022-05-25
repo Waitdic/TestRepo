@@ -13,6 +13,8 @@ pool:
 variables:
 - name : project
   value: 'iVectorOne-Admin-Api'
+- name : testProject
+  value: 'iVectorOne-Admin-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
@@ -80,7 +82,7 @@ steps:
   displayName: 'Test Project'
   inputs:
     command: 'test'
-    projects: 'test/$(project)**/*.csproj'
+    projects: 'test/$(testProject)**/*.csproj'
     arguments: '-c $(buildConfiguration)'
     testRunTitle: 'Unit Tests'
 
