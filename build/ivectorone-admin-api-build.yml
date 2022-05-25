@@ -31,6 +31,7 @@ steps:
       $minorVersion = Get-Date -Format "yyMMdd"
       $Build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
       $VersionString = '2' + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
+      echo $VersionString
       Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - task: Assembly-Info-NetCore@3
