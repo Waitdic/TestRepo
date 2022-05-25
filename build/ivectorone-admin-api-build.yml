@@ -29,7 +29,8 @@ steps:
       $Major = $Year + $DayOfYear
       $Minor = 0
       $Build = $TotalMinutes
-      ##vso[task.setvariable variable=appVersion;]($Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId))
+      $VersionString = $Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId)
+      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - task: Assembly-Info-NetCore@3
   displayName: 'Set Assembly Metadata'
