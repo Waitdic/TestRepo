@@ -29,11 +29,10 @@ steps:
     targetType: 'inline'
     script: |
       $Year = (Get-Date).Year.ToString().SubString(2, 2)
-      $DayOfYear = (Get-Date).DayOfYear
-      $minorVersion =  $Year + $DayOfYear
-      $Build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-      $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
-      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+      $dayOfYear = (Get-Date).DayOfYear
+      $minorVersion =  $year + $dayOfYear
+      $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+      $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $build.ToString() + '.' + $(Build.BuildId)
 
 - task: Assembly-Info-NetCore@3
   displayName: 'Set Assembly Metadata'
@@ -58,15 +57,6 @@ steps:
     IgnoreNetFrameworkProjects: false
     UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
     AddBuildTag: 'v$(appVersion)'
-
-- bash: |
-    echo ""
-    echo "---------"
-    echo "Debugging"
-    echo "---------"
-    echo  "AssemblyInfo.FileVersion: $(AssemblyInfo.FileVersion)"
-    echo  "App Version: $(appVersion)"
-  displayName: Debug
 
 - task: SonarCloudPrepare@1
   inputs:
@@ -104,13 +94,13 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
     zipAfterPublish: True
     modifyOutputPath: false
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
-    ArtifactName: 'art_$(project)_$(appVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
