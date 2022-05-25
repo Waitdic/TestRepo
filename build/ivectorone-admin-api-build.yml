@@ -33,6 +33,7 @@ steps:
       $minorVersion =  $year + $dayOfYear
       $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
       $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $build.ToString() + '.' + $(Build.BuildId)
+      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - task: Assembly-Info-NetCore@3
   displayName: 'Set Assembly Metadata'
@@ -95,12 +96,12 @@ steps:
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
     arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
-    zipAfterPublish: True
+    zipAfterPublish: False
     modifyOutputPath: false
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
     PathtoPublish: '$(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
-    ArtifactName: 'art_$(project)_$(appVersion)'
+    ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
