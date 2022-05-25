@@ -15,6 +15,17 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: PowerShell@2
+  displayName: 'Create version number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $Year = (Get-Date).Year.ToString().SubString(2, 2)
+      $DayOfYear = (Get-Date).DayOfYear
+      $TotalMinutes = [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+
+      $Version = $Year + '.' + &DayOfYear + "." + $TotalMinutes
+      $Version
 
 - task: SonarCloudPrepare@1
   inputs:
