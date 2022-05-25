@@ -59,6 +59,14 @@ steps:
     UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
     AddBuildTag: 'v$(appVersion)'
 
+- bash: |
+    echo ""
+    echo "---------"
+    echo "Debugging"
+    echo "---------"
+    echo  "AssemblyInfo.FileVersion: $(AssemblyInfo.FileVersion)}"
+  displayName: Debug
+
 - task: SonarCloudPrepare@1
   inputs:
     SonarCloud: 'SonarCloud'
