@@ -25,7 +25,7 @@ steps:
     InsertAttributes: false
     FileEncoding: 'auto'
     WriteBOM: false
-    LogLevel: 'verbose'
+    LogLevel: 'normal'
     FailOnWarning: false
     DisableTelemetry: false
     Company: 'Intuitive Systems'
@@ -37,6 +37,9 @@ steps:
     FileVersionNumber: '$(appVersion)'
     InformationalVersion: '$(appVersion)'
     PackageVersion: '$(appVersion)'
+    IgnoreNetFrameworkProjects: false
+    UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
+    AddBuildTag: 'v$(appVersion)'
 
 - task: SonarCloudPrepare@1
   inputs:
