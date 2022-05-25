@@ -24,7 +24,7 @@ steps:
       $DayOfYear = (Get-Date).DayOfYear
       $TotalMinutes = [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
 
-      $Version = $Year + '.' + &DayOfYear + "." + $TotalMinutes
+      $Version = $Year + '.' + $DayOfYear + "." + $TotalMinutes
       $Version
 
 - task: SonarCloudPrepare@1
