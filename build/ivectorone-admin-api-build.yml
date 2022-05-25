@@ -13,9 +13,23 @@ variables:
   project: 'iVectorOne-Admin-Api'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  appVersion: '10.9.8.7'
+  appVersion: '0.0.0.0'
 
 steps:
+
+- task: PowerShell@2
+  displayName: 'Create date based version number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $Year = (Get-Date).Year.ToString().SubString(2, 2)
+      $DayOfYear = (Get-Date).DayOfYear
+      $TotalMinutes = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+
+      $Major = $Year + $DayOfYear
+      $Minor = 0
+      $Build = $TotalMinutes
+      ##vso[task.setvariable variable=appVersion;]($Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId))
 
 - task: Assembly-Info-NetCore@3
   displayName: 'Set Assembly Metadata'
@@ -25,13 +39,13 @@ steps:
     InsertAttributes: true
     FileEncoding: 'auto'
     WriteBOM: false
-    LogLevel: 'normal'
+    LogLevel: 'verbose'
     FailOnWarning: false
     DisableTelemetry: false
     Company: 'Intuitive Systems'
     Product: 'iVectorOne Admin Api'
     Description: 'iVectorOne Admin Api'
-    Copyright: 'Copyright © $(date:YYYY) Example Ltd'
+    Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
     Culture: 'en-GB'
     VersionNumber: '$(appVersion)'
     FileVersionNumber: '$(appVersion)'
