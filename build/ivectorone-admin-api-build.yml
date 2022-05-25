@@ -28,7 +28,7 @@ steps:
       $Major = $Year + $DayOfYear
       $Minor = 0
       $Build = $TotalMinutes
-      $(appVersion) = $Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId)
+      ##vso[task.setvariable variable=appVersion;]($Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId))
       # $pattern = '\[assembly: FileVersion\("(.*)"\)\]'
       # $AssemblyFiles = Get-ChildItem . AssemblyInfo.cs -rec
 
