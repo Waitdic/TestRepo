@@ -13,7 +13,9 @@ variables:
   project: 'iVectorOne-Admin-Api'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  appVersion: '0.0.0.0'
+  majorVersion: 2
+  minorVersion: 0
+  appVersion: ''
 
 steps:
 
@@ -26,10 +28,9 @@ steps:
       $DayOfYear = (Get-Date).DayOfYear
       $TotalMinutes = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
 
-      $Major = $Year + $DayOfYear
-      $Minor = 0
-      $Build = $TotalMinutes
-      $VersionString = $Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId)
+      $Build = $Year + $DayOfYear
+      $Revision = $TotalMinutes
+      $VersionString = $(majorVersion) + '.' + $(minorVersion) + '.' + $Build + '.' + $Revision
       Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - task: Assembly-Info-NetCore@3
