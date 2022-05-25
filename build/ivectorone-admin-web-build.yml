@@ -1,0 +1,64 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/iVectorOne-Admin-Web
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- name : project
+  value: 'iVectorOne-Admin-Web'
+- name:  majorVersion
+  value: '2'
+- name:  appVersion
+  value : ''
+
+steps:
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '17.x'
+  displayName: 'Install Node.js'
+
+- task: PowerShell@2
+  displayName: 'Set Version Number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $Year = (Get-Date).Year.ToString().SubString(2, 2)
+      $dayOfYear = (Get-Date).DayOfYear
+      $minorVersion =  $year + $dayOfYear
+      $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+      $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $build.ToString() + '.' + $(Build.BuildId)
+      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+
+- script: 
+    npm install
+  displayName: 'npm install'
+  workingDirectory: 'src/$(project)'
+  
+- script: 
+    npm run build
+  displayName: 'npm build'
+  workingDirectory: 'src/$(project)'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonar Cloud'
+    organization: 'intuitive-systems'
+    scannerMode: 'CLI'
+    configMode: 'manual'
+    cliProjectKey: 'Intuitive_iVectorOne_Admin_Web'
+    cliProjectName: 'iVector One Admin Web'
+    cliSources: 'src/$(project)'
+    
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
