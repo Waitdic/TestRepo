@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>iVectorOne_Search.Api</RootNamespace>
+    <RootNamespace>iVectorOne_Search-Api</RootNamespace>
     <UserSecretsId>a42087cd-dfd1-4ed5-b2cb-afd4d22dbf85</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>

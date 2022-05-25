@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32505.426
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iVectorOne-Admin-Api", "src\iVectorOne-Admin-Api\iVectorOne-Admin-Api.csproj", "{56C41BB3-090C-4B21-BCDF-FE5183DCA1A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Admin-Api", "src\iVectorOne-Admin-Api\iVectorOne-Admin-Api.csproj", "{56C41BB3-090C-4B21-BCDF-FE5183DCA1A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iVectorOne-Search.Api", "src\iVectorOne-Search.Api\iVectorOne-Search.Api.csproj", "{E7E76615-FFFF-428F-A68B-95955CC638A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Book-Api", "src\iVectorOne-Book-Api\iVectorOne-Book-Api.csproj", "{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iVectorOne-Book-Api", "src\iVectorOne-Book-Api\iVectorOne-Book-Api.csproj", "{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Search-Api", "src\iVectorOne-Search-Api\iVectorOne-Search-Api.csproj", "{0DCD55ED-C42F-4EF4-B673-1572773F2F74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{56C41BB3-090C-4B21-BCDF-FE5183DCA1A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C41BB3-090C-4B21-BCDF-FE5183DCA1A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C41BB3-090C-4B21-BCDF-FE5183DCA1A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E7E76615-FFFF-428F-A68B-95955CC638A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E7E76615-FFFF-428F-A68B-95955CC638A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E7E76615-FFFF-428F-A68B-95955CC638A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E7E76615-FFFF-428F-A68B-95955CC638A9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53DBE753-9B62-43AF-9F2D-CDCE04FDB8B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCD55ED-C42F-4EF4-B673-1572773F2F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCD55ED-C42F-4EF4-B673-1572773F2F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCD55ED-C42F-4EF4-B673-1572773F2F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCD55ED-C42F-4EF4-B673-1572773F2F74}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
