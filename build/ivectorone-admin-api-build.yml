@@ -88,18 +88,19 @@ steps:
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
-    
+
 - task: DotNetCoreCLI@2
   displayName: 'Publish'
   inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(AssemblyInfo.FileVersion)'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/path_$(project)_$(AssemblyInfo.FileVersion)'
     zipAfterPublish: True
+    modifyOutputPath: false
 
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(AssemblyInfo.FileVersion)'
-    ArtifactName: '$(project)_$(AssemblyInfo.FileVersion)'
+    ArtifactName: 'art_$(project)_$(AssemblyInfo.FileVersion)'
     publishLocation: 'Container'
