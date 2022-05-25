@@ -28,7 +28,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $minorVersion = Get-Date -Format "yyMMdd"
+      $Year = (Get-Date).Year.ToString().SubString(2, 2)
+      $DayOfYear = (Get-Date).DayOfYear
+      $minorVersion =  $Year + $DayOfYear
       $Build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
       $VersionString = '2' + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
       echo $VersionString
@@ -42,6 +44,7 @@ steps:
     InsertAttributes: true
     FileEncoding: 'auto'
     WriteBOM: false
+
     LogLevel: 'verbose'
     FailOnWarning: false
     DisableTelemetry: false
