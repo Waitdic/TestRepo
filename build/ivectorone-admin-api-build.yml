@@ -24,7 +24,7 @@ variables:
 steps:
 
 - task: PowerShell@2
-  displayName: 'CREATE DATE BASED VERSION NUMBER'
+  displayName: 'Set version number'
   inputs:
     targetType: 'inline'
     script: |
@@ -33,7 +33,6 @@ steps:
       $minorVersion =  $Year + $DayOfYear
       $Build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
       $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $Build.ToString() + '.' + $(Build.BuildId)
-      echo $VersionString
       Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - task: Assembly-Info-NetCore@3
@@ -44,7 +43,6 @@ steps:
     InsertAttributes: true
     FileEncoding: 'auto'
     WriteBOM: false
-
     LogLevel: 'verbose'
     FailOnWarning: false
     DisableTelemetry: false
@@ -78,7 +76,7 @@ steps:
 
 
 - task: DotNetCoreCLI@2
-  displayName: 'Unit Tests'
+  displayName: 'Test'
   inputs:
     command: 'test'
     projects: 'test/$(project)**/*.csproj'
@@ -92,14 +90,16 @@ steps:
     pollingTimeoutSec: '300'
     
 - task: DotNetCoreCLI@2
+  displayName: 'Publish'
   inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)-$(appVersion)'
+    zipAfterPublish: True
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
+    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)-$(appVersion)'
+    ArtifactName: '$(project)_LatestBuild'
     publishLocation: 'Container'
