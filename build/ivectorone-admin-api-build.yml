@@ -102,5 +102,5 @@ steps:
   displayName: 'Publish Build Artifacts'
   inputs:
     PathtoPublish: '$(build.artifactStagingDirectory)/path_$(project)_$(appVersion)'
-    ArtifactName: '$(project)_$(appVersion)'
+    ArtifactName: 'art_$(project)_$(appVersion)'
     publishLocation: 'Container'
