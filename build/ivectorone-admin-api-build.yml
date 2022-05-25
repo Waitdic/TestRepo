@@ -22,10 +22,28 @@ steps:
     script: |
       $Year = (Get-Date).Year.ToString().SubString(2, 2)
       $DayOfYear = (Get-Date).DayOfYear
-      $TotalMinutes = [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+      $TotalMinutes = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
 
-      $Version = $Year + '.' + $DayOfYear + "." + $TotalMinutes
-      $Version
+      $Major = $Year + $DayOfYear
+      $Minor = 0
+      $Build = $TotalMinutes
+
+      $buildNumber = $Major + '.' + $Minor + '.' + $Build + '.' + $(Build.BuildId)
+      $pattern = '\[assembly: AssemblyVersion\("(.*)"\)\]'
+      $AssemblyFiles = Get-ChildItem . AssemblyInfo.cs -rec
+
+      foreach ($file in $AssemblyFiles)
+      {
+        (Get-Content $file.PSPath) | ForEach-Object{
+            if($_ -match $pattern){
+                '[assembly: AssemblyVersion("{0}")]' -f $buildNumber
+            } else {
+                # Output line as is
+                $_
+            }
+      } | Set-Content $file.PSPath
+      }
+
 
 - task: SonarCloudPrepare@1
   inputs:
