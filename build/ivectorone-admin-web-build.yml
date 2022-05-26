@@ -71,6 +71,6 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)'
     ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
