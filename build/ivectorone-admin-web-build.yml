@@ -65,7 +65,7 @@ steps:
     rootFolderOrFile: 'src/$(project)/dist'
     includeRootFolder: false
     archiveType: 'zip'
-    archiveFile: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)/$(project)_$(appVersion).zip'
+    archiveFile: '$(build.artifactStagingDirectory)/$(project)_$(appVersion).zip'
     replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
