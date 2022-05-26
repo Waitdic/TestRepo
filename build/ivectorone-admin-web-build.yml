@@ -59,24 +59,24 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: 'src/$(project)/dist'
-    Contents: '**'
-    TargetFolder: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-
-# - task: ArchiveFiles@2
-#   displayName: 'Publish Project'
+# - task: CopyFiles@2
 #   inputs:
-#     rootFolderOrFile: 'src/$(project)/dist'
-#     includeRootFolder: false
-#     archiveType: 'zip'
-#     archiveFile: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)/$(project)_$(appVersion).zip'
-#     replaceExistingArchive: true
+#     SourceFolder: 'src/$(project)/dist'
+#     Contents: '**'
+#     TargetFolder: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+
+- task: ArchiveFiles@2
+  displayName: 'Publish Project'
+  inputs:
+    rootFolderOrFile: 'src/$(project)/dist'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)/$(project)_$(appVersion).zip'
+    replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)/$(project)_$(appVersion).zip'
     ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
