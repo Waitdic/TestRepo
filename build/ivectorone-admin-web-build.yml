@@ -12,8 +12,6 @@ pool:
 variables:
 - name : project
   value: 'iVectorOne-Admin-Web'
-- name:  majorVersion
-  value: '2'
 - name:  appVersion
   value : ''
 
@@ -29,11 +27,10 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $Year = (Get-Date).Year.ToString().SubString(2, 2)
-      $dayOfYear = (Get-Date).DayOfYear
-      $minorVersion =  $year + $dayOfYear
+      $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
+      $minorVersion =  (Get-Date).ToString("dd")
       $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-      $VersionString = ($(majorVersion)).ToString() + '.' + $minorVersion + '.' + $build.ToString() + '.' + $(Build.BuildId)
+      $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
       Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 - script: 
