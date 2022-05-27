@@ -97,7 +97,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/package'
     zipAfterPublish: false
     modifyOutputPath: false
 
@@ -106,7 +106,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      dir "$(build.artifactStagingDirectory)/$(project)_$(appVersion)"
+      dir "$(build.artifactStagingDirectory)"
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
