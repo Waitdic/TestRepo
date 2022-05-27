@@ -24,16 +24,22 @@ variables:
   value : '1.0.0.2'
   
 stages:
-- stage: A
-  displayName: "Stage A"
-  jobs:
-  - job: A1
-  - job: A2
-
-- stage: B
-  displayName: "Stage B"
-  jobs:
-  - job: B1
-  - job: B2
+- stage: Build
+  displayName: "Build"
+steps:
 
 
+  - task: PowerShell@2
+    displayName: 'Set Version Number'
+    inputs:
+      targetType: 'inline'
+      script: 
+        Write-Host "Build Stage"
+
+- stage: IntegrationTests
+  displayName: "Integration Tests"
+  dependsOn: Build
+
+- stage: DeployStage
+  displayName: "Deploy Stage"
+  dependsOn: IntegrationTests
