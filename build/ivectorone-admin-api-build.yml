@@ -107,3 +107,4 @@ steps:
     PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
     ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
+    FileCopyOptions: "**/*"
