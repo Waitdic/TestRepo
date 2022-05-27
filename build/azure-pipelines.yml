@@ -21,7 +21,7 @@ variables:
 # - name:  majorVersion
 #   value: '2'
 - name:  appVersion
-  value : ''
+  value : '1.0.0.2'
   
 steps:
 
@@ -30,7 +30,8 @@ steps:
     targetType: 'inline'
     script: |
       $appSpecFile = Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) 'appspec.yml'
-
+      
+      New-Item -Path Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) -ItemType directory
       New-Item $appSpecFile -ItemType File -Value 'version: 0.0'
       Add-Content $appSpecFile 'os: linux'
 
