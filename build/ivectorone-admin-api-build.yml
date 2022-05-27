@@ -61,35 +61,35 @@ steps:
     UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
     AddBuildTag: 'v$(appVersion)'
 
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'SonarCloud'
-    organization: 'intuitive-systems'
-    scannerMode: 'MSBuild'
-    projectKey: 'Intuitive_iVectorOne_Admin_Api'
-    projectName: 'iVectorOne Admin Api'
+# - task: SonarCloudPrepare@1
+#   inputs:
+#     SonarCloud: 'SonarCloud'
+#     organization: 'intuitive-systems'
+#     scannerMode: 'MSBuild'
+#     projectKey: 'Intuitive_iVectorOne_Admin_Api'
+#     projectName: 'iVectorOne Admin Api'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build Project'
-  inputs:
-    command: 'build'
-    projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Build Project'
+#   inputs:
+#     command: 'build'
+#     projects: 'src/$(project)/**/*.csproj'
+#     arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
 
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test Project'
-  inputs:
-    command: 'test'
-    projects: 'tests/$(testProject)**/*.csproj'
-    arguments: '-c $(buildConfiguration)'
-    testRunTitle: 'Unit Tests'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Test Project'
+#   inputs:
+#     command: 'test'
+#     projects: 'tests/$(testProject)**/*.csproj'
+#     arguments: '-c $(buildConfiguration)'
+#     testRunTitle: 'Unit Tests'
 
-- task: SonarCloudAnalyze@1
+# - task: SonarCloudAnalyze@1
 
-- task: SonarCloudPublish@1
-  inputs:
-    pollingTimeoutSec: '300'
+# - task: SonarCloudPublish@1
+#   inputs:
+#     pollingTimeoutSec: '300'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Project'
@@ -101,19 +101,25 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: false
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifacts'
-  inputs:
-    TargetPath: '$(build.artifactStagingDirectory)/targetpath/'
-    publishLocation: 'FilePath'
-    # PathtoPublish: '$(build.artifactStagingDirectory)/package'
-    # ArtifactName: 'art_$(project)_$(appVersion)'
-    # publishLocation: 'Container'
-    # FileCopyOptions: "**/*"
-    
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
     targetType: 'inline'
     script: |
       dir "$(build.artifactStagingDirectory)/targetpath"
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(build.artifactStagingDirectory)/package
+    artifactName: WebApp
+
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Build Artifacts'
+#   inputs:
+#     TargetPath: '$(build.artifactStagingDirectory)/targetpath/'
+#     publishLocation: 'FilePath'
+    # PathtoPublish: '$(build.artifactStagingDirectory)/package'
+    # ArtifactName: 'art_$(project)_$(appVersion)'
+    # publishLocation: 'Container'
+    # FileCopyOptions: "**/*"
+    
