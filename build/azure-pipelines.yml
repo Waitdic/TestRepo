@@ -25,6 +25,15 @@ variables:
   
 steps:
 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $appSpecFile = Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) 'appspec.yml'
+
+      New-Item $appSpecFile
+      Add-Content $appSpecFile 'test text'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
