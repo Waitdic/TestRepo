@@ -1,0 +1,109 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/iVectorOne-Search-Api
+    - tests/iVectorOne-Search-Api-BuildTests
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- name : project
+  value: 'iVectorOne-Search-Api'
+- name : testProject
+  value: 'iVectorOne-Search-Api-BuildTests'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: buildConfiguration
+  value: 'Release'
+# - name:  majorVersion
+#   value: '2'
+- name:  appVersion
+  value : ''
+
+steps:
+
+- task: PowerShell@2
+  displayName: 'Set Version Number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
+      $minorVersion =  (Get-Date).ToString("dd")
+      $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+      $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
+      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+
+- task: Assembly-Info-NetCore@3
+  displayName: 'Set Assembly Metadata'
+  inputs:
+    Path: '$(Build.SourcesDirectory)/src/$(project)'
+    FileNames: '**/*.csproj'
+    InsertAttributes: true
+    FileEncoding: 'auto'
+    WriteBOM: false
+    LogLevel: 'verbose'
+    FailOnWarning: false
+    DisableTelemetry: false
+    Company: 'Intuitive Systems'
+    Product: 'iVectorOne Search Api'
+    Description: 'iVectorOne Search Api'
+    Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
+    Culture: 'en-GB'
+    VersionNumber: '$(appVersion)'
+    FileVersionNumber: '$(appVersion)'
+    InformationalVersion: '$(appVersion)'
+    PackageVersion: '$(appVersion)'
+    IgnoreNetFrameworkProjects: false
+    UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
+    AddBuildTag: 'v$(appVersion)'
+
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'
+    organization: 'intuitive-systems'
+    scannerMode: 'MSBuild'
+    projectKey: 'Intuitive_iVectorOne_Search_Api'
+    projectName: 'iVectorOne Search Api'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Project'
+  inputs:
+    command: 'build'
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test Project'
+  inputs:
+    command: 'test'
+    projects: 'tests/$(testProject)**/*.csproj'
+    arguments: '-c $(buildConfiguration)'
+    testRunTitle: 'Unit Tests'
+
+- task: SonarCloudAnalyze@1
+
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Project'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    zipAfterPublish: True
+    modifyOutputPath: false
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    ArtifactName: '$(project)_$(appVersion)'
+    publishLocation: 'Container'
