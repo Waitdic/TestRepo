@@ -31,8 +31,8 @@ steps:
     script: |
       $appSpecFile = Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) 'appspec.yml'
 
-      New-Item $appSpecFile
-      Add-Content $appSpecFile 'test text'
+      New-Item $appSpecFile -ItemType File -Value 'version: 0.0'
+      Add-Content $appSpecFile 'os: linux'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
