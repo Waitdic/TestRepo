@@ -106,7 +106,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      dir "$(build.artifactStagingDirectory)/targetpath"
+      dir "$(build.artifactStagingDirectory)/package"
 
 - task: PublishPipelineArtifact@1
   inputs:
