@@ -101,6 +101,13 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: false
 
+- task: PowerShell@2
+  displayName: 'Set Version Number'
+  inputs:
+    targetType: 'inline'
+    script: |
+      dir "$(build.artifactStagingDirectory)/$(project)_$(appVersion)"
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
