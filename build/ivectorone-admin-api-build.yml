@@ -101,18 +101,19 @@ steps:
     zipAfterPublish: false
     modifyOutputPath: false
 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    TargetPath: '$(build.artifactStagingDirectory)/targetpath/'
+    publishLocation: 'FilePath'
+    # PathtoPublish: '$(build.artifactStagingDirectory)/package'
+    # ArtifactName: 'art_$(project)_$(appVersion)'
+    # publishLocation: 'Container'
+    # FileCopyOptions: "**/*"
+    
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
     targetType: 'inline'
     script: |
-      dir "$(build.artifactStagingDirectory)"
-      dir "$(build.artifactStagingDirectory)/package"
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifacts'
-  # inputs:
-    # PathtoPublish: '$(build.artifactStagingDirectory)/package'
-    # ArtifactName: 'art_$(project)_$(appVersion)'
-    # publishLocation: 'Container'
-    # FileCopyOptions: "**/*"
+      dir "$(build.artifactStagingDirectory)/targetpath"
