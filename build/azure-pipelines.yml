@@ -23,21 +23,17 @@ variables:
 - name:  appVersion
   value : '1.0.0.2'
   
-steps:
+stages:
+- stage: A
+  displayName: "Stage A"
+  jobs:
+  - job: A1
+  - job: A2
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $appSpecFile = Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) 'appspec.yml'
-      
-      New-Item -Path Join-Path $(build.artifactStagingDirectory) $(project)_$(appVersion) -ItemType directory
-      New-Item $appSpecFile -ItemType File -Value 'version: 0.0'
-      Add-Content $appSpecFile 'os: linux'
+- stage: B
+  displayName: "Stage B"
+  jobs:
+  - job: B1
+  - job: B2
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifacts'
-  inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-    ArtifactName: '$(project)_$(appVersion)'
-    publishLocation: 'Container'
+
