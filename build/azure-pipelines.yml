@@ -55,12 +55,14 @@ stages:
   displayName: "Deploy Stage"
   dependsOn: IntegrationTests
   jobs:
-  - job:
-    steps:
-
-      - task: PowerShell@2
-        displayName: 'Set Version Number'
-        inputs:
-          targetType: 'inline'
-          script: 
-            Write-Host "Deploy Stage"
+  - deployment: DeployWeb
+    displayName: deploy Web App
+    pool:
+      vmImage: 'Ubuntu-latest'
+    # creates an environment if it doesn't exist
+    environment: 'smarthotel-dev'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello world
