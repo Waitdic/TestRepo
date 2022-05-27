@@ -40,7 +40,27 @@ stages:
 - stage: IntegrationTests
   displayName: "Integration Tests"
   dependsOn: Build
+  jobs:
+  - job:
+    steps:
+
+      - task: PowerShell@2
+        displayName: 'Set Version Number'
+        inputs:
+          targetType: 'inline'
+          script: 
+            Write-Host "Integration Tests"
 
 - stage: DeployStage
   displayName: "Deploy Stage"
   dependsOn: IntegrationTests
+  jobs:
+  - job:
+    steps:
+
+      - task: PowerShell@2
+        displayName: 'Set Version Number'
+        inputs:
+          targetType: 'inline'
+          script: 
+            Write-Host "Deploy Stage"
