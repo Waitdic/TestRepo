@@ -113,6 +113,6 @@ steps:
   displayName: 'Publish Build Artifacts'
   inputs:
     PathtoPublish: '$(build.artifactStagingDirectory)/package'
-    ArtifactName: '$(project)_$(appVersion)'
+    ArtifactName: 'art_$(project)_$(appVersion)'
     publishLocation: 'Container'
     FileCopyOptions: "**/*"
