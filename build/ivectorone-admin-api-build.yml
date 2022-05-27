@@ -110,7 +110,7 @@ steps:
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(build.artifactStagingDirectory)/package/**/*'
+    targetPath: '$(build.artifactStagingDirectory)/package/iVectorOne-Admin-Api.dll'
     artifactName: WebApp
 
 # - task: PublishBuildArtifacts@1
