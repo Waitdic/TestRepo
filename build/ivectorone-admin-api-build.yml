@@ -4,17 +4,17 @@ trigger:
     - main
   paths:
     include:
-    - src/iVectorOne-Admin-Api
-    - tests/iVectorOne-Admin-Api-BuildTests
+    - src/iVectorOne-Search-Api
+    - tests/iVectorOne-Search-Api-BuildTests
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
 - name : project
-  value: 'iVectorOne-Admin-Api'
+  value: 'iVectorOne-Search-Api'
 - name : testProject
-  value: 'iVectorOne-Admin-Api-BuildTests'
+  value: 'iVectorOne-Search-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
@@ -49,8 +49,8 @@ steps:
     FailOnWarning: false
     DisableTelemetry: false
     Company: 'Intuitive Systems'
-    Product: 'iVectorOne Admin Api'
-    Description: 'iVectorOne Admin Api'
+    Product: 'iVectorOne Search Api'
+    Description: 'iVectorOne Search Api'
     Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
     Culture: 'en-GB'
     VersionNumber: '$(appVersion)'
@@ -61,35 +61,35 @@ steps:
     UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
     AddBuildTag: 'v$(appVersion)'
 
-# - task: SonarCloudPrepare@1
-#   inputs:
-#     SonarCloud: 'SonarCloud'
-#     organization: 'intuitive-systems'
-#     scannerMode: 'MSBuild'
-#     projectKey: 'Intuitive_iVectorOne_Admin_Api'
-#     projectName: 'iVectorOne Admin Api'
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'SonarCloud'
+    organization: 'intuitive-systems'
+    scannerMode: 'MSBuild'
+    projectKey: 'Intuitive_iVectorOne_Search_Api'
+    projectName: 'iVectorOne Search Api'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Build Project'
-#   inputs:
-#     command: 'build'
-#     projects: 'src/$(project)/**/*.csproj'
-#     arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+- task: DotNetCoreCLI@2
+  displayName: 'Build Project'
+  inputs:
+    command: 'build'
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
 
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Test Project'
-#   inputs:
-#     command: 'test'
-#     projects: 'tests/$(testProject)**/*.csproj'
-#     arguments: '-c $(buildConfiguration)'
-#     testRunTitle: 'Unit Tests'
+- task: DotNetCoreCLI@2
+  displayName: 'Test Project'
+  inputs:
+    command: 'test'
+    projects: 'tests/$(testProject)**/*.csproj'
+    arguments: '-c $(buildConfiguration)'
+    testRunTitle: 'Unit Tests'
 
-# - task: SonarCloudAnalyze@1
+- task: SonarCloudAnalyze@1
 
-# - task: SonarCloudPublish@1
-#   inputs:
-#     pollingTimeoutSec: '300'
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish Project'
@@ -97,29 +97,11 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/package'
-    zipAfterPublish: false
+    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    zipAfterPublish: True
     modifyOutputPath: false
-
-- task: PowerShell@2
-  displayName: 'Set Version Number'
-  inputs:
-    targetType: 'inline'
-    script: |
-      dir "$(build.artifactStagingDirectory)/package"
 
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(build.artifactStagingDirectory)/package/iVectorOne-Admin-Api.dll'
-    artifactName: WebApp
-
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish Build Artifacts'
-#   inputs:
-#     TargetPath: '$(build.artifactStagingDirectory)/targetpath/'
-#     publishLocation: 'FilePath'
-    # PathtoPublish: '$(build.artifactStagingDirectory)/package'
-    # ArtifactName: 'art_$(project)_$(appVersion)'
-    # publishLocation: 'Container'
-    # FileCopyOptions: "**/*"
-    
+    targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    artifactName: '$(project)_$(appVersion)'
