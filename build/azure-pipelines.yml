@@ -26,15 +26,16 @@ variables:
 stages:
 - stage: Build
   displayName: "Build"
-steps:
+  jobs:
+  - job:
+    steps:
 
-
-  - task: PowerShell@2
-    displayName: 'Set Version Number'
-    inputs:
-      targetType: 'inline'
-      script: 
-        Write-Host "Build Stage"
+      - task: PowerShell@2
+        displayName: 'Set Version Number'
+        inputs:
+          targetType: 'inline'
+          script: 
+            Write-Host "Build Stage"
 
 - stage: IntegrationTests
   displayName: "Integration Tests"
