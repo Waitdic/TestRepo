@@ -107,11 +107,12 @@ steps:
     targetType: 'inline'
     script: |
       dir "$(build.artifactStagingDirectory)"
+      dir "$(build.artifactStagingDirectory)/package"
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Build Artifacts'
   inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    PathtoPublish: '$(build.artifactStagingDirectory)/package'
     ArtifactName: '$(project)_$(appVersion)'
     publishLocation: 'Container'
     FileCopyOptions: "**/*"
