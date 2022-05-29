@@ -30,7 +30,7 @@ stages:
         #   displayName: 'DotNet Restore'
         #   inputs:
         #     command: 'restore'
-        #     projects: 'src/$(project)/**/*.csproj'
+        #     projects: 'src/$(sourceProject)/**/*.csproj'
 
         - task: PowerShell@2
           displayName: 'Set Version Number'
@@ -46,7 +46,7 @@ stages:
         - task: Assembly-Info-NetCore@3
           displayName: 'Set Assembly Metadata'
           inputs:
-            Path: '$(Build.SourcesDirectory)/src/$(project)'
+            Path: '$(Build.SourcesDirectory)/src/$(sourceProject)'
             FileNames: '**/*.csproj'
             InsertAttributes: true
             FileEncoding: 'auto'
@@ -80,7 +80,7 @@ stages:
           displayName: 'Build Project'
           inputs:
             command: 'build'
-            projects: 'src/$(project)/**/*.csproj'
+            projects: 'src/$(sourceProject)/**/*.csproj'
             arguments: '-c $(buildConfiguration)'
 
         - task: DotNetCoreCLI@2
@@ -103,7 +103,7 @@ stages:
           displayName: 'Publish Project'
           inputs:
             command: 'publish'
-            projects: 'src/$(project)/**/*.csproj'
+            projects: 'src/$(sourceProject)/**/*.csproj'
             arguments: '--no-build -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
             publishWebProjects: false
             zipAfterPublish: True
