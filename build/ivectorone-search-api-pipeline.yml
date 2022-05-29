@@ -26,11 +26,11 @@ stages:
   jobs:
      - job: 
        steps:  
-        - task: DotNetCoreCLI@2
-          displayName: 'DotNet Restore'
-          inputs:
-            command: 'restore'
-            projects: 'src/$(project)/**/*.csproj'
+        # - task: DotNetCoreCLI@2
+        #   displayName: 'DotNet Restore'
+        #   inputs:
+        #     command: 'restore'
+        #     projects: 'src/$(project)/**/*.csproj'
 
         - task: PowerShell@2
           displayName: 'Set Version Number'
