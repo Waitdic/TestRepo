@@ -1,0 +1,161 @@
+# Build, test and deploy iVectorOne Search API
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/iVectorOne-Search-Api
+    - tests/iVectorOne-Search-Api-BuildTests
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  sourceProject: 'iVectorOne-Search-Api'
+  testProject: 'iVectorOne-Search-Api-BuildTests'
+  appVersion: '0.0.0.0'
+  websiteName: 'WeatherService'
+  appPoolName: 'WeatherService'
+
+stages:
+- stage: 'Build'
+  displayName: 'Build'
+  jobs:
+     - job: 
+       steps:  
+        - task: DotNetCoreCLI@2
+          displayName: 'DotNet Restore'
+          inputs:
+            command: 'restore'
+            projects: 'src/$(project)/**/*.csproj'
+
+        - task: PowerShell@2
+          displayName: 'Set Version Number'
+          inputs:
+            targetType: 'inline'
+            script: |
+              $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
+              $minorVersion =  (Get-Date).ToString("dd")
+              $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+              $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
+              Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+
+        - task: Assembly-Info-NetCore@3
+          displayName: 'Set Assembly Metadata'
+          inputs:
+            Path: '$(Build.SourcesDirectory)/src/$(project)'
+            FileNames: '**/*.csproj'
+            InsertAttributes: true
+            FileEncoding: 'auto'
+            WriteBOM: false
+            LogLevel: 'verbose'
+            FailOnWarning: false
+            DisableTelemetry: false
+            Company: 'Intuitive Systems'
+            Product: 'iVectorOne Search Api'
+            Description: 'iVectorOne Search Api'
+            Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
+            Culture: 'en-GB'
+            VersionNumber: '$(appVersion)'
+            FileVersionNumber: '$(appVersion)'
+            InformationalVersion: '$(appVersion)'
+            PackageVersion: '$(appVersion)'
+            IgnoreNetFrameworkProjects: false
+            UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
+            AddBuildTag: 'v$(appVersion)'
+
+        - task: SonarCloudPrepare@1
+          displayName: 'Prepare SonarCloud'
+          inputs:
+            SonarCloud: 'SonarCloud'
+            organization: 'intuitive-systems'
+            scannerMode: 'MSBuild'
+            projectKey: 'Intuitive_iVectorOne_Search_Api'
+            projectName: 'iVectorOne Search Api'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Project'
+          inputs:
+            command: 'build'
+            projects: 'src/$(project)/**/*.csproj'
+            arguments: '-c $(buildConfiguration)'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Test Project'
+          inputs:
+            command: 'test'
+            projects: 'tests/$(testProject)**/*.csproj'
+            arguments: '-c $(buildConfiguration)'
+            testRunTitle: 'Unit Tests'
+
+        - task: SonarCloudAnalyze@1
+          displayName: 'SonarCloud Analyse Project'
+
+        - task: SonarCloudPublish@1
+          displayName: 'SonarCloud Publish'
+          inputs:
+            pollingTimeoutSec: '300'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Publish Project'
+          inputs:
+            command: 'publish'
+            projects: 'src/$(project)/**/*.csproj'
+            arguments: '--no-build -c $(buildConfiguration) -o $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+            publishWebProjects: false
+            zipAfterPublish: True
+
+        - publish: '$(Build.ArtifactStagingDirectory)'
+          artifact: drop
+
+# - stage: 'Dev'
+#   displayName: 'Dev'
+#   dependsOn: 'Build'
+#   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+#   jobs:
+#    - deployment: Dev
+#      displayName: Dev
+#      environment: 
+#        name: 'Dev'    
+#        resourceType: VirtualMachine
+#      variables:
+#      - name: websitePhysicalPath
+#        value: '%SystemDrive%\inetpub\wwwroot\$(websiteName)'
+
+#      strategy:
+#       runOnce:
+#         deploy:
+#           steps: 
+#           - task: IISWebAppManagementOnMachineGroup@0
+#             inputs:            
+#               IISDeploymentType: 'IISWebsite'
+#               ActionIISWebsite: 'CreateOrUpdateWebsite'
+#               WebsiteName: '$(websiteName)'
+#               WebsitePhysicalPath: '$(websitePhysicalPath)'
+#               WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
+#               CreateOrUpdateAppPoolForWebsite: true
+#               AppPoolNameForWebsite: '$(appPoolName)'
+#               DotNetVersionForWebsite: 'No Managed Code'
+#               PipeLineModeForWebsite: 'Integrated'
+#               AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
+#               AddBinding: true
+#               Bindings: |
+#                   {
+#                       bindings:[
+#                           {
+#                               "protocol":"http",
+#                               "ipAddress":"",
+#                               "hostname":"",
+#                               "port":"80",
+#                               "sslThumbprint":"",
+#                               "sniFlag":false
+#                           }
+#                       ]
+#                   }
+#           - task: IISWebAppDeploymentOnMachineGroup@0
+#             inputs:
+#               WebSiteName: '$(websiteName)'
+#               Package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/$(projectName).zip'
