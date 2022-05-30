@@ -26,6 +26,16 @@ variables:
 
 steps:
 
+- task: NuGetToolInstaller@1
+  inputs:
+    versionSpec: 
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
