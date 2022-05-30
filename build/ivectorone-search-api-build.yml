@@ -107,7 +107,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    arguments: '--no-build -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
     zipAfterPublish: True
     modifyOutputPath: false
 
