@@ -118,9 +118,9 @@ steps:
     zipAfterPublish: True
     modifyOutputPath: false
 
-# - task: PublishBuildArtifacts@1
-#   displayName: 'Publish Build Artifacts'
-#   inputs:
-#     PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-#     ArtifactName: '$(project)_$(appVersion)'
-#     publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    ArtifactName: '$(project)_$(appVersion)'
+    publishLocation: 'Container'
