@@ -58,18 +58,18 @@ stages:
            - script: echo Running in the Staging environment as deployment job
              displayName: 'Staging based stage'
 
-
-- stage: ProductionCanary
-  jobs:
-  - deployment: 
-    displayName: Production Canary deploy
-    environment: ProductionCanary
-    strategy:
-     runOnce:
-       deploy:
-         steps:
-           - script: echo Running in the Production environment as deployment job
-             displayName: 'Production based stage'
+- ${{ if eq(parameters.deploy, true) }}:
+  - stage: ProductionCanary
+    jobs:
+    - deployment: 
+      displayName: Production Canary deploy
+      environment: ProductionCanary
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - script: echo Running in the Production environment as deployment job
+                displayName: 'Production based stage'
 
 - stage: Production
   jobs:
