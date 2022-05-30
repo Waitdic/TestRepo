@@ -10,15 +10,11 @@ trigger:
     - tests/iVectorOne-Search-Api-BuildTests
 
 parameters:
-- name: image
-  displayName: Pool Image
-  type: string
-  default: ubuntu-latest
-  values:
-  - windows-latest
-  - ubuntu-latest
-  - macOS-latest
-  
+- name: deploy
+  displayName: Deploy to Production?
+  type: boolean
+  default: false
+
 pool:
   vmImage: ubuntu-latest
 
