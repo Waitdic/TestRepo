@@ -99,7 +99,7 @@ steps:
   inputs:
     command: 'test'
     projects: 'tests/$(testProject)**/*.csproj'
-    arguments: '-c $(buildConfiguration)'
+    arguments: '-c $(buildConfiguration) --no-restore'
     testRunTitle: 'Unit Tests'
 
 - task: SonarCloudAnalyze@1
