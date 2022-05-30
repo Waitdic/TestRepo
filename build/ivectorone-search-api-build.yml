@@ -101,19 +101,19 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Project'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: 'src/$(project)/**/*.csproj'
-    arguments: '--no-build -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-    zipAfterPublish: True
-    modifyOutputPath: false
+# - task: DotNetCoreCLI@2
+#   displayName: 'Publish Project'
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: false
+#     projects: 'src/$(project)/**/*.csproj'
+#     arguments: '--no-build -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+#     zipAfterPublish: True
+#     modifyOutputPath: false
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Build Artifacts'
-  inputs:
-    PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-    ArtifactName: '$(project)_$(appVersion)'
-    publishLocation: 'Container'
+# - task: PublishBuildArtifacts@1
+#   displayName: 'Publish Build Artifacts'
+#   inputs:
+#     PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+#     ArtifactName: '$(project)_$(appVersion)'
+#     publishLocation: 'Container'
