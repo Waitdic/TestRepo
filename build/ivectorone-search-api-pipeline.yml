@@ -9,6 +9,16 @@ trigger:
     - src/iVectorOne-Search-Api
     - tests/iVectorOne-Search-Api-BuildTests
 
+parameters:
+- name: image
+  displayName: Pool Image
+  type: string
+  default: ubuntu-latest
+  values:
+  - windows-latest
+  - ubuntu-latest
+  - macOS-latest
+  
 pool:
   vmImage: ubuntu-latest
 
@@ -51,6 +61,7 @@ stages:
          steps:
            - script: echo Running in the Staging environment as deployment job
              displayName: 'Staging based stage'
+
 
 - stage: ProductionCanary
   jobs:
