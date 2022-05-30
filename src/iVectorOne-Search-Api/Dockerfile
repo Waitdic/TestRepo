@@ -7,16 +7,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src/iVectorOne-Search.Api/iVectorOne-Search.Api.csproj", "src/iVectorOne-Search.Api/"]
-RUN dotnet restore "src/iVectorOne-Search.Api/iVectorOne-Search.Api.csproj"
+COPY ["NuGet.config", "."]
+COPY ["src/iVectorOne.Search.Api/iVectorOne.Search.Api.csproj", "src/iVectorOne.Search.Api/"]
+RUN dotnet restore "src/iVectorOne.Search.Api/iVectorOne.Search.Api.csproj"
 COPY . .
-WORKDIR "/src/src/iVectorOne-Search.Api"
-RUN dotnet build "iVectorOne-Search.Api.csproj" -c Release -o /app/build
+WORKDIR "/src/src/iVectorOne.Search.Api"
+RUN dotnet build "iVectorOne.Search.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "iVectorOne-Search.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "iVectorOne.Search.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "iVectorOne-Search.Api.dll"]
+ENTRYPOINT ["dotnet", "iVectorOne.Search.Api.dll"]

@@ -1,0 +1,21 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>ThirdParty</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Intuitive.Domain" Version="4.9.4" />
+    <PackageReference Include="iVector.Search.Abstractions" Version="0.11.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="TPImport.Abstractions" Version="0.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
+    <ProjectReference Include="..\ThirdParty.CSSuppliers\ThirdParty.CSSuppliers.csproj" />
+  </ItemGroup>
+</Project>

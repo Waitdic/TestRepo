@@ -1,17 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>iVectorOne_Book_Api</RootNamespace>
-    <UserSecretsId>57bf3cbb-b83e-4ed2-9b36-c38801b86cf4</UserSecretsId>
+    <UserSecretsId>c9da9ead-7396-4430-997e-488889b240f7</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Intuitive.Core" Version="7.1.0"/>
+    <PackageReference Include="Intuitive.Helpers" Version="0.14.0"/>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\libs\iVectorOne.Web\iVectorOne.Web.csproj" />
+    <ProjectReference Include="..\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
+    <ProjectReference Include="..\libs\ThirdParty.Service\ThirdParty.Service.csproj" />
   </ItemGroup>
 
 </Project>

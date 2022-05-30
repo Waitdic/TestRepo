@@ -1,34 +1,66 @@
-var builder = WebApplication.CreateBuilder(args);
+using System.Diagnostics;
+using Intuitive.Modules;
+using iVectorOne.Book.Api.Endpoints.V2;
+using iVectorOne.Web.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-var app = builder.Build();
+Log.Information("Starting up");
 
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
+try
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    ThreadPool.SetMinThreads(200, 200);
 
-app.MapGet("/weatherforecast", () =>
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
+        .ReadFrom.Configuration(ctx.Configuration));
+
+    // Add services to the container.
+    builder.Services.RegisterWebServices();
+    builder.Host.UseDiscoveredModules();
+
+    var app = builder.Build();
+
+    //Load application specific endpoints
+    app.MapEndpoints();
+
+    app.UseExceptionHandler("/error");
+
+    app.MapGet("/error", () =>
+    {
+        var problemDetails = new ProblemDetails
+        {
+            Title = "An unexpected error occurred processing your request.",
+        };
+
+        problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
+
+        return Results.Problem(problemDetails);
+    })
+    .ExcludeFromDescription();
+
+    app.UseSerilogRequestLogging();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseHttpsRedirection();
+
+    app.Run();
+}
+catch (Exception ex)
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-});
-
-app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+    Log.Fatal(ex, "An unhandled exception occured during bootstrapping");
+}
+finally
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
 }
