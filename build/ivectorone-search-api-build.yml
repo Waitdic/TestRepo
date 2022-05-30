@@ -26,6 +26,15 @@ variables:
 
 steps:
 
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(Build.SourcesDirectory)/src/$(project)'
+    feedsToUse: 'select'
+    vstsFeed: 'e026d9a2-a759-4e20-867f-640a284d81e9'
+
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
