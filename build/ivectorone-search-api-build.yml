@@ -26,24 +26,6 @@ variables:
 
 steps:
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: 'src/$(project)/**/*.csproj'
-    feedsToUse: 'select'
-    vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
-    includeNuGetOrg: false
-
-- task: NuGetToolInstaller@1
-  inputs:
-    versionSpec: 
-
-- task: NuGetCommand@2
-  inputs:
-    command: 'restore'
-    restoreSolution: '**/*.sln'
-    feedsToUse: 'select'
-    vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
@@ -88,12 +70,20 @@ steps:
     projectName: 'iVectorOne Search Api'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Restore packages'
+  inputs:
+    command: 'restore'
+    projects: 'src/$(project)/**/*.csproj'
+    feedsToUse: 'select'
+    vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
+    includeNuGetOrg: false
+
+- task: DotNetCoreCLI@2
   displayName: 'Build Project'
   inputs:
     command: 'build'
     projects: 'src/$(project)/**/*.csproj'
     arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory) --no-restore'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Test Project'
@@ -109,15 +99,15 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Publish Project'
-#   inputs:
-#     command: 'publish'
-#     publishWebProjects: false
-#     projects: 'src/$(project)/**/*.csproj'
-#     arguments: '--no-build -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-#     zipAfterPublish: True
-#     modifyOutputPath: false
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Project'
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: 'src/$(project)/**/*.csproj'
+    arguments: '--no-build --no-restore -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    zipAfterPublish: True
+    modifyOutputPath: false
 
 # - task: PublishBuildArtifacts@1
 #   displayName: 'Publish Build Artifacts'
