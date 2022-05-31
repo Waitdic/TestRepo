@@ -75,6 +75,7 @@ steps:
     command: 'restore'
     projects: 'src/$(project)/**/*.csproj'
     feedsToUse: 'config'
+    nugetConfigPath: '$(Build.SourcesDirectory)/NuGet.config'
     includeNuGetOrg: false
 
 - task: DotNetCoreCLI@2
@@ -83,6 +84,7 @@ steps:
     command: 'restore'
     projects: 'tests/$(testProject)**/*.csproj'
     feedsToUse: 'config'
+    nugetConfigPath: '$(Build.SourcesDirectory)/NuGet.config'
     includeNuGetOrg: false
 
 - task: DotNetCoreCLI@2
