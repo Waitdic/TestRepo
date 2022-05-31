@@ -19,7 +19,6 @@
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
 
-
     public class ExpediaRapid : IThirdParty
     {
 

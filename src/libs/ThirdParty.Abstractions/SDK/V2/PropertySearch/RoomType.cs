@@ -1,7 +1,7 @@
 ﻿namespace ThirdParty.SDK.V2.PropertySearch
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// A class representing a room on a property result
@@ -46,7 +46,7 @@
         /// <value>
         /// The name.
         /// </value>
-        [JsonProperty("RoomType")]
+        [JsonPropertyName("RoomType")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>

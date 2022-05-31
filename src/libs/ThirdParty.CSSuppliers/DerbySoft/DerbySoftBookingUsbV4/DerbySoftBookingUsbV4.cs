@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System;
     using System.Collections.Generic;
@@ -13,9 +13,8 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Lookups;
-    using ThirdPartyInterfaces.DerbySoft;
-    using ThirdPartyInterfaces.DerbySoft.ThirdParty;
-    using ThirdPartyInterfaces.DerbySoft.DerbySoftBookingUsbV4.ThirdParty;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
 
     public abstract class DerbySoftBookingUsbV4 : IThirdParty
     {

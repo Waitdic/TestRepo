@@ -1,19 +1,18 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft.DerbySoftShoppingEngineV4
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DerbySoft.ThirdParty;
-    using Intuitive.Net.WebRequests;
-    using Newtonsoft.Json;
-    using DerbySoft.DerbySoftShoppingEngineV4.ThirdParty;
-    using global::ThirdParty.Models;
-    using global::ThirdParty.Search.Models;
-    using global::ThirdParty;
-    using global::ThirdParty.Search.Support;
     using iVector.Search.Property;
     using Intuitive.Helpers.Extensions;
-    using global::ThirdParty.CSSuppliers;
+    using Intuitive.Net.WebRequests;
+    using Newtonsoft.Json;
+    using ThirdParty.Models;
+    using ThirdParty.Search.Models;
+    using ThirdParty;
+    using ThirdParty.Search.Support;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
 
     public class ShoppingEngineRequestBuilder : ISearchRequestBuilder
     {
@@ -109,8 +108,8 @@
             };
         }
 
-        private DerbySoft.ThirdParty.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
-            new DerbySoft.ThirdParty.Hotel
+        private DerbySoft.Models.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
+            new DerbySoft.Models.Hotel
             {
                 HotelId = tpKey,
                 SupplierId = _settings.SupplierID(searchDetails),

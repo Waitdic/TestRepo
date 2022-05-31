@@ -25,7 +25,6 @@
 
     public class ExpediaRapidSearch : ThirdPartyPropertySearchBase
     {
-
         private readonly IExpediaRapidSettings _settings;
 
         private readonly ITPSupport _support;
@@ -66,7 +65,6 @@
 
         public Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails, bool savelogs)
         {
-
             string searchURL = BuildSearchURL(tpKeys, searchDetails);
             bool useGzip = _settings.get_UseGZIP(searchDetails);
             string apiKey = _settings.get_ApiKey(searchDetails);
@@ -85,7 +83,6 @@
 
         public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
-
             int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
             var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
 
@@ -94,7 +91,6 @@
 
         public static string BuildSearchURL(IEnumerable<string> tpKeys, IExpediaRapidSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, DateTime arrivalDate, DateTime departureDate, string currencyCode, IEnumerable<ExpediaRapidOccupancy> occupancies)
         {
-
             var nvc = new NameValueCollection() { { SearchQueryKeys.CheckIn, arrivalDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.Currency, currencyCode }, { SearchQueryKeys.Language, settings.get_LanguageCode(tpAttributeSearch) }, { SearchQueryKeys.CountryCode, settings.get_CountryCode(tpAttributeSearch) }, { SearchQueryKeys.SalesChannel, settings.get_SalesChannel(tpAttributeSearch) }, { SearchQueryKeys.SalesEnvironment, settings.get_SalesEnvironment(tpAttributeSearch) }, { SearchQueryKeys.SortType, settings.get_SortType(tpAttributeSearch) }, { SearchQueryKeys.RatePlanCount, settings.get_RatePlanCount(tpAttributeSearch).ToString() }, { SearchQueryKeys.PaymentTerms, settings.get_PaymentTerms(tpAttributeSearch) }, { SearchQueryKeys.PartnerPointOfSale, settings.get_PartnerPointOfSale(tpAttributeSearch) }, { SearchQueryKeys.BillingTerms, settings.get_BillingTerms(tpAttributeSearch) }, { SearchQueryKeys.RateOption, settings.get_RateOption(tpAttributeSearch) } };
 
             if (!string.IsNullOrWhiteSpace(settings.get_PlatformName(tpAttributeSearch)))
@@ -125,7 +121,6 @@
                 var response = new SearchResponse();
                 bool success = response.IsValid(request.ResponseString, (int)request.ResponseStatusCode);
 
-
                 if (success)
                 {
                     response = JsonConvert.DeserializeObject<SearchResponse>(request.ResponseString);
@@ -146,7 +141,6 @@
 
         public override bool ResponseHasExceptions(Request request)
         {
-
             var searchResponse = new SearchResponse();
 
             return !request.Success || !searchResponse.IsValid(request.ResponseString, (int)request.ResponseStatusCode);
@@ -154,7 +148,6 @@
 
         internal static string AddQueryParams(NameValueCollection @params)
         {
-
             var queryString = from key in @params.AllKeys
                               from value in @params.GetValues(key)
                               select string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
@@ -164,7 +157,6 @@
 
         private string BuildSearchURL(IEnumerable<string> tpKeys, SearchDetails searchDetails)
         {
-
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
@@ -177,7 +169,6 @@
 
         private IEnumerable<TransformedResult> GetResultFromPropertyAvailability(SearchDetails searchDetails, PropertyAvailablility propertyAvailability, string tpSessionID)
         {
-
             if (searchDetails.Rooms > 1)
             {
                 var cheapestRoom = propertyAvailability.Rooms.OrderBy(room => room.Rates.Min(rate => GetTotalInclusiveRate(rate.OccupancyRoomRates))).First();
@@ -191,7 +182,6 @@
 
         private decimal GetTotalInclusiveRate(Dictionary<string, OccupancyRoomRate> occupancyRoomRates)
         {
-
             return occupancyRoomRates.Sum(orr => orr.Value.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount);
         }
 
@@ -205,7 +195,6 @@
 
         private TransformedResult BuildResultFromOccupancy(string tpKey, SearchResponseRoom room, RoomRate rate, BedGroupAvailability bedGroup, ExpediaRapidOccupancy occupancy, int propertyRoomBookingID, string tpSessionID)
         {
-
             var occupancyRoomRate = rate.OccupancyRoomRates[occupancy.GetExpediaRapidOccupancy()];
 
             var inclusiveRate = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInRequestCurrency;
@@ -225,8 +214,6 @@
             var specialOffers = GetSpecialOffers(rate, lookupMealBasisCodes);
 
             var result = new TransformedResult();
-
-
 
             if (occupancyRoomRate is null)
             {
@@ -263,7 +250,6 @@
 
         private IEnumerable<TransformedResult> BuildResultFromRoom(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, string tpSessionID)
         {
-
             if (searchDetails.Rooms > 1)
             {
                 var cheapestRate = room.Rates.MinBy(rate => GetTotalInclusiveRate(rate.OccupancyRoomRates)).First();
@@ -277,13 +263,11 @@
 
         private IEnumerable<TransformedResult> BuildResultFromRoomRates(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, string tpSessionID)
         {
-
             return rate.BedGroupAvailabilities.Values.SelectMany(bedGroup => BuildResultFromBedGroups(searchDetails, tpKey, room, rate, bedGroup, tpSessionID));
         }
 
         private List<TransformedResultAdjustment> GetAdjustments(List<Tax> taxes)
         {
-
             return taxes.Select(t => new TransformedResultAdjustment()
             {
                 AdjustmentType = "T",
@@ -295,7 +279,6 @@
 
         private List<Tax> GetTaxes(OccupancyRoomRate occupancyRoomRate)
         {
-
             decimal salesTax = GetTotalNightlyRateFromType(occupancyRoomRate, RateTypes.SalesTax);
             decimal taxAndServiceFee = GetTotalNightlyRateFromType(occupancyRoomRate, RateTypes.TaxAndServiceFee);
             decimal recoverChargesAndFees = GetTotalNightlyRateFromType(occupancyRoomRate, RateTypes.RecoveryChargesAndFees);
@@ -321,13 +304,10 @@
         public static decimal GetTotalNightlyRateFromType(OccupancyRoomRate occupancyRoomRate, string rateType)
         {
             return occupancyRoomRate.NightlyRates.SelectMany(nr => nr.Where(amt => (amt.RateType ?? "") == (rateType ?? ""))).Sum(amt => amt.Amount);
-
-
         }
 
         public static decimal GetStayRateFromType(OccupancyRoomRate occupancyRoomRate, string rateType)
         {
-
             var stayRates = occupancyRoomRate.StayRates;
 
             var matchedRate = stayRates.Where(r => (r.RateType ?? "") == (rateType ?? ""));
@@ -337,7 +317,6 @@
 
         private List<string> GetSpecialOffers(RoomRate rate, HashSet<string> lookupMealBasisCodes)
         {
-
             var specialOffers = new List<string>();
 
             IEnumerable<string> nonMealBasisAmenities = rate.Amenities.Where(a => !lookupMealBasisCodes.Contains(a.Key)).Select(a => a.Value.Name).ToList();
@@ -365,7 +344,6 @@
 
         internal string GetMealBasisCode(IEnumerable<string> amenities, HashSet<string> tpValidMealbasisCodes)
         {
-
             var matchedMealBasisCodes = amenities.Where(a => tpValidMealbasisCodes.Contains(a));
 
             return matchedMealBasisCodes.Any() ? matchedMealBasisCodes.First() : "RO";
@@ -373,7 +351,6 @@
 
         public static RequestHeader CreateAuthorizationHeader(string apiKey, string secret)
         {
-
             double timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
             var data = Encoding.UTF8.GetBytes($"{apiKey}{secret}{timeStamp}");
@@ -404,7 +381,5 @@
             public string Name { get; set; }
             public string Value { get; set; }
         }
-
     }
-
 }

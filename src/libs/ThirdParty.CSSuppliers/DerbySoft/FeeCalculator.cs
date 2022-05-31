@@ -1,9 +1,9 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DerbySoft.ThirdParty;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
 
     public class FeeCalculator
     {

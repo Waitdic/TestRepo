@@ -1,8 +1,8 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System.Collections.Generic;
-    using global::ThirdParty.Results;
     using Intuitive.Net.WebRequests;
+    using ThirdParty.Results;
 
     public interface ISearchResponseTransformer
     {

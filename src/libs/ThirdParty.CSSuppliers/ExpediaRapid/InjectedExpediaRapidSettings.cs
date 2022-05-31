@@ -5,18 +5,9 @@
     using ThirdParty.Search.Settings;
     using ThirdParty.Support;
 
-
     public class InjectedExpediaRapidSettings : SettingsBase, IExpediaRapidSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.EXPEDIARAPID;
-
-        public InjectedExpediaRapidSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         public string get_ApiKey(IThirdPartyAttributeSearch tpAttributeSearch)
         {

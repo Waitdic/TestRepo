@@ -19,7 +19,7 @@
     using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.NetStorming.Models;
     using ThirdParty.CSSuppliers.NetStorming.Models.Common;
-    using ThirdParty.NetStorming.Resources;
+    using ThirdParty.CSSuppliers.NetStorming.Resources;
     using Cancellation = ThirdParty.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 

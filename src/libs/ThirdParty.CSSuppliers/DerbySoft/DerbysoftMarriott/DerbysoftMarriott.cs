@@ -1,11 +1,13 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.Lookups;
+    using usbv4 = DerbySoftBookingUsbV4;
 
-    public class DerbySoftMarriott : DerbySoftBookingUsbV4
+    public class DerbySoftMarriott : usbv4.DerbySoftBookingUsbV4
     {
         public DerbySoftMarriott(
             IDerbySoftMarriottSettings settings,

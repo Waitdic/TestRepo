@@ -1,8 +1,8 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
-    using global::ThirdParty.Models.Property.Booking;
     using Newtonsoft.Json;
-    using ThirdParty;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Models.Property.Booking;
 
     public class PreBookHelper
     {

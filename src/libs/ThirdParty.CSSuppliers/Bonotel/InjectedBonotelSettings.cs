@@ -5,18 +5,9 @@
     using ThirdParty.Search.Settings;
     using ThirdParty.Support;
 
-
     public class InjectedBonotelSettings : SettingsBase, IBonotelSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.BONOTEL;
-
-        public InjectedBonotelSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch)
         {

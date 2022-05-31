@@ -8,15 +8,7 @@
 
     public class InjectedYouTravelSettings : SettingsBase, IYouTravelSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.YOUTRAVEL;
-
-        public InjectedYouTravelSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
         {

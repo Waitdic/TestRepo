@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     public interface IDerbySoftClubMedSettings : IDerbySoftSettings
     {

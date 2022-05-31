@@ -1,9 +1,9 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System.Collections.Generic;
-    using global::ThirdParty.Models;
-    using global::ThirdParty.Search.Models;
     using Intuitive.Net.WebRequests;
+    using ThirdParty.Models;
+    using ThirdParty.Search.Models;
 
     public interface ISearchRequestBuilder
     {

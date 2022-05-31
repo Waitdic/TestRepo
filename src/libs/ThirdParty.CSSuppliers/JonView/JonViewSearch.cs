@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Intuitive;
-using Intuitive.Helpers.Extensions;
-using Intuitive.Net.WebRequests;
-using iVector.Search.Property;
-using Microsoft.Extensions.Logging;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-using ThirdParty.Models;
-using ThirdParty.Results;
-using ThirdParty.Search.Models;
-
-namespace ThirdParty.CSSuppliers.JonView
+﻿namespace ThirdParty.CSSuppliers.JonView
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Xml.Serialization;
+    using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Net.WebRequests;
+    using iVector.Search.Property;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
 
     public class JonViewSearch : ThirdPartyPropertySearchBase
     {

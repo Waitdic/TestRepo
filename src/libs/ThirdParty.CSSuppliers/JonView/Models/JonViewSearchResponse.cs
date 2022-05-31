@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace ThirdParty.CSSuppliers.JonView
+﻿namespace ThirdParty.CSSuppliers.JonView
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     [Serializable()]
     [XmlRoot("message")]

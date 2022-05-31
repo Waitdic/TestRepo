@@ -16,17 +16,13 @@
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
 
-
-
     public class SunHotels : IThirdParty
     {
-
         #region Constructor
 
-        public SunHotels(ISunHotelsSettings settings, ITPSupport support, HttpClient httpClient, ISerializer serializer, ILogger<SunHotels> logger)
+        public SunHotels(ISunHotelsSettings settings, HttpClient httpClient, ISerializer serializer, ILogger<SunHotels> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -37,8 +33,6 @@
         #region Properties
 
         private readonly ISunHotelsSettings _settings;
-
-        private readonly ITPSupport _support;
 
         private readonly HttpClient _httpClient;
 

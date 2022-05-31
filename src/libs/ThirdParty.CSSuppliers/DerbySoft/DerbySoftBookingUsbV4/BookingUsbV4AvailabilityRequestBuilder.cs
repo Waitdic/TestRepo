@@ -1,17 +1,16 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using DerbySoft.ThirdParty;
-    using global::ThirdParty.Models;
-    using global::ThirdParty.Search.Models;
-    using global::ThirdParty.Search.Support;
-    using global::ThirdParty.CSSuppliers;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Newtonsoft.Json;
-    using ThirdParty;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Models;
+    using ThirdParty.Search.Models;
+    using ThirdParty.Search.Support;
 
     public class BookingUsbV4AvailabilityRequestBuilder : ISearchRequestBuilder
     {

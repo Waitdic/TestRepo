@@ -1,16 +1,15 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft.DerbySoftShoppingEngineV4
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty;
-    using DerbySoft.ThirdParty;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Newtonsoft.Json;
-    using global::ThirdParty.Results;
-    using global::ThirdParty.Search.Support;
-    using global::ThirdParty.CSSuppliers;
-    using Intuitive.Helpers.Extensions;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Support;
 
     public class ShoppingEngineResponseTransformer : ISearchResponseTransformer
     {

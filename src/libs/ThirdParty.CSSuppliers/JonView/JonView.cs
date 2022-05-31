@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.Http;
-using System.Text;
-using System.Xml;
-using Intuitive;
-using Intuitive.Helpers.Extensions;
-using Intuitive.Net.WebRequests;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-using ThirdParty.Models;
-using ThirdParty.Models.Property.Booking;
-
-namespace ThirdParty.CSSuppliers.JonView
+﻿namespace ThirdParty.CSSuppliers.JonView
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net.Http;
+    using System.Text;
+    using System.Xml;
+    using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Caching.Memory;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
     public class JonView : IThirdParty
     {
-
         #region Properties
 
         private readonly IJonViewSettings _settings;
@@ -590,7 +588,6 @@ namespace ThirdParty.CSSuppliers.JonView
 
             return message.ToString();
         }
-
 
         public string GetTitle(string sTitle)
         {

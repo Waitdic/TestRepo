@@ -1,11 +1,12 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
-    using ThirdParty.Constants;
-    using ThirdParty.Lookups;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using usbv4 = DerbySoftBookingUsbV4;
 
-    public class DerbySoftClubMed : DerbySoftBookingUsbV4
+    public class DerbySoftClubMed : usbv4.DerbySoftBookingUsbV4
     {
         public DerbySoftClubMed(
             IDerbySoftClubMedSettings settings,

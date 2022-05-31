@@ -1,12 +1,13 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System.Collections.Generic;
     using System.Linq;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
 
     public class HotelValidator
     {
         public static List<string> HotelsWithCompleteRoomSelection(List<string> hotelList, int roomCount, 
-            List<System.Tuple<int, ThirdParty.DerbySoftBookingUsbV4AvailabilityResponse>> responses)
+            List<System.Tuple<int, DerbySoftBookingUsbV4AvailabilityResponse>> responses)
         {
             var validHotels = new List<string>();
             validHotels.AddRange(hotelList);

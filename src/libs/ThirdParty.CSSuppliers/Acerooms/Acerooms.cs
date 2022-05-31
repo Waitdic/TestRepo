@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Acerooms
 {
     using System;
     using System.Collections.Generic;

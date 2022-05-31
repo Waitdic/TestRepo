@@ -1,6 +1,7 @@
-﻿using ThirdParty;
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Acerooms
 {
+    using ThirdParty;
+
     public interface IAceroomsSettings
     {
         string APIKey(IThirdPartyAttributeSearch tpAttributeSearch);

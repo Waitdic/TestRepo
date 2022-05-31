@@ -64,7 +64,9 @@
             var searchDetails = _searchDetailsFactory.Create(searchRequest, user, log);
 
             // 2.Check which suppliers to search
-            var suppliers = user.Configurations.Select(c => c.Supplier).ToList();
+            var suppliers = searchRequest.Suppliers.Any() ?
+                searchRequest.Suppliers :
+                user.Configurations.Select(c => c.Supplier).ToList();
 
             // 3.Call db to get resort splits from central propery ids
             var resortSplits = await _searchRepository.GetResortSplitsAsync(string.Join(",", searchDetails.PropertyReferenceIDs), string.Join(",", suppliers));

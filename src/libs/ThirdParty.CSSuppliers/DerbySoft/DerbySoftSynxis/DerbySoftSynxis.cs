@@ -1,11 +1,12 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Lookups;
+    using usbv4 = DerbySoftBookingUsbV4;
 
-    public class DerbySoftSynxis : DerbySoftBookingUsbV4
+    public class DerbySoftSynxis : usbv4.DerbySoftBookingUsbV4
     {
         public DerbySoftSynxis(
             IDerbySoftSynxisSettings settings,

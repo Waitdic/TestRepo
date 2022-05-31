@@ -1,10 +1,9 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System;
     using DerbySoftBookingUsbV4;
     using DerbySoftShoppingEngineV4;
-    using global::ThirdParty;
-    using global::ThirdParty.CSSuppliers;
+    using ThirdParty;
 
     public class SearchFactory
     {

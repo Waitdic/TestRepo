@@ -1,4 +1,5 @@
-﻿
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
+{
     using Newtonsoft.Json;
 
     public class DerbySoftSupport
@@ -8,3 +9,4 @@
         public static JsonSerializerSettings GetJsonSerializerSettings() =>
            new JsonSerializerSettings { DateFormatString = DateFormat };
     }
+}

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Net;
 using Intuitive.Modules;
 using iVectorOne.Search.Api.Endpoints.V2;
 using iVectorOne.Web.Infrastructure;
@@ -45,6 +46,9 @@ try
         return Results.Problem(problemDetails);
     })
     .ExcludeFromDescription();
+
+    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
+            SecurityProtocolType.Tls;
 
     app.UseSerilogRequestLogging();
 

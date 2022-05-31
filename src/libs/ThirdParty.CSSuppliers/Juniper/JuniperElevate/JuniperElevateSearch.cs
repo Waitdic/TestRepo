@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Juniper
 {
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;

@@ -1,11 +1,11 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
-    using global::ThirdParty.Models.Property.Booking;
-    using Intuitive.Helpers.Extensions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty;
+    using Intuitive.Helpers.Extensions;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Models.Property.Booking;
 
     public class CancellationCalculator
     {

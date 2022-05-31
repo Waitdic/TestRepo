@@ -21,5 +21,7 @@
         public bool OpaqueRates { get; set; }
 
         public string SellingCountry { get; set; } = "";
+
+        public List<string> Suppliers { get; set; } = new();
     }
 }

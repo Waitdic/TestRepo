@@ -1,6 +1,5 @@
 ﻿namespace ThirdParty.CSSuppliers.JonView
 {
-
     public interface IJonViewSettings
     {
         bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);

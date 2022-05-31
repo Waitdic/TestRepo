@@ -11,17 +11,17 @@
 
         public string CompanyCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CompanyCode", tpAttributeSearch);           
+            return Get_Value("CompanyCode", tpAttributeSearch);
         }
 
         public string CustomerCountryCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("CustomerCountryCode", tpAttributeSearch);
+            return Get_Value("CustomerCountryCode", tpAttributeSearch);
         }
 
         public string CustomerNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("CustomerNationality", tpAttributeSearch);
+            return Get_Value("CustomerNationality", tpAttributeSearch);
         }
 
         public int DefaultCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -34,7 +34,7 @@
         {
 
             return Get_Value("ExcludeDOTWThirdParties", tpAttributeSearch).ToSafeBoolean();
-            
+
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -52,7 +52,7 @@
         public string RequestCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("RequestCurrencyID", tpAttributeSearch);
-            
+
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -72,7 +72,7 @@
 
         public string ServerURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-           return Get_Value("ServerURL", tpAttributeSearch);
+            return Get_Value("ServerURL", tpAttributeSearch);
         }
 
         public string ThreadedSearch(IThirdPartyAttributeSearch tpAttributeSearch)

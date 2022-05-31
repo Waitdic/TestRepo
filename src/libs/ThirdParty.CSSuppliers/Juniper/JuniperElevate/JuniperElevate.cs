@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Juniper
 {
     using System.Net.Http;
     using Intuitive.Helpers.Serialization;

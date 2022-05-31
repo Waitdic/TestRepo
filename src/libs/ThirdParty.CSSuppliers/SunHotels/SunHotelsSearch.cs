@@ -19,10 +19,8 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-
     public class SunHotelsSearch : ThirdPartyPropertySearchBase
     {
-
         #region Properties
 
         public override string Source { get; } = ThirdParties.SUNHOTELS;
@@ -445,6 +443,5 @@
             public DateTime EndDate { get; set; }
             public decimal Percentage { get; set; }
         }
-
     }
 }

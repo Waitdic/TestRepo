@@ -13,7 +13,7 @@
         {
             _ = endpoints
                 .MapGet(
-                    "/property/search",
+                    "/v2/property/search",
                     async (
                         HttpContext httpContext,
                         [FromServices] IMediator mediator,
@@ -26,7 +26,8 @@
                         [FromQuery] bool? opaquerates,
                         [FromQuery] string? sellingcountry,
                         [FromQuery] string? currencycode,
-                        [FromQuery] bool? log) // todo - move to config
+                        [FromQuery] bool? log, // todo - move to config
+                        [FromQuery] string suppliers)
                     =>
                     {
                         var request = new Request
@@ -41,7 +42,8 @@
                             NaionalityID = nationalityid ?? string.Empty,
                             OpaqueRates = opaquerates.GetValueOrDefault(),
                             RoomRequests = roomRequestsFactory.Create(rooms),
-                            SellingCountry = sellingcountry ?? string.Empty
+                            SellingCountry = sellingcountry ?? string.Empty,
+                            Suppliers = suppliers.Split(",").ToList()
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);

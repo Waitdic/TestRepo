@@ -1,17 +1,15 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
-    using global::ThirdParty;
-    using global::ThirdParty.Lookups;
-    using global::ThirdParty.Models;
-    using global::ThirdParty.Results;
-    using global::ThirdParty.Search.Models;
-    using Intuitive;
-    using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdPartyInterfaces.DerbySoft;
+    using Intuitive;
+    using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty;
+    using ThirdParty.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
 
     public abstract class DerbySoftBookingUsbV4Search : ThirdPartyPropertySearchBase
     {

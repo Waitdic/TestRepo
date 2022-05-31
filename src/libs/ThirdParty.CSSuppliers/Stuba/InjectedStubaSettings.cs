@@ -7,15 +7,7 @@
 
     public class InjectedStubaSettings : SettingsBase, IStubaSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.STUBA;
-
-        public InjectedStubaSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch)
         {

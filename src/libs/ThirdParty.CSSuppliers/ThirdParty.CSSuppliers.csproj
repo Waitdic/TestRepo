@@ -3,7 +3,6 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <OutputType>Library</OutputType>
     <LangVersion>latest</LangVersion>
-    <RootNamespace>ThirdParty</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS8603;CS8604;CS1591;CA1304;CA1716;CS8629;CS8618;CS1591;CA1304;CA1716;CS8602;</NoWarn>
@@ -14,7 +13,7 @@
     <None Remove="Travelgate\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Intuitive.Helpers" Version="0.14.0" />
+    <PackageReference Include="Intuitive.Helpers" Version="0.14.1" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
@@ -33,11 +32,29 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>NetstormingRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\SunHotels\SunHotelsRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SunHotelsRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SunHotels\SunHotelsRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SunHotelsRes.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="NetStorming\Resources\NetstormingRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\SunHotels\SunHotelsRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SunHotelsRes.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SunHotels\SunHotelsRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SunHotelsRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -1,22 +1,13 @@
-﻿using Intuitive.Helpers.Extensions;
-using ThirdParty.Constants;
-using ThirdParty.Search.Settings;
-using ThirdParty.Support;
-
-namespace ThirdParty.CSSuppliers.JonView
+﻿namespace ThirdParty.CSSuppliers.JonView
 {
+    using Intuitive.Helpers.Extensions;
+    using ThirdParty.Constants;
+    using ThirdParty.Search.Settings;
+    using ThirdParty.Support;
 
     public class InjectedJonViewSettings : SettingsBase, IJonViewSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.JONVIEW;
-
-        public InjectedJonViewSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
 
         public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {

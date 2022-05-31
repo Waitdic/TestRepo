@@ -7,16 +7,7 @@
 
     public class InjectedSunHotelsSettings : SettingsBase, ISunHotelsSettings
     {
-
-        private readonly ThirdPartyConfiguration configuration;
-
         protected override string Source => ThirdParties.SUNHOTELS;
-
-        public InjectedSunHotelsSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
 
         public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {

@@ -1,13 +1,11 @@
-﻿namespace ThirdPartyInterfaces.DerbySoft
+﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System;
     using System.Linq;
-    using global::ThirdParty.Results;
-    using global::ThirdParty.Search.Models;
-    using Intuitive;
-    using ThirdParty;
-    using global::ThirdParty.Models.Property.Booking;
-    using global::ThirdParty.CSSuppliers;
+    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
+    using ThirdParty.Models.Property.Booking;
     using Intuitive.Helpers.Extensions;
 
     public class TransformedResultBuilder
