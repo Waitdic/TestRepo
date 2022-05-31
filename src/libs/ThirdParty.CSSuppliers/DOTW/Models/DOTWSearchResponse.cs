@@ -5,7 +5,7 @@
 
     [System.Serializable()]
     [XmlRoot("result", IsNullable = false)]
-    public partial class DOTWSearchResponse
+    public class DOTWSearchResponse
     {
         [XmlArray("hotels")]
         public List<Hotel> Hotels = new List<Hotel>();

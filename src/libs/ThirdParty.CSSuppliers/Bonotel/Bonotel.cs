@@ -12,13 +12,12 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-
     public class Bonotel : IThirdParty
     {
+        private readonly IBonotelSettings _settings;
 
         private readonly HttpClient _httpclient;
 
@@ -28,10 +27,9 @@
 
         #region Constructor
 
-        public Bonotel(IBonotelSettings settings, ITPSupport support, HttpClient httpClient, ISerializer serializer, ILogger<Bonotel> logger)
+        public Bonotel(IBonotelSettings settings, HttpClient httpClient, ISerializer serializer, ILogger<Bonotel> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _httpclient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -40,10 +38,6 @@
         #endregion
 
         #region Properties
-
-        private IBonotelSettings _settings { get; set; }
-
-        private ITPSupport _support { get; set; }
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {

@@ -1,46 +1,41 @@
 ﻿namespace ThirdParty.CSSuppliers.DOTW
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
-    using Newtonsoft.Json;
+    using Microsoft.Extensions.Logging;
     using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.Models;
     using ThirdParty.Lookups;
-    using ThirdParty.Search.Support;
     using ThirdParty.Results;
-    using iVector.Search.Property;
-    using ThirdParty.Models.Property.Booking;
-    using Intuitive.Helpers.Extensions;
-    using Intuitive.Helpers.Security;
-    using Microsoft.Extensions.Logging;
-    using System.Text;
     using ThirdParty.CSSuppliers.DOTW.Models;
+    using Intuitive.Helpers.Serialization;
 
     public class DOTWSearch : ThirdPartyPropertySearchBase
     {
-
         #region Constructor
 
-        public DOTWSearch(IDOTWSettings settings, ITPSupport support, ISecretKeeper secretKeeper, ILogger<DOTWSearch> logger, IDOTWSupport dotwSupport) : base(logger)
+        private readonly IDOTWSettings _settings;
+
+        private readonly ITPSupport _support;
+
+        private readonly IDOTWSupport _dotwSupport;
+
+        private readonly ISerializer _serializer;
+
+        public DOTWSearch(IDOTWSettings settings, ITPSupport support, ILogger<DOTWSearch> logger, IDOTWSupport dotwSupport, ISerializer serializer)
+            : base(logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
-            _dotwSupport = dotwSupport;
+            _dotwSupport = Ensure.IsNotNull(dotwSupport, nameof(dotwSupport));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
-
-        public DOTWSearch(IDOTWSettings settings, ITPSupport support, ISecretKeeper secretKeeper, ILogger<DOTWSearch> logger) : base(logger)
-        {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
-            _dotwSupport = new DOTWSupport();
-            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
-        }
-
 
         #endregion
 
@@ -51,14 +46,6 @@
         public override bool SqlRequest => false;
 
         public override bool SupportsNonRefundableTagging => false;
-
-        private readonly IDOTWSettings _settings;
-
-        private readonly ITPSupport _support;
-
-        private readonly ISecretKeeper _secretKeeper;
-
-        private IDOTWSupport _dotwSupport { get; set; }
 
         #endregion
 
@@ -73,64 +60,56 @@
 
         #region SearchFunctions
 
-        public override List<Intuitive.Net.WebRequests.Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
-
-            var oRequests = new List<Intuitive.Net.WebRequests.Request>();
+            var requests = new List<Request>();
 
             // get cities and sub locations
-            var oCities = new DOTWSupport.Cities();
-            foreach (ResortSplit oResort in oResortSplits)
+            var cities = new DOTWSupport.Cities();
+            foreach (var resort in resortSplits)
             {
-                if (oResort.ResortCode.Contains('|'))
+                if (resort.ResortCode.Contains('|'))
                 {
+                    int cityNumber = resort.ResortCode.Split('|')[0].ToSafeInt();
+                    int locationId = resort.ResortCode.Split('|')[1].ToSafeInt();
 
-                    int iCityNumber = (oResort.ResortCode.Split('|')[0]).ToSafeInt();
-                    int iLocationID = (oResort.ResortCode.Split('|')[1]).ToSafeInt();
-
-                    if (!(iCityNumber == 0) && oCities.ContainsKey(iCityNumber))
+                    if (!(cityNumber == 0) && cities.ContainsKey(cityNumber))
                     {
-                        DOTWSupport.City oCity = oCities[iCityNumber];
-                        if (!oCity.LocationIDs.Contains(iLocationID))
+                        var city = cities[cityNumber];
+                        if (!city.LocationIDs.Contains(locationId))
                         {
-                            oCity.LocationIDs.Add(iLocationID);
+                            city.LocationIDs.Add(locationId);
                         }
                     }
                     else
                     {
-                        var oCity = new DOTWSupport.City(iCityNumber, iLocationID);
-                        oCities.Add(iCityNumber, oCity);
+                        var city = new DOTWSupport.City(cityNumber, locationId);
+                        cities.Add(cityNumber, city);
                     }
-
                 }
             }
 
-            foreach (KeyValuePair<int, DOTWSupport.City> oCityKeyValue in oCities)
+            foreach (var cityKeyValue in cities)
             {
-
-
                 // create the search request for this city
-                var oCity = oCityKeyValue.Value;
+                var city = cityKeyValue.Value;
 
-                string sRequest = BuildSearchRequestXML(oSearchDetails, oCity, _dotwSupport);
+                string requestString = BuildSearchRequestXML(searchDetails, city);
 
+                var request = new Request
+                {
+                    EndPoint = _settings.ServerURL(searchDetails),
+                    Method = eRequestMethod.POST,
+                    ExtraInfo = searchDetails,
+                    UseGZip = true
+                };
 
-                var oRequest = new Request();
-                oRequest.EndPoint = _settings.ServerURL(oSearchDetails);
-                oRequest.Method = eRequestMethod.POST;
-                oRequest.Source = Source;
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.TimeoutInSeconds = this.RequestTimeOutSeconds(oSearchDetails) - 2;
-                oRequest.ExtraInfo = oSearchDetails;
-                oRequest.SetRequest(sRequest);
-                oRequest.UseGZip = true;
+                request.SetRequest(requestString);
 
-                oRequests.Add(oRequest);
-
+                requests.Add(request);
             }
 
-            return oRequests;
+            return requests;
         }
 
         public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -138,22 +117,21 @@
             var transformedResults = new TransformedResultCollection();
             var responses = new List<DOTWSearchResponse>();
 
-
             foreach (var request in requests)
             {
                 var response = new DOTWSearchResponse();
-                bool success = request.Success;
 
-                if (success)
+                if (request.Success)
                 {
-                    response = JsonConvert.DeserializeObject<DOTWSearchResponse>(request.ResponseString);
+                    response = _serializer.DeSerialize<DOTWSearchResponse>(request.ResponseString);
+
                     responses.Add(response);
                 }
             }
 
             transformedResults.TransformedResults
-            .AddRange(responses.Where(o => o.Hotels.Count() > 0)
-            .SelectMany(r => GetResultFromResponse(searchDetails, r)));
+                .AddRange(responses.Where(o => o.Hotels.Count() > 0)
+                .SelectMany(r => GetResultFromResponse(searchDetails, r)));
 
             return transformedResults;
         }
@@ -161,139 +139,134 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+
+        public override bool ResponseHasExceptions(Request request)
         {
             return false;
         }
+
         #endregion
 
         #region Helpers
 
-        public string BuildSearchRequestXML(SearchDetails oSearchDetails, DOTWSupport.City oCity, IDOTWSupport oSupport)
+        public string BuildSearchRequestXML(SearchDetails searchDetails, DOTWSupport.City city)
         {
+            var sb = new StringBuilder();
 
-            int iSalesChannelID = oSearchDetails.SalesChannelID;
-            int iBrandID = oSearchDetails.BrandID;
+            sb.AppendLine("<customer>");
+            sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails));
+            sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(searchDetails)));
+            sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails));
+            sb.AppendLine("<source>1</source>");
+            sb.AppendLine("<product>hotel</product>");
+            sb.AppendLine("<request command=\"searchhotels\" debug=\"0\">");
+            sb.AppendLine("<bookingDetails>");
+            sb.AppendFormat("<fromDate>{0}</fromDate>", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd"));
+            sb.AppendFormat("<toDate>{0}</toDate>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-dd"));
+            sb.AppendFormat("<currency>{0}</currency>", _dotwSupport.GetCurrencyID(searchDetails));
 
-            var oSB = new StringBuilder();
+            sb.AppendFormat("<rooms no = \"{0}\">", searchDetails.Rooms);
 
+            int roomRunNo = 0;
 
-            oSB.AppendLine("<customer>");
-            oSB.AppendFormat("<username>{0}</username>", _settings.Username(oSearchDetails));
-            oSB.AppendFormat("<password>{0}</password>", DOTWSupport.MD5Password(_settings.Password(oSearchDetails)));
-            oSB.AppendFormat("<id>{0}</id>", _settings.CompanyCode(oSearchDetails));
-            oSB.AppendLine("<source>1</source>");
-            oSB.AppendLine("<product>hotel</product>");
-            oSB.AppendLine("<request command=\"searchhotels\" debug=\"0\">");
-            oSB.AppendLine("<bookingDetails>");
-            oSB.AppendFormat("<fromDate>{0}</fromDate>", oSearchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd"));
-            oSB.AppendFormat("<toDate>{0}</toDate>", oSearchDetails.PropertyDepartureDate.ToString("yyyy-MM-dd"));
-            oSB.AppendFormat("<currency>{0}</currency>", oSupport.GetCachedCurrencyID(oSearchDetails, _support, oSearchDetails.CurrencyCode, _settings));
-
-            oSB.AppendFormat("<rooms no = \"{0}\">", oSearchDetails.Rooms);
-
-            int iRoomRunNo = 0;
-            foreach (RoomDetail oRoomDetail in oSearchDetails.RoomDetails)
+            foreach (var roomDetail in searchDetails.RoomDetails)
             {
+                var childAndInfantAges = roomDetail.ChildAndInfantAges(1).Where(i => i <= 12).ToList();
 
-                List<int> oChildAndInfantAges = oRoomDetail.ChildAndInfantAges(1).Where(i => i <= 12).ToList();
+                int adults = roomDetail.Adults + roomDetail.Children + roomDetail.Infants - childAndInfantAges.Count;
+                int children = childAndInfantAges.Count;
 
-                int iAdults = oRoomDetail.Adults + oRoomDetail.Children + oRoomDetail.Infants - oChildAndInfantAges.Count;
-                int iChildren = oChildAndInfantAges.Count;
-
-                oSB.AppendFormat("<room runno = \"{0}\">", iRoomRunNo);
-                oSB.AppendFormat("<adultsCode>{0}</adultsCode>", iAdults);
-                oSB.AppendFormat("<children no = \"{0}\">", iChildren);
+                sb.AppendFormat("<room runno = \"{0}\">", roomRunNo);
+                sb.AppendFormat("<adultsCode>{0}</adultsCode>", adults);
+                sb.AppendFormat("<children no = \"{0}\">", children);
 
                 // append the children
-                int iChildRunNo = 0;
-                foreach (int iChildAge in oChildAndInfantAges)
+                int childRunNo = 0;
+                foreach (int childAge in childAndInfantAges)
                 {
-                    oSB.AppendFormat("<child runno=\"{0}\">{1}</child>", iChildRunNo, iChildAge);
-                    iChildRunNo += 1;
+                    sb.AppendFormat("<child runno=\"{0}\">{1}</child>", childRunNo, childAge);
+                    childRunNo += 1;
                 }
 
-                oSB.AppendLine("</children>");
-                oSB.AppendLine("<extraBed>0</extraBed>");
-                oSB.AppendLine("<rateBasis>-1</rateBasis>");
+                sb.AppendLine("</children>");
+                sb.AppendLine("<extraBed>0</extraBed>");
+                sb.AppendLine("<rateBasis>-1</rateBasis>");
 
-                // Nationality and Country of residence				
-                if (_settings.Version(oSearchDetails) == "2")
+                // Nationality and Country of residence
+                if (_settings.Version(searchDetails) == 2)
                 {
+                    string nationality = DOTW.GetNationality(searchDetails.NationalityID, searchDetails, _support, _settings);
+                    string countryCode = DOTW.GetCountryOfResidence(nationality, searchDetails, _settings);
 
-                    string sNationality = DOTW.GetNationality(oSearchDetails.NationalityID, oSearchDetails, _support, _settings);
-                    string sCountryCode = DOTW.GetCountryOfResidence(sNationality, oSearchDetails, _settings);
-
-                    if (!string.IsNullOrEmpty(sNationality))
+                    if (!string.IsNullOrEmpty(nationality))
                     {
-                        oSB.AppendFormat("<passengerNationality>{0}</passengerNationality>", sNationality);
+                        sb.AppendFormat("<passengerNationality>{0}</passengerNationality>", nationality);
                     }
 
-                    if (!string.IsNullOrEmpty(sCountryCode))
+                    if (!string.IsNullOrEmpty(countryCode))
                     {
-                        oSB.AppendFormat("<passengerCountryOfResidence>{0}</passengerCountryOfResidence>", sCountryCode);
+                        sb.AppendFormat("<passengerCountryOfResidence>{0}</passengerCountryOfResidence>", countryCode);
                     }
                 }
 
-                oSB.AppendLine("</room>");
-                iRoomRunNo += 1;
-
+                sb.AppendLine("</room>");
+                roomRunNo += 1;
             }
 
-            oSB.AppendLine("</rooms>");
-            oSB.AppendLine("</bookingDetails>");
-            oSB.AppendLine("<return>");
-            oSB.AppendLine("<sorting order = \"asc\">sortByPrice</sorting>");
-            oSB.AppendLine("<getRooms>true</getRooms>");
-            oSB.AppendLine("<filters xmlns:a = \"http://us.dotwconnect.com/xsd/atomicCondition\" xmlns:c = \"http://us.dotwconnect.com/xsd/complexCondition\">");
-            oSB.AppendFormat("<city>{0}</city>", oCity.CityNumber);
-            oSB.AppendLine("<nearbyCities>false</nearbyCities>");
-
+            sb.AppendLine("</rooms>");
+            sb.AppendLine("</bookingDetails>");
+            sb.AppendLine("<return>");
+            sb.AppendLine("<sorting order = \"asc\">sortByPrice</sorting>");
+            sb.AppendLine("<getRooms>true</getRooms>");
+            sb.AppendLine("<filters xmlns:a = \"http://us.dotwconnect.com/xsd/atomicCondition\" xmlns:c = \"http://us.dotwconnect.com/xsd/complexCondition\">");
+            sb.AppendFormat("<city>{0}</city>", city.CityNumber);
+            sb.AppendLine("<nearbyCities>false</nearbyCities>");
 
             // conditions
-            oSB.AppendLine("<c:condition>");
-
+            sb.AppendLine("<c:condition>");
 
             // availability = not on request
-            oSB.AppendLine("<a:condition>");
-            oSB.AppendLine("<fieldName>onRequest</fieldName>");
-            oSB.AppendLine("<fieldTest>equals</fieldTest> ");
-            oSB.AppendLine("<fieldValues>");
-            oSB.AppendLine("<fieldValue>0</fieldValue> ");
-            oSB.AppendLine("</fieldValues>");
-            oSB.AppendLine("</a:condition>");
-
+            sb.AppendLine("<a:condition>");
+            sb.AppendLine("<fieldName>onRequest</fieldName>");
+            sb.AppendLine("<fieldTest>equals</fieldTest> ");
+            sb.AppendLine("<fieldValues>");
+            sb.AppendLine("<fieldValue>0</fieldValue> ");
+            sb.AppendLine("</fieldValues>");
+            sb.AppendLine("</a:condition>");
 
             // put in the city locations
             // only need to do this is there is more than one location
-            if (oCity.LocationIDs.Count > 1)
+            if (city.LocationIDs.Count > 1)
             {
-                oSB.AppendLine("<operator>AND</operator>");
-                oSB.AppendLine("<a:condition>");
-                oSB.AppendLine("<fieldName>locationId</fieldName>");
-                oSB.AppendLine("<fieldTest>in</fieldTest>");
-                oSB.AppendLine("<fieldValues>");
-                foreach (int iLocationID in oCity.LocationIDs)
-                    oSB.AppendFormat("<fieldValue>{0}</fieldValue>", iLocationID);
-                oSB.AppendLine("</fieldValues>");
-                oSB.AppendLine("</a:condition>");
+                sb.AppendLine("<operator>AND</operator>");
+                sb.AppendLine("<a:condition>");
+                sb.AppendLine("<fieldName>locationId</fieldName>");
+                sb.AppendLine("<fieldTest>in</fieldTest>");
+                sb.AppendLine("<fieldValues>");
+
+                foreach (int iLocationID in city.LocationIDs)
+                {
+                    sb.AppendFormat("<fieldValue>{0}</fieldValue>", iLocationID);
+                }
+
+                sb.AppendLine("</fieldValues>");
+                sb.AppendLine("</a:condition>");
             }
 
-            oSB.AppendLine("</c:condition>");
-            oSB.AppendLine("</filters>");
-            oSB.AppendLine("<fields>");
-            oSB.AppendLine("<field>hotelName</field>");
-            oSB.AppendLine("<field>noOfRooms</field>");
-            oSB.AppendLine("<roomField>name</roomField>");
-            oSB.AppendLine("<roomField>including</roomField>");
-            oSB.AppendLine("<roomField>minStay</roomField>");
-            oSB.AppendLine("</fields>");
-            oSB.AppendLine("</return>");
-            oSB.AppendLine("</request>");
-            oSB.AppendLine("</customer>");
+            sb.AppendLine("</c:condition>");
+            sb.AppendLine("</filters>");
+            sb.AppendLine("<fields>");
+            sb.AppendLine("<field>hotelName</field>");
+            sb.AppendLine("<field>noOfRooms</field>");
+            sb.AppendLine("<roomField>name</roomField>");
+            sb.AppendLine("<roomField>including</roomField>");
+            sb.AppendLine("<roomField>minStay</roomField>");
+            sb.AppendLine("</fields>");
+            sb.AppendLine("</return>");
+            sb.AppendLine("</request>");
+            sb.AppendLine("</customer>");
 
-            return oSB.ToString();
-
+            return sb.ToString();
         }
 
         private List<TransformedResult> GetResultFromResponse(SearchDetails searchDetails, DOTWSearchResponse response)
@@ -304,45 +277,48 @@
             {
                 foreach (var room in hotel.Rooms)
                 {
-                    foreach (var roomtype in room.RoomTypes) 
-                    { 
-                  
+                    foreach (var roomtype in room.RoomTypes)
+                    {
                         foreach (var rateBasis in roomtype.RateBases)
                         {
                             // Some DOTW Rooms have a minimum stay Length so I need to remove any that don't fulfil the criteria
                             // exclude DOTW's third parties if necessary. 1 is their own static stock, 2 is their own dynamic stock and 
                             // 3 is their third party dynamic stock
 
-                            if (!string.IsNullOrEmpty(rateBasis.MinStay) ||!(rateBasis.RateType.Type == "1" || 
-                                rateBasis.RateType.Type == "2" || !_settings.ExcludeDOTWThirdParties(searchDetails))) { continue; }
-
-                            var amount = _settings.UseMinimumSellingPrice(searchDetails) && rateBasis.TotalMinSelling != null
-                                    && !string.IsNullOrEmpty(rateBasis.TotalMinSelling.Total) ?
-                                    rateBasis.TotalMinSelling.Total.ToSafeDecimal() : rateBasis.Total.TotalCost.ToSafeDecimal(); 
-
-                            TransformedResult transformedResult = new TransformedResult()
+                            if (string.IsNullOrEmpty(rateBasis.MinStay) &&
+                                (rateBasis.RateType.Type == "1" ||
+                                    rateBasis.RateType.Type == "2" ||
+                                    !_settings.ExcludeDOTWThirdParties(searchDetails)))
                             {
-                                MasterID = hotel.HotelID.ToSafeInt(), 
-                                TPKey = hotel.HotelID, 
-                                CurrencyCode = rateBasis.RateType.CurrencyID, 
-                                PropertyRoomBookingID = room.RoomNum, 
-                                RoomType = roomtype.Name,
-                                RoomTypeCode = roomtype.Code,
-                                MealBasisCode = rateBasis.ID,
-                                Amount = amount,
-                                DynamicProperty = rateBasis.WithinCancellationDeadline == "yes",
-                                TPReference = roomtype.Code + rateBasis.ID
-                            };
+
+                                var amount = _settings.UseMinimumSellingPrice(searchDetails) && rateBasis.TotalMinSelling != null
+                                        && !string.IsNullOrEmpty(rateBasis.TotalMinSelling.Total) ?
+                                        rateBasis.TotalMinSelling.Total.ToSafeDecimal() : rateBasis.Total.TotalCost.ToSafeDecimal();
+
+                                var transformedResult = new TransformedResult()
+                                {
+                                    MasterID = hotel.HotelID.ToSafeInt(),
+                                    TPKey = hotel.HotelID,
+                                    CurrencyCode = rateBasis.RateType.CurrencyID,
+                                    PropertyRoomBookingID = room.RoomNum + 1,
+                                    RoomType = roomtype.Name,
+                                    RoomTypeCode = roomtype.Code,
+                                    MealBasisCode = rateBasis.ID,
+                                    Amount = amount,
+                                    DynamicProperty = rateBasis.WithinCancellationDeadline == "yes",
+                                    TPReference = roomtype.Code + "|" + rateBasis.ID
+                                };
+
+                                transformedResults.Add(transformedResult);
+                            }
                         }
                     }
                 }
             }
 
-
-            return transformedResults; 
+            return transformedResults;
         }
 
         #endregion
-
     }
 }

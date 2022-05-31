@@ -45,6 +45,8 @@
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using ThirdParty.CSSuppliers.Jumbo;
+    using ThirdParty.CSSuppliers.MTS;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -64,6 +66,7 @@
             RegsiterThirdPartyConfigs(services);
             RegsiterThirdPartySearchServices(services);
             RegsiterThirdPartyBookServices(services);
+            RegsiterThirdPartyUtilities(services);
         }
 
         private static void RegisterFactories(IServiceCollection services)
@@ -141,11 +144,13 @@
             services.AddSingleton<IHotelBedsV2Settings, InjectedHotelBedsV2Settings>();
             services.AddSingleton<IImperatoreSettings, InjectedImperatoreSettings>();
             services.AddSingleton<IJonViewSettings, InjectedJonViewSettings>();
+            services.AddSingleton<IJumboSettings, InjectedJumboSettings>();
             services.AddSingleton<IJuniperECTravelSettings, InjectedJuniperECTravelSettings>();
             services.AddSingleton<IJuniperElevateSettings, InjectedJuniperElevateSettings>();
             services.AddSingleton<IJuniperFastPayHotelsSettings, InjectedJuniperFastPayHotelsSettings>();
             services.AddSingleton<INetstormingSettings, InjectedWHLSettings>();
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
+            services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
             services.AddSingleton<IRestelSettings, InjectedRestelSettings>();
             services.AddSingleton<ISerhsSettings, InjectedSerhsSettings>();
@@ -173,10 +178,12 @@
             services.AddSingleton<ThirdPartyPropertySearchBase, HotelBedsV2Search>();
             services.AddSingleton<ThirdPartyPropertySearchBase, ImperatoreSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, JonViewSearch>();
+            services.AddSingleton<ThirdPartyPropertySearchBase, JumboSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, JuniperElevateSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, JuniperECTravelSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, JuniperFastPayHotelsSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, NullTestSupplier>();
+            services.AddSingleton<ThirdPartyPropertySearchBase, MTSSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, OceanBedsSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, RestelSearch>();
             services.AddSingleton<ThirdPartyPropertySearchBase, SerhsSearch>();
@@ -205,9 +212,11 @@
             services.AddSingleton<IThirdParty, HotelBedsV2>();
             services.AddSingleton<IThirdParty, Imperatore>();
             services.AddSingleton<IThirdParty, JonView>();
+            services.AddSingleton<IThirdParty, Jumbo>();
             services.AddSingleton<IThirdParty, JuniperElevate>();
             services.AddSingleton<IThirdParty, JuniperECTravel>();
             services.AddSingleton<IThirdParty, JuniperFastPayHotels>();
+            services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, OceanBeds>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, Serhs>();
@@ -218,8 +227,11 @@
             services.AddSingleton<IThirdParty, WelcomeBeds>();
             services.AddSingleton<IThirdParty, WHL>();
             services.AddSingleton<IThirdParty, YouTravel>();
+        }
 
-            // tp helpers
+        public void RegsiterThirdPartyUtilities(IServiceCollection services)
+        {
+            services.AddSingleton<IDOTWSupport, DOTWSupport>();
             services.AddSingleton<IExpediaRapidAPI, ExpediaRapidAPI>();
         }
     }

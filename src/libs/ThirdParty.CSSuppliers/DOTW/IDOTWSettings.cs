@@ -1,6 +1,5 @@
 ﻿namespace ThirdParty.CSSuppliers.DOTW
 {
-
     public interface IDOTWSettings
     {
         string CompanyCode(IThirdPartyAttributeSearch tpAttributeSearch);
@@ -18,7 +17,6 @@
         string ThreadedSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseMinimumSellingPrice(IThirdPartyAttributeSearch tpAttributeSearch);
         string Username(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Version(IThirdPartyAttributeSearch tpAttributeSearch);
+        int Version(IThirdPartyAttributeSearch tpAttributeSearch);
     }
-
 }

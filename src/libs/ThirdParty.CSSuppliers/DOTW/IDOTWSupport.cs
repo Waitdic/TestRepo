@@ -1,9 +1,15 @@
 ﻿namespace ThirdParty.CSSuppliers.DOTW
 {
-    using ThirdParty.Lookups;
-
     public interface IDOTWSupport
     {
-        int GetCachedCurrencyID(IThirdPartyAttributeSearch SearchDetails, ITPSupport Support, string CurrencyCode, IDOTWSettings Settings);
+        string MD5Password(string password);
+
+        int GetTitleID(string sTitle);
+
+        int GetCurrencyID(IThirdPartyAttributeSearch searchDetails);
+
+        int GetCurrencyCode(int currencyId, IThirdPartyAttributeSearch searchDetails);
+
+        string CleanName(string name);
     }
 }

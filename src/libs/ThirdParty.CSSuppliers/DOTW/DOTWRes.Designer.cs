@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.DOTW {
+namespace ThirdParty.DOTW {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.CSSuppliers.DOTW {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.DOTW.DOTWRes", typeof(DOTWRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.DOTW.DOTWRes", typeof(DOTWRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

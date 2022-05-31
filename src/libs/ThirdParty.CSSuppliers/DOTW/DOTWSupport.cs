@@ -7,255 +7,231 @@
     using System.Security.Cryptography;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Xml;
+    using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.DOTW;
     using ThirdParty.Lookups;
 
     public partial class DOTWSupport : IDOTWSupport
     {
+        private readonly IDOTWSettings _settings;
+
+        private readonly ITPSupport _support;
+
+        private readonly HttpClient _httpClient;
+
+        private readonly ILogger<DOTWSupport> _logger;
+
+        private readonly IMemoryCache _cache;
+
+        public DOTWSupport(
+            IDOTWSettings settings,
+            ITPSupport support,
+            HttpClient httpClient,
+            ILogger<DOTWSupport> logger,
+            IMemoryCache cache)
+        {
+            _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _support = Ensure.IsNotNull(support, nameof(support));
+            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _cache = Ensure.IsNotNull(cache, nameof(cache));
+        }
 
         public partial class Cities : Dictionary<int, City>
         {
-
         }
 
         public partial class City
         {
-
             public int CityNumber;
-            public List<int> LocationIDs = new List<int>();
+            public List<int> LocationIDs = new();
 
-            public City(int CityNumber, int LocationID)
+            public City(int cityNumber, int locationId)
             {
-                this.CityNumber = CityNumber;
-                LocationIDs.Add(LocationID);
+                CityNumber = cityNumber;
+                LocationIDs.Add(locationId);
             }
-
         }
-
-        public static string StripNameSpaces(string sXML)
-        {
-
-            sXML = sXML.Replace("xmlns=\"http://xmldev.dotwconnect.com/xsd/\"", "");
-            sXML = sXML.Replace("xmlns:a=\"http://xmldev.dotwconnect.com/xsd/atomicCondition_rooms\"", "");
-            sXML = sXML.Replace("xmlns:c=\"http://xmldev.dotwconnect.com/xsd/complexCondition_rooms\"", "");
-
-            return sXML;
-
-        }
-
 
         #region Password Hash
 
-        public static string MD5Password(string sPassword)
+        public string MD5Password(string password)
         {
-
             var encoder = new UTF8Encoding();
-            /* TODO ERROR: Skipped WarningDirectiveTrivia
-            #Disable Warning SCS0006 ' Weak hashing function
-            */
             var md5Hasher = new MD5CryptoServiceProvider();
-            /* TODO ERROR: Skipped WarningDirectiveTrivia
-            #Enable Warning SCS0006 ' Weak hashing function
-            */
-            var hashedDataBytes = md5Hasher.ComputeHash(encoder.GetBytes(sPassword));
+            var hashedDataBytes = md5Hasher.ComputeHash(encoder.GetBytes(password));
 
-            string sResult = "";
+            string result = "";
             foreach (byte b in hashedDataBytes)
-                sResult += b.ToString("x2");
+            {
+                result += b.ToString("x2");
+            }
 
-            return sResult;
-
+            return result;
         }
 
         #endregion
 
-        public static int GetTitleID(string sTitle)
+        public int GetTitleID(string title)
         {
-
-            // HACK CS Dim oTitle As Generic.Dictionary(Of String, Integer) = CType(HttpRuntime.Cache("DOTWTitle"), Generic.Dictionary(Of String, Integer))
-
-            Dictionary<string, int> oTitle = null;
-
-            if (oTitle is null)
+            Dictionary<string, int> cacheBuilder()
             {
-
-                oTitle = new Dictionary<string, int>();
+                var titles = new Dictionary<string, int>();
 
                 // read from res file
-                var oTitles = new StringReader(DOTWRes.Titles);
-                string sTitlesLine = oTitles.ReadLine();
+                using var titlesFile = new StringReader(DOTWRes.Titles);
+                string titleLine = titlesFile.ReadLine();
 
-
-                // loop through Titles, 
-                while (sTitlesLine is not null)
+                // loop through Titles,
+                while (titleLine is not null)
                 {
+                    string key = titleLine.Split('#')[0];
+                    int value = titleLine.Split('#')[1].ToSafeInt();
 
-                    string sKey = sTitlesLine.Split('#')[0];
-                    int iValue = sTitlesLine.Split('#')[1].ToSafeInt();
-
-                    if (!oTitle.ContainsKey(sKey))
+                    if (!titles.ContainsKey(key))
                     {
-                        oTitle.Add(sKey, iValue);
+                        titles.Add(key, value);
                     }
-                    sTitlesLine = oTitles.ReadLine();
+
+                    titleLine = titlesFile.ReadLine();
                 }
-                oTitles.Close();
+                titlesFile.Close();
 
-                // HACK CS Intuitive.Functions.AddToCache("DOTWTitle", oTitle, 60)
-
+                return titles;
             }
 
+            var titles = _cache.GetOrCreate("DOTWTitle", cacheBuilder, 60);
 
-            if (oTitle.ContainsKey(sTitle))
+            if (titles.ContainsKey(title))
             {
-                return oTitle[sTitle];
+                return titles[title];
             }
             else
             {
-                return oTitle["Mr"];
+                return titles["Mr"];
             }
-
-
         }
 
-        public static DOTWCurrencyCache GetCurrencyCache(IThirdPartyAttributeSearch SearchDetails, IDOTWSettings Settings, HttpClient client, ILogger<DOTW> logger) 
+        public int GetCurrencyID(IThirdPartyAttributeSearch searchDetails)
         {
+            // in ivector we are calling  SQL.GetValue("exec Geography_GetThirdPartyCurrencyCode). GeographyLevel1 is not configureable in iVectorOne
+            // return default currencyID stored in the settings
+            return _settings.DefaultCurrencyID(searchDetails);
+        }
 
-            // HACK CS Dim oCurrency As DOTWCurrencyCache = CType(HttpRuntime.Cache("DOTWCurrency"), DOTWCurrencyCache)
+        public int GetCurrencyCode(int currencyId, IThirdPartyAttributeSearch searchDetails)
+        {
+            string currencyCode = _support.TPCurrencyLookup(ThirdParties.DOTW, currencyId.ToSafeString());
 
-            DOTWCurrencyCache oCurrency = null;
-
-            if (oCurrency is null)
+            // todo - make async
+            var currencyCache = GetCurrencyCacheAsync(searchDetails).Result;
+            if (currencyCache.ContainsKey(currencyCode))
             {
+                return currencyCache[currencyCode];
+            }
+            else
+            {
+                return _settings.DefaultCurrencyID(searchDetails);
+            }
+        }
 
+        public string CleanName(string name)
+        {
+            string cleanName = name;
 
-                oCurrency = new DOTWCurrencyCache();
+            // Remove spaces
+            cleanName = cleanName.Replace(" ", string.Empty);
 
-                var oSB = new StringBuilder();
+            // Try and convert to latin characters. This also replaces special charaters and numbers
+            cleanName = AngliciseString(cleanName);
 
-                oSB.AppendLine("<customer>");
-                oSB.AppendFormat("<username>{0}</username>", Settings.Username(SearchDetails)).AppendLine();
-                oSB.AppendFormat("<password>{0}</password>", DOTWSupport.MD5Password(Settings.Password(SearchDetails))).AppendLine();
-                oSB.AppendFormat("<id>{0}</id>", Settings.CompanyCode(SearchDetails)).AppendLine();
-                oSB.AppendLine("<source>1</source>");
-                oSB.AppendLine("<request command=\"getcurrenciesids\" />");
-                oSB.AppendLine("</customer>");
+            // If it's under 2 characters long then pad with X
+            if (cleanName.Length < 2)
+            {
+                cleanName = cleanName.PadRight(2, 'X');
+            }
+
+            // Don't allow it to be longer than 25 characters
+            if (cleanName.Length > 25)
+            {
+                cleanName = cleanName.Substring(0, 25);
+            }
+
+            return cleanName;
+        }
+
+        private string AngliciseString(string text)
+        {
+            return Regex.Replace(text.Normalize(NormalizationForm.FormD), "[^A-Za-z]*", string.Empty).Trim();
+        }
+
+        private async Task<Dictionary<string, int>> GetCurrencyCacheAsync(IThirdPartyAttributeSearch SearchDetails)
+        {
+            async Task<Dictionary<string, int>> cacheBuilder()
+            {
+                var currencies = new Dictionary<string, int>();
+
+                var sb = new StringBuilder();
+
+                sb.AppendLine("<customer>");
+                sb.AppendFormat("<username>{0}</username>", _settings.Username(SearchDetails)).AppendLine();
+                sb.AppendFormat("<password>{0}</password>", MD5Password(_settings.Password(SearchDetails))).AppendLine();
+                sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(SearchDetails)).AppendLine();
+                sb.AppendLine("<source>1</source>");
+                sb.AppendLine("<request command=\"getcurrenciesids\" />");
+                sb.AppendLine("</customer>");
 
                 // get the xml response for all currencies
-                var oResponseXML = new XmlDocument();
-
-                var oWebRequest = new Intuitive.Net.WebRequests.Request();
-
-                var oHeaders = new Intuitive.Net.WebRequests.RequestHeaders();
-                if (Settings.UseGZip(SearchDetails))
+                var headers = new RequestHeaders();
+                if (_settings.UseGZip(SearchDetails))
                 {
-                    oHeaders.AddNew("Accept-Encoding", "gzip");
+                    headers.AddNew("Accept-Encoding", "gzip");
                 }
 
-                oWebRequest.EndPoint = Settings.ServerURL(SearchDetails);
-                oWebRequest.Method = eRequestMethod.POST;
-                oWebRequest.Source = ThirdParties.DOTW;
-                oWebRequest.Headers = oHeaders;
-                oWebRequest.LogFileName = "GetCurrencyCache";
-                oWebRequest.SetRequest(oSB.ToString());
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.CreateLog = true;
-                oWebRequest.Send(client, logger);
+                var webRequest = new Request
+                {
+                    EndPoint = _settings.ServerURL(SearchDetails),
+                    Method = eRequestMethod.POST,
+                    Source = ThirdParties.DOTW,
+                    Headers = headers,
+                    LogFileName = "GetCurrencyCache",
+                    ContentType = ContentTypes.Text_xml,
+                    CreateLog = true
+                };
+                webRequest.SetRequest(sb.ToString());
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponseXML = oWebRequest.ResponseXML;
+                var responseXml = webRequest.ResponseXML;
 
                 // check according to documentation that there is a success node with the value TRUE in it
-                var oSuccessNode = oResponseXML.SelectSingleNode("result/successful");
-                if (oSuccessNode is null || oSuccessNode.InnerText != "TRUE")
+                var successNode = responseXml.SelectSingleNode("result/successful");
+                if (successNode is null || successNode.InnerText != "TRUE")
                 {
                     throw new Exception("currencies do not return success");
                 }
 
-
-                foreach (XmlNode oNode in oResponseXML.SelectNodes("result/currency/option"))
+                foreach (XmlNode node in responseXml.SelectNodes("result/currency/option"))
                 {
-                    string sKey = oNode.SelectSingleNode("@shortcut").Value;
-                    int iValue = oNode.SelectSingleNode("@value").Value.ToSafeInt();
+                    string key = node.SelectSingleNode("@shortcut").Value;
+                    int value = node.SelectSingleNode("@value").Value.ToSafeInt();
 
-                    if (!oCurrency.ContainsKey(sKey))
+                    if (!currencies.ContainsKey(key))
                     {
-                        oCurrency.Add(sKey, iValue);
+                        currencies.Add(key, value);
                     }
-
                 }
 
-                // HACK CS Intuitive.Functions.AddToCache("DOTWCurrency", oCurrency, 60)
-
+                return currencies;
             }
 
-            return oCurrency;
-
-        }
-
-        public int GetCachedCurrencyID(IThirdPartyAttributeSearch SearchDetails, ITPSupport Support, string CurrencyCode, IDOTWSettings Settings)
-        {
-            return GetCurrencyID(SearchDetails, Support, CurrencyCode, Settings);
-        }
-
-        public static int GetCurrencyID(IThirdPartyAttributeSearch SearchDetails, ITPSupport Support, string CurrencyCode, IDOTWSettings Settings)
-        {
-            // in ivector we are calling  SQL.GetValue("exec Geography_GetThirdPartyCurrencyCode). GeographyLevel1 is not configureable in iVectorOne
-            // return default currencyID stored in the settings
-            return Settings.DefaultCurrencyID(SearchDetails);
-        }
-
-        public static int GetCurrencyCode(int currencyID, IThirdPartyAttributeSearch searchDetails, IDOTWSettings settings, ITPSupport support, HttpClient client, ILogger<DOTW> logger)
-        {
-            string sCurrencyCode = support.TPCurrencyLookup(ThirdParties.DOTW, currencyID.ToSafeString());
-
-            var oCurrencyCache = GetCurrencyCache(searchDetails, settings, client, logger);
-            if (oCurrencyCache.ContainsKey(sCurrencyCode))
-            {
-                return oCurrencyCache[sCurrencyCode];
-            }
-            else
-            {
-                return settings.DefaultCurrencyID(searchDetails);
-            }
-
-        }
-
-        internal static string CleanName(string name, ITPSupport support)
-        {
-
-            string sCleanName = name;
-
-            // Remove spaces
-            sCleanName = sCleanName.Replace( " ", string.Empty);
-
-            // Try and convert to latin characters. This also replaces special charaters and numbers
-            sCleanName = AngliciseString(sCleanName);
-
-            // If it's under 2 characters long then pad with X
-            if (sCleanName.Length < 2)
-            {
-                sCleanName = sCleanName.PadRight(2, 'X');
-            }
-
-            // Don't allow it to be longer than 25 characters
-            if (sCleanName.Length > 25)
-            {
-                sCleanName = sCleanName.Substring(0, 25);
-            }
-
-            return sCleanName;
-
-        }
-
-        public static string AngliciseString(string text)
-        {
-            return Regex.Replace(text.Normalize(NormalizationForm.FormD), "[^A-Za-z]*", string.Empty).Trim();
+            return await _cache.GetOrCreateAsync("DOTWCurrency", cacheBuilder, 60);
         }
     }
-
-    public class DOTWCurrencyCache : Dictionary<string, int> { }
 }

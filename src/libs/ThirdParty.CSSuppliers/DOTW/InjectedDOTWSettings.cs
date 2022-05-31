@@ -26,38 +26,32 @@
 
         public int DefaultCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-
             return Get_Value("DefaultCurrencyID", tpAttributeSearch).ToSafeInt();
         }
 
         public bool ExcludeDOTWThirdParties(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-
             return Get_Value("ExcludeDOTWThirdParties", tpAttributeSearch).ToSafeBoolean();
-
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-
             return Get_Value("Password", tpAttributeSearch);
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
         public string RequestCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("RequestCurrencyID", tpAttributeSearch);
-
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
@@ -87,13 +81,12 @@
 
         public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-
             return Get_Value("Username", tpAttributeSearch);
         }
 
-        public string Version(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int Version(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Version", tpAttributeSearch);
+            return Get_Value("Version", tpAttributeSearch).ToSafeInt();
         }
     }
 }
