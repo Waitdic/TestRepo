@@ -23,7 +23,7 @@ try
         .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
         .ReadFrom.Configuration(ctx.Configuration));
 
-    // Add services to the container.
+        // Add services to the container.
     builder.Services.RegisterWebServices();
     builder.Host.UseDiscoveredModules();
 

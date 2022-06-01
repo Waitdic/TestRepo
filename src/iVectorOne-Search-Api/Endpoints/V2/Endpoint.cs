@@ -27,7 +27,7 @@
                         [FromQuery] string? sellingcountry,
                         [FromQuery] string? currencycode,
                         [FromQuery] bool? log, // todo - move to config
-                        [FromQuery] string suppliers)
+                        [FromQuery] string? suppliers)
                     =>
                     {
                         var request = new Request
@@ -43,7 +43,7 @@
                             OpaqueRates = opaquerates.GetValueOrDefault(),
                             RoomRequests = roomRequestsFactory.Create(rooms),
                             SellingCountry = sellingcountry ?? string.Empty,
-                            Suppliers = suppliers.Split(",").ToList()
+                            Suppliers = suppliers?.Split(",").ToList() ?? new(),
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);
