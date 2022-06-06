@@ -7,9 +7,12 @@
             "PropertyTPRequestLimit": 500,
             "SearchTimeoutSeconds": 60,
             "LogMainSearchError": "true",
-            "CurrencyCode": "USD"
+            "CurrencyCode": "USD",
         },
         "Configurations": [
+            {
+                "SMTPHost": "sqldev"
+            },
             {
                 "Supplier": "Altura",
                 "Configurations": {

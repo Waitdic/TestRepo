@@ -21,7 +21,7 @@
     using ThirdParty.CSSuppliers.Xml.W2M;
     using Microsoft.Extensions.Logging;
 
-    public class W2MSearch : ThirdPartyPropertySearchBase
+    public class W2MSearch : IThirdPartySearch
     {
         #region "Properties"
 
@@ -30,15 +30,14 @@
 
         private readonly SearchRequestBuilder _searchRequestBuilder;
 
-        public override bool SqlRequest => false;
-        public override string Source => ThirdParties.W2M;
+        public string Source => ThirdParties.W2M;
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return request.ResponseString.Contains(Constants.ErrorsNode);
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return _settings.SplitMultiroom(searchDetails) && searchDetails.Rooms > 1;
         }
@@ -48,7 +47,6 @@
         #region "Constructors"
 
         public W2MSearch(IW2MSettings settings, ISerializer serializer, HttpClient httpClient, ILogger<W2MSearch> logger)
-            : base(logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -59,7 +57,7 @@
 
         #region "Build Search Request"
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var searchRequests = _searchRequestBuilder.BuildSearchRequests(searchDetails, Source, resortSplits);
 
@@ -70,7 +68,7 @@
 
         #region "Transform Response"
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var resultsCollection = new TransformedResultCollection();
 

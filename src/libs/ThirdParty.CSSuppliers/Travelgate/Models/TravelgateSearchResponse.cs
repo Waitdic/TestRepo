@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     [Serializable()]
     [XmlRoot("Envelope")]

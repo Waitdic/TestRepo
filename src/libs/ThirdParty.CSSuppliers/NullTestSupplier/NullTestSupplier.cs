@@ -3,28 +3,24 @@
     using System.Collections.Generic;
     using Intuitive;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class NullTestSupplier : ThirdPartyPropertySearchBase
+    public class NullTestSupplier : IThirdPartySearch
     {
         private readonly INullTestSupplierSettings _settings;
 
-        public override string Source => ThirdParties.NULLTESTSUPPLIER;
+        public string Source => ThirdParties.NULLTESTSUPPLIER;
 
-        public override bool SqlRequest => false;
-
-        public NullTestSupplier(INullTestSupplierSettings settings, ILogger<NullTestSupplier> logger)
-            : base(logger)
+        public NullTestSupplier(INullTestSupplierSettings settings)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
         }
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return new List<Request>() { new Request() {
@@ -33,12 +29,12 @@
                 Method=eRequestMethod.GET} };
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -87,7 +83,7 @@
             return transformedResults;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }

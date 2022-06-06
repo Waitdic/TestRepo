@@ -14,11 +14,11 @@
     /// <summary>Factory that takes in a source or supplier and returns the correct third party search or booking class</summary>
     public class ThirdPartyFactory : IThirdPartyFactory
     {
-        private readonly Dictionary<string, ThirdPartyPropertySearchBase> _propertySearchServices;
+        private readonly Dictionary<string, IThirdPartySearch> _propertySearchServices;
         private readonly Dictionary<string, IThirdParty> _propertyBookServices;
 
         public ThirdPartyFactory(
-            IEnumerable<ThirdPartyPropertySearchBase> propertySearchServices,
+            IEnumerable<IThirdPartySearch> propertySearchServices,
             IEnumerable<IThirdParty> propertyBookServices)
         {
             _propertySearchServices = Ensure.IsNotNull(propertySearchServices, nameof(propertySearchServices))
@@ -35,7 +35,7 @@
         }
         
         /// <inheritdoc />
-        public ThirdPartyPropertySearchBase CreateSearchTPFromSupplier(string source)
+        public IThirdPartySearch CreateSearchTPFromSupplier(string source)
         {
             _propertySearchServices.TryGetValue(source, out var supplierSearch);
             return supplierSearch;

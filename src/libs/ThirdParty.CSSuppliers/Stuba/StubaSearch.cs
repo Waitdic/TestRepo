@@ -16,29 +16,25 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class StubaSearch : ThirdPartyPropertySearchBase
+    public class StubaSearch : IThirdPartySearch
     {
-
         private readonly IStubaSettings _settings;
 
         private readonly ITPSupport _support;
 
         private readonly ISerializer _serializer;
 
-        public override string Source { get; } = ThirdParties.STUBA;
+        public string Source => ThirdParties.STUBA;
 
-        public override bool SqlRequest { get; } = false;
-
-        public StubaSearch(IStubaSettings settings, ITPSupport support, ISerializer serializer, ILogger<StubaSearch> logger) : base(logger)
+        public StubaSearch(IStubaSettings settings, ITPSupport support, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
-
             var oRequests = new List<Request>();
 
             var requestBodies = new List<string>();
@@ -69,16 +65,14 @@
 
             foreach (string request in requestBodies)
             {
-                var oRequest = new Request();
-                oRequest.EndPoint = _settings.get_URL(oSearchDetails);
+                var oRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(oSearchDetails),
+                    Method = eRequestMethod.POST,
+                    Source = ThirdParties.STUBA,
+                    ExtraInfo = new SearchExtraHelper() { SearchDetails = oSearchDetails }
+                };
                 oRequest.SetRequest(request);
-                oRequest.Method = eRequestMethod.POST;
-                oRequest.Source = ThirdParties.STUBA;
-                oRequest.TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails);
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.ExtraInfo = new SearchExtraHelper() { SearchDetails = oSearchDetails };
-                oRequest.UseGZip = true;
                 oRequests.Add(oRequest);
             }
             return oRequests;
@@ -132,9 +126,8 @@
             return request.ToString();
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails searchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails searchDetails, List<ResortSplit> oResortSplits)
         {
-
             var transformedCollection = new TransformedResultCollection();
 
             IEnumerable<StubaSearchResponse> results = oRequests.Select(o => _serializer.DeSerialize<StubaSearchResponse>(o.ResponseXML)).ToList();
@@ -224,12 +217,12 @@
             }
         }
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
             return false;
         }
 
-        public override bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }

@@ -12,9 +12,8 @@
         public WHLSearch(
             INetstormingSettings settings,
             ITPSupport support,
-            ISerializer serializer,
-            ILogger<WHLSearch> logger)
-            : base(settings, support, serializer, logger)
+            ISerializer serializer)
+            : base(settings, support, serializer)
         {
         }
     }

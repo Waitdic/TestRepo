@@ -16,33 +16,27 @@
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class JonViewSearch : ThirdPartyPropertySearchBase
+    public class JonViewSearch : IThirdPartySearch
     {
 
         #region Properties
 
-        private IJonViewSettings _settings { get; set; }
+        private readonly IJonViewSettings _settings;
 
-        private ITPSupport _support { get; set; }
+        public string Source => ThirdParties.JONVIEW;
 
-
-        public override string Source { get; } = ThirdParties.JONVIEW;
-
-        public override bool SqlRequest { get; } = false;
-
-        public JonViewSearch(IJonViewSettings settings, ITPSupport support, ILogger<JonViewSearch> logger) : base(logger)
+        public JonViewSearch(IJonViewSettings settings)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
         }
 
-        public override bool SupportsNonRefundableTagging { get; } = false;
+        public bool SupportsNonRefundableTagging { get; } = false;
 
         #endregion
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
 
             bool bRestrictions = false;
@@ -74,9 +68,8 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
-
             var oRequests = new List<Request>();
 
             // build request xml for each resort
@@ -88,15 +81,14 @@
                 // Build request url
                 string url = BuildSearchURL(oSearchDetails, sCityCode);
 
-                var oRequest = new Request();
-                oRequest.EndPoint = _settings.get_URL(oSearchDetails) + url;
-                oRequest.Method = eRequestMethod.POST;
-                oRequest.Source = Source;
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails);
-                oRequest.ExtraInfo = oSearchDetails;
-                oRequest.UseGZip = true;
+                var oRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(oSearchDetails) + url,
+                    Method = eRequestMethod.POST,
+                    Source = Source,
+                    ExtraInfo = oSearchDetails,
+                    UseGZip = true
+                };
 
                 oRequests.Add(oRequest);
 
@@ -106,7 +98,7 @@
 
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
 
             var transformedResults = new TransformedResultCollection();
@@ -142,10 +134,12 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }
+
         #endregion
 
         #region Helper classes

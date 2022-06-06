@@ -16,7 +16,7 @@
     using ThirdParty.CSSuppliers.DOTW.Models;
     using Intuitive.Helpers.Serialization;
 
-    public class DOTWSearch : ThirdPartyPropertySearchBase
+    public class DOTWSearch : IThirdPartySearch
     {
         #region Constructor
 
@@ -28,8 +28,7 @@
 
         private readonly ISerializer _serializer;
 
-        public DOTWSearch(IDOTWSettings settings, ITPSupport support, ILogger<DOTWSearch> logger, IDOTWSupport dotwSupport, ISerializer serializer)
-            : base(logger)
+        public DOTWSearch(IDOTWSettings settings, ITPSupport support, IDOTWSupport dotwSupport, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -41,17 +40,15 @@
 
         #region Properties
 
-        public override string Source => ThirdParties.DOTW;
+        public string Source => ThirdParties.DOTW;
 
-        public override bool SqlRequest => false;
-
-        public override bool SupportsNonRefundableTagging => false;
+        public bool SupportsNonRefundableTagging => false;
 
         #endregion
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
@@ -60,7 +57,7 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
 
@@ -112,7 +109,7 @@
             return requests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var responses = new List<DOTWSearchResponse>();
@@ -140,7 +137,7 @@
 
         #region ResponseHasExceptions
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

@@ -47,6 +47,7 @@
     using Cancel = SDK.V2.PropertyCancel;
     using ThirdParty.CSSuppliers.Jumbo;
     using ThirdParty.CSSuppliers.MTS;
+    using ThirdParty.CSSuppliers.Travelgate;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -108,8 +109,7 @@
             services.AddSingleton<ITokenValues, TokenValues>();
             services.AddSingleton<ITPSupport, TPSupportWrapper>();
             services.AddSingleton<IRequestTracker, ThirdPartyRequestTracker>();
-
-            services.AddHelperServices(context.Configuration);
+            services.AddSingleton<IThirdPartyPropertySearchRunner, ThirdPartyPropertySearchRunner>();
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()
@@ -157,6 +157,32 @@
             services.AddSingleton<IStubaSettings, InjectedStubaSettings>();
             services.AddSingleton<ISunHotelsSettings, InjectedSunHotelsSettings>();
             services.AddSingleton<ITeamAmericaSettings, InjectedTeamAmericaSettings>();
+            services.AddSingleton<ITravelgateArabianASettings, InjectedTravelgateArabianASettings>();
+            services.AddSingleton<ITravelgateBookohotelSettings, InjectedTravelgateBookohotelSettings>();
+            services.AddSingleton<ITravelgateDarinaSettings, InjectedTravelgateDarinaSettings>();
+            services.AddSingleton<ITravelgateDerbysoftBestWesternSettings, InjectedTravelgateDerbysoftBestWesternSettings>();
+            services.AddSingleton<ITravelgateDerbysoftIHGSettings, InjectedTravelgateDerbysoftIHGSettings>();
+            services.AddSingleton<ITravelgateDerbysoftNAVHSettings, InjectedTravelgateDerbysoftNAVHSettings>();
+            services.AddSingleton<ITravelgateDerbysoftUORSettings, InjectedTravelgateDerbysoftUORSettings>();
+            services.AddSingleton<ITravelgateDingusSettings, InjectedTravelgateDingusSettings>();
+            services.AddSingleton<ITravelgateDingusBlueSeaSettings, InjectedTravelgateDingusBlueSeaSettings>();
+            services.AddSingleton<ITravelgateDingusSpringHotelsSettings, InjectedTravelgateDingusSpringHotelsSettings>();
+            services.AddSingleton<ITravelgateDingusTHBSettings, InjectedTravelgateDingusTHBSettings>();
+            services.AddSingleton<ITravelgateDOTWv3Settings, InjectedTravelgateDOTWv3Settings>();
+            services.AddSingleton<ITravelgateEETGlobalSettings, InjectedTravelgateEETGlobalSettings>();
+            services.AddSingleton<ITravelgateEuroPlayasSettings, InjectedTravelgateEuroPlayasSettings>();
+            services.AddSingleton<ITravelgateGekkoSettings, InjectedTravelgateGekkoSettings>();
+            services.AddSingleton<ITravelgateHotelTraderSettings, InjectedTravelgateHotelTraderSettings>();
+            services.AddSingleton<ITravelgateIxpiraSettings, InjectedTravelgateIxpiraSettings>();
+            services.AddSingleton<ITravelgateMethabookSettings, InjectedTravelgateMethabookSettings>();
+            services.AddSingleton<ITravelgateOswaldArrigoSettings, InjectedTravelgateOswaldArrigoSettings>();
+            services.AddSingleton<ITravelgatePerlatoursSettings, InjectedTravelgatePerlatoursSettings>();
+            services.AddSingleton<ITravelgateTBOSettings, InjectedTravelgateTBOSettings>();
+            services.AddSingleton<ITravelgateTravellandaSettings, InjectedTravelgateTravellandaSettings>();
+            services.AddSingleton<ITravelgateTraveltinoSettings, InjectedTravelgateTraveltinoSettings>();
+            services.AddSingleton<ITravelgateViajesOlympiaSettings, InjectedTravelgateViajesOlympiaSettings>();
+            services.AddSingleton<ITravelgateWHLSettings, InjectedTravelgateWHLSettings>();
+            services.AddSingleton<ITravelgateYalagoSettings, InjectedTravelgateYalagoSettings>();
             services.AddSingleton<IW2MSettings, InjectedW2MSettings>();
             services.AddSingleton<IWelcomeBedsSettings, InjectedWelcomeBedsSettings>();
             services.AddSingleton<IYalagoSettings, InjectedYalagoSettings>();
@@ -165,36 +191,62 @@
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)
         {
-            services.AddSingleton<ThirdPartyPropertySearchBase, AceroomsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, AlturaSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, BedsWithEaseSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, BookaBedSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, BonotelSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, DerbySoftClubMedSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, DerbySoftSynxisSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, DerbySoftMarriottSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, DOTWSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, ExpediaRapidSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, HotelBedsV2Search>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, ImperatoreSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, JonViewSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, JumboSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, JuniperElevateSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, JuniperECTravelSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, JuniperFastPayHotelsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, NullTestSupplier>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, MTSSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, OceanBedsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, RestelSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, SerhsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, StubaSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, SunHotelsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, TeamAmericaSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, W2MSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, WelcomeBedsSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, WHLSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, YalagoSearch>();
-            services.AddSingleton<ThirdPartyPropertySearchBase, YouTravelSearch>();
+            services.AddSingleton<IThirdPartySearch, AceroomsSearch>();
+            services.AddSingleton<IThirdPartySearch, AlturaSearch>();
+            services.AddSingleton<IThirdPartySearch, BedsWithEaseSearch>();
+            services.AddSingleton<IThirdPartySearch, BookaBedSearch>();
+            services.AddSingleton<IThirdPartySearch, BonotelSearch>();
+            services.AddSingleton<IThirdPartySearch, DerbySoftClubMedSearch>();
+            services.AddSingleton<IThirdPartySearch, DerbySoftSynxisSearch>();
+            services.AddSingleton<IThirdPartySearch, DerbySoftMarriottSearch>();
+            services.AddSingleton<IThirdPartySearch, DOTWSearch>();
+            services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
+            services.AddSingleton<IThirdPartySearch, HotelBedsV2Search>();
+            services.AddSingleton<IThirdPartySearch, ImperatoreSearch>();
+            services.AddSingleton<IThirdPartySearch, JonViewSearch>();
+            services.AddSingleton<IThirdPartySearch, JumboSearch>();
+            services.AddSingleton<IThirdPartySearch, JuniperElevateSearch>();
+            services.AddSingleton<IThirdPartySearch, JuniperECTravelSearch>();
+            services.AddSingleton<IThirdPartySearch, JuniperFastPayHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, NullTestSupplier>();
+            services.AddSingleton<IThirdPartySearch, MTSSearch>();
+            services.AddSingleton<IThirdPartySearch, OceanBedsSearch>();
+            services.AddSingleton<IThirdPartySearch, RestelSearch>();
+            services.AddSingleton<IThirdPartySearch, SerhsSearch>();
+            services.AddSingleton<IThirdPartySearch, StubaSearch>();
+            services.AddSingleton<IThirdPartySearch, SunHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, TeamAmericaSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateArabianASearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateBookohotelSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDarinaSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDerbysoftBestWesternSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDerbysoftIHGSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDerbysoftNAVHSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDerbysoftUORSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDingusSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDingusBlueSeaSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDingusSpringHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDingusTHBSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateDOTWv3Search>();
+            services.AddSingleton<IThirdPartySearch, TravelgateEETGlobalSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateEuroPlayasSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateGekkoSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateHotelTraderSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateIxpiraSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateMethabookSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateOswaldArrigoSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgatePerlatoursSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateTBOSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateTravellandaSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateTraveltinoSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateViajesOlympiaSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateWHLSearch>();
+            services.AddSingleton<IThirdPartySearch, TravelgateYalagoSearch>();
+            services.AddSingleton<IThirdPartySearch, W2MSearch>();
+            services.AddSingleton<IThirdPartySearch, WelcomeBedsSearch>();
+            services.AddSingleton<IThirdPartySearch, WHLSearch>();
+            services.AddSingleton<IThirdPartySearch, YalagoSearch>();
+            services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -223,6 +275,32 @@
             services.AddSingleton<IThirdParty, Stuba>();
             services.AddSingleton<IThirdParty, SunHotels>();
             services.AddSingleton<IThirdParty, TeamAmerica>();
+            services.AddSingleton<IThirdParty, TravelgateArabianA>();
+            services.AddSingleton<IThirdParty, TravelgateBookohotel>();
+            services.AddSingleton<IThirdParty, TravelgateDarina>();
+            services.AddSingleton<IThirdParty, TravelgateDerbysoftBestWestern>();
+            services.AddSingleton<IThirdParty, TravelgateDerbysoftIHG>();
+            services.AddSingleton<IThirdParty, TravelgateDerbysoftNAVH>();
+            services.AddSingleton<IThirdParty, TravelgateDerbysoftUOR>();
+            services.AddSingleton<IThirdParty, TravelgateDingus>();
+            services.AddSingleton<IThirdParty, TravelgateDingusBlueSea>();
+            services.AddSingleton<IThirdParty, TravelgateDingusSpringHotels>();
+            services.AddSingleton<IThirdParty, TravelgateDingusTHB>();
+            services.AddSingleton<IThirdParty, TravelgateDOTWv3>();
+            services.AddSingleton<IThirdParty, TravelgateEETGlobal>();
+            services.AddSingleton<IThirdParty, TravelgateEuroPlayas>();
+            services.AddSingleton<IThirdParty, TravelgateGekko>();
+            services.AddSingleton<IThirdParty, TravelgateHotelTrader>();
+            services.AddSingleton<IThirdParty, TravelgateIxpira>();
+            services.AddSingleton<IThirdParty, TravelgateMethabook>();
+            services.AddSingleton<IThirdParty, TravelgateOswaldArrigo>();
+            services.AddSingleton<IThirdParty, TravelgatePerlatours>();
+            services.AddSingleton<IThirdParty, TravelgateTBO>();
+            services.AddSingleton<IThirdParty, TravelgateTravellanda>();
+            services.AddSingleton<IThirdParty, TravelgateTraveltino>();
+            services.AddSingleton<IThirdParty, TravelgateViajesOlympia>();
+            services.AddSingleton<IThirdParty, TravelgateWHL>();
+            services.AddSingleton<IThirdParty, TravelgateYalago>();
             services.AddSingleton<IThirdParty, W2M>();
             services.AddSingleton<IThirdParty, WelcomeBeds>();
             services.AddSingleton<IThirdParty, WHL>();

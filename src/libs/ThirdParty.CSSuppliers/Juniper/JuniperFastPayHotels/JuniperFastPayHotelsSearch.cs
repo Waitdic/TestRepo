@@ -6,8 +6,8 @@
     
     public class JuniperFastPayHotelsSearch : JuniperBaseSearch
     {
-        public JuniperFastPayHotelsSearch(IJuniperFastPayHotelsSettings settings, ISerializer serializer, ILogger<JuniperFastPayHotelsSearch> logger)
-            : base(settings, serializer, logger)
+        public JuniperFastPayHotelsSearch(IJuniperFastPayHotelsSettings settings, ISerializer serializer)
+            : base(settings, serializer)
         {
         }
 

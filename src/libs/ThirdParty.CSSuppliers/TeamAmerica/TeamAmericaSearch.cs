@@ -6,7 +6,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.Models;
@@ -15,18 +14,16 @@
     using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.TeamAmerica.Models;
 
-    public class TeamAmericaSearch : ThirdPartyPropertySearchBase
+    public class TeamAmericaSearch : IThirdPartySearch
     {
         #region "Properties"
 
         private readonly ITeamAmericaSettings _settings;
         private readonly ISerializer _serializer;
 
-        public override string Source => ThirdParties.TEAMAMERICA;
+        public string Source => ThirdParties.TEAMAMERICA;
 
-        public override bool SqlRequest => false;
-
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
@@ -35,8 +32,7 @@
 
         #region "Constructors"
 
-        public TeamAmericaSearch(ITeamAmericaSettings settings, ISerializer serializer, ILogger<TeamAmericaSearch> logger)
-            : base(logger)
+        public TeamAmericaSearch(ITeamAmericaSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -46,7 +42,7 @@
 
         #region "SearchFunctions"
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSerchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSerchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
             var oRequests = oResortSplits.Select(oResortSplit =>
             {
@@ -75,7 +71,7 @@
             return oRequests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var oResponses = requests.SelectMany(oRequest => Envelope<PriceSearchResponse>
                                         .DeSerialize(oRequest.ResponseXML, _serializer).HotelSearchResponse.Offers).ToList();
@@ -138,7 +134,7 @@
 
         #region "SearchRestrictions"
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             //'Must be between 1 to 21 nights
             bool moreThan21nights = searchDetails.Duration > 21;

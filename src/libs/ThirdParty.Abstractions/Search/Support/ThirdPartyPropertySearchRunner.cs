@@ -4,35 +4,49 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
     using Intuitive;
+    using Intuitive.Helpers.Email;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
     /// <summary>
     /// Third Party Property Search Base
     /// </summary>
-    public abstract class ThirdPartyPropertySearchBase
+    public class ThirdPartyPropertySearchRunner : IThirdPartyPropertySearchRunner
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<ThirdPartyPropertySearchRunner> _logger;
 
-        public ThirdPartyPropertySearchBase(ILogger logger)
+        private readonly IEmailService _emailService;
+
+        private readonly ISearchResultsProcessor _searchResultsProcessor;
+
+        private readonly HttpClient _httpClient;
+
+        public ThirdPartyPropertySearchRunner(
+            ILogger<ThirdPartyPropertySearchRunner> logger,
+            IEmailService emailService,
+            ISearchResultsProcessor searchResultsProcessor,
+            HttpClient httpClient)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _emailService = Ensure.IsNotNull(emailService, nameof(emailService));
+            _searchResultsProcessor = Ensure.IsNotNull(searchResultsProcessor, nameof(searchResultsProcessor));
+            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
         }
 
         public async Task SearchAsync(
             SearchDetails searchDetails,
             List<ResortSplit> resortSplits,
-            CancellationTokenSource cancellationTokenSource,
-            HttpClient httpClient)
+            IThirdPartySearch thirdPartySearch,
+            CancellationTokenSource cancellationTokenSource)
         {
             try
             {
@@ -41,26 +55,34 @@
                 StartTime = DateTime.Now; // needed for timeouts
                 var taskList = new List<Task>();
 
-                var requests = BuildSearchRequests(searchDetails, resortSplits, false);
+                var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits, false);
 
                 foreach (var request in requests)
                 {
-                    request.Source = Source;
+                    request.Source = thirdPartySearch.Source;
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
                     request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails);
-                    request.UseGZip = UseGZip(searchDetails);
+                    request.UseGZip = UseGZip(searchDetails, thirdPartySearch.Source);
 
-                    taskList.Add(httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
+                    taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
                 }
 
                 await Task.WhenAll(taskList);
 
-                var tranformedResponses = TransformResponse(requests, searchDetails, resortSplits);
+                if (!string.IsNullOrWhiteSpace(searchDetails.EmailLogsToAddress))
+                {
+                    foreach (var request in requests)
+                    {
+                        EmailSearchLogs(searchDetails.EmailLogsToAddress, thirdPartySearch.Source, request);
+                    }
+                }
 
-                await SearchResultsProcessor.ProcessTPResultsAsync(
-                    tranformedResponses,
-                    Source,
+                var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
+
+                await _searchResultsProcessor.ProcessTPResultsAsync(
+                    transformedResponses,
+                    thirdPartySearch.Source,
                     searchDetails,
                     resortSplits);
             }
@@ -75,10 +97,6 @@
         /// <c>true</c> if [exclude non refundable]; otherwise, <c>false</c>.</value>
         [XmlIgnore]
         public bool ExcludeNonRefundable { get; set; }
-
-        /// <summary>Gets or sets the search results processor.</summary>
-        /// <value>The search results processor.</value>
-        public ISearchResultsProcessor SearchResultsProcessor { get; set; } = null!;
 
         /// <summary>Gets the current time taken in seconds.</summary>
         /// <value>The current time taken in seconds.</value>
@@ -101,30 +119,6 @@
         /// <summary>Gets or sets the request tracker.</summary>
         /// <value>The request tracker.</value>
         public IRequestTracker RequestTracker { get; set; } = null!;
-
-        /// <summary>
-        /// Gets or sets the source.
-        /// </summary>
-        /// <value>
-        /// The source.
-        /// </value>
-        public abstract string Source { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether [SQL request].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [SQL request]; otherwise, <c>false</c>.
-        /// </value>
-        public abstract bool SqlRequest { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether [supports non refundable tagging].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [supports non refundable tagging]; otherwise, <c>false</c>.
-        /// </value>
-        public virtual bool SupportsNonRefundableTagging { get; } = true;
 
         /// <summary>gets a unique request identifier.</summary>
         /// <param name="source">The source.</param>
@@ -161,42 +155,6 @@
             return source;
         }
 
-        /// <summary>
-        /// Builds the search requests.
-        /// </summary>
-        /// <param name="searchDetails">The search details.</param>
-        /// <param name="resortSplits">The resort splits.</param>
-        /// <param name="saveLogs">if set to <c>true</c> [b save logs].</param>
-        /// <returns>A list of request</returns>
-        public abstract List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs);
-
-        /// <summary>
-        /// Transforms the response.
-        /// </summary>
-        /// <param name="requests">The requests.</param>
-        /// <returns>an XML document</returns>
-        public abstract TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits);
-
-        /// <summary>
-        /// '''     Check if there are any search restrictions for the third party.
-        /// '''     For example; the third party can not perform multi-room bookings.
-        /// '''
-        /// </summary>
-        /// <param name="searchDetails">The search details.</param>
-        /// <returns>
-        /// If there any search restrictions for the third party.
-        /// </returns>
-        /// '''
-        /// '''
-        public abstract bool SearchRestrictions(SearchDetails searchDetails);
-
-        /// <summary>
-        /// Responses the has exceptions.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>a boolean if the response has an exception</returns>
-        public abstract bool ResponseHasExceptions(Request request);
-
         /// <summary>Requests the time out seconds.</summary>
         /// <param name="searchDetails">The search details.</param>
         /// <returns>
@@ -228,9 +186,9 @@
         /// <returns>
         ///   <br />
         /// </returns>
-        private bool UseGZip(SearchDetails searchDetails)
+        private bool UseGZip(SearchDetails searchDetails, string source)
         {
-            var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == this.Source);
+            var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == source);
 
             var useGZip = false;
 
@@ -245,26 +203,35 @@
             return useGZip;
         }
 
-        /// <summary>A boolean to decide if we want to compress the request</summary>
-        /// <param name="searchDetails">The search details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        private string SMTPHost(SearchDetails searchDetails)
+        /// <summary>Emails the search logs.</summary>
+        /// <param name="emailAddress">The email address.</param>
+        /// <param name="provider">The provider.</param>
+        /// <param name="request">The web request.</param>
+        private void EmailSearchLogs(string emailAddress, string provider, Request request)
         {
-            var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == this.Source);
-
-            var smtpHost = string.Empty;
-
-            if (searchDetails != null)
+            try
             {
-                if (configuration.Configurations.ContainsKey("SMTPHost"))
-                {
-                    smtpHost = configuration.Configurations["SMTPHost"].ToSafeString();
-                }
-            }
+                var sb = new StringBuilder();
+                sb.Append("Request").AppendLine().AppendLine();
+                sb.Append(request.RequestLog).AppendLine().AppendLine();
+                sb.Append("Response").AppendLine().AppendLine();
+                sb.Append(request.ResponseLog);
 
-            return smtpHost;
+                var email = new Email()
+                {
+                    EmailTo = emailAddress,
+                    From = $"{provider} Search Logs",
+                    FromEmail = "searchlogs@intuitivesystems.co.uk",
+                    Subject = $"Search Logs - {provider} {DateTime.Now}",
+                    Body = sb.ToString()
+                };
+
+                _emailService.SendEmail(email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error emailing search logs");
+            }
         }
     }
 }

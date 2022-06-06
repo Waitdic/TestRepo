@@ -13,23 +13,21 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.Juniper.Model;
-    using Microsoft.Extensions.Logging;
 
-    public abstract class JuniperBaseSearch : ThirdPartyPropertySearchBase
+    public abstract class JuniperBaseSearch : IThirdPartySearch
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IJuniperBaseSettings _settings;
         private readonly ISerializer _serializer;
 
-        public override bool SqlRequest => false;
+        public abstract string Source { get; }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
-        public JuniperBaseSearch(IJuniperBaseSettings settings, ISerializer serializer, ILogger logger)
-            : base(logger)
+        public JuniperBaseSearch(IJuniperBaseSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -37,9 +35,9 @@
 
         #endregion
 
-        #region "Build Search Requests"
+        #region Build Search Requests
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var hotelList = new List<string>();
             int maxHotelsPerRequest = _settings.MaxHotelsPerSearchRequest(searchDetails);
@@ -70,7 +68,7 @@
             int iUniqueReqID)
         {
             string sSoapAction = _settings.HotelAvailURLSOAPAction(SearchDetails);
-            bool useGZip = SafeTypeExtensions.ToSafeBoolean(_settings.UseGZip(SearchDetails));
+            bool useGZip = _settings.UseGZip(SearchDetails);
             string hotelAvailUrl = JuniperHelper.ConstructUrl(_settings.BaseURL(SearchDetails), _settings.HotelAvailURL(SearchDetails));
 
             var searchRequest = BuildSearchRequest(SearchDetails, HotelList.ToList(), oRoom);
@@ -83,7 +81,6 @@
             //' make a note of the room number so we know what we're dealing with in the transform
             oExtraHelper.ExtraInfo = prbid.ToString();
 
-            oSearchRequest.TimeoutInSeconds = RequestTimeOutSeconds(SearchDetails);
             oSearchRequest.ExtraInfo = oExtraHelper;
 
             return oSearchRequest;
@@ -141,9 +138,9 @@
 
         #endregion
 
-        #region "Transform Response"
+        #region Transform Response
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var excludeNonRefundableRates = _settings.ExcludeNonRefundableRates(searchDetails);
@@ -202,13 +199,12 @@
 
         #endregion
 
-
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
             return oSearchDetails.Rooms > 1 && !SafeTypeExtensions.ToSafeBoolean(_settings.SplitMultiroom(oSearchDetails));
         }

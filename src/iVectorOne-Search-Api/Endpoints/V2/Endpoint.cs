@@ -27,7 +27,8 @@
                         [FromQuery] string? sellingcountry,
                         [FromQuery] string? currencycode,
                         [FromQuery] bool? log, // todo - move to config
-                        [FromQuery] string? suppliers)
+                        [FromQuery] string? suppliers,
+                        [FromQuery] string? emailLogsTo)
                     =>
                     {
                         var request = new Request
@@ -44,6 +45,7 @@
                             RoomRequests = roomRequestsFactory.Create(rooms),
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
+                            EmailLogsToAddress = emailLogsTo
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);

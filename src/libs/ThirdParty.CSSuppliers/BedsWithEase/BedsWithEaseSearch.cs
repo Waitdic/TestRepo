@@ -18,7 +18,7 @@
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class BedsWithEaseSearch : ThirdPartyPropertySearchBase
+    public class BedsWithEaseSearch : IThirdPartySearch
     {
         private readonly IBedsWithEaseSettings _settings;
         private readonly ISerializer _serializer;
@@ -30,7 +30,6 @@
             ISerializer serializer,
             IHttpClientFactory httpclient,
             ILogger<BedsWithEaseSearch> logger)
-            : base(logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -38,11 +37,9 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        public override string Source => ThirdParties.BEDSWITHEASE;
+        public string Source => ThirdParties.BEDSWITHEASE;
 
-        public override bool SqlRequest => false;
-
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
             string sessionId = BedsWithEaseHelper.GetSessionId(searchDetails, _settings, _serializer, _httpClient, _logger);
@@ -145,7 +142,7 @@
             return _serializer.Serialize(envelope);
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -200,12 +197,12 @@
             return transformedResults;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }

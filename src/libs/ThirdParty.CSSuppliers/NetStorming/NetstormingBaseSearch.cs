@@ -23,7 +23,7 @@
     using Cancellation = ThirdParty.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 
-    public abstract class NetstormingBaseSearch : ThirdPartyPropertySearchBase
+    public abstract class NetstormingBaseSearch : IThirdPartySearch
     {
         private readonly INetstormingSettings _settings;
         private readonly ITPSupport _support;
@@ -32,24 +32,20 @@
         protected NetstormingBaseSearch(
             INetstormingSettings settings,
             ITPSupport support,
-            ISerializer serializer,
-            ILogger logger)
-            : base(logger)
+            ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public abstract override string Source { get; }
+        public abstract string Source { get; }
 
-        public override bool SqlRequest => false;
-
-        public override bool SupportsNonRefundableTagging => false;
+        public bool SupportsNonRefundableTagging => false;
 
         public static IThirdPartyAttributeSearch? SearchDetails { get; set; }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             bool restrictions = false;
 
@@ -61,7 +57,7 @@
             return restrictions;
         }
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             SearchDetails = searchDetails;
             var requests = new List<Request>();
@@ -93,12 +89,7 @@
                     {
                         EndPoint = _settings.URL(searchDetails),
                         Method = eRequestMethod.POST,
-                        Source = Source,
-                        LogFileName = "Search",
-                        CreateLog = saveLogs,
-                        TimeoutInSeconds = RequestTimeOutSeconds(searchDetails),
                         ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
-                        UseGZip = _settings.UseGZip(searchDetails)
                     };
                     request.SetRequest(xmlRequest);
                     requests.Add(request);
@@ -109,7 +100,7 @@
             return requests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -271,7 +262,7 @@
                 : $"{prefix} {roomTypeDetail}";
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

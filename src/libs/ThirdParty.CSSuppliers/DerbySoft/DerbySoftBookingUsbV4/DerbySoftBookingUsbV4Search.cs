@@ -5,20 +5,18 @@
     using System.Linq;
     using Intuitive;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public abstract class DerbySoftBookingUsbV4Search : ThirdPartyPropertySearchBase
+    public abstract class DerbySoftBookingUsbV4Search : IThirdPartySearch
     {
         #region "Constructor"
 
         private readonly IDerbySoftSettings _settings;
 
-        public DerbySoftBookingUsbV4Search(IDerbySoftSettings settings, ILogger logger)
-            : base(logger)
+        public DerbySoftBookingUsbV4Search(IDerbySoftSettings settings)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
         }
@@ -27,15 +25,15 @@
 
         #region Properties
 
-        public override bool SqlRequest => false;
+        public abstract string Source { get; }
 
-        public override bool ResponseHasExceptions(Request request) => false;
+        public bool ResponseHasExceptions(Request request) => false;
 
-        public override bool SearchRestrictions(SearchDetails searchDetails) => false;
+        public bool SearchRestrictions(SearchDetails searchDetails) => false;
 
         #endregion
-        
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requestBuilderFactory = new SearchFactory(_settings, Source, Guid.NewGuid());
             var requestBuilder = requestBuilderFactory.GetSearchRequestBuilder(searchDetails);
@@ -44,7 +42,7 @@
             return requestBuilder.BuildSearchRequests(searchDetails, resortSplits, saveLogs).ToList();
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 

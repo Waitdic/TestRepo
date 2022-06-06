@@ -22,14 +22,14 @@
             if (dataMasker == null)
             {
                 return xML;
-            }                
+            }
 
             // replace each node that is requested to be replaced
             foreach (DataMaskLookup dataMask in dataMasker)
             {
                 xML = DocumentReplace(xML, dataMask.XPath, dataMask.Regex, dataMasker.NameSpaceManager);
             }
-            
+
             return xML;
         }
 

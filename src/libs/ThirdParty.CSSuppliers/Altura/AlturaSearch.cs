@@ -18,7 +18,7 @@
     using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.Models.Altura;
 
-    public class AlturaSearch : ThirdPartyPropertySearchBase
+    public class AlturaSearch : IThirdPartySearch
     {
         #region "Properties"
 
@@ -26,9 +26,7 @@
         private readonly ITPSupport _support;
         private readonly ISerializer _serializer;
 
-        public override string Source => ThirdParties.ALTURA;
-
-        public override bool SqlRequest => false;
+        public string Source => ThirdParties.ALTURA;
 
         #endregion
 
@@ -37,9 +35,7 @@
         public AlturaSearch(
             IAlturaSettings settings,
             ITPSupport support,
-            ISerializer serializer,
-            ILogger<AlturaSearch> logger)
-            : base(logger)
+            ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -50,7 +46,7 @@
 
         #region "SearchRestrictions"
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
             return oSearchDetails.Rooms > 1 && !_settings.SplitMultiRoom(oSearchDetails);
         }
@@ -59,7 +55,7 @@
 
         #region "SearchFunctions"
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
             // Create for each resort a list of hotels
             var oHotels = oResortSplits.SelectMany(rs => rs.Hotels.Select(h => h.TPKey)).Distinct().ToList();
@@ -85,8 +81,6 @@
                     LogFileName = "Search",
                     Param = "xml",
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
-                    CreateLog = bSaveLogs,
-                    TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails),
                     ExtraInfo = oExtraInfo,
                     UseGZip = true,
                 };
@@ -104,7 +98,7 @@
 
         #region "Transform Response"
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var oAlturaSearchResponses = requests
                 .Where(oRequest => oRequest.Success && !oRequest.ResponseString.Contains("Error"))
@@ -131,7 +125,7 @@
 
         #region "Validators"
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

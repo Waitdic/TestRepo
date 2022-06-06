@@ -15,7 +15,7 @@
     using ThirdParty.CSSuppliers.Models.WelcomeBeds;
     using Microsoft.Extensions.Logging;
 
-    public class WelcomeBedsSearch : ThirdPartyPropertySearchBase
+    public class WelcomeBedsSearch : IThirdPartySearch
     {
         #region "Constructor"
 
@@ -26,9 +26,7 @@
         public WelcomeBedsSearch(
             IWelcomeBedsSettings settings,
             ITPSupport tpSupport,
-            ISerializer serializer,
-            ILogger<WelcomeBedsSearch> logger)
-            : base(logger)
+            ISerializer serializer)
         {
             _settings = settings;
             _tpSupport = tpSupport;
@@ -39,15 +37,13 @@
 
         #region "Properties"
 
-        public override string Source => ThirdParties.WELCOMEBEDS;
-
-        public override bool SqlRequest => false;
+        public string Source => ThirdParties.WELCOMEBEDS;
 
         #endregion
 
         #region "Build Search Request"
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
 
@@ -135,10 +131,6 @@
                 {
                     EndPoint = _settings.URL(searchDetails),
                     Method = eRequestMethod.POST,
-                    Source = Source,
-                    LogFileName = "Search",
-                    CreateLog = saveLogs,
-                    TimeoutInSeconds = RequestTimeOutSeconds(searchDetails),
                     ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
                     UseGZip = true,
                     SoapAction = "HotelAvail"
@@ -150,12 +142,12 @@
             return requests;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return searchDetails.Rooms > 3;
         }
@@ -198,7 +190,7 @@
         #endregion
 
         #region "Transform Response"
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allResponses = requests.Where(rq => rq.Success)

@@ -23,5 +23,7 @@
         public string SellingCountry { get; set; } = "";
 
         public List<string> Suppliers { get; set; } = new();
+
+        public string EmailLogsToAddress { get; set; } = string.Empty;
     }
 }

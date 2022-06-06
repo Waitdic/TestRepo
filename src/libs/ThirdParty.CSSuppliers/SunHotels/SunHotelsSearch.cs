@@ -19,22 +19,21 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class SunHotelsSearch : ThirdPartyPropertySearchBase
+    public class SunHotelsSearch : IThirdPartySearch
     {
         #region Properties
 
-        public override string Source { get; } = ThirdParties.SUNHOTELS;
+        public string Source => ThirdParties.SUNHOTELS;
         private readonly ITPSupport _support;
         private readonly ISunHotelsSettings _settings;
         private readonly ISerializer _serializer;
         private readonly IMemoryCache _cache;
-        public override bool SqlRequest { get; } = false;
-
+        
         #endregion
 
         #region Constructor
 
-        public SunHotelsSearch(ISunHotelsSettings settings, ITPSupport support, ISerializer serializer, IMemoryCache cache, ILogger<SunHotelsSearch> logger) : base(logger)
+        public SunHotelsSearch(ISunHotelsSettings settings, ITPSupport support, ISerializer serializer, IMemoryCache cache)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -46,9 +45,8 @@
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
-
             bool bRestrictions = false;
 
             if (oSearchDetails.Rooms > 1)
@@ -64,10 +62,8 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
-
-            int salesChannelId = oSearchDetails.SalesChannelID;
             var oRequests = new List<Request>();
             var oSearchCodes = new Dictionary<List<string>, string>();
             var oHotelCodes = new List<string>();
@@ -117,14 +113,12 @@
 
                         string request = BuildSearchRequestString(_settings.get_SearchURL(oSearchDetails), _settings.get_Username(oSearchDetails), _settings.get_Password(oSearchDetails), _settings.get_Language(oSearchDetails), _settings.get_Currency(oSearchDetails), oSearchDetails, oRoomDetail, oSearchCode.Key.Skip(iFrom).Take(numberToTake).ToList(), oSearchCode.Value, _settings.get_Nationality(oSearchDetails), _settings.get_RequestPackageRates(oSearchDetails));
 
-                        var oRequest = new Request();
-                        oRequest.EndPoint = request.ToString();
-                        oRequest.Method = eRequestMethod.GET;
-                        oRequest.Source = "SunHotels";
-                        oRequest.LogFileName = "Search";
-                        oRequest.CreateLog = bSaveLogs;
-                        oRequest.TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails) - 2;
-                        oRequest.ExtraInfo = oExtraInfo;
+                        var oRequest = new Request
+                        {
+                            EndPoint = request.ToString(),
+                            Method = eRequestMethod.GET,
+                            ExtraInfo = oExtraInfo
+                        };
 
                         oRequests.Add(oRequest);
 
@@ -220,14 +214,11 @@
             return searchRequestUrlBuilder.ToString();
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
-
             var oTransformedList = new TransformedResultCollection();
             try
             {
-
-
                 var oResponses = new List<SunhotelsSearchResponse>();
                 string sCurrency = _settings.get_Currency(oSearchDetails);
 
@@ -357,10 +348,12 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }
+
         #endregion
 
         #region Helpers

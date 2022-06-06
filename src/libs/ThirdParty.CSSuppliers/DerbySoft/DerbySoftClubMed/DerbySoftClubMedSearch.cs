@@ -6,8 +6,8 @@
 
     public class DerbySoftClubMedSearch : DerbySoftBookingUsbV4Search
     {
-        public DerbySoftClubMedSearch(IDerbySoftClubMedSettings settings, ILogger<DerbySoftClubMedSearch> logger)
-            : base(settings, logger)
+        public DerbySoftClubMedSearch(IDerbySoftClubMedSettings settings)
+            : base(settings)
         {
         }
 

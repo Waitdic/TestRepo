@@ -1,41 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Xml.Serialization;
-using Intuitive;
-using Intuitive.Helpers.Extensions;
-using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using Intuitive.Net.WebRequests;
-using Microsoft.Extensions.Logging;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-using ThirdParty.Models;
-using ThirdParty.Results;
-using ThirdParty.Search.Models;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Web;
+    using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using Intuitive.Net.WebRequests;
+    using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Travelgate.Models;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
 
-    public class TravelgateSearch : ThirdPartyPropertySearchBase
+    // todo - allow travelgate itself as a third party
+    // todo - refactor to avoid boilerplate code for shared tp interfaces
+    public abstract class TravelgateSearch : IThirdPartySearch
     {
-
         #region Constructor
-
-        public TravelgateSearch(ITravelgateSettings settings, ITPSupport support, ISecretKeeper secretKeeper, ISerializer serializer, ILogger<TravelgateSearch> logger) : base(logger)
-        {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
-            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
-            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
-        }
-
-        #endregion
-
-        #region Properties
 
         private readonly ITravelgateSettings _settings;
 
@@ -45,15 +31,21 @@ namespace ThirdParty.CSSuppliers
 
         private readonly ISerializer _serializer;
 
-        public override string Source { get; } = ThirdParties.TRAVELGATE;
+        public TravelgateSearch(ITravelgateSettings settings, ITPSupport support, ISecretKeeper secretKeeper, ISerializer serializer)
+        {
+            _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _support = Ensure.IsNotNull(support, nameof(support));
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+        }
 
-        public override bool SqlRequest { get; } = false;
+        public abstract string Source { get; }
 
         #endregion
 
         #region Search Restrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
@@ -62,383 +54,346 @@ namespace ThirdParty.CSSuppliers
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
-
-            var oRequests = new List<Request>();
-            int iSalesChannelID = oSearchDetails.SalesChannelID;
-            int iBrandID = oSearchDetails.BrandID;
+            var requests = new List<Request>();
 
             // Remove any suppliers in the dictionary that are attempting a restricted search
             // Needs to be done here since
-            var oFilteredSuppliers = new List<string>();
+            var filteredSuppliers = new List<string>();
 
-            int iMaximumRoomNumber = _settings.get_MaximumRoomNumber(oSearchDetails);
-            int iMaximumRoomGuestNumber = _settings.get_MaximumRoomGuestNumber(oSearchDetails);
-            int iMinimumStay = _settings.get_MinimumStay(oSearchDetails);
+            int maximumRoomNumber = _settings.get_MaximumRoomNumber(searchDetails);
+            int maximumRoomGuestNumber = _settings.get_MaximumRoomGuestNumber(searchDetails);
+            int minimumStay = _settings.get_MinimumStay(searchDetails);
 
-            bool bSearchExceedsGuestCount = false;
+            bool searchExceedsGuestCount = false;
 
-            foreach (iVector.Search.Property.RoomDetail oRoom in oSearchDetails.RoomDetails)
+            foreach (var room in searchDetails.RoomDetails)
             {
-                if (oRoom.Adults + oRoom.Children + oRoom.Infants > iMaximumRoomGuestNumber)
+                if (room.Adults + room.Children + room.Infants > maximumRoomGuestNumber)
                 {
-                    bSearchExceedsGuestCount = true;
+                    searchExceedsGuestCount = true;
                 }
             }
 
-            if (!(oSearchDetails.Rooms > iMaximumRoomNumber || oSearchDetails.Duration < iMinimumStay || bSearchExceedsGuestCount))
+            if (!(searchDetails.Rooms > maximumRoomNumber || searchDetails.Duration < minimumStay || searchExceedsGuestCount))
             {
-                oFilteredSuppliers.Add(Source);
+                filteredSuppliers.Add(Source);
             }
 
-            if (oFilteredSuppliers.Count > 0)
+            if (filteredSuppliers.Count > 0)
             {
-
                 var sbSearchRequest = new StringBuilder();
 
+                sbSearchRequest.Append("<soapenv:Envelope xmlns:soapenv = \"http://schemas.xmlsoap.org/soap/envelope/\" ");
+                sbSearchRequest.Append("xmlns:ns = \"http://schemas.xmltravelgate.com/hub/2012/06\" ");
+                sbSearchRequest.Append("xmlns:wsse = \"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\">");
+                sbSearchRequest.Append("<soapenv:Header>");
+                sbSearchRequest.Append("<wsse:Security>");
+                sbSearchRequest.Append("<wsse:UsernameToken>");
+                sbSearchRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(searchDetails));
+                sbSearchRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(searchDetails));
+                sbSearchRequest.Append("</wsse:UsernameToken>");
+                sbSearchRequest.Append("</wsse:Security>");
+                sbSearchRequest.Append("</soapenv:Header>");
+                sbSearchRequest.Append("<soapenv:Body>");
+                sbSearchRequest.Append("<ns:Avail>");
+                sbSearchRequest.Append("<ns:availRQ>");
+                sbSearchRequest.Append("<ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds>"); // max general search timeout is 25s
+                sbSearchRequest.Append("<ns:version>1</ns:version>");
+                sbSearchRequest.Append("<ns:providerRQs>");
+
+                int requestCount = 1;
+
+                // Some third parties don't support searches by TPKey, so use these to check what kind of search we want to be doing
+                int maximumHotelSearchNumber = _settings.get_MaximumHotelSearchNumber(searchDetails);
+                int maximumCitySearchNumber = _settings.get_MaximumCitySearchNumber(searchDetails);
+                // We generally prefer hotel based searches, but if a third party has a small maximum number of hotels per search
+                // we leave it up to the discretion of the user to determine if they would rather perform city based searches (where allowed)
+                bool allowHotelSearch = _settings.get_AllowHotelSearch(searchDetails);
+                // Whether to try to search for a zone (region) instead of individual resorts (cities)
+                bool useZoneSearch = resortSplits.Count > 1 && _settings.get_UseZoneSearch(searchDetails);
+
+                var searchBatchDetails = new SearchBatchDetails();
+                searchBatchDetails.Source = Source;
+                searchBatchDetails.ResortSplits = resortSplits;
+
+                // Check how many hotels we have - if only one we can ignore the allow hotel search boolean
+                int hotelCount = 0;
+                foreach (var resortSplit in resortSplits)
                 {
-                    ref var withBlock = ref sbSearchRequest;
-
-                    withBlock.Append("<soapenv:Envelope xmlns:soapenv = \"http://schemas.xmlsoap.org/soap/envelope/\" ");
-                    withBlock.Append("xmlns:ns = \"http://schemas.xmltravelgate.com/hub/2012/06\" ");
-                    withBlock.Append("xmlns:wsse = \"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\">");
-                    withBlock.Append("<soapenv:Header>");
-                    withBlock.Append("<wsse:Security>");
-                    withBlock.Append("<wsse:UsernameToken>");
-                    withBlock.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(oSearchDetails));
-                    withBlock.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(oSearchDetails));
-                    withBlock.Append("</wsse:UsernameToken>");
-                    withBlock.Append("</wsse:Security>");
-                    withBlock.Append("</soapenv:Header>");
-                    withBlock.Append("<soapenv:Body>");
-                    withBlock.Append("<ns:Avail>");
-                    withBlock.Append("<ns:availRQ>");
-                    withBlock.Append("<ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds>"); // max general search timeout is 25s
-                    withBlock.Append("<ns:version>1</ns:version>");
-                    withBlock.Append("<ns:providerRQs>");
-
-                    int iRequestCount = 1;
-
-                    // Some third parties don't support searches by TPKey, so use these to check what kind of search we want to be doing
-                    int iMaximumHotelSearchNumber = _settings.get_MaximumHotelSearchNumber(oSearchDetails);
-                    int iMaximumCitySearchNumber = _settings.get_MaximumCitySearchNumber(oSearchDetails);
-                    // We generally prefer hotel based searches, but if a third party has a small maximum number of hotels per search
-                    // we leave it up to the discretion of the user to determine if they would rather perform city based searches (where allowed)
-                    bool bAllowHotelSearch = _settings.get_AllowHotelSearch(oSearchDetails);
-                    // Whether to try to search for a zone (region) instead of individual resorts (cities)
-                    bool bUseZoneSearch = oResortSplits.Count > 1 && _settings.get_UseZoneSearch(oSearchDetails);
-
-                    var oSearchBatchDetails = new SearchBatchDetails();
-                    oSearchBatchDetails.Source = Source;
-                    oSearchBatchDetails.ResortSplits = oResortSplits;
-
-                    // Check how many hotels we have - if only one we can ignore the allow hotel search boolean
-                    int iHotelCount = 0;
-                    foreach (ResortSplit oResortSplit in oResortSplits)
-                        iHotelCount += oResortSplit.Hotels.Count;
-
-                    // Get a count of our resorts as well
-                    int iResortCount = oResortSplits.Count;
-
-                    // Set which search type we will be using - if hotel searches are allowed and either the allow flag is set to true,
-                    // or else city searches aren't allowed or we're only searching for one hotel, search by hotel
-                    // Otherwiwse search by city
-
-                    if (iMaximumHotelSearchNumber > 0 && (bAllowHotelSearch || iMaximumCitySearchNumber == 0 || iHotelCount == 1))
-                    {
-
-                        oSearchBatchDetails.SearchByHotel = true;
-
-                        // Get the batch size and count for hotel searches
-                        oSearchBatchDetails.BatchSize = iMaximumHotelSearchNumber;
-                        oSearchBatchDetails.SearchItemCount = iHotelCount;
-                    }
-
-                    else if (iMaximumCitySearchNumber > 0)
-                    {
-
-                        oSearchBatchDetails.SearchByHotel = false;
-
-                        if (bUseZoneSearch)
-                        {
-                            oSearchBatchDetails.SetZoneSearchID();
-                            oSearchBatchDetails.UseZoneSearch = oSearchBatchDetails.SearchItemIDs.Count == 1;
-                        }
-
-                        if (oSearchBatchDetails.UseZoneSearch)
-                        {
-                            oSearchBatchDetails.BatchSize = 1;
-                            oSearchBatchDetails.SearchItemCount = 1;
-                        }
-                        else
-                        {
-                            // Get the batch size and count for city searches
-                            oSearchBatchDetails.BatchSize = iMaximumCitySearchNumber;
-                            oSearchBatchDetails.SearchItemCount = iResortCount;
-                        }
-                    }
-
-                    oSearchBatchDetails.CalculateBatchCount();
-
-                    if (!oSearchBatchDetails.UseZoneSearch)
-                    {
-                        oSearchBatchDetails.SetSearchIDs();
-                    }
-
-                    BuildSearchBatch(oSearchDetails, oSearchBatchDetails, ref sbSearchRequest, ref iRequestCount);
-
-                    // Next
-
-                    withBlock.Append("</ns:providerRQs>");
-                    withBlock.Append("</ns:availRQ>");
-                    withBlock.Append("</ns:Avail>");
-                    withBlock.Append("</soapenv:Body>");
-                    withBlock.Append("</soapenv:Envelope>");
-
+                    hotelCount += resortSplit.Hotels.Count;
                 }
 
-                // Build Request Object
-                var oRequest = new Request();
-                oRequest.EndPoint = _settings.get_URL(oSearchDetails);
-                oRequest.SoapAction = _settings.get_SearchSOAPAction(oSearchDetails);
-                oRequest.Headers.AddNew("SOAPAction", _settings.get_SearchSOAPAction(oSearchDetails));
-                oRequest.Method = eRequestMethod.POST;
-                oRequest.Source = Source;
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails);
-                oRequest.ExtraInfo = oSearchDetails;
-                oRequest.SuppressExpectHeaders = true;
-                oRequest.SetRequest(sbSearchRequest.ToString());
-                oRequest.UseGZip = _settings.get_UseGZip(oSearchDetails);
+                // Get a count of our resorts as well
+                int resortCount = resortSplits.Count;
 
-                oRequests.Add(oRequest);
+                // Set which search type we will be using - if hotel searches are allowed and either the allow flag is set to true,
+                // or else city searches aren't allowed or we're only searching for one hotel, search by hotel
+                // Otherwiwse search by city
 
-            }
-
-            return oRequests;
-
-        }
-
-        public void BuildSearchBatch(SearchDetails SearchDetails, SearchBatchDetails SearchBatchDetails, ref StringBuilder SearchRequest, ref int RequestCount)
-        {
-
-            int iSalesChannelID = SearchDetails.SalesChannelID;
-            int iBrandID = SearchDetails.BrandID;
-
-            // Index to keep track of where we're at
-            int iIndex = 0;
-
-
-            // Loop through the batches
-            for (int iBatchNumber = 1, loopTo = SearchBatchDetails.BatchCount; iBatchNumber <= loopTo; iBatchNumber++)
-            {
-
-                SearchRequest.Append("<ns:ProviderRQ>");
-                SearchRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(SearchDetails));
-                SearchRequest.AppendFormat("<ns:id>{0}</ns:id>", RequestCount);
-                SearchRequest.Append("<ns:rqXML>");
-                SearchRequest.Append("<AvailRQ>");
-                SearchRequest.AppendFormat("<timeoutMilliseconds>{0}</timeoutMilliseconds>", _settings.get_SearchRequestTimeout(SearchDetails));
-                SearchRequest.Append("<source>");
-                SearchRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(SearchDetails));
-                SearchRequest.Append("</source>");
-                SearchRequest.Append("<filterAuditData>");
-                SearchRequest.Append("<registerTransactions>false</registerTransactions>");
-                SearchRequest.Append("</filterAuditData>");
-                SearchRequest.Append("<Configuration>");
-                SearchRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(SearchDetails));
-                SearchRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(SearchDetails));
-                SearchRequest.Append(AppendURLs(SearchDetails));
-                SearchRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(SearchDetails)));
-
-                SearchRequest.Append("</Configuration>");
-
-                SearchRequest.Append("<OnRequest>false</OnRequest>");
-
-                SearchRequest.Append("<AvailDestinations>");
-
-                // Get the last item for our current batch
-                int iLastBatchItem = 0;
-
-                if (iIndex + SearchBatchDetails.BatchSize > SearchBatchDetails.SearchItemCount)
+                if (maximumHotelSearchNumber > 0 && (allowHotelSearch || maximumCitySearchNumber == 0 || hotelCount == 1))
                 {
-                    iLastBatchItem = SearchBatchDetails.SearchItemCount - 1;
+                    searchBatchDetails.SearchByHotel = true;
+
+                    // Get the batch size and count for hotel searches
+                    searchBatchDetails.BatchSize = maximumHotelSearchNumber;
+                    searchBatchDetails.SearchItemCount = hotelCount;
                 }
-                else
+                else if (maximumCitySearchNumber > 0)
                 {
-                    iLastBatchItem = iIndex + SearchBatchDetails.BatchSize - 1;
-                }
+                    searchBatchDetails.SearchByHotel = false;
 
-                for (int iPosition = iIndex, loopTo1 = iLastBatchItem; iPosition <= loopTo1; iPosition++)
-                {
-
-                    if (SearchBatchDetails.SearchByHotel)
+                    if (useZoneSearch)
                     {
-                        SearchRequest.AppendFormat("<Destination type = \"HOT\" code = \"{0}\"/>", SearchBatchDetails.SearchItemIDs.ElementAt(iIndex));
+                        searchBatchDetails.SetZoneSearchID();
+                        searchBatchDetails.UseZoneSearch = searchBatchDetails.SearchItemIDs.Count == 1;
                     }
-                    else if (SearchBatchDetails.UseZoneSearch)
+
+                    if (searchBatchDetails.UseZoneSearch)
                     {
-                        SearchRequest.AppendFormat("<Destination type = \"ZON\" code = \"{0}\"/>", SearchBatchDetails.SearchItemIDs.ElementAt(iIndex));
+                        searchBatchDetails.BatchSize = 1;
+                        searchBatchDetails.SearchItemCount = 1;
                     }
                     else
                     {
-                        SearchRequest.AppendFormat("<Destination type = \"CTY\" code = \"{0}\"/>", SearchBatchDetails.SearchItemIDs.ElementAt(iIndex));
+                        // Get the batch size and count for city searches
+                        searchBatchDetails.BatchSize = maximumCitySearchNumber;
+                        searchBatchDetails.SearchItemCount = resortCount;
                     }
-
-                    iIndex += 1;
-
                 }
 
-                SearchRequest.Append("</AvailDestinations>");
+                searchBatchDetails.CalculateBatchCount();
 
-                SearchRequest.AppendFormat("<StartDate>{0}</StartDate>", SearchDetails.ArrivalDate.ToString("dd/MM/yyyy"));
-                SearchRequest.AppendFormat("<EndDate>{0}</EndDate>", SearchDetails.DepartureDate.ToString("dd/MM/yyyy"));
-                SearchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.get_CurrencyCode(SearchDetails));
-
-                string sNationality = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, SearchDetails.NationalityID);
-                if (string.IsNullOrEmpty(sNationality))
+                if (!searchBatchDetails.UseZoneSearch)
                 {
-                    sNationality = _settings.get_DefaultNationality(SearchDetails, false);
+                    searchBatchDetails.SetSearchIDs();
                 }
 
-                if (!string.IsNullOrEmpty(sNationality))
+                BuildSearchBatch(searchDetails, searchBatchDetails, ref sbSearchRequest, ref requestCount);
+
+                // Next
+
+                sbSearchRequest.Append("</ns:providerRQs>");
+                sbSearchRequest.Append("</ns:availRQ>");
+                sbSearchRequest.Append("</ns:Avail>");
+                sbSearchRequest.Append("</soapenv:Body>");
+                sbSearchRequest.Append("</soapenv:Envelope>");
+
+                // Build Request Object
+                var request = new Request
                 {
-                    SearchRequest.AppendFormat("<Nationality>{0}</Nationality>", sNationality);
-                    SearchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", sNationality);
+                    EndPoint = _settings.get_URL(searchDetails),
+                    SoapAction = _settings.get_SearchSOAPAction(searchDetails),
+                    Method = eRequestMethod.POST,
+                    ExtraInfo = searchDetails,
+                    SuppressExpectHeaders = true,
+                    UseGZip = _settings.get_UseGZip(searchDetails)
+                };
+                request.Headers.AddNew("SOAPAction", _settings.get_SearchSOAPAction(searchDetails));
+                request.SetRequest(sbSearchRequest.ToString());
+
+                requests.Add(request);
+            }
+
+            return requests;
+        }
+
+        public void BuildSearchBatch(SearchDetails searchDetails, SearchBatchDetails searchBatchDetails, ref StringBuilder searchRequest, ref int requestCount)
+        {
+            // Index to keep track of where we're at
+            int index = 0;
+
+            // Loop through the batches
+            for (int batchNumber = 1; batchNumber <= searchBatchDetails.BatchCount; batchNumber++)
+            {
+                searchRequest.Append("<ns:ProviderRQ>");
+                searchRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(searchDetails));
+                searchRequest.AppendFormat("<ns:id>{0}</ns:id>", requestCount);
+                searchRequest.Append("<ns:rqXML>");
+                searchRequest.Append("<AvailRQ>");
+                searchRequest.AppendFormat("<timeoutMilliseconds>{0}</timeoutMilliseconds>", _settings.get_SearchRequestTimeout(searchDetails));
+                searchRequest.Append("<source>");
+                searchRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(searchDetails));
+                searchRequest.Append("</source>");
+                searchRequest.Append("<filterAuditData>");
+                searchRequest.Append("<registerTransactions>false</registerTransactions>");
+                searchRequest.Append("</filterAuditData>");
+                searchRequest.Append("<Configuration>");
+                searchRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(searchDetails));
+                searchRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(searchDetails));
+                searchRequest.Append(AppendURLs(searchDetails));
+                searchRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(searchDetails)));
+
+                searchRequest.Append("</Configuration>");
+                searchRequest.Append("<OnRequest>false</OnRequest>");
+                searchRequest.Append("<AvailDestinations>");
+
+                // Get the last item for our current batch
+                int lastBatchItem;
+
+                if (index + searchBatchDetails.BatchSize > searchBatchDetails.SearchItemCount)
+                {
+                    lastBatchItem = searchBatchDetails.SearchItemCount - 1;
                 }
                 else
                 {
-                    string sDefaultNationality = _settings.get_DefaultNationality(SearchDetails, false);
+                    lastBatchItem = index + searchBatchDetails.BatchSize - 1;
+                }
+
+                for (int position = index; position <= lastBatchItem; position++)
+                {
+                    if (searchBatchDetails.SearchByHotel)
+                    {
+                        searchRequest.AppendFormat("<Destination type = \"HOT\" code = \"{0}\"/>", searchBatchDetails.SearchItemIDs.ElementAt(index));
+                    }
+                    else if (searchBatchDetails.UseZoneSearch)
+                    {
+                        searchRequest.AppendFormat("<Destination type = \"ZON\" code = \"{0}\"/>", searchBatchDetails.SearchItemIDs.ElementAt(index));
+                    }
+                    else
+                    {
+                        searchRequest.AppendFormat("<Destination type = \"CTY\" code = \"{0}\"/>", searchBatchDetails.SearchItemIDs.ElementAt(index));
+                    }
+
+                    index++;
+                }
+
+                searchRequest.Append("</AvailDestinations>");
+
+                searchRequest.AppendFormat("<StartDate>{0}</StartDate>", searchDetails.ArrivalDate.ToString("dd/MM/yyyy"));
+                searchRequest.AppendFormat("<EndDate>{0}</EndDate>", searchDetails.DepartureDate.ToString("dd/MM/yyyy"));
+                searchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.get_CurrencyCode(searchDetails));
+
+                string nationality = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, searchDetails.NationalityID);
+                if (string.IsNullOrEmpty(nationality))
+                {
+                    nationality = _settings.get_DefaultNationality(searchDetails, false);
+                }
+
+                if (!string.IsNullOrEmpty(nationality))
+                {
+                    searchRequest.AppendFormat("<Nationality>{0}</Nationality>", nationality);
+                    searchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", nationality);
+                }
+                else
+                {
+                    string sDefaultNationality = _settings.get_DefaultNationality(searchDetails, false);
                     if (!string.IsNullOrEmpty(sDefaultNationality))
                     {
-                        SearchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", sDefaultNationality);
+                        searchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", sDefaultNationality);
                     }
                 }
 
-                string sMarkets = _settings.get_Markets(SearchDetails);
-                if (sMarkets.Length > 0)
+                string markets = _settings.get_Markets(searchDetails);
+                if (markets.Length > 0)
                 {
-                    SearchRequest.Append("<Markets>");
-                    foreach (string sMarket in sMarkets.Split(','))
-                        SearchRequest.AppendFormat("<Market>{0}</Market>", sMarket);
-                    SearchRequest.Append("</Markets>");
-                }
-                else if (!string.IsNullOrEmpty(sNationality))
-                {
-                    SearchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", sNationality);
-                }
-
-                SearchRequest.Append("<RoomCandidates>");
-
-                int iRoomIndex = 1;
-                foreach (iVector.Search.Property.RoomDetail oRoomDetails in SearchDetails.RoomDetails)
-                {
-
-                    SearchRequest.AppendFormat("<RoomCandidate id = \"{0}\">", iRoomIndex);
-                    SearchRequest.Append("<Paxes>");
-
-                    int iPaxCount = 1;
-
-                    for (int i = 1, loopTo2 = oRoomDetails.Adults; i <= loopTo2; i++)
+                    searchRequest.Append("<Markets>");
+                    foreach (string sMarket in markets.Split(','))
                     {
-                        SearchRequest.AppendFormat("<Pax age = \"30\" id = \"{0}\"/>", iPaxCount);
-                        iPaxCount += 1;
+                        searchRequest.AppendFormat("<Market>{0}</Market>", sMarket);
                     }
 
-                    if (oRoomDetails.Children > 0)
+                    searchRequest.Append("</Markets>");
+                }
+                else if (!string.IsNullOrEmpty(nationality))
+                {
+                    searchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", nationality);
+                }
+
+                searchRequest.Append("<RoomCandidates>");
+
+                int roomIndex = 1;
+                foreach (var roomDetails in searchDetails.RoomDetails)
+                {
+                    searchRequest.AppendFormat("<RoomCandidate id = \"{0}\">", roomIndex);
+                    searchRequest.Append("<Paxes>");
+
+                    int paxCount = 1;
+
+                    for (int i = 1; i <= roomDetails.Adults; i++)
                     {
-                        foreach (string sChildAge in oRoomDetails.ChildAgeCSV.Split(','))
+                        searchRequest.AppendFormat("<Pax age = \"30\" id = \"{0}\"/>", paxCount);
+                        paxCount += 1;
+                    }
+
+                    if (roomDetails.Children > 0)
+                    {
+                        foreach (string sChildAge in roomDetails.ChildAgeCSV.Split(','))
                         {
-                            SearchRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", sChildAge, iPaxCount);
-                            iPaxCount += 1;
+                            searchRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", sChildAge, paxCount);
+                            paxCount += 1;
                         }
                     }
 
-                    if (oRoomDetails.Infants > 0)
+                    if (roomDetails.Infants > 0)
                     {
-                        for (int i = 1, loopTo3 = oRoomDetails.Infants; i <= loopTo3; i++)
+                        for (int i = 1, loopTo3 = roomDetails.Infants; i <= loopTo3; i++)
                         {
-                            SearchRequest.AppendFormat("<Pax age = \"1\" id = \"{0}\"/>", iPaxCount);
-                            iPaxCount += 1;
+                            searchRequest.AppendFormat("<Pax age = \"1\" id = \"{0}\"/>", paxCount);
+                            paxCount += 1;
                         }
                     }
 
-                    SearchRequest.Append("</Paxes>");
-                    SearchRequest.Append("</RoomCandidate>");
+                    searchRequest.Append("</Paxes>");
+                    searchRequest.Append("</RoomCandidate>");
 
-                    iRoomIndex += 1;
+                    roomIndex += 1;
                 }
 
-                SearchRequest.Append("</RoomCandidates>");
+                searchRequest.Append("</RoomCandidates>");
 
-                SearchRequest.Append("</AvailRQ>");
-                SearchRequest.Append("</ns:rqXML>");
-                SearchRequest.Append("</ns:ProviderRQ>");
+                searchRequest.Append("</AvailRQ>");
+                searchRequest.Append("</ns:rqXML>");
+                searchRequest.Append("</ns:ProviderRQ>");
 
-                RequestCount += 1;
-
-
+                requestCount += 1;
             }
-
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-
-            var oTransformedResults = new TransformedResultCollection();
-            var oAvailabilityResponses = new List<TravelgateSearchResponse>();
-            var oEnvelopeSerializer = new XmlSerializer(typeof(TravelgateResponseEnvelope));
-            var oResponseSerializer = new XmlSerializer(typeof(TravelgateSearchResponse));
-
-            foreach (Request oRequest in oRequests)
+            var transformedResults = new TransformedResultCollection();
+            var availabilityResponses = new List<TravelgateSearchResponse>();
+            
+            foreach (var request in requests)
             {
-
-                if (oRequest.Success)
+                if (request.Success)
                 {
-                    var oResponseXML = _serializer.CleanXmlNamespaces(oRequest.ResponseXML);
+                    var responseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);
 
                     // Retrieve response envelope
-                    var oResponseEnvelope = new TravelgateResponseEnvelope();
+                    var responseEnvelope = new TravelgateResponseEnvelope();
 
                     // Deserialize the response Envelope
-                    using (TextReader oReader = new StringReader(oResponseXML.InnerXml))
-                    {
-                        oResponseEnvelope = (TravelgateResponseEnvelope)oEnvelopeSerializer.Deserialize(oReader);
-                    }
+                    responseEnvelope = _serializer.DeSerialize<TravelgateResponseEnvelope>(responseXml.InnerXml);
 
-                    string sResponses = oResponseEnvelope.Body.Response.Result.ProviderResults.FirstOrDefault().Results.Result;
+                    string responses = responseEnvelope.Body.Response.Result.ProviderResults.FirstOrDefault().Results.Result;
 
                     // Decoded Xml if response encoded
-                    if (sResponses.Contains("&gt;"))
+                    if (responses.Contains("&gt;"))
                     {
-                        HttpUtility.HtmlDecode(sResponses);
+                        HttpUtility.HtmlDecode(responses);
                     }
 
                     // Deserialize Response Body
-                    var oResponse = new TravelgateSearchResponse();
-                    using (TextReader oReader = new StringReader(sResponses))
-                    {
-                        oResponse = (TravelgateSearchResponse)oResponseSerializer.Deserialize(oReader);
-                    }
+                    var response = _serializer.DeSerialize<TravelgateSearchResponse>(responses);
 
-                    oAvailabilityResponses.Add(oResponse);
+                    availabilityResponses.Add(response);
                 }
             }
 
             // Extract search results from responses
-            oTransformedResults.TransformedResults.AddRange(oAvailabilityResponses.Where(r => r.Hotels.Count > 0).SelectMany(x => GetResultFromResponse(x)));
+            transformedResults.TransformedResults.AddRange(availabilityResponses.Where(r => r.Hotels.Count > 0).SelectMany(x => GetResultFromResponse(x)));
 
-            return oTransformedResults;
-
+            return transformedResults;
         }
 
         #endregion
 
         #region ResponseHasExceptions
 
-        public override bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
@@ -449,15 +404,14 @@ namespace ThirdParty.CSSuppliers
 
         public class SearchBatchDetails
         {
-
-            public string Source;
-            public List<ResortSplit> ResortSplits;
-            public bool SearchByHotel;
-            public bool UseZoneSearch;
-            public int BatchSize;
-            public int BatchCount;
-            public int SearchItemCount;
-            public List<string> SearchItemIDs = new List<string>();
+            public string Source { get; set; }
+            public List<ResortSplit> ResortSplits { get; set; }
+            public bool SearchByHotel { get; set; }
+            public bool UseZoneSearch { get; set; }
+            public int BatchSize { get; set; }
+            public int BatchCount { get; set; }
+            public int SearchItemCount { get; set; }
+            public List<string> SearchItemIDs { get; set; } = new();
 
             public void CalculateBatchCount()
             {
@@ -467,145 +421,148 @@ namespace ThirdParty.CSSuppliers
             public void SetZoneSearchID()
             {
                 // Only try to extract the region/zone code if code has 3 parts separated by #
-                var sCode = ResortSplits[0].ResortCode.Split('#');
-                if (sCode.Length == 3)
+                var code = ResortSplits[0].ResortCode.Split('#');
+                if (code.Length == 3)
                 {
-                    SearchItemIDs.Add(sCode[0] + "#" + sCode[1]);
+                    SearchItemIDs.Add(code[0] + "#" + code[1]);
                 }
             }
 
             public void SetSearchIDs()
             {
                 // Create a list of all properties/cities that we will be searching (easier to keep track of this way)
-                foreach (ResortSplit oResortSplit in ResortSplits)
+                foreach (var resortSplit in ResortSplits)
                 {
                     if (SearchByHotel)
                     {
-                        foreach (iVector.Search.Property.Hotel oHotel in oResortSplit.Hotels)
-                            SearchItemIDs.Add(oHotel.TPKey);
+                        foreach (var hotel in resortSplit.Hotels)
+                        {
+                            SearchItemIDs.Add(hotel.TPKey);
+                        }
                     }
                     else
                     {
-                        SearchItemIDs.Add(oResortSplit.ResortCode);
+                        SearchItemIDs.Add(resortSplit.ResortCode);
                     }
                 }
             }
-
         }
 
-        public string AppendURLs(IThirdPartyAttributeSearch SearchDetails)
+        public string AppendURLs(IThirdPartyAttributeSearch searchDetails)
         {
-
             var sbURLXML = new StringBuilder();
 
-            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(SearchDetails));
-            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(SearchDetails));
-            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(SearchDetails));
-            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(SearchDetails));
+            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(searchDetails));
+            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(searchDetails));
+            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(searchDetails));
+            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(searchDetails));
 
             return sbURLXML.ToString();
-
         }
 
-        private List<TransformedResult> GetResultFromResponse(TravelgateSearchResponse oResponse)
+        private List<TransformedResult> GetResultFromResponse(TravelgateSearchResponse response)
         {
-            var oTransformedResults = new List<TransformedResult>();
+            var transformedResults = new List<TransformedResult>();
 
-            foreach (TravelgateSearchResponse.Hotel oHotel in oResponse.Hotels)
+            foreach (var hotel in response.Hotels)
             {
-                foreach (TravelgateSearchResponse.Meal oMealPlans in oHotel.Meals)
+                foreach (var mealPlans in hotel.Meals)
                 {
-                    foreach (TravelgateSearchResponse.OptionDetails oOption in oMealPlans.Options)
+                    foreach (var option in mealPlans.Options)
                     {
-                        string encryptedParamters = EncryptParamters(oOption.Parameters);
+                        string encryptedParamters = EncryptParamters(option.Parameters);
 
-                        foreach (TravelgateSearchResponse.Room oRoom in oOption.Rooms)
+                        foreach (var room in option.Rooms)
                         {
-                            var oTransformedResult = new TransformedResult();
-                            oTransformedResult.TPKey = oHotel.TPKey;
-                            oTransformedResult.CurrencyCode = oOption.Price.Currency;
-                            oTransformedResult.RoomType = oRoom.RoomType;
-                            oTransformedResult.RoomTypeCode = oRoom.RoomTypeCode;
-                            oTransformedResult.MealBasisCode = oMealPlans.MealBaisCode;
-                            oTransformedResult.Amount = oOption.Price.Amount.ToSafeDecimal();
-                            oTransformedResult.PropertyRoomBookingID = oRoom.PropertyRoomBookingID.ToSafeInt();
-                            oTransformedResult.CommissionPercentage = oOption.Price.Commission.ToSafeDecimal();
-                            oTransformedResult.NonRefundableRates = IsNonRefundable(oOption.RateRules, oRoom.NonRefunfable);
-                            oTransformedResult.FixPrice = IsFixedPrice(oOption.Price.Binding, oOption.Price.Commission);
-                            oTransformedResult.SellingPrice = GetSellingPrice(oOption.Price.Binding, oOption.Price.Amount);
-                            oTransformedResult.NetPrice = CalculateNetPrice(oOption.Price.Binding, oOption.Price.Amount, oOption.Price.Commission);
-                            oTransformedResult.TPRateCode = GetTPRateCode(oResponse.DailyRatePlans);
-                            oTransformedResult.TPReference = oRoom.ID + "~" + oRoom.RoomTypeCode + "~" + oRoom.RoomType + "~" + oOption.PaymentType + "~" + encryptedParamters + "~" + oOption.Price.Commission + "~" + oOption.Price.Binding + "~" + oMealPlans.MealBaisCode;
+                            var transformedResult = new TransformedResult
+                            {
+                                TPKey = hotel.TPKey,
+                                CurrencyCode = option.Price.Currency,
+                                RoomType = room.RoomType,
+                                RoomTypeCode = room.RoomTypeCode,
+                                MealBasisCode = mealPlans.MealBaisCode,
+                                Amount = option.Price.Amount.ToSafeDecimal(),
+                                PropertyRoomBookingID = room.PropertyRoomBookingID.ToSafeInt(),
+                                CommissionPercentage = option.Price.Commission.ToSafeDecimal(),
+                                NonRefundableRates = IsNonRefundable(option.RateRules, room.NonRefunfable),
+                                FixPrice = IsFixedPrice(option.Price.Binding, option.Price.Commission),
+                                SellingPrice = GetSellingPrice(option.Price.Binding, option.Price.Amount),
+                                NetPrice = CalculateNetPrice(option.Price.Binding, option.Price.Amount, option.Price.Commission),
+                                TPRateCode = GetTPRateCode(response.DailyRatePlans),
+                                TPReference = room.ID + "~" + room.RoomTypeCode + "~" + room.RoomType + "~" + option.PaymentType + "~" + encryptedParamters + "~" + option.Price.Commission + "~" + option.Price.Binding + "~" + mealPlans.MealBaisCode
+                            };
 
-                            oTransformedResults.Add(oTransformedResult);
+                            transformedResults.Add(transformedResult);
                         }
                     }
                 }
             }
 
-            return oTransformedResults;
+            return transformedResults;
         }
 
-        private string EncryptParamters(List<TravelgateSearchResponse.Parameter> oParameters)
+        private string EncryptParamters(List<TravelgateSearchResponse.Parameter> parameters)
         {
-            return _secretKeeper.Encrypt("<Parameters>" + GetParamters(oParameters) + "</Parameters>");
+            return _secretKeeper.Encrypt("<Parameters>" + GetParamters(parameters) + "</Parameters>");
         }
 
-        private string GetParamters(List<TravelgateSearchResponse.Parameter> oParameters)
+        private string GetParamters(List<TravelgateSearchResponse.Parameter> parameters)
         {
             var sbParamters = new StringBuilder();
-            foreach (TravelgateSearchResponse.Parameter oParameter in oParameters)
-                sbParamters.AppendFormat("<Parameter key=\"{0}\" value=\"{1}\"></Parameter>", oParameter.Key, oParameter.Value);
+            foreach (var parameter in parameters)
+            {
+                sbParamters.AppendFormat("<Parameter key=\"{0}\" value=\"{1}\"></Parameter>", parameter.Key, parameter.Value);
+            }
 
             return sbParamters.ToSafeString();
         }
 
-        private bool IsNonRefundable(List<TravelgateSearchResponse.RateRule> oRateRules, string sIsNonRefundable)
+        private bool IsNonRefundable(List<TravelgateSearchResponse.RateRule> rateRules, string isNonRefundable)
         {
-            if (oRateRules.Any())
+            if (rateRules.Any())
             {
-                return oRateRules.First().Rules.FirstOrDefault().RateType.Equals("NonRefundable") | !string.IsNullOrEmpty(sIsNonRefundable) & sIsNonRefundable.Equals("true");
+                return rateRules.First().Rules.FirstOrDefault().RateType.Equals("NonRefundable") ||
+                    (!string.IsNullOrEmpty(isNonRefundable) && isNonRefundable.Equals("true"));
             }
 
             return false;
         }
 
-        private bool IsFixedPrice(string sBinding, string sComissions)
+        private bool IsFixedPrice(string binding, string comissions)
         {
-            return sBinding.Equals("true") & !sComissions.Equals("-1");
+            return binding.Equals("true") && !comissions.Equals("-1");
         }
 
-        private string GetSellingPrice(string sBinding, string sAmount)
+        private string GetSellingPrice(string binding, string amount)
         {
-            if (sBinding.Equals("true"))
+            if (binding.Equals("true"))
             {
-                return sAmount;
+                return amount;
             }
 
             return "0";
         }
 
-        private string CalculateNetPrice(string sBinding, string sAmount, string sComission)
+        private string CalculateNetPrice(string binding, string amount, string commission)
         {
-            if (sBinding.Equals("true"))
+            if (binding.Equals("true"))
             {
-                return (sAmount.ToSafeDecimal() * ((100m - sComission.ToSafeDecimal()) / 100m)).ToSafeString();
+                return (amount.ToSafeDecimal() * ((100m - commission.ToSafeDecimal()) / 100m)).ToSafeString();
             }
 
             return "0";
         }
 
-        private string GetTPRateCode(List<TravelgateSearchResponse.RatePlan> oDailyRatePlans)
+        private string GetTPRateCode(List<TravelgateSearchResponse.RatePlan> dailyRatePlans)
         {
-            if (oDailyRatePlans.Any())
+            if (dailyRatePlans.Any())
             {
-                return oDailyRatePlans.First().TPRateCode;
+                return dailyRatePlans.First().TPRateCode;
             }
 
             return string.Empty;
         }
 
         #endregion
-
     }
 }

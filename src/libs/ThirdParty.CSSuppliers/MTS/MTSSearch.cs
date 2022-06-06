@@ -6,7 +6,6 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.MTS.Models;
@@ -15,14 +14,14 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class MTSSearch : ThirdPartyPropertySearchBase
+    public class MTSSearch : IThirdPartySearch
     {
         #region Constructor
 
         private readonly IMTSSettings _settings;
         private readonly ISerializer _serializer;
 
-        public MTSSearch(IMTSSettings settings, ISerializer serializer, ILogger<MTSSearch> logger) : base(logger)
+        public MTSSearch(IMTSSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -32,15 +31,13 @@
 
         #region Properties
 
-        public override string Source => ThirdParties.MTS;
-
-        public override bool SqlRequest => false;
+        public string Source => ThirdParties.MTS;
 
         #endregion
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
@@ -49,7 +46,7 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
             var regions = new Dictionary<string, string>();
@@ -243,12 +240,7 @@
                 {
                     EndPoint = _settings.BaseURL(searchDetails),
                     Method = eRequestMethod.POST,
-                    Source = ThirdParties.MTS,
-                    LogFileName = "Search",
-                    CreateLog = true,
-                    TimeoutInSeconds = this.RequestTimeOutSeconds(searchDetails),
                     ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
-                    UseGZip = true,
                     ContentType = ContentTypes.Application_json
                 };
 
@@ -260,7 +252,7 @@
             return requests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allResponses = new List<MTSSearchResponse>();
@@ -341,7 +333,7 @@
 
         #region ResponseHasExceptions
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

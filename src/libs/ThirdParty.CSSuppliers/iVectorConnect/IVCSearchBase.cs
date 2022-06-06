@@ -8,28 +8,24 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class IVCSearchBase : ThirdPartyPropertySearchBase
+    public abstract class IVCSearchBase : IThirdPartySearch
     {
         private readonly IIVectorConnectSettings _settings;
         private readonly ISerializer _serializer;
 
-        public IVCSearchBase(IIVectorConnectSettings settings, ISerializer serializer, ILogger logger)
-            : base(logger)
+        public IVCSearchBase(IIVectorConnectSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public override string Source { get; }
+        public abstract string Source { get; }
 
-        public override bool SqlRequest => false;
-
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             //1. set up some start values
             var requests = new List<Request>();
@@ -47,7 +43,6 @@
                 CreateLog = saveLogs,
                 Source = Source,
                 LogFileName = "PropertySearch",
-                TimeoutInSeconds = RequestTimeOutSeconds(searchDetails),
                 ExtraInfo = searchDetails,
             };
 
@@ -168,7 +163,7 @@
             return resortSplits.Sum(resortSplit => resortSplit.Hotels.Count);
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -210,12 +205,12 @@
 
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

@@ -18,7 +18,7 @@
     using ThirdParty.Search.Support;
     using static RestelCommon;
 
-    public class RestelSearch : ThirdPartyPropertySearchBase
+    public class RestelSearch : IThirdPartySearch
     {
         private readonly IRestelSettings _settings;
         private readonly ISerializer _serializer;
@@ -27,20 +27,16 @@
         public RestelSearch(
             IRestelSettings settings,
             ISerializer serializer,
-            ISecretKeeper secretKeeper,
-            ILogger<RestelSearch> logger)
-            : base(logger)
+            ISecretKeeper secretKeeper)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
-        public override string Source => ThirdParties.RESTEL;
+        public string Source => ThirdParties.RESTEL;
 
-        public override bool SqlRequest => false;
-
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails,  List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails,  List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
 
@@ -64,11 +60,8 @@
 
                 // Build the Request Object
                 var oRequest = CreateRequest(_settings, searchDetails, "Search");
-                oRequest.CreateLog = saveLogs;
-                oRequest.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails);
                 oRequest.ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode);
-                oRequest.UseGZip = true;
-
+                
                 oRequest.SetRequest(xmlRequest);
 
                 requests.Add(oRequest);
@@ -77,7 +70,7 @@
             return requests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -143,7 +136,7 @@
             return transformedResults;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             // doesn't do more than 3 rooms
             if (searchDetails.Rooms > 3)
@@ -205,7 +198,7 @@
             return false;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

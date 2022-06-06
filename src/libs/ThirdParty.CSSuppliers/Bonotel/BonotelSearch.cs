@@ -8,39 +8,31 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-
-    public class BonotelSearch : ThirdPartyPropertySearchBase
+    public class BonotelSearch : IThirdPartySearch
     {
-
         #region Properties
 
         private readonly IBonotelSettings _settings;
 
-        private readonly ITPSupport _support;
-
         private readonly ISerializer _serializer;
 
-        public override string Source { get; } = ThirdParties.BONOTEL;
+        public string Source => ThirdParties.BONOTEL;
 
-        public override bool SqlRequest { get; } = false;
-
-        public override bool SupportsNonRefundableTagging { get; } = false;
+        public bool SupportsNonRefundableTagging { get; } = false;
 
         #endregion
 
         #region Constructors
 
-        public BonotelSearch(IBonotelSettings settings, ITPSupport support, ISerializer serializer, ILogger<BonotelSearch> logger) : base(logger)
+        public BonotelSearch(IBonotelSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
@@ -48,7 +40,7 @@
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
 
             bool bRestrictions = false;
@@ -66,7 +58,7 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
 
             var oRequests = new List<Request>();
@@ -138,7 +130,7 @@
 
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
             var oResponses = new List<AvailabilityResponse>();
             var oTransformedResults = new TransformedResultCollection();
@@ -187,10 +179,12 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }
+
         #endregion
 
         #region Helpers
@@ -198,6 +192,5 @@
 
 
         #endregion
-
     }
 }

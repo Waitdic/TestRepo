@@ -6,8 +6,8 @@
 
     public class DerbySoftSynxisSearch : DerbySoftBookingUsbV4Search
     {
-        public DerbySoftSynxisSearch(IDerbySoftSynxisSettings settings, ILogger<DerbySoftSynxisSearch> logger)
-            : base(settings, logger)
+        public DerbySoftSynxisSearch(IDerbySoftSynxisSettings settings)
+            : base(settings)
         {
         }
 

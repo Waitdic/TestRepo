@@ -6,8 +6,8 @@
 
     public class JuniperECTravelSearch : JuniperBaseSearch
     {
-        public JuniperECTravelSearch(IJuniperECTravelSettings settings, ISerializer serializer, ILogger<JuniperECTravelSearch> logger)
-            : base(settings, serializer, logger)
+        public JuniperECTravelSearch(IJuniperECTravelSettings settings, ISerializer serializer)
+            : base(settings, serializer)
         {
         }
 

@@ -30,6 +30,7 @@
                 CurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? user.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 OpaqueSearch = searchRequest.OpaqueRates,
                 SellingCountry = searchRequest.SellingCountry,
+                EmailLogsToAddress = searchRequest.EmailLogsToAddress,
             };
 
             if (searchRequest.ArrivalDate.HasValue)

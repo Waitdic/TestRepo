@@ -12,27 +12,23 @@
     using Intuitive.Helpers.Serialization;
     using Models;
     using Models.Common;
-    using Microsoft.Extensions.Logging;
 
-    public class SerhsSearch : ThirdPartyPropertySearchBase
+    public class SerhsSearch : IThirdPartySearch
     {
         private const string EmptyHotelId = "0";
 
         private readonly ISerhsSettings _settings;
         private readonly ISerializer _serializer;
 
-        public SerhsSearch(ISerhsSettings settings, ISerializer serializer, ILogger<SerhsSearch> logger)
-            : base(logger)
+        public SerhsSearch(ISerhsSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public override string Source => ThirdParties.SERHS;
+        public string Source => ThirdParties.SERHS;
 
-        public override bool SqlRequest => false;
-
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             string version = _settings.Version(searchDetails);
             string clientCode = _settings.ClientCode(searchDetails);
@@ -117,10 +113,6 @@
             {
                 EndPoint = _settings.URL(searchDetails),
                 Method = eRequestMethod.POST,
-                Source = Source,
-                LogFileName = "Search",
-                CreateLog = saveLogs,
-                TimeoutInSeconds = RequestTimeOutSeconds(searchDetails),
                 ExtraInfo = searchDetails
             };
 
@@ -129,7 +121,7 @@
             return new List<Request>{ request };
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -198,12 +190,12 @@
             return SafeTypeExtensions.ToSafeDecimal(price.Replace(".", "").Replace(",", "."));
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return searchDetails.Duration > 30;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

@@ -8,7 +8,6 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
@@ -16,12 +15,11 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class YouTravelSearch : ThirdPartyPropertySearchBase
+    public class YouTravelSearch : IThirdPartySearch
     {
-
         #region Constructor
 
-        public YouTravelSearch(IYouTravelSettings settings, ITPSupport support, ISerializer serializer, ILogger<YouTravelSearch> logger) : base(logger)
+        public YouTravelSearch(IYouTravelSettings settings, ITPSupport support, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -38,15 +36,13 @@
 
         private readonly ISerializer _serializer;
 
-        public override string Source { get; } = ThirdParties.YOUTRAVEL;
-
-        public override bool SqlRequest { get; } = false;
+        public string Source => ThirdParties.YOUTRAVEL;
 
         #endregion
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
 
             bool bRestrictions = false;
@@ -65,7 +61,7 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
 
             var oRequests = new List<Request>();
@@ -141,7 +137,6 @@
                 oRequest.Source = Source;
                 oRequest.LogFileName = "Search";
                 oRequest.CreateLog = bSaveLogs;
-                oRequest.TimeoutInSeconds = RequestTimeOutSeconds(oSearchDetails);
                 oRequest.ExtraInfo = new SearchExtraHelper(oSearchDetails, sUniqueCode);
                 oRequest.UseGZip = true;
 
@@ -154,7 +149,7 @@
         }
 
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
 
             var results = oRequests.Select(o => _serializer.DeSerialize<YouTravelSearchResponse>(o.ResponseXML));
@@ -218,7 +213,7 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }

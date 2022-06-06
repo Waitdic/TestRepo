@@ -1,30 +1,25 @@
-﻿
-using System.Net.Http;
-using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using System.Net.Http;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
 
     public class TravelgateDOTWv3 : Travelgate
     {
-
-        public TravelgateDOTWv3(ITravelgateSettings settings, ITPSupport support, HttpClient httpClient, ISecretKeeper secretKeeper, ISerializer serializer) : base(settings, support, httpClient, secretKeeper, serializer)
+        public TravelgateDOTWv3(
+            ITravelgateDOTWv3Settings settings,
+            ITPSupport support,
+            HttpClient httpClient,
+            ISecretKeeper secretKeeper,
+            ISerializer serializer,
+            ILogger<TravelgateDOTWv3> logger)
+            : base(settings, support, httpClient, secretKeeper, serializer, logger)
         {
         }
 
-        public override string Source
-        {
-            get
-            {
-                return ThirdParties.TRAVELGATEDOTWV3;
-            }
-            set
-            {
-            }
-        }
-
+        public override string Source => ThirdParties.TRAVELGATEDOTWV3;
     }
 }

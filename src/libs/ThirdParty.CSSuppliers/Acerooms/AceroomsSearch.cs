@@ -18,23 +18,21 @@
     using ThirdParty.Search.Models;
     using static ThirdParty.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
 
-    public class AceroomsSearch : ThirdPartyPropertySearchBase
+    public class AceroomsSearch : IThirdPartySearch
     {
         #region "Properties"
 
         private readonly IAceroomsSettings _settings;
         private readonly ITPSupport _support;
 
-        public override bool SqlRequest => false;
+        public string Source => ThirdParties.ACEROOMS;
 
-        public override string Source => ThirdParties.ACEROOMS;
-
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
@@ -43,8 +41,7 @@
 
         #region "Constructors"
 
-        public AceroomsSearch(IAceroomsSettings settings, ITPSupport support, ILogger<AceroomsSearch> logger)
-            : base(logger)
+        public AceroomsSearch(IAceroomsSettings settings, ITPSupport support)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -54,7 +51,7 @@
 
         #region "Build Search Request"
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
@@ -98,7 +95,7 @@
 
         #region "Transform Response"
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allResponses = new List<AceroomsAvailabilityResponse>();

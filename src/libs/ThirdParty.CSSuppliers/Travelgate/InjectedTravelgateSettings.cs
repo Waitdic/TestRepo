@@ -1,23 +1,146 @@
-﻿using Intuitive.Helpers.Extensions;
-using ThirdParty.Constants;
-using ThirdParty.Search.Settings;
-using ThirdParty.Support;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using Intuitive.Helpers.Extensions;
+    using ThirdParty.Constants;
+    using ThirdParty.Support;
 
-    public class InjectedTravelgateSettings : SettingsBase, ITravelgateSettings
+    public class InjectedTravelgateArabianASettings : InjectedTravelgateSettings, ITravelgateArabianASettings
     {
+        protected override string Source => ThirdParties.TRAVELGATEARABIANA;
+    }
 
-        private readonly ThirdPartyConfiguration configuration;
+    public class InjectedTravelgateBookohotelSettings : InjectedTravelgateSettings, ITravelgateBookohotelSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEBOOKOHOTEL;
+    }
 
-        protected override string Source => ThirdParties.TRAVELGATE;
+    public class InjectedTravelgateDarinaSettings : InjectedTravelgateSettings, ITravelgateDarinaSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDARINA;
+    }
 
-        public InjectedTravelgateSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+    public class InjectedTravelgateDerbysoftSettings : InjectedTravelgateSettings, ITravelgateDerbysoftSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFT;
+    }
 
+    public class InjectedTravelgateDerbysoftBestWesternSettings : InjectedTravelgateSettings, ITravelgateDerbysoftBestWesternSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTBESTWESTERN;
+    }
+
+    public class InjectedTravelgateDerbysoftIHGSettings : InjectedTravelgateSettings, ITravelgateDerbysoftIHGSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTIHG;
+    }
+
+    public class InjectedTravelgateDerbysoftNAVHSettings : InjectedTravelgateSettings, ITravelgateDerbysoftNAVHSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEYALAGO;
+    }
+
+    public class InjectedTravelgateDerbysoftUORSettings : InjectedTravelgateSettings, ITravelgateDerbysoftUORSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTUOR;
+    }
+
+    public class InjectedTravelgateDingusSettings : InjectedTravelgateSettings, ITravelgateDingusSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDINGUS;
+    }
+
+    public class InjectedTravelgateDingusBlueSeaSettings : InjectedTravelgateSettings, ITravelgateDingusBlueSeaSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDINGUSBLUESEA;
+    }
+
+    public class InjectedTravelgateDingusSpringHotelsSettings : InjectedTravelgateSettings, ITravelgateDingusSpringHotelsSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDINGUSSPRINGHOTELS;
+    }
+
+    public class InjectedTravelgateDingusTHBSettings : InjectedTravelgateSettings, ITravelgateDingusTHBSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDINGUSTHB;
+    }
+
+    public class InjectedTravelgateDOTWv3Settings : InjectedTravelgateSettings, ITravelgateDOTWv3Settings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEDOTWV3;
+    }
+
+    public class InjectedTravelgateEETGlobalSettings : InjectedTravelgateSettings, ITravelgateEETGlobalSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEEETGLOBAL;
+    }
+
+    public class InjectedTravelgateEuroPlayasSettings : InjectedTravelgateSettings, ITravelgateEuroPlayasSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEUROPLAYAS;
+    }
+
+    public class InjectedTravelgateGekkoSettings : InjectedTravelgateSettings, ITravelgateGekkoSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEGEKKO;
+    }
+
+    public class InjectedTravelgateHotelTraderSettings : InjectedTravelgateSettings, ITravelgateHotelTraderSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEHOTELTRADER;
+    }
+
+    public class InjectedTravelgateIxpiraSettings : InjectedTravelgateSettings, ITravelgateIxpiraSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEIXPIRA;
+    }
+
+    public class InjectedTravelgateMethabookSettings : InjectedTravelgateSettings, ITravelgateMethabookSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEMETHABOOK;
+    }
+
+    public class InjectedTravelgateOswaldArrigoSettings : InjectedTravelgateSettings, ITravelgateOswaldArrigoSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEOSWALDARRIGO;
+    }
+
+    public class InjectedTravelgatePerlatoursSettings : InjectedTravelgateSettings, ITravelgatePerlatoursSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEPERLATOURS;
+    }
+
+    public class InjectedTravelgateTBOSettings : InjectedTravelgateSettings, ITravelgateTBOSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATETBO;
+    }
+
+    public class InjectedTravelgateTravellandaSettings : InjectedTravelgateSettings, ITravelgateTravellandaSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATETRAVELLANDA;
+    }
+    
+    public class InjectedTravelgateTraveltinoSettings : InjectedTravelgateSettings, ITravelgateTraveltinoSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATETRAVELTINO;
+    }
+
+    public class InjectedTravelgateViajesOlympiaSettings : InjectedTravelgateSettings, ITravelgateViajesOlympiaSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEVIAJESOLYMPIA;
+    }
+
+    public class InjectedTravelgateWHLSettings : InjectedTravelgateSettings, ITravelgateWHLSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEWHL;
+    }
+
+    public class InjectedTravelgateYalagoSettings : InjectedTravelgateSettings, ITravelgateYalagoSettings
+    {
+        protected override string Source => ThirdParties.TRAVELGATEYALAGO;
+    }
+
+    public abstract class InjectedTravelgateSettings : SettingsBase, ITravelgateSettings
+    {
         public string get_Username(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Username", tpAttributeSearch);

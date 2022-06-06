@@ -18,7 +18,7 @@
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Logging;
 
-    public class YalagoSearch : ThirdPartyPropertySearchBase
+    public class YalagoSearch : IThirdPartySearch
     {
         #region "Constructors"
 
@@ -26,8 +26,7 @@
 
         private readonly ITPSupport _support;
 
-        public YalagoSearch(IYalagoSettings settings, ITPSupport support, ILogger<YalagoSearch> logger)
-            : base(logger)
+        public YalagoSearch(IYalagoSettings settings, ITPSupport support)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -37,23 +36,21 @@
 
         #region "Properties"
 
-        public override string Source => ThirdParties.YALAGO;
+        public string Source => ThirdParties.YALAGO;
 
-        public override bool SqlRequest => false;
-
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
 
         #endregion
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
             var searchHelper = new SearchHelper();
@@ -143,7 +140,7 @@
             return yalagoAvailabilityRequest;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allResponses = new List<YalagoAvailabilityResponse>();

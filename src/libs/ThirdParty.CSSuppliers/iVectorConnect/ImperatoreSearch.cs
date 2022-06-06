@@ -6,8 +6,8 @@
 
     public sealed class ImperatoreSearch : IVCSearchBase
     {
-        public ImperatoreSearch(IImperatoreSettings settings, ISerializer serializer, ILogger<ImperatoreSearch> logger)
-            : base(settings, serializer, logger)
+        public ImperatoreSearch(IImperatoreSettings settings, ISerializer serializer)
+            : base(settings, serializer)
         {
         }
 

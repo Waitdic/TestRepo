@@ -17,7 +17,7 @@
     using ThirdParty.Search.Models;
     using ThirdParty.CSSuppliers.Jumbo.Models;
 
-    public class JumboSearch : ThirdPartyPropertySearchBase
+    public class JumboSearch : IThirdPartySearch
     {
         #region Constructor
 
@@ -27,7 +27,7 @@
 
         private readonly ISerializer _serializer;
 
-        public JumboSearch(IJumboSettings settings, ITPSupport support, ILogger<JumboSearch> logger, ISerializer serializer) : base(logger)
+        public JumboSearch(IJumboSettings settings, ITPSupport support, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -38,7 +38,7 @@
 
         #region Properties
 
-        public override string Source
+        public string Source
         {
             get
             {
@@ -46,15 +46,13 @@
             }
         }
 
-        public override bool SqlRequest { get; } = false;
-
-        public override bool SupportsNonRefundableTagging { get; } = false;
+        public bool SupportsNonRefundableTagging { get; } = false;
 
         #endregion
 
         #region SearchRestrictions
 
-        public override bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails oSearchDetails)
         {
 
             bool bRestrictions = false;
@@ -73,7 +71,7 @@
 
         #region SearchFunctions
 
-        public override List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
         {
 
             var oRequests = new List<Request>();
@@ -161,7 +159,7 @@
 
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
 
             var transformedResults = new TransformedResultCollection();
@@ -215,10 +213,12 @@
         #endregion
 
         #region ResponseHasExceptions
-        public override bool ResponseHasExceptions(Request oRequest)
+
+        public bool ResponseHasExceptions(Request oRequest)
         {
             return false;
         }
+
         #endregion
 
         #region Helpers

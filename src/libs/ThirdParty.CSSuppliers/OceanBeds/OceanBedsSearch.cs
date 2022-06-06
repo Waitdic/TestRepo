@@ -16,23 +16,20 @@
     using ThirdParty.CSSuppliers.OceanBeds.Models;
     using static OceanBedsHelper;
 
-    public class OceanBedsSearch : ThirdPartyPropertySearchBase
+    public class OceanBedsSearch : IThirdPartySearch
     {
         private readonly IOceanBedsSettings _settings;
         private readonly ISerializer _serializer;
 
-        public OceanBedsSearch(IOceanBedsSettings settings, ISerializer serializer, ILogger<OceanBedsSearch> logger)
-            : base(logger)
+        public OceanBedsSearch(IOceanBedsSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public override string Source => ThirdParties.OCEANBEDS;
+        public string Source => ThirdParties.OCEANBEDS;
 
-        public override bool SqlRequest => false;
-
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = from resort in resortSplits
                            select new OceanBedsPropertyDetails(searchDetails, resort.ResortCode)
@@ -44,7 +41,7 @@
             return requests.ToList();
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResult = new TransformedResultCollection();
             var responses = requests
@@ -58,12 +55,12 @@
             return transformedResult;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return searchDetails.Duration < 7;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
@@ -76,13 +73,8 @@
             {
                 searchWebRequest.EndPoint = _settings.SearchEndPoint(searchDetails);
                 searchWebRequest.Method = eRequestMethod.POST;
-                searchWebRequest.Source = Source;
-                searchWebRequest.LogFileName = "Search";
-                searchWebRequest.CreateLog = saveLogs;
-                searchWebRequest.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails);
                 searchWebRequest.ExtraInfo = searchDetails;
                 searchWebRequest.SetRequest(_serializer.Serialize(request));
-                searchWebRequest.UseGZip = _settings.UseGzip(searchDetails).ToSafeBoolean();
                 searchWebRequest.SOAP = false;
             }
             catch (Exception)

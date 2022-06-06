@@ -6,8 +6,8 @@
 
     public class JuniperElevateSearch : JuniperBaseSearch
     {
-        public JuniperElevateSearch(IJuniperElevateSettings settings, ISerializer serializer, ILogger<JuniperElevateSearch> logger)
-            : base(settings, serializer, logger)
+        public JuniperElevateSearch(IJuniperElevateSettings settings, ISerializer serializer)
+            : base(settings, serializer)
         {
         }
 

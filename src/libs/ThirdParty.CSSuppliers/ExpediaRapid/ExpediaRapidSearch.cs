@@ -21,23 +21,20 @@
     using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
-    using Microsoft.Extensions.Logging;
 
-    public class ExpediaRapidSearch : ThirdPartyPropertySearchBase
+    public class ExpediaRapidSearch : IThirdPartySearch
     {
         private readonly IExpediaRapidSettings _settings;
 
         private readonly ITPSupport _support;
 
-        public ExpediaRapidSearch(IExpediaRapidSettings settings, ITPSupport support, ILogger<ExpediaRapidSearch> logger) : base(logger)
+        public ExpediaRapidSearch(IExpediaRapidSettings settings, ITPSupport support)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
         }
 
-        public override string Source { get; } = ThirdParties.EXPEDIARAPID;
-
-        public override bool SqlRequest { get; } = false;
+        public string Source { get; } = ThirdParties.EXPEDIARAPID;
 
         public static Request BuildDefaultRequest(string url, eRequestMethod requestMethod, RequestHeaders headers, bool useGzip, bool saveLogs, string userAgent, string logFileName, string requestBody = null)
         {
@@ -81,7 +78,7 @@
             return request;
         }
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
             var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
@@ -109,7 +106,7 @@
             return searchUrl.Uri.AbsoluteUri + AddQueryParams(nvc);
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allAvailabilities = new List<PropertyAvailablility>();
@@ -133,13 +130,13 @@
             return transformedResults;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
 
             return searchDetails.Rooms > 8;
         }
 
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             var searchResponse = new SearchResponse();
 

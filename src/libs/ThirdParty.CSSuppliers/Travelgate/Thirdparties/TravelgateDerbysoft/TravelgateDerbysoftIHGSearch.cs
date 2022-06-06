@@ -1,26 +1,22 @@
-﻿using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
 
     public class TravelgateDerbysoftIHGSearch : TravelgateSearch
     {
-
-        public TravelgateDerbysoftIHGSearch(ITravelgateSettings settings, ITPSupport support, ISecretKeeper secretKeeper, ISerializer serializer) : base(settings, support, secretKeeper, serializer)
+        public TravelgateDerbysoftIHGSearch(
+            ITravelgateDerbysoftIHGSettings settings,
+            ITPSupport support,
+            ISecretKeeper secretKeeper,
+            ISerializer serializer)
+            : base(settings, support, secretKeeper, serializer)
         {
         }
 
-
-        public override string Source
-        {
-            get
-            {
-                return ThirdParties.TRAVELGATEDERBYSOFTIHG;
-            }
-        }
-
+        public override string Source => ThirdParties.TRAVELGATEDERBYSOFTIHG;
     }
 }

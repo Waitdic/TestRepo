@@ -6,8 +6,8 @@
 
     public sealed class BookaBedSearch : IVCSearchBase
     {
-        public BookaBedSearch(IBookabedSettings settings, ISerializer serializer, ILogger<BookaBedSearch> logger)
-            : base(settings, serializer, logger)
+        public BookaBedSearch(IBookabedSettings settings, ISerializer serializer)
+            : base(settings, serializer)
         {
         }
 

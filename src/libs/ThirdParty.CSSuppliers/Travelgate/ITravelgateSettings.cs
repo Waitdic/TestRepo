@@ -1,5 +1,112 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    public interface ITravelgateArabianASettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateBookohotelSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDarinaSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDerbysoftSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDerbysoftBestWesternSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDerbysoftIHGSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDerbysoftNAVHSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDerbysoftUORSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDingusSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDingusBlueSeaSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDingusSpringHotelsSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDingusTHBSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateDOTWv3Settings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateEETGlobalSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateEuroPlayasSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateGekkoSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateHotelTraderSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateIxpiraSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateMethabookSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateOswaldArrigoSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgatePerlatoursSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateTBOSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateTravellandaSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateTraveltinoSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateViajesOlympiaSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateWHLSettings : ITravelgateSettings
+    {
+    }
+
+    public interface ITravelgateYalagoSettings : ITravelgateSettings
+    {
+    }
 
     public interface ITravelgateSettings
     {

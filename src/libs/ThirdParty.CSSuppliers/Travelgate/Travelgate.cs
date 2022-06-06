@@ -1,30 +1,46 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Web;
-using System.Xml;
-using Intuitive;
-using Intuitive.Helpers.Extensions;
-using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using Intuitive.Net.WebRequests;
-using Microsoft.Extensions.Logging;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-using ThirdParty.Models;
-using ThirdParty.Models.Property.Booking;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using System;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System.Web;
+    using System.Xml;
+    using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
     public abstract class Travelgate : IThirdParty
     {
-
         #region Constructor
 
-        public Travelgate(ITravelgateSettings settings, ITPSupport support, HttpClient httpClient, ISecretKeeper secretKeeper, ISerializer serializer, ILogger<Travelgate> logger)
+        private readonly ITravelgateSettings _settings;
+
+        private readonly ITPSupport _support;
+
+        private readonly HttpClient _httpClient;
+
+        private readonly ISecretKeeper _secretKeeper;
+
+        private readonly ISerializer _serializer;
+
+        private readonly ILogger _logger;
+
+        public Travelgate(
+            ITravelgateSettings settings,
+            ITPSupport support,
+            HttpClient httpClient,
+            ISecretKeeper secretKeeper,
+            ISerializer serializer,
+            ILogger logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -38,399 +54,343 @@ namespace ThirdParty.CSSuppliers
 
         #region Properties
 
-        public abstract string Source { get; set; }
+        public abstract string Source { get; }
 
-        private readonly ITravelgateSettings _settings;
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+            => _settings.get_OffsetCancellationDays(searchDetails, false);
 
-        private readonly ITPSupport _support;
+        public bool SupportsBookingSearch => false;
 
-        private readonly HttpClient _httpClient;
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.get_AllowCancellations(searchDetails);
 
-        private readonly ISecretKeeper _secretKeeper;
+        public bool SupportsRemarks => false;
 
-        private readonly ISerializer _serializer;
+        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => false;
 
-        private readonly ILogger<Travelgate> _logger;
+        public bool RequiresVCard(VirtualCardInfo info) => _settings.get_RequiresVCard(info);
 
-        private int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        private char get_ReferenceDelimiter(IThirdPartyAttributeSearch searchDetails)
         {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
-        }
-
-        int IThirdParty.OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => OffsetCancellationDays(searchDetails);
-
-        public bool SupportsBookingSearch
-        {
-            get
+            string referenceDelimiter = _settings.get_ReferenceDelimiter(searchDetails, false);
+            if (string.IsNullOrEmpty(referenceDelimiter))
             {
-                return false;
-            }
-        }
-
-        private bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-        {
-            return _settings.get_AllowCancellations(searchDetails);
-        }
-
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => SupportsLiveCancellation(searchDetails, source);
-
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        private bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
-        bool IThirdParty.TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => TakeSavingFromCommissionMargin(searchDetails);
-
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return _settings.get_RequiresVCard(info);
-        }
-
-        private char get_ReferenceDelimiter(IThirdPartyAttributeSearch SearchDetails)
-        {
-            string sReferenceDelimiter = _settings.get_ReferenceDelimiter(SearchDetails, false);
-            if (string.IsNullOrEmpty(sReferenceDelimiter))
-            {
-                sReferenceDelimiter = "~";
+                referenceDelimiter = "~";
             }
 
-            return sReferenceDelimiter[0];
+            return referenceDelimiter[0];
         }
-
 
         #endregion
 
         #region Prebook
-        public bool PreBook(PropertyDetails oPropertyDetails)
-        {
 
-            var oRequestXML = new XmlDocument();
-            var oResponseXML = new XmlDocument();
-            bool bSuccess = false;
+        public bool PreBook(PropertyDetails propertyDetails)
+        {
+            var requestXml = new XmlDocument();
+            var responseXml = new XmlDocument();
+            bool success;
 
             try
             {
-
                 // Send request
-                string sRequest = GenericRequest(BuildPrebookRequest(oPropertyDetails), oPropertyDetails);
-                oRequestXML.LoadXml(sRequest);
-                oResponseXML = SendRequest(sRequest, "Prebook", oPropertyDetails);
+                string request = GenericRequest(BuildPrebookRequest(propertyDetails), propertyDetails);
+                requestXml.LoadXml(request);
+                responseXml = SendRequest(request, "Prebook", propertyDetails);
 
                 // Retrieve, decode and clean provider response
-                string sDecodedProviderResponse = oResponseXML.SafeNodeValue("Envelope/Body/ValuationResponse/ValuationResult/providerRS/rs");
-                var oProviderResponse = new XmlDocument();
-                oProviderResponse.LoadXml(sDecodedProviderResponse);
+                string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/ValuationResponse/ValuationResult/providerRS/rs");
+                var providerResponse = new XmlDocument();
+                providerResponse.LoadXml(decodedProviderResponse);
 
                 // Responses only contain a cost for the entire booking - so no individual room prices
                 // If there's a difference in total we split the new cost against all the rooms
-                decimal nBookingCost = oProviderResponse.SelectSingleNode("ValuationRS/Price/@amount").InnerText.ToSafeDecimal();
+                decimal bookingCost = providerResponse.SelectSingleNode("ValuationRS/Price/@amount").InnerText.ToSafeDecimal();
 
-                if (nBookingCost == 0m)
+                if (bookingCost == 0m)
                 {
                     return false;
                 }
 
-                if (nBookingCost != oPropertyDetails.GrossCost)
+                if (bookingCost != propertyDetails.GrossCost)
                 {
+                    decimal perRoomCost = bookingCost / propertyDetails.Rooms.Count;
 
-                    decimal nPerRoomCost = nBookingCost / oPropertyDetails.Rooms.Count;
-
-                    foreach (RoomDetails oRoomDetails in oPropertyDetails.Rooms)
+                    foreach (var roomDetails in propertyDetails.Rooms)
                     {
-                        oRoomDetails.LocalCost = nPerRoomCost;
-                        oRoomDetails.GrossCost = nPerRoomCost;
+                        roomDetails.LocalCost = perRoomCost;
+                        roomDetails.GrossCost = perRoomCost;
                     }
-
                 }
 
-                oPropertyDetails.LocalCost = nBookingCost;
+                propertyDetails.LocalCost = bookingCost;
 
-                string errata = oProviderResponse.SafeNodeValue("ValuationRS/Remarks");
+                string errata = providerResponse.SafeNodeValue("ValuationRS/Remarks");
                 if (!string.IsNullOrWhiteSpace(errata))
                 {
-                    oPropertyDetails.Errata.Add(new Erratum("Remarks", RemoveHtmlTags(errata)));
+                    propertyDetails.Errata.Add(new Erratum("Remarks", RemoveHtmlTags(errata)));
                 }
 
                 // Cancellations
-                foreach (XmlNode oCancellationNode in oProviderResponse.SelectNodes("ValuationRS/CancelPenalties/CancelPenalty"))
+                foreach (XmlNode cancellationNode in providerResponse.SelectNodes("ValuationRS/CancelPenalties/CancelPenalty"))
                 {
-
-                    int iCancellationHours = oCancellationNode.SelectSingleNode("HoursBefore").InnerText.ToSafeInt();
-                    string sCancellationType = oCancellationNode.SelectSingleNode("Penalty/@type").InnerText;
-                    decimal nCancellationValue = oCancellationNode.SelectSingleNode("Penalty").InnerText.ToSafeDecimal();
-                    decimal nCancellationCost = 0m;
+                    int cancellationHours = cancellationNode.SelectSingleNode("HoursBefore").InnerText.ToSafeInt();
+                    string cancellationType = cancellationNode.SelectSingleNode("Penalty/@type").InnerText;
+                    decimal cancellationValue = cancellationNode.SelectSingleNode("Penalty").InnerText.ToSafeDecimal();
+                    decimal cancellationCost = 0m;
 
                     // Three cancellation types: Importe - we are given a fixed fee; Porcentaje - a percentage of room cost; and Noches - a number of nights.
-                    switch (sCancellationType ?? "")
+                    switch (cancellationType ?? "")
                     {
                         case "Importe":
                             {
-                                nCancellationCost = nCancellationValue;
+                                cancellationCost = cancellationValue;
                                 break;
                             }
                         case "Porcentaje":
                             {
-                                nCancellationCost = nBookingCost * (nCancellationValue / 100m);
+                                cancellationCost = bookingCost * (cancellationValue / 100m);
                                 break;
                             }
                         case "Noches":
                             {
-                                nCancellationCost = nBookingCost / oPropertyDetails.Duration * nCancellationValue;
+                                cancellationCost = bookingCost / propertyDetails.Duration * cancellationValue;
                                 break;
                             }
                     }
 
-                    var dFromDate = oPropertyDetails.ArrivalDate.AddHours(-1 * iCancellationHours);
-                    var dEndDate = oPropertyDetails.ArrivalDate;
-                    if (dFromDate > dEndDate)
+                    var fromDate = propertyDetails.ArrivalDate.AddHours(-1 * cancellationHours);
+                    var endDate = propertyDetails.ArrivalDate;
+                    if (fromDate > endDate)
                     {
-                        dEndDate = new DateTime(2099, 12, 31);
+                        endDate = new DateTime(2099, 12, 31);
                     }
 
-                    var oCancellationPolicy = new Cancellation(dFromDate, dEndDate, nCancellationCost);
+                    var cancellationPolicy = new Cancellation(fromDate, endDate, cancellationCost);
 
-                    oPropertyDetails.Cancellations.Add(oCancellationPolicy);
-
+                    propertyDetails.Cancellations.Add(cancellationPolicy);
                 }
 
                 // If no cancellation policies but considered a non-refundable rate, set a 100% cancellation policy effective from today
-                bool bNonRefundableRate = oProviderResponse.SafeNodeValue("ValuationRS/CancelPenalties/@nonRefundable").ToSafeBoolean();
+                bool nonRefundableRate = providerResponse.SafeNodeValue("ValuationRS/CancelPenalties/@nonRefundable").ToSafeBoolean();
 
-                if (oPropertyDetails.Cancellations.Count == 0 && bNonRefundableRate)
+                if (propertyDetails.Cancellations.Count == 0 && nonRefundableRate)
                 {
-
-                    var oCancellationPolicy = new Cancellation(DateTime.Now, new DateTime(2099, 12, 31), nBookingCost);
-                    oPropertyDetails.Cancellations.Add(oCancellationPolicy);
-
+                    var cancellationPolicy = new Cancellation(DateTime.Now, new DateTime(2099, 12, 31), bookingCost);
+                    propertyDetails.Cancellations.Add(cancellationPolicy);
                 }
 
-                oPropertyDetails.Cancellations.Solidify(SolidifyType.Max);
+                propertyDetails.Cancellations.Solidify(SolidifyType.Max);
 
                 // Lastly, grab any parameters we may need for the booking, put an encrypted version in the TPRef
-                if (oProviderResponse.SelectSingleNode("ValuationRS/Parameters") is not null)
+                if (providerResponse.SelectSingleNode("ValuationRS/Parameters") is not null)
                 {
-                    string sEncryptedParameters = _secretKeeper.Encrypt(oProviderResponse.SelectSingleNode("ValuationRS/Parameters").OuterXml);
-                    oPropertyDetails.TPRef1 = sEncryptedParameters;
+                    string encryptedParameters = _secretKeeper.Encrypt(providerResponse.SelectSingleNode("ValuationRS/Parameters").OuterXml);
+                    propertyDetails.TPRef1 = encryptedParameters;
                 }
                 else
                 {
-                    oPropertyDetails.TPRef1 = "";
+                    propertyDetails.TPRef1 = "";
                 }
 
-                bSuccess = true;
+                success = true;
             }
-
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
-                bSuccess = false;
+                propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
+                success = false;
             }
 
             // Lastly, add any logs
-            if (!string.IsNullOrEmpty(oRequestXML.InnerXml))
+            if (!string.IsNullOrEmpty(requestXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} PreBook Request", oPropertyDetails.Source), oRequestXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} PreBook Request", propertyDetails.Source), requestXml);
             }
 
-            if (!string.IsNullOrEmpty(oResponseXML.InnerXml))
+            if (!string.IsNullOrEmpty(responseXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} PreBook Response", oPropertyDetails.Source), oResponseXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} PreBook Response", propertyDetails.Source), responseXml);
             }
 
-            return bSuccess;
+            return success;
         }
+
         #endregion
 
         #region Book
-        public string Book(PropertyDetails oPropertyDetails)
-        {
 
-            var oRequestXML = new XmlDocument();
-            var oResponseXML = new XmlDocument();
-            string sReference = string.Empty;
+        public string Book(PropertyDetails propertyDetails)
+        {
+            var requestXml = new XmlDocument();
+            var responseXml = new XmlDocument();
+            string reference;
 
             try
             {
-
                 // Send request
-                string sRequest = GenericRequest(BuildBookRequest(oPropertyDetails), oPropertyDetails);
-                oRequestXML.LoadXml(sRequest);
-                oResponseXML = SendRequest(sRequest, "Book", oPropertyDetails);
+                string request = GenericRequest(BuildBookRequest(propertyDetails), propertyDetails);
+                requestXml.LoadXml(request);
+                responseXml = SendRequest(request, "Book", propertyDetails);
 
                 // Retrieve, decode and clean provider response
-                string sDecodedProviderResponse = oResponseXML.SafeNodeValue("Envelope/Body/ReservationResponse/ReservationResult/providerRS/rs");
-                var oProviderResponse = new XmlDocument();
-                oProviderResponse.LoadXml(sDecodedProviderResponse);
+                string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/ReservationResponse/ReservationResult/providerRS/rs");
+                var providerResponse = new XmlDocument();
+                providerResponse.LoadXml(decodedProviderResponse);
 
-                if (oProviderResponse.SelectSingleNode("ReservationRS/ResStatus").InnerText.ToString() == "OK")
+                if (providerResponse.SelectSingleNode("ReservationRS/ResStatus").InnerText.ToString() == "OK")
                 {
-
-                    string sBookingReference = oProviderResponse.SelectSingleNode("ReservationRS/ProviderLocator").InnerText.ToString();
-                    sReference = sBookingReference;
+                    string bookingReference = providerResponse.SelectSingleNode("ReservationRS/ProviderLocator").InnerText.ToString();
+                    reference = bookingReference;
                 }
                 else
                 {
-                    sReference = "Failed";
+                    reference = "Failed";
                 }
             }
-
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
-                sReference = "Failed";
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
+                reference = "Failed";
             }
 
             // Lastly, add any logs
-            if (!string.IsNullOrEmpty(oRequestXML.InnerXml))
+            if (!string.IsNullOrEmpty(requestXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} Book Request", oPropertyDetails.Source), oRequestXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Book Request", propertyDetails.Source), requestXml);
             }
 
-            if (!string.IsNullOrEmpty(oResponseXML.InnerXml))
+            if (!string.IsNullOrEmpty(responseXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} Book Response", oPropertyDetails.Source), oResponseXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Book Response", propertyDetails.Source), responseXml);
             }
 
-            return sReference;
-
+            return reference;
         }
 
         #endregion
 
         #region Cancellation
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
-        {
 
-            var oRequestXML = new XmlDocument();
-            var oResponseXML = new XmlDocument();
-            var oCancellationResponse = new ThirdPartyCancellationResponse();
+        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        {
+            var requestXml = new XmlDocument();
+            var responseXml = new XmlDocument();
+            var cancellationResponse = new ThirdPartyCancellationResponse();
 
             try
             {
-
                 // Send request
-                string sRequest = GenericRequest(BuildCancellationRequest(oPropertyDetails), oPropertyDetails);
-                oRequestXML.LoadXml(sRequest);
-                oResponseXML = SendRequest(sRequest, "Cancellation", oPropertyDetails);
+                string request = GenericRequest(BuildCancellationRequest(propertyDetails), propertyDetails);
+                requestXml.LoadXml(request);
+                responseXml = SendRequest(request, "Cancellation", propertyDetails);
 
                 // Retrieve, decode and clean provider response
-                string sDecodedProviderResponse = oResponseXML.SafeNodeValue("Envelope/Body/CancelResponse/CancelResult/providerRS/rs");
-                var oProviderResponse = new XmlDocument();
-                oProviderResponse.LoadXml(sDecodedProviderResponse);
+                string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/CancelResponse/CancelResult/providerRS/rs");
+                var providerResponse = new XmlDocument();
+                providerResponse.LoadXml(decodedProviderResponse);
 
-                if (oProviderResponse.SafeNodeValue("CancelRS/TransactionStatus/ResStatus") == "CN")
+                if (providerResponse.SafeNodeValue("CancelRS/TransactionStatus/ResStatus") == "CN")
                 {
+                    string cancellationReference = providerResponse.SafeNodeValue("CancelId");
 
-                    string sCancellationReference = oProviderResponse.SafeNodeValue("CancelId");
-
-                    if (!string.IsNullOrEmpty(sCancellationReference))
+                    if (!string.IsNullOrEmpty(cancellationReference))
                     {
-                        oCancellationResponse.TPCancellationReference = sCancellationReference;
+                        cancellationResponse.TPCancellationReference = cancellationReference;
                     }
                     else
                     {
-                        oCancellationResponse.TPCancellationReference = oPropertyDetails.SourceReference;
+                        cancellationResponse.TPCancellationReference = propertyDetails.SourceReference;
                     }
 
-                    oCancellationResponse.Success = true;
+                    cancellationResponse.Success = true;
                 }
             }
-
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
-                oCancellationResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
+                cancellationResponse.Success = false;
             }
 
             // Lastly, add any logs
-            if (!string.IsNullOrEmpty(oRequestXML.InnerXml))
+            if (!string.IsNullOrEmpty(requestXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} Cancellation Request", oPropertyDetails.Source), oRequestXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Cancellation Request", propertyDetails.Source), requestXml);
             }
 
-            if (!string.IsNullOrEmpty(oResponseXML.InnerXml))
+            if (!string.IsNullOrEmpty(responseXml.InnerXml))
             {
-                oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, string.Format("{0} Cancellation Response", oPropertyDetails.Source), oResponseXML);
+                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Cancellation Response", propertyDetails.Source), responseXml);
             }
 
-            return oCancellationResponse;
-
+            return cancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails oPropertyDetails)
+        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
         {
             return new ThirdPartyCancellationFeeResult();
         }
+
         #endregion
 
         #region Booking Search
 
-        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails oBookingSearchDetails)
+        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             return new ThirdPartyBookingSearchResults();
         }
 
-        public string CreateReconciliationReference(string sInputReference)
+        public string CreateReconciliationReference(string inputReference)
         {
-            return "";
+            return string.Empty;
         }
 
-        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails oPropertyDetails)
+        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails)
         {
             return null;
         }
+
         #endregion
 
         #region Helpers
 
-        public XmlDocument SendRequest(string RequestString, string RequestType, PropertyDetails PropertyDetails)
+        public XmlDocument SendRequest(string requestString, string requestType, PropertyDetails propertyDetails)
         {
-
-            var oResponseXML = new XmlDocument();
-
-            var oWebRequest = new Request();
-
-
-            switch (RequestType.ToLower() ?? "")
+            string soapAction = string.Empty;
+            switch (requestType.ToLower() ?? "")
             {
                 case "prebook":
                     {
-                        oWebRequest.SoapAction = _settings.get_PrebookSOAPAction(PropertyDetails);
+                        soapAction = _settings.get_PrebookSOAPAction(propertyDetails);
                         break;
                     }
                 case "book":
                     {
-                        oWebRequest.SoapAction = _settings.get_BookSOAPAction(PropertyDetails);
+                        soapAction = _settings.get_BookSOAPAction(propertyDetails);
                         break;
                     }
                 case "cancellation":
                     {
-                        oWebRequest.SoapAction = _settings.get_CancelSOAPAction(PropertyDetails);
+                        soapAction = _settings.get_CancelSOAPAction(propertyDetails);
                         break;
                     }
             }
 
-            oWebRequest.EndPoint = _settings.get_URL(PropertyDetails);
-            oWebRequest.Method = eRequestMethod.POST;
-            oWebRequest.Source = PropertyDetails.Source;
-            oWebRequest.LogFileName = RequestType;
-            oWebRequest.CreateLog = true;
-            oWebRequest.SetRequest(RequestString);
-            oWebRequest.UseGZip = true;
-            oWebRequest.Send(_httpClient, _logger);
+            var webRequest = new Request
+            {
+                EndPoint = _settings.get_URL(propertyDetails),
+                Method = eRequestMethod.POST,
+                Source = propertyDetails.Source,
+                LogFileName = requestType,
+                CreateLog = true,
+                UseGZip = true,
+                SoapAction = soapAction
+            };
+            webRequest.SetRequest(requestString);
+            webRequest.Send(_httpClient, _logger);
 
-            oResponseXML = _serializer.CleanXmlNamespaces(oWebRequest.ResponseXML);
+            var responseXML = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 
-            return oResponseXML;
-
+            return responseXML;
         }
 
         public string RemoveHtmlTags(string text)
@@ -442,9 +402,8 @@ namespace ThirdParty.CSSuppliers
 
         #region Request builders
 
-        public string BuildPrebookRequest(PropertyDetails PropertyDetails)
+        public string BuildPrebookRequest(PropertyDetails propertyDetails)
         {
-
             var sbPrebookRequest = new StringBuilder();
 
             // Create valuation request
@@ -454,7 +413,7 @@ namespace ThirdParty.CSSuppliers
             sbPrebookRequest.Append("<ns:version>1</ns:version>");
 
             sbPrebookRequest.Append("<ns:providerRQ>");
-            sbPrebookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(PropertyDetails));
+            sbPrebookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails));
             sbPrebookRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbPrebookRequest.Append("<ns:rqXML>");
 
@@ -462,114 +421,123 @@ namespace ThirdParty.CSSuppliers
 
             sbPrebookRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbPrebookRequest.Append("<source>");
-            sbPrebookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(PropertyDetails));
+            sbPrebookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails));
             sbPrebookRequest.Append("</source>");
             sbPrebookRequest.Append("<filterAuditData>");
             sbPrebookRequest.Append("<registerTransactions>true</registerTransactions>");
             sbPrebookRequest.Append("</filterAuditData>");
 
             sbPrebookRequest.Append("<Configuration>");
-            sbPrebookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(PropertyDetails));
-            sbPrebookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(PropertyDetails));
-            sbPrebookRequest.Append(AppendURLs(PropertyDetails));
-            sbPrebookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(PropertyDetails)));
+            sbPrebookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails));
+            sbPrebookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails));
+            sbPrebookRequest.Append(AppendURLs(propertyDetails));
+            sbPrebookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails)));
             sbPrebookRequest.Append("</Configuration>");
 
-            sbPrebookRequest.AppendFormat("<StartDate>{0}</StartDate>", PropertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
-            sbPrebookRequest.AppendFormat("<EndDate>{0}</EndDate>", PropertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
+            sbPrebookRequest.AppendFormat("<StartDate>{0}</StartDate>", propertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
+            sbPrebookRequest.AppendFormat("<EndDate>{0}</EndDate>", propertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
 
             // Add hotel option parameters
             // Check if we have any first before we add the parameters node
             // Don't do multiroom bookings for rooms across different options, so can just pluck out the first room's parameters
-            string sReferenceDelimiter = _settings.get_ReferenceDelimiter(PropertyDetails, false);
-            if (string.IsNullOrEmpty(sReferenceDelimiter))
-            {
-                sReferenceDelimiter = "~";
-            }
-            string sEncryptedParameters = PropertyDetails.Rooms[0].ThirdPartyReference.Split(sReferenceDelimiter[0])[4];
+            string referenceDelimiter = _settings.get_ReferenceDelimiter(propertyDetails, false);
 
-            if (!string.IsNullOrEmpty(sEncryptedParameters))
+            if (string.IsNullOrEmpty(referenceDelimiter))
             {
-                var oParameters = new XmlDocument();
-                oParameters.LoadXml(_secretKeeper.Decrypt(sEncryptedParameters));
-                sbPrebookRequest.Append(oParameters.OuterXml);
+                referenceDelimiter = "~";
             }
 
-            sbPrebookRequest.AppendFormat("<MealPlanCode>{0}</MealPlanCode>", PropertyDetails.Rooms[0].ThirdPartyReference.Split(sReferenceDelimiter[0])[7]);
-            sbPrebookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", PropertyDetails.TPKey);
-            sbPrebookRequest.AppendFormat("<PaymentType>{0}</PaymentType>", PropertyDetails.Rooms[0].ThirdPartyReference.Split(sReferenceDelimiter[0])[3]);
+            string encryptedParameters = propertyDetails.Rooms[0].ThirdPartyReference.Split(referenceDelimiter[0])[4];
+
+            if (!string.IsNullOrEmpty(encryptedParameters))
+            {
+                var parameters = new XmlDocument();
+                parameters.LoadXml(_secretKeeper.Decrypt(encryptedParameters));
+                sbPrebookRequest.Append(parameters.OuterXml);
+            }
+
+            sbPrebookRequest.AppendFormat("<MealPlanCode>{0}</MealPlanCode>", propertyDetails.Rooms[0].ThirdPartyReference.Split(referenceDelimiter[0])[7]);
+            sbPrebookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", propertyDetails.TPKey);
+            sbPrebookRequest.AppendFormat("<PaymentType>{0}</PaymentType>", propertyDetails.Rooms[0].ThirdPartyReference.Split(referenceDelimiter[0])[3]);
             sbPrebookRequest.Append("<OptionType>Hotel</OptionType>");
-            string sNationality = "";
-            string sNationalityLookupValue = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, PropertyDetails.NationalityID);
-            string sDefaultNationality = _settings.get_DefaultNationality(PropertyDetails, false);
 
-            if (!string.IsNullOrEmpty(sNationalityLookupValue))
+            string nationality = "";
+            string nationalityLookupValue = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, propertyDetails.NationalityID);
+            string defaultNationality = _settings.get_DefaultNationality(propertyDetails, false);
+
+            if (!string.IsNullOrEmpty(nationalityLookupValue))
             {
-                sNationality = sNationalityLookupValue;
+                nationality = nationalityLookupValue;
             }
-            else if (!string.IsNullOrEmpty(sDefaultNationality))
+            else if (!string.IsNullOrEmpty(defaultNationality))
             {
-                sNationality = sDefaultNationality;
+                nationality = defaultNationality;
             }
-            if (!string.IsNullOrEmpty(sNationality))
+            if (!string.IsNullOrEmpty(nationality))
             {
-                sbPrebookRequest.AppendFormat("<Nationality>{0}</Nationality>", sNationality);
+                sbPrebookRequest.AppendFormat("<Nationality>{0}</Nationality>", nationality);
             }
 
             sbPrebookRequest.Append("<Rooms>");
 
-            int iRoomID = 1;
-            foreach (RoomDetails oRoom in PropertyDetails.Rooms)
+            int roomId = 1;
+            foreach (var room in propertyDetails.Rooms)
             {
-                sbPrebookRequest.AppendFormat("<Room id = \"{0}\" roomCandidateRefId = \"{3}\" code = \"{1}\" description = \"{2}\"/>", oRoom.ThirdPartyReference.Split(sReferenceDelimiter[0])[0], oRoom.ThirdPartyReference.Split(sReferenceDelimiter[0])[1], oRoom.ThirdPartyReference.Split(sReferenceDelimiter[0])[2], iRoomID);
+                sbPrebookRequest.AppendFormat(
+                    "<Room id = \"{0}\" roomCandidateRefId = \"{3}\" code = \"{1}\" description = \"{2}\"/>",
+                    room.ThirdPartyReference.Split(referenceDelimiter[0])[0],
+                    room.ThirdPartyReference.Split(referenceDelimiter[0])[1],
+                    room.ThirdPartyReference.Split(referenceDelimiter[0])[2],
+                    roomId);
 
-                iRoomID += 1;
+                roomId += 1;
             }
 
             sbPrebookRequest.Append("</Rooms>");
             sbPrebookRequest.Append("<RoomCandidates>");
 
-            iRoomID = 1;
-            int iPassengerID;
+            roomId = 1;
+            int passengerId;
 
-            foreach (RoomDetails oRoom in PropertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
-                sbPrebookRequest.AppendFormat("<RoomCandidate id = \"{0}\">", iRoomID);
+                sbPrebookRequest.AppendFormat("<RoomCandidate id = \"{0}\">", roomId);
                 sbPrebookRequest.Append("<Paxes>");
 
-                iPassengerID = 1; // every room starts with PaxID 1
-                foreach (Passenger oPassenger in oRoom.Passengers)
+                passengerId = 1; // every room starts with PaxID 1
+                foreach (var passenger in room.Passengers)
                 {
-                    var iAge = default(int);
-                    switch (oPassenger.PassengerType)
+                    var age = default(int);
+                    switch (passenger.PassengerType)
                     {
                         case PassengerType.Adult:
                             {
-                                iAge = 30;
+                                age = 30;
                                 break;
                             }
                         case PassengerType.Child:
                             {
-                                iAge = oPassenger.Age;
+                                age = passenger.Age;
                                 break;
                             }
                         case PassengerType.Infant:
                             {
-                                iAge = 1;
+                                age = 1;
                                 break;
                             }
                     }
 
-                    sbPrebookRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", iAge, iPassengerID);
+                    sbPrebookRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", age, passengerId);
 
-                    iPassengerID += 1;
+                    passengerId += 1;
                 }
 
                 sbPrebookRequest.Append("</Paxes>");
                 sbPrebookRequest.Append("</RoomCandidate>");
 
-                iRoomID += 1;
+                roomId += 1;
             }
+
             sbPrebookRequest.Append("</RoomCandidates>");
             sbPrebookRequest.Append("</ValuationRQ>");
 
@@ -580,19 +548,17 @@ namespace ThirdParty.CSSuppliers
             sbPrebookRequest.Append("</ns:Valuation>");
 
             return sbPrebookRequest.ToString();
-
         }
 
-        public string BuildBookRequest(PropertyDetails oPropertyDetails)
+        public string BuildBookRequest(PropertyDetails propertyDetails)
         {
+            string source = propertyDetails.Source;
 
-            string sSource = oPropertyDetails.Source;
-
-            char cDelimiter = get_ReferenceDelimiter(oPropertyDetails);
+            char delimiter = get_ReferenceDelimiter(propertyDetails);
 
             var sbBookRequest = new StringBuilder();
 
-            string sPaymentType = oPropertyDetails.Rooms[0].ThirdPartyReference.Split(cDelimiter)[3];
+            string paymentType = propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[3];
 
             sbBookRequest.Append("<ns:Reservation>");
             sbBookRequest.Append("<ns:reservationRQ>");
@@ -600,7 +566,7 @@ namespace ThirdParty.CSSuppliers
             sbBookRequest.Append("<ns:version>1</ns:version>");
 
             sbBookRequest.Append("<ns:providerRQ>");
-            sbBookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(oPropertyDetails));
+            sbBookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails));
             sbBookRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbBookRequest.Append("<ns:rqXML>");
 
@@ -608,153 +574,159 @@ namespace ThirdParty.CSSuppliers
 
             sbBookRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbBookRequest.Append("<source>");
-            sbBookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(oPropertyDetails));
+            sbBookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails));
             sbBookRequest.Append("</source>");
             sbBookRequest.Append("<filterAuditData>");
             sbBookRequest.Append("<registerTransactions>true</registerTransactions>");
             sbBookRequest.Append("</filterAuditData>");
 
             sbBookRequest.Append("<Configuration>");
-            sbBookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(oPropertyDetails));
-            sbBookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(oPropertyDetails));
-            sbBookRequest.Append(AppendURLs(oPropertyDetails));
-            sbBookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(oPropertyDetails)));
+            sbBookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails));
+            sbBookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails));
+            sbBookRequest.Append(AppendURLs(propertyDetails));
+            sbBookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails)));
             sbBookRequest.Append("</Configuration>");
-            if (_settings.get_SendGUIDReference(oPropertyDetails))
+
+            if (_settings.get_SendGUIDReference(propertyDetails))
             {
-                sbBookRequest.AppendFormat("<ClientLocator>{0}</ClientLocator>", oPropertyDetails.BookingReference.TrimEnd() + Guid.NewGuid().ToString());
+                sbBookRequest.AppendFormat("<ClientLocator>{0}</ClientLocator>", propertyDetails.BookingReference.TrimEnd() + Guid.NewGuid().ToString());
             }
             else
             {
-                sbBookRequest.AppendFormat("<ClientLocator>{0}</ClientLocator>", oPropertyDetails.BookingReference);
+                sbBookRequest.AppendFormat("<ClientLocator>{0}</ClientLocator>", propertyDetails.BookingReference);
             }
-            sbBookRequest.AppendLine(BuildCardDetails(oPropertyDetails));
 
-            sbBookRequest.AppendFormat("<StartDate>{0}</StartDate>", oPropertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
-            sbBookRequest.AppendFormat("<EndDate>{0}</EndDate>", oPropertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
+            sbBookRequest.AppendLine(BuildCardDetails(propertyDetails));
+
+            sbBookRequest.AppendFormat("<StartDate>{0}</StartDate>", propertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
+            sbBookRequest.AppendFormat("<EndDate>{0}</EndDate>", propertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
 
             // Add hotel option parameters
             // Check if we have any first before we add the parameters node
             // Don't do multiroom bookings for rooms across different options, so can just pluck out the first room's parameters
-            string sEncryptedParameters = oPropertyDetails.TPRef1;
+            string encryptedParameters = propertyDetails.TPRef1;
 
-            if (!string.IsNullOrEmpty(sEncryptedParameters))
+            if (!string.IsNullOrEmpty(encryptedParameters))
             {
-                var oParameters = new XmlDocument();
-                oParameters.LoadXml(_secretKeeper.Decrypt(sEncryptedParameters));
-                sbBookRequest.Append(oParameters.OuterXml);
+                var parameters = new XmlDocument();
+                parameters.LoadXml(_secretKeeper.Decrypt(encryptedParameters));
+                sbBookRequest.Append(parameters.OuterXml);
             }
 
-            sbBookRequest.AppendFormat("<MealPlanCode>{0}</MealPlanCode>", oPropertyDetails.Rooms[0].ThirdPartyReference.Split(cDelimiter)[7]);
-            sbBookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", oPropertyDetails.TPKey);
+            sbBookRequest.AppendFormat("<MealPlanCode>{0}</MealPlanCode>", propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[7]);
+            sbBookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", propertyDetails.TPKey);
 
-            string sNationality = "";
-            string sNationalityLookupValue = _support.TPNationalityLookup(Source, oPropertyDetails.NationalityID);
-            string sDefaultNationality = _settings.get_DefaultNationality(oPropertyDetails, false);
+            string nationality = "";
+            string nationalityLookupValue = _support.TPNationalityLookup(Source, propertyDetails.NationalityID);
+            string defaultNationality = _settings.get_DefaultNationality(propertyDetails, false);
 
-            if (!string.IsNullOrEmpty(sNationalityLookupValue))
+            if (!string.IsNullOrEmpty(nationalityLookupValue))
             {
-                sNationality = sNationalityLookupValue;
+                nationality = nationalityLookupValue;
             }
-            else if (!string.IsNullOrEmpty(sDefaultNationality))
+            else if (!string.IsNullOrEmpty(defaultNationality))
             {
-                sNationality = sDefaultNationality;
+                nationality = defaultNationality;
             }
-            if (!string.IsNullOrEmpty(sNationality))
+            if (!string.IsNullOrEmpty(nationality))
             {
-                sbBookRequest.AppendFormat("<Nationality>{0}</Nationality>", sNationality);
+                sbBookRequest.AppendFormat("<Nationality>{0}</Nationality>", nationality);
             }
 
-            string sCurrencyCode = _support.TPCurrencyLookup(sSource, oPropertyDetails.CurrencyCode);
+            string currencyCode = _support.TPCurrencyLookup(source, propertyDetails.CurrencyCode);
             // send gross cost as gross net down can be used (local is the net)
-            sbBookRequest.AppendFormat("<Price currency = \"{0}\" amount = \"{1}\" binding = \"{2}\" commission = \"{3}\"/>", sCurrencyCode, oPropertyDetails.GrossCost, oPropertyDetails.Rooms[0].ThirdPartyReference.Split(cDelimiter)[6], oPropertyDetails.Rooms[0].ThirdPartyReference.Split(cDelimiter)[5]);
+            sbBookRequest.AppendFormat("<Price currency = \"{0}\" amount = \"{1}\" binding = \"{2}\" commission = \"{3}\"/>", currencyCode, propertyDetails.GrossCost, propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[6], propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[5]);
             sbBookRequest.Append("<ResGuests>");
             sbBookRequest.Append("<Guests>");
 
-            int iPassengerCount;
-            int iRoomCount = 1;
-            foreach (RoomDetails oRoom in oPropertyDetails.Rooms)
+            int passengerCount;
+            int roomCount = 1;
+            foreach (var room in propertyDetails.Rooms)
             {
+                passengerCount = 1;
 
-                iPassengerCount = 1;
-                foreach (Passenger oPassenger in oRoom.Passengers)
+                foreach (var passenger in room.Passengers)
                 {
-
-                    sbBookRequest.AppendFormat("<Guest roomCandidateId = \"{0}\" paxId = \"{1}\">", iRoomCount, iPassengerCount);
-                    sbBookRequest.AppendFormat("<GivenName>{0}</GivenName>", oPassenger.FirstName);
-                    sbBookRequest.AppendFormat("<SurName>{0}</SurName>", oPassenger.LastName);
+                    sbBookRequest.AppendFormat("<Guest roomCandidateId = \"{0}\" paxId = \"{1}\">", roomCount, passengerCount);
+                    sbBookRequest.AppendFormat("<GivenName>{0}</GivenName>", passenger.FirstName);
+                    sbBookRequest.AppendFormat("<SurName>{0}</SurName>", passenger.LastName);
                     sbBookRequest.Append("</Guest>");
 
-                    iPassengerCount += 1;
+                    passengerCount++;
                 }
-                iRoomCount += 1;
+
+                roomCount++;
             }
+
             sbBookRequest.Append("</Guests>");
             sbBookRequest.Append("</ResGuests>");
-            sbBookRequest.AppendFormat("<PaymentType>{0}</PaymentType>", sPaymentType);
+            sbBookRequest.AppendFormat("<PaymentType>{0}</PaymentType>", paymentType);
 
             sbBookRequest.Append("<Rooms>");
 
-            iRoomCount = 1;
+            roomCount = 1;
 
-            foreach (RoomDetails oRoom in oPropertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
-                sbBookRequest.AppendFormat("<Room id = \"{0}\" roomCandidateRefId = \"{3}\" code = \"{1}\" description = \"{2}\"/>", oRoom.ThirdPartyReference.Split(cDelimiter)[0], oRoom.ThirdPartyReference.Split(cDelimiter)[1], oRoom.ThirdPartyReference.Split(cDelimiter)[2], iRoomCount);
+                sbBookRequest.AppendFormat("<Room id = \"{0}\" roomCandidateRefId = \"{3}\" code = \"{1}\" description = \"{2}\"/>", room.ThirdPartyReference.Split(delimiter)[0], room.ThirdPartyReference.Split(delimiter)[1], room.ThirdPartyReference.Split(delimiter)[2], roomCount);
 
-                iRoomCount += 1;
+                roomCount++;
             }
+
             sbBookRequest.Append("</Rooms>");
             sbBookRequest.Append("<RoomCandidates>");
 
-            iRoomCount = 1;
-            int iPassengerID;
+            roomCount = 1;
+            int passengerId;
 
-            foreach (RoomDetails oRoom in oPropertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
-                sbBookRequest.AppendFormat("<RoomCandidate id = \"{0}\">", iRoomCount);
+                sbBookRequest.AppendFormat("<RoomCandidate id = \"{0}\">", roomCount);
                 sbBookRequest.Append("<Paxes>");
 
-                iPassengerID = 1;
-                foreach (Passenger oPassenger in oRoom.Passengers)
+                passengerId = 1;
+                foreach (var passenger in room.Passengers)
                 {
-                    var iAge = default(int);
-                    switch (oPassenger.PassengerType)
+                    var age = default(int);
+                    switch (passenger.PassengerType)
                     {
                         case PassengerType.Adult:
                             {
-                                iAge = 30;
+                                age = 30;
                                 break;
                             }
                         case PassengerType.Child:
                             {
-                                iAge = oPassenger.Age;
+                                age = passenger.Age;
                                 break;
                             }
                         case PassengerType.Infant:
                             {
-                                iAge = 1;
+                                age = 1;
                                 break;
                             }
                     }
 
-                    sbBookRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", iAge, iPassengerID);
+                    sbBookRequest.AppendFormat("<Pax age = \"{0}\" id = \"{1}\"/>", age, passengerId);
 
-                    iPassengerID += 1;
+                    passengerId += 1;
                 }
 
                 sbBookRequest.Append("</Paxes>");
                 sbBookRequest.Append("</RoomCandidate>");
 
-                iRoomCount += 1;
+                roomCount += 1;
             }
 
             sbBookRequest.Append("</RoomCandidates>");
-            if (!string.IsNullOrEmpty(oPropertyDetails.BookingComments.ToString()))
+
+            if (!string.IsNullOrEmpty(propertyDetails.BookingComments.ToString()))
             {
                 sbBookRequest.Append("<Remarks>");
-                sbBookRequest.Append(oPropertyDetails.BookingComments.ToString().Trim());
+                sbBookRequest.Append(propertyDetails.BookingComments.ToString().Trim());
                 sbBookRequest.Append("</Remarks>");
             }
+
             sbBookRequest.Append("</ReservationRQ>");
 
             sbBookRequest.Append("</ns:rqXML>");
@@ -763,12 +735,10 @@ namespace ThirdParty.CSSuppliers
             sbBookRequest.Append("</ns:Reservation>");
 
             return sbBookRequest.ToString();
-
         }
 
-        public string BuildCancellationRequest(PropertyDetails PropertyDetails)
+        public string BuildCancellationRequest(PropertyDetails propertyDetails)
         {
-
             var sbCancellationRequest = new StringBuilder();
 
             sbCancellationRequest.Append("<ns:Cancel>");
@@ -777,33 +747,33 @@ namespace ThirdParty.CSSuppliers
             sbCancellationRequest.Append("<ns:version>1</ns:version>");
 
             sbCancellationRequest.Append("<ns:providerRQ>");
-            sbCancellationRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(PropertyDetails));
+            sbCancellationRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails));
             sbCancellationRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbCancellationRequest.Append("<ns:rqXML>");
 
-            sbCancellationRequest.AppendFormat("<CancelRQ  hotelCode=\"{0}\">", PropertyDetails.TPKey);
+            sbCancellationRequest.AppendFormat("<CancelRQ  hotelCode=\"{0}\">", propertyDetails.TPKey);
 
             sbCancellationRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbCancellationRequest.Append("<source>");
-            sbCancellationRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(PropertyDetails));
+            sbCancellationRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails));
             sbCancellationRequest.Append("</source>");
             sbCancellationRequest.Append("<filterAuditData>");
             sbCancellationRequest.Append("<registerTransactions>true</registerTransactions>");
             sbCancellationRequest.Append("</filterAuditData>");
 
             sbCancellationRequest.Append("<Configuration>");
-            sbCancellationRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(PropertyDetails));
-            sbCancellationRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(PropertyDetails));
-            sbCancellationRequest.Append(AppendURLs(PropertyDetails));
-            sbCancellationRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(PropertyDetails)));
+            sbCancellationRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails));
+            sbCancellationRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails));
+            sbCancellationRequest.Append(AppendURLs(propertyDetails));
+            sbCancellationRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails)));
             sbCancellationRequest.Append("</Configuration>");
 
             sbCancellationRequest.Append("<Locators>");
-            sbCancellationRequest.AppendFormat("<Client>{0}</Client>", PropertyDetails.BookingReference);
-            sbCancellationRequest.AppendFormat("<Provider>{0}</Provider>", PropertyDetails.SourceReference);
+            sbCancellationRequest.AppendFormat("<Client>{0}</Client>", propertyDetails.BookingReference);
+            sbCancellationRequest.AppendFormat("<Provider>{0}</Provider>", propertyDetails.SourceReference);
             sbCancellationRequest.Append("</Locators>");
-            sbCancellationRequest.AppendFormat("<StartDate>{0}</StartDate>", PropertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
-            sbCancellationRequest.AppendFormat("<EndDate>{0}</EndDate>", PropertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
+            sbCancellationRequest.AppendFormat("<StartDate>{0}</StartDate>", propertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
+            sbCancellationRequest.AppendFormat("<EndDate>{0}</EndDate>", propertyDetails.DepartureDate.ToString("dd/MM/yyyy"));
             sbCancellationRequest.Append("</CancelRQ>");
 
             sbCancellationRequest.Append("</ns:rqXML>");
@@ -812,12 +782,10 @@ namespace ThirdParty.CSSuppliers
             sbCancellationRequest.Append("</ns:Cancel>");
 
             return sbCancellationRequest.ToString();
-
         }
 
-        public string GenericRequest(string SpecificRequest, IThirdPartyAttributeSearch SearchDetails)
+        public string GenericRequest(string specificRequest, IThirdPartyAttributeSearch searchDetails)
         {
-
             var sbRequest = new StringBuilder();
 
             sbRequest.Append("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" ");
@@ -826,120 +794,77 @@ namespace ThirdParty.CSSuppliers
             sbRequest.Append("<soapenv:Header>");
             sbRequest.Append("<wsse:Security>");
             sbRequest.Append("<wsse:UsernameToken>");
-            sbRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(SearchDetails));
-            sbRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(SearchDetails));
+            sbRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(searchDetails));
+            sbRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(searchDetails));
             sbRequest.Append("</wsse:UsernameToken>");
             sbRequest.Append("</wsse:Security>");
             sbRequest.Append("</soapenv:Header>");
             sbRequest.Append("<soapenv:Body>");
-            sbRequest.Append(SpecificRequest);
+            sbRequest.Append(specificRequest);
             sbRequest.Append("</soapenv:Body>");
-
             sbRequest.Append("</soapenv:Envelope>");
+
             return sbRequest.ToString();
-
         }
 
-        public string AppendURL(string URLType, string Source, IThirdPartyAttributeSearch SearchDetails)
+        public string BuildCardDetails(PropertyDetails propertyDetails)
         {
+            string source = propertyDetails.Source;
 
-            string sURL = _settings.get_URL(SearchDetails);
+            char delimiter = get_ReferenceDelimiter(propertyDetails);
 
-            if (string.IsNullOrEmpty(sURL))
-            {
-                return "";
-            }
-            else
-            {
-                string sNodeName = "";
-                switch (URLType ?? "")
-                {
-                    case "URLReservation":
-                        {
-                            sNodeName = "UrlReservation";
-                            break;
-                        }
-                    case "URLGeneric":
-                        {
-                            sNodeName = "UrlGeneric";
-                            break;
-                        }
-                    case "URLAvail":
-                        {
-                            sNodeName = "UrlAvail";
-                            break;
-                        }
-                    case "URLValuation":
-                        {
-                            sNodeName = "UrlValuation";
-                            break;
-                        }
-                }
-
-                return string.Format("<{0}>{1}</{0}>", sNodeName, sURL);
-            }
-
-        }
-
-        public string BuildCardDetails(PropertyDetails oPropertyDetails)
-        {
-
-            string sSource = oPropertyDetails.Source;
-
-            char cDelimiter = get_ReferenceDelimiter(oPropertyDetails);
-
-            string sPaymentType = oPropertyDetails.Rooms[0].ThirdPartyReference.Split(cDelimiter)[3];
-            bool bRequiresVCard = _settings.get_RequiresVCard(oPropertyDetails);
+            string paymentType = propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[3];
+            bool requiresVCard = _settings.get_RequiresVCard(propertyDetails);
 
             var sb = new StringBuilder();
 
-
-            if (bRequiresVCard && sPaymentType == "CardBookingPay" | sPaymentType == "CardCheckInPay")
+            if ((requiresVCard && paymentType == "CardBookingPay") || paymentType == "CardCheckInPay")
             {
+                string cardHolderName = propertyDetails.GeneratedVirtualCard.CardHolderName;
 
-                string sCardHolderName = oPropertyDetails.GeneratedVirtualCard.CardHolderName;
-                if (string.IsNullOrEmpty(sCardHolderName))
+                if (string.IsNullOrEmpty(cardHolderName))
                 {
-                    sCardHolderName = _settings.get_CardHolderName(oPropertyDetails);
+                    cardHolderName = _settings.get_CardHolderName(propertyDetails);
                 }
 
                 sb.AppendLine("<CardInfo>");
-                sb.AppendLine($"<CardCode>{_support.TPCreditCardLookup(sSource, oPropertyDetails.GeneratedVirtualCard.CardTypeID)}</CardCode>");
-                sb.AppendLine($"<Number>{oPropertyDetails.GeneratedVirtualCard.CardNumber}</Number>");
-                sb.AppendLine($"<Holder>{sCardHolderName}</Holder>");
+                sb.AppendLine($"<CardCode>{_support.TPCreditCardLookup(source, propertyDetails.GeneratedVirtualCard.CardTypeID)}</CardCode>");
+                sb.AppendLine($"<Number>{propertyDetails.GeneratedVirtualCard.CardNumber}</Number>");
+                sb.AppendLine($"<Holder>{cardHolderName}</Holder>");
                 sb.AppendLine("<ValidityDate>");
-                sb.AppendLine($"<Month>{oPropertyDetails.GeneratedVirtualCard.ExpiryMonth.PadLeft(2, '0')}</Month>");
-                sb.AppendLine($"<Year>{oPropertyDetails.GeneratedVirtualCard.ExpiryYear.Substring(2)}</Year>");
+                sb.AppendLine($"<Month>{propertyDetails.GeneratedVirtualCard.ExpiryMonth.PadLeft(2, '0')}</Month>");
+                sb.AppendLine($"<Year>{propertyDetails.GeneratedVirtualCard.ExpiryYear.Substring(2)}</Year>");
                 sb.AppendLine("</ValidityDate>");
-                sb.AppendLine($"<CVC>{oPropertyDetails.GeneratedVirtualCard.CVV}</CVC>");
+                sb.AppendLine($"<CVC>{propertyDetails.GeneratedVirtualCard.CVV}</CVC>");
                 sb.AppendLine("</CardInfo>");
             }
-
-            else if (!bRequiresVCard)
+            else if (!requiresVCard)
             {
-
-                string sEncrytedCardDetails = _settings.get_EncryptedCardDetails(oPropertyDetails);
-                if (string.IsNullOrWhiteSpace(sEncrytedCardDetails))
+                string encrytedCardDetails = _settings.get_EncryptedCardDetails(propertyDetails);
+                if (string.IsNullOrWhiteSpace(encrytedCardDetails))
+                {
                     return string.Empty;
+                }
 
                 // Card details are encryted in the form 'CardCode|CardNumber|ExpiryDate|CVC|CardHolderName'
-                var sDecryptedCardDetails = _secretKeeper.Decrypt(sEncrytedCardDetails).Split('|');
-                if (sDecryptedCardDetails.Count() != 5)
+                var decryptedCardDetails = _secretKeeper.Decrypt(encrytedCardDetails).Split('|');
+                if (decryptedCardDetails.Count() != 5)
+                {
                     return string.Empty;
+                }
 
-                var dtExpiryDate = sDecryptedCardDetails[2].ToSafeDate();
+                var expiryDate = decryptedCardDetails[2].ToSafeDate();
 
                 sb.AppendLine("<CardInfo>");
-                sb.AppendLine($"<CardCode>{sDecryptedCardDetails[0]}</CardCode>");
-                sb.AppendLine($"<Number>{sDecryptedCardDetails[1]}</Number>");
-                sb.AppendLine($"<Holder>{sDecryptedCardDetails[4]}</Holder>");
+                sb.AppendLine($"<CardCode>{decryptedCardDetails[0]}</CardCode>");
+                sb.AppendLine($"<Number>{decryptedCardDetails[1]}</Number>");
+                sb.AppendLine($"<Holder>{decryptedCardDetails[4]}</Holder>");
                 sb.AppendLine("<ValidityDate>");
-                sb.AppendLine($"<Month>{dtExpiryDate.Month.ToString().PadLeft(2, '0')}</Month>");
-                sb.AppendLine($"<Year>{dtExpiryDate.Year}</Year>");
+                sb.AppendLine($"<Month>{expiryDate.Month.ToString().PadLeft(2, '0')}</Month>");
+                sb.AppendLine($"<Year>{expiryDate.Year}</Year>");
                 sb.AppendLine("</ValidityDate>");
-                sb.AppendLine($"<CVC>{sDecryptedCardDetails[3]}</CVC>");
+                sb.AppendLine($"<CVC>{decryptedCardDetails[3]}</CVC>");
                 sb.AppendLine("</CardInfo>");
-
             }
 
             return sb.ToString();
@@ -949,30 +874,27 @@ namespace ThirdParty.CSSuppliers
 
         #region Helper class
 
-        public string AppendURLs(IThirdPartyAttributeSearch SearchDetails)
+        public string AppendURLs(IThirdPartyAttributeSearch searchDetails)
         {
-
             var sbURLXML = new StringBuilder();
 
-            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(SearchDetails));
-            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(SearchDetails));
-            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(SearchDetails));
-            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(SearchDetails));
+            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(searchDetails));
+            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(searchDetails));
+            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(searchDetails));
+            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(searchDetails));
 
             return sbURLXML.ToString();
-
         }
 
         #endregion
 
         #region End session
 
-        public void EndSession(PropertyDetails oPropertyDetails)
+        public void EndSession(PropertyDetails propertyDetails)
         {
 
         }
 
         #endregion
-
     }
 }

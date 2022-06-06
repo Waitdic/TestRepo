@@ -20,6 +20,6 @@
         /// <returns>
         /// The third party to use for search
         /// </returns>
-        ThirdPartyPropertySearchBase CreateSearchTPFromSupplier(string supplier);
+        IThirdPartySearch CreateSearchTPFromSupplier(string supplier);
     }
 }

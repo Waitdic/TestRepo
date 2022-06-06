@@ -20,9 +20,8 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
     using ThirdParty.Models.Property.Booking;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
-    using Microsoft.Extensions.Logging;
 
-    public class HotelBedsV2Search : ThirdPartyPropertySearchBase
+    public class HotelBedsV2Search : IThirdPartySearch
     {
         #region Properties
 
@@ -30,16 +29,14 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
         private readonly ITPSupport _support;
         private readonly ISecretKeeper _secretKeeper;
 
-        public override string Source => ThirdParties.HOTELBEDSV2;
+        public string Source => ThirdParties.HOTELBEDSV2;
 
-        public override bool SqlRequest => false;
-
-        public override bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-        public override bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
             return false;
         }
@@ -51,9 +48,7 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
         public HotelBedsV2Search(
             IHotelBedsV2Settings settings,
             ITPSupport support,
-            ISecretKeeper secretKeeper,
-            ILogger<HotelBedsV2Search> logger)
-            : base(logger)
+            ISecretKeeper secretKeeper)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
@@ -62,7 +57,7 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
 
         #endregion
 
-        public override List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
@@ -144,7 +139,7 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
             return requests;
         }
 
-        public override TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
             var allResponses = new List<HotelBedsV2AvailabilityResponse>();

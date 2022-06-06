@@ -3,7 +3,6 @@
     using Intuitive.Helpers.Extensions;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers;
     using ThirdParty.Support;
 
     public class InjectedJuniperECTravelSettings : InjectedJuniperBaseSettings, IJuniperECTravelSettings

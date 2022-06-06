@@ -1,28 +1,25 @@
-﻿using System.Net.Http;
-using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using ThirdParty.Constants;
-using ThirdParty.Lookups;
-
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
+    using System.Net.Http;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.Lookups;
 
     public class TravelgateDingusSpringHotels : Travelgate
     {
-
-        public TravelgateDingusSpringHotels(ITravelgateSettings settings, ITPSupport support, HttpClient httpClient, ISecretKeeper secretKeeper, ISerializer serializer) : base(settings, support, httpClient, secretKeeper, serializer)
+        public TravelgateDingusSpringHotels(
+            ITravelgateDingusSpringHotelsSettings settings,
+            ITPSupport support,
+            HttpClient httpClient,
+            ISecretKeeper secretKeeper,
+            ISerializer serializer,
+            ILogger<TravelgateDingusSpringHotels> logger)
+            : base(settings, support, httpClient, secretKeeper, serializer, logger)
         {
         }
 
-        public override string Source
-        {
-            get
-            {
-                return ThirdParties.TRAVELGATEDINGUSSPRINGHOTELS;
-            }
-            set
-            {
-            }
-        }
+        public override string Source => ThirdParties.TRAVELGATEDINGUSSPRINGHOTELS;
     }
 }
