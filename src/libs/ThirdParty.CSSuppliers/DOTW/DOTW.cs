@@ -63,8 +63,6 @@
 
         public bool SupportsBookingSearch => false;
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => false;
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => _settings.OffsetCancellationDays(searchDetails, false);
 
         public bool RequiresVCard(VirtualCardInfo info) => false;

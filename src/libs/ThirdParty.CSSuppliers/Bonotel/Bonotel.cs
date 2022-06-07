@@ -62,26 +62,15 @@
 
         public string Source => ThirdParties.BONOTEL;
 
-        private bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
-        bool IThirdParty.TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => TakeSavingFromCommissionMargin(searchDetails);
-
-        private int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
 
-        int IThirdParty.OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => OffsetCancellationDays(searchDetails);
-
-        private bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info)
         {
             return false;
         }
-
-        bool IThirdParty.RequiresVCard(VirtualCardInfo info) => RequiresVCard(info);
 
         #endregion
 

@@ -30,7 +30,6 @@
         public bool SupportsBookingSearch => false;
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => true;
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => 0;
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch SearchDetails) => false;
         public bool RequiresVCard(VirtualCardInfo oInfo) => false;
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails oBookingSearchDetails) => new ThirdPartyBookingSearchResults();

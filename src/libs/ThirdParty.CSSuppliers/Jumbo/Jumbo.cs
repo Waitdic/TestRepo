@@ -47,8 +47,6 @@
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.get_AllowCancellations(searchDetails);
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => false;
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
             => _settings.get_OffsetCancellationDays(searchDetails, false);
 

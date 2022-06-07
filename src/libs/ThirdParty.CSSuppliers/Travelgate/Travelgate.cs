@@ -66,8 +66,6 @@
 
         public bool SupportsRemarks => false;
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => false;
-
         public bool RequiresVCard(VirtualCardInfo info) => _settings.get_RequiresVCard(info);
 
         private char get_ReferenceDelimiter(IThirdPartyAttributeSearch searchDetails)

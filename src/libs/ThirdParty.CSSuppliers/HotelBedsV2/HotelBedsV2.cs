@@ -77,11 +77,6 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
 
         private bool RequiresVCard;
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
         #endregion
 
         #region PreBook

@@ -273,11 +273,6 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
         #endregion
 
         #region "Helpers"

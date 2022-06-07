@@ -195,10 +195,5 @@
         {
             return true;
         }
-
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

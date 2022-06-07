@@ -37,11 +37,6 @@
 
         public bool SupportsBookingSearch => false;
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
         {
             return _settings.OffsetCancellationDays(searchDetails);

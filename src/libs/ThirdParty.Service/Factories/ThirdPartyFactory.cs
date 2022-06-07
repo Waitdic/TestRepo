@@ -1,13 +1,8 @@
 ﻿namespace ThirdParty.Factories
 {
     using System.Collections.Generic;
-    using System.Net.Http;
-    using System.Security.Cryptography;
     using Intuitive;
-    using Intuitive.Helpers.Security;
-    using Intuitive.Helpers.Serialization;
     using ThirdParty;
-    using ThirdParty.Lookups;
     using ThirdParty.Search.Settings;
     using System.Linq;
 

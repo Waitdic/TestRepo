@@ -647,27 +647,14 @@
             return uriBuilder.Uri.AbsoluteUri.TrimEnd('/') + path;
         }
 
-        private bool IThirdParty_SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => IThirdParty_SupportsLiveCancellation(searchDetails, source);
-
-        private bool IThirdParty_TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
         {
             throw new NotImplementedException();
         }
-
-        bool IThirdParty.TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => IThirdParty_TakeSavingFromCommissionMargin(searchDetails);
-
-        private int IThirdParty_OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
-        {
-            throw new NotImplementedException();
-        }
-
-        int IThirdParty.OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => IThirdParty_OffsetCancellationDays(searchDetails);
-
     }
-
 }

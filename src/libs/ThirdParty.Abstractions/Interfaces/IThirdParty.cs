@@ -11,25 +11,16 @@
         /// <summary>
         /// Gets or sets the source.
         /// </summary>
-        /// <value>
-        /// The source.
-        /// </value>
         string Source { get; }
 
         /// <summary>
         /// Gets a value indicating whether [supports remarks].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [supports remarks]; otherwise, <c>false</c>.
-        /// </value>
         bool SupportsRemarks { get; }
 
         /// <summary>
         /// Gets a value indicating whether [supports booking search].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [supports booking search]; otherwise, <c>false</c>.
-        /// </value>
         bool SupportsBookingSearch { get; }
 
         /// <summary>
@@ -39,13 +30,6 @@
         /// <param name="source">The s source.</param>
         /// <returns>A Boolean</returns>
         bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source);
-
-        /// <summary>
-        /// Gets the take saving from commission margin.
-        /// </summary>
-        /// <param name="searchDetails">The search details.</param>
-        /// <returns>A Boolean</returns>
-        bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails);
 
         /// <summary>
         /// Gets the offset cancellation days.

@@ -340,19 +340,10 @@
             }
         }
 
-        private bool IThirdParty_TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
-        bool IThirdParty.TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails) => IThirdParty_TakeSavingFromCommissionMargin(searchDetails);
-
-        private int IThirdParty_OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
-
-        int IThirdParty.OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => IThirdParty_OffsetCancellationDays(searchDetails);
 
         public bool RequiresVCard(VirtualCardInfo info)
         {

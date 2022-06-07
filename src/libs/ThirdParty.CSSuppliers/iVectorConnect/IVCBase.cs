@@ -51,11 +51,6 @@
             return true;
         }
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
         {
             return 0;
