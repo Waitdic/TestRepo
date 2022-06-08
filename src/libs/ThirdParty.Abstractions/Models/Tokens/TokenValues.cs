@@ -3,15 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using ThirdParty.Models.Tokens.Constants;
 
     /// <summary>A collection of token values, made as a class rather than just a list to allow utiltiy functions for adding new values</summary>
     public class TokenValues : ITokenValues
     {
         /// <summary>The values</summary>
-        private List<TokenValue> _values = new List<TokenValue>();
+        private List<TokenValue> _values = new();
 
         /// <summary>Gets the values.</summary>
         /// <value>Returns the stored token values.</value>
@@ -19,7 +17,7 @@
         {
             get
             {
-                return this._values;
+                return _values;
             }
         }
 
@@ -32,7 +30,7 @@
 
             if(this._values.Any(v => v.Type == type))
             {
-                throw new ArgumentException("A value of that type is already in the collection");
+                throw new ArgumentException("A value of that type is already in the collection", nameof(type));
             } 
             else if (this._values.Any())
             {

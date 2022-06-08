@@ -1,7 +1,27 @@
 ﻿namespace ThirdParty
 {
+    using System.Collections.Generic;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
+
+    //public interface IMultiThirdParty : IThirdParty
+    //{
+    //    /// <summary>
+    //    /// Gets or sets the source.
+    //    /// </summary>
+    //    /// <value>
+    //    /// The source.
+    //    /// </value>
+    //    List<string> Sources { get; }
+    //}
+
+    //public interface ISingleThirdParty : IThirdParty
+    //{
+    //    /// <summary>
+    //    /// Gets or sets the source.
+    //    /// </summary>
+    //    string Source { get; }
+    //}
 
     /// <summary>
     /// Defines a third party

@@ -1,12 +1,12 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
 {
-    using ThirdParty.Models.Property.Booking;
+    using Intuitive.Net.WebRequests;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using ThirdParty.Models.Property.Booking;
 
     public interface IExpediaRapidAPI
     {
-        TResponse GetDeserializedResponse<TResponse>(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request) where TResponse : IExpediaRapidResponse, new();
-        string GetResponse(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request);
+        TResponse GetDeserializedResponse<TResponse>(PropertyDetails propertyDetails, Request request) where TResponse : IExpediaRapidResponse<TResponse>, new();
+        string GetResponse(PropertyDetails propertyDetails, Request request);
     }
-
 }

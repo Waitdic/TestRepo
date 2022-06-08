@@ -1,0 +1,53 @@
+﻿URL: https://test.ean.com/2.3/properties/availability?checkin=2021-09-01&checkout=2021-09-06&currency=GBP&language=en-US&country_code=GB&sales_channel=agent_tool&sales_environment=hotel_only&sort_type=preferred&rate_plan_count=250&payment_terms=EAC&partner_point_of_sale=EAC_SA&billing_terms=&rate_option=net_rates&occupancy=1&property_id=102245
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: https://test.ean.com/2.3/properties/availability?checkin=2021-09-01&checkout=2021-09-06&currency=GBP&language=en-US&country_code=GB&sales_channel=agent_tool&sales_environment=hotel_only&sort_type=preferred&rate_plan_count=250&payment_terms=EAC&partner_point_of_sale=EAC_SA&billing_terms=&rate_option=net_rates&occupancy=2&property_id=102245
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: https://test.ean.com/2.3/properties/availability?checkin=2021-09-01&checkout=2021-09-06&currency=GBP&language=en-US&country_code=GB&sales_channel=agent_tool&sales_environment=hotel_only&sort_type=preferred&rate_plan_count=250&payment_terms=EAC&partner_point_of_sale=EAC_SA&billing_terms=&rate_option=net_rates&occupancy=1-8&property_id=102245
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: https://test.ean.com/2.3/properties/availability?checkin=2021-09-01&checkout=2021-09-06&currency=GBP&language=en-US&country_code=GB&sales_channel=agent_tool&sales_environment=hotel_only&sort_type=preferred&rate_plan_count=250&payment_terms=EAC&partner_point_of_sale=EAC_SA&billing_terms=&rate_option=net_rates&occupancy=1-0&property_id=102245
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: https://test.ean.com/2.3/properties/availability?checkin=2021-09-01&checkout=2021-09-06&currency=GBP&language=en-US&country_code=GB&sales_channel=agent_tool&sales_environment=hotel_only&sort_type=preferred&rate_plan_count=250&payment_terms=EAC&partner_point_of_sale=EAC_SA&billing_terms=&rate_option=net_rates&occupancy=1-8%2c0&property_id=102245
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+
+
+
+
+
+
+
+

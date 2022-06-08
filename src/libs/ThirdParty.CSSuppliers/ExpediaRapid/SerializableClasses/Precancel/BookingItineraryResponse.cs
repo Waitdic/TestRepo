@@ -6,9 +6,8 @@
     using Newtonsoft.Json;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
 
-    public class BookingItineraryResponse : IExpediaRapidResponse
+    public class BookingItineraryResponse : IExpediaRapidResponse<BookingItineraryResponse>
     {
-
         [JsonProperty("itinerary_id")]
         public string ItineraryID { get; set; }
 
@@ -39,31 +38,27 @@
         [JsonProperty("conversations")]
         public Conversations Conversations { get; set; }
 
-        public bool IsValid(string responseString, int statusCode)
+        public (bool valid, BookingItineraryResponse response) GetValidResults(string responseString, int statusCode)
         {
+            (bool valid, BookingItineraryResponse response) = (false, new BookingItineraryResponse());
 
             if (!string.IsNullOrWhiteSpace(responseString))
             {
                 try
                 {
+                    response = JsonConvert.DeserializeObject<BookingItineraryResponse>(responseString);
 
-                    var precancelResponse = JsonConvert.DeserializeObject<BookingItineraryResponse>(responseString);
-
-                    if (precancelResponse.Rooms.First() is null)
-                        return false;
-                    if (precancelResponse.Rooms.First().Rate is null)
-                        return false;
-
-                    return true;
+                    if (response.Rooms.First() is not null && response.Rooms.First().Rate is not null)
+                    {
+                        valid = true;
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return false;
                 }
             }
-            return false;
+
+            return (valid, response);
         }
-
     }
-
 }

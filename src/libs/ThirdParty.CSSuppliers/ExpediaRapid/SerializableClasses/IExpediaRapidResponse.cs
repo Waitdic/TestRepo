@@ -1,11 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses
 {
-
-    public interface IExpediaRapidResponse
+    public interface IExpediaRapidResponse<TResponse>
     {
-
-        bool IsValid(string responseString, int statusCode);
-
+        (bool valid, TResponse response) GetValidResults(string responseString, int statusCode);
     }
-
 }

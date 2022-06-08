@@ -1,0 +1,193 @@
+﻿<PropertyAvailabilityRS xmlns="http://oceanbeds.com/2014/10" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+  <Request>
+    <Credential>
+      <User>Trevor</User>
+      <Password>******</Password>
+    </Credential>
+    <CheckInDate>02-nov-2014</CheckInDate>
+    <CheckOutDate>20-nov-2014</CheckOutDate>
+    <RoomList>
+      <RequestRoom>
+        <Adults>1</Adults>
+        <Children>1</Children>
+      </RequestRoom>
+      <RequestRoom>
+        <Adults>1</Adults>
+        <Children>1</Children>
+      </RequestRoom>
+    </RoomList>
+    <PropertyCode/>
+    <StateId>0</StateId>
+    <CityId>0</CityId>
+    <Region/>
+    <CommunityId>0</CommunityId>
+    <BedRoom>0</BedRoom>
+    <HomeType/>
+    <IsAvailable>true</IsAvailable>
+    <HotelSearch>true</HotelSearch>
+    <GenericSearch>true</GenericSearch>
+    <VillaSearch>true</VillaSearch>
+<Filters>
+    <isGamesRoom>false</isGamesRoom>
+    <isSpaPool>false</isSpaPool>
+    <isPrivatePool>false</isPrivatePool>
+    <isOnGolfCourse>false</isOnGolfCourse>
+    <isGatedCommunity>false</isGatedCommunity>
+    <isPoolSouthFacing>false</isPoolSouthFacing>
+    <isInternetAccess>false</isInternetAccess>
+    <isConservationView>false</isConservationView>
+  </Filters>
+
+  </Request>
+  <Response>
+    <Property>
+      <Id>h27</Id>
+      <Type>Hotel</Type>
+      <Name>Barefootn Resort</Name>
+      <ShortDescription i:nil="true"/>
+      <Country>USA</Country>
+      <StateId>1</StateId>
+      <State>Florida</State>
+      <ImageUrl>http://test.oceanbeds.com/Areas/Admin/upload/NoImage.jpg</ImageUrl>
+      <Currency>USD</Currency>
+      <CancellationText>Cancellation Policy</CancellationText>
+      <MinimumStay i:nil="true"/>
+      <RoomList>
+        <Room>
+          <Id>35</Id>
+          <Name>1 Bedroom Condo Deluxe Queen or King</Name>
+          <Code>1BED</Code>
+          <MaxAdults>4</MaxAdults>
+          <MaxChildren>3</MaxChildren>
+          <Sleeps>7</Sleeps>
+          <BookingType>BookNow</BookingType>
+          <ExtraOccupancyPrice>0</ExtraOccupancyPrice>
+          <OfferText>Stay 7 Nights pay for 6</OfferText>
+          <Price>936</Price>
+          <Discount>114</Discount>
+          <NetPrice>822</NetPrice>
+        </Room>
+      </RoomList>
+      <CityList>
+        <City>
+          <Id>11</Id>
+          <Name>Kissimmee</Name>
+        </City>
+      </CityList>
+      <NotesList>
+        <Notes>
+          <Note>test</Note>
+        </Notes>
+      </NotesList>
+      <CommunityId>2</CommunityId>
+      <Region>Orlando</Region>
+
+    </Property>
+    <Property>
+      <Id>h24</Id>
+      <Type>Hotel</Type>
+      <Name>Liki Tiki Village</Name>
+      <ShortDescription i:nil="true"/>
+      <Country>USA</Country>
+      <StateId>1</StateId>
+      <State>Florida</State>
+            <ImageUrl>http://test.oceanbeds.com/Areas/Admin/upload/NoImage.jpg</ImageUrl>
+      <Currency>USD</Currency>
+      <MinimumStay i:nil="true"/>
+      <RoomList>
+        <Room>
+          <Id>30</Id>
+          <Name>1 Bed Condo</Name>
+          <Code>1BCDO</Code>
+          <MaxAdults>4</MaxAdults>
+          <MaxChildren>3</MaxChildren>
+          <Sleeps>7</Sleeps>
+          <BookingType>BookNow</BookingType>
+          <ExtraOccupancyPrice>0</ExtraOccupancyPrice>
+          <OfferText>Stay 7 Nights pay for 6</OfferText>
+          <Price>1098</Price>
+          <Discount>133</Discount>
+          <NetPrice>965</NetPrice>
+        </Room>
+        <Room>
+          <Id>31</Id>
+          <Name>2 Bed Condo</Name>
+          <Code>2BCDO</Code>
+          <MaxAdults>6</MaxAdults>
+          <MaxChildren>5</MaxChildren>
+          <Sleeps>11</Sleeps>
+          <BookingType>BookNow</BookingType>
+          <ExtraOccupancyPrice>0</ExtraOccupancyPrice>
+          <OfferText>Stay 7 Nights pay for 6</OfferText>
+          <Price>1386</Price>
+          <Discount>168</Discount>
+          <NetPrice>1218</NetPrice>
+        </Room>
+        <Room>
+          <Id>32</Id>
+          <Name>3 Bed Condo</Name>
+          <Code>3BCDO</Code>
+          <MaxAdults>10</MaxAdults>
+          <MaxChildren>9</MaxChildren>
+          <Sleeps>19</Sleeps>
+          <BookingType>BookNow</BookingType>
+          <ExtraOccupancyPrice>0</ExtraOccupancyPrice>
+          <OfferText>Stay 7 Nights pay for 6</OfferText>
+          <Price>2934</Price>
+          <Discount>356</Discount>
+          <NetPrice>2578</NetPrice>
+        </Room>
+      </RoomList>
+      <CityList>
+        <City>
+          <Id>11</Id>
+          <Name>Kissimmee</Name>
+        </City>
+      </CityList>
+      <NotesList/> 
+      <CommunityId>2</CommunityId>
+      <Region>Orlando</Region>       
+    </Property>
+    <Property>
+      <Id>i30</Id>
+      <Type>Villa</Type>
+      <Name>345SC</Name>
+      <ShortDescription>TesT</ShortDescription>
+      <Country>USA</Country>
+      <StateId>0</StateId>
+      <State>Florida</State>
+      <ImageUrl>http://test.oceanbeds.com/Areas/Admin/upload/03564e10-2cf1-4436-a694-cd14b042c5a8.jpg</ImageUrl>
+      <Currency>USD</Currency>
+      <MinimumStay i:nil="true"/>
+      <RoomList>
+        <Room>
+          <Id>i30</Id>
+          <Name>345SC</Name>
+          <Code>i30</Code>
+          <MaxAdults>0</MaxAdults>
+          <MaxChildren>0</MaxChildren>
+          <Sleeps>10</Sleeps>
+          <BookingType>BookNow</BookingType>
+          <ExtraOccupancyPrice>0</ExtraOccupancyPrice>
+          <OfferText/>
+          <Price>2124.00</Price>
+          <Discount>0</Discount>
+          <NetPrice>2124.00</NetPrice>
+        </Room>
+      </RoomList>
+      <CityList>
+        <City>
+          <Id>0</Id>
+          <Name>Orlando</Name>
+        </City>
+      </CityList>
+      <NotesList/>
+      <CommunityId>2</CommunityId>
+      <Region>Orlando</Region>
+    </Property>
+  </Response>
+  <Status>
+    <Code>0</Code>
+    <Message>Success</Message>
+  </Status>
+</PropertyAvailabilityRS>

@@ -1,33 +1,25 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search
 {
-    using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
 
-    public class SearchResponse : List<PropertyAvailablility>, IExpediaRapidResponse
+    public class SearchResponse : List<PropertyAvailablility>, IExpediaRapidResponse<SearchResponse>
     {
-
-        public bool IsValid(string responseString, int statusCode)
+        public (bool valid, SearchResponse response) GetValidResults(string responseString, int statusCode)
         {
-
+            (bool valid, SearchResponse response) = (false, new SearchResponse());
             if (!string.IsNullOrWhiteSpace(responseString))
             {
-                var token = JToken.Parse(responseString);
                 try
                 {
-
-                    JsonConvert.DeserializeObject<SearchResponse>(responseString);
-                    return true;
+                    response = JsonConvert.DeserializeObject<SearchResponse>(responseString);
+                    valid = true;
                 }
-
-                catch (Exception ex)
+                catch
                 {
-                    return false;
                 }
             }
-            return false;
+            return (valid, response);
         }
     }
-
 }

@@ -1,11 +1,5 @@
 ﻿namespace ThirdParty.Models.Tokens
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>Represents a value in a base 92 token</summary>
     public class TokenValue
     {

@@ -20,6 +20,13 @@
                 .ToDictionary(x => x.Source, x => x);
             _propertyBookServices = Ensure.IsNotNull(propertyBookServices, nameof(propertyBookServices))
                 .ToDictionary(x => x.Source, x => x);
+            //_propertyBookServices = Ensure.IsNotNull(propertyBookServices, nameof(propertyBookServices))
+            //    .Where(x => x is ISingleThirdParty)
+            //    .Select(x => ((x as ISingleThirdParty).Source, x))
+            //    .Concat(propertyBookServices
+            //        .Where(x => x is IMultiThirdParty)
+            //        .SelectMany(x => (x as IMultiThirdParty).Sources.Select(s => (s, x))))
+            //    .ToDictionary(x => x.Item1, x => x.Item2);
         }
 
         /// <inheritdoc />

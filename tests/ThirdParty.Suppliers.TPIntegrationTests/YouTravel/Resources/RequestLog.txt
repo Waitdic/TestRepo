@@ -1,0 +1,41 @@
+﻿URL: http://testxml.youtravel.com/webservicestest/index.asp?HID=102245&LangID=EN&Username=xmltestme&Password=testme&Checkin_Date=01/09/2021&Nights=5&Rooms=1&ADLTS_1=1&CanxPol=1
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: http://testxml.youtravel.com/webservicestest/index.asp?HID=102245&LangID=EN&Username=xmltestme&Password=testme&Checkin_Date=01/09/2021&Nights=5&Rooms=1&ADLTS_1=2&CanxPol=1
+
+**HEADERS**
+
+Timeout: 58
+
+
+**REQUEST**
+
+URL: http://testxml.youtravel.com/webservicestest/index.asp?HID=102245&LangID=EN&Username=xmltestme&Password=testme&Checkin_Date=01/09/2021&Nights=5&Rooms=1&ADLTS_1=1&CHILD_1=1&ChildAgeR1C1=8&CanxPol=1
+
+**HEADERS**
+
+Timeout: 58
+
+**REQUEST**
+
+URL: http://testxml.youtravel.com/webservicestest/index.asp?HID=102245&LangID=EN&Username=xmltestme&Password=testme&Checkin_Date=01/09/2021&Nights=5&Rooms=1&ADLTS_1=1&CHILD_1=1&ChildAgeR1C1=1&CanxPol=1
+
+**HEADERS**
+
+Timeout: 58
+
+**REQUEST**
+
+URL: http://testxml.youtravel.com/webservicestest/index.asp?HID=102245&LangID=EN&Username=xmltestme&Password=testme&Checkin_Date=01/09/2021&Nights=5&Rooms=1&ADLTS_1=1&CHILD_1=2&ChildAgeR1C1=8&ChildAgeR1C2=1&CanxPol=1
+
+**HEADERS**
+
+Timeout: 58
+
+**REQUEST**

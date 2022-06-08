@@ -34,7 +34,61 @@
             _support = Ensure.IsNotNull(support, nameof(support));
         }
 
-        public string Source { get; } = ThirdParties.EXPEDIARAPID;
+        public string Source => ThirdParties.EXPEDIARAPID;
+
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        {
+            int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
+            var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
+
+            return MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize).Select(tpKeys => BuildSearchRequest(tpKeys, searchDetails, saveLogs)).ToList();
+        }
+
+        private Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails, bool savelogs)
+        {
+            string searchURL = BuildSearchURL(tpKeys, searchDetails);
+            bool useGzip = _settings.get_UseGZIP(searchDetails);
+            string apiKey = _settings.get_ApiKey(searchDetails);
+            string secret = _settings.get_Secret(searchDetails);
+            string userAgent = _settings.get_UserAgent(searchDetails);
+
+            string tpSessionID = Guid.NewGuid().ToString();
+            var headers = new RequestHeaders() { new RequestHeader(SearchHeaderKeys.CustomerSessionID, tpSessionID), CreateAuthorizationHeader(apiKey, secret) };
+
+            var request = BuildDefaultRequest(searchURL, eRequestMethod.GET, headers, useGzip, savelogs, userAgent, "Search");
+
+            request.ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails };
+
+            return request;
+        }
+
+        private string BuildSearchURL(IEnumerable<string> tpKeys, SearchDetails searchDetails)
+        {
+            var arrivalDate = searchDetails.ArrivalDate;
+            var departureDate = searchDetails.DepartureDate;
+
+            string currencyCode = _support.TPCurrencyLookup(Source, searchDetails.CurrencyCode);
+
+            var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
+
+            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, occupancies);
+        }
+
+        public static RequestHeader CreateAuthorizationHeader(string apiKey, string secret)
+        {
+            double timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            var data = Encoding.UTF8.GetBytes($"{apiKey}{secret}{timeStamp}");
+
+            string hashString;
+
+            using (SHA512 sha = new SHA512Managed())
+            {
+                hashString = BitConverter.ToString(sha.ComputeHash(data)).Replace("-", "").ToLower();
+            }
+
+            return new RequestHeader(SearchHeaderKeys.Authorization, $"EAN apikey={apiKey},signature={hashString},timestamp={timeStamp}");
+        }
 
         public static Request BuildDefaultRequest(string url, eRequestMethod requestMethod, RequestHeaders headers, bool useGzip, bool saveLogs, string userAgent, string logFileName, string requestBody = null)
         {
@@ -55,35 +109,11 @@
             };
 
             if (!string.IsNullOrWhiteSpace(requestBody))
+            {
                 request.SetRequest(requestBody);
+            }
 
             return request;
-        }
-
-        public Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails, bool savelogs)
-        {
-            string searchURL = BuildSearchURL(tpKeys, searchDetails);
-            bool useGzip = _settings.get_UseGZIP(searchDetails);
-            string apiKey = _settings.get_ApiKey(searchDetails);
-            string secret = _settings.get_Secret(searchDetails);
-            string userAgent = _settings.get_UserAgent(searchDetails);
-
-            string tpSessionID = Guid.NewGuid().ToString();
-            var headers = new RequestHeaders() { new RequestHeader(SearchHeaderKeys.CustomerSessionID, tpSessionID), CreateAuthorizationHeader(apiKey, secret) };
-
-            var request = BuildDefaultRequest(searchURL, eRequestMethod.GET, headers, useGzip, savelogs, userAgent, "Search");
-
-            request.ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails };
-
-            return request;
-        }
-
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
-        {
-            int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
-            var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
-
-            return MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize).Select(tpKeys => BuildSearchRequest(tpKeys, searchDetails, saveLogs)).ToList();
         }
 
         public static string BuildSearchURL(IEnumerable<string> tpKeys, IExpediaRapidSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, DateTime arrivalDate, DateTime departureDate, string currencyCode, IEnumerable<ExpediaRapidOccupancy> occupancies)
@@ -96,14 +126,27 @@
             }
 
             foreach (ExpediaRapidOccupancy occupancy in occupancies)
+            {
                 nvc.Add(SearchQueryKeys.Occupancy, occupancy.GetExpediaRapidOccupancy());
+            }
 
             foreach (string tpKey in tpKeys)
+            {
                 nvc.Add(SearchQueryKeys.PropertyID, tpKey);
+            }
 
             var searchUrl = new UriBuilder(settings.get_Scheme(tpAttributeSearch), settings.get_Host(tpAttributeSearch), -1, settings.get_SearchPath(tpAttributeSearch)); // to not put the port number in the URL
 
             return searchUrl.Uri.AbsoluteUri + AddQueryParams(nvc);
+        }
+
+        private static string AddQueryParams(NameValueCollection @params)
+        {
+            var queryString = from key in @params.AllKeys
+                              from value in @params.GetValues(key)
+                              select string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
+
+            return "?" + string.Join("&", queryString);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -113,16 +156,11 @@
 
             string tpSessionID = requests.First().ResponseHeaders["Transaction-Id"];
 
-            foreach (Request request in requests)
+            foreach (var request in requests)
             {
                 var response = new SearchResponse();
-                bool success = response.IsValid(request.ResponseString, (int)request.ResponseStatusCode);
-
-                if (success)
-                {
-                    response = JsonConvert.DeserializeObject<SearchResponse>(request.ResponseString);
-                    allAvailabilities.AddRange(response);
-                }
+                (bool valid, response) = response.GetValidResults(request.ResponseString, (int)request.ResponseStatusCode);
+                allAvailabilities.AddRange(response);
             }
 
             transformedResults.TransformedResults.AddRange(allAvailabilities.SelectMany(pa => GetResultFromPropertyAvailability(searchDetails, pa, tpSessionID)));
@@ -130,46 +168,11 @@
             return transformedResults;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
-        {
-
-            return searchDetails.Rooms > 8;
-        }
-
-        public bool ResponseHasExceptions(Request request)
-        {
-            var searchResponse = new SearchResponse();
-
-            return !request.Success || !searchResponse.IsValid(request.ResponseString, (int)request.ResponseStatusCode);
-        }
-
-        internal static string AddQueryParams(NameValueCollection @params)
-        {
-            var queryString = from key in @params.AllKeys
-                              from value in @params.GetValues(key)
-                              select string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
-
-            return "?" + string.Join("&", queryString);
-        }
-
-        private string BuildSearchURL(IEnumerable<string> tpKeys, SearchDetails searchDetails)
-        {
-            var arrivalDate = searchDetails.ArrivalDate;
-            var departureDate = searchDetails.DepartureDate;
-
-            string currencyCode = _support.TPCurrencyLookup(Source, searchDetails.CurrencyCode);
-
-            var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
-
-            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, occupancies);
-        }
-
         private IEnumerable<TransformedResult> GetResultFromPropertyAvailability(SearchDetails searchDetails, PropertyAvailablility propertyAvailability, string tpSessionID)
         {
             if (searchDetails.Rooms > 1)
             {
                 var cheapestRoom = propertyAvailability.Rooms.OrderBy(room => room.Rates.Min(rate => GetTotalInclusiveRate(rate.OccupancyRoomRates))).First();
-
 
                 propertyAvailability.Rooms.RemoveAll(r => (r.RoomID ?? "") != (cheapestRoom.RoomID ?? ""));
             }
@@ -182,9 +185,25 @@
             return occupancyRoomRates.Sum(orr => orr.Value.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount);
         }
 
+        private IEnumerable<TransformedResult> BuildResultFromRoom(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, string tpSessionID)
+        {
+            if (searchDetails.Rooms > 1)
+            {
+                var cheapestRate = room.Rates.MinBy(rate => GetTotalInclusiveRate(rate.OccupancyRoomRates)).First();
+
+                room.Rates.RemoveAll(r => (r.RateID ?? "") != (cheapestRate.RateID ?? ""));
+            }
+
+            return room.Rates.SelectMany(rate => BuildResultFromRoomRates(searchDetails, tpKey, room, rate, tpSessionID));
+        }
+
+        private IEnumerable<TransformedResult> BuildResultFromRoomRates(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, string tpSessionID)
+        {
+            return rate.BedGroupAvailabilities.Values.SelectMany(bedGroup => BuildResultFromBedGroups(searchDetails, tpKey, room, rate, bedGroup, tpSessionID));
+        }
+
         private IEnumerable<TransformedResult> BuildResultFromBedGroups(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, BedGroupAvailability bedGroup, string tpSessionID)
         {
-
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return occupancies.Select((occupancy, i) => BuildResultFromOccupancy(tpKey, room, rate, bedGroup, occupancy, i + 1, tpSessionID));
@@ -245,24 +264,6 @@
             return result;
         }
 
-        private IEnumerable<TransformedResult> BuildResultFromRoom(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, string tpSessionID)
-        {
-            if (searchDetails.Rooms > 1)
-            {
-                var cheapestRate = room.Rates.MinBy(rate => GetTotalInclusiveRate(rate.OccupancyRoomRates)).First();
-
-
-                room.Rates.RemoveAll(r => (r.RateID ?? "") != (cheapestRate.RateID ?? ""));
-            }
-
-            return room.Rates.SelectMany(rate => BuildResultFromRoomRates(searchDetails, tpKey, room, rate, tpSessionID));
-        }
-
-        private IEnumerable<TransformedResult> BuildResultFromRoomRates(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, string tpSessionID)
-        {
-            return rate.BedGroupAvailabilities.Values.SelectMany(bedGroup => BuildResultFromBedGroups(searchDetails, tpKey, room, rate, bedGroup, tpSessionID));
-        }
-
         private List<TransformedResultAdjustment> GetAdjustments(List<Tax> taxes)
         {
             return taxes.Select(t => new TransformedResultAdjustment()
@@ -321,7 +322,6 @@
 
             if (rate.Promotions is not null)
             {
-
                 if (rate.Promotions.ValueAdds is not null)
                 {
                     IEnumerable<string> valueAdds = rate.Promotions.ValueAdds.Select(vaKvp => vaKvp.Value.Description).ToList();
@@ -333,7 +333,6 @@
                 {
                     specialOffers.Add(rate.Promotions.Deal.Description);
                 }
-
             }
 
             return specialOffers;
@@ -346,20 +345,14 @@
             return matchedMealBasisCodes.Any() ? matchedMealBasisCodes.First() : "RO";
         }
 
-        public static RequestHeader CreateAuthorizationHeader(string apiKey, string secret)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
-            double timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            return searchDetails.Rooms > 8;
+        }
 
-            var data = Encoding.UTF8.GetBytes($"{apiKey}{secret}{timeStamp}");
-
-            string hashString;
-
-            using (SHA512 sha = new SHA512Managed())
-            {
-                hashString = BitConverter.ToString(sha.ComputeHash(data)).Replace("-", "").ToLower();
-            }
-
-            return new RequestHeader(SearchHeaderKeys.Authorization, $"EAN apikey={apiKey},signature={hashString},timestamp={timeStamp}");
+        public bool ResponseHasExceptions(Request request)
+        {
+            return !request.Success;
         }
 
         private class Tax
@@ -371,12 +364,6 @@
             }
             public string TaxName { get; set; }
             public decimal TaxAmount { get; set; }
-        }
-
-        private class QueryParamter
-        {
-            public string Name { get; set; }
-            public string Value { get; set; }
         }
     }
 }

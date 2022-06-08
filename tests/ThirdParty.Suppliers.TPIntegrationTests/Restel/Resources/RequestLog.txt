@@ -1,0 +1,169 @@
+﻿URL: http://xml.hotelresb2b.com/xml/listen_xml.jsp?codusu=Codusu&codigousu=Codigousu&clausu=Clausu&afiliacio=RS&secacc=Secacc
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<peticion>
+  <tipo>110</tipo>
+  <parametros>
+    <hotel />
+    <pais>MA</pais>
+    <provincia>MAD_12</provincia>
+    <poblacion />
+    <categoria>0</categoria>
+    <radio>0</radio>
+    <fechaentrada>09/01/2021</fechaentrada>
+    <fechasalida>09/06/2021</fechasalida>
+    <afiliacion>RS</afiliacion>
+    <usuario>Codusu</usuario>
+    <numhab1>1</numhab1>
+    <paxes1>1-0</paxes1>
+    <restricciones>0</restricciones>
+    <idioma>2</idioma>
+    <duplicidad>1</duplicidad>
+    <comprimido>2</comprimido>
+  </parametros>
+</peticion>
+
+URL: http://xml.hotelresb2b.com/xml/listen_xml.jsp?codusu=Codusu&codigousu=Codigousu&clausu=Clausu&afiliacio=RS&secacc=Secacc
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<peticion>
+  <tipo>110</tipo>
+  <parametros>
+    <hotel />
+    <pais>MA</pais>
+    <provincia>MAD_12</provincia>
+    <poblacion />
+    <categoria>0</categoria>
+    <radio>0</radio>
+    <fechaentrada>09/01/2021</fechaentrada>
+    <fechasalida>09/06/2021</fechasalida>
+    <afiliacion>RS</afiliacion>
+    <usuario>Codusu</usuario>
+    <numhab1>1</numhab1>
+    <paxes1>2-0</paxes1>
+    <restricciones>0</restricciones>
+    <idioma>2</idioma>
+    <duplicidad>1</duplicidad>
+    <comprimido>2</comprimido>
+  </parametros>
+</peticion>
+
+URL: http://xml.hotelresb2b.com/xml/listen_xml.jsp?codusu=Codusu&codigousu=Codigousu&clausu=Clausu&afiliacio=RS&secacc=Secacc
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<peticion>
+  <tipo>110</tipo>
+  <parametros>
+    <hotel />
+    <pais>MA</pais>
+    <provincia>MAD_12</provincia>
+    <poblacion />
+    <categoria>0</categoria>
+    <radio>0</radio>
+    <fechaentrada>09/01/2021</fechaentrada>
+    <fechasalida>09/06/2021</fechasalida>
+    <afiliacion>RS</afiliacion>
+    <usuario>Codusu</usuario>
+    <numhab1>1</numhab1>
+    <paxes1>1-1</paxes1>
+    <restricciones>0</restricciones>
+    <idioma>2</idioma>
+    <duplicidad>1</duplicidad>
+    <comprimido>2</comprimido>
+  </parametros>
+</peticion>
+
+URL: http://xml.hotelresb2b.com/xml/listen_xml.jsp?codusu=Codusu&codigousu=Codigousu&clausu=Clausu&afiliacio=RS&secacc=Secacc
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<peticion>
+  <tipo>110</tipo>
+  <parametros>
+    <hotel />
+    <pais>MA</pais>
+    <provincia>MAD_12</provincia>
+    <poblacion />
+    <categoria>0</categoria>
+    <radio>0</radio>
+    <fechaentrada>09/01/2021</fechaentrada>
+    <fechasalida>09/06/2021</fechasalida>
+    <afiliacion>RS</afiliacion>
+    <usuario>Codusu</usuario>
+    <numhab1>1</numhab1>
+    <paxes1>1-0</paxes1>
+    <restricciones>0</restricciones>
+    <idioma>2</idioma>
+    <duplicidad>1</duplicidad>
+    <comprimido>2</comprimido>
+  </parametros>
+</peticion>
+
+URL: http://xml.hotelresb2b.com/xml/listen_xml.jsp?codusu=Codusu&codigousu=Codigousu&clausu=Clausu&afiliacio=RS&secacc=Secacc
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<peticion>
+  <tipo>110</tipo>
+  <parametros>
+    <hotel />
+    <pais>MA</pais>
+    <provincia>MAD_12</provincia>
+    <poblacion />
+    <categoria>0</categoria>
+    <radio>0</radio>
+    <fechaentrada>09/01/2021</fechaentrada>
+    <fechasalida>09/06/2021</fechasalida>
+    <afiliacion>RS</afiliacion>
+    <usuario>Codusu</usuario>
+    <numhab1>1</numhab1>
+    <paxes1>1-1</paxes1>
+    <restricciones>0</restricciones>
+    <idioma>2</idioma>
+    <duplicidad>1</duplicidad>
+    <comprimido>2</comprimido>
+  </parametros>
+</peticion>

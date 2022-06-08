@@ -1,0 +1,63 @@
+﻿<?xml version='1.0' encoding='ISO-8859-1'?>
+<HtSearchRq xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='http://xml.youtravel.com/webservices/xsd_yt_srq.xsd'>
+<Success>true</Success>
+<Search_Criteria>
+<Company>XML Test Affiliate</Company>
+<LangID>EN</LangID>
+<Dstn></Dstn>
+<Rsrt>8824</Rsrt>
+<Rooms>1</Rooms>
+<Nofn>5</Nofn>
+<Checkin_Date>01/09/2021</Checkin_Date>
+<Youtravel_Rating>All star ratings</Youtravel_Rating>
+<Board_Type>1</Board_Type>
+<Adlts_1>1</Adlts_1>
+<Child_1>0</Child_1>
+<Infant_1>0</Infant_1>
+<Adlts_2>0</Adlts_2>
+<Child_2>0</Child_2>
+<Infant_2>0</Infant_2>
+<Adlts_3>0</Adlts_3>
+<Child_3>0</Child_3>
+<Infant_3>0</Infant_3>
+</Search_Criteria>
+<session id='1086313642203202125424114'>
+<Currency>EUR</Currency>
+<Hotel ID='1572'>
+<Hotel_Name>TEST2 Hotel EU</Hotel_Name>
+<Youtravel_Rating>4</Youtravel_Rating>
+<Official_Rating>1 star</Official_Rating>
+<Board_Type>(SC)(BB)(HB)(HB+)(FB)(FB+)(AI)(VILLA)</Board_Type>
+<Child_Age>2 - 15</Child_Age>
+<Country>Greece</Country>
+<Destination>Athens</Destination>
+<Resort>Athens City Centre</Resort>
+<Image>http://images.youtravel.com/photos/1572/xml.jpg</Image>
+<Hotel_Desc><![CDATA[Hello World! THIS IS A TEST HOTEL ONLY, DO NOT BOOK UNDER ANY CIRCUMSTANCES BOOK]]></Hotel_Desc>
+<Room_1>
+<Passengers Adults='2' Children='0' Infants='0'></Passengers>
+<Room Id='1158562' Refundable='true' ADV='false'>
+<CanxPolicy token='yytdtbeaeedgqaiaepeypjpyaeapatapaepp' />
+<Type>Standard Room</Type>
+<Board>BB</Board>
+<Rates Original_Rate='228.7' Final_Rate='228.7'></Rates>
+<Offers Lastminute_Offer='0' Early_Booking_Discount='0' Free_Stay='0' Free_Transfer='0' Gala_Meals='0'></Offers>
+</Room>
+<Room Id='1158563' Refundable='true' ADV='false'>
+<CanxPolicy token='yytdtbwawiwgptaiaepeypjpyaeapatapawpp' />
+<Type>Standard Room</Type>
+<Board>HB</Board>
+<Rates Original_Rate='343.05' Final_Rate='343.05'></Rates>
+<Offers Lastminute_Offer='0' Early_Booking_Discount='0' Free_Stay='0' Free_Transfer='0' Gala_Meals='0'></Offers>
+</Room>
+<Room Id='1392458' Refundable='true' ADV='false'>
+<CanxPolicy token='ywjeitdaitqgiaiaepeypjpyaeapatapaipp' />
+<Type>Standard Room</Type>
+<Board>FB</Board>
+<Rates Original_Rate='457.4' Final_Rate='457.4'></Rates>
+<Offers Lastminute_Offer='0' Early_Booking_Discount='0' Free_Stay='0' Free_Transfer='0' Gala_Meals='0'></Offers>
+</Room>
+</Room_1>
+</Hotel>
+</session>
+</HtSearchRq>

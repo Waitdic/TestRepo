@@ -1,0 +1,72 @@
+﻿URL: http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl?actioncode=HOSTXML&clientlocseq=25788&userid=BABHOST&password=HANGZHOU&message=<?xml version="1.0" encoding="UTF-8"?><message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode><searchtype>CITY</searchtype><citycode>MAD_12</citycode><startdate>01-Sep-2021</startdate><duration>5</duration><status>AVAILABLE</status><displayname>Y</displayname><displaynamedetails>Y</displaynamedetails><displayroomconf>Y</displayroomconf><displayprice>Y</displayprice><displaysuppliercd>Y</displaysuppliercd><displayavail>Y</displayavail><displaypolicy>Y</displaypolicy><displayrestriction>Y</displayrestriction><displaydynamicrates>Y</displaydynamicrates><adults>1</adults><children>0</children><childrenage></childrenage><displaypolicy>Y</displaypolicy></searchseg></message>
+
+**HEADERS**
+
+Content-Type: text/xml
+Host: h2htest.jonview.com
+Content-Length: 0
+Connection: Close
+Timeout: 53
+
+
+**REQUEST**
+
+
+URL: http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl?actioncode=HOSTXML&clientlocseq=25788&userid=BABHOST&password=HANGZHOU&message=<?xml version="1.0" encoding="UTF-8"?><message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode><searchtype>CITY</searchtype><citycode>MAD_12</citycode><startdate>01-Sep-2021</startdate><duration>5</duration><status>AVAILABLE</status><displayname>Y</displayname><displaynamedetails>Y</displaynamedetails><displayroomconf>Y</displayroomconf><displayprice>Y</displayprice><displaysuppliercd>Y</displaysuppliercd><displayavail>Y</displayavail><displaypolicy>Y</displaypolicy><displayrestriction>Y</displayrestriction><displaydynamicrates>Y</displaydynamicrates><adults>2</adults><children>0</children><childrenage></childrenage><displaypolicy>Y</displaypolicy></searchseg></message>
+
+**HEADERS**
+
+Content-Type: text/xml
+Host: h2htest.jonview.com
+Content-Length: 0
+Connection: Close
+Timeout: 53
+
+
+**REQUEST**
+
+
+
+URL: http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl?actioncode=HOSTXML&clientlocseq=25788&userid=BABHOST&password=HANGZHOU&message=<?xml version="1.0" encoding="UTF-8"?><message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode><searchtype>CITY</searchtype><citycode>MAD_12</citycode><startdate>01-Sep-2021</startdate><duration>5</duration><status>AVAILABLE</status><displayname>Y</displayname><displaynamedetails>Y</displaynamedetails><displayroomconf>Y</displayroomconf><displayprice>Y</displayprice><displaysuppliercd>Y</displaysuppliercd><displayavail>Y</displayavail><displaypolicy>Y</displaypolicy><displayrestriction>Y</displayrestriction><displaydynamicrates>Y</displaydynamicrates><adults>1</adults><children>1</children><childrenage>8</childrenage><displaypolicy>Y</displaypolicy></searchseg></message>
+
+**HEADERS**
+
+Content-Type: text/xml
+Host: h2htest.jonview.com
+Content-Length: 0
+Connection: Close
+Timeout: 53
+
+
+**REQUEST**
+
+
+
+URL: http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl?actioncode=HOSTXML&clientlocseq=25788&userid=BABHOST&password=HANGZHOU&message=<?xml version="1.0" encoding="UTF-8"?><message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode><searchtype>CITY</searchtype><citycode>MAD_12</citycode><startdate>01-Sep-2021</startdate><duration>5</duration><status>AVAILABLE</status><displayname>Y</displayname><displaynamedetails>Y</displaynamedetails><displayroomconf>Y</displayroomconf><displayprice>Y</displayprice><displaysuppliercd>Y</displaysuppliercd><displayavail>Y</displayavail><displaypolicy>Y</displaypolicy><displayrestriction>Y</displayrestriction><displaydynamicrates>Y</displaydynamicrates><adults>1</adults><children>1</children><childrenage>/1</childrenage><displaypolicy>Y</displaypolicy></searchseg></message>
+
+**HEADERS**
+
+Content-Type: text/xml
+Host: h2htest.jonview.com
+Content-Length: 0
+Connection: Close
+Timeout: 53
+
+
+**REQUEST**
+
+
+
+URL: http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl?actioncode=HOSTXML&clientlocseq=25788&userid=BABHOST&password=HANGZHOU&message=<?xml version="1.0" encoding="UTF-8"?><message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode><searchtype>CITY</searchtype><citycode>MAD_12</citycode><startdate>01-Sep-2021</startdate><duration>5</duration><status>AVAILABLE</status><displayname>Y</displayname><displaynamedetails>Y</displaynamedetails><displayroomconf>Y</displayroomconf><displayprice>Y</displayprice><displaysuppliercd>Y</displaysuppliercd><displayavail>Y</displayavail><displaypolicy>Y</displaypolicy><displayrestriction>Y</displayrestriction><displaydynamicrates>Y</displaydynamicrates><adults>1</adults><children>2</children><childrenage>8/1</childrenage><displaypolicy>Y</displaypolicy></searchseg></message>
+**HEADERS**
+
+Content-Type: text/xml
+Host: h2htest.jonview.com
+Content-Length: 0
+Connection: Close
+Timeout: 53
+
+
+**REQUEST**
+
+

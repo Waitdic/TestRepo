@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_responses>
+    <Response type="Availability" session="201403191132301157890017">
+        <Session>
+            <AgencyId>100</AgencyId>
+            <ExternalId></ExternalId>
+        </Session>
+        <Hotels>
+            <Hotel id="838">
+                <Name><!--[CDATA[Intertur Waikiki Apts.]]--></Name>
+                <Rating>3k</Rating>
+                <Resort>34-07-PMI-001</Resort>
+                <ResortName><!--[CDATA[Palma Nova]]--></ResortName>
+                <Rates>
+                    <Rate id="26967496" Currency="EUR" TotalPrice="383292" Board="AI" ispackagerate="0" NoRefundable="0">
+                        <Rooms>
+                            <Room Code="1" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="143234"></Room>
+                            <Room Code="2" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="96824"></Room>
+                            <Room Code="3" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="143234"></Room>
+                        </Rooms>
+                        <CancellationPrices endframe="20191011 00:00" timezone="Europe/Madrid">
+                            <Price timeframe="0" unit="days" currency="EUR">71183</Price>
+                            <Price timeframe="1" unit="days" currency="EUR">71183</Price>
+                        </CancellationPrices>
+                    </Rate>
+                    <Rate id="26967497" Currency="EUR" TotalPrice="214942" Board="BB" ispackagerate="0" NoRefundable="0">
+                        <Rooms>
+                            <Room Code="1" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="75894"></Room>
+                            <Room Code="2" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="63154"></Room>
+                            <Room Code="3" id="1" Mapping="29" Name="1 Bedroom Apt" currency="EUR" Price="75894"></Room>
+                        </Rooms>
+                        <CancellationPrices endframe="20191011 00:00" timezone="Europe/Madrid">
+                            <Price percent="18.75" timeframe="0" unit="days" currency="EUR">39918</Price>
+                            <Price percent="18.75" timeframe="1" unit="days" currency="EUR">39918</Price>
+                        </CancellationPrices>
+                    </Rate>
+                </Rates>
+            </Hotel>
+            <Hotel id="1950">
+                <Name><!--[CDATA[Agua Beach Hotel]]--></Name>
+                <Rating>4*</Rating>
+                <Resort>34-07-PMI-001</Resort>
+                <Resortname><!--[CDATA[Palma Nova]]--></Resortname>
+                <Rates>
+                    <Rate id="26967493" Currency="EUR" TotalPrice="654472" Board="HB" ispackagerate="0" NoRefundable="0">
+                        <Rooms>
+                            <Room Code="1" id="5" Mapping="36" Name="Suite" currency="EUR" Price="275366"></Room>
+                            <Room Code="2" id="1" Mapping="16" Name="Twin" currency="EUR" Price="103740"></Room>
+                            <Room Code="3" id="5" Mapping="36" Name="Suite" currency="EUR" Price="275366"></Room>
+                        </Rooms>
+                        <CancellationPrices endframe="20191011 00:00" timezone="Europe/Madrid">
+                            <Price percent="15" timeframe="7" unit="days" currency="EUR">98171</Price>
+                            <Price percent="10" timeframe="14" unit="days" currency="EUR">65447</Price>
+                            <Price percent="5" timeframe="21" unit="days" currency="EUR">32724</Price>
+                        </CancellationPrices>
+                    </Rate>
+                    <Rate id="26967494" Currency="EUR" TotalPrice="663572" Board="HB" ispackagerate="0" NoRefundable="0">
+                        <Rooms>
+                            <Room Code="1" id="5" Mapping="36" Name="Suite" currency="EUR" Price="275366"></Room>
+                            <Room Code="2" id="4" Mapping="306" Name="Twin Sea View" currency="EUR" Price="112840"></Room>
+                        </Rooms>
+                        <CancellationPrices endframe="20191011 00:00" timezone="Europe/Madrid">
+                            <Price percent="15" timeframe="7" unit="days" currency="EUR">98171</Price>
+                            <Price percent="10" timeframe="14" unit="days" currency="EUR">65447</Price>
+                            <Price percent="5" timeframe="21" unit="days" currency="EUR">32724</Price>
+                        </CancellationPrices>
+                    </Rate>
+                </Rates>
+            </Hotel>
+        </Hotels>
+    </Response>
+</AlturaDS_responses>

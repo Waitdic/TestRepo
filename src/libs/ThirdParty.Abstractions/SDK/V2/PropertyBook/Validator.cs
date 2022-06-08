@@ -38,7 +38,8 @@
                 .Must(x => !string.IsNullOrWhiteSpace(x.Title)).WithMessage(WarningMessages.InvalidGuestTitle)
                 .Must(x => !string.IsNullOrWhiteSpace(x.FirstName)).WithMessage(WarningMessages.InvalidGuestFirstName)
                 .Must(x => !string.IsNullOrWhiteSpace(x.LastName)).WithMessage(WarningMessages.InvalidGuestLastName)
-                .Must(x => x.DateOfBirth >= System.DateTime.MinValue).WithMessage(WarningMessages.InvalidDateOfBirth);
+                .Must(x => x.DateOfBirth >= System.DateTime.MinValue).WithMessage(WarningMessages.InvalidDateOfBirth)
+                .OverridePropertyName("GuestDetails");
         }
     }
 }

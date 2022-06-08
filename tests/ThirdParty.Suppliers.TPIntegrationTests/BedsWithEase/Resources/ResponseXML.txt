@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <HotelAvailabilityResponse xmlns="http://topdog.uk.net/BlackBox">
+      <SessionId>5f70434c80f94fee0ea50eef0bbe4639-02100820/A1B</SessionId>
+      <Hotels>
+        <Hotel>
+          <RoomStays>
+            <RoomStay>
+              <AllocationVariants>
+                <AllocationVariant>
+                  <RoomType>
+                    <Code/>
+                    <Description>APARTMENT (1 BEDROOM) STANDARD</Description>
+                    <NumberOfRoomsAvailable>
+                      <Value>7</Value>
+                    </NumberOfRoomsAvailable>
+                    <RatesWithBoard>
+                      <RateWithBoard>
+                        <BookCode>d62e24f95e736fd8f8bb0f258e5c4f56</BookCode>
+                        <BookCodeExpireDateTime>2009-02-10T08:49:11</BookCodeExpireDateTime>
+                        <BoardType>
+                          <Code>SC</Code>
+                          <Description>SELF CATERING</Description>
+                        </BoardType>
+                        <Contract>56.CG-VARIOS</Contract>
+                        <TotalPrice>175.79</TotalPrice>
+                        <CurrencyCode>EUR</CurrencyCode>
+                        <RoomsGroupCode>1</RoomsGroupCode>
+                      </RateWithBoard>
+                    </RatesWithBoard>
+                  </RoomType>
+                  <IncomingContract>08N0458264</IncomingContract>
+                  <Offer>
+                    <Value>false</Value>
+                  </Offer>
+                </AllocationVariant>
+              </AllocationVariants>
+              <PerRoomRecordNumber>2</PerRoomRecordNumber>
+            </RoomStay>
+          </RoomStays>
+          <HotelInfo>
+            <Code>412</Code>
+            <GiataCode>8796</GiataCode>
+            <HotelGUID>10000</HotelGUID>
+            <Name>Capri</Name>
+            <Address>
+              <Airport>
+                <Code>LPA</Code>
+                <Description>Gran Canaria</Description>
+              </Airport>
+              <Resort>
+                <Code>59</Code>
+                <Name>Maspalomas</Name>
+              </Resort>
+            </Address>
+            <ChildMinAge>
+              <Value>12</Value>
+            </ChildMinAge>
+            <Category>
+              <Code>1 KEY</Code>
+              <Description>1 KEY</Description>
+            </Category>
+            <OriginalCategory>
+              <Code>1LL</Code>
+              <Description>1 KEY</Description>
+            </OriginalCategory>
+          </HotelInfo>
+          <OperatorCode>BDS</OperatorCode>
+        </Hotel>
+        <Hotel>
+          <RoomStays>
+            <RoomStay>
+              <AllocationVariants>
+                <AllocationVariant>
+                  <RoomType>
+                    <Code/>
+                    <Description>BUNGALOW (1 BEDROOM) 3 PEOPLE</Description>
+                    <NumberOfRoomsAvailable>
+                      <Value>4</Value>
+                    </NumberOfRoomsAvailable>
+                    <RatesWithBoard>
+                      <RateWithBoard>
+                        <BookCode>9b4022e1ebbc64555dd3e29d086cb213</BookCode>
+                        <BookCodeExpireDateTime>2009-02-10T08:49:11</BookCodeExpireDateTime>
+                        <BoardType>
+                          <Code>SC</Code>
+                          <Description>SELF CATERING</Description>
+                        </BoardType>
+                        <Contract>56.OFE-VARIOS</Contract>
+                        <TotalPrice>176.82</TotalPrice>
+                        <CurrencyCode>EUR</CurrencyCode>
+                        <RoomsGroupCode>1</RoomsGroupCode>
+                      </RateWithBoard>
+                    </RatesWithBoard>
+                  </RoomType>
+                  <IncomingContract>08N0458264</IncomingContract>
+                  <Offer>
+                    <Value>false</Value>
+                  </Offer>
+                </AllocationVariant>
+              </AllocationVariants>
+              <PerRoomRecordNumber>1</PerRoomRecordNumber>
+            </RoomStay>
+          </RoomStays>
+          <HotelInfo>
+            <Code>7813</Code>
+            <GiataCode>87366</GiataCode>
+            <HotelGUID>10001</HotelGUID>
+            <Name>El Cardonal</Name>
+            <Address>
+              <Airport>
+                <Code>LPA</Code>
+                <Description>Gran Canaria</Description>
+              </Airport>
+              <Resort>
+                <Code>59</Code>
+                <Name>Maspalomas</Name>
+              </Resort>
+            </Address>
+            <ChildMinAge>
+              <Value>12</Value>
+            </ChildMinAge>
+            <Category>
+              <Code>2 KEY</Code>
+              <Description>2 KEYS</Description>
+            </Category>
+            <OriginalCategory>
+              <Code>2LL</Code>
+              <Description>2 KEYS</Description>
+            </OriginalCategory>
+          </HotelInfo>
+          <OperatorCode>BDS</OperatorCode>
+        </Hotel>
+        <Hotel>
+          <RoomStays>
+            <RoomStay>
+              <AllocationVariants>
+                <AllocationVariant>
+                  <RoomType>
+                    <Code/>
+                    <Description>BUNGALOW (1 BEDROOM) 3 PEOPLE</Description>
+                    <NumberOfRoomsAvailable>
+                      <Value>4</Value>
+                    </NumberOfRoomsAvailable>
+                    <RatesWithBoard>
+                      <RateWithBoard>
+                        <BookCode>493b8a24472b4307596e7963a9f751fe</BookCode>
+                        <BookCodeExpireDateTime>2009-02-10T08:49:11</BookCodeExpireDateTime>
+                        <BoardType>
+                          <Code>SC</Code>
+                          <Description>SELF CATERING</Description>
+                        </BoardType>
+                        <Contract>56.CG-VARIOS</Contract>
+                        <TotalPrice>205.54</TotalPrice>
+                        <CurrencyCode>EUR</CurrencyCode>
+                      </RateWithBoard>
+                    </RatesWithBoard>
+                  </RoomType>
+                  <IncomingContract>08N0458264</IncomingContract>
+                  <Offer>
+                    <Value>false</Value>
+                  </Offer>
+                </AllocationVariant>
+              </AllocationVariants>
+              <PerRoomRecordNumber>1</PerRoomRecordNumber>
+            </RoomStay>
+          </RoomStays>
+          <HotelInfo>
+            <Code>7813</Code>
+            <Name>El Cardonal</Name>
+            <HotelGUID>10001</HotelGUID>
+            <Address>
+              <Airport>
+                <Code>LPA</Code>
+                <Description>Gran Canaria</Description>
+              </Airport>
+              <Resort>
+                <Code>59</Code>
+                <Name>Maspalomas</Name>
+              </Resort>
+            </Address>
+            <ChildMinAge>
+              <Value>12</Value>
+            </ChildMinAge>
+            <Category>
+              <Code>2 KEY</Code>
+              <Description>2 KEYS</Description>
+            </Category>
+            <OriginalCategory>
+              <Code>2LL</Code>
+              <Description>2 KEYS</Description>
+            </OriginalCategory>
+          </HotelInfo>
+          <OperatorCode>BDS</OperatorCode>
+        </Hotel>
+      </Hotels>
+      <PortionsSequenceId>0da9ba9c7135fb1ea972b39e2d839635</PortionsSequenceId>
+    </HotelAvailabilityResponse>
+  </S:Body>
+</S:Envelope>

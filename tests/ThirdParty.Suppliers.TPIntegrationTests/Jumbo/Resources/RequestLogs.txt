@@ -1,0 +1,83 @@
+﻿URL: http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: text/xml
+Host: live.xtravelsystem.com
+Content-Length: 974
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://xtravelsystem.com/v1_0rc1/hotel/types"><soapenv:Header/><soapenv:Body><typ:availableHotelsByMultiQueryV12><AvailableHotelsByMultiQueryRQ_1><agencyCode>243008</agencyCode><brandCode>1</brandCode><pointOfSaleId>1</pointOfSaleId><checkin>2021-09-01T12:00:00</checkin><checkout>2021-09-06T12:00:00</checkout><fromPrice>0</fromPrice><fromRow>0</fromRow><includeEstablishmentData>false</includeEstablishmentData><language>en</language><maxRoomCombinationsPerEstablishment>10</maxRoomCombinationsPerEstablishment><numRows>1000</numRows><occupancies><adults>1</adults><children>0</children><numberOfRooms>1</numberOfRooms></occupancies><onlyOnline>true</onlyOnline><orderBy xsi:nil="true" /><productCode xsi:nil="true" /><toPrice>9999</toPrice><establishmentId>102245</establishmentId></AvailableHotelsByMultiQueryRQ_1></typ:availableHotelsByMultiQueryV12></soapenv:Body></soapenv:Envelope>
+
+URL: http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: text/xml
+Host: live.xtravelsystem.com
+Content-Length: 974
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://xtravelsystem.com/v1_0rc1/hotel/types"><soapenv:Header/><soapenv:Body><typ:availableHotelsByMultiQueryV12><AvailableHotelsByMultiQueryRQ_1><agencyCode>243008</agencyCode><brandCode>1</brandCode><pointOfSaleId>1</pointOfSaleId><checkin>2021-09-01T12:00:00</checkin><checkout>2021-09-06T12:00:00</checkout><fromPrice>0</fromPrice><fromRow>0</fromRow><includeEstablishmentData>false</includeEstablishmentData><language>en</language><maxRoomCombinationsPerEstablishment>10</maxRoomCombinationsPerEstablishment><numRows>1000</numRows><occupancies><adults>2</adults><children>0</children><numberOfRooms>1</numberOfRooms></occupancies><onlyOnline>true</onlyOnline><orderBy xsi:nil="true" /><productCode xsi:nil="true" /><toPrice>9999</toPrice><establishmentId>102245</establishmentId></AvailableHotelsByMultiQueryRQ_1></typ:availableHotelsByMultiQueryV12></soapenv:Body></soapenv:Envelope>
+
+URL: http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: text/xml
+Host: live.xtravelsystem.com
+Content-Length: 974
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://xtravelsystem.com/v1_0rc1/hotel/types"><soapenv:Header/><soapenv:Body><typ:availableHotelsByMultiQueryV12><AvailableHotelsByMultiQueryRQ_1><agencyCode>243008</agencyCode><brandCode>1</brandCode><pointOfSaleId>1</pointOfSaleId><checkin>2021-09-01T12:00:00</checkin><checkout>2021-09-06T12:00:00</checkout><fromPrice>0</fromPrice><fromRow>0</fromRow><includeEstablishmentData>false</includeEstablishmentData><language>en</language><maxRoomCombinationsPerEstablishment>10</maxRoomCombinationsPerEstablishment><numRows>1000</numRows><occupancies><adults>1</adults><children>1</children><childrenAges>8</childrenAges><numberOfRooms>1</numberOfRooms></occupancies><onlyOnline>true</onlyOnline><orderBy xsi:nil="true" /><productCode xsi:nil="true" /><toPrice>9999</toPrice><establishmentId>102245</establishmentId></AvailableHotelsByMultiQueryRQ_1></typ:availableHotelsByMultiQueryV12></soapenv:Body></soapenv:Envelope>
+
+URL: http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: text/xml
+Host: live.xtravelsystem.com
+Content-Length: 974
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://xtravelsystem.com/v1_0rc1/hotel/types"><soapenv:Header/><soapenv:Body><typ:availableHotelsByMultiQueryV12><AvailableHotelsByMultiQueryRQ_1><agencyCode>243008</agencyCode><brandCode>1</brandCode><pointOfSaleId>1</pointOfSaleId><checkin>2021-09-01T12:00:00</checkin><checkout>2021-09-06T12:00:00</checkout><fromPrice>0</fromPrice><fromRow>0</fromRow><includeEstablishmentData>false</includeEstablishmentData><language>en</language><maxRoomCombinationsPerEstablishment>10</maxRoomCombinationsPerEstablishment><numRows>1000</numRows><occupancies><adults>1</adults><children>1</children><childrenAges>0</childrenAges><numberOfRooms>1</numberOfRooms></occupancies><onlyOnline>true</onlyOnline><orderBy xsi:nil="true" /><productCode xsi:nil="true" /><toPrice>9999</toPrice><establishmentId>102245</establishmentId></AvailableHotelsByMultiQueryRQ_1></typ:availableHotelsByMultiQueryV12></soapenv:Body></soapenv:Envelope>
+URL: http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: text/xml
+Host: live.xtravelsystem.com
+Content-Length: 974
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:typ="http://xtravelsystem.com/v1_0rc1/hotel/types"><soapenv:Header/><soapenv:Body><typ:availableHotelsByMultiQueryV12><AvailableHotelsByMultiQueryRQ_1><agencyCode>243008</agencyCode><brandCode>1</brandCode><pointOfSaleId>1</pointOfSaleId><checkin>2021-09-01T12:00:00</checkin><checkout>2021-09-06T12:00:00</checkout><fromPrice>0</fromPrice><fromRow>0</fromRow><includeEstablishmentData>false</includeEstablishmentData><language>en</language><maxRoomCombinationsPerEstablishment>10</maxRoomCombinationsPerEstablishment><numRows>1000</numRows><occupancies><adults>1</adults><children>2</children><childrenAges>8</childrenAges><childrenAges>0</childrenAges><numberOfRooms>1</numberOfRooms></occupancies><onlyOnline>true</onlyOnline><orderBy xsi:nil="true" /><productCode xsi:nil="true" /><toPrice>9999</toPrice><establishmentId>102245</establishmentId></AvailableHotelsByMultiQueryRQ_1></typ:availableHotelsByMultiQueryV12></soapenv:Body></soapenv:Envelope>

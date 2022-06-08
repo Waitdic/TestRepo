@@ -1,0 +1,94 @@
+﻿URL: https://api.test.hotelbeds.com/hotel-api/1.0/hotels
+
+**HEADERS**
+
+Api-key: qgusgu8649g7qz5gbugced7z
+X-Signature: 997337791882bf47c0038ed91052c8b71ac291f582487f1ef80856407ce1c9df
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Host: api.test.hotelbeds.com
+Content-Length: 425
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"stay":{"checkIn":"2021-09-01","checkOut":"2021-09-06","shiftDays":null},"occupancies":[{"rooms":1,"adults":1,"children":0,"paxes":[{"type":"AD","age":30}]}],"hotels":{"hotel":[102245]},"filter":{"minRate":0,"maxRate":1000000,"minCategory":1,"maxCategory":5,"paymentType":null,"maxRatesPerRoom":1000000,"packaging":true,"hotelPackage":"BOTH"},"dailyRate":false,"sourceMarket":"UK"}
+
+URL: https://api.test.hotelbeds.com/hotel-api/1.0/hotels
+
+**HEADERS**
+
+Api-key: qgusgu8649g7qz5gbugced7z
+X-Signature: 997337791882bf47c0038ed91052c8b71ac291f582487f1ef80856407ce1c9df
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Host: api.test.hotelbeds.com
+Content-Length: 425
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"stay":{"checkIn":"2021-09-01","checkOut":"2021-09-06","shiftDays":null},"occupancies":[{"rooms":1,"adults":2,"children":0,"paxes":[{"type":"AD","age":30},{"type":"AD","age":30}]}],"hotels":{"hotel":[102245]},"filter":{"minRate":0,"maxRate":1000000,"minCategory":1,"maxCategory":5,"paymentType":null,"maxRatesPerRoom":1000000,"packaging":true,"hotelPackage":"BOTH"},"dailyRate":false,"sourceMarket":"UK"}
+
+URL: https://api.test.hotelbeds.com/hotel-api/1.0/hotels
+
+**HEADERS**
+
+Api-key: qgusgu8649g7qz5gbugced7z
+X-Signature: 997337791882bf47c0038ed91052c8b71ac291f582487f1ef80856407ce1c9df
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Host: api.test.hotelbeds.com
+Content-Length: 425
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"stay":{"checkIn":"2021-09-01","checkOut":"2021-09-06","shiftDays":null},"occupancies":[{"rooms":1,"adults":1,"children":1,"paxes":[{"type":"CH","age":8},{"type":"AD","age":30}]}],"hotels":{"hotel":[102245]},"filter":{"minRate":0,"maxRate":1000000,"minCategory":1,"maxCategory":5,"paymentType":null,"maxRatesPerRoom":1000000,"packaging":true,"hotelPackage":"BOTH"},"dailyRate":false,"sourceMarket":"UK"}
+
+URL: https://api.test.hotelbeds.com/hotel-api/1.0/hotels
+
+**HEADERS**
+
+Api-key: qgusgu8649g7qz5gbugced7z
+X-Signature: 997337791882bf47c0038ed91052c8b71ac291f582487f1ef80856407ce1c9df
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Host: api.test.hotelbeds.com
+Content-Length: 425
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"stay":{"checkIn":"2021-09-01","checkOut":"2021-09-06","shiftDays":null},"occupancies":[{"rooms":1,"adults":1,"children":1,"paxes":[{"type":"AD","age":30},{"type":"CH","age":1}]}],"hotels":{"hotel":[102245]},"filter":{"minRate":0,"maxRate":1000000,"minCategory":1,"maxCategory":5,"paymentType":null,"maxRatesPerRoom":1000000,"packaging":true,"hotelPackage":"BOTH"},"dailyRate":false,"sourceMarket":"UK"}
+
+URL: https://api.test.hotelbeds.com/hotel-api/1.0/hotels
+
+**HEADERS**
+
+Api-key: qgusgu8649g7qz5gbugced7z
+X-Signature: 997337791882bf47c0038ed91052c8b71ac291f582487f1ef80856407ce1c9df
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Host: api.test.hotelbeds.com
+Content-Length: 425
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"stay":{"checkIn":"2021-09-01","checkOut":"2021-09-06","shiftDays":null},"occupancies":[{"rooms":1,"adults":1,"children":2,"paxes":[{"type":"CH","age":8},{"type":"AD","age":30},{"type":"CH","age":1}]}],"hotels":{"hotel":[102245]},"filter":{"minRate":0,"maxRate":1000000,"minCategory":1,"maxCategory":5,"paymentType":null,"maxRatesPerRoom":1000000,"packaging":true,"hotelPackage":"BOTH"},"dailyRate":false,"sourceMarket":"UK"}

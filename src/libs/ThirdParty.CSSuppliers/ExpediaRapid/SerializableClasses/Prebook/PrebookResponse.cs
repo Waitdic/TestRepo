@@ -1,37 +1,32 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook
 {
-    using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public class PrebookResponse : IExpediaRapidResponse
+    public class PrebookResponse : IExpediaRapidResponse<PrebookResponse>
     {
-
         [JsonProperty("occupancy_pricing")]
         public Dictionary<string, OccupancyRoomRate> OccupancyRoomRates { get; set; }
 
         [JsonProperty("links")]
         public Dictionary<string, Link> Links { get; set; } = new Dictionary<string, Link>();
 
-        public bool IsValid(string responseString, int statusCode)
+        public (bool valid, PrebookResponse response) GetValidResults(string responseString, int statusCode)
         {
-
+            (bool valid, PrebookResponse response) = (false, new PrebookResponse());
             if (!string.IsNullOrWhiteSpace(responseString))
             {
                 try
                 {
-
-                    JsonConvert.DeserializeObject<PrebookResponse>(responseString);
-                    return true;
+                    response = JsonConvert.DeserializeObject<PrebookResponse>(responseString);
+                    valid = true;
                 }
-
-                catch (Exception ex)
+                catch
                 {
-                    return false;
                 }
             }
-            return false;
+
+            return (valid, response);
         }
     }
-
 }

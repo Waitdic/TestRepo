@@ -1,0 +1,269 @@
+﻿URL: https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.juniper.es/webservice/2007/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <HotelAvail>
+      <HotelAvailRQ Version="1.1" Language="en">
+        <Login Email="XML_IntuitiveSystems-iVector" Password="H'LGw.m(6CVzdj{F">
+        </Login>
+        <Paxes>
+          <Pax IdPax="1">
+          </Pax>
+        </Paxes>
+        <HotelRequest>
+          <SearchSegmentsHotels>
+            <SearchSegmentHotels Start="2021-09-01" End="2021-09-06">
+            </SearchSegmentHotels>
+            <HotelCodes>
+              <HotelCode>102245</HotelCode>
+            </HotelCodes>
+            <CountryOfResidence>GB</CountryOfResidence>
+          </SearchSegmentsHotels>
+          <RelPaxesDist>
+            <RelPaxDist>
+              <RelPaxes>
+                <RelPax IdPax="1">
+                </RelPax>
+              </RelPaxes>
+            </RelPaxDist>
+          </RelPaxesDist>
+        </HotelRequest>
+        <AdvancedOptions>
+          <ShowHotelInfo>true</ShowHotelInfo>
+          <ShowOnlyBestPriceCombination>false</ShowOnlyBestPriceCombination>
+          <ShowCancellationPolicies>true</ShowCancellationPolicies>
+          <TimeOut>8000</TimeOut>
+        </AdvancedOptions>
+      </HotelAvailRQ>
+    </HotelAvail>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.juniper.es/webservice/2007/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <HotelAvail>
+      <HotelAvailRQ Version="1.1" Language="en">
+        <Login Email="XML_IntuitiveSystems-iVector" Password="H'LGw.m(6CVzdj{F">
+        </Login>
+        <Paxes>
+          <Pax IdPax="1">
+          </Pax>
+          <Pax IdPax="2">
+          </Pax>
+        </Paxes>
+        <HotelRequest>
+          <SearchSegmentsHotels>
+            <SearchSegmentHotels Start="2021-09-01" End="2021-09-06">
+            </SearchSegmentHotels>
+            <HotelCodes>
+              <HotelCode>102245</HotelCode>
+            </HotelCodes>
+            <CountryOfResidence>GB</CountryOfResidence>
+          </SearchSegmentsHotels>
+          <RelPaxesDist>
+            <RelPaxDist>
+              <RelPaxes>
+                <RelPax IdPax="1">
+                </RelPax>
+                <RelPax IdPax="2">
+                </RelPax>
+              </RelPaxes>
+            </RelPaxDist>
+          </RelPaxesDist>
+        </HotelRequest>
+        <AdvancedOptions>
+          <ShowHotelInfo>true</ShowHotelInfo>
+          <ShowOnlyBestPriceCombination>false</ShowOnlyBestPriceCombination>
+          <ShowCancellationPolicies>true</ShowCancellationPolicies>
+          <TimeOut>8000</TimeOut>
+        </AdvancedOptions>
+      </HotelAvailRQ>
+    </HotelAvail>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.juniper.es/webservice/2007/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <HotelAvail>
+      <HotelAvailRQ Version="1.1" Language="en">
+        <Login Email="XML_IntuitiveSystems-iVector" Password="H'LGw.m(6CVzdj{F">
+        </Login>
+        <Paxes>
+          <Pax IdPax="1">
+          </Pax>
+          <Pax IdPax="2">
+            <Age>8</Age>
+          </Pax>
+        </Paxes>
+        <HotelRequest>
+          <SearchSegmentsHotels>
+            <SearchSegmentHotels Start="2021-09-01" End="2021-09-06">
+            </SearchSegmentHotels>
+            <HotelCodes>
+              <HotelCode>102245</HotelCode>
+            </HotelCodes>
+            <CountryOfResidence>GB</CountryOfResidence>
+          </SearchSegmentsHotels>
+          <RelPaxesDist>
+            <RelPaxDist>
+              <RelPaxes>
+                <RelPax IdPax="1">
+                </RelPax>
+                <RelPax IdPax="2">
+                </RelPax>
+              </RelPaxes>
+            </RelPaxDist>
+          </RelPaxesDist>
+        </HotelRequest>
+        <AdvancedOptions>
+          <ShowHotelInfo>true</ShowHotelInfo>
+          <ShowOnlyBestPriceCombination>false</ShowOnlyBestPriceCombination>
+          <ShowCancellationPolicies>true</ShowCancellationPolicies>
+          <TimeOut>8000</TimeOut>
+        </AdvancedOptions>
+      </HotelAvailRQ>
+    </HotelAvail>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.juniper.es/webservice/2007/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <HotelAvail>
+      <HotelAvailRQ Version="1.1" Language="en">
+        <Login Email="XML_IntuitiveSystems-iVector" Password="H'LGw.m(6CVzdj{F">
+        </Login>
+        <Paxes>
+          <Pax IdPax="1">
+          </Pax>
+          <Pax IdPax="2">
+            <Age>1</Age>
+          </Pax>
+        </Paxes>
+        <HotelRequest>
+          <SearchSegmentsHotels>
+            <SearchSegmentHotels Start="2021-09-01" End="2021-09-06">
+            </SearchSegmentHotels>
+            <HotelCodes>
+              <HotelCode>102245</HotelCode>
+            </HotelCodes>
+            <CountryOfResidence>GB</CountryOfResidence>
+          </SearchSegmentsHotels>
+          <RelPaxesDist>
+            <RelPaxDist>
+              <RelPaxes>
+                <RelPax IdPax="1">
+                </RelPax>
+                <RelPax IdPax="2">
+                </RelPax>
+              </RelPaxes>
+            </RelPaxDist>
+          </RelPaxesDist>
+        </HotelRequest>
+        <AdvancedOptions>
+          <ShowHotelInfo>true</ShowHotelInfo>
+          <ShowOnlyBestPriceCombination>false</ShowOnlyBestPriceCombination>
+          <ShowCancellationPolicies>true</ShowCancellationPolicies>
+          <TimeOut>8000</TimeOut>
+        </AdvancedOptions>
+      </HotelAvailRQ>
+    </HotelAvail>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://www.juniper.es/webservice/2007/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <HotelAvail>
+      <HotelAvailRQ Version="1.1" Language="en">
+        <Login Email="XML_IntuitiveSystems-iVector" Password="H'LGw.m(6CVzdj{F">
+        </Login>
+        <Paxes>
+          <Pax IdPax="1">
+          </Pax>
+          <Pax IdPax="2">
+            <Age>8</Age>
+          </Pax>
+          <Pax IdPax="3">
+            <Age>1</Age>
+          </Pax>
+        </Paxes>
+        <HotelRequest>
+          <SearchSegmentsHotels>
+            <SearchSegmentHotels Start="2021-09-01" End="2021-09-06">
+            </SearchSegmentHotels>
+            <HotelCodes>
+              <HotelCode>102245</HotelCode>
+            </HotelCodes>
+            <CountryOfResidence>GB</CountryOfResidence>
+          </SearchSegmentsHotels>
+          <RelPaxesDist>
+            <RelPaxDist>
+              <RelPaxes>
+                <RelPax IdPax="1">
+                </RelPax>
+                <RelPax IdPax="2">
+                </RelPax>
+                <RelPax IdPax="3">
+                </RelPax>
+              </RelPaxes>
+            </RelPaxDist>
+          </RelPaxesDist>
+        </HotelRequest>
+        <AdvancedOptions>
+          <ShowHotelInfo>true</ShowHotelInfo>
+          <ShowOnlyBestPriceCombination>false</ShowOnlyBestPriceCombination>
+          <ShowCancellationPolicies>true</ShowCancellationPolicies>
+          <TimeOut>8000</TimeOut>
+        </AdvancedOptions>
+      </HotelAvailRQ>
+    </HotelAvail>
+  </soapenv:Body>
+</soapenv:Envelope>
+

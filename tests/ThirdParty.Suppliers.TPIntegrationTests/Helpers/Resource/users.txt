@@ -1,0 +1,503 @@
+[
+  {
+    "Login": "TravelpackTest_hotel",
+    "Password": "_Tr4v3lp4ck",
+    "DummyResponses": "false",
+    "TPSettings": {
+      "PropertyTPRequestLimit": 500,
+      "SearchTimeoutSeconds": 60,
+      "LogMainSearchError": "true",
+      "CurrencyCode": "GBP"
+    },
+    "Configurations": [
+      {
+        "Supplier": "ExpediaRapid",
+        "Configurations": {
+          "ApiKey": "5gbpbm39shdpog18vuspphl7oj",
+          "Secret": "c91af861133kp",
+          "Scheme": "https",
+          "Host": "test.ean.com",
+          "SearchURL": "2.3/properties/availability",
+          "HotelBatchLimit": "250",
+          "SourceMarket": "GB",
+          "SalesChannel": "agent_tool",
+          "SalesEnvironment": "hotel_only",
+          "SortType": "preferred",
+          "RatePlanCount": "250",
+          "PaymentTerms": "EAC",
+          "PartnerPointOfSale": "EAC_SA",
+          "LanguageCode": "en-US",
+          "UseGZIP": "true",
+          "OffsetCancellationDays": "0",
+          "AllowCancellations": "true",
+          "UserAgent": "iVector/1.00",
+          "Allow Cancellations": "true",
+          "PlatformName": "",
+          "BillingTerms": "",
+          "RateOption": "net_rates",
+          "ValidateAffiliateID": "false"
+        }
+      },
+      {
+        "Supplier": "Stuba",
+        "Configurations": {
+          "HotelBatchLimit": "50",
+          "ExcludeUnknownCancellations": "false",
+          "ExcludeNRF": "true",
+          "GenericURL": "http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx",
+          "Password": "xmltest",
+          "Currency": "GBP",
+          "TradeReference": "travelpacktest",
+          "UseGZip": "true",
+          "OffsetCancellationDays": "0",
+          "ContactEmail": "test@test.com",
+          "ContactPhoneNumber": "ContactPhoneNumber",
+          "AgencyID": "travelpack",
+          "Organisation": "travelpack",
+          "User": "xmltest",
+          "Version": "1.28",
+          "LeadGuestNationality": "GB",
+          "AllowCancellations": "true"
+        }
+      },
+      {
+        "Supplier": "HotelBedsV2",
+        "Configurations": {
+          "SearchURL": "https://api.test.hotelbeds.com/hotel-api/1.0/hotels",
+          "Password": "a3w8vQpwBX",
+          "Allow Cancellations": "false",
+          "LanguageCode": "ENG",
+          "UseGZip": "true",
+          "NonRefundableRates": "true",
+          "OffsetCancellationDays": "0",
+          "CustomerCountryCode": "UK",
+          "EnableHotelSearch": "true",
+          "BookingURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings",
+          "CancellationURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings/{{bookingReference}}?cancellationFlag=CANCELLATION",
+          "CheckRatesURL": "https://api.test.hotelbeds.com/hotel-api/1.0/checkrates",
+          "HotelBatchLimit": "250",
+          "SecureBookingURL": "https://api-secure.test.hotelbeds.com/hotel-api/1.0/bookings",
+          "Packaging": "true",
+          "AllowAtHotelPayments": "true",
+          "ExcludeNRF": "false",
+          "HotelPackage": "true",
+          "User": "qgusgu8649g7qz5gbugced7z"
+        }
+      },
+      {
+        "Supplier": "MTS",
+        "Configurations": {
+          "User": "TEST",
+          "Type": "22",
+          "Instance": "MF001",
+          "GenericURL": "http://intesb.axisdata.net:54321/apu-test/ota",
+          "Unique_ID_Type": "14",
+          "OverRideID": "TEST",
+          "AllowCancellations": "true",
+          "LanguageCode": "EN",
+          "UseGZip": "false",
+          "OffsetCancellationDays": "0",
+          "AuthenticationType": "88",
+          "Password": "testpass",
+          "ID_Context": "AxisData",
+          "OverrideCountries": "",
+          "AuthenticationID": "TEST"
+        }
+      },
+      {
+        "Supplier": "YouTravel",
+        "Configurations": {
+          "SearchURL": "http://testxml.youtravel.com/webservicestest/index.asp",
+          "BookingURL": "http://testxml.youtravel.com/webservicestest/bookings.asp",
+          "CancellationFeeURL": "http://testxml.youtravel.com/webservicestest/get_canx_fees.asp",
+          "CancellationURL": "http://testxml.youtravel.com/webservicestest/cancel.asp",
+          "LanguageCode": "EN",
+          "User": "xmltestme",
+          "Password": "testme",
+          "AllowCancellations": "true",
+          "UseGZip": "false",
+          "OffsetCancellationDays": "0",
+          "PrebookURL": "http://testxml.youtravel.com/webservicestest/get_hoteldetails.asp",
+          "CancellationPolicyURL": "http://testxml.youtravel.com/webservicestest/get_canx_policy.a"
+        }
+      },
+      {
+        "Supplier": "Bonotel",
+        "Configurations": {
+          "GenericURL": "http://xmltest.bonotel.com/bonotelapps/bonotel/reservation/",
+          "User": "trvlpths_xml",
+          "Password": "trvl20p0809",
+          "AllowCancellations": "false",
+          "UseGZip": "false",
+          "OffsetCancellationDays": "0",
+          "BookTimeout": "100"
+        }
+      },
+      {
+        "Supplier": "JonView",
+        "Configurations": {
+          "GenericURL": "http://www.jonview.com/ws/services/Jonviewhostserver_xmlN_cst_xmlServiceBindingImpl",
+          "User": "BABHOST",
+          "Password": "HANGZHOU",
+          "AllowCancellations": "false",
+          "OffsetCancellationDays": "0",
+          "ClientLoc": "25788",
+          "UseGZip": "false"
+        }
+      },
+      {
+        "Supplier": "Travelgate",
+        "Configurations": {
+          "SecondaryUsername": "18608",
+          "SecondaryPassword": "1737",
+          "ProviderCode": "OV2",
+          "SecondaryGenericURL": "http://test.viajesolympia.com/services/service.asmx",
+          "UseGZip": "false",
+          "Parameters": "",
+          "LanguageCode": "en",
+          "Currency": "EUR",
+          "AllowCancellations": "true",
+          "HotelBatchLimit": "1000",
+          "CityBatchLimit": "1",
+          "RoomSearchLimit": "3",
+          "MaximumRoomGuestNumber": "9",
+          "MinimumStay": "0",
+          "EnableHotelSearch": "true",
+          "RequiresVCard": "false",
+          "SearchRequestTimeout": "20000",
+          "SendGUIDReference": "",
+          "SecondarySearchURL": "",
+          "SecondaryPrebookURL": "",
+          "SecondaryBookURL": "",
+          "OffsetCancellationDays": "0",
+          "LeadGuestNationality": "ES",
+          "GenericURL": "http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc",
+          "User": "bookabed",
+          "Password": "3ZpxW61D49",
+          "SearchURL": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Avail",
+          "PrebookURL": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Valuation",
+          "BookingURL": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Reservation",
+          "CancellationURL": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Cancel"
+        }
+      },
+      {
+        "Supplier": "Acerooms",
+        "Configurations": {
+          "GenericURL": "https://stage-gateway.azurewebsites.net/hotel-api/1.0/",
+          "APIKey": "19R6dkI20Vgik15aLZ575Xea1",
+          "SecretKey": "wSQRn1epBAhLDWT",
+          "Signature": "243e84e47c43e270c9375a6adc36fd84",
+          "HotelBatchLimit": "50"
+
+        }
+      },
+      {
+        "Supplier": "DOTW",
+        "Configurations": {
+          "GenericURL": "http://us.dotwconnect.com/gateway.dotw",
+          "User": "TestUserName",
+          "Password": "test",
+          "CompanyCode": "672245",
+          "RequestCurrencyID": "413",
+          "AllowCancellations": "false",
+          "DefaultCurrencyID": "413",
+          "ExcludeDOTWThirdParties": "false",
+          "UseMinimumSellingPrice": "false",
+          "UseGZIP": "true",
+          "ThreadedSearch": "false",
+          "SendTradeReference": "false",
+          "OffsetCancellationDays": "0",
+          "CustomerCountryCode": "",
+          "Version": "2",
+          "CustomerNationality": ""
+        }
+      },
+      {
+        "Supplier": "Yalago",
+        "Configurations": {
+          "URGenericURLL": "https://api.yalago.com/hotels/",
+          "APIKey": "testKey",
+          "AllowCancellations": "true",
+          "UseGZip": "true",
+          "ExcludeNRF": "false",
+          "ReturnOpaqueRates": "true",
+          "LanguageCode": "en-gb",
+          "SourceMarket": "GB",
+          "SearchURL": "https://api.yalago.com/hotels/availability/get",
+          "BookingURL": "https://api.yalago.com/hotels/bookings/create",
+          "PreCancellationURL": "https://api.yalago.com/hotels/bookings/getcancellationcharges",
+          "CancellationURL": "https://api.yalago.com/hotels/bookings/cancel",
+          "PreBookURL": "https://api.yalago.com/hotels/details/get"
+        }
+      },
+      {
+        "Supplier": "SERHS",
+        "Configurations": {
+          "Branch": "26293",
+          "ClientCode": "UKTES2",
+          "GenericURL": "http://wsintcli.serhstourism.com/wsserhs/serhstourism",
+          "AllowCancellations": "true",
+          "Password": "UKTES2test",
+          "Version": "4.1",
+          "LanguageCode": "ENG",
+          "TradingGroup": "GBP",
+          "CancellationName": "PakTravel",
+          "CancellationEmail": "",
+          "UseGZip": "false",
+          "OffsetCancellationDays": 0
+        }
+      },
+      {
+        "Supplier": "DerbySoftClubMed",
+        "Configurations": {
+          "User": "THOMASCOOK",
+          "Password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8",
+          "SearchURL": "https://solo.derbysoft-test.com/bookingusbv4/availability",
+          "PrebookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/prebook",
+          "BookingURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/book",
+          "CancellationURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/cancel",
+          "UseGZip": "true",
+          "AllowCancellations": "true",
+          "ExcludeNRF": "false",
+          "OffsetCancellationDays": "0",
+          "HotelBatchLimit": "10",
+          "SupplierID": "CLUBMEDUK",
+          "EnableUtilitySearch": "true",
+          "SecondarySearchURL": "https://solo.derbysoft-test.com/shoppingenginev4/shopping/multihotels",
+          "SecondaryHotelBatchLimit": "20",
+          "SecondaryPassword": ""
+        }
+      },
+      {
+        "Supplier": "DerbySoftSynexis",
+        "Configurations": {
+          "User": "THOMASCOOK",
+          "Password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8",
+          "SearchURL": "https://solo.derbysoft-test.com/bookingusbv4/availability",
+          "PrebookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/prebook",
+          "BookingURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/book",
+          "CancellationURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/cancel",
+          "UseGZip": "true",
+          "AllowCancellations": "true",
+          "ExcludeNRF": "false",
+          "OffsetCancellationDays": "0",
+          "HotelBatchLimit": "10",
+          "SupplierID": "CLUBMEDUK",
+          "EnableUtilitySearch": "false",
+          "SecondarySearchURL": "https://solo.derbysoft-test.com/shoppingenginev4/shopping/multihotels",
+          "SecondaryHotelBatchLimit": "20",
+          "SecondaryPassword": ""
+          }
+        },
+        {
+        "Supplier": "W2M",
+        "Configurations": {
+          "User": "XML_IntuitiveSystems-iVector",
+          "Password": "H'LGw.m(6CVzdj{F",
+          "SearchURL": "https://xml-uat.bookingengine.es/WebService/jp/operations/availtransactions.asmx",
+          "PrebookURL": "https://xml-uat.bookingengine.es/WebService/jp/operations/checktransactions.asmx",
+          "BookingUrl": "https://xml-uat.bookingengine.es/WebService/jp/operations/BookTransactions.asmx",
+          "CancellationURL": "https://xml-uat.bookingengine.es/WebService/jp/operations/BookTransactions.asmx",
+          "LanguageCode": "EN",
+          "Allow Cancellations": "true",
+          "UseGZip": "false",
+          "ExcludeNRF": "false",
+          "HotelBatchLimit": "10",
+          "EnableMultiRoomSearch": "true",
+          "SoapActionPrefix": "http://www.juniper.es/webservice/2007/",
+          "LeadGuestNationality": "GB"
+        }
+      },
+      {
+        "Supplier": "Restel",
+        "Configurations": {
+          "Codusu": "Codusu",
+          "Codigousu": "Codigousu",
+          "Clausu": "Clausu",
+          "Secacc": "Secacc",
+          "GenericURL": "http://xml.hotelresb2b.com/xml/listen_xml.jsp",
+          "AllowCancellations": "true",
+          "GuestNamesAvailable": "true",
+          "UseGZip": "false",
+          "CancelFirstPreBook": "false",
+          "OffsetCancellationDays": "0"
+        }
+      },
+      {
+        "Supplier": "Jumbo",
+        "Configurations": {
+          "AgencyID": "243008",
+          "BrandCode": "1",
+          "POS": "1",
+          "GenericURL": "http://live.xtravelsystem.com/public/v1_0rc1/commonsHandler",
+          "BookingURL": "http://live.xtravelsystem.com/public/v1_0rc1/hotelBookingHandler",
+          "CancellationURL": "http://live.xtravelsystem.com/public/v1_0rc1/basketHandler",
+          "AllowCancellations": "false",
+          "LanguageCode": "en",
+          "UseGZip": "true",
+          "OffsetCancellationDays": "0",
+          "NationalityBasedCredentials": ""
+        }
+      },
+      {
+        "Supplier": "GoGlobal",
+        "Configurations": {
+          "Agency": "12345",
+          "User": "TestUser",
+          "Password": "Test123",
+          "GenericURL": "http://xml.cloud.goglobal.travel/XMLWebService.asmx",
+          "OffsetCancellationDays": "0",
+          "AllowCancellations": "True",
+          "UseGZip": "True",
+          "SecondsBeforeSearchCutoff": "6",
+          "HotelBatchLimit": ""
+        }
+      },
+      {
+        "Supplier": "WHL",
+        "Configurations": {
+          "GenericURL": "http://towers.netstorming.net/kalima/call.php",
+          "Actor": "Imperatours",
+          "User": "xmluser",
+          "Password": "imperatxml",
+          "Version": "1.6.0",
+          "AllowCancellations": "false",
+          "ContactEmail": "booking@imperatours.com",
+          "SendThreadedRequests": "true",
+          "LanguageCode": "EN",
+          "UseGZip": "true",
+          "OffsetCancellationDays": 0,
+          "LeadGuestNationality": "ES"
+        }
+      },
+      {
+        "Supplier": "BookABed",
+        "Configurations": {
+          "GenericURL": "http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx",
+          "UseAgentDetails": "",
+          "AgentAddress": "",
+          "AgentEmailAddress": "",
+          "Login": "agendas",
+          "Password": "group",
+          "AgentReference": "10275",
+          "SellingCurrencyID": "1"
+        }
+      },
+      {
+        "Supplier": "Altura",
+        "Configurations": {
+          "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",
+          "AgencyID": "100",
+          "Password": "3141592",
+          "AllowCancellations": "true",
+          "ExternalID": "test",
+          "UseGZip": "true",
+          "OffsetCancellationDays": "0",
+          "DefaultNationality": "GB",
+          "SplitMultiRoom": "true",
+          "SourceMarket": "GB",
+          "Currency": "EUR"
+        }
+      },
+      {
+        "Supplier": "WelcomeBeds",
+        "Configurations": {
+          "URL": "http://test.gsisservices.com:80/GServices/WSHOT-PS",
+          "Version": "1",
+          "AccountCode": "PATHS000WS",
+          "Password": "PATHS000WS$$",
+          "System": "WISPD",
+          "SalesChannel": "WIS",
+          "LanguageCode": "ING",
+          "AllowCancellations": "true",
+          "AgencyName": "BOOKABED",
+          "ResortSearchSap": "2",
+          "UseGZip": "true",
+          "ResortSearchCap": "10",
+          "OffsetCancellationDays": "0",
+          "ConnectionString": "PATHS_XMLN",
+          "RequiresVCard": "true"
+        }
+      },
+      {
+        "Supplier": "BedsWithEase",
+        "Configurations": {
+            "URL": "http://81.144.197.67:8090/blackboxMR/blackbox",
+            "Username": "TEST_3DP",
+            "Password": "yy!1629",
+            "UseGZip": "true",
+            "OffsetCancellationDays": "0",
+            "LanguageCode": "ENG",
+            "LocationsURL": "temp-remove",
+            "SOAPStart": "http://topdog.uk.net/BlackBox/StartSession",
+            "SOAPAvailableHotels": "http://topdog.uk.net/BlackBox/GetBoardingPasses",
+            "SOAPHotelReservation": "http://topdog.uk.net/BlackBox/ReserveHotel",
+            "SOAPCancellationInfo": "http://topdog.uk.net/BlackBox/CancellationInfo",
+            "SOAPCancelBooking": "http://topdog.uk.net/BlackBox/CancelBooking",
+            "SOAPReservationConfirmation": "http://topdog.uk.net/BlackBox/ConfirmReservation",
+            "AgencyAddressLine1": "address line 1 test",
+            "AgencyAddressLine2": "address line 2 test",
+            "OperatorCode": "DEMO-TD2WS",
+            "AllowCancellations": "false",
+            "SOAPEndSession": "http://topdog.uk.net/BlackBox/EndSession"
+        }
+      },
+      {
+        "Supplier": "TeamAmerica",
+        "Configurations": {
+          "URL": "https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit",
+          "Username": "XMLBKBDIE",
+          "Password": "XXXXXX",
+          "CompanyName": "BookaBed",
+          "CompanyAddressEmail": "karl@bookabed.ie",
+          "DefaultNationalityCode": "IE",
+          "AllowCancellations": "True",
+          "OffsetCancellationDays": "0",
+          "UseGZip": "True"
+        }
+      },
+      {
+        "Supplier": "OceanBeds",
+        "Configurations": {
+          "User": "xmluser",
+          "Password": "test",
+          "AllowCancellations": "true",
+          "Currency": "USD",
+          "UseGZip": "true",
+          "Telephone": "01234567890",
+          "SearchEndPoint": "http://oceanbeds.com/service.svc/GetPropertyAvailability",
+          "BookEndPoint": "http://oceanbeds.com/service.svc/BookingMultiple",
+          "GetCancellationEndPoint": "http://oceanbeds.com/service.svc/GetBookingCancellation",
+          "ConfirmCancelEndPoint": "http://oceanbeds.com/service.svc/ConfirmCancellation",
+          "DefaultEmail": "info@bookabed.ie"
+        }
+      },
+      {
+        "Supplier": "JuniperElevate",
+        "Configurations": {
+          "AgentDutyCode": "XML_IntuitiveSystems-iVector",
+          "AllowCancellations": "true",
+          "BaseURL": "http://xml-uat.bookingengine.es/webservice",
+          "CurrencyCode": "USD",
+          "ExcludeNonRefundableRates": "true",
+          "HotelAvailURL": "OTA_HotelAvail.asmx",
+          "HotelAvailURLSOAPAction": "http://www.opentravel.org/OTA/2003/05/OTA_HotelAvailService",
+          "HotelBookingRuleSOAPAction": "http://www.opentravel.org/OTA/2003/05/OTA_HotelBookingRuleService",
+          "HotelBookingRuleURL": "OTA_HotelBookingRule.asmx",
+          "HotelBookSOAPAction": "http://www.opentravel.org/OTA/2003/05/OTA_HotelResV2Service",
+          "HotelBookURL": "OTA_HotelRes.asmx",
+          "HotelCancelSOAPAction": "http://www.opentravel.org/OTA/2003/05/OTA_CancelService",
+          "HotelCancelURL": "OTA_Cancel.asmx",
+          "LanguageCode": "en",
+          "MaxHotelsPerSearchRequest": 50,
+          "OffsetCancellationDays": 0,
+          "Password": "H'LGw.m(6CVzdj{F",
+          "PaxCountry": "GB",
+          "ShowCatalogueData": "true",
+          "SplitMultiroom": "true",
+          "UseGZip": "true"
+        }
+      }
+    ]
+  }
+]

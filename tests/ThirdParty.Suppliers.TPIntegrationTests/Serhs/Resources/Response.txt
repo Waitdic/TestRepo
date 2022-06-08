@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response version="4.1" type="ACCOMMODATIONS_AVAIL">
+    <status>0</status>
+    <period end="20220227" start="20220222" />
+    <accommodations>
+        <accommodation code="T05382" name="VILA GALE CERRO ALAGOA" type="1">
+            <category code="4" name="4*" />
+            <city code="61124" name="Albufeira" zipCode="" />
+            <region code="1831" name="Algarve" />
+            <country code="PRT" name="Portugal" />
+            <area code="106" name="Costa de Algarve" />
+            <offers />
+            <concepts>
+                <concept code="D20" name="Standard Room With Views." standardCode="HE------YZ----">
+                    <boards>
+                        <board code="BB" name="Bed and Breakfast." cancelPolicyId="1" ticket="H4sIAAAAAAAAAAXBy5ZDMAAA0A-ywDRyWFaFiahJKdPYeYR4nJKjwfj6uReq5pqZsV6i2fJfP16aPDsnCq_4Jj9Klei-x_ibwjEC504m0pzFvkVsMzliz504_UXCsnBAwDWi2ixZ3_LyPCp_O9aaxPe40iASBhCLDg5hjsrKl-Vl_hV8R7TiIEaUboUXpd1JQynnSQM-ztKgZTKocZvP9ppF9hAd6MG-Niqs-WZ0BDhGApFznC2e8sYw00fAoO0PoP7QTs_7vmJettsifju_vM4rMvDM612BmeFi4SZkGtXBkBx8GP4D2-PWLAABAAA=">
+                            <price amount="474,81" currencyCode="EUR" minAmount="594,75" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                        <board code="HB" name="Half Board." cancelPolicyId="1" ticket="H4sIAAAAAAAAAA3NSWKCMAAAwAdxYClGOLKIEJsgsjXcwITFCFJsA-H17XxgwC91ch2r9emF7Q3RkRbJdMwWa3TjavAMn1rtkcF1xvaFsSsRLT9HCU8AUIfKKX72qhCZwnE5ByAOaU2lx31IgoItKdE9H3E7D420r0V2Ml7arjbhN7Tg81IeoCsTUhKKOevMeU8fMtHCGQUSTEgA26Sqst58TXf5UgAjbdJV-DjLP8r7u13lmFWegMMtX86N7K7e9ODWwQXDOxy9gG1ImJF-F9EYdXFJet3E_2E_OWhblM_If-qBk3ar8fUHPTrpDgABAAA=">
+                            <price amount="667,76" currencyCode="EUR" minAmount="836,42" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                    </boards>
+                    <cancelPolicies />
+                </concept>
+                <concept code="D01" name="Standard Room." standardCode="DBST----------">
+                    <boards>
+                        <board cancelPolicyId="1" code="BB" name="Bed and Breakfast." ticket="H4sIAAAAAAAAAAXB3XpDMAAA0AfKhSbkoxe7QBBMR1bzc7c2Rlr_JcrT75x0KHexHW1G6REHncgmZN3De4DxVksNIwhJAdVoByvkrpM9vFxAMCvZLY3K129d9d8D8AI2SxkyhRyX2Dibn3p5Gv_y11FUNVqMNXdRv_m-AbgKkFopEfMH_RIK9botkva2INefoaHe0llZYjorwcezfjuxcGennXms7TGw5an6qpOGcEZs_WYUgWUmkOK9e9Cg7fg6gHOJ1Q02o0wQmvio6cps7ix9amSS7O0ZH_9OjhUS7AAAAA==">
+                            <price amount="394,30" currencyCode="EUR" minAmount="" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                        <board code="HB" name="Half Board." cancelPolicyId="1" ticket="H4sIAAAAAAAAAAXB3XpDMAAA0AfaRWMr4jLTmH_jQyJ3lBE_Ccpon77naHuNMiW8lFiGxhnUU53HQk9XOH1HjJufp6E5zyO5dhhOCrUpf7GQah4wCOZbYX-ts9yFIivLVx18MLnJ9Hr40RIeLuomiEiwqJEVNC-_BgjntjDbagI2wBxoTmuhhPgSZCrjP2XsMnqggTbLGY9BDB2oCD27F76Ij9VhtuUQjV0-SjHekhT-AsPLojk7VzTk0ATyXnjisf2RIFW7kblB81-2_VySh1_ZW0uXCN16ytnwBHDs97VMsabz9A18TsegAAEAAA==">
+                            <price amount="588,94" currencyCode="EUR" minAmount="737,69" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                    </boards>
+                    <cancelPolicies>
+                        <cancelPolicy id="1" offerId="" releaseDate="20220220" releaseHour="0000 UTC" type="2" value="596,30" />
+                    </cancelPolicies>
+                </concept>
+                <concept code="D01" name="Standard Room Swimming Pool View." standardCode="DBST----C0----">
+                    <boards>
+                        <board cancelPolicyId="2" code="HB" name="Half Board." ticket="H4sIAAAAAAAAAAXBSXaCMAAA0AN1QcokWXQhg4EGQQhh2slTIkNILVPK6fs_FfVftx9j4XuvpLKzd40CmnVhDqRTbpc3-WBRDTFrxyR48Nh9UtjoAEPBfpZJU_aKpai_GYBroUlzkyBbV_lGtFlc4wVuwKO86ieRe2dUhAN2wRj7-0GuMfaeRaPBgnGnJn0bKwdqK3egSDLn7OPZeaymuo9adpJr2lh65er2p3JJLYjDrORjd9sYkL8ULZvl6ZQI475KewpgmyDjEETN70M3W3nE9rTMvqPa-voHMuJiKOwAAAA=">
+                            <price amount="674,98" currencyCode="EUR" minAmount="" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                        <board cancelPolicyId="2" code="BB" name="Bed and Breakfast." ticket="H4sIAAAAAAAAAAXBUYNCMBwA8A_kQcykh3tIVo7WqHOqt7Id_7DibOLT9_tlz-sE49zkYTgnUQt5Z_tFXEQYj6V2sG1ZwcVCdDKUxbckf-zOYBm9md8zev2_lUKensYuOvZax0czmA-Jt1rv3wtRvL4pEqwfC-0c4MceFFcpFGrgcu2S0Jc1HnyC9bIxg0R6ZenNm9NWMF-8q86rCQQvcQdiy2bleL1Mb5WL1F4T3nNgUCHqakYJOS9hkrwdj6bC-cOhm5iiv1-NtFgoCvXFZG2SMc27SqZfH15vuXLsAAAA">
+                            <price amount="473,18" currencyCode="EUR" minAmount="" />
+                            <offer />
+                            <extraCharges>
+                                <extraCharge code="CITYTAX" name="In case of tourist tax, it will be paid directly by the client at the hotel." obligatory="1" type="direct_payment" />
+                            </extraCharges>
+                            <discounts />
+                        </board>
+                    </boards>
+                    <cancelPolicies>
+                        <cancelPolicy id="2" offerId="" releaseDate="20220220" releaseHour="0000 UTC" type="2" value="674,98" />
+                    </cancelPolicies>
+                </concept>
+            </concepts>
+        </accommodation>
+    </accommodations>
+    <response_detail>
+        <reference>16420898060307200;mdh-go-generic-56c95464b7-r7m4b;</reference>
+        <result_items>5</result_items>
+        <processed_items>7</processed_items>
+        <start_time>2022011317032630</start_time>
+        <end_time>20220113170326497</end_time>
+    </response_detail>
+</response>

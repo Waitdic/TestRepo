@@ -1,0 +1,62 @@
+﻿<?xml version="1.0"?>
+<PropertySearchResponse>
+  <ReturnStatus>
+    <Success>true</Success>
+    <Exceptions/>
+  </ReturnStatus>
+  <PropertyResults>
+    <PropertyResult>
+      <BookingToken>77XHIv7Wgmjcz5UZVg6hc5tJePeitsFIzstwLfcKR3U=</BookingToken>
+      <PropertyReferenceID>673</PropertyReferenceID>
+      <GeographyLevel1ID>19</GeographyLevel1ID>
+      <GeographyLevel2ID>26</GeographyLevel2ID>
+      <GeographyLevel3ID>133</GeographyLevel3ID>
+      <RoomTypes>
+        <RoomType>
+          <Seq>1</Seq>
+          <RoomBookingToken>G879hu9y9H9y9GYJ54Tvf64=</RoomBookingToken>
+          <MealBasisID>3</MealBasisID>
+          <RoomTypeID>0</RoomTypeID>
+          <RoomType>Twin Deluxe</RoomType>
+          <RoomView>Garden View</RoomView>
+          <AvailableRooms>10</AvailableRooms>
+          <DiscountID>0</DiscountID>
+          <Discount>0.00</Discount>
+          <Saving>0.00</Saving>
+          <SubTotal>250.00</SubTotal>
+          <Total>250.00</Total>
+          <PayLocalTotal>0</PayLocalTotal>
+          <Errata/>
+          <Adjustments/>
+          <optionalSupplements/>
+          <DailyRates/>
+          <SpecialOffer/>
+          <NonRefundable>false</NonRefundable>
+          <OnRequest>0</OnRequest>
+        </RoomType>
+        <RoomType>
+          <Seq>2</Seq>
+          <RoomBookingToken>30ea0uji5350043759oot09re0t=</RoomBookingToken>
+          <MealBasisID>3</MealBasisID>
+          <RoomTypeID>0</RoomTypeID>
+          <RoomType>Double Deluxe</RoomType>
+          <RoomView/>
+          <AvailableRooms>10</AvailableRooms>
+          <DiscountID>0</DiscountID>
+          <Discount>0.00</Discount>
+          <Saving>0.00</Saving>
+          <SubTotal>280.00</SubTotal>
+          <Total>280.00</Total>
+          <PayLocalTotal>0</PayLocalTotal>
+          <Errata/>
+          <Adjustments/>
+          <OptionalSupplements/>
+          <DailyRates/>
+          <SpecialOffer/>
+          <NonRefundable>false</NonRefundable>
+          <OnRequest>0</OnRequest>
+        </RoomType>
+      </RoomTypes>
+    </PropertyResult>
+  </PropertyResults>
+</PropertySearchResponse>

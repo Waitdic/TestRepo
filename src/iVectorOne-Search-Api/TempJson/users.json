@@ -5,254 +5,87 @@
         "DummyResponses": "false",
         "TPSettings": {
             "PropertyTPRequestLimit": 500,
-            "SearchTimeoutSeconds": 60,
+            "SearchTimeoutSeconds": 10,
             "LogMainSearchError": "true",
-            "CurrencyCode": "USD",
+            "CurrencyCode": "USD"
         },
-        "Configurations": [
-            {
-                "SMTPHost": "sqldev"
-            },
-            {
-                "Supplier": "Altura",
-                "Configurations": {
-                    "URL": "https://xml.alturaspain.com/xml/xml-interface.php",
-                    "AgencyID": "100",
-                    "Password": "3141592",
-                    "AllowCancellations": "true",
-                    "ExternalID": "test",
-                    "UseGZip": "true",
-                    "OffsetCancellationDays": "0",
-                    "DefaultNationality": "GB",
-                    "SplitMultiRoom": "true",
-                    "SourceMarket": "GB",
-                    "DefaultCurrency": "EUR"
-                }
-            },
-            {
-                "Supplier": "Stuba",
-                "Configurations": {
-                    "MaxHotelsPerRequest": "50",
-                    "ExcludeUnknownCancellations": "false",
-                    "ExcludeNonRefundableRates": "true",
-                    "URL": "http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx",
-                    "Password": "xmltest",
-                    "Currency": "GBP",
-                    "TradeReference": "sunwayTest",
-                    "UseGZip": "true",
-                    "OffsetCancellationDays": "0",
-                    "ContactEmail": "test@test.com",
-                    "ContactPhoneNumber": "ContactPhoneNumber",
-                    "AgencyID": "travelpack",
-                    "Organisation": "travelpack",
-                    "Username": "xmltest",
-                    "Version": "1.28",
-                    "Nationality": "GB",
-                    "AllowCancellations": "true",
-                    "Allow Cancellations": "false"
-                }
-            },
-            {
-                "Supplier": "HotelBedsV2",
-                "Configurations": {
-                    "URL": "https://api.test.hotelbeds.com/hotel-api/1.0/hotels",
-                    "Password": "9TWKxZgqdk",
-                    "Allow Cancellations": "false",
-                    "ContentLanguage": "ENG",
-                    "UseGZip": "true",
-                    "HotelSearchLimit": "250",
-                    "NonRefundableRates": "true",
-                    "OffsetCancellationDays": "0",
-                    "CustomerCountryCode": "UK",
-                    "EnableHotelSearch": "true",
-                    "BookingURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings",
-                    "CancellationURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings/{{bookingReference}}?cancellationFlag=CANCELLATION",
-                    "CheckRatesURL": "https://api.test.hotelbeds.com/hotel-api/1.0/checkrates",
-                    "BatchLimit": "250",
-                    "SecureBookingURL": "https://api-secure.test.hotelbeds.com/hotel-api/1.0/bookings",
-                    "Packaging": "true",
-                    "AllowAtHotelPayments": "true",
-                    "ExcludeNRF": "false",
-                    "HotelPackage": "true",
-                    "User": "ckkjrzebk76xm2m9dvtnq9ha"
-                }
-            },
-            {
-                "Supplier": "Travelgate",
-                "Configurations": {
-                    "URL": "http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc",
-                    "Username": "bookabed",
-                    "Password": "3ZpxW61D49",
-                    "AllowCancellations": "true",
-                    "UseGZip": "true",
-                    "OffsetCancellationDays": "0",
-                    "SearchSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Avail",
-                    "PrebookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Valuation",
-                    "BookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Reservation",
-                    "CancelSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Cancel",
-                    "RequiresVCard": "true"
-                }
-            },
-            {
-                "Supplier": "TravelgateArabianA",
-                "Configurations": {
-                    "ProviderUsername": "SAXGBAX",
-                    "ProviderPassword": "EMIRATES@16",
-                    "ProviderCode": "AADTEST",
-                    "UrlGeneric": "",
-                    "UseGZip": "false",
-                    "Parameters": "&lt;Parameters&gt; &lt;Parameter key = &quot;urlAuth&quot; value = &quot;https://test.leisureatemirates.com/OTASecurity_v66/V66&quot;/&gt; &lt;Parameter key = &quot;urlStatic&quot; value = &quot;https://test.leisureatemirates.com/OTAData_v66/V66&quot;/&gt; &lt;Parameter key = &quot;urlBookingRead&quot; value = &quot;https://test.leisureatemirates.com/OTAOperations_v66/V66&quot;/&gt; &lt;Parameter key = &quot;urlHotelList&quot; value = &quot;http://xtghubstatic.blob.core.windows.net/int-static-hotel/AADHotelList.csv&quot;/&gt; &lt;Parameter key = &quot;bookingChannelType&quot; value = &quot;W&quot;/&gt; &lt;Parameter key = &quot;companyNameCode&quot; value = &quot;AA&quot;/&gt; &lt;Parameter key = &quot;companyNameDivision&quot; value = &quot;FIT&quot;/&gt; &lt;Parameter key = &quot;companyNameDepartment&quot; value = &quot;AA&quot;/&gt; &lt;Parameter key = &quot;agentSine&quot; value = &quot;SAXGBAX&quot;/&gt; &lt;Parameter key = &quot;ersp_UserID&quot; value = &quot;14948&quot;/&gt; &lt;Parameter key = &quot;requestorID&quot; value = &quot;19055&quot;/&gt; &lt;Parameter key = &quot;phoneNumber&quot; value = &quot;123-123-1234&quot;/&gt; &lt;Parameter key = &quot;maxResponses&quot; value = &quot;1000&quot;/&gt; &lt;/Parameters&gt;",
-                    "LanguageCode": "en",
-                    "CurrencyCode": "USD",
-                    "AllowCancellations": "true",
-                    "MaximumHotelSearchNumber": "5000",
-                    "MaximumCitySearchNumber": "1",
-                    "MaximumRoomNumber": "3",
-                    "MaximumRoomGuestNumber": "9",
-                    "MinimumStay": "0",
-                    "AllowHotelSearch": "true",
-                    "RequiresVCard": "false",
-                    "SearchRequestTimeout": "20000",
-                    "SendGUIDReference": ""
-                }
-            },
-            {
-                "Supplier": "TravelgateEuroPlayas",
-                "Configurations": {
-                    "ProviderUsername": "4852580",
-                    "ProviderPassword": "820290000",
-                    "ProviderCode": "EPL",
-                    "UrlGeneric": "http://xml-4.europlayas.es/XmlService/AggregatorWs.ashx",
-                    "UseGZip": "True",
-                    "Parameters": "&lt;Parameters&gt; &lt;Parameter key = &quot;hotelList&quot; value = &quot;http://xtghubstatic.blob.core.windows.net/int-static-hotel/EPL-ListadoHoteles.csv&quot;/&gt; &lt;Parameter key = &quot;codage&quot; value = &quot;820290000&quot;/&gt; &lt;Parameter key = &quot;codsys&quot; value = &quot;AGH&quot;/&gt; &lt;Parameter key = &quot;urlIMG&quot; value = &quot;www.europlayas.es/&quot;/&gt; &lt;Parameter key = &quot;userFTP&quot; value = &quot;escapadas&quot;&gt;&lt;/Parameter&gt; &lt;Parameter key = &quot;passFTP&quot; value = &quot;escapadas&quot;&gt;&lt;/Parameter&gt; &lt;Parameter key = &quot;urlFTP&quot; value = &quot;ftp://ftp.europlayas.es/XTG/Logitravel/EPL-directProduct.csv&quot;&gt;&lt;/Parameter&gt; &lt;/Parameters&gt;",
-                    "LanguageCode": "en",
-                    "CurrencyCode": "EUR",
-                    "AllowCancellations": "true",
-                    "MaximumHotelSearchNumber": "5000",
-                    "MaximumCitySearchNumber": "1",
-                    "MaximumRoomNumber": "3",
-                    "MaximumRoomGuestNumber": "9",
-                    "MinimumStay": "0",
-                    "AllowHotelSearch": "true",
-                    "RequiresVCard": "false",
-                    "SearchRequestTimeout": "20000",
-                    "SendGUIDReference": "",
-                    "UrlAvail": "",
-                    "UrlValuation": "",
-                    "UrlReservation": "",
-                    "OffsetCancellationDays": "0",
-                    "DefaultNationality": "ES",
-                    "URL": "http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc",
-                    "Username": "bookabed",
-                    "Password": "3ZpxW61D49",
-                    "SearchSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Avail",
-                    "PrebookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Valuation",
-                    "BookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Reservation",
-                    "CancelSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Cancel"
-                }
-            },
-            {
-                "Supplier": "TravelgateViajesOlympia",
-                "Configurations": {
-                    "ProviderUsername": "18608",
-                    "ProviderPassword": "1737",
-                    "ProviderCode": "OV2",
-                    "UrlGeneric": "http://test.viajesolympia.com/services/service.asmx",
-                    "UseGZip": "false",
-                    "Parameters": "",
-                    "LanguageCode": "en",
-                    "CurrencyCode": "EUR",
-                    "AllowCancellations": "true",
-                    "MaximumHotelSearchNumber": "1000",
-                    "MaximumCitySearchNumber": "1",
-                    "MaximumRoomNumber": "3",
-                    "MaximumRoomGuestNumber": "9",
-                    "MinimumStay": "0",
-                    "AllowHotelSearch": "true",
-                    "RequiresVCard": "false",
-                    "SearchRequestTimeout": "20000",
-                    "SendGUIDReference": "",
-                    "UrlAvail": "",
-                    "UrlValuation": "",
-                    "UrlReservation": "",
-                    "OffsetCancellationDays": "0",
-                    "DefaultNationality": "ES",
-                    "URL": "http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc",
-                    "Username": "bookabed",
-                    "Password": "3ZpxW61D49",
-                    "SearchSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Avail",
-                    "PrebookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Valuation",
-                    "BookSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Reservation",
-                    "CancelSOAPAction": "http://schemas.xmltravelgate.com/hub/2012/06/IServiceHotel/Cancel"
-                }
-            },
-            {
-                "Supplier": "DerbySoftClubMed",
-                "Configurations": {
-                    "User": "SCOTTDUNN",
-                    "Password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT",
-                    "SearchURL": "https://solo.derbysoft-test.com/bookingusbv4/availability",
-                    "PreBookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/prebook",
-                    "BookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/book",
-                    "CancelURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/cancel",
-                    "UseGZip": "true",
-                    "AllowCancellations": "true",
-                    "ExcludeNonRefundable": "false",
-                    "OffsetCancellationDays": "0",
-                    "HotelSearchLimit": "10",
-                    "SupplierID": "GOHOTEL",
-                    "UseShoppingEngineForSearch": "false",
-                    "ShoppingEngineURL": "https://solo.derbysoft-test.com/shoppingenginev4/shopping/multihotels",
-                    "ShoppingEngineHotelsBatchSize": "20",
-                    "ShoppingEnginePassword": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT"
-
-                }
-            },
-            {
-                "Supplier": "DerbySoftSynxis",
-                "Configurations": {
-                    "User": "SCOTTDUNN",
-                    "Password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT",
-                    "SearchURL": "https://solo.derbysoft-test.com/bookingusbv4/availability",
-                    "PreBookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/prebook",
-                    "BookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/book",
-                    "CancelURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/cancel",
-                    "UseGZip": "true",
-                    "AllowCancellations": "true",
-                    "ExcludeNonRefundable": "false",
-                    "OffsetCancellationDays": "0",
-                    "HotelSearchLimit": "10",
-                    "SupplierID": "GOHOTEL",
-                    "UseShoppingEngineForSearch": "true",
-                    "ShoppingEngineURL": "https://solo.derbysoft-test.com/shoppingenginev4/shopping/multihotels",
-                    "ShoppingEngineHotelsBatchSize": "20",
-                    "ShoppingEnginePassword": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT"
-
-                }
-            },
-            {
-                "Supplier": "DerbySoftMarriott",
-                "Configurations": {
-                    "User": "SCOTTDUNN",
-                    "Password": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT",
-                    "SearchURL": "https://solo.derbysoft-test.com/bookingusbv4/availability",
-                    "PreBookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/prebook",
-                    "BookURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/book",
-                    "CancelURL": "https://solo.derbysoft-test.com/bookingusbv4/reservation/cancel",
-                    "UseGZip": "true",
-                    "AllowCancellations": "true",
-                    "ExcludeNonRefundable": "false",
-                    "OffsetCancellationDays": "0",
-                    "HotelSearchLimit": "10",
-                    "SupplierID": "MARRIOTT",
-                    "UseShoppingEngineForSearch": "false",
-                    "ShoppingEngineURL": "https://solo.derbysoft-test.com/shoppingenginev4/shopping/multihotels",
-                    "ShoppingEngineHotelsBatchSize": "20",
-                    "ShoppingEnginePassword": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTQ09UVERVTk4iLCJuYW1lIjoic2NvdHRkdW5uIiwidGltZSI6IjE2MjY3OTI2OTkifQ.n2lp7ncjCzg6rQls7nzvlZ8FBSf0UW2lfR4ANCNcaJ4-GOINIT"
-
-                }
-            }
-        ]
+      "Configurations": [
+        {
+          "Supplier": "HotelBedsV2",
+          "Configurations": {
+            "URL": "https://api.test.hotelbeds.com/hotel-api/1.0/hotels",
+            "Password": "9TWKxZgqdk",
+            "Allow Cancellations": "false",
+            "ContentLanguage": "ENG",
+            "UseGZip": "true",
+            "HotelSearchLimit": "250",
+            "NonRefundableRates": "true",
+            "OffsetCancellationDays": "0",
+            "CustomerCountryCode": "UK",
+            "EnableHotelSearch": "true",
+            "BookingURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings",
+            "CancellationURL": "https://api.test.hotelbeds.com/hotel-api/1.0/bookings/{{bookingReference}}?cancellationFlag=CANCELLATION",
+            "CheckRatesURL": "https://api.test.hotelbeds.com/hotel-api/1.0/checkrates",
+            "BatchLimit": "250",
+            "SecureBookingURL": "https://api-secure.test.hotelbeds.com/hotel-api/1.0/bookings",
+            "Packaging": "true",
+            "AllowAtHotelPayments": "true",
+            "ExcludeNRF": "false",
+            "HotelPackage": "true",
+            "User": "ckkjrzebk76xm2m9dvtnq9ha"
+          }
+        },
+        {
+          "Supplier": "ExpediaRapid",
+          "Configurations": {
+            "ApiKey": "3nou07m199sk0u06ljujij7fo2",
+            "Secret": "q7cvcvdl15cb",
+            "Scheme": "https",
+            "Host": "test.ean.com",
+            "SearchPath": "2.3/properties/availability",
+            "SearchRequestBatchSize": "250",
+            "CountryCode": "IT",
+            "SalesChannel": "agent_tool",
+            "SalesEnvironment": "hotel_only",
+            "SortType": "preferred",
+            "RatePlanCount": "250",
+            "PaymentTerms": "EAC",
+            "PartnerPointOfSale": "B2B_EAC_SA_PKG_MOD",
+            "LanguageCode": "en-US",
+            "UseGZIP": "true",
+            "OffsetCancellationDays": "0",
+            "AllowCancellations": "true",
+            "UserAgent": "iVector/1.00",
+            "Allow Cancellations": "true",
+            "PlatformName": "732b0adf-1c6c-44e1-913e-878c1c73ee00",
+            "BillingTerms": "",
+            "RateOption": "net_rates",
+            "ValidateAffiliateID": "false"
+          }
+        },
+        {
+          "Supplier": "SunHotels",
+          "Configurations": {
+            "Password": "Test2acc123",
+            "Username": "Test2account",
+            "EmailAddress": "enquiries@allinclusive.co.uk",
+            "Language": "en",
+            "Currency": "EUR",
+            "AllowCancellations": "true",
+            "SupplierReference": "Travelgenix",
+            "UseGZip": "false",
+            "SearchURL": "http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/SearchV2?",
+            "BookURL": "http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/BookV2?",
+            "CancelURL": "http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/CancelBooking?",
+            "OffsetCancellationDays": "0",
+            "Nationality": "GB",
+            "PreBookURL": "http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/PreBookV2?",
+            "AccommodationTypes": "",
+            "RequestPackageRates": "true",
+            "HotelRequestLimit": "180"
+          }
+        }
+      ]
     },
     {
         "Login": "FastpayhotelsNetLive",

@@ -9,7 +9,6 @@
 
     public class ExpediaRapidAPI : IExpediaRapidAPI
     {
-
         private readonly HttpClient _httpclient;
         private readonly ILogger<ExpediaRapidAPI> _logger;
 
@@ -19,19 +18,19 @@
             _logger = logger;
         }
 
-        public TResponse GetDeserializedResponse<TResponse>(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request) where TResponse : IExpediaRapidResponse, new()
+        public TResponse GetDeserializedResponse<TResponse>(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
-
             string responseString = GetResponse(propertyDetails, request);
             var response = new TResponse();
 
-            if (response.IsValid(request.ResponseString, (int)request.ResponseStatusCode))
-            {
+            (bool valid, response) = response.GetValidResults(responseString, (int)request.ResponseStatusCode);
 
-                return JsonConvert.DeserializeObject<TResponse>(request.ResponseString);
+            if (!valid)
+            {
+                response = default;
             }
 
-            return default;
+            return response;
         }
 
         public string GetResponse(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request)

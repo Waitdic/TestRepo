@@ -1,0 +1,178 @@
+﻿URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_requests>
+  <Request type="Availability" version="v2.8.3" currency="EUR">
+    <Session>
+      <AgencyId>100</AgencyId>
+      <Password>3141592</Password>
+      <ExternalId>test</ExternalId>
+    </Session>
+    <Destination type="HOTEL">102245</Destination>
+    <Arrival>20210901</Arrival>
+    <Departure>20210906</Departure>
+    <NumberOfRooms>1</NumberOfRooms>
+    <RoomsOccupancy>
+      <Room code="1">
+        <Adults>1</Adults>
+        <Children>0</Children>
+        <ChildrenAges />
+      </Room>
+    </RoomsOccupancy>
+    <Market>
+      <SourceMarket>GB</SourceMarket>
+      <ClientNationality>GB</ClientNationality>
+    </Market>
+  </Request>
+</AlturaDS_requests>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_requests>
+  <Request type="Availability" version="v2.8.3" currency="EUR">
+    <Session>
+      <AgencyId>100</AgencyId>
+      <Password>3141592</Password>
+      <ExternalId>test</ExternalId>
+    </Session>
+    <Destination type="HOTEL">102245</Destination>
+    <Arrival>20210901</Arrival>
+    <Departure>20210906</Departure>
+    <NumberOfRooms>1</NumberOfRooms>
+    <RoomsOccupancy>
+      <Room code="1">
+        <Adults>2</Adults>
+        <Children>0</Children>
+        <ChildrenAges />
+      </Room>
+    </RoomsOccupancy>
+    <Market>
+      <SourceMarket>GB</SourceMarket>
+      <ClientNationality>GB</ClientNationality>
+    </Market>
+  </Request>
+</AlturaDS_requests>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_requests>
+  <Request type="Availability" version="v2.8.3" currency="EUR">
+    <Session>
+      <AgencyId>100</AgencyId>
+      <Password>3141592</Password>
+      <ExternalId>test</ExternalId>
+    </Session>
+    <Destination type="HOTEL">102245</Destination>
+    <Arrival>20210901</Arrival>
+    <Departure>20210906</Departure>
+    <NumberOfRooms>1</NumberOfRooms>
+    <RoomsOccupancy>
+      <Room code="1">
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <ChildrenAges>
+          <ChildAge>8</ChildAge>
+        </ChildrenAges>
+      </Room>
+    </RoomsOccupancy>
+    <Market>
+      <SourceMarket>GB</SourceMarket>
+      <ClientNationality>GB</ClientNationality>
+    </Market>
+  </Request>
+</AlturaDS_requests>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_requests>
+  <Request type="Availability" version="v2.8.3" currency="EUR">
+    <Session>
+      <AgencyId>100</AgencyId>
+      <Password>3141592</Password>
+      <ExternalId>test</ExternalId>
+    </Session>
+    <Destination type="HOTEL">102245</Destination>
+    <Arrival>20210901</Arrival>
+    <Departure>20210906</Departure>
+    <NumberOfRooms>1</NumberOfRooms>
+    <RoomsOccupancy>
+      <Room code="1">
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <ChildrenAges />
+      </Room>
+    </RoomsOccupancy>
+    <Market>
+      <SourceMarket>GB</SourceMarket>
+      <ClientNationality>GB</ClientNationality>
+    </Market>
+  </Request>
+</AlturaDS_requests>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<AlturaDS_requests>
+  <Request type="Availability" version="v2.8.3" currency="EUR">
+    <Session>
+      <AgencyId>100</AgencyId>
+      <Password>3141592</Password>
+      <ExternalId>test</ExternalId>
+    </Session>
+    <Destination type="HOTEL">102245</Destination>
+    <Arrival>20210901</Arrival>
+    <Departure>20210906</Departure>
+    <NumberOfRooms>1</NumberOfRooms>
+    <RoomsOccupancy>
+      <Room code="1">
+        <Adults>1</Adults>
+        <Children>2</Children>
+        <ChildrenAges>
+          <ChildAge>8</ChildAge>
+        </ChildrenAges>
+      </Room>
+    </RoomsOccupancy>
+    <Market>
+      <SourceMarket>GB</SourceMarket>
+      <ClientNationality>GB</ClientNationality>
+    </Market>
+  </Request>
+</AlturaDS_requests>

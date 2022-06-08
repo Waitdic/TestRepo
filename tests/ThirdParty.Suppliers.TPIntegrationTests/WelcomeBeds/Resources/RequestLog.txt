@@ -1,0 +1,55 @@
+﻿URL: http://test.gsisservices.com:80/GServices/WSHOT-PS
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:ns0="http://www.opentravel.org/OTA/2003/05" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ns0:OTA_HotelAvailRQ Version="1"><ns0:AvailRequestSegments><ns0:AvailRequestSegment><ns0:StayDateRange Start="2021-09-01" End="2021-09-06" /><ns0:RoomStayCandidates><ns0:RoomStayCandidate><ns0:GuestCounts><ns0:GuestCount Count="1" Age="30" /></ns0:GuestCounts></ns0:RoomStayCandidate></ns0:RoomStayCandidates><ns0:HotelSearchCriteria><ns0:Criterion><ns0:HotelRef HotelCode="102245" /></ns0:Criterion></ns0:HotelSearchCriteria><ns0:TPA_Extensions><ns0:Providers><ns0:Provider Provider="GSI"><ns0:ProviderAreas><ns0:Area TypeCode="Country" AreaCode="15304" /><ns0:Area TypeCode="Province" AreaCode="140965" /></ns0:ProviderAreas><ns0:Credentials><ns0:Credential CredentialCode="PATHS000WS" CredentialName="AccountCode" /><ns0:Credential CredentialCode="PATHS000WS$$" CredentialName="Password" /><ns0:Credential CredentialCode="WISPD" CredentialName="System" /><ns0:Credential CredentialCode="WIS" CredentialName="SalesChannel" /><ns0:Credential CredentialCode="ING" CredentialName="LanguageCode" /><ns0:Credential CredentialCode="PATHS_XMLN" CredentialName="ConnectionString" /></ns0:Credentials></ns0:Provider></ns0:Providers><ns0:ProviderTokens><ns0:Token TokenName="ResponseMode" TokenCode="4" /></ns0:ProviderTokens><ns0:RoomToken Token="" /><ns0:ProviderID Provider="" /><ns0:HotelInfo><ns0:CategoryCode Code="" /><ns0:CategoryUngroupedCode Code="" /><ns0:CategoryName Name="" /><ns0:Id ID="" /><ns0:Name Name="" /><ns0:Type Type="" /></ns0:HotelInfo><ns0:Photos /></ns0:TPA_Extensions></ns0:AvailRequestSegment></ns0:AvailRequestSegments></ns0:OTA_HotelAvailRQ></soapenv:Body></soapenv:Envelope>
+
+URL: http://test.gsisservices.com:80/GServices/WSHOT-PS
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:ns0="http://www.opentravel.org/OTA/2003/05" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ns0:OTA_HotelAvailRQ Version="1"><ns0:AvailRequestSegments><ns0:AvailRequestSegment><ns0:StayDateRange Start="2021-09-01" End="2021-09-06" /><ns0:RoomStayCandidates><ns0:RoomStayCandidate><ns0:GuestCounts><ns0:GuestCount Count="1" Age="30" /><ns0:GuestCount Count="1" Age="30" /></ns0:GuestCounts></ns0:RoomStayCandidate></ns0:RoomStayCandidates><ns0:HotelSearchCriteria><ns0:Criterion><ns0:HotelRef HotelCode="102245" /></ns0:Criterion></ns0:HotelSearchCriteria><ns0:TPA_Extensions><ns0:Providers><ns0:Provider Provider="GSI"><ns0:ProviderAreas><ns0:Area TypeCode="Country" AreaCode="15304" /><ns0:Area TypeCode="Province" AreaCode="140965" /></ns0:ProviderAreas><ns0:Credentials><ns0:Credential CredentialCode="PATHS000WS" CredentialName="AccountCode" /><ns0:Credential CredentialCode="PATHS000WS$$" CredentialName="Password" /><ns0:Credential CredentialCode="WISPD" CredentialName="System" /><ns0:Credential CredentialCode="WIS" CredentialName="SalesChannel" /><ns0:Credential CredentialCode="ING" CredentialName="LanguageCode" /><ns0:Credential CredentialCode="PATHS_XMLN" CredentialName="ConnectionString" /></ns0:Credentials></ns0:Provider></ns0:Providers><ns0:ProviderTokens><ns0:Token TokenName="ResponseMode" TokenCode="4" /></ns0:ProviderTokens><ns0:RoomToken Token="" /><ns0:ProviderID Provider="" /><ns0:HotelInfo><ns0:CategoryCode Code="" /><ns0:CategoryUngroupedCode Code="" /><ns0:CategoryName Name="" /><ns0:Id ID="" /><ns0:Name Name="" /><ns0:Type Type="" /></ns0:HotelInfo><ns0:Photos /></ns0:TPA_Extensions></ns0:AvailRequestSegment></ns0:AvailRequestSegments></ns0:OTA_HotelAvailRQ></soapenv:Body></soapenv:Envelope>
+
+URL: http://test.gsisservices.com:80/GServices/WSHOT-PS
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:ns0="http://www.opentravel.org/OTA/2003/05" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ns0:OTA_HotelAvailRQ Version="1"><ns0:AvailRequestSegments><ns0:AvailRequestSegment><ns0:StayDateRange Start="2021-09-01" End="2021-09-06" /><ns0:RoomStayCandidates><ns0:RoomStayCandidate><ns0:GuestCounts><ns0:GuestCount Count="1" Age="30" /><ns0:GuestCount Count="1" Age="8" /></ns0:GuestCounts></ns0:RoomStayCandidate></ns0:RoomStayCandidates><ns0:HotelSearchCriteria><ns0:Criterion><ns0:HotelRef HotelCode="102245" /></ns0:Criterion></ns0:HotelSearchCriteria><ns0:TPA_Extensions><ns0:Providers><ns0:Provider Provider="GSI"><ns0:ProviderAreas><ns0:Area TypeCode="Country" AreaCode="15304" /><ns0:Area TypeCode="Province" AreaCode="140965" /></ns0:ProviderAreas><ns0:Credentials><ns0:Credential CredentialCode="PATHS000WS" CredentialName="AccountCode" /><ns0:Credential CredentialCode="PATHS000WS$$" CredentialName="Password" /><ns0:Credential CredentialCode="WISPD" CredentialName="System" /><ns0:Credential CredentialCode="WIS" CredentialName="SalesChannel" /><ns0:Credential CredentialCode="ING" CredentialName="LanguageCode" /><ns0:Credential CredentialCode="PATHS_XMLN" CredentialName="ConnectionString" /></ns0:Credentials></ns0:Provider></ns0:Providers><ns0:ProviderTokens><ns0:Token TokenName="ResponseMode" TokenCode="4" /></ns0:ProviderTokens><ns0:RoomToken Token="" /><ns0:ProviderID Provider="" /><ns0:HotelInfo><ns0:CategoryCode Code="" /><ns0:CategoryUngroupedCode Code="" /><ns0:CategoryName Name="" /><ns0:Id ID="" /><ns0:Name Name="" /><ns0:Type Type="" /></ns0:HotelInfo><ns0:Photos /></ns0:TPA_Extensions></ns0:AvailRequestSegment></ns0:AvailRequestSegments></ns0:OTA_HotelAvailRQ></soapenv:Body></soapenv:Envelope>
+
+URL: http://test.gsisservices.com:80/GServices/WSHOT-PS
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:ns0="http://www.opentravel.org/OTA/2003/05" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ns0:OTA_HotelAvailRQ Version="1"><ns0:AvailRequestSegments><ns0:AvailRequestSegment><ns0:StayDateRange Start="2021-09-01" End="2021-09-06" /><ns0:RoomStayCandidates><ns0:RoomStayCandidate><ns0:GuestCounts><ns0:GuestCount Count="1" Age="30" /><ns0:GuestCount Count="1" Age="1" /></ns0:GuestCounts></ns0:RoomStayCandidate></ns0:RoomStayCandidates><ns0:HotelSearchCriteria><ns0:Criterion><ns0:HotelRef HotelCode="102245" /></ns0:Criterion></ns0:HotelSearchCriteria><ns0:TPA_Extensions><ns0:Providers><ns0:Provider Provider="GSI"><ns0:ProviderAreas><ns0:Area TypeCode="Country" AreaCode="15304" /><ns0:Area TypeCode="Province" AreaCode="140965" /></ns0:ProviderAreas><ns0:Credentials><ns0:Credential CredentialCode="PATHS000WS" CredentialName="AccountCode" /><ns0:Credential CredentialCode="PATHS000WS$$" CredentialName="Password" /><ns0:Credential CredentialCode="WISPD" CredentialName="System" /><ns0:Credential CredentialCode="WIS" CredentialName="SalesChannel" /><ns0:Credential CredentialCode="ING" CredentialName="LanguageCode" /><ns0:Credential CredentialCode="PATHS_XMLN" CredentialName="ConnectionString" /></ns0:Credentials></ns0:Provider></ns0:Providers><ns0:ProviderTokens><ns0:Token TokenName="ResponseMode" TokenCode="4" /></ns0:ProviderTokens><ns0:RoomToken Token="" /><ns0:ProviderID Provider="" /><ns0:HotelInfo><ns0:CategoryCode Code="" /><ns0:CategoryUngroupedCode Code="" /><ns0:CategoryName Name="" /><ns0:Id ID="" /><ns0:Name Name="" /><ns0:Type Type="" /></ns0:HotelInfo><ns0:Photos /></ns0:TPA_Extensions></ns0:AvailRequestSegment></ns0:AvailRequestSegments></ns0:OTA_HotelAvailRQ></soapenv:Body></soapenv:Envelope>
+
+URL: http://test.gsisservices.com:80/GServices/WSHOT-PS
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:ns0="http://www.opentravel.org/OTA/2003/05" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ns0:OTA_HotelAvailRQ Version="1"><ns0:AvailRequestSegments><ns0:AvailRequestSegment><ns0:StayDateRange Start="2021-09-01" End="2021-09-06" /><ns0:RoomStayCandidates><ns0:RoomStayCandidate><ns0:GuestCounts><ns0:GuestCount Count="1" Age="30" /><ns0:GuestCount Count="1" Age="8" /><ns0:GuestCount Count="1" Age="1" /></ns0:GuestCounts></ns0:RoomStayCandidate></ns0:RoomStayCandidates><ns0:HotelSearchCriteria><ns0:Criterion><ns0:HotelRef HotelCode="102245" /></ns0:Criterion></ns0:HotelSearchCriteria><ns0:TPA_Extensions><ns0:Providers><ns0:Provider Provider="GSI"><ns0:ProviderAreas><ns0:Area TypeCode="Country" AreaCode="15304" /><ns0:Area TypeCode="Province" AreaCode="140965" /></ns0:ProviderAreas><ns0:Credentials><ns0:Credential CredentialCode="PATHS000WS" CredentialName="AccountCode" /><ns0:Credential CredentialCode="PATHS000WS$$" CredentialName="Password" /><ns0:Credential CredentialCode="WISPD" CredentialName="System" /><ns0:Credential CredentialCode="WIS" CredentialName="SalesChannel" /><ns0:Credential CredentialCode="ING" CredentialName="LanguageCode" /><ns0:Credential CredentialCode="PATHS_XMLN" CredentialName="ConnectionString" /></ns0:Credentials></ns0:Provider></ns0:Providers><ns0:ProviderTokens><ns0:Token TokenName="ResponseMode" TokenCode="4" /></ns0:ProviderTokens><ns0:RoomToken Token="" /><ns0:ProviderID Provider="" /><ns0:HotelInfo><ns0:CategoryCode Code="" /><ns0:CategoryUngroupedCode Code="" /><ns0:CategoryName Name="" /><ns0:Id ID="" /><ns0:Name Name="" /><ns0:Type Type="" /></ns0:HotelInfo><ns0:Photos /></ns0:TPA_Extensions></ns0:AvailRequestSegment></ns0:AvailRequestSegments></ns0:OTA_HotelAvailRQ></soapenv:Body></soapenv:Envelope>
+

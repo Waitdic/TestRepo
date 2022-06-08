@@ -28,12 +28,12 @@
         public BedsWithEaseSearch(
             IBedsWithEaseSettings settings,
             ISerializer serializer,
-            IHttpClientFactory httpclient,
+            HttpClient httpclient,
             ILogger<BedsWithEaseSearch> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
-            _httpClient = Ensure.IsNotNull(httpclient, nameof(httpclient)).CreateClient();
+            _httpClient = Ensure.IsNotNull(httpclient, nameof(httpclient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 

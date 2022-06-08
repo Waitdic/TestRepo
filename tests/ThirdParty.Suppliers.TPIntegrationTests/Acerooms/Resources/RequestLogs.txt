@@ -1,0 +1,89 @@
+﻿URL: https://stage-gateway.azurewebsites.net/hotel-api/1.0/Search
+
+**HEADERS**
+
+APIKey: 19R6dkI20Vgik15aLZ575Xea1
+Signature: 243e84e47c43e270c9375a6adc36fd84
+Content-Type: application/json
+Host: stage-gateway.azurewebsites.net
+Content-Length: 148
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"CityID":3185,"NationalityID":"115","ArrivalDate":"2021-09-01","Nights":5,"Hotels":[102245],"CurrencyCode":"GBP","Rooms":[{"Adult":1,"Children":0}]}
+
+URL: https://stage-gateway.azurewebsites.net/hotel-api/1.0/Search
+
+**HEADERS**
+
+APIKey: 19R6dkI20Vgik15aLZ575Xea1
+Signature: 243e84e47c43e270c9375a6adc36fd84
+Content-Type: application/json
+Host: stage-gateway.azurewebsites.net
+Content-Length: 148
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"CityID":3185,"NationalityID":"115","ArrivalDate":"2021-09-01","Nights":5,"Hotels":[102245],"CurrencyCode":"GBP","Rooms":[{"Adult":2,"Children":0}]}
+
+URL: https://stage-gateway.azurewebsites.net/hotel-api/1.0/Search
+
+**HEADERS**
+
+APIKey: 19R6dkI20Vgik15aLZ575Xea1
+Signature: 243e84e47c43e270c9375a6adc36fd84
+Content-Type: application/json
+Host: stage-gateway.azurewebsites.net
+Content-Length: 148
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"CityID":3185,"NationalityID":"115","ArrivalDate":"2021-09-01","Nights":5,"Hotels":[102245],"CurrencyCode":"GBP","Rooms":[{"Adult":1,"Children":1,"Ages":[8]}]}
+
+URL: https://stage-gateway.azurewebsites.net/hotel-api/1.0/Search
+
+**HEADERS**
+
+APIKey: 19R6dkI20Vgik15aLZ575Xea1
+Signature: 243e84e47c43e270c9375a6adc36fd84
+Content-Type: application/json
+Host: stage-gateway.azurewebsites.net
+Content-Length: 148
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"CityID":3185,"NationalityID":"115","ArrivalDate":"2021-09-01","Nights":5,"Hotels":[102245],"CurrencyCode":"GBP","Rooms":[{"Adult":1,"Children":1}]}
+
+URL: https://stage-gateway.azurewebsites.net/hotel-api/1.0/Search
+
+**HEADERS**
+
+APIKey: 19R6dkI20Vgik15aLZ575Xea1
+Signature: 243e84e47c43e270c9375a6adc36fd84
+Content-Type: application/json
+Host: stage-gateway.azurewebsites.net
+Content-Length: 148
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+{"CityID":3185,"NationalityID":"115","ArrivalDate":"2021-09-01","Nights":5,"Hotels":[102245],"CurrencyCode":"GBP","Rooms":[{"Adult":1,"Children":2,"Ages":[8]}]}

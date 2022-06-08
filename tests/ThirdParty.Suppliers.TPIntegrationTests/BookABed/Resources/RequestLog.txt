@@ -1,0 +1,185 @@
+﻿URL: http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx
+
+**HEADERS**
+
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertySearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>agendas</Login>
+    <Password>group</Password>
+    <AgentReference>10275</AgentReference>
+    <SellingCurrencyID>1</SellingCurrencyID>
+  </LoginDetails>
+  <PropertyReferenceID>102245</PropertyReferenceID>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <ArrivalDate>2021-09-01</ArrivalDate>
+  <Duration>5</Duration>
+  <RoomRequests>
+    <RoomRequest>
+      <GuestConfiguration>
+        <Adults>1</Adults>
+        <Children>0</Children>
+        <Infants>0</Infants>
+      </GuestConfiguration>
+    </RoomRequest>
+  </RoomRequests>
+  <MealBasisID>0</MealBasisID>
+</PropertySearchRequest>
+
+URL: http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx
+
+**HEADERS**
+
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertySearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>agendas</Login>
+    <Password>group</Password>
+    <AgentReference>10275</AgentReference>
+    <SellingCurrencyID>1</SellingCurrencyID>
+  </LoginDetails>
+  <PropertyReferenceID>102245</PropertyReferenceID>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <ArrivalDate>2021-09-01</ArrivalDate>
+  <Duration>5</Duration>
+  <RoomRequests>
+    <RoomRequest>
+      <GuestConfiguration>
+        <Adults>2</Adults>
+        <Children>0</Children>
+        <Infants>0</Infants>
+      </GuestConfiguration>
+    </RoomRequest>
+  </RoomRequests>
+  <MealBasisID>0</MealBasisID>
+</PropertySearchRequest>
+
+URL: http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx
+
+**HEADERS**
+
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertySearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>agendas</Login>
+    <Password>group</Password>
+    <AgentReference>10275</AgentReference>
+    <SellingCurrencyID>1</SellingCurrencyID>
+  </LoginDetails>
+  <PropertyReferenceID>102245</PropertyReferenceID>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <ArrivalDate>2021-09-01</ArrivalDate>
+  <Duration>5</Duration>
+  <RoomRequests>
+    <RoomRequest>
+      <GuestConfiguration>
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <Infants>0</Infants>
+        <ChildAges>
+          <ChildAge>8</ChildAge>
+        </ChildAges>
+      </GuestConfiguration>
+    </RoomRequest>
+  </RoomRequests>
+  <MealBasisID>0</MealBasisID>
+</PropertySearchRequest>
+
+URL: http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx
+
+**HEADERS**
+
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertySearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>agendas</Login>
+    <Password>group</Password>
+    <AgentReference>10275</AgentReference>
+    <SellingCurrencyID>1</SellingCurrencyID>
+  </LoginDetails>
+  <PropertyReferenceID>102245</PropertyReferenceID>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <ArrivalDate>2021-09-01</ArrivalDate>
+  <Duration>5</Duration>
+  <RoomRequests>
+    <RoomRequest>
+      <GuestConfiguration>
+        <Adults>1</Adults>
+        <Children>0</Children>
+        <Infants>1</Infants>
+      </GuestConfiguration>
+    </RoomRequest>
+  </RoomRequests>
+  <MealBasisID>0</MealBasisID>
+</PropertySearchRequest>
+
+URL: http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx
+
+**HEADERS**
+
+Content-Type: application/x-www-form-urlencoded
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertySearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>agendas</Login>
+    <Password>group</Password>
+    <AgentReference>10275</AgentReference>
+    <SellingCurrencyID>1</SellingCurrencyID>
+  </LoginDetails>
+  <PropertyReferenceID>102245</PropertyReferenceID>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <ArrivalDate>2021-09-01</ArrivalDate>
+  <Duration>5</Duration>
+  <RoomRequests>
+    <RoomRequest>
+      <GuestConfiguration>
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <Infants>1</Infants>
+        <ChildAges>
+          <ChildAge>8</ChildAge>
+        </ChildAges>
+      </GuestConfiguration>
+    </RoomRequest>
+  </RoomRequests>
+  <MealBasisID>0</MealBasisID>
+</PropertySearchRequest>

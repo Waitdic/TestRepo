@@ -1,0 +1,54 @@
+﻿URL: http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<AvailabilitySearch><Authority><Org>travelpack</Org><User>xmltest</User><Password>xmltest</Password><Currency>GBP</Currency><Version>1.28</Version></Authority><RegionId>MAD_12</RegionId><Hotels><Id>102245</Id></Hotels><HotelStayDetails><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Nationality>GB</Nationality><Room><Guests><Adult/></Guests></Room></HotelStayDetails></AvailabilitySearch>
+
+
+URL: http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<AvailabilitySearch><Authority><Org>travelpack</Org><User>xmltest</User><Password>xmltest</Password><Currency>GBP</Currency><Version>1.28</Version></Authority><RegionId>MAD_12</RegionId><Hotels><Id>102245</Id></Hotels><HotelStayDetails><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Nationality>GB</Nationality><Room><Guests><Adult/><Adult/></Guests></Room></HotelStayDetails></AvailabilitySearch>
+
+URL: http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<AvailabilitySearch><Authority><Org>travelpack</Org><User>xmltest</User><Password>xmltest</Password><Currency>GBP</Currency><Version>1.28</Version></Authority><RegionId>MAD_12</RegionId><Hotels><Id>102245</Id></Hotels><HotelStayDetails><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Nationality>GB</Nationality><Room><Guests><Adult/><Child age="8"/></Guests></Room></HotelStayDetails></AvailabilitySearch>
+
+
+URL: http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx
+
+**HEADERS**
+
+Timeout: 1
+
+**REQUEST**
+
+<AvailabilitySearch><Authority><Org>travelpack</Org><User>xmltest</User><Password>xmltest</Password><Currency>GBP</Currency><Version>1.28</Version></Authority><RegionId>MAD_12</RegionId><Hotels><Id>102245</Id></Hotels><HotelStayDetails><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Nationality>GB</Nationality><Room><Guests><Adult/><Child age="0"/></Guests></Room></HotelStayDetails></AvailabilitySearch>
+
+URL: http://www.stubademo.com/RXLStagingServices/ASMX/XmlService.asmx
+
+**HEADERS**
+
+Timeout: 1
+
+**REQUEST**
+
+<AvailabilitySearch><Authority><Org>travelpack</Org><User>xmltest</User><Password>xmltest</Password><Currency>GBP</Currency><Version>1.28</Version></Authority><RegionId>MAD_12</RegionId><Hotels><Id>102245</Id></Hotels><HotelStayDetails><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Nationality>GB</Nationality><Room><Guests><Adult/><Child age="8"/><Child age="0"/></Guests></Room></HotelStayDetails></AvailabilitySearch>

@@ -1,0 +1,18 @@
+﻿<Project>
+  <PropertyGroup Label="Project">
+	  <Version>0.1.0</Version>
+	  <InformationalVersion>0.1.0+Branch.master.Sha.47f611fb62417fcc830b3ee4c2878517e9df1ed6</InformationalVersion>
+    <Product>iVector</Product>
+
+    <Copyright>intuitive Ltd</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build">
+    <CompileOptions_Nullable>true</CompileOptions_Nullable>
+    <TestOptions_Framework>xunit</TestOptions_Framework>
+    <Analyzer_FxCop>false</Analyzer_FxCop>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Supressions">
+  </PropertyGroup>
+</Project>

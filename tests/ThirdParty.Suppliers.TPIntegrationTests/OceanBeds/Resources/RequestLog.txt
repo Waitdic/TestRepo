@@ -1,0 +1,249 @@
+﻿URL: http://oceanbeds.com/service.svc/GetPropertyAvailability
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertyAvailabilityRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://oceanbeds.com/2014/10">
+  <Credential>
+    <User>xmluser</User>
+    <Password>test</Password>
+  </Credential>
+  <CheckInDate>2021-Sep-01</CheckInDate>
+  <CheckOutDate>2021-Sep-06</CheckOutDate>
+  <RoomList>
+    <RequestRoom>
+      <Adults>1</Adults>
+      <Children>0</Children>
+      <Infants>0</Infants>
+    </RequestRoom>
+  </RoomList>
+  <PropertyCode />
+  <StateId>2</StateId>
+  <CityId>3</CityId>
+  <Region />
+  <CommunityId>0</CommunityId>
+  <BedRoom>0</BedRoom>
+  <Bathroom>0</Bathroom>
+  <HomeType />
+  <IsAvailable>true</IsAvailable>
+  <HotelSearch>true</HotelSearch>
+  <GenericSearch>false</GenericSearch>
+  <VillaSearch>false</VillaSearch>
+  <Filters>
+    <isGamesRoom>true</isGamesRoom>
+    <isSpaPool>true</isSpaPool>
+    <isPrivatePool>true</isPrivatePool>
+    <isOnGolfCourse>true</isOnGolfCourse>
+    <isGatedCommunity>true</isGatedCommunity>
+    <isPoolSouthFacing>true</isPoolSouthFacing>
+    <isInternetAccess>true</isInternetAccess>
+    <isConservationView>true</isConservationView>
+    <isTheatre>true</isTheatre>
+    <AirportId>0</AirportId>
+  </Filters>
+</PropertyAvailabilityRQ>
+
+URL: http://oceanbeds.com/service.svc/GetPropertyAvailability
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertyAvailabilityRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://oceanbeds.com/2014/10">
+  <Credential>
+    <User>xmluser</User>
+    <Password>test</Password>
+  </Credential>
+  <CheckInDate>2021-Sep-01</CheckInDate>
+  <CheckOutDate>2021-Sep-06</CheckOutDate>
+  <RoomList>
+    <RequestRoom>
+      <Adults>2</Adults>
+      <Children>0</Children>
+      <Infants>0</Infants>
+    </RequestRoom>
+  </RoomList>
+  <PropertyCode />
+  <StateId>2</StateId>
+  <CityId>3</CityId>
+  <Region />
+  <CommunityId>0</CommunityId>
+  <BedRoom>0</BedRoom>
+  <Bathroom>0</Bathroom>
+  <HomeType />
+  <IsAvailable>true</IsAvailable>
+  <HotelSearch>true</HotelSearch>
+  <GenericSearch>false</GenericSearch>
+  <VillaSearch>false</VillaSearch>
+  <Filters>
+    <isGamesRoom>true</isGamesRoom>
+    <isSpaPool>true</isSpaPool>
+    <isPrivatePool>true</isPrivatePool>
+    <isOnGolfCourse>true</isOnGolfCourse>
+    <isGatedCommunity>true</isGatedCommunity>
+    <isPoolSouthFacing>true</isPoolSouthFacing>
+    <isInternetAccess>true</isInternetAccess>
+    <isConservationView>true</isConservationView>
+    <isTheatre>true</isTheatre>
+    <AirportId>0</AirportId>
+  </Filters>
+</PropertyAvailabilityRQ>
+
+URL: http://oceanbeds.com/service.svc/GetPropertyAvailability
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertyAvailabilityRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://oceanbeds.com/2014/10">
+  <Credential>
+    <User>xmluser</User>
+    <Password>test</Password>
+  </Credential>
+  <CheckInDate>2021-Sep-01</CheckInDate>
+  <CheckOutDate>2021-Sep-06</CheckOutDate>
+  <RoomList>
+    <RequestRoom>
+      <Adults>1</Adults>
+      <Children>1</Children>
+      <Infants>0</Infants>
+    </RequestRoom>
+  </RoomList>
+  <PropertyCode />
+  <StateId>2</StateId>
+  <CityId>3</CityId>
+  <Region />
+  <CommunityId>0</CommunityId>
+  <BedRoom>0</BedRoom>
+  <Bathroom>0</Bathroom>
+  <HomeType />
+  <IsAvailable>true</IsAvailable>
+  <HotelSearch>true</HotelSearch>
+  <GenericSearch>false</GenericSearch>
+  <VillaSearch>false</VillaSearch>
+  <Filters>
+    <isGamesRoom>true</isGamesRoom>
+    <isSpaPool>true</isSpaPool>
+    <isPrivatePool>true</isPrivatePool>
+    <isOnGolfCourse>true</isOnGolfCourse>
+    <isGatedCommunity>true</isGatedCommunity>
+    <isPoolSouthFacing>true</isPoolSouthFacing>
+    <isInternetAccess>true</isInternetAccess>
+    <isConservationView>true</isConservationView>
+    <isTheatre>true</isTheatre>
+    <AirportId>0</AirportId>
+  </Filters>
+</PropertyAvailabilityRQ>
+
+URL: http://oceanbeds.com/service.svc/GetPropertyAvailability
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertyAvailabilityRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://oceanbeds.com/2014/10">
+  <Credential>
+    <User>xmluser</User>
+    <Password>test</Password>
+  </Credential>
+  <CheckInDate>2021-Sep-01</CheckInDate>
+  <CheckOutDate>2021-Sep-06</CheckOutDate>
+  <RoomList>
+    <RequestRoom>
+      <Adults>1</Adults>
+      <Children>0</Children>
+      <Infants>1</Infants>
+    </RequestRoom>
+  </RoomList>
+  <PropertyCode />
+  <StateId>2</StateId>
+  <CityId>3</CityId>
+  <Region />
+  <CommunityId>0</CommunityId>
+  <BedRoom>0</BedRoom>
+  <Bathroom>0</Bathroom>
+  <HomeType />
+  <IsAvailable>true</IsAvailable>
+  <HotelSearch>true</HotelSearch>
+  <GenericSearch>false</GenericSearch>
+  <VillaSearch>false</VillaSearch>
+  <Filters>
+    <isGamesRoom>true</isGamesRoom>
+    <isSpaPool>true</isSpaPool>
+    <isPrivatePool>true</isPrivatePool>
+    <isOnGolfCourse>true</isOnGolfCourse>
+    <isGatedCommunity>true</isGatedCommunity>
+    <isPoolSouthFacing>true</isPoolSouthFacing>
+    <isInternetAccess>true</isInternetAccess>
+    <isConservationView>true</isConservationView>
+    <isTheatre>true</isTheatre>
+    <AirportId>0</AirportId>
+  </Filters>
+</PropertyAvailabilityRQ>
+
+URL: http://oceanbeds.com/service.svc/GetPropertyAvailability
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<PropertyAvailabilityRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://oceanbeds.com/2014/10">
+  <Credential>
+    <User>xmluser</User>
+    <Password>test</Password>
+  </Credential>
+  <CheckInDate>2021-Sep-01</CheckInDate>
+  <CheckOutDate>2021-Sep-06</CheckOutDate>
+  <RoomList>
+    <RequestRoom>
+      <Adults>1</Adults>
+      <Children>1</Children>
+      <Infants>1</Infants>
+    </RequestRoom>
+  </RoomList>
+  <PropertyCode />
+  <StateId>2</StateId>
+  <CityId>3</CityId>
+  <Region />
+  <CommunityId>0</CommunityId>
+  <BedRoom>0</BedRoom>
+  <Bathroom>0</Bathroom>
+  <HomeType />
+  <IsAvailable>true</IsAvailable>
+  <HotelSearch>true</HotelSearch>
+  <GenericSearch>false</GenericSearch>
+  <VillaSearch>false</VillaSearch>
+  <Filters>
+    <isGamesRoom>true</isGamesRoom>
+    <isSpaPool>true</isSpaPool>
+    <isPrivatePool>true</isPrivatePool>
+    <isOnGolfCourse>true</isOnGolfCourse>
+    <isGatedCommunity>true</isGatedCommunity>
+    <isPoolSouthFacing>true</isPoolSouthFacing>
+    <isInternetAccess>true</isInternetAccess>
+    <isConservationView>true</isConservationView>
+    <isTheatre>true</isTheatre>
+    <AirportId>0</AirportId>
+  </Filters>
+</PropertyAvailabilityRQ>

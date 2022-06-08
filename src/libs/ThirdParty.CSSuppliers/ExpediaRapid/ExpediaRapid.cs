@@ -6,6 +6,7 @@
     using System.Net;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Net.WebRequests;
     using MoreLinq;
     using Newtonsoft.Json;
     using ThirdParty.Constants;
@@ -92,7 +93,7 @@
             {
                 var firstRoom = propertyDetails.Rooms.First();
 
-                var prebookResponse = GetResponse<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], Intuitive.Net.WebRequests.eRequestMethod.GET, "Prebook PriceCheck ", false);
+                var prebookResponse = GetResponse<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
 
                 if (prebookResponse is null)
                 {
@@ -125,8 +126,7 @@
                 var firstRoom = propertyDetails.Rooms.First();
                 string bookRequestBody = BuildBookRequestBody(propertyDetails);
 
-                var bookResponse = GetResponse<BookResponse>(propertyDetails, propertyDetails.TPRef2, Intuitive.Net.WebRequests.eRequestMethod.POST, "Book ", true, bookRequestBody);
-
+                var bookResponse = GetResponse<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
 
                 if (bookResponse is null)
                 {
@@ -153,7 +153,7 @@
 
             try
             {
-                var bookingItineraryResponse1 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, Intuitive.Net.WebRequests.eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
+                var bookingItineraryResponse1 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
 
                 if (bookingItineraryResponse1 is null)
                 {
@@ -167,7 +167,7 @@
                     throw new Exception("Unable to cancel a room.");
                 }
 
-                var bookingItineraryResponse2 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, Intuitive.Net.WebRequests.eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
+                var bookingItineraryResponse2 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
 
                 if (bookingItineraryResponse2 is null)
                 {
@@ -212,7 +212,7 @@
 
             try
             {
-                var precancelResponse = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, Intuitive.Net.WebRequests.eRequestMethod.GET, "Booking Itinerary ", true);
+                var precancelResponse = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
 
                 if (precancelResponse is null)
                 {
@@ -274,7 +274,7 @@
                     string cancelLink = room.Links["cancel"].HRef;
 
                     string url = BuildDefaultURL(propertyDetails, cancelLink);
-                    var request = BuildRequest(propertyDetails, url, "Cancel", Intuitive.Net.WebRequests.eRequestMethod.DELETE, true);
+                    var request = BuildRequest(propertyDetails, url, "Cancel", eRequestMethod.DELETE, true);
 
                     string cancelResponseString = _api.GetResponse(propertyDetails, request);
                     int statusCode = (int)request.ResponseStatusCode;
@@ -331,9 +331,8 @@
             }
         }
 
-        private TResponse GetResponse<TResponse>(PropertyDetails propertyDetails, string link, Intuitive.Net.WebRequests.eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse, new()
+        private TResponse GetResponse<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
-
             string url = BuildDefaultURL(propertyDetails, link);
             var request = BuildRequest(propertyDetails, url, logName, method, addCustomerIPHeader, requestBody);
             var response = _api.GetDeserializedResponse<TResponse>(propertyDetails, request);
@@ -342,9 +341,8 @@
 
         private SearchResponse GetPrebookSearchRedoResponse(PropertyDetails propertyDetails)
         {
-
             string searchURL = BuildPrebookSearchURL(propertyDetails);
-            var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", Intuitive.Net.WebRequests.eRequestMethod.GET, false);
+            var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", eRequestMethod.GET, false);
             var searchResponse = _api.GetDeserializedResponse<SearchResponse>(propertyDetails, searchRequest);
             return searchResponse;
         }
@@ -549,7 +547,7 @@
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
         }
 
-        private Intuitive.Net.WebRequests.Request BuildRequest(PropertyDetails propertyDetails, string url, string logName, Intuitive.Net.WebRequests.eRequestMethod method, bool addCustomerIPHeader, string requestBody = null)
+        private Request BuildRequest(PropertyDetails propertyDetails, string url, string logName, eRequestMethod method, bool addCustomerIPHeader, string requestBody = null)
         {
 
             bool useGzip = _settings.get_UseGZIP(propertyDetails);
@@ -559,7 +557,7 @@
             string customerIp = Dns.GetHostEntry(Dns.GetHostName()).AddressList[0].MapToIPv4().ToString();
             string tpRef = propertyDetails.TPRef1;
             string tpSessionID = !string.IsNullOrWhiteSpace(tpRef) ? tpRef.Split('|')[0] : Guid.NewGuid().ToString();
-            var headers = new Intuitive.Net.WebRequests.RequestHeaders();
+            var headers = new RequestHeaders();
 
             headers.AddNew(SearchHeaderKeys.CustomerSessionID, tpSessionID);
             headers.Add(ExpediaRapidSearch.CreateAuthorizationHeader(apiKey, secret));

@@ -23,14 +23,11 @@
 
         private readonly IJumboSettings _settings;
 
-        private readonly ITPSupport _support;
-
         private readonly ISerializer _serializer;
 
-        public JumboSearch(IJumboSettings settings, ITPSupport support, ISerializer serializer)
+        public JumboSearch(IJumboSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
@@ -38,13 +35,7 @@
 
         #region Properties
 
-        public string Source
-        {
-            get
-            {
-                return ThirdParties.JUMBO;
-            }
-        }
+        public string Source => ThirdParties.JUMBO;
 
         public bool SupportsNonRefundableTagging { get; } = false;
 

@@ -1,0 +1,124 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+    <soapenv:Body> 
+        <ns0:OTA_HotelAvailRS Version="1" xmlns:ns0="http://www.opentravel.org/OTA/2003/05"> 
+            <ns0:Success/> 
+            <ns0:POS> 
+                <ns0:Source> 
+                    <ns0:BookingChannel Type=""/> 
+                </ns0:Source> 
+            </ns0:POS> 
+            <ns0:Errors/> 
+            <ns0:RoomStays> 
+                <ns0:RoomStay> 
+                    <ns0:RoomTypes> 
+                        <ns0:RoomType RoomTypeCode="DBL ES"> 
+                            <ns0:RoomDescription Name="DOUBLE-STANDARD"/> 
+                        </ns0:RoomType> 
+                        <ns0:RoomType RoomTypeCode="DBL VR"> 
+                            <ns0:RoomDescription Name="DOUBLE-SEA VIEW"/> 
+                        </ns0:RoomType> 
+                        <ns0:RoomType RoomTypeCode="SU ES"> 
+                            <ns0:RoomDescription Name="SUITE 2 PAX-STANDARD"/> 
+                        </ns0:RoomType> 
+                    </ns0:RoomTypes> 
+                    <ns0:RatePlans> 
+                        <ns0:RatePlan RatePlanCode="C#FGEN#FIT_AD" RatePlanName="COSTS "> 
+                            <ns0:MealsIncluded MealPlanCodes="AD-Bed and breakfast"/> 
+                        </ns0:RatePlan> 
+                        <ns0:RatePlan RatePlanCode="C#FGEN#FIT_MP" RatePlanName="COSTS "> 
+                            <ns0:MealsIncluded MealPlanCodes="MP-HALF BOARD"/> 
+                        </ns0:RatePlan> 
+                        <ns0:RatePlan RatePlanCode="C#FGEN#FIT_PC" RatePlanName="COSTS "> 
+                            <ns0:MealsIncluded MealPlanCodes="PC-FULL BOARD"/> 
+                        </ns0:RatePlan> 
+                        <ns0:RatePlan RatePlanCode="C#FGEN#FIT_TI" RatePlanName="COSTS "> 
+                            <ns0:MealsIncluded MealPlanCodes="TI-ALL INCLUSIVE"/> 
+                        </ns0:RatePlan> 
+                    </ns0:RatePlans> 
+                    <ns0:RoomRates> 
+                        <ns0:RoomRate RoomTypeCode="DBL ES" RatePlanCode="C#FGEN#FIT_AD" InvBlockCode="1" 
+                                     PromotionCode="TMP_CODE-S" AvailabilityStatus="AvailableForSale"> 
+                            <ns0:Rates> 
+                                <ns0:Rate> 
+                                    <ns0:Total AmountAfterTax="502.92" CurrencyCode="EUR"/> 
+                                    <ns0:TPA_Extensions> 
+                                        <ns0:RoomToken Token="eJxdTtEKgzAM/JWBLxpYaTprWnzoqq1DkCq2sv//k9XOvQxy4eCSu5NcMC3rcew+HtMNji7O/DHDoIjouB0EWzBDcvthI95QH5fjTFAHDVYB+GdYJoTjNX08qEqtBz8Y05bGNdYeCj7TPyp8KRikx2vkA6R5QK5B1NakahF0xOxtlMPWcum/wD3RC0D"/> 
+                                        <ns0:ProviderTokens> 
+                                            <ns0:Token TokenName="RecommendedPrice" TokenCode="611.0"/> 
+                                        </ns0:ProviderTokens> 
+                                    </ns0:TPA_Extensions> 
+                                </ns0:Rate> 
+                            </ns0:Rates> 
+                            <ns0:RoomRateDescription Name="PROMOTION"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:RoomRateDescription Name="PROMOTION#OBSERVATION"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:RoomRateDescription Name="PROMOTION#USEROBSERVATIONREQUIRED"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:GuestCounts>
+                                <ns0:GuestCount Age="30" Count="1"/>
+                                <ns0:GuestCount Age="30" Count="1"/> 
+                            </ns0:GuestCounts> 
+                        </ns0:RoomRate> 
+                        <ns0:RoomRate RoomTypeCode="DBL VR" RatePlanCode="C#FGEN#FIT_AD" InvBlockCode="2" 
+                                     PromotionCode="TMP_CODE-S" AvailabilityStatus="AvailableForSale"> 
+                            <ns0:Rates> 
+                                <ns0:Rate> 
+                                    <ns0:Total AmountAfterTax="564.9" CurrencyCode="EUR"/> 
+                                    <ns0:TPA_Extensions> 
+                                        <ns0:RoomToken Token="eJxdjc0KgzAQhF9F8KILDdlt/sRDqiaWgMSiUd//TappeynsLB/M7oxUgjXgq2f/G31XbEHf4DfFiCOiMT1F1CA66fi0r6cAzJ/WmtBc2ygcxCPBGNIMJTj08cyYz74V0ivOMxr5pj3Vfhz4aFzzJn46VBGMaEAiZiShu4V1a0xjEgbISpZt2+xtyzE"/> 
+                                        <ns0:ProviderTokens> 
+                                            <ns0:Token TokenName="RecommendedPrice" TokenCode="686.0"/> 
+                                        </ns0:ProviderTokens> 
+                                    </ns0:TPA_Extensions> 
+                                </ns0:Rate> 
+                            </ns0:Rates> 
+                            <ns0:RoomRateDescription Name="PROMOTION"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:RoomRateDescription Name="PROMOTION#OBSERVATION"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:RoomRateDescription Name="PROMOTION#USEROBSERVATIONREQUIRED"> 
+                                <ns0:Text/> 
+                            </ns0:RoomRateDescription> 
+                            <ns0:GuestCounts> 
+                                <ns0:GuestCount Age="30" Count="1"/> 
+                                <ns0:GuestCount Age="30" Count="1"/> 
+                            </ns0:GuestCounts> 
+                        </ns0:RoomRate> 
+                    </ns0:RoomRates> 
+                    <ns0:TimeSpan Start="2011-12-07+01:00" End="2011-12-14+01:00"/> 
+                    <ns0:BasicPropertyInfo HotelCode="7019" HotelName="COSTA ADEJE GRAN HOTEL"/> 
+                    <ns0:TPA_Extensions> 
+                        <ns0:ProviderTokens> 
+                            <ns0:Token TokenName="ExternalID" TokenCode="-1"/> 
+                            <ns0:Token TokenName="ExternalProvider" TokenCode="1"/> 
+                        </ns0:ProviderTokens> 
+                        <ns0:ProviderID Provider="WIS"/> 
+                        <ns0:HotelInfo> 
+                            <ns0:CategoryCode Code="5"/> 
+                            <ns0:CategoryUngroupedCode Code="5*"/> 
+                            <ns0:CategoryName Name="5*"/> 
+                            <ns0:Id ID="7019"/> 
+                            <ns0:Name Name="COSTA ADEJE GRAN HOTEL"/> 
+                            <ns0:Type Type="HOTEL"/> 
+                        </ns0:HotelInfo> 
+                        <ns0:Photos> 
+                            <ns0:Photo URL="http://newtour_pre.globalia.com:8080//b2b//img//hotel//TF/TF090F4.jpg"/> 
+                        </ns0:Photos> 
+                    </ns0:TPA_Extensions> 
+                </ns0:RoomStay> 
+            </ns0:RoomStays> 
+            <ns0:TPA_Extensions> 
+                <ns0:ProviderTokens> 
+                    <ns0:Token TokenName="CurrentPage" TokenCode="1"/> 
+                    <ns0:Token TokenName="TotalPages" TokenCode="1"/> 
+                </ns0:ProviderTokens> 
+            </ns0:TPA_Extensions> 
+        </ns0:OTA_HotelAvailRS> 
+    </soapenv:Body> 
+</soapenv:Envelope>

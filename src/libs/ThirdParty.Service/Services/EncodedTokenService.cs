@@ -109,7 +109,7 @@
             return bits;
         }
 
-        public async Task<BookToken> DecodeBookToken(string tokenString)
+        public async Task<BookToken> DecodeBookTokenAsync(string tokenString)
         {
             BookToken token = null!;
             try
@@ -134,7 +134,7 @@
             return token;
         }
 
-        public async Task<PropertyToken> DecodePropertyToken(string tokenString)
+        public async Task<PropertyToken> DecodePropertyTokenAsync(string tokenString)
         {
             PropertyToken token = null!;
 
@@ -279,7 +279,6 @@
 
                     _tokenValues.AddValue(tokenValueName, roomtoken.ChildAges[i]);
                 }
-
             }
         }
 
@@ -376,7 +375,6 @@
                 Enum.TryParse($"LocalCost{i}", out TokenValueType tokenValueName);
                 _tokenValues.AddValue(tokenValueName, localCosts[i - 1]);
             }
-
         }
 
         private List<int> GetLocalCostFromTokenValues()
@@ -393,6 +391,5 @@
 
             return localCosts;
         }
-
     }
 }

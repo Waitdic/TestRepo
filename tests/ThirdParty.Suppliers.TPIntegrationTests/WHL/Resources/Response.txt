@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+    <header>
+        <version>1.6.3</version>
+        <timestamp>20200129154400</timestamp>
+    </header>
+    <response type="availability" product="hotel">
+        <search number="100045951727573" time="2.51" />
+        <nights number="18" />
+        <checkin date="2020-09-05" />
+        <checkout date="2020-09-23" />
+        <hotels total="2">
+            <hotel code="43016" name="UNIVERSO" stars="3" location="01" address="Piazza Santa Maria Novella, 20, 50123" promo="false" city="FLR">
+                <agreement id="0xbd.43016.7.RB.C.Y2JhYTkw.0.BB.MGFjMDRk" available="true" room_basis="RB" meal_basis="C" ctype="7" c_type="7" room_type="Standard Room" is_dynamic="false" currency="EUR" deadline="2020-09-01" total="4248.00" total_gross="4248.00" original_total="4248.00" special="false">
+                    <deadline date="2020-09-01 18:00:00" value="2020-09-01 18:00:00"/>
+                    <policies>
+                        <policy from="2020-09-01 18:00:00" percentage="5.56" />
+                    </policies>
+                    <deadline_remarks />
+                    <remarks>
+                        <remark text="Supplier Rooms description: 1 x QUADRUPLE"/>
+                        <remark text="From 2015-12-13 to 2039-12-13: CITY TAX: Hotel prices do not include room taxes established by local entities. These room taxes vary according to the city and hotel category and are charged directly by the hotel upon client’s arrival."/>
+                    </remarks>
+                    <room type="sgl" required="1" occupancy="4">
+                        <price from="2020-09-05" to="2020-09-23">
+                            <roomprice nett="4248.00" gross="4248.00"/>
+                        </price>
+                    </room>
+                </agreement>
+                <agreement id="0xa8.43016.7.RB.C.YjE0NjA2.MzMyMTg4.Zjc1YzNh" available="true" room_basis="RB" meal_basis="C" ctype="7" c_type="7" room_type="Quadruple Room" is_dynamic="true" currency="EUR" deadline="2020-01-28" total="4464.00" total_gross="4464.00" original_total="4464.00" special="false">
+                    <remarks>
+                        <remark code="SYS_CONTRACT_TYPE" text="Quadruple room"/>
+                    </remarks>
+                    <room type="qud" required="1" occupancy="4">
+                        <price from="2020-09-05" to="2020-09-23">
+                            <roomprice nett="4464.00" gross="4464.00"/>
+                        </price>
+                    </room>
+                </agreement>
+            </hotel>
+            <hotel code="103945" name="MORANDI ALLA CROCETTA" stars="3" location="09" address="Via Laura, 50, 50121" promo="false" city="FLR">
+                <agreement id="0x62.103945.7.RO.X.YzBhN2Fl.NDlhNGYw.FLR" available="true" room_basis="RO" meal_basis="X" ctype="7" c_type="7" room_type="Classic Quadruple Room" is_dynamic="true" currency="EUR" deadline="2020-01-28" total="4734.00" total_gross="4734.00" original_total="4734.00" special="false">
+                    <remarks>
+                        <remark text="NON REFUNDABLE"/>
+                        <remark code="SYS_CONTRACT_TYPE" text="Classic Quadruple Room"/>
+                    </remarks>
+                    <room type="tsu" required="1" occupancy="4">
+                        <price from="2020-09-05" to="2020-09-23">
+                            <roomprice nett="4734.00" gross="4734.00"/>
+                        </price>
+                    </room>
+                </agreement>
+            </hotel>
+        </hotels>
+    </response>
+</envelope>

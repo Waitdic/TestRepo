@@ -1,10 +1,9 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book
 {
-    using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
 
-    public class BookResponse : IExpediaRapidResponse
+    public class BookResponse : IExpediaRapidResponse<BookResponse>
     {
 
         [JsonProperty("itinerary_id")]
@@ -13,28 +12,27 @@
         [JsonProperty("links")]
         public Dictionary<string, Link> Links { get; set; } = new Dictionary<string, Link>();
 
-        public bool IsValid(string responseString, int statusCode)
+        public (bool valid, BookResponse response) GetValidResults(string responseString, int statusCode)
         {
+            (bool valid, BookResponse bookResponse) = (false, new BookResponse());
 
             if (!string.IsNullOrWhiteSpace(responseString))
             {
                 try
                 {
-                    var bookResponse = JsonConvert.DeserializeObject<BookResponse>(responseString);
+                    bookResponse = JsonConvert.DeserializeObject<BookResponse>(responseString);
 
-                    if (string.IsNullOrWhiteSpace(bookResponse.ItineraryID) || !bookResponse.Links.ContainsKey("retrieve"))
-                        return false;
-
-                    return true;
+                    if (!string.IsNullOrWhiteSpace(bookResponse.ItineraryID) && bookResponse.Links.ContainsKey("retrieve"))
+                    {
+                        valid = true;
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    return false;
                 }
             }
-            return false;
+
+            return (valid, bookResponse);
         }
-
     }
-
 }

@@ -1,0 +1,83 @@
+﻿URL: https://solo.derbysoft-test.com/bookingusbv4/availability
+
+**HEADERS**
+
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Timeout: 100
+
+
+**REQUEST**
+
+{"header":{"supplierId":"CLUBMEDUK","distributorId":"THOMASCOOK","version":"v4","token":"2a774834-63a2-4a29-a699-7706e4bb1f42"},"hotelId":"102245","stayRange":{"checkin":"2021-09-01","checkout":"2021-09-06"},"roomCriteria":{"roomCount":1,"adultCount":1,"childCount":0,"childAges":[]}}
+
+
+URL: https://solo.derbysoft-test.com/bookingusbv4/availability
+
+**HEADERS**
+
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Timeout: 100
+
+
+**REQUEST**
+
+
+{"header":{"supplierId":"CLUBMEDUK","distributorId":"THOMASCOOK","version":"v4","token":"2a774834-63a2-4a29-a699-7706e4bb1f42"},"hotelId":"102245","stayRange":{"checkin":"2021-09-01","checkout":"2021-09-06"},"roomCriteria":{"roomCount":1,"adultCount":2,"childCount":0,"childAges":[]}}
+
+
+URL: https://solo.derbysoft-test.com/bookingusbv4/availability
+
+**HEADERS**
+
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Timeout: 100
+
+
+**REQUEST**
+
+
+{"header":{"supplierId":"CLUBMEDUK","distributorId":"THOMASCOOK","version":"v4","token":"2a774834-63a2-4a29-a699-7706e4bb1f42"},"hotelId":"102245","stayRange":{"checkin":"2021-09-01","checkout":"2021-09-06"},"roomCriteria":{"roomCount":1,"adultCount":1,"childCount":1,"childAges":[8]}}
+
+
+URL: https://solo.derbysoft-test.com/bookingusbv4/availability
+
+**HEADERS**
+
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Timeout: 100
+
+
+**REQUEST**
+
+
+{"header":{"supplierId":"CLUBMEDUK","distributorId":"THOMASCOOK","version":"v4","token":"2a774834-63a2-4a29-a699-7706e4bb1f42"},"hotelId":"102245","stayRange":{"checkin":"2021-09-01","checkout":"2021-09-06"},"roomCriteria":{"roomCount":1,"adultCount":1,"childCount":1,"childAges":[1]}}
+
+
+URL: https://solo.derbysoft-test.com/bookingusbv4/availability
+
+**HEADERS**
+
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUSE9NQVNDT09LIiwibmFtZSI6InRob21hc2Nvb2siLCJ0aW1lIjoiMTU5MTI4MTAwMSJ9.6639Ltop5Qo0lyhf-JxIpZcg4op8O3gpyB-tTcFx1d8
+Accept: application/json
+Accept-Encoding: gzip
+Content-Type: application/json
+Timeout: 100
+
+
+**REQUEST**
+
+
+{"header":{"supplierId":"CLUBMEDUK","distributorId":"THOMASCOOK","version":"v4","token":"2a774834-63a2-4a29-a699-7706e4bb1f42"},"hotelId":"102245","stayRange":{"checkin":"2021-09-01","checkout":"2021-09-06"},"roomCriteria":{"roomCount":1,"adultCount":1,"childCount":2,"childAges":[8,1]}}
+

@@ -1,0 +1,154 @@
+﻿URL: https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://www.wso2.org/php/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:PriceSearch>
+      <xsd:UserName>XMLBKBDIE</xsd:UserName>
+      <xsd:Password>XXXXXX</xsd:Password>
+      <xsd:CityCode>MAD_12</xsd:CityCode>
+      <xsd:ProductCode />
+      <xsd:Type>Hotel</xsd:Type>
+      <xsd:Occupancy />
+      <xsd:ArrivalDate>2021-09-01</xsd:ArrivalDate>
+      <xsd:NumberOfNights>5</xsd:NumberOfNights>
+      <xsd:NumberOfRooms>1</xsd:NumberOfRooms>
+      <xsd:DisplayClosedOut>N</xsd:DisplayClosedOut>
+      <xsd:DisplayOnRequest>N</xsd:DisplayOnRequest>
+      <xsd:VendorIDs>
+        <xsd:VendorID>102245</xsd:VendorID>
+      </xsd:VendorIDs>
+    </xsd:PriceSearch>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://www.wso2.org/php/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:PriceSearch>
+      <xsd:UserName>XMLBKBDIE</xsd:UserName>
+      <xsd:Password>XXXXXX</xsd:Password>
+      <xsd:CityCode>MAD_12</xsd:CityCode>
+      <xsd:ProductCode />
+      <xsd:Type>Hotel</xsd:Type>
+      <xsd:Occupancy />
+      <xsd:ArrivalDate>2021-09-01</xsd:ArrivalDate>
+      <xsd:NumberOfNights>5</xsd:NumberOfNights>
+      <xsd:NumberOfRooms>1</xsd:NumberOfRooms>
+      <xsd:DisplayClosedOut>N</xsd:DisplayClosedOut>
+      <xsd:DisplayOnRequest>N</xsd:DisplayOnRequest>
+      <xsd:VendorIDs>
+        <xsd:VendorID>102245</xsd:VendorID>
+      </xsd:VendorIDs>
+    </xsd:PriceSearch>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://www.wso2.org/php/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:PriceSearch>
+      <xsd:UserName>XMLBKBDIE</xsd:UserName>
+      <xsd:Password>XXXXXX</xsd:Password>
+      <xsd:CityCode>MAD_12</xsd:CityCode>
+      <xsd:ProductCode />
+      <xsd:Type>Hotel</xsd:Type>
+      <xsd:Occupancy />
+      <xsd:ArrivalDate>2021-09-01</xsd:ArrivalDate>
+      <xsd:NumberOfNights>5</xsd:NumberOfNights>
+      <xsd:NumberOfRooms>1</xsd:NumberOfRooms>
+      <xsd:DisplayClosedOut>N</xsd:DisplayClosedOut>
+      <xsd:DisplayOnRequest>N</xsd:DisplayOnRequest>
+      <xsd:VendorIDs>
+        <xsd:VendorID>102245</xsd:VendorID>
+      </xsd:VendorIDs>
+    </xsd:PriceSearch>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://www.wso2.org/php/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:PriceSearch>
+      <xsd:UserName>XMLBKBDIE</xsd:UserName>
+      <xsd:Password>XXXXXX</xsd:Password>
+      <xsd:CityCode>MAD_12</xsd:CityCode>
+      <xsd:ProductCode />
+      <xsd:Type>Hotel</xsd:Type>
+      <xsd:Occupancy />
+      <xsd:ArrivalDate>2021-09-01</xsd:ArrivalDate>
+      <xsd:NumberOfNights>5</xsd:NumberOfNights>
+      <xsd:NumberOfRooms>1</xsd:NumberOfRooms>
+      <xsd:DisplayClosedOut>N</xsd:DisplayClosedOut>
+      <xsd:DisplayOnRequest>N</xsd:DisplayOnRequest>
+      <xsd:VendorIDs>
+        <xsd:VendorID>102245</xsd:VendorID>
+      </xsd:VendorIDs>
+    </xsd:PriceSearch>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: https://javatest.teamamericany.com:8443/TADoclit/services/TADoclit
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://www.wso2.org/php/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:PriceSearch>
+      <xsd:UserName>XMLBKBDIE</xsd:UserName>
+      <xsd:Password>XXXXXX</xsd:Password>
+      <xsd:CityCode>MAD_12</xsd:CityCode>
+      <xsd:ProductCode />
+      <xsd:Type>Hotel</xsd:Type>
+      <xsd:Occupancy />
+      <xsd:ArrivalDate>2021-09-01</xsd:ArrivalDate>
+      <xsd:NumberOfNights>5</xsd:NumberOfNights>
+      <xsd:NumberOfRooms>1</xsd:NumberOfRooms>
+      <xsd:DisplayClosedOut>N</xsd:DisplayClosedOut>
+      <xsd:DisplayOnRequest>N</xsd:DisplayOnRequest>
+      <xsd:VendorIDs>
+        <xsd:VendorID>102245</xsd:VendorID>
+      </xsd:VendorIDs>
+    </xsd:PriceSearch>
+  </soapenv:Body>
+</soapenv:Envelope>

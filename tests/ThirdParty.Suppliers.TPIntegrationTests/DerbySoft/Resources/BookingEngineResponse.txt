@@ -1,0 +1,128 @@
+﻿{
+    "hotelId": "GOH101",
+    "stayRange": {
+        "checkin": "2021-12-25",
+        "checkout": "2021-12-28"
+    },
+    "roomCriteria": {
+        "roomCount": 1,
+        "adultCount": 2,
+        "childCount": 0
+    },
+    "roomRates": [
+        {
+            "roomId": "T2",
+            "rateId": "BAR",
+            "currency": "CNY",
+            "inventory": 9,
+            "amountAfterTax": [
+                120.0,
+                120.0,
+                120.0
+            ],
+            "mealPlan": "RO",
+            "fees": [
+                {
+                    "dateRange": {
+                        "startDate": "2021-12-25",
+                        "endDate": "2021-12-27"
+                    },
+                    "fee": {
+                        "name": "Service Charge",
+                        "type": "Exclusive",
+                        "amount": 10.000,
+                        "amountType": "Percent",
+                        "chargeType": "PerRoomPerNight"
+                    }
+                }
+            ],
+            "cancelPolicy": {
+                "code": "4PM0D1N_100P",
+                "description": "cancel before 4PM of arrival date is free",
+                "cancelPenalties": [
+                    {
+                        "noShow": false,
+                        "cancellable": true,
+                        "cancelDeadline": {
+                            "offsetTimeDropType": "BeforeArrival",
+                            "offsetTimeUnit": "D",
+                            "offsetTimeValue": 0,
+                            "dealineTime": "4PM"
+                        },
+                        "penaltyCharge": {
+                            "chargeBase": "NightBase",
+                            "nights": 1
+                        }
+                    },
+                    {
+                        "noShow": true,
+                        "penaltyCharge": {
+                            "chargeBase": "FullStay",
+                            "percent": 100
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "roomId": "T2",
+            "rateId": "PROMO",
+            "currency": "CNY",
+            "inventory": 20,
+            "amountAfterTax": [
+                108.0,
+                108.0,
+                108.0
+            ],
+            "mealPlan": "RO",
+            "fees": [
+                {
+                    "dateRange": {
+                        "startDate": "2021-12-25",
+                        "endDate": "2021-12-27"
+                    },
+                    "fee": {
+                        "name": "Service Charge",
+                        "type": "Exclusive",
+                        "amount": 10.000,
+                        "amountType": "Percent",
+                        "chargeType": "PerRoomPerNight"
+                    }
+                }
+            ],
+            "cancelPolicy": {
+                "code": "4PM0D1N_100P",
+                "description": "cancel before 4PM of arrival date is free",
+                "cancelPenalties": [
+                    {
+                        "noShow": false,
+                        "cancellable": true,
+                        "cancelDeadline": {
+                            "offsetTimeDropType": "BeforeArrival",
+                            "offsetTimeUnit": "D",
+                            "offsetTimeValue": 0,
+                            "dealineTime": "4PM"
+                        },
+                        "penaltyCharge": {
+                            "chargeBase": "NightBase",
+                            "nights": 1
+                        }
+                    },
+                    {
+                        "noShow": true,
+                        "penaltyCharge": {
+                            "chargeBase": "FullStay",
+                            "percent": 100
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "header": {
+        "version": "v4",
+        "token": "2a774834-63a2-4a29-a699-7706e4bb1f42",
+        "supplierId": "GOHOTEL",
+        "distributorId": "SCOTTDUNN"
+    }
+}

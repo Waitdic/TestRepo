@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<availabilityResponse status="Y">
+<hotelList>
+	<hotel>
+		<hotelCode>2343</hotelCode>
+		<name>Seralago Hotel and Suites</name>
+		<address>5678 West Irlo Bronson Memorial Highway</address>
+		<city>Kissimmee</city>
+		<stateProvince>Florida</stateProvince>
+		<country>USA</country>
+		<postalCode>34746</postalCode>
+		<rateCurrencyCode>USD</rateCurrencyCode>
+		<shortDescription>The Seralago Hotel and Suites Main Gate East is located in Kissimmee, FL, and stands adjacent to Kissimmee's Old Town. The hotel is positioned three miles from Disney's Main Gate, less than five miles from Disney's Hollywood Studios and seven miles from Downtown Disney and Epcot. A daily Resort Fee is payable by the guest upon check-in.</shortDescription>
+		<starRating>3star</starRating>
+		<thumbNailUrl>http://s3.amazonaws.com/rezgate-prod-sharedfiles/static/bonotel/Hotel_Images/2343/2343_Thumbnail_Image.JPG</thumbNailUrl>
+		<hotelUrl/>
+		<maintenance/>
+		<bookingPolicy/>
+<policyDescription><![CDATA[ <ul><li>Cancellations up to 4 days prior to arrival - No cancellation fee</li><li>Cancellations/No-Shows 0-4 days prior to arrival - One Night Cancellation Fee</li></ul>  <ul> <li>Rates are inclusive of resort fee</li></ul><p>Applicable cancellation fees are subject to change at&nbsp; time of cancellation. Please be advised that the cancellation policy listed is also subject to change without notice at any time. For any concerns regarding cancellation policies/fees please contact a Bonotel representative&rdquo;<br /></p><ul> </ul><p>This hotel cannot be modified.<br /></p> ]]></policyDescription>		<roomInformation>
+			<roomNo>1</roomNo>
+			<roomCode>158846</roomCode>
+			<roomTypeCode>10798</roomTypeCode>
+			<roomType>Double Poolview</roomType>
+		<roomDescription/>
+			<bedTypeCode>4</bedTypeCode>
+			<bedType>Double (Family Plan)</bedType>
+			<stdAdults>2</stdAdults>
+		<promotionCode/>
+			<confirmationType>CON</confirmationType>
+			<confirmationConditions/>
+			<rateInformation>
+				<ratePlanCode>1</ratePlanCode>
+				<ratePlan>Room Only</ratePlan>
+				<averageRate>54.14</averageRate>
+				<totalRate>270.72</totalRate>
+				<dailyRates>
+					<nightlyRate date="10-Sep-2021" dailyCondition="">
+  						<stdAdultRate>56.40</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>56.40</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="11-Sep-2021" dailyCondition="">
+  						<stdAdultRate>56.40</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>56.40</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="12-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="13-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="14-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+				</dailyRates>
+				<taxInformation>
+					<tax taxName="roomTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="salesTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="otherCharges">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+				</taxInformation>
+			</rateInformation>
+		</roomInformation>
+		<roomInformation>
+			<roomNo>1</roomNo>
+			<roomCode>158847</roomCode>
+			<roomTypeCode>10798</roomTypeCode>
+			<roomType>Double Poolview</roomType>
+		<roomDescription/>
+			<bedTypeCode>5</bedTypeCode>
+			<bedType>Triple </bedType>
+			<stdAdults>3</stdAdults>
+		<promotionCode/>
+			<confirmationType>CON</confirmationType>
+			<confirmationConditions/>
+			<rateInformation>
+				<ratePlanCode>1</ratePlanCode>
+				<ratePlan>Room Only</ratePlan>
+				<averageRate>54.14</averageRate>
+				<totalRate>270.72</totalRate>
+				<dailyRates>
+					<nightlyRate date="10-Sep-2021" dailyCondition="">
+  						<stdAdultRate>56.40</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>56.40</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="11-Sep-2021" dailyCondition="">
+  						<stdAdultRate>56.40</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>56.40</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="12-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="13-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="14-Sep-2021" dailyCondition="">
+  						<stdAdultRate>52.64</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>52.64</total>
+  						<rateCode/>
+  					</nightlyRate>
+				</dailyRates>
+				<taxInformation>
+					<tax taxName="roomTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="salesTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="otherCharges">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+				</taxInformation>
+			</rateInformation>
+		</roomInformation>
+		<roomInformation>
+			<roomNo>1</roomNo>
+			<roomCode>158841</roomCode>
+			<roomTypeCode>9113</roomTypeCode>
+			<roomType>Double Standard</roomType>
+		<roomDescription/>
+			<bedTypeCode>4</bedTypeCode>
+			<bedType>Double (Family Plan)</bedType>
+			<stdAdults>2</stdAdults>
+		<promotionCode/>
+			<confirmationType>CON</confirmationType>
+			<confirmationConditions/>
+			<rateInformation>
+				<ratePlanCode>1</ratePlanCode>
+				<ratePlan>Room Only</ratePlan>
+				<averageRate>45.12</averageRate>
+				<totalRate>225.60</totalRate>
+				<dailyRates>
+					<nightlyRate date="10-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="11-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="12-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="13-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="14-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+				</dailyRates>
+				<taxInformation>
+					<tax taxName="roomTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="salesTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="otherCharges">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+				</taxInformation>
+			</rateInformation>
+		</roomInformation>
+		<roomInformation>
+			<roomNo>1</roomNo>
+			<roomCode>158842</roomCode>
+			<roomTypeCode>9113</roomTypeCode>
+			<roomType>Double Standard</roomType>
+		<roomDescription/>
+			<bedTypeCode>5</bedTypeCode>
+			<bedType>Triple </bedType>
+			<stdAdults>3</stdAdults>
+		<promotionCode/>
+			<confirmationType>CON</confirmationType>
+			<confirmationConditions/>
+			<rateInformation>
+				<ratePlanCode>1</ratePlanCode>
+				<ratePlan>Room Only</ratePlan>
+				<averageRate>45.12</averageRate>
+				<totalRate>225.60</totalRate>
+				<dailyRates>
+					<nightlyRate date="10-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="11-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="12-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="13-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+					<nightlyRate date="14-Sep-2021" dailyCondition="">
+  						<stdAdultRate>45.12</stdAdultRate>
+  						<additionalAdultRate>0.00</additionalAdultRate>
+  						<total>45.12</total>
+  						<rateCode/>
+  					</nightlyRate>
+				</dailyRates>
+				<taxInformation>
+					<tax taxName="roomTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="salesTax">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+					<tax taxName="otherCharges">
+						<taxAmount>0.0</taxAmount>
+					</tax>
+				</taxInformation>
+			</rateInformation>
+		</roomInformation>
+	</hotel>
+</hotelList>
+</availabilityResponse>

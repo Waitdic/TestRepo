@@ -1,0 +1,159 @@
+﻿URL: http://towers.netstorming.net/kalima/call.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+  <header>
+    <actor>Imperatours</actor>
+    <user>xmluser</user>
+    <password>imperatxml</password>
+    <version>1.6.0</version>
+    <timestamp>
+    </timestamp>
+  </header>
+  <query type="availability" product="hotel">
+    <city code="MAD_12" />
+    <filters>
+      <filter>AVAILONLY</filter>
+    </filters>
+    <checkin date="2021-09-01" />
+    <checkout date="2021-09-06" />
+    <details>
+      <room type="sgl" required="1" />
+    </details>
+  </query>
+</envelope>
+
+URL: http://towers.netstorming.net/kalima/call.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+  <header>
+    <actor>Imperatours</actor>
+    <user>xmluser</user>
+    <password>imperatxml</password>
+    <version>1.6.0</version>
+    <timestamp>
+    </timestamp>
+  </header>
+  <query type="availability" product="hotel">
+    <city code="MAD_12" />
+    <filters>
+      <filter>AVAILONLY</filter>
+    </filters>
+    <checkin date="2021-09-01" />
+    <checkout date="2021-09-06" />
+    <details>
+      <room type="twn" required="1" />
+    </details>
+  </query>
+</envelope>
+
+URL: http://towers.netstorming.net/kalima/call.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+  <header>
+    <actor>Imperatours</actor>
+    <user>xmluser</user>
+    <password>imperatxml</password>
+    <version>1.6.0</version>
+    <timestamp>
+    </timestamp>
+  </header>
+  <query type="availability" product="hotel">
+    <city code="MAD_12" />
+    <filters>
+      <filter>AVAILONLY</filter>
+    </filters>
+    <checkin date="2021-09-01" />
+    <checkout date="2021-09-06" />
+    <details>
+      <room type="twn" required="1" />
+    </details>
+  </query>
+</envelope>
+
+URL: http://towers.netstorming.net/kalima/call.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+  <header>
+    <actor>Imperatours</actor>
+    <user>xmluser</user>
+    <password>imperatxml</password>
+    <version>1.6.0</version>
+    <timestamp>
+    </timestamp>
+  </header>
+  <query type="availability" product="hotel">
+    <city code="MAD_12" />
+    <filters>
+      <filter>AVAILONLY</filter>
+    </filters>
+    <checkin date="2021-09-01" />
+    <checkout date="2021-09-06" />
+    <details>
+      <room type="tsu" required="1" cot="true" />
+    </details>
+  </query>
+</envelope>
+
+URL: http://towers.netstorming.net/kalima/call.php
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<envelope>
+  <header>
+    <actor>Imperatours</actor>
+    <user>xmluser</user>
+    <password>imperatxml</password>
+    <version>1.6.0</version>
+    <timestamp>
+    </timestamp>
+  </header>
+  <query type="availability" product="hotel">
+    <city code="MAD_12" />
+    <filters>
+      <filter>AVAILONLY</filter>
+    </filters>
+    <checkin date="2021-09-01" />
+    <checkout date="2021-09-06" />
+    <details>
+      <room type="twn" required="1" cot="true" />
+    </details>
+  </query>
+</envelope>

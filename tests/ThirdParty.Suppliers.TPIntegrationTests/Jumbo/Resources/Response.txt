@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns0="http://xtravelsystem.com/v1_0rc1/hotel/types">
+  <env:Body>
+    <ns0:availableHotelsByMultiQueryV12Response>
+      <result>
+        <fromRow>0</fromRow>
+        <numRows>1000</numRows>
+        <totalRows>1</totalRows>
+        <availableHotels>
+          <moreCombinations>false</moreCombinations>
+          <establishment>
+            <address>
+              <address>C/Edgard Neville s/n. Ctra. N340 Km 173</address>
+              <cityCode>6</cityCode>
+              <cityName>MARBELLA</cityName>
+              <countryCode>ES</countryCode>
+              <countryName>SPAIN</countryName>
+              <email xsi:nil="1" />
+              <fax>+34952868172</fax>
+              <name xsi:nil="1" />
+              <stateCode>241</stateCode>
+              <stateName>MALAGA</stateName>
+              <telephone>+34952899404</telephone>
+              <zipCode>29660</zipCode>
+              <zoneCode xsi:nil="1" />
+              <zoneName xsi:nil="1" />
+            </address>
+            <categoryCode>6</categoryCode>
+            <categoryName>*****</categoryName>
+            <id>7172</id>
+            <imageUrl xsi:nil="1" />
+            <name>GRAN HOTEL GUADALPIN BANUS</name>
+            <shortDescription xsi:nil="1" />
+            <weight>0</weight>
+            <comments>
+              <from>2022-02-06T23:00:00.000Z</from>
+              <text>Reservation Info - COVID-19: Due to the current situation related to COVID-19 travel restrictions may change in time (visas, pcr test, documentation, quarantine, etc.) we recommend our clients to inform themselves of the measures and/or rules of their destination through official agencies before travel. It may be possible that not all amenities and services of the establishment and/or other providers will be available and/or operate in the normal way, we apologise in advance and must inform that no complaints will be  accepted due to these exceptional cases, also cancellations terms will not be altered and will remain as per original booking. We remind you to comply with all sanitary measures of COVID-19 during travel, both in and out of the establishment.</text>
+              <to>2022-02-12T23:00:00.000Z</to>
+              <type>ERRATA</type>
+            </comments>
+            <comments>
+              <from xsi:nil="1" />
+              <text>false</text>
+              <to xsi:nil="1" />
+              <type>Direct Client Payment</type>
+            </comments>
+          </establishment>
+          <roomCombinations>
+            <rooms>
+              <adults>1</adults>
+              <children>0</children>
+              <priceOfFirstNight xsi:nil="1" />
+              <quantity>1</quantity>
+              <typeCode>SGL</typeCode>
+              <typeName>SINGLE</typeName>
+            </rooms>
+            <prices xsi:type="ns0:PriceExtends">
+              <amount>
+                <currencyCode>EUR</currencyCode>
+                <value>632.36</value>
+              </amount>
+              <boardCategoryCode>BB</boardCategoryCode>
+              <boardTypeCode>BB</boardTypeCode>
+              <boardTypeName>BED &amp; BREAKFAST</boardTypeName>
+              <offer>false</offer>
+              <onRequest>false</onRequest>
+              <roomPrices>
+                <comments>
+                  <from>2017-11-30T23:00:00.000Z</from>
+                  <text>100.0%</text>
+                  <to>2039-12-30T23:00:00.000Z</to>
+                  <type>NO SHOW</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>cancellations@jumbotours.com</text>
+                  <to xsi:nil="1" />
+                  <type>Cancellation email</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>2 - 14.29%</text>
+                  <to xsi:nil="1" />
+                  <type>Cancellation term</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>722.5</text>
+                  <to xsi:nil="1" />
+                  <type>PVP / Binding retail price amount</type>
+                </comments>
+                <paxes>1</paxes>
+                <price>632.36</price>
+                <pricePerPaxAndNight>90.34</pricePerPaxAndNight>
+                <pricePerRoomAndNight>90.34</pricePerRoomAndNight>
+                <typeCode>SGL</typeCode>
+                <typeName>SINGLE</typeName>
+              </roomPrices>
+            </prices>
+            <prices xsi:type="ns0:PriceExtends">
+              <amount>
+                <currencyCode>EUR</currencyCode>
+                <value>775.6</value>
+              </amount>
+              <boardCategoryCode>HB</boardCategoryCode>
+              <boardTypeCode>HB</boardTypeCode>
+              <boardTypeName>HALF BOARD</boardTypeName>
+              <offer>false</offer>
+              <onRequest>false</onRequest>
+              <roomPrices>
+                <comments>
+                  <from>2017-11-30T23:00:00.000Z</from>
+                  <text>100.0%</text>
+                  <to>2039-12-30T23:00:00.000Z</to>
+                  <type>NO SHOW</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>cancellations@jumbotours.com</text>
+                  <to xsi:nil="1" />
+                  <type>Cancellation email</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>2 - 14.29%</text>
+                  <to xsi:nil="1" />
+                  <type>Cancellation term</type>
+                </comments>
+                <comments>
+                  <from xsi:nil="1" />
+                  <text>886.16</text>
+                  <to xsi:nil="1" />
+                  <type>PVP / Binding retail price amount</type>
+                </comments>
+                <paxes>1</paxes>
+                <price>775.6</price>
+                <pricePerPaxAndNight>110.8</pricePerPaxAndNight>
+                <pricePerRoomAndNight>110.8</pricePerRoomAndNight>
+                <typeCode>SGL</typeCode>
+                <typeName>SINGLE</typeName>
+              </roomPrices>
+            </prices>
+          </roomCombinations>
+        </availableHotels>
+      </result>
+    </ns0:availableHotelsByMultiQueryV12Response>
+  </env:Body>
+</env:Envelope>

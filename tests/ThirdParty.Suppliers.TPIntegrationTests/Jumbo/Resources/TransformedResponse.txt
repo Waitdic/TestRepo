@@ -1,0 +1,1 @@
+﻿<Results><Result MID="0" TPK="7172" CC="EUR" PRBID="1" RT="SINGLE" RTC="0" MBC="BB" AD="0" CH="0" hlpCHA="0" INF="0" AMT="632.36" TPR="SGL|BB" NRF="0" /><Result MID="0" TPK="7172" CC="EUR" PRBID="1" RT="SINGLE" RTC="0" MBC="HB" AD="0" CH="0" hlpCHA="0" INF="0" AMT="775.6" TPR="SGL|HB" NRF="0" /></Results>

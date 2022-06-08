@@ -1,0 +1,248 @@
+﻿URL: http://xml-uat.bookingengine.es/webservice/OTA_HotelAvail.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <OTA_HotelAvailService xmlns="http://www.opentravel.org/OTA/2003/05">
+      <OTA_HotelAvailRQ PrimaryLangID="en">
+        <POS>
+          <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+          </Source>
+        </POS>
+        <AvailRequestSegments>
+          <AvailRequestSegment>
+            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <RoomStayCandidates>
+              <RoomStayCandidate Quantity="1">
+                <GuestCounts>
+                  <GuestCount Age="40" Count="1" />
+                </GuestCounts>
+              </RoomStayCandidate>
+            </RoomStayCandidates>
+            <HotelSearchCriteria>
+              <Criterion>
+                <HotelRef HotelCode="102245" />
+                <TPA_Extensions>
+                  <ShowCatalogueData>1</ShowCatalogueData>
+                  <ForceCurrency>USD</ForceCurrency>
+                  <PaxCountry>GB</PaxCountry>
+                  <ShowBasicInfo>0</ShowBasicInfo>
+                  <ShowPromotions>0</ShowPromotions>
+                  <ShowOnlyAvailable>1</ShowOnlyAvailable>
+                </TPA_Extensions>
+              </Criterion>
+            </HotelSearchCriteria>
+          </AvailRequestSegment>
+        </AvailRequestSegments>
+      </OTA_HotelAvailRQ>
+    </OTA_HotelAvailService>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice/OTA_HotelAvail.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <OTA_HotelAvailService xmlns="http://www.opentravel.org/OTA/2003/05">
+      <OTA_HotelAvailRQ PrimaryLangID="en">
+        <POS>
+          <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+          </Source>
+        </POS>
+        <AvailRequestSegments>
+          <AvailRequestSegment>
+            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <RoomStayCandidates>
+              <RoomStayCandidate Quantity="1">
+                <GuestCounts>
+                  <GuestCount Age="40" Count="2" />
+                </GuestCounts>
+              </RoomStayCandidate>
+            </RoomStayCandidates>
+            <HotelSearchCriteria>
+              <Criterion>
+                <HotelRef HotelCode="102245" />
+                <TPA_Extensions>
+                  <ShowCatalogueData>1</ShowCatalogueData>
+                  <ForceCurrency>USD</ForceCurrency>
+                  <PaxCountry>GB</PaxCountry>
+                  <ShowBasicInfo>0</ShowBasicInfo>
+                  <ShowPromotions>0</ShowPromotions>
+                  <ShowOnlyAvailable>1</ShowOnlyAvailable>
+                </TPA_Extensions>
+              </Criterion>
+            </HotelSearchCriteria>
+          </AvailRequestSegment>
+        </AvailRequestSegments>
+      </OTA_HotelAvailRQ>
+    </OTA_HotelAvailService>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice/OTA_HotelAvail.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <OTA_HotelAvailService xmlns="http://www.opentravel.org/OTA/2003/05">
+      <OTA_HotelAvailRQ PrimaryLangID="en">
+        <POS>
+          <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+          </Source>
+        </POS>
+        <AvailRequestSegments>
+          <AvailRequestSegment>
+            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <RoomStayCandidates>
+              <RoomStayCandidate Quantity="1">
+                <GuestCounts>
+                  <GuestCount Age="40" Count="1" />
+                  <GuestCount Age="8" Count="1" />
+                </GuestCounts>
+              </RoomStayCandidate>
+            </RoomStayCandidates>
+            <HotelSearchCriteria>
+              <Criterion>
+                <HotelRef HotelCode="102245" />
+                <TPA_Extensions>
+                  <ShowCatalogueData>1</ShowCatalogueData>
+                  <ForceCurrency>USD</ForceCurrency>
+                  <PaxCountry>GB</PaxCountry>
+                  <ShowBasicInfo>0</ShowBasicInfo>
+                  <ShowPromotions>0</ShowPromotions>
+                  <ShowOnlyAvailable>1</ShowOnlyAvailable>
+                </TPA_Extensions>
+              </Criterion>
+            </HotelSearchCriteria>
+          </AvailRequestSegment>
+        </AvailRequestSegments>
+      </OTA_HotelAvailRQ>
+    </OTA_HotelAvailService>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice/OTA_HotelAvail.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <OTA_HotelAvailService xmlns="http://www.opentravel.org/OTA/2003/05">
+      <OTA_HotelAvailRQ PrimaryLangID="en">
+        <POS>
+          <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+          </Source>
+        </POS>
+        <AvailRequestSegments>
+          <AvailRequestSegment>
+            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <RoomStayCandidates>
+              <RoomStayCandidate Quantity="1">
+                <GuestCounts>
+                  <GuestCount Age="40" Count="1" />
+                  <GuestCount Age="0" Count="1" />
+                </GuestCounts>
+              </RoomStayCandidate>
+            </RoomStayCandidates>
+            <HotelSearchCriteria>
+              <Criterion>
+                <HotelRef HotelCode="102245" />
+                <TPA_Extensions>
+                  <ShowCatalogueData>1</ShowCatalogueData>
+                  <ForceCurrency>USD</ForceCurrency>
+                  <PaxCountry>GB</PaxCountry>
+                  <ShowBasicInfo>0</ShowBasicInfo>
+                  <ShowPromotions>0</ShowPromotions>
+                  <ShowOnlyAvailable>1</ShowOnlyAvailable>
+                </TPA_Extensions>
+              </Criterion>
+            </HotelSearchCriteria>
+          </AvailRequestSegment>
+        </AvailRequestSegments>
+      </OTA_HotelAvailRQ>
+    </OTA_HotelAvailService>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice/OTA_HotelAvail.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Body>
+    <OTA_HotelAvailService xmlns="http://www.opentravel.org/OTA/2003/05">
+      <OTA_HotelAvailRQ PrimaryLangID="en">
+        <POS>
+          <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+          </Source>
+        </POS>
+        <AvailRequestSegments>
+          <AvailRequestSegment>
+            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <RoomStayCandidates>
+              <RoomStayCandidate Quantity="1">
+                <GuestCounts>
+                  <GuestCount Age="40" Count="1" />
+                  <GuestCount Age="0" Count="1" />
+                  <GuestCount Age="8" Count="1" />
+                </GuestCounts>
+              </RoomStayCandidate>
+            </RoomStayCandidates>
+            <HotelSearchCriteria>
+              <Criterion>
+                <HotelRef HotelCode="102245" />
+                <TPA_Extensions>
+                  <ShowCatalogueData>1</ShowCatalogueData>
+                  <ForceCurrency>USD</ForceCurrency>
+                  <PaxCountry>GB</PaxCountry>
+                  <ShowBasicInfo>0</ShowBasicInfo>
+                  <ShowPromotions>0</ShowPromotions>
+                  <ShowOnlyAvailable>1</ShowOnlyAvailable>
+                </TPA_Extensions>
+              </Criterion>
+            </HotelSearchCriteria>
+          </AvailRequestSegment>
+        </AvailRequestSegments>
+      </OTA_HotelAvailRQ>
+    </OTA_HotelAvailService>
+  </soap:Body>
+</soap:Envelope>

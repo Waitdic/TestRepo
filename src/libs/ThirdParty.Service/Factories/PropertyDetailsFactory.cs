@@ -59,7 +59,7 @@
         {
             PropertyDetails propertyDetails = new PropertyDetails();
 
-            var propertyToken = await _tokenService.DecodePropertyToken(request.BookingToken);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken);
             
             if (propertyToken != null)
             {
@@ -190,7 +190,7 @@
             var propertyDetails = new PropertyDetails();
 
             var leadCustomer = request.LeadCustomer;
-            var propertyToken = await _tokenService.DecodePropertyToken(request.BookingToken);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken);
 
             if (propertyToken != null)
             {
@@ -316,8 +316,8 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookToken(request.BookingToken);
-            var propertyToken = await _tokenService.DecodePropertyToken(request.BookingToken);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken);
 
             if (token != null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {
@@ -353,8 +353,8 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookToken(request.BookingToken);
-            var propertyToken = await _tokenService.DecodePropertyToken(request.BookingToken);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken);
 
             if (token != null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {

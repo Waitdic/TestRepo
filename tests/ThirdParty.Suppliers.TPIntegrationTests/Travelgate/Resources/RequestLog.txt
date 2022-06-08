@@ -1,0 +1,79 @@
+﻿URL: http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc
+
+**HEADERS**
+
+Content-Type: application/json
+Host: intesb.axisdata.net:54321
+Content-Length: 798
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns = "http://schemas.xmltravelgate.com/hub/2012/06" xmlns:wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><soapenv:Header><wsse:Security><wsse:UsernameToken><wsse:Username>bookabed</wsse:Username><wsse:Password>3ZpxW61D49</wsse:Password></wsse:UsernameToken></wsse:Security></soapenv:Header><soapenv:Body><ns:Avail><ns:availRQ><ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds><ns:version>1</ns:version><ns:providerRQs><ns:ProviderRQ><ns:code>OV2</ns:code><ns:id>1</ns:id><ns:rqXML><AvailRQ><timeoutMilliseconds>20000</timeoutMilliseconds><source><languageCode>en</languageCode></source><filterAuditData><registerTransactions>false</registerTransactions></filterAuditData><Configuration><User>18608</User><Password>1737</Password><UrlReservation></UrlReservation><UrlGeneric>http://test.viajesolympia.com/services/service.asmx</UrlGeneric><UrlAvail></UrlAvail><UrlValuation></UrlValuation></Configuration><OnRequest>false</OnRequest><AvailDestinations><Destination type = "HOT" code = "102245"/></AvailDestinations><StartDate>01/09/2021</StartDate><EndDate>06/09/2021</EndDate><Currency>EUR</Currency><Nationality>ES</Nationality><Markets><Market>ES</Market></Markets><Markets><Market>ES</Market></Markets><RoomCandidates><RoomCandidate id = "1"><Paxes><Pax age = "30" id = "1"/></Paxes></RoomCandidate></RoomCandidates></AvailRQ></ns:rqXML></ns:ProviderRQ></ns:providerRQs></ns:availRQ></ns:Avail></soapenv:Body></soapenv:Envelope>
+
+URL: http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc
+
+**HEADERS**
+
+Content-Type: application/json
+Host: intesb.axisdata.net:54321
+Content-Length: 798
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns = "http://schemas.xmltravelgate.com/hub/2012/06" xmlns:wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><soapenv:Header><wsse:Security><wsse:UsernameToken><wsse:Username>bookabed</wsse:Username><wsse:Password>3ZpxW61D49</wsse:Password></wsse:UsernameToken></wsse:Security></soapenv:Header><soapenv:Body><ns:Avail><ns:availRQ><ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds><ns:version>1</ns:version><ns:providerRQs><ns:ProviderRQ><ns:code>OV2</ns:code><ns:id>1</ns:id><ns:rqXML><AvailRQ><timeoutMilliseconds>20000</timeoutMilliseconds><source><languageCode>en</languageCode></source><filterAuditData><registerTransactions>false</registerTransactions></filterAuditData><Configuration><User>18608</User><Password>1737</Password><UrlReservation></UrlReservation><UrlGeneric>http://test.viajesolympia.com/services/service.asmx</UrlGeneric><UrlAvail></UrlAvail><UrlValuation></UrlValuation></Configuration><OnRequest>false</OnRequest><AvailDestinations><Destination type = "HOT" code = "102245"/></AvailDestinations><StartDate>01/09/2021</StartDate><EndDate>06/09/2021</EndDate><Currency>EUR</Currency><Nationality>ES</Nationality><Markets><Market>ES</Market></Markets><Markets><Market>ES</Market></Markets><RoomCandidates><RoomCandidate id = "1"><Paxes><Pax age = "30" id = "1"/><Pax age = "30" id = "2"/></Paxes></RoomCandidate></RoomCandidates></AvailRQ></ns:rqXML></ns:ProviderRQ></ns:providerRQs></ns:availRQ></ns:Avail></soapenv:Body></soapenv:Envelope>
+
+URL: http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc
+
+**HEADERS**
+
+Content-Type: application/json
+Host: intesb.axisdata.net:54321
+Content-Length: 798
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns = "http://schemas.xmltravelgate.com/hub/2012/06" xmlns:wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><soapenv:Header><wsse:Security><wsse:UsernameToken><wsse:Username>bookabed</wsse:Username><wsse:Password>3ZpxW61D49</wsse:Password></wsse:UsernameToken></wsse:Security></soapenv:Header><soapenv:Body><ns:Avail><ns:availRQ><ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds><ns:version>1</ns:version><ns:providerRQs><ns:ProviderRQ><ns:code>OV2</ns:code><ns:id>1</ns:id><ns:rqXML><AvailRQ><timeoutMilliseconds>20000</timeoutMilliseconds><source><languageCode>en</languageCode></source><filterAuditData><registerTransactions>false</registerTransactions></filterAuditData><Configuration><User>18608</User><Password>1737</Password><UrlReservation></UrlReservation><UrlGeneric>http://test.viajesolympia.com/services/service.asmx</UrlGeneric><UrlAvail></UrlAvail><UrlValuation></UrlValuation></Configuration><OnRequest>false</OnRequest><AvailDestinations><Destination type = "HOT" code = "102245"/></AvailDestinations><StartDate>01/09/2021</StartDate><EndDate>06/09/2021</EndDate><Currency>EUR</Currency><Nationality>ES</Nationality><Markets><Market>ES</Market></Markets><Markets><Market>ES</Market></Markets><RoomCandidates><RoomCandidate id = "1"><Paxes><Pax age = "30" id = "1"/><Pax age = "8" id = "2"/></Paxes></RoomCandidate></RoomCandidates></AvailRQ></ns:rqXML></ns:ProviderRQ></ns:providerRQs></ns:availRQ></ns:Avail></soapenv:Body></soapenv:Envelope>
+
+URL: http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc
+
+**HEADERS**
+
+Content-Type: application/json
+Host: intesb.axisdata.net:54321
+Content-Length: 798
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns = "http://schemas.xmltravelgate.com/hub/2012/06" xmlns:wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><soapenv:Header><wsse:Security><wsse:UsernameToken><wsse:Username>bookabed</wsse:Username><wsse:Password>3ZpxW61D49</wsse:Password></wsse:UsernameToken></wsse:Security></soapenv:Header><soapenv:Body><ns:Avail><ns:availRQ><ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds><ns:version>1</ns:version><ns:providerRQs><ns:ProviderRQ><ns:code>OV2</ns:code><ns:id>1</ns:id><ns:rqXML><AvailRQ><timeoutMilliseconds>20000</timeoutMilliseconds><source><languageCode>en</languageCode></source><filterAuditData><registerTransactions>false</registerTransactions></filterAuditData><Configuration><User>18608</User><Password>1737</Password><UrlReservation></UrlReservation><UrlGeneric>http://test.viajesolympia.com/services/service.asmx</UrlGeneric><UrlAvail></UrlAvail><UrlValuation></UrlValuation></Configuration><OnRequest>false</OnRequest><AvailDestinations><Destination type = "HOT" code = "102245"/></AvailDestinations><StartDate>01/09/2021</StartDate><EndDate>06/09/2021</EndDate><Currency>EUR</Currency><Nationality>ES</Nationality><Markets><Market>ES</Market></Markets><Markets><Market>ES</Market></Markets><RoomCandidates><RoomCandidate id = "1"><Paxes><Pax age = "30" id = "1"/><Pax age = "1" id = "2"/></Paxes></RoomCandidate></RoomCandidates></AvailRQ></ns:rqXML></ns:ProviderRQ></ns:providerRQs></ns:availRQ></ns:Avail></soapenv:Body></soapenv:Envelope>
+
+URL: http://hubpublic.xmltravelgate.com/Service/Travel/v2/Hotel.svc
+
+**HEADERS**
+
+Content-Type: application/json
+Host: intesb.axisdata.net:54321
+Content-Length: 798
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:soapenv = "http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns = "http://schemas.xmltravelgate.com/hub/2012/06" xmlns:wsse = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><soapenv:Header><wsse:Security><wsse:UsernameToken><wsse:Username>bookabed</wsse:Username><wsse:Password>3ZpxW61D49</wsse:Password></wsse:UsernameToken></wsse:Security></soapenv:Header><soapenv:Body><ns:Avail><ns:availRQ><ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds><ns:version>1</ns:version><ns:providerRQs><ns:ProviderRQ><ns:code>OV2</ns:code><ns:id>1</ns:id><ns:rqXML><AvailRQ><timeoutMilliseconds>20000</timeoutMilliseconds><source><languageCode>en</languageCode></source><filterAuditData><registerTransactions>false</registerTransactions></filterAuditData><Configuration><User>18608</User><Password>1737</Password><UrlReservation></UrlReservation><UrlGeneric>http://test.viajesolympia.com/services/service.asmx</UrlGeneric><UrlAvail></UrlAvail><UrlValuation></UrlValuation></Configuration><OnRequest>false</OnRequest><AvailDestinations><Destination type = "HOT" code = "102245"/></AvailDestinations><StartDate>01/09/2021</StartDate><EndDate>06/09/2021</EndDate><Currency>EUR</Currency><Nationality>ES</Nationality><Markets><Market>ES</Market></Markets><Markets><Market>ES</Market></Markets><RoomCandidates><RoomCandidate id = "1"><Paxes><Pax age = "30" id = "1"/><Pax age = "8" id = "2"/><Pax age = "1" id = "3"/></Paxes></RoomCandidate></RoomCandidates></AvailRQ></ns:rqXML></ns:ProviderRQ></ns:providerRQs></ns:availRQ></ns:Avail></soapenv:Body></soapenv:Envelope>

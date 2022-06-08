@@ -1,0 +1,298 @@
+﻿URL: http://us.dotwconnect.com/gateway.dotw
+
+**HEADERS**
+
+Timeout: -1
+
+
+**REQUEST**
+
+<customer>
+  <username>TestUserName</username>
+  <password>098f6bcd4621d373cade4e832627b4f6</password>
+  <id>672245</id>
+  <source>1</source>
+  <product>hotel</product>
+  <request command="searchhotels" debug="0">
+    <bookingDetails>
+      <fromDate>2021-09-01</fromDate>
+      <toDate>2021-09-06</toDate>
+      <currency>100</currency>
+      <rooms no="1">
+        <room runno="0">
+          <adultsCode>1</adultsCode>
+          <children no="0">
+          </children>
+          <extraBed>0</extraBed>
+          <rateBasis>-1</rateBasis>
+          <passengerNationality>100</passengerNationality>
+          <passengerCountryOfResidence>100</passengerCountryOfResidence>
+        </room>
+      </rooms>
+    </bookingDetails>
+    <return>
+      <sorting order="asc">sortByPrice</sorting>
+      <getRooms>true</getRooms>
+      <filters xmlns:a="http://us.dotwconnect.com/xsd/atomicCondition" xmlns:c="http://us.dotwconnect.com/xsd/complexCondition">
+        <city>15304</city>
+        <nearbyCities>false</nearbyCities>
+        <c:condition>
+          <a:condition>
+            <fieldName>onRequest</fieldName>
+            <fieldTest>equals</fieldTest>
+            <fieldValues>
+              <fieldValue>0</fieldValue>
+            </fieldValues>
+          </a:condition>
+        </c:condition>
+      </filters>
+      <fields>
+        <field>hotelName</field>
+        <field>noOfRooms</field>
+        <roomField>name</roomField>
+        <roomField>including</roomField>
+        <roomField>minStay</roomField>
+      </fields>
+    </return>
+  </request>
+</customer>
+
+URL: http://us.dotwconnect.com/gateway.dotw
+
+**HEADERS**
+
+Timeout: -1
+
+
+**REQUEST**
+
+<customer>
+  <username>TestUserName</username>
+  <password>098f6bcd4621d373cade4e832627b4f6</password>
+  <id>672245</id>
+  <source>1</source>
+  <product>hotel</product>
+  <request command="searchhotels" debug="0">
+    <bookingDetails>
+      <fromDate>2021-09-01</fromDate>
+      <toDate>2021-09-06</toDate>
+      <currency>100</currency>
+      <rooms no="1">
+        <room runno="0">
+          <adultsCode>2</adultsCode>
+          <children no="0">
+          </children>
+          <extraBed>0</extraBed>
+          <rateBasis>-1</rateBasis>
+          <passengerNationality>100</passengerNationality>
+          <passengerCountryOfResidence>100</passengerCountryOfResidence>
+        </room>
+      </rooms>
+    </bookingDetails>
+    <return>
+      <sorting order="asc">sortByPrice</sorting>
+      <getRooms>true</getRooms>
+      <filters xmlns:a="http://us.dotwconnect.com/xsd/atomicCondition" xmlns:c="http://us.dotwconnect.com/xsd/complexCondition">
+        <city>15304</city>
+        <nearbyCities>false</nearbyCities>
+        <c:condition>
+          <a:condition>
+            <fieldName>onRequest</fieldName>
+            <fieldTest>equals</fieldTest>
+            <fieldValues>
+              <fieldValue>0</fieldValue>
+            </fieldValues>
+          </a:condition>
+        </c:condition>
+      </filters>
+      <fields>
+        <field>hotelName</field>
+        <field>noOfRooms</field>
+        <roomField>name</roomField>
+        <roomField>including</roomField>
+        <roomField>minStay</roomField>
+      </fields>
+    </return>
+  </request>
+</customer>
+
+URL: http://us.dotwconnect.com/gateway.dotw
+
+**HEADERS**
+
+Timeout: -1
+
+
+**REQUEST**
+
+<customer>
+  <username>TestUserName</username>
+  <password>098f6bcd4621d373cade4e832627b4f6</password>
+  <id>672245</id>
+  <source>1</source>
+  <product>hotel</product>
+  <request command="searchhotels" debug="0">
+    <bookingDetails>
+      <fromDate>2021-09-01</fromDate>
+      <toDate>2021-09-06</toDate>
+      <currency>100</currency>
+      <rooms no="1">
+        <room runno="0">
+          <adultsCode>1</adultsCode>
+          <children no="1">
+            <child runno="0">8</child>
+          </children>
+          <extraBed>0</extraBed>
+          <rateBasis>-1</rateBasis>
+          <passengerNationality>100</passengerNationality>
+          <passengerCountryOfResidence>100</passengerCountryOfResidence>
+        </room>
+      </rooms>
+    </bookingDetails>
+    <return>
+      <sorting order="asc">sortByPrice</sorting>
+      <getRooms>true</getRooms>
+      <filters xmlns:a="http://us.dotwconnect.com/xsd/atomicCondition" xmlns:c="http://us.dotwconnect.com/xsd/complexCondition">
+        <city>15304</city>
+        <nearbyCities>false</nearbyCities>
+        <c:condition>
+          <a:condition>
+            <fieldName>onRequest</fieldName>
+            <fieldTest>equals</fieldTest>
+            <fieldValues>
+              <fieldValue>0</fieldValue>
+            </fieldValues>
+          </a:condition>
+        </c:condition>
+      </filters>
+      <fields>
+        <field>hotelName</field>
+        <field>noOfRooms</field>
+        <roomField>name</roomField>
+        <roomField>including</roomField>
+        <roomField>minStay</roomField>
+      </fields>
+    </return>
+  </request>
+</customer>
+
+URL: http://us.dotwconnect.com/gateway.dotw
+
+**HEADERS**
+
+Timeout: -1
+
+
+**REQUEST**
+
+<customer>
+  <username>TestUserName</username>
+  <password>098f6bcd4621d373cade4e832627b4f6</password>
+  <id>672245</id>
+  <source>1</source>
+  <product>hotel</product>
+  <request command="searchhotels" debug="0">
+    <bookingDetails>
+      <fromDate>2021-09-01</fromDate>
+      <toDate>2021-09-06</toDate>
+      <currency>100</currency>
+      <rooms no="1">
+        <room runno="0">
+          <adultsCode>1</adultsCode>
+          <children no="1">
+            <child runno="0">1</child>
+          </children>
+          <extraBed>0</extraBed>
+          <rateBasis>-1</rateBasis>
+          <passengerNationality>100</passengerNationality>
+          <passengerCountryOfResidence>100</passengerCountryOfResidence>
+        </room>
+      </rooms>
+    </bookingDetails>
+    <return>
+      <sorting order="asc">sortByPrice</sorting>
+      <getRooms>true</getRooms>
+      <filters xmlns:a="http://us.dotwconnect.com/xsd/atomicCondition" xmlns:c="http://us.dotwconnect.com/xsd/complexCondition">
+        <city>15304</city>
+        <nearbyCities>false</nearbyCities>
+        <c:condition>
+          <a:condition>
+            <fieldName>onRequest</fieldName>
+            <fieldTest>equals</fieldTest>
+            <fieldValues>
+              <fieldValue>0</fieldValue>
+            </fieldValues>
+          </a:condition>
+        </c:condition>
+      </filters>
+      <fields>
+        <field>hotelName</field>
+        <field>noOfRooms</field>
+        <roomField>name</roomField>
+        <roomField>including</roomField>
+        <roomField>minStay</roomField>
+      </fields>
+    </return>
+  </request>
+</customer>
+
+URL: http://us.dotwconnect.com/gateway.dotw
+
+**HEADERS**
+
+Timeout: -1
+
+
+**REQUEST**
+
+<customer>
+  <username>TestUserName</username>
+  <password>098f6bcd4621d373cade4e832627b4f6</password>
+  <id>672245</id>
+  <source>1</source>
+  <product>hotel</product>
+  <request command="searchhotels" debug="0">
+    <bookingDetails>
+      <fromDate>2021-09-01</fromDate>
+      <toDate>2021-09-06</toDate>
+      <currency>100</currency>
+      <rooms no="1">
+        <room runno="0">
+          <adultsCode>1</adultsCode>
+          <children no="2">
+            <child runno="0">8</child>
+            <child runno="1">1</child>
+          </children>
+          <extraBed>0</extraBed>
+          <rateBasis>-1</rateBasis>
+          <passengerNationality>100</passengerNationality>
+          <passengerCountryOfResidence>100</passengerCountryOfResidence>
+        </room>
+      </rooms>
+    </bookingDetails>
+    <return>
+      <sorting order="asc">sortByPrice</sorting>
+      <getRooms>true</getRooms>
+      <filters xmlns:a="http://us.dotwconnect.com/xsd/atomicCondition" xmlns:c="http://us.dotwconnect.com/xsd/complexCondition">
+        <city>15304</city>
+        <nearbyCities>false</nearbyCities>
+        <c:condition>
+          <a:condition>
+            <fieldName>onRequest</fieldName>
+            <fieldTest>equals</fieldTest>
+            <fieldValues>
+              <fieldValue>0</fieldValue>
+            </fieldValues>
+          </a:condition>
+        </c:condition>
+      </filters>
+      <fields>
+        <field>hotelName</field>
+        <field>noOfRooms</field>
+        <roomField>name</roomField>
+        <roomField>including</roomField>
+        <roomField>minStay</roomField>
+      </fields>
+    </return>
+  </request>
+</customer>
