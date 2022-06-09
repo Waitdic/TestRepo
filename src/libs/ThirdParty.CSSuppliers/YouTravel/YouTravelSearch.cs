@@ -185,8 +185,16 @@
 
             string tpKey = oHotel.ID;
             results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_1.Room, 1, sCurrencyCode, tpKey, sSessionId));
+
+            if (oHotel.Room_2 is not null)
+            {
             results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_2.Room, 2, sCurrencyCode, tpKey, sSessionId));
+            }
+
+            if (oHotel.Room_3 is not null)
+            {
             results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_3.Room, 3, sCurrencyCode, tpKey, sSessionId));
+            }
 
             return results;
         }
