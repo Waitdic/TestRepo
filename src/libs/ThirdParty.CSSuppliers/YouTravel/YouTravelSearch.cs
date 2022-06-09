@@ -19,10 +19,13 @@
     {
         #region Constructor
 
-        public YouTravelSearch(IYouTravelSettings settings, ITPSupport support, ISerializer serializer)
+        private readonly IYouTravelSettings _settings;
+
+        private readonly ISerializer _serializer;
+
+        public YouTravelSearch(IYouTravelSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
@@ -30,184 +33,174 @@
 
         #region Properties
 
-        private readonly IYouTravelSettings _settings;
-
-        private readonly ITPSupport _support;
-
-        private readonly ISerializer _serializer;
-
         public string Source => ThirdParties.YOUTRAVEL;
 
         #endregion
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails)
         {
-
-            bool bRestrictions = false;
+            bool restrictions = false;
 
             // no more than 3 rooms allowed
-            if (oSearchDetails.RoomDetails.Count > 3)
+            if (searchDetails.RoomDetails.Count > 3)
             {
-                bRestrictions = true;
+                restrictions = true;
             }
 
-            return bRestrictions;
-
+            return restrictions;
         }
 
         #endregion
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-
-            var oRequests = new List<Request>();
+            var requests = new List<Request>();
 
             // if a single resort do that, else find distinct destination and loop through these
-            var oURLs = new RequestURLs();
+            var urls = new RequestURLs();
 
-            if (oResortSplits.Count == 1)
+            if (resortSplits.Count == 1)
             {
-                if (oResortSplits[0].Hotels.Count == 1)
+                if (resortSplits[0].Hotels.Count == 1)
                 {
-                    string sHotelCode = oResortSplits[0].Hotels[0].TPKey;
-                    string sHotelURL = _settings.get_SearchURL(oSearchDetails) + string.Format("?HID={0}", sHotelCode);
-                    oURLs.Add(sHotelURL, "HID", sHotelCode);
+                    string hotelCode = resortSplits[0].Hotels[0].TPKey;
+                    string hotelURL = _settings.get_SearchURL(searchDetails) + string.Format("?HID={0}", hotelCode);
+                    urls.Add(hotelURL, "HID", hotelCode);
                 }
 
-                string sResortCode = oResortSplits[0].ResortCode.Split('_')[1];
-                string sResortURL = _settings.get_SearchURL(oSearchDetails) + string.Format("?RSRT={0}", sResortCode);
-                oURLs.Add(sResortURL, "RSRT", sResortCode);
+                string resortCode = resortSplits[0].ResortCode.Split('_')[1];
+                string resortURL = _settings.get_SearchURL(searchDetails) + string.Format("?RSRT={0}", resortCode);
+                urls.Add(resortURL, "RSRT", resortCode);
             }
-
             else
             {
-                var oDestinations = YouTravelSupport.GetDistinctDestinations(oResortSplits);
-                foreach (string sDestination in oDestinations)
+                var destinations = YouTravelSupport.GetDistinctDestinations(resortSplits);
+                foreach (string destination in destinations)
                 {
-                    string sDestinationURL = _settings.get_SearchURL(oSearchDetails) + string.Format("?DSTN={0}", sDestination);
-                    oURLs.Add(sDestinationURL, "DSTN", sDestination);
+                    string destinationURL = _settings.get_SearchURL(searchDetails) + string.Format("?DSTN={0}", destination);
+                    urls.Add(destinationURL, "DSTN", destination);
                 }
             }
 
             // build string with addition critera (dates, passengers)
-            var sbSuffix = new StringBuilder();
-            sbSuffix.AppendFormat("&LangID={0}", _settings.get_LangID(oSearchDetails));
-            sbSuffix.AppendFormat("&Username={0}", _settings.get_Username(oSearchDetails));
-            sbSuffix.AppendFormat("&Password={0}", _settings.get_Password(oSearchDetails));
-            sbSuffix.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(oSearchDetails.PropertyArrivalDate));
-            sbSuffix.AppendFormat("&Nights={0}", oSearchDetails.PropertyDuration);
-            sbSuffix.AppendFormat("&Rooms={0}", oSearchDetails.Rooms);
-
+            var sb = new StringBuilder();
+            sb.AppendFormat("&LangID={0}", _settings.get_LangID(searchDetails));
+            sb.AppendFormat("&Username={0}", _settings.get_Username(searchDetails));
+            sb.AppendFormat("&Password={0}", _settings.get_Password(searchDetails));
+            sb.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(searchDetails.PropertyArrivalDate));
+            sb.AppendFormat("&Nights={0}", searchDetails.PropertyDuration);
+            sb.AppendFormat("&Rooms={0}", searchDetails.Rooms);
 
             // adults and children
-            int iRoomIndex = 0;
-            foreach (RoomDetail oRoom in oSearchDetails.RoomDetails)
+            int roomIndex = 0;
+            foreach (var room in searchDetails.RoomDetails)
             {
-                iRoomIndex += 1;
-                sbSuffix.AppendFormat("&ADLTS_{0}={1}", iRoomIndex, oRoom.Adults);
+                roomIndex += 1;
+                sb.AppendFormat("&ADLTS_{0}={1}", roomIndex, room.Adults);
 
-                if (oRoom.Children + oRoom.Infants > 0)
+                if (room.Children + room.Infants > 0)
                 {
-                    sbSuffix.AppendFormat("&CHILD_{0}={1}", iRoomIndex, oRoom.Children + oRoom.Infants);
+                    sb.AppendFormat("&CHILD_{0}={1}", roomIndex, room.Children + room.Infants);
                     int iChildCount = 1;
-                    foreach (int iChildAge in oRoom.ChildAndInfantAges(1))
+                    foreach (int iChildAge in room.ChildAndInfantAges(1))
                     {
-                        sbSuffix.AppendFormat("&ChildAgeR{0}C{1}={2}", iRoomIndex, iChildCount, iChildAge);
+                        sb.AppendFormat("&ChildAgeR{0}C{1}={2}", roomIndex, iChildCount, iChildAge);
                         iChildCount += 1;
                     }
                 }
             }
-            sbSuffix.Append("&CanxPol=1");
+            sb.Append("&CanxPol=1");
 
-            foreach (RequestURL oURL in oURLs)
+            foreach (var url in urls)
             {
                 // set a unique code. if the is one request we only need the source name
-                string sUniqueCode = Source;
-                if (oURLs.Count > 1)
-                    sUniqueCode = oURL.UniqueRequestID(Source);
+                string uniqueCode = Source;
+                if (urls.Count > 1)
+                {
+                    uniqueCode = url.UniqueRequestID(Source);
+                }
 
                 var request = new Request
                 {
-                    EndPoint = oURL.URL + sbSuffix.ToString(),
+                    EndPoint = url.URL + sb.ToString(),
                     Method = eRequestMethod.GET,
-                    ExtraInfo = new SearchExtraHelper(oSearchDetails, sUniqueCode)
+                    ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode)
                 };
 
-                oRequests.Add(request);
-
+                requests.Add(request);
             }
 
-            return oRequests;
+            return requests;
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-
-            var results = oRequests.Select(o => _serializer.DeSerialize<YouTravelSearchResponse>(o.ResponseXML));
+            var results = requests.Select(o => _serializer.DeSerialize<YouTravelSearchResponse>(_serializer.CleanXmlNamespaces(o.ResponseXML)));
             var sessions = results.Where(o => o.Success.ToSafeBoolean()).Select(o => o.session).ToList();
 
-            var oTransformedResults = new TransformedResultCollection();
+            var transformedResults = new TransformedResultCollection();
 
-            oTransformedResults.TransformedResults.AddRange(sessions.SelectMany(o => CreateTransformedResponse(o)));
+            transformedResults.TransformedResults.AddRange(sessions.SelectMany(o => CreateTransformedResponse(o)));
 
-            if (oSearchDetails.StarRating is not null)
+            if (searchDetails.StarRating is not null)
             {
-                oSearchDetails.StarRating = oSearchDetails.StarRating.Replace("+", "");
+                searchDetails.StarRating = searchDetails.StarRating.Replace("+", "");
             }
 
-            return oTransformedResults;
-
+            return transformedResults;
         }
 
-        private List<TransformedResult> CreateTransformedResponse(Session oSession)
+        private List<TransformedResult> CreateTransformedResponse(Session session)
         {
             var results = new List<TransformedResult>();
 
-            string currencyCode = oSession.Currency;
-            string sessionId = oSession.id;
-            results.AddRange(oSession.Hotel.SelectMany(o => CreateHotelResults(o, currencyCode, sessionId)));
+            string currencyCode = session.Currency;
+            string sessionId = session.id;
+            results.AddRange(session.Hotel.SelectMany(o => CreateHotelResults(o, currencyCode, sessionId)));
 
             return results;
         }
 
-        private List<TransformedResult> CreateHotelResults(Hotel oHotel, string sCurrencyCode, string sSessionId)
+        private List<TransformedResult> CreateHotelResults(Hotel hotel, string currencyCode, string sessionId)
         {
             var results = new List<TransformedResult>();
 
-            string tpKey = oHotel.ID;
-            results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_1.Room, 1, sCurrencyCode, tpKey, sSessionId));
+            string tpKey = hotel.ID;
+            results.AddRange(CreateRoomsFromRoomResultCollection(hotel.Room_1.Room, 1, currencyCode, tpKey, sessionId));
 
-            if (oHotel.Room_2 is not null)
+            if (hotel.Room_2 is not null)
             {
-            results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_2.Room, 2, sCurrencyCode, tpKey, sSessionId));
+                results.AddRange(CreateRoomsFromRoomResultCollection(hotel.Room_2.Room, 2, currencyCode, tpKey, sessionId));
             }
 
-            if (oHotel.Room_3 is not null)
+            if (hotel.Room_3 is not null)
             {
-            results.AddRange(CreateRoomsFromRoomResultCollection(oHotel.Room_3.Room, 3, sCurrencyCode, tpKey, sSessionId));
+                results.AddRange(CreateRoomsFromRoomResultCollection(hotel.Room_3.Room, 3, currencyCode, tpKey, sessionId));
             }
 
             return results;
         }
 
-        private List<TransformedResult> CreateRoomsFromRoomResultCollection(Room[] oRooms, int iPropertyRoomBookingID, string sCurrencyCode, string sTPKey, string sSessionId)
+        private List<TransformedResult> CreateRoomsFromRoomResultCollection(Room[] rooms, int propertyRoomBookingId, string currencyCode, string tpKey, string sessionId)
         {
             var results = new List<TransformedResult>();
-            foreach (Room room in oRooms)
+            foreach (var room in rooms)
             {
-                var result = new TransformedResult();
-                result.TPKey = sTPKey;
-                result.CurrencyCode = sCurrencyCode;
-                result.PropertyRoomBookingID = iPropertyRoomBookingID;
-                result.RoomType = room.Type;
-                result.MealBasisCode = room.Board;
-                result.Amount = room.Rates.Final_Rate;
-                result.NonRefundableRates = !room.Refundable.ToSafeBoolean();
-                result.TPReference = $"{sSessionId}_{room.Id}_{room.CanxPolicy.token}";
+                var result = new TransformedResult
+                {
+                    TPKey = tpKey,
+                    CurrencyCode = currencyCode,
+                    PropertyRoomBookingID = propertyRoomBookingId,
+                    RoomType = room.Type,
+                    MealBasisCode = room.Board,
+                    Amount = room.Rates.Final_Rate,
+                    NonRefundableRates = !room.Refundable.ToSafeBoolean(),
+                    TPReference = $"{sessionId}_{room.Id}_{room.CanxPolicy.token}"
+                };
                 results.Add(result);
             }
             return results;
@@ -216,7 +209,7 @@
         #endregion
 
         #region ResponseHasExceptions
-        public bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
@@ -224,13 +217,11 @@
 
         private class RequestURLs : List<RequestURL>
         {
-
-            public void Add(string URL, string RequestType, string RequestID)
+            public void Add(string url, string requestType, string requestId)
             {
-                var oURL = new RequestURL(URL, RequestType, RequestID);
-                Add(oURL);
+                var requestUrl = new RequestURL(url, requestType, requestId);
+                Add(requestUrl);
             }
-
         }
 
         private class RequestURL
@@ -239,19 +230,14 @@
             public string RequestType = string.Empty;
             public string RequestID = string.Empty;
 
-            public RequestURL(string URL, string RequestType, string RequestID)
+            public RequestURL(string url, string requestType, string requestId)
             {
-                this.URL = URL;
-                this.RequestType = RequestType;
-                this.RequestID = RequestID;
+                URL = url;
+                RequestType = requestType;
+                RequestID = requestId;
             }
 
-            public string UniqueRequestID(string Source)
-            {
-                return string.Format("{0}_{1}_{2}", Source, RequestType, RequestID);
-            }
-
+            public string UniqueRequestID(string source) => $"{source}_{RequestType}_{RequestID}";
         }
-
     }
 }

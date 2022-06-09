@@ -2,7 +2,6 @@
 {
     using System;
     using System.Xml.Serialization;
-    using Intuitive.Helpers.Extensions;
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
@@ -10,48 +9,11 @@
     [XmlRoot(Namespace = "", IsNullable = false)]
     public partial class YouTravelSearchResponse
     {
+        public string Success { get; set; }
 
-        private string successField;
+        public Search_Criteria Search_Criteria { get; set; }
 
-        private Search_Criteria search_CriteriaField;
-
-        private Session sessionField;
-
-        public string Success
-        {
-            get
-            {
-                return successField;
-            }
-            set
-            {
-                successField = value;
-            }
-        }
-
-        public Search_Criteria Search_Criteria
-        {
-            get
-            {
-                return search_CriteriaField;
-            }
-            set
-            {
-                search_CriteriaField = value;
-            }
-        }
-
-        public Session session
-        {
-            get
-            {
-                return sessionField;
-            }
-            set
-            {
-                sessionField = value;
-            }
-        }
+        public Session session { get; set; }
     }
 
     [Serializable()]
@@ -59,258 +21,41 @@
     [XmlType(AnonymousType = true)]
     public partial class Search_Criteria
     {
+        public string Company { get; set; }
 
-        private string companyField;
+        public string LangID { get; set; }
 
-        private string langIDField;
+        public string Dstn { get; set; }
 
-        private string dstnField;
+        public string Rsrt { get; set; }
 
-        private object rsrtField;
+        public int Rooms { get; set; }
 
-        private byte roomsField;
+        public int Nofn { get; set; }
 
-        private byte nofnField;
+        public string Checkin_Date { get; set; }
 
-        private string checkin_DateField;
+        public string Youtravel_Rating { get; set; }
 
-        private byte youtravel_RatingField;
+        public string Board_Type { get; set; }
 
-        private string board_TypeField;
+        public int Adlts_1 { get; set; }
 
-        private byte adlts_1Field;
+        public int Child_1 { get; set; }
 
-        private byte child_1Field;
+        public int Infant_1 { get; set; }
 
-        private byte infant_1Field;
+        public int Adlts_2 { get; set; }
 
-        private byte adlts_2Field;
+        public int Child_2 { get; set; }
 
-        private byte child_2Field;
+        public int Infant_2 { get; set; }
 
-        private byte infant_2Field;
+        public int Adlts_3 { get; set; }
 
-        private byte adlts_3Field;
+        public int Child_3 { get; set; }
 
-        private byte child_3Field;
-
-        private byte infant_3Field;
-
-        public string Company
-        {
-            get
-            {
-                return companyField;
-            }
-            set
-            {
-                companyField = value;
-            }
-        }
-
-        public string LangID
-        {
-            get
-            {
-                return langIDField;
-            }
-            set
-            {
-                langIDField = value;
-            }
-        }
-
-        public string Dstn
-        {
-            get
-            {
-                return dstnField;
-            }
-            set
-            {
-                dstnField = value;
-            }
-        }
-
-        public object Rsrt
-        {
-            get
-            {
-                return rsrtField;
-            }
-            set
-            {
-                rsrtField = value;
-            }
-        }
-
-        public byte Rooms
-        {
-            get
-            {
-                return roomsField;
-            }
-            set
-            {
-                roomsField = value;
-            }
-        }
-
-        public byte Nofn
-        {
-            get
-            {
-                return nofnField;
-            }
-            set
-            {
-                nofnField = value;
-            }
-        }
-
-        public string Checkin_Date
-        {
-            get
-            {
-                return checkin_DateField;
-            }
-            set
-            {
-                checkin_DateField = value;
-            }
-        }
-
-        public byte Youtravel_Rating
-        {
-            get
-            {
-                return youtravel_RatingField;
-            }
-            set
-            {
-                youtravel_RatingField = value;
-            }
-        }
-
-        public string Board_Type
-        {
-            get
-            {
-                return board_TypeField;
-            }
-            set
-            {
-                board_TypeField = value;
-            }
-        }
-
-        public byte Adlts_1
-        {
-            get
-            {
-                return adlts_1Field;
-            }
-            set
-            {
-                adlts_1Field = value;
-            }
-        }
-
-        public byte Child_1
-        {
-            get
-            {
-                return child_1Field;
-            }
-            set
-            {
-                child_1Field = value;
-            }
-        }
-
-        public byte Infant_1
-        {
-            get
-            {
-                return infant_1Field;
-            }
-            set
-            {
-                infant_1Field = value;
-            }
-        }
-
-        public byte Adlts_2
-        {
-            get
-            {
-                return adlts_2Field;
-            }
-            set
-            {
-                adlts_2Field = value;
-            }
-        }
-
-        public byte Child_2
-        {
-            get
-            {
-                return child_2Field;
-            }
-            set
-            {
-                child_2Field = value;
-            }
-        }
-
-        public byte Infant_2
-        {
-            get
-            {
-                return infant_2Field;
-            }
-            set
-            {
-                infant_2Field = value;
-            }
-        }
-
-        public byte Adlts_3
-        {
-            get
-            {
-                return adlts_3Field;
-            }
-            set
-            {
-                adlts_3Field = value;
-            }
-        }
-
-        public byte Child_3
-        {
-            get
-            {
-                return child_3Field;
-            }
-            set
-            {
-                child_3Field = value;
-            }
-        }
-
-        public byte Infant_3
-        {
-            get
-            {
-                return infant_3Field;
-            }
-            set
-            {
-                infant_3Field = value;
-            }
-        }
+        public int Infant_3 { get; set; }
     }
 
     [Serializable()]
@@ -318,50 +63,13 @@
     [XmlType(AnonymousType = true)]
     public partial class Session
     {
-
-        private string currencyField;
-
-        private Hotel[] hotelField;
-
-        private string idField;
-
-        public string Currency
-        {
-            get
-            {
-                return currencyField;
-            }
-            set
-            {
-                currencyField = value;
-            }
-        }
+        public string Currency { get; set; }
 
         [XmlElement("Hotel")]
-        public Hotel[] Hotel
-        {
-            get
-            {
-                return hotelField;
-            }
-            set
-            {
-                hotelField = value;
-            }
-        }
+        public Hotel[] Hotel { get; set; }
 
         [XmlAttribute(DataType = "integer")]
-        public string id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public string id { get; set; }
     }
 
     [Serializable()]
@@ -369,203 +77,34 @@
     [XmlType(AnonymousType = true)]
     public partial class Hotel
     {
+        public string Hotel_Name { get; set; }
 
-        private string hotel_NameField;
+        public string Youtravel_Rating { get; set; }
 
-        private string youtravel_RatingField;
+        public string Official_Rating { get; set; }
 
-        private string official_RatingField;
+        public string Board_Type { get; set; }
 
-        private string board_TypeField;
+        public string Child_Age { get; set; }
 
-        private string child_AgeField;
+        public string Country { get; set; }
 
-        private string countryField;
+        public string Destination { get; set; }
 
-        private string destinationField;
+        public string Resort { get; set; }
 
-        private string resortField;
+        public string Image { get; set; }
 
-        private string imageField;
+        public string Hotel_Desc { get; set; }
 
-        private string hotel_DescField;
+        public Room_1 Room_1 { get; set; }
 
-        private Room_1 room_1Field;
+        public Room_2 Room_2 { get; set; }
 
-        private Room_2 room_2Field;
-
-        private Room_3 room_3Field;
-
-        private string idField;
-
-        public string Hotel_Name
-        {
-            get
-            {
-                return hotel_NameField;
-            }
-            set
-            {
-                hotel_NameField = value;
-            }
-        }
-
-        public string Youtravel_Rating
-        {
-            get
-            {
-                return youtravel_RatingField;
-            }
-            set
-            {
-                youtravel_RatingField = value;
-            }
-        }
-
-        public string Official_Rating
-        {
-            get
-            {
-                return official_RatingField;
-            }
-            set
-            {
-                official_RatingField = value;
-            }
-        }
-
-        public string Board_Type
-        {
-            get
-            {
-                return board_TypeField;
-            }
-            set
-            {
-                board_TypeField = value;
-            }
-        }
-
-        public string Child_Age
-        {
-            get
-            {
-                return child_AgeField;
-            }
-            set
-            {
-                child_AgeField = value;
-            }
-        }
-
-        public string Country
-        {
-            get
-            {
-                return countryField;
-            }
-            set
-            {
-                countryField = value;
-            }
-        }
-
-        public string Destination
-        {
-            get
-            {
-                return destinationField;
-            }
-            set
-            {
-                destinationField = value;
-            }
-        }
-
-        public string Resort
-        {
-            get
-            {
-                return resortField;
-            }
-            set
-            {
-                resortField = value;
-            }
-        }
-
-        public string Image
-        {
-            get
-            {
-                return imageField;
-            }
-            set
-            {
-                imageField = value;
-            }
-        }
-
-        public string Hotel_Desc
-        {
-            get
-            {
-                return hotel_DescField;
-            }
-            set
-            {
-                hotel_DescField = value;
-            }
-        }
-
-        public Room_1 Room_1
-        {
-            get
-            {
-                return room_1Field;
-            }
-            set
-            {
-                room_1Field = value;
-            }
-        }
-
-        public Room_2 Room_2
-        {
-            get
-            {
-                return room_2Field;
-            }
-            set
-            {
-                room_2Field = value;
-            }
-        }
-
-        public Room_3 Room_3
-        {
-            get
-            {
-                return room_3Field;
-            }
-            set
-            {
-                room_3Field = value;
-            }
-        }
+        public Room_3 Room_3 { get; set; }
 
         [XmlAttribute()]
-        public string ID
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public string ID { get; set; }
     }
 
     [Serializable()]
@@ -573,35 +112,10 @@
     [XmlType(AnonymousType = true)]
     public partial class Room_1
     {
-
-        private Passengers passengersField;
-
-        private Room[] roomField;
-
-        public Passengers Passengers
-        {
-            get
-            {
-                return passengersField;
-            }
-            set
-            {
-                passengersField = value;
-            }
-        }
+        public Passengers Passengers { get; set; }
 
         [XmlElement("Room")]
-        public Room[] Room
-        {
-            get
-            {
-                return roomField;
-            }
-            set
-            {
-                roomField = value;
-            }
-        }
+        public Room[] Room { get; set; }
     }
 
     [Serializable()]
@@ -609,51 +123,14 @@
     [XmlType(AnonymousType = true)]
     public partial class Passengers
     {
-
-        private byte adultsField;
-
-        private byte childrenField;
-
-        private byte infantsField;
+        [XmlAttribute()]
+        public int Adults { get; set; }
 
         [XmlAttribute()]
-        public byte Adults
-        {
-            get
-            {
-                return adultsField;
-            }
-            set
-            {
-                adultsField = value;
-            }
-        }
+        public int Children { get; set; }
 
         [XmlAttribute()]
-        public byte Children
-        {
-            get
-            {
-                return childrenField;
-            }
-            set
-            {
-                childrenField = value;
-            }
-        }
-
-        [XmlAttribute()]
-        public byte Infants
-        {
-            get
-            {
-                return infantsField;
-            }
-            set
-            {
-                infantsField = value;
-            }
-        }
+        public int Infants { get; set; }
     }
 
     [Serializable()]
@@ -661,120 +138,23 @@
     [XmlType(AnonymousType = true)]
     public partial class Room
     {
+        public CanxPolicy CanxPolicy { get; set; }
 
-        private CanxPolicy canxPolicyField;
+        public string Type { get; set; }
 
-        private string typeField;
+        public string Board { get; set; }
 
-        private string boardField;
+        public string AI_Type { get; set; }
 
-        private string aI_TypeField;
+        public Rates Rates { get; set; }
 
-        private Rates ratesField;
-
-        private Offers offersField;
-
-        private string idField;
-
-        private string refundableField;
-
-        public CanxPolicy CanxPolicy
-        {
-            get
-            {
-                return canxPolicyField;
-            }
-            set
-            {
-                canxPolicyField = value;
-            }
-        }
-
-        public string Type
-        {
-            get
-            {
-                return typeField;
-            }
-            set
-            {
-                typeField = value;
-            }
-        }
-
-        public string Board
-        {
-            get
-            {
-                return boardField;
-            }
-            set
-            {
-                boardField = value;
-            }
-        }
-
-        public string AI_Type
-        {
-            get
-            {
-                return aI_TypeField;
-            }
-            set
-            {
-                aI_TypeField = value;
-            }
-        }
-
-        public Rates Rates
-        {
-            get
-            {
-                return ratesField;
-            }
-            set
-            {
-                ratesField = value;
-            }
-        }
-
-        public Offers Offers
-        {
-            get
-            {
-                return offersField;
-            }
-            set
-            {
-                offersField = value;
-            }
-        }
+        public Offers Offers { get; set; }
 
         [XmlAttribute()]
-        public string Id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public string Id { get; set; }
 
         [XmlAttribute()]
-        public string Refundable
-        {
-            get
-            {
-                return refundableField;
-            }
-            set
-            {
-                refundableField = value;
-            }
-        }
+        public string Refundable { get; set; }
     }
 
     [Serializable()]
@@ -782,21 +162,8 @@
     [XmlType(AnonymousType = true)]
     public partial class CanxPolicy
     {
-
-        private string tokenField;
-
         [XmlAttribute()]
-        public string token
-        {
-            get
-            {
-                return tokenField;
-            }
-            set
-            {
-                tokenField = value;
-            }
-        }
+        public string token { get; set; }
     }
 
     [Serializable()]
@@ -804,36 +171,11 @@
     [XmlType(AnonymousType = true)]
     public partial class Rates
     {
-
-        private decimal original_RateField;
-
-        private decimal final_RateField;
+        [XmlAttribute()]
+        public decimal Original_Rate { get; set; }
 
         [XmlAttribute()]
-        public decimal Original_Rate
-        {
-            get
-            {
-                return original_RateField;
-            }
-            set
-            {
-                original_RateField = value;
-            }
-        }
-
-        [XmlAttribute()]
-        public decimal Final_Rate
-        {
-            get
-            {
-                return final_RateField;
-            }
-            set
-            {
-                final_RateField = value;
-            }
-        }
+        public decimal Final_Rate { get; set; }
     }
 
     [Serializable()]
@@ -841,81 +183,20 @@
     [XmlType(AnonymousType = true)]
     public partial class Offers
     {
-
-        private byte lastminute_OfferField;
-
-        private byte early_Booking_DiscountField;
-
-        private byte free_StayField;
-
-        private byte free_TransferField;
-
-        private byte gala_MealsField;
+        [XmlAttribute()]
+        public bool Lastminute_Offer { get; set; }
 
         [XmlAttribute()]
-        public byte Lastminute_Offer
-        {
-            get
-            {
-                return lastminute_OfferField;
-            }
-            set
-            {
-                lastminute_OfferField = value;
-            }
-        }
+        public bool Early_Booking_Discount { get; set; }
 
         [XmlAttribute()]
-        public byte Early_Booking_Discount
-        {
-            get
-            {
-                return early_Booking_DiscountField;
-            }
-            set
-            {
-                early_Booking_DiscountField = value;
-            }
-        }
+        public bool Free_Stay { get; set; }
 
         [XmlAttribute()]
-        public byte Free_Stay
-        {
-            get
-            {
-                return free_StayField;
-            }
-            set
-            {
-                free_StayField = value;
-            }
-        }
+        public bool Free_Transfer { get; set; }
 
         [XmlAttribute()]
-        public byte Free_Transfer
-        {
-            get
-            {
-                return free_TransferField;
-            }
-            set
-            {
-                free_TransferField = value;
-            }
-        }
-
-        [XmlAttribute()]
-        public byte Gala_Meals
-        {
-            get
-            {
-                return gala_MealsField;
-            }
-            set
-            {
-                gala_MealsField = value;
-            }
-        }
+        public bool Gala_Meals { get; set; }
     }
 
     [Serializable()]
@@ -923,35 +204,10 @@
     [XmlType(AnonymousType = true)]
     public partial class Room_2
     {
-
-        private Passengers passengersField;
-
-        private Room[] roomField;
-
-        public Passengers Passengers
-        {
-            get
-            {
-                return passengersField;
-            }
-            set
-            {
-                passengersField = value;
-            }
-        }
+        public Passengers Passengers { get; set; }
 
         [XmlElement("Room")]
-        public Room[] Room
-        {
-            get
-            {
-                return roomField;
-            }
-            set
-            {
-                roomField = value;
-            }
-        }
+        public Room[] Room { get; set; }
     }
 
     [Serializable()]
@@ -959,35 +215,9 @@
     [XmlType(AnonymousType = true)]
     public partial class Room_3
     {
-
-        private Passengers passengersField;
-
-        private Room[] roomField;
-
-        public Passengers Passengers
-        {
-            get
-            {
-                return passengersField;
-            }
-            set
-            {
-                passengersField = value;
-            }
-        }
+        public Passengers Passengers { get; set; }
 
         [XmlElement("Room")]
-        public Room[] Room
-        {
-            get
-            {
-                return roomField;
-            }
-            set
-            {
-                roomField = value;
-            }
-        }
+        public Room[] Room { get; set; }
     }
-
 }
