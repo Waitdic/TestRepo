@@ -33,90 +33,102 @@
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oRequests = new List<Request>();
+            var requests = new List<Request>();
 
             var requestBodies = new List<string>();
-            foreach (ResortSplit resortSplit in oResortSplits.Where(rs => !rs.ResortCode.Contains("|")))
-                requestBodies.AddRange(BuildRequests(oSearchDetails, resortSplit.ResortCode, resortSplit.Hotels.Select(h => h.TPKey).ToList()));
+            
+            foreach (var resortSplit in resortSplits.Where(rs => !rs.ResortCode.Contains("|")))
+            {
+                requestBodies.AddRange(BuildRequests(searchDetails, resortSplit.ResortCode, resortSplit.Hotels.Select(h => h.TPKey).ToList()));
+            }
 
-            var resortCodesGroupedByCityCode = oResortSplits.Where(rs => rs.ResortCode.Contains("|")).ToLookup(rs => rs.ResortCode.Split('|')[0], rs => rs.ResortCode.Split('|')[1]);
+            var resortCodesGroupedByCityCode = resortSplits
+                    .Where(rs => rs.ResortCode.Contains("|"))
+                    .ToLookup(rs => rs.ResortCode.Split('|')[0], rs => rs.ResortCode.Split('|')[1]);
 
-            foreach (IGrouping<string, string> resortCodeGroup in resortCodesGroupedByCityCode)
+            foreach (var resortCodeGroup in resortCodesGroupedByCityCode)
             {
                 string cityCode = resortCodeGroup.Key;
                 string regionIdToUse;
                 IEnumerable<string> hotelIDs;
+
                 if (resortCodeGroup.Count() > 1)
                 {
                     regionIdToUse = cityCode;
-                    hotelIDs = from rs in oResortSplits.Where(rs => (rs.ResortCode.Split('|')[0] ?? "") == (regionIdToUse ?? ""))
+                    hotelIDs = from rs in resortSplits.Where(rs => (rs.ResortCode.Split('|')[0] ?? "") == (regionIdToUse ?? ""))
                                from hotel in rs.Hotels
                                select hotel.TPKey;
                 }
                 else
                 {
                     regionIdToUse = resortCodeGroup.Single();
-                    hotelIDs = oResortSplits.Single(rs => (rs.ResortCode ?? "") == ($"{cityCode}|{regionIdToUse}" ?? "")).Hotels.Select(h => h.TPKey);
+                    hotelIDs = resortSplits.Single(rs => (rs.ResortCode ?? "") == ($"{cityCode}|{regionIdToUse}" ?? "")).Hotels.Select(h => h.TPKey);
                 }
-                requestBodies.AddRange(BuildRequests(oSearchDetails, regionIdToUse, hotelIDs.ToList()));
+
+                requestBodies.AddRange(BuildRequests(searchDetails, regionIdToUse, hotelIDs.ToList()));
             }
 
-            foreach (string request in requestBodies)
+            foreach (string requestBody in requestBodies)
             {
-                var oRequest = new Request
+                var request = new Request
                 {
-                    EndPoint = _settings.get_URL(oSearchDetails),
+                    EndPoint = _settings.get_URL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.STUBA,
-                    ExtraInfo = new SearchExtraHelper() { SearchDetails = oSearchDetails }
+                    ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails }
                 };
-                oRequest.SetRequest(request);
-                oRequests.Add(oRequest);
+                request.SetRequest(requestBody);
+                requests.Add(request);
             }
-            return oRequests;
+
+            return requests;
         }
 
-        private IEnumerable<string> BuildRequests(SearchDetails oSearchDetails, string sResortCode, List<string> oHotelIDs)
+        private IEnumerable<string> BuildRequests(SearchDetails searchDetails, string resortCode, List<string> hotelIds)
         {
-            int iMaxHotels = _settings.get_MaxHotelsPerRequest(oSearchDetails);
-            if (iMaxHotels <= 0)
+            int maxHotels = _settings.get_MaxHotelsPerRequest(searchDetails);
+
+            if (maxHotels <= 0)
             {
-                yield return BuildRequest(oSearchDetails, sResortCode, oHotelIDs);
+                yield return BuildRequest(searchDetails, resortCode, hotelIds);
             }
             else
             {
-                int iBatchCount = Math.Ceiling(oHotelIDs.Count / (double)iMaxHotels).ToSafeInt();
-                for (int i = 0, loopTo = iBatchCount - 1; i <= loopTo; i++)
-                    yield return BuildRequest(oSearchDetails, sResortCode, oHotelIDs.Skip(i * iMaxHotels).Take(iMaxHotels));
+                int batchCount = Math.Ceiling(hotelIds.Count / (double)maxHotels).ToSafeInt();
+                
+                for (int i = 0; i <= batchCount - 1; i++)
+                {
+                    yield return BuildRequest(searchDetails, resortCode, hotelIds.Skip(i * maxHotels).Take(maxHotels));
+                }
             }
         }
 
-        private string BuildRequest(SearchDetails oSearchDetails, string sResortCode, IEnumerable<string> oHotelIDs)
+        private string BuildRequest(SearchDetails searchDetails, string resortCode, IEnumerable<string> hotelIds)
         {
-            string sOrg = _settings.get_Organisation(oSearchDetails);
-            string sUser = _settings.get_Username(oSearchDetails);
-            string sPassword = _settings.get_Password(oSearchDetails);
-            string sVersion = _settings.get_Version(oSearchDetails);
-            string sCurrencyCode = _settings.get_Currency(oSearchDetails);
-            string sNationality = _settings.get_Nationality(oSearchDetails);
+            string org = _settings.get_Organisation(searchDetails);
+            string user = _settings.get_Username(searchDetails);
+            string password = _settings.get_Password(searchDetails);
+            string version = _settings.get_Version(searchDetails);
+            string currencyCode = _settings.get_Currency(searchDetails);
+            string nationality = _settings.get_Nationality(searchDetails);
 
             var request = new XElement("AvailabilitySearch",
                             new XElement("Authority",
-                                new XElement("Org", sOrg),
-                                new XElement("User", sUser),
-                                new XElement("Password", sPassword),
-                                new XElement("Currency", sCurrencyCode),
-                                new XElement("Version", sVersion)
+                                new XElement("Org", org),
+                                new XElement("User", user),
+                                new XElement("Password", password),
+                                new XElement("Currency", currencyCode),
+                                new XElement("Version", version)
                             ),
-                            new XElement("RegionId", sResortCode),
-                            new XElement("Hotels", from id in oHotelIDs
+                            new XElement("RegionId", resortCode),
+                            new XElement("Hotels", from id in hotelIds
                                                    select new XElement("Id", id)),
                             new XElement("HotelStayDetails",
-                            new XElement("ArrivalDate", oSearchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd")),
-                            new XElement("Nights", oSearchDetails.PropertyDuration),
-                            new XElement("Nationality", sNationality), from oRoom in oSearchDetails.RoomDetails
+                            new XElement("ArrivalDate", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd")),
+                            new XElement("Nights", searchDetails.PropertyDuration),
+                            new XElement("Nationality", nationality), from oRoom in searchDetails.RoomDetails
                                                                        select new XElement("Room",
                                                                                   new XElement("Guests", from adult in Enumerable.Range(0, oRoom.Adults)
                                                                                                          select new XElement("Adult"), from childAge in oRoom.ChildAges
@@ -126,11 +138,11 @@
             return request.ToString();
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails searchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedCollection = new TransformedResultCollection();
 
-            var results = oRequests
+            var results = requests
                 .Select(o =>
                     {
                         try
@@ -139,9 +151,10 @@
                         }
                         catch
                         {
-                            return new StubaSearchResponse();
+                            return null;
                         }
                     })
+                .Where(o => o is not null)
                 .ToList();
 
             bool removeNonRefundable = _settings.get_ExcludeNonRefundableRates(searchDetails);
@@ -159,43 +172,37 @@
             {
                 RemoveNonCheapestRoomCombinations(results);
             }
-            try
+
+            foreach (var stubaResult in results)
             {
-                foreach (StubaSearchResponse stubaResult in results)
+                foreach (var hotelAvail in stubaResult.HotelAvailability)
                 {
-                    foreach (HotelAvailability hotelAvail in stubaResult.HotelAvailability)
+                    foreach (var result in hotelAvail.Result)
                     {
-                        foreach (Result result in hotelAvail.Result)
+                        for (int index = 0; index < result.Room.Count(); index++)
                         {
-                            for (int index = 0, loopTo = result.Room.Count(); index < loopTo; index++)
+                            var room = result.Room[index];
+
+                            var transformedResult = new TransformedResult()
                             {
+                                MasterID = hotelAvail.Hotel.id,
+                                PropertyRoomBookingID = index + 1,
+                                MealBasisCode = room.MealType.code.ToSafeString(),
+                                TPKey = hotelAvail.Hotel.id.ToSafeString(),
+                                CurrencyCode = stubaResult.Currency,
+                                RoomType = room.RoomType.text,
+                                Amount = room.Price.amt,
+                                TPReference = $"{hotelAvail.hotelQuoteId}|{result.id}",
+                                RoomTypeCode = room.RoomType.code.ToSafeString(),
+                                NonRefundableRates = room.CancellationPolicyStatus == "NonRefundable"
+                            };
 
-                                var room = result.Room[index];
-
-                                var transformedResult = new TransformedResult()
-                                {
-                                    MasterID = hotelAvail.Hotel.id,
-                                    PropertyRoomBookingID = index + 1,
-                                    MealBasisCode = room.MealType.code.ToSafeString(),
-                                    TPKey = hotelAvail.Hotel.id.ToSafeString(),
-                                    CurrencyCode = stubaResult.Currency,
-                                    RoomType = room.RoomType.text,
-                                    Amount = room.Price.amt,
-                                    TPReference = $"{hotelAvail.hotelQuoteId}|{result.id}",
-                                    RoomTypeCode = room.RoomType.code.ToSafeString(),
-                                    NonRefundableRates = room.CancellationPolicyStatus == "NonRefundable"
-                                };
-
-                                transformedCollection.TransformedResults.Add(transformedResult);
-                            }
+                            transformedCollection.TransformedResults.Add(transformedResult);
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                var test = ex.ToString();
-            }
+
             return transformedCollection;
         }
 
@@ -211,7 +218,6 @@
 
         private void RemoveResultsByCancellationPolicy(IEnumerable<StubaSearchResponse> results, string policyStatus)
         {
-
             foreach (StubaSearchResponse response in results)
             {
                 foreach (HotelAvailability hotelAvail in response.HotelAvailability)

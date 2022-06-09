@@ -10,23 +10,10 @@
     [XmlRoot(Namespace = "http://xml.sunhotels.net/15/", IsNullable = false)]
     public partial class SunhotelsSearchResponse
     {
-
-        private Hotel[] hotelsField;
-
         public int PropertyRoomBookingID;
 
         [XmlArrayItem("hotel", IsNullable = false)]
-        public Hotel[] hotels
-        {
-            get
-            {
-                return hotelsField;
-            }
-            set
-            {
-                hotelsField = value;
-            }
-        }
+        public Hotel[] hotels { get; set; }
     }
 
     [Serializable()]
@@ -34,122 +21,25 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Hotel
     {
-
-        private int hotelidField;
-
-        private int destination_idField;
-
-        private int resort_idField;
-
-        private int transferField;
-
-        private Roomtype[] roomtypesField;
-
-        private Note[] notesField;
-
-        private decimal? distanceField;
-
-        private object codesField;
-
         [XmlElement("hotel.id")]
-        public int hotelid
-        {
-            get
-            {
-                return hotelidField;
-            }
-            set
-            {
-                hotelidField = value;
-            }
-        }
+        public int hotelid { get; set; }
 
-        public int destination_id
-        {
-            get
-            {
-                return destination_idField;
-            }
-            set
-            {
-                destination_idField = value;
-            }
-        }
+        public int destination_id { get; set; }
 
-        public int resort_id
-        {
-            get
-            {
-                return resort_idField;
-            }
-            set
-            {
-                resort_idField = value;
-            }
-        }
+        public int resort_id { get; set; }
 
-        public int transfer
-        {
-            get
-            {
-                return transferField;
-            }
-            set
-            {
-                transferField = value;
-            }
-        }
+        public int transfer { get; set; }
 
         [XmlArrayItem("roomtype", IsNullable = false)]
-        public Roomtype[] roomtypes
-        {
-            get
-            {
-                return roomtypesField;
-            }
-            set
-            {
-                roomtypesField = value;
-            }
-        }
+        public Roomtype[] roomtypes { get; set; }
 
         [XmlArrayItem("note", IsNullable = false)]
-        public Note[] notes
-        {
-            get
-            {
-                return notesField;
-            }
-            set
-            {
-                notesField = value;
-            }
-        }
+        public Note[] notes { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public decimal? distance
-        {
-            get
-            {
-                return distanceField;
-            }
-            set
-            {
-                distanceField = value;
-            }
-        }
+        public decimal? distance { get; set; }
 
-        public object codes
-        {
-            get
-            {
-                return codesField;
-            }
-            set
-            {
-                codesField = value;
-            }
-        }
+        public object codes { get; set; }
     }
 
     [Serializable()]
@@ -157,36 +47,11 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Roomtype
     {
-
-        private int roomtypeIDField;
-
-        private Room[] roomsField;
-
         [XmlElement("roomtype.ID")]
-        public int roomtypeID
-        {
-            get
-            {
-                return roomtypeIDField;
-            }
-            set
-            {
-                roomtypeIDField = value;
-            }
-        }
+        public int roomtypeID { get; set; }
 
         [XmlArrayItem("room", IsNullable = false)]
-        public Room[] rooms
-        {
-            get
-            {
-                return roomsField;
-            }
-            set
-            {
-                roomsField = value;
-            }
-        }
+        public Room[] rooms { get; set; }
     }
 
     [Serializable()]
@@ -194,134 +59,25 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Room
     {
+        public int id { get; set; }
 
-        private int idField;
+        public int beds { get; set; }
 
-        private int bedsField;
-
-        private int extrabedsField;
-
-        private Meal[] mealsField;
-
-        private Cancellation_policy[] cancellation_policiesField;
-
-        private object notesField;
-
-        private bool isSuperDealField;
-
-        private bool isBestBuyField;
-
-        private PaymentMethods paymentMethodsField;
-
-        public int id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
-
-        public int beds
-        {
-            get
-            {
-                return bedsField;
-            }
-            set
-            {
-                bedsField = value;
-            }
-        }
-
-        public int extrabeds
-        {
-            get
-            {
-                return extrabedsField;
-            }
-            set
-            {
-                extrabedsField = value;
-            }
-        }
+        public int extrabeds { get; set; }
 
         [XmlArrayItem("meal", IsNullable = false)]
-        public Meal[] meals
-        {
-            get
-            {
-                return mealsField;
-            }
-            set
-            {
-                mealsField = value;
-            }
-        }
+        public Meal[] meals { get; set; }
 
         [XmlArrayItem("cancellation_policy", IsNullable = false)]
-        public Cancellation_policy[] cancellation_policies
-        {
-            get
-            {
-                return cancellation_policiesField;
-            }
-            set
-            {
-                cancellation_policiesField = value;
-            }
-        }
+        public Cancellation_policy[] cancellation_policies { get; set; }
 
-        public object notes
-        {
-            get
-            {
-                return notesField;
-            }
-            set
-            {
-                notesField = value;
-            }
-        }
+        public object notes { get; set; }
 
-        public bool isSuperDeal
-        {
-            get
-            {
-                return isSuperDealField;
-            }
-            set
-            {
-                isSuperDealField = value;
-            }
-        }
+        public bool isSuperDeal { get; set; }
 
-        public bool isBestBuy
-        {
-            get
-            {
-                return isBestBuyField;
-            }
-            set
-            {
-                isBestBuyField = value;
-            }
-        }
+        public bool isBestBuy { get; set; }
 
-        public PaymentMethods paymentMethods
-        {
-            get
-            {
-                return paymentMethodsField;
-            }
-            set
-            {
-                paymentMethodsField = value;
-            }
-        }
+        public PaymentMethods paymentMethods { get; set; }
     }
 
     [Serializable()]
@@ -329,64 +85,15 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Meal
     {
-
-        private int idField;
-
-        private string labelIdField;
-
-        private Prices pricesField;
-
-        private Discount discountField;
-
-        public int id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public int id { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public string labelId
-        {
-            get
-            {
-                return labelIdField;
-            }
-            set
-            {
-                labelIdField = value;
-            }
-        }
+        public string labelId { get; set; }
 
-        public Prices prices
-        {
-            get
-            {
-                return pricesField;
-            }
-            set
-            {
-                pricesField = value;
-            }
-        }
+        public Prices prices { get; set; }
 
         [XmlElement(IsNullable = true)]
-        public Discount discount
-        {
-            get
-            {
-                return discountField;
-            }
-            set
-            {
-                discountField = value;
-            }
-        }
+        public Discount discount { get; set; }
     }
 
     [Serializable()]
@@ -394,20 +101,7 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Prices
     {
-
-        private Price priceField;
-
-        public Price price
-        {
-            get
-            {
-                return priceField;
-            }
-            set
-            {
-                priceField = value;
-            }
-        }
+        public Price price { get; set; }
     }
 
     [Serializable()]
@@ -415,51 +109,14 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Price
     {
-
-        private string currencyField;
-
-        private int paymentMethodsField;
-
-        private decimal valueField;
+        [XmlAttribute()]
+        public string currency { get; set; }
 
         [XmlAttribute()]
-        public string currency
-        {
-            get
-            {
-                return currencyField;
-            }
-            set
-            {
-                currencyField = value;
-            }
-        }
-
-        [XmlAttribute()]
-        public int paymentMethods
-        {
-            get
-            {
-                return paymentMethodsField;
-            }
-            set
-            {
-                paymentMethodsField = value;
-            }
-        }
+        public int paymentMethods { get; set; }
 
         [XmlText()]
-        public decimal Value
-        {
-            get
-            {
-                return valueField;
-            }
-            set
-            {
-                valueField = value;
-            }
-        }
+        public decimal Value { get; set; }
     }
 
     [Serializable()]
@@ -467,34 +124,9 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Discount
     {
+        public int typeId { get; set; }
 
-        private int typeIdField;
-
-        private Amounts amountsField;
-
-        public int typeId
-        {
-            get
-            {
-                return typeIdField;
-            }
-            set
-            {
-                typeIdField = value;
-            }
-        }
-
-        public Amounts amounts
-        {
-            get
-            {
-                return amountsField;
-            }
-            set
-            {
-                amountsField = value;
-            }
-        }
+        public Amounts amounts { get; set; }
     }
 
     [Serializable()]
@@ -502,20 +134,7 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Amounts
     {
-
-        private Amount amountField;
-
-        public Amount amount
-        {
-            get
-            {
-                return amountField;
-            }
-            set
-            {
-                amountField = value;
-            }
-        }
+        public Amount amount { get; set; }
     }
 
     [Serializable()]
@@ -523,51 +142,14 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Amount
     {
-
-        private string currencyField;
-
-        private int paymentMethodsField;
-
-        private decimal valueField;
+        [XmlAttribute()]
+        public string currency { get; set; }
 
         [XmlAttribute()]
-        public string currency
-        {
-            get
-            {
-                return currencyField;
-            }
-            set
-            {
-                currencyField = value;
-            }
-        }
-
-        [XmlAttribute()]
-        public int paymentMethods
-        {
-            get
-            {
-                return paymentMethodsField;
-            }
-            set
-            {
-                paymentMethodsField = value;
-            }
-        }
+        public int paymentMethods { get; set; }
 
         [XmlText()]
-        public decimal Value
-        {
-            get
-            {
-                return valueField;
-            }
-            set
-            {
-                valueField = value;
-            }
-        }
+        public decimal Value { get; set; }
     }
 
     [Serializable()]
@@ -575,35 +157,10 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Cancellation_policy
     {
-
-        private string deadlineField;
-
-        private string percentageField;
-
         [XmlElement(IsNullable = true)]
-        public string deadline
-        {
-            get
-            {
-                return deadlineField;
-            }
-            set
-            {
-                deadlineField = value;
-            }
-        }
+        public string deadline { get; set; }
 
-        public string percentage
-        {
-            get
-            {
-                return percentageField;
-            }
-            set
-            {
-                percentageField = value;
-            }
-        }
+        public string percentage { get; set; }
     }
 
     [Serializable()]
@@ -611,20 +168,7 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class PaymentMethods
     {
-
-        private PaymentMethod paymentMethodField;
-
-        public PaymentMethod paymentMethod
-        {
-            get
-            {
-                return paymentMethodField;
-            }
-            set
-            {
-                paymentMethodField = value;
-            }
-        }
+        public PaymentMethod paymentMethod { get; set; }
     }
 
     [Serializable()]
@@ -632,21 +176,8 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class PaymentMethod
     {
-
-        private int idField;
-
         [XmlAttribute()]
-        public int id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        public int id { get; set; }
     }
 
     [Serializable()]
@@ -654,49 +185,12 @@
     [XmlType(AnonymousType = true, Namespace = "http://xml.sunhotels.net/15/")]
     public partial class Note
     {
-
-        private string textField;
-
-        private DateTime start_dateField;
-
-        private DateTime end_dateField;
-
-        public string text
-        {
-            get
-            {
-                return textField;
-            }
-            set
-            {
-                textField = value;
-            }
-        }
+        public string text { get; set; }
 
         [XmlAttribute()]
-        public DateTime start_date
-        {
-            get
-            {
-                return start_dateField;
-            }
-            set
-            {
-                start_dateField = value;
-            }
-        }
+        public DateTime start_date { get; set; }
 
         [XmlAttribute()]
-        public DateTime end_date
-        {
-            get
-            {
-                return end_dateField;
-            }
-            set
-            {
-                end_dateField = value;
-            }
-        }
+        public DateTime end_date { get; set; }
     }
 }
