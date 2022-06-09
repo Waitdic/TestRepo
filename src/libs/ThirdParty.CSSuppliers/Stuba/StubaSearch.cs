@@ -130,7 +130,19 @@
         {
             var transformedCollection = new TransformedResultCollection();
 
-            IEnumerable<StubaSearchResponse> results = oRequests.Select(o => _serializer.DeSerialize<StubaSearchResponse>(o.ResponseXML)).ToList();
+            var results = oRequests
+                .Select(o =>
+                    {
+                        try
+                        {
+                            return _serializer.DeSerialize<StubaSearchResponse>(_serializer.CleanXmlNamespaces(o.ResponseXML));
+                        }
+                        catch
+                        {
+                            return new StubaSearchResponse();
+                        }
+                    })
+                .ToList();
 
             bool removeNonRefundable = _settings.get_ExcludeNonRefundableRates(searchDetails);
             bool removeUnknownCancellations = _settings.get_ExcludeUnknownCancellationPolicys(searchDetails);

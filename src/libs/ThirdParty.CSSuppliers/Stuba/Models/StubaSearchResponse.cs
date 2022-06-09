@@ -2,395 +2,108 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Xml.Serialization;
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType("AvailabilitySearchResult")]
-    [System.Xml.Serialization.XmlRoot(Namespace = "", IsNullable = false)]
+    [XmlType("AvailabilitySearchResult")]
+    [XmlRoot(Namespace = "", IsNullable = false)]
     public partial class StubaSearchResponse
     {
+        public string Currency { get; set; }
 
-        private string currencyField;
+        public string Warning { get; set; }
 
-        private object warningField;
+        public bool TestMode { get; set; }
 
-        private bool testModeField;
-
-        private List<HotelAvailability> hotelAvailabilityField;
-
-
-        public string Currency
-        {
-            get
-            {
-                return currencyField;
-            }
-            set
-            {
-                currencyField = value;
-            }
-        }
-
-
-        public object Warning
-        {
-            get
-            {
-                return warningField;
-            }
-            set
-            {
-                warningField = value;
-            }
-        }
-
-
-        public bool TestMode
-        {
-            get
-            {
-                return testModeField;
-            }
-            set
-            {
-                testModeField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlElement("HotelAvailability")]
-        public List<HotelAvailability> HotelAvailability
-        {
-            get
-            {
-                return hotelAvailabilityField;
-            }
-            set
-            {
-                hotelAvailabilityField = value;
-            }
-        }
+        [XmlElement("HotelAvailability")]
+        public List<HotelAvailability> HotelAvailability { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class HotelAvailability
     {
+        public Hotel Hotel { get; set; }
 
-        private Hotel hotelField;
+        [XmlElement("Result")]
+        public List<Result> Result { get; set; }
 
-        private List<Result> resultField;
-
-        private string hotelQuoteIdField;
-
-
-        public Hotel Hotel
-        {
-            get
-            {
-                return hotelField;
-            }
-            set
-            {
-                hotelField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlElement("Result")]
-        public List<Result> Result
-        {
-            get
-            {
-                return resultField;
-            }
-            set
-            {
-                resultField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public string hotelQuoteId
-        {
-            get
-            {
-                return hotelQuoteIdField;
-            }
-            set
-            {
-                hotelQuoteIdField = value;
-            }
-        }
+        [XmlAttribute()]
+        public string hotelQuoteId { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class Hotel
     {
+        [XmlAttribute()]
+        public int id { get; set; }
 
-        private int idField;
-
-        private string nameField;
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public int id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public string name
-        {
-            get
-            {
-                return nameField;
-            }
-            set
-            {
-                nameField = value;
-            }
-        }
+        [XmlAttribute()]
+        public string name { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class Result
     {
+        [XmlElement("Room")]
+        public List<Room> Room { get; set; }
 
-        private List<Room> roomField;
-
-        private string idField;
-
-
-        [System.Xml.Serialization.XmlElement("Room")]
-        public List<Room> Room
-        {
-            get
-            {
-                return roomField;
-            }
-            set
-            {
-                roomField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public string id
-        {
-            get
-            {
-                return idField;
-            }
-            set
-            {
-                idField = value;
-            }
-        }
+        [XmlAttribute()]
+        public string id { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class Room
     {
+        public RoomType RoomType { get; set; }
 
-        private RoomType roomTypeField;
+        public MealType MealType { get; set; }
 
-        private MealType mealTypeField;
+        public Price Price { get; set; }
 
-        private Price priceField;
+        public string Messages { get; set; }
 
-        private object messagesField;
-
-        private string cancellationPolicyStatusField;
-
-
-        public RoomType RoomType
-        {
-            get
-            {
-                return roomTypeField;
-            }
-            set
-            {
-                roomTypeField = value;
-            }
-        }
-
-
-        public MealType MealType
-        {
-            get
-            {
-                return mealTypeField;
-            }
-            set
-            {
-                mealTypeField = value;
-            }
-        }
-
-
-        public Price Price
-        {
-            get
-            {
-                return priceField;
-            }
-            set
-            {
-                priceField = value;
-            }
-        }
-
-
-        public object Messages
-        {
-            get
-            {
-                return messagesField;
-            }
-            set
-            {
-                messagesField = value;
-            }
-        }
-
-
-        public string CancellationPolicyStatus
-        {
-            get
-            {
-                return cancellationPolicyStatusField;
-            }
-            set
-            {
-                cancellationPolicyStatusField = value;
-            }
-        }
+        public string CancellationPolicyStatus { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class RoomType
     {
+        [XmlAttribute()]
+        public int code { get; set; }
 
-        private int codeField;
-
-        private string textField;
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public int code
-        {
-            get
-            {
-                return codeField;
-            }
-            set
-            {
-                codeField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public string text
-        {
-            get
-            {
-                return textField;
-            }
-            set
-            {
-                textField = value;
-            }
-        }
+        [XmlAttribute()]
+        public string text { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class MealType
     {
+        [XmlAttribute()]
+        public int code { get; set; }
 
-        private int codeField;
-
-        private string textField;
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public int code
-        {
-            get
-            {
-                return codeField;
-            }
-            set
-            {
-                codeField = value;
-            }
-        }
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public string text
-        {
-            get
-            {
-                return textField;
-            }
-            set
-            {
-                textField = value;
-            }
-        }
+        [XmlAttribute()]
+        public string text { get; set; }
     }
-
 
     [Serializable()]
     [System.ComponentModel.DesignerCategory("code")]
-    [System.Xml.Serialization.XmlType(AnonymousType = true)]
+    [XmlType(AnonymousType = true)]
     public partial class Price
     {
-
-        private decimal amtField;
-
-
-        [System.Xml.Serialization.XmlAttribute()]
-        public decimal amt
-        {
-            get
-            {
-                return amtField;
-            }
-            set
-            {
-                amtField = value;
-            }
-        }
+        [XmlAttribute()]
+        public decimal amt { get; set; }
     }
 }
