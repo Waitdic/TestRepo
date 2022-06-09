@@ -58,15 +58,12 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
-
             var oRequests = new List<Request>();
 
             foreach (ResortSplit oResortSplit in oResortSplits)
             {
-
-
                 // Dim oFinalResults As New Results
                 var sb = new StringBuilder();
                 sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -110,24 +107,20 @@
                 sb.AppendFormat("</roomsInformation>");
                 sb.Append("</availabilityRequest>");
 
+                var oRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(oSearchDetails) + "GetAvailability.do",
+                    ContentType = ContentTypes.Text_xml,
+                    Method = eRequestMethod.POST,
+                    ExtraInfo = oSearchDetails
+                };
 
-
-                var oRequest = new Request();
-                oRequest.EndPoint = _settings.get_URL(oSearchDetails) + "GetAvailability.do";
-                oRequest.Method = eRequestMethod.POST;
-                oRequest.Source = ThirdParties.BONOTEL;
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.ExtraInfo = oSearchDetails;
                 oRequest.SetRequest(sb.ToString());
-                oRequest.ContentType = ContentTypes.Text_xml;
 
                 oRequests.Add(oRequest);
-
             }
 
             return oRequests;
-
         }
 
         public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)

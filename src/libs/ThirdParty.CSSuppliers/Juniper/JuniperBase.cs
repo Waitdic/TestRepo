@@ -76,7 +76,7 @@
                 try
                 {
                     string sPreBookRequest = BuildPreBookRequest(propertyDetails, oRoom.ThirdPartyReference);
-                    oRequest = JuniperHelper.BuildWebRequest(hotelBookRuleURL, sSOAPAction, sPreBookRequest, Constant.PreBookLogFile, Source, true, useGzip);
+                    oRequest = JuniperHelper.BuildWebRequest(hotelBookRuleURL, sSOAPAction, sPreBookRequest, Constant.PreBookLogFile, Source, useGzip);
                     oRequest.Send(_httpClient, _logger).RunSynchronously();
 
                     var oResponseXml = _serializer.CleanXmlNamespaces(oRequest.ResponseXML);
@@ -429,7 +429,6 @@
                             sCancellationRequest,
                             Constant.CancelLogFile,
                             Source,
-                            true,
                             _settings.UseGZip(propertyDetails)
                         );
 

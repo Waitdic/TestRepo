@@ -549,7 +549,6 @@
 
         private Request BuildRequest(PropertyDetails propertyDetails, string url, string logName, eRequestMethod method, bool addCustomerIPHeader, string requestBody = null)
         {
-
             bool useGzip = _settings.get_UseGZIP(propertyDetails);
             string apiKey = _settings.get_ApiKey(propertyDetails);
             string secret = _settings.get_Secret(propertyDetails);
@@ -561,17 +560,19 @@
 
             headers.AddNew(SearchHeaderKeys.CustomerSessionID, tpSessionID);
             headers.Add(ExpediaRapidSearch.CreateAuthorizationHeader(apiKey, secret));
-            if (addCustomerIPHeader)
-                headers.AddNew(SearchHeaderKeys.CustomerIP, customerIp);
 
-            var request = ExpediaRapidSearch.BuildDefaultRequest(url, method, headers, useGzip, propertyDetails.CreateLogs, userAgent, logName, requestBody);
+            if (addCustomerIPHeader)
+            {
+                headers.AddNew(SearchHeaderKeys.CustomerIP, customerIp);
+            }
+
+            var request = ExpediaRapidSearch.BuildDefaultRequest(url, method, headers, useGzip, userAgent, requestBody);
 
             return request;
         }
 
         private string BuildBookRequestBody(PropertyDetails propertyDetails)
         {
-
             var bookRequest = new BookRequest()
             {
                 AffiliateReferenceId = propertyDetails.BookingReference.Trim(),

@@ -57,7 +57,7 @@
             return restrictions;
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             SearchDetails = searchDetails;
             var requests = new List<Request>();

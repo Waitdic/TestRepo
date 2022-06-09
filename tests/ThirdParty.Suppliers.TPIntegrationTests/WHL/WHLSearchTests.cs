@@ -49,7 +49,7 @@
             // Act
             foreach (var searchDetails in SearchDetailsList)
             {
-                var request = SearchClass.BuildSearchRequests(searchDetails, ResortSplits, true)[0];
+                var request = SearchClass.BuildSearchRequests(searchDetails, ResortSplits)[0];
                 string requestString = Regex.Replace(request.RequestString, pattern, replacement); // remove timestamp
                 request.SetRequest(requestString); 
                 builtRequests.Add(request);

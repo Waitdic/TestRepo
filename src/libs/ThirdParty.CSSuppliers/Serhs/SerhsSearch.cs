@@ -28,7 +28,7 @@
 
         public string Source => ThirdParties.SERHS;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string version = _settings.Version(searchDetails);
             string clientCode = _settings.ClientCode(searchDetails);

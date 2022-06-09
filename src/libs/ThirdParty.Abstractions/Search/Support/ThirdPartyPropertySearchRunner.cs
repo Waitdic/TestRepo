@@ -55,7 +55,7 @@
                 StartTime = DateTime.Now; // needed for timeouts
                 var taskList = new List<Task>();
 
-                var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits, false);
+                var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits);
 
                 foreach (var request in requests)
                 {

@@ -61,7 +61,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
 
             var oRequests = new List<Request>();
@@ -125,29 +125,24 @@
 
             foreach (RequestURL oURL in oURLs)
             {
-
                 // set a unique code. if the is one request we only need the source name
                 string sUniqueCode = Source;
                 if (oURLs.Count > 1)
                     sUniqueCode = oURL.UniqueRequestID(Source);
 
-                var oRequest = new Request();
-                oRequest.EndPoint = oURL.URL + sbSuffix.ToString();
-                oRequest.Method = eRequestMethod.GET;
-                oRequest.Source = Source;
-                oRequest.LogFileName = "Search";
-                oRequest.CreateLog = bSaveLogs;
-                oRequest.ExtraInfo = new SearchExtraHelper(oSearchDetails, sUniqueCode);
-                oRequest.UseGZip = true;
+                var request = new Request
+                {
+                    EndPoint = oURL.URL + sbSuffix.ToString(),
+                    Method = eRequestMethod.GET,
+                    ExtraInfo = new SearchExtraHelper(oSearchDetails, sUniqueCode)
+                };
 
-                oRequests.Add(oRequest);
+                oRequests.Add(request);
 
             }
 
             return oRequests;
-
         }
-
 
         public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {

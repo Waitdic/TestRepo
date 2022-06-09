@@ -8,7 +8,6 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.Lookups;
@@ -55,7 +54,7 @@
 
         #region "SearchFunctions"
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
             // Create for each resort a list of hotels
             var oHotels = oResortSplits.SelectMany(rs => rs.Hotels.Select(h => h.TPKey)).Distinct().ToList();
@@ -94,7 +93,6 @@
         }
 
         #endregion
-
 
         #region "Transform Response"
 

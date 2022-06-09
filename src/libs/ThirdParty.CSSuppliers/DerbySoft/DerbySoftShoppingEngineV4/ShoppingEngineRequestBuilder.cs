@@ -27,10 +27,7 @@
             _guid = guid;
         }
 
-        public IEnumerable<Request> BuildSearchRequests(
-            SearchDetails searchDetails,
-            List<ResortSplit> resortSplits,
-            bool saveLogs)
+        public IEnumerable<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var tpKeys = resortSplits
                 .SelectMany(rs => rs.Hotels)
@@ -47,8 +44,7 @@
                         searchDetails,
                         room,
                         uniqueCode,
-                        index + 1,
-                        saveLogs));
+                        index + 1));
         }
 
         public IEnumerable<Request> BuildSearchRequests(
@@ -56,8 +52,7 @@
             SearchDetails searchDetails,
             RoomDetail roomDetails,
             string uniqueCode,
-            int propertyRoomBookingId,
-            bool saveLogs) =>
+            int propertyRoomBookingId) =>
             tpKeys
                 .Batch(_settings.ShoppingEngineHotelsBatchSize(searchDetails))
                 .Select(batch => BuildSearchRequest(batch, searchDetails, roomDetails))
@@ -65,8 +60,7 @@
                     searchDetails,
                     request,
                     propertyRoomBookingId,
-                    uniqueCode,
-                    saveLogs));
+                    uniqueCode));
 
         private DerbySoftShoppingEngineV4SearchRequest BuildSearchRequest(
             IEnumerable<string> tpKeysBatch,
@@ -78,7 +72,7 @@
                 Header = BuildHeader(searchDetails),
                 Hotels = tpKeysBatch.Select(tpKey => BuildHotel(searchDetails, tpKey)).ToArray(),
                 StayRange = BuildStayRange(searchDetails),
-                RoomCriteria = BuildRoomCriteria(searchDetails, roomDetails)
+                RoomCriteria = BuildRoomCriteria(roomDetails)
             };
         }
 
@@ -90,7 +84,7 @@
                 Version = "v4"
             };
 
-        private static RoomCriteria BuildRoomCriteria(SearchDetails searchDetails, RoomDetail roomDetails) =>
+        private static RoomCriteria BuildRoomCriteria(RoomDetail roomDetails) =>
             new RoomCriteria
             {
                 RoomCount = 1,
@@ -120,8 +114,7 @@
             SearchDetails searchDetails,
             DerbySoftShoppingEngineV4SearchRequest deserialisedRequest,
             int propertyRoomBookingId,
-            string uniqueCode,
-            bool saveLogs)
+            string uniqueCode)
         {
             var searchHelper = new SearchExtraHelper
             {
@@ -134,13 +127,9 @@
             {
                 EndPoint = _settings.ShoppingEngineURL(searchDetails),
                 Method = eRequestMethod.POST,
-                Source = _source,
-                CreateLog = saveLogs,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",
-                UseGZip = _settings.UseGZip(searchDetails),
                 ExtraInfo = searchHelper,
-                TimeoutInSeconds = 100,
             };
 
             var serialisedRequest = JsonConvert.SerializeObject(deserialisedRequest, DerbySoftSupport.GetJsonSerializerSettings());

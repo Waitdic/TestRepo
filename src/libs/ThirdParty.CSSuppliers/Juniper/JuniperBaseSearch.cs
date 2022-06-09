@@ -37,24 +37,26 @@
 
         #region Build Search Requests
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var hotelList = new List<string>();
             int maxHotelsPerRequest = _settings.MaxHotelsPerSearchRequest(searchDetails);
 
-            var searchRequests = searchDetails.RoomDetails.SelectMany((oRoom, roomCnt) =>
-            {
-                return resortSplits.SelectMany(resortSplit =>
-                {
-                    return resortSplit.Hotels
-                        .Select((h, idx) => new { oHotel = h.TPKey, grIdx = idx / maxHotelsPerRequest })
-                        .GroupBy(x => x.grIdx)
-                        .Select(gr => new { hotels = gr.Select(x => x.oHotel), room = oRoom, prbid = roomCnt + 1 })
-                        .ToList();
-                });
-            }).Take(Constant.SearchWebRequestLimit)
-            .Select((x, iUniqueReqID) => BuildSearchWebRequest(searchDetails, x.hotels, saveLogs, x.room, x.prbid, iUniqueReqID))
-            .ToList();
+            var searchRequests = searchDetails.RoomDetails
+                .SelectMany((oRoom, roomCnt) =>
+                    {
+                        return resortSplits.SelectMany(resortSplit =>
+                        {
+                            return resortSplit.Hotels
+                                .Select((h, idx) => new { oHotel = h.TPKey, grIdx = idx / maxHotelsPerRequest })
+                                .GroupBy(x => x.grIdx)
+                                .Select(gr => new { hotels = gr.Select(x => x.oHotel), room = oRoom, prbid = roomCnt + 1 })
+                                .ToList();
+                        });
+                    })
+                .Take(Constant.SearchWebRequestLimit)
+                .Select((x, iUniqueReqID) => BuildSearchWebRequest(searchDetails, x.hotels, x.room, x.prbid, iUniqueReqID))
+                .ToList();
 
             return searchRequests;
         }
@@ -62,7 +64,6 @@
         public Request BuildSearchWebRequest(
             SearchDetails SearchDetails,
             IEnumerable<string> HotelList,
-            bool SaveLogs,
             RoomDetail oRoom,
             int prbid,
             int iUniqueReqID)
@@ -74,7 +75,7 @@
             var searchRequest = BuildSearchRequest(SearchDetails, HotelList.ToList(), oRoom);
             var sSearchRequest = JuniperHelper.BuildSoap(searchRequest, _serializer);
 
-            var oSearchRequest = JuniperHelper.BuildWebRequest(hotelAvailUrl, sSoapAction, sSearchRequest, Constant.SearchLogFile, Source, SaveLogs, useGZip);
+            var oSearchRequest = JuniperHelper.BuildWebRequest(hotelAvailUrl, sSoapAction, sSearchRequest, Constant.SearchLogFile, Source, useGZip);
 
             var sUniqueCode = $"{Source}{iUniqueReqID}";
             var oExtraHelper = new SearchExtraHelper(SearchDetails, sUniqueCode);

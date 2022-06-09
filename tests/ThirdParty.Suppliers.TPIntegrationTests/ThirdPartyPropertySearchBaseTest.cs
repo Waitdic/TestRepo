@@ -77,7 +77,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             // Act
             for (int i = 0; i < SearchDetailsList.Count(); ++i)
             {
-                builtRequests.Add(SearchClass.BuildSearchRequests(SearchDetailsList[i], ResortSplits, true)[0]);
+                builtRequests.Add(SearchClass.BuildSearchRequests(SearchDetailsList[i], ResortSplits)[0]);
             }
             var resStr = builtRequests.Aggregate("", (all, item) => $"{all}{item.RequestLog}\n");
             // Assert
@@ -90,7 +90,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             var emptyResortSplits = new List<ResortSplit>();
 
             // Act 
-            var builtRequests = SearchClass.BuildSearchRequests(SearchDetailsList[0], emptyResortSplits, true);
+            var builtRequests = SearchClass.BuildSearchRequests(SearchDetailsList[0], emptyResortSplits);
 
             // Assert
             return Helper.AreSameWebRequests(GetRequests(requestLog), builtRequests);

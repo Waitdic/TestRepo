@@ -62,7 +62,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
             var oRequests = new List<Request>();
             var oSearchCodes = new Dictionary<List<string>, string>();

@@ -27,10 +27,7 @@
             _guid = guid;
         }
 
-        public IEnumerable<Request> BuildSearchRequests(
-            SearchDetails searchDetails,
-            List<ResortSplit> resortSplits,
-            bool saveLogs)
+        public IEnumerable<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             int hotelSearchLimit = _settings.HotelSearchLimit(searchDetails);

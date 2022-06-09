@@ -57,7 +57,7 @@
 
         #region "Build Search Request"
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var searchRequests = _searchRequestBuilder.BuildSearchRequests(searchDetails, Source, resortSplits);
 

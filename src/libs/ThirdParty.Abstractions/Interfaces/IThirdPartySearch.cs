@@ -21,9 +21,8 @@
         /// </summary>
         /// <param name="searchDetails">The search details.</param>
         /// <param name="resortSplits">The resort splits.</param>
-        /// <param name="saveLogs">if set to <c>true</c> [b save logs].</param>
         /// <returns>A list of request</returns>
-        List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs);
+        List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits);
 
         /// <summary>
         /// Transforms the response.

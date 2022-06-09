@@ -36,15 +36,15 @@
 
         public string Source => ThirdParties.EXPEDIARAPID;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
             var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
 
-            return MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize).Select(tpKeys => BuildSearchRequest(tpKeys, searchDetails, saveLogs)).ToList();
+            return MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize).Select(tpKeys => BuildSearchRequest(tpKeys, searchDetails)).ToList();
         }
 
-        private Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails, bool savelogs)
+        private Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails)
         {
             string searchURL = BuildSearchURL(tpKeys, searchDetails);
             bool useGzip = _settings.get_UseGZIP(searchDetails);
@@ -55,7 +55,7 @@
             string tpSessionID = Guid.NewGuid().ToString();
             var headers = new RequestHeaders() { new RequestHeader(SearchHeaderKeys.CustomerSessionID, tpSessionID), CreateAuthorizationHeader(apiKey, secret) };
 
-            var request = BuildDefaultRequest(searchURL, eRequestMethod.GET, headers, useGzip, savelogs, userAgent, "Search");
+            var request = BuildDefaultRequest(searchURL, eRequestMethod.GET, headers, useGzip, userAgent);
 
             request.ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails };
 
@@ -90,7 +90,13 @@
             return new RequestHeader(SearchHeaderKeys.Authorization, $"EAN apikey={apiKey},signature={hashString},timestamp={timeStamp}");
         }
 
-        public static Request BuildDefaultRequest(string url, eRequestMethod requestMethod, RequestHeaders headers, bool useGzip, bool saveLogs, string userAgent, string logFileName, string requestBody = null)
+        public static Request BuildDefaultRequest(
+            string url,
+            eRequestMethod requestMethod,
+            RequestHeaders headers,
+            bool useGzip,
+            string userAgent,
+            string requestBody = null)
         {
             var request = new Request()
             {
@@ -102,9 +108,6 @@
                 Headers = headers,
                 UserAgent = userAgent,
                 EndPoint = url,
-                CreateLog = saveLogs,
-                Source = ThirdParties.EXPEDIARAPID,
-                LogFileName = logFileName,
                 SuppressExpectHeaders = true
             };
 

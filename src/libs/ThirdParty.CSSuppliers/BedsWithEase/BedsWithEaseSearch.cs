@@ -39,7 +39,7 @@
 
         public string Source => ThirdParties.BEDSWITHEASE;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             string sessionId = BedsWithEaseHelper.GetSessionId(searchDetails, _settings, _serializer, _httpClient, _logger);
@@ -52,10 +52,6 @@
                     Method = eRequestMethod.POST,
                     SoapAction = _settings.SOAPAvailableHotels(searchDetails),
                     SOAP = true,
-                    Source = Source,
-                    LogFileName = "Search",
-                    CreateLog = saveLogs,
-                    UseGZip = _settings.UseGZIP(searchDetails)
                 };
 
                 var xmlRequest = BuildAvailableRequest(sessionId, searchDetails, resortSplit.ResortCode);

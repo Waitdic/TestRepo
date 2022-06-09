@@ -20,7 +20,7 @@
             _settings = Ensure.IsNotNull(settings, nameof(settings));
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return new List<Request>() { new Request() {

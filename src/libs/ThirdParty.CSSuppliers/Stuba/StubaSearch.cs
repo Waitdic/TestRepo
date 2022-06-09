@@ -33,7 +33,7 @@
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {
             var oRequests = new List<Request>();
 

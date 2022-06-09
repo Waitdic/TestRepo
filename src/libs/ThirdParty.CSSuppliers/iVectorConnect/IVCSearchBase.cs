@@ -25,7 +25,7 @@
 
         public abstract string Source { get; }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             //1. set up some start values
             var requests = new List<Request>();
@@ -40,9 +40,6 @@
                 EndPoint = url,
                 Method = eRequestMethod.POST,
                 ContentType = ContentTypes.Application_x_www_form_urlencoded,
-                CreateLog = saveLogs,
-                Source = Source,
-                LogFileName = "PropertySearch",
                 ExtraInfo = searchDetails,
             };
 

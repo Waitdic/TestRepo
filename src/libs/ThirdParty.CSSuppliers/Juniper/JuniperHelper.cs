@@ -6,27 +6,30 @@
 
     public static class JuniperHelper
     {
-
         #region "Request Builder"
 
-        public static Request BuildWebRequest(string URL, string SOAPAction, string Request,
-            string LogFileName, string Source, bool SaveLogs = true, bool UseGZip = false)
+        public static Request BuildWebRequest(
+            string url,
+            string soapAction,
+            string request,
+            string logFileName,
+            string source,
+            bool useGZip = false)
         {
-            var oWebRequest = new Request
+            var webRequest = new Request
             {
-                EndPoint = URL,
+                EndPoint = url,
                 SOAP = true,
-                SoapAction = SOAPAction,
+                SoapAction = soapAction,
                 Method = eRequestMethod.POST,
-                Source = Source,
-                LogFileName = LogFileName,
-                CreateLog = SaveLogs,
-                UseGZip = UseGZip,
+                Source = source,
+                LogFileName = logFileName,
+                UseGZip = useGZip,
             };
 
-            oWebRequest.SetRequest(Request);
+            webRequest.SetRequest(request);
 
-            return oWebRequest;
+            return webRequest;
         }
 
         internal static Pos BuildPosNode(string agentDutyCode, string password)

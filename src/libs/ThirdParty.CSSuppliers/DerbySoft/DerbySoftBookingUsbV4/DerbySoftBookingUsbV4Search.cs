@@ -33,13 +33,13 @@
 
         #endregion
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requestBuilderFactory = new SearchFactory(_settings, Source, Guid.NewGuid());
             var requestBuilder = requestBuilderFactory.GetSearchRequestBuilder(searchDetails);
             var guid = Guid.NewGuid();
 
-            return requestBuilder.BuildSearchRequests(searchDetails, resortSplits, saveLogs).ToList();
+            return requestBuilder.BuildSearchRequests(searchDetails, resortSplits).ToList();
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

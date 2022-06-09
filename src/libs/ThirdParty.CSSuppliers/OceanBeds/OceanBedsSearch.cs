@@ -29,14 +29,14 @@
 
         public string Source => ThirdParties.OCEANBEDS;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = from resort in resortSplits
                            select new OceanBedsPropertyDetails(searchDetails, resort.ResortCode)
                 into propertyDetails
                            select BuildPropertyAvailabilityRequest(propertyDetails, searchDetails, _settings)
                 into request
-                           select BuildSearchRequest(searchDetails, request, saveLogs);
+                           select BuildSearchRequest(searchDetails, request);
 
             return requests.ToList();
         }
@@ -65,7 +65,7 @@
             return false;
         }
 
-        private Request BuildSearchRequest(SearchDetails searchDetails, PropertyAvailabilityRQ request, bool saveLogs)
+        private Request BuildSearchRequest(SearchDetails searchDetails, PropertyAvailabilityRQ request)
         {
             var searchWebRequest = new Request();
 

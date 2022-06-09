@@ -51,7 +51,7 @@
 
         #region "Build Search Request"
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();

@@ -42,7 +42,7 @@
 
         #region "SearchFunctions"
 
-        public List<Request> BuildSearchRequests(SearchDetails oSerchDetails, List<ResortSplit> oResortSplits, bool bSaveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails oSerchDetails, List<ResortSplit> oResortSplits)
         {
             var oRequests = oResortSplits.Select(oResortSplit =>
             {
@@ -59,9 +59,6 @@
                     SoapAction = $"{_settings.URL(oSerchDetails)}/{Constant.SoapActionPreBook}",
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                    Source = Source,
-                    LogFileName = Constant.LogFileSearch,
-                    CreateLog = bSaveLogs,
                     ExtraInfo = new SearchExtraHelper(oSerchDetails, sUniqueCode),
                 };
                 oRequest.SetRequest(oRequestXML);

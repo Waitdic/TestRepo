@@ -50,7 +50,7 @@
 
         #endregion
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits, bool saveLogs)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var searchHelper = new SearchHelper();

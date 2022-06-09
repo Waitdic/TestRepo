@@ -50,8 +50,8 @@
             var bookingUsbV4RequestLogs = GetRequests(DerbySoftRes.BookingUsbV4RequestLogs);
             for (int i = 0; i < SearchDetailsList.Count; ++i)
             {
-                shoppingEngineRequests.Add(shoppingEngineRequestBuilder.BuildSearchRequests(SearchDetailsList[i], ResortSplits, true).ToList()[0]);
-                bookingusbV4Requests.Add(bookingEngineRequestBuilder.BuildSearchRequests(SearchDetailsList[i], ResortSplits, true).ToList()[0]);
+                shoppingEngineRequests.Add(shoppingEngineRequestBuilder.BuildSearchRequests(SearchDetailsList[i], ResortSplits).ToList()[0]);
+                bookingusbV4Requests.Add(bookingEngineRequestBuilder.BuildSearchRequests(SearchDetailsList[i], ResortSplits).ToList()[0]);
             }
 
             // Assert

@@ -7,9 +7,6 @@
 
     public interface ISearchRequestBuilder
     {
-        IEnumerable<Request> BuildSearchRequests(
-            SearchDetails searchDetails, 
-            List<ResortSplit> resortSplits,
-            bool saveLogs);
+        IEnumerable<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits);
     }
 }
