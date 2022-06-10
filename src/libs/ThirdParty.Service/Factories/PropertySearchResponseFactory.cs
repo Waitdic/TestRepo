@@ -113,7 +113,8 @@
                             CurrencyCode = await this.currencyRepository.GetCurrencyCodeFromISOCurrencyIDAsync(roomResult.RoomData.Source, roomResult.PriceData.CurrencyID),
                             TotalCost = Math.Round(roomResult.PriceData.TotalCost + 0.00M, 2),
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
-                            CancellationTerms = GetCancellationTerms(roomResult.Cancellations)
+                            CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
+                            Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2)
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

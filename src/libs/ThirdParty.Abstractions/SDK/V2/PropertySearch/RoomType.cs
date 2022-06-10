@@ -82,6 +82,14 @@
         public decimal TotalCost { get; set; }
 
         /// <summary>
+        /// Gets or sets the discount.
+        /// </summary>
+        /// <value>
+        /// The discount.
+        /// </value>
+        public decimal Discount { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether [non refundable].
         /// </summary>
         /// <value>
