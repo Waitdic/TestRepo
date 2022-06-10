@@ -1,34 +1,37 @@
-var builder = WebApplication.CreateBuilder(args);
+using AutoMapper;
+using iVectorOne_Admin_Api.Config.Context;
+using iVectorOne_Admin_Api.Config.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ConfigContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConfigConnection")));
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/tenants/{tenantid}/subscriptions", (ConfigContext context, IMapper mapper, int tenantid) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var subscriptions = context.Subscriptions.Where(t => t.TenantId == tenantid).ToList();
+    List<SubscriptionDTO> subList = mapper.Map<List<SubscriptionDTO>>(subscriptions);
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return subList;
 });
 
-app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
+app.MapGet("/tenants/{tenantid}/subscriptions/{subscriptionid}", (ConfigContext context, IMapper mapper, int tenantid, int subscriptionid) =>
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var subscription = context.Subscriptions.Where(s=>s.SubscriptionId == subscriptionid && s.TenantId == tenantid).FirstOrDefault();
+    SubscriptionDTO sub = mapper.Map<SubscriptionDTO>(subscription);
+
+    return sub;
+});
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+app.Run();
