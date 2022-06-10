@@ -50,6 +50,15 @@
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the code.
+        /// </summary>
+        /// <value>
+        /// The code.
+        /// </value>
+        [JsonPropertyName("RoomTypeCode")]
+        public string Code { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the type of the supplier room.
         /// </summary>
         /// <value>
