@@ -6,19 +6,19 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.AceRooms.Models;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Lookups;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using static ThirdParty.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
 
-    public class AceroomsSearch : IThirdPartySearch
+    public class AceroomsSearch : IThirdPartySearch, ISingleSource
     {
         #region "Properties"
 
@@ -32,7 +32,7 @@
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

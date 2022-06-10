@@ -13,13 +13,11 @@
 
     public class BookingUsbV4ResponseTransformer : ISearchResponseTransformer
     {
-        private readonly IDerbySoftSettings _settings;
         private readonly TransformedResultBuilder _resultBuilder;
 
-        public BookingUsbV4ResponseTransformer(IDerbySoftSettings settings)
+        public BookingUsbV4ResponseTransformer(IDerbySoftSettings settings, string source)
         {
-            _settings = settings;
-            _resultBuilder = new TransformedResultBuilder(_settings);
+            _resultBuilder = new TransformedResultBuilder(settings, source);
         }
 
         public IEnumerable<TransformedResult> TransformResponses(List<Request> requests)

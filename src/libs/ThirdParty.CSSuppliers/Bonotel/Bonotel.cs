@@ -12,10 +12,11 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class Bonotel : IThirdParty
+    public class Bonotel : IThirdParty, ISingleSource
     {
         private readonly IBonotelSettings _settings;
 
@@ -40,37 +41,18 @@
         #region Properties
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-        {
-            return _settings.get_AllowCancellations(searchDetails, false);
-        }
+            => _settings.get_AllowCancellations(searchDetails, false);
 
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool SupportsRemarks => true;
 
-        public bool SupportsBookingSearch
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.BONOTEL;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
-        {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
-        }
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.get_OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 
@@ -387,11 +369,11 @@
         }
 
         #endregion
+
         public void EndSession(PropertyDetails oPropertyDetails)
         {
 
         }
-
 
         #region Third Party Reference Helper
 
@@ -735,6 +717,5 @@
         }
 
         #endregion
-
     }
 }

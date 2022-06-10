@@ -12,21 +12,21 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.CSSuppliers.Models.Altura;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.Models.Altura;
 
-    public class Altura : IThirdParty
+    public class Altura : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IAlturaSettings _settings;
         private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<Altura> _logger;
 
-        public string Source { get; set; } = ThirdParties.ALTURA;
+        public string Source => ThirdParties.ALTURA;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
@@ -37,19 +37,19 @@
 
         public bool SupportsBookingSearch => false;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public Altura(
             IAlturaSettings settings,
@@ -65,7 +65,7 @@
 
         #endregion
 
-        #region "PreBook"
+        #region PreBook
 
         public bool PreBook(PropertyDetails oPropertyDetails)
         {
@@ -137,7 +137,8 @@
 
         #endregion
 
-        #region "Book"
+        #region Book
+
         public string Book(PropertyDetails oPropertyDetails)
         {
             var oReferences = new List<string>();
@@ -201,7 +202,7 @@
 
         #endregion
 
-        #region "Cancellations"
+        #region Cancellations
 
         public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
         {
@@ -347,7 +348,7 @@
 
         #endregion
 
-        #region "Booking Search"
+        #region Booking Search
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
@@ -361,7 +362,7 @@
 
         #endregion
 
-        #region "Booking Status Update"
+        #region Booking Status Update
 
         public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails)
         {
@@ -374,9 +375,9 @@
         {
         }
 
-        #region "Helpers"
+        #region Helpers
 
-        public AlturaPrebookRequest SetCheckRequest(PropertyDetails oPropertyDetails, string iRateId, string iSessionId)
+        public AlturaPrebookRequest SetCheckRequest(PropertyDetails propertyDetails, string rateId, string sessionId)
         {
             return new AlturaPrebookRequest
             {
@@ -384,13 +385,13 @@
                 {
                     RequestType = Constant.RequestTypePrebook,
                     Version = Constant.ApiVersion,
-                    Session = GetSession(oPropertyDetails, iSessionId),
-                    RateId = iRateId
+                    Session = GetSession(propertyDetails, sessionId),
+                    RateId = rateId
                 }
             };
         }
 
-        public AlturaBookRequest SetConfirmationRequest(PropertyDetails oPropertyDetails, string sRateId, string sSessionId, int iRoomIndex)
+        public AlturaBookRequest SetConfirmationRequest(PropertyDetails propertyDetails, string rateId, string sessionId, int roomIndex)
         {
             //'build the request xml
             return new AlturaBookRequest
@@ -399,72 +400,72 @@
                 {
                     RequestType = Constant.RequestTypeBook,
                     Version = Constant.ApiVersion,
-                    Session = GetSession(oPropertyDetails, sSessionId),
+                    Session = GetSession(propertyDetails, sessionId),
                     BookingConfirmation =
                     {
-                        RateId = sRateId,
-                        SpecialRequest = oPropertyDetails.BookingComments.Any()
-                                ? $"{string.Join(",", oPropertyDetails.BookingComments.Select(c => c.Text))} (Room {iRoomIndex + 1}/{oPropertyDetails.Rooms.Count})"
-                                : $"(Room {iRoomIndex + 1}/{oPropertyDetails.Rooms.Count})",
+                        RateId = rateId,
+                        SpecialRequest = propertyDetails.BookingComments.Any()
+                                ? $"{string.Join(",", propertyDetails.BookingComments.Select(c => c.Text))} (Room {roomIndex + 1}/{propertyDetails.Rooms.Count})"
+                                : $"(Room {roomIndex + 1}/{propertyDetails.Rooms.Count})",
                     },
                     Guest =
                     {
-                            Tittle = oPropertyDetails.LeadGuestTitle,
-                            FirstName = oPropertyDetails.LeadGuestFirstName,
-                            LastName = oPropertyDetails.LeadGuestLastName,
-                            Email = oPropertyDetails.LeadGuestEmail,
-                            Phone = oPropertyDetails.LeadGuestPhone
+                            Tittle = propertyDetails.LeadGuestTitle,
+                            FirstName = propertyDetails.LeadGuestFirstName,
+                            LastName = propertyDetails.LeadGuestLastName,
+                            Email = propertyDetails.LeadGuestEmail,
+                            Phone = propertyDetails.LeadGuestPhone
                     }
                 }
             };
         }
 
-        public AlturaCancellationRequest SetCancellationRequest(PropertyDetails oPropertyDetails, string sBookingId)
+        public AlturaCancellationRequest SetCancellationRequest(PropertyDetails propertyDetails, string bookingId)
         {
             return new AlturaCancellationRequest
             {
                 Request =
                 {
-                    Session = GetSession(oPropertyDetails),
+                    Session = GetSession(propertyDetails),
                     Cancellation =
                     {
-                        BookingId = sBookingId
+                        BookingId = bookingId
                     }
                 }
             };
         }
 
-        public AlturaCancellationRequest SetCancelConfirmationRequest(PropertyDetails oPropertyDetails, string sSessionId, string sBookingId, decimal dCancelationAmount)
+        public AlturaCancellationRequest SetCancelConfirmationRequest(PropertyDetails propertyDetails, string sessionId, string bookingId, decimal cancelationAmount)
         {
             return new AlturaCancellationRequest
             {
                 Request =
                 {
                     RequestType = Constant.RequestTypeCancellation,
-                    Session = GetSession(oPropertyDetails, sSessionId),
+                    Session = GetSession(propertyDetails, sessionId),
                     Cancellation =
                     {
-                        BookingId = sBookingId,
-                        CancellationPrice = dCancelationAmount * 100
+                        BookingId = bookingId,
+                        CancellationPrice = cancelationAmount * 100
                     }
                 }
             };
         }
 
-        private Session GetSession(PropertyDetails oPropertyDetails, string sSessionId = "")
+        private Session GetSession(PropertyDetails propertyDetails, string sessionId = "")
         {
             return new Session
             {
-                Id = sSessionId,
-                AgencyId = _settings.AgencyId(oPropertyDetails),
-                Password = _settings.Password(oPropertyDetails),
-                ExternalId = _settings.ExternalId(oPropertyDetails)
+                Id = sessionId,
+                AgencyId = _settings.AgencyId(propertyDetails),
+                Password = _settings.Password(propertyDetails),
+                ExternalId = _settings.ExternalId(propertyDetails)
             };
         }
 
-        public bool IsRoomBooked(PropertyDetails oPropertyDetails, int iRoomIndex)
+        public bool IsRoomBooked(PropertyDetails propertyDetails, int roomIndex)
         {
-            var sSourceReference = GetSourceReference(oPropertyDetails);
+            var sSourceReference = GetSourceReference(propertyDetails);
 
             //'Check whether rooms have never been booked
             if (string.IsNullOrEmpty(sSourceReference))
@@ -475,52 +476,52 @@
             var oSourceReferences = sSourceReference.Split('|');
 
             //'Check if previous book has been sucessfull
-            if (oSourceReferences.Count() == oPropertyDetails.Rooms.Count())
+            if (oSourceReferences.Count() == propertyDetails.Rooms.Count())
             {
-                return !string.Equals(oSourceReferences[iRoomIndex], Constant.FailedReference);
+                return !string.Equals(oSourceReferences[roomIndex], Constant.FailedReference);
             }
 
             return false;
         }
 
-        public static string GetSourceReference(PropertyDetails oPropertyDetails)
+        public static string GetSourceReference(PropertyDetails propertyDetails)
         {
-            return !string.Equals(oPropertyDetails.SourceReference, "failed")
-                        ? oPropertyDetails.SourceReference
-                        : oPropertyDetails.SourceSecondaryReference;
+            return !string.Equals(propertyDetails.SourceReference, "failed")
+                        ? propertyDetails.SourceReference
+                        : propertyDetails.SourceSecondaryReference;
         }
 
-        public XmlDocument SendRequest<T>(T tRequest, PropertyDetails oPropertyDetails, string sLogFilename)
+        public XmlDocument SendRequest<T>(T request, PropertyDetails propertyDetails, string logFilename)
         {
-            var xmlRequest = _serializer.Serialize(tRequest);
+            var xmlRequest = _serializer.Serialize(request);
 
-            var oRequest = new Request
+            var webRequest = new Request
             {
-                EndPoint = _settings.URL(oPropertyDetails),
+                EndPoint = _settings.URL(propertyDetails),
                 Method = eRequestMethod.POST,
                 Source = Source,
                 CreateLog = true,
-                LogFileName = sLogFilename,
-                UseGZip = _settings.UseGZip(oPropertyDetails),
+                LogFileName = logFilename,
+                UseGZip = _settings.UseGZip(propertyDetails),
                 Param = "xml",
                 ContentType = ContentTypes.Application_x_www_form_urlencoded,
             };
 
-            oRequest.SetRequest(xmlRequest);
+            webRequest.SetRequest(xmlRequest);
 
-            oRequest.Send(_httpClient, _logger).RunSynchronously();
+            webRequest.Send(_httpClient, _logger).RunSynchronously();
 
             //'save the xml for the front end
             if (!string.IsNullOrEmpty(xmlRequest.OuterXml))
             {
-                oPropertyDetails.Logs.AddNew(Source, $"{Source} {sLogFilename} Request", xmlRequest.OuterXml);
+                propertyDetails.Logs.AddNew(Source, $"{Source} {logFilename} Request", xmlRequest.OuterXml);
             }
-            if (!string.IsNullOrEmpty(oRequest.ResponseLog))
+            if (!string.IsNullOrEmpty(webRequest.ResponseLog))
             {
-                oPropertyDetails.Logs.AddNew(Source, $"{Source} {sLogFilename} Response", oRequest.ResponseLog);
+                propertyDetails.Logs.AddNew(Source, $"{Source} {logFilename} Response", webRequest.ResponseLog);
             }
 
-            return oRequest.ResponseXML;
+            return webRequest.ResponseXML;
         }
 
         #endregion

@@ -1,18 +1,26 @@
 ﻿namespace ThirdParty.CSSuppliers.iVectorConnect
 {
     using System;
+    using System.Collections.Generic;
     using Models.Common;
+    using ThirdParty.Constants;
 
     public static class Helper
     {
-        public static LoginDetails GetLoginDetails(IThirdPartyAttributeSearch searchDetails, IIVectorConnectSettings settings)
+        public static List<string> iVectorConnectSources = new()
+        {
+            ThirdParties.BOOKABED,
+            ThirdParties.IMPERATORE,
+        };
+
+        public static LoginDetails GetLoginDetails(IThirdPartyAttributeSearch searchDetails, IiVectorConnectSettings settings, string source)
         {
             return new LoginDetails
             {
-                Login = settings.Login(searchDetails),
-                Password = settings.Password(searchDetails),
-                AgentReference = settings.AgentReference(searchDetails),
-                SellingCurrencyID = settings.SellingCurrencyID(searchDetails)
+                Login = settings.Login(searchDetails, source),
+                Password = settings.Password(searchDetails, source),
+                AgentReference = settings.AgentReference(searchDetails, source),
+                SellingCurrencyID = settings.SellingCurrencyID(searchDetails, source)
             };
         }
 

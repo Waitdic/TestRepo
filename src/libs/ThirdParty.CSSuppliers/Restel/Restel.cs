@@ -3,24 +3,25 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.Restel.Models;
     using static RestelThirdPartyReference;
     using static RestelCommon;
-    using Intuitive.Helpers.Serialization;
-    using System.Net.Http;
-    using Intuitive.Helpers.Security;
-    using Microsoft.Extensions.Logging;
 
-    public class Restel : IThirdParty
+    public class Restel : IThirdParty, ISingleSource
     {
         private readonly IRestelSettings _settings;
         private readonly ITPSupport _support;
@@ -56,12 +57,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }

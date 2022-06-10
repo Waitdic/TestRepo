@@ -10,24 +10,22 @@
     using MoreLinq;
     using Newtonsoft.Json;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
-    public class ExpediaRapid : IThirdParty
+    public class ExpediaRapid : IThirdParty, ISingleSource
     {
-
         private readonly IExpediaRapidAPI _api;
 
         private readonly IExpediaRapidSettings _settings;
-
-        private readonly string _source = ThirdParties.EXPEDIARAPID;
 
         private readonly ITPSupport _support;
 
@@ -40,15 +38,13 @@
             _support = Ensure.IsNotNull(support, nameof(support));
         }
 
-        public bool SupportsRemarks { get; private set; } = true;
-        public bool SupportsBookingSearch { get; private set; } = false;
+        public bool SupportsRemarks => true;
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.EXPEDIARAPID;
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            throw new NotImplementedException();
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source)
+            => throw new NotImplementedException();
 
         public void EndSession(PropertyDetails propertyDetails)
         {
@@ -57,7 +53,6 @@
 
         public bool PreBook(PropertyDetails propertyDetails)
         {
-
             try
             {
                 // retry search to get cancellation and errata
@@ -118,7 +113,6 @@
 
         public string Book(PropertyDetails propertyDetails)
         {
-
             var roomBookResults = new Dictionary<string, Result>();
 
             try
@@ -146,7 +140,6 @@
 
         public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
         {
-
             decimal amount = 0m;
             var cancelReferences = new List<string>();
             bool success = true;
@@ -206,7 +199,6 @@
 
         public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
         {
-
             decimal amount = 0m;
             bool success = true;
 
@@ -264,7 +256,6 @@
 
         private List<string> CancelRooms(PropertyDetails propertyDetails, BookingItineraryResponse bookingItineraryResponse1)
         {
-
             var cancelReferences = new List<string>();
 
             foreach (BookingItineraryResponseRoom room in bookingItineraryResponse1.Rooms)
@@ -300,9 +291,7 @@
 
         private void GetBookingLink(PropertyDetails propertyDetails, RoomDetails firstRoom, PrebookResponse prebookResponse)
         {
-
-            Link bookLink = null;
-            if (!prebookResponse.Links.TryGetValue("book", out bookLink))
+            if (!prebookResponse.Links.TryGetValue("book", out Link bookLink))
             {
                 throw new Exception("Couldn't find booklink for room in prebook response");
             }
@@ -349,7 +338,6 @@
 
         private Cancellations GetCancellationsFromAllRooms(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
-
             var cancellations = new Cancellations();
 
             foreach (RoomDetails room in propertyDetails.Rooms)
@@ -375,7 +363,6 @@
 
         private Cancellation BuildCancellation(OccupancyRoomRate occupancyRoomRate, CancelPenalty cancelPenalty)
         {
-
             decimal amount = 0m;
 
             if (cancelPenalty.Amount != 0m)
@@ -407,9 +394,8 @@
 
         private Errata GetErrataFromAllRooms(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
-
             var errata = new Errata();
-            string currencyCode = _support.TPCurrencyLookup(_source, propertyDetails.CurrencyCode);
+            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
 
             var mandatoryFees = new List<OccupancyRateFee>();
             var resortFees = new List<OccupancyRateFee>();
@@ -478,7 +464,6 @@
 
         private OccupancyRoomRate GetExactOccupancyRoomRate(List<SearchResponseRoom> responseRooms, ExpediaRapidOccupancy occuapncy, string roomID, string rateID)
         {
-
             var roomRate = GetExactRoomRate(responseRooms, roomID, rateID);
             var occupancyRoomRate = roomRate.OccupancyRoomRates[occuapncy.GetExpediaRapidOccupancy()];
 
@@ -487,7 +472,6 @@
 
         private RoomRate GetExactRoomRate(List<SearchResponseRoom> responseRooms, string roomID, string rateID)
         {
-
             var responseRoom = responseRooms.First(r => (r.RoomID ?? "") == (roomID ?? ""));
             var roomRate = responseRoom.Rates.First(r => (r.RateID ?? "") == (rateID ?? ""));
             return roomRate;
@@ -495,13 +479,11 @@
 
         private Erratum BuildErrata(string feeName, decimal amount, string currencyCode)
         {
-
             return new Erratum(ErrataTitle, $"{feeName}: {currencyCode}/{amount}");
         }
 
         private List<SearchResponseRoom> GetPrebookSpecificRoomRates(PropertyDetails propertyDetails, SearchResponse searchResponse)
         {
-
             var propertyAvail = searchResponse.First(sr => (sr.PropertyID ?? "") == (propertyDetails.TPKey ?? ""));
 
             if (propertyAvail is null || !propertyAvail.Rooms.Any())
@@ -539,9 +521,8 @@
 
         private string BuildPrebookSearchURL(PropertyDetails propertyDetails)
         {
-
             var tpKeys = new List<string>() { propertyDetails.TPKey };
-            string currencyCode = _support.TPCurrencyLookup(_source, propertyDetails.CurrencyCode);
+            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
@@ -596,7 +577,7 @@
                                 City = propertyDetails.LeadGuestTownCity,
                                 StateProvinceCode = propertyDetails.LeadGuestCounty,
                                 PostalCode = propertyDetails.LeadGuestPostcode,
-                                CountryCode = _support.TPBookingCountryLookup(_source, propertyDetails.LeadGuestBookingCountryID)
+                                CountryCode = _support.TPBookingCountryLookup(Source, propertyDetails.LeadGuestBookingCountryID)
                             }
                         }
                     }
@@ -608,7 +589,6 @@
 
         private BookRequestRoom CreateBookRequestRoom(PropertyDetails propertyDetails, Passenger firstPasseneger, int index)
         {
-
             if (index == 0)
             {
                 return new BookRequestRoom()
@@ -637,7 +617,6 @@
 
         private string BuildDefaultURL(PropertyDetails propertyDetails, string path)
         {
-
             var uriBuilder = new UriBuilder(_settings.get_Scheme(propertyDetails), _settings.get_Host(propertyDetails), -1);
 
             if (string.IsNullOrWhiteSpace(path))
@@ -651,7 +630,7 @@
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new NotImplementedException();
         }

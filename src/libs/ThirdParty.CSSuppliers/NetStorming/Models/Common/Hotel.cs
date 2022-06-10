@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.NetStorming.Models.Common
+﻿namespace ThirdParty.CSSuppliers.Netstorming.Models.Common
 {
     using System;
     using System.Xml.Serialization;

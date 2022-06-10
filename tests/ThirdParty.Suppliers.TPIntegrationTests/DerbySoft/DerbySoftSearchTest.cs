@@ -3,34 +3,33 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Intuitive.Net.WebRequests;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Search.Support;
-    using Xunit;
-    using ThirdParty.Results;
-    using System.Xml;
-    using ThirdParty.CSSuppliers.DerbySoft;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
-    using ThirdParty.Tests.DerbySoft;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
-    using Intuitive.Helpers.Serialization;
     using System.Text;
+    using System.Xml;
+    using Intuitive.Helpers.Serialization;
+    using Intuitive.Net.WebRequests;
+    using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.DerbySoft;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
+    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
+    using ThirdParty.Search.Support;
+    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
+    using ThirdParty.Tests.DerbySoft;
 
     public class DerbySoftSearchTest : ThirdPartyPropertySearchBaseTest
     {
-        private const string _provider = "DerbySoftClubMed";
+        private const string _provider = ThirdParties.DERBYSOFTCLUBMED;
 
         private static readonly SearchDetails _searchDetails = Helper.CreateSearchDetails(_provider);
 
-        private static readonly IDerbySoftClubMedSettings _settings = new InjectedDerbySoftClubMedSettings();
+        private static readonly IDerbySoftSettings _settings = new InjectedDerbySoftSettings();
 
         public DerbySoftSearchTest() : base(
            _provider,
            new List<SearchDetails>() { _searchDetails },
            _settings,
-           new DerbySoftClubMedSearch(_settings))
+           new DerbySoftSearch(_settings))
         {
         }
 
@@ -39,7 +38,6 @@
         {
             // Arrange 
             var guid = new Guid("2a774834-63a2-4a29-a699-7706e4bb1f42");
-            var requestBuilderFactory = new SearchFactory(_settings, _provider, guid);
             var shoppingEngineRequestBuilder = new ShoppingEngineRequestBuilder(_settings, _provider, guid);
             var bookingEngineRequestBuilder = new BookingUsbV4AvailabilityRequestBuilder(_settings, _provider, guid);
             var shoppingEngineRequests = new List<Request>();
@@ -64,8 +62,8 @@
         public void TransformerTest()
         {
             // Arrange 
-            var shoppingEngineTransformer = new ShoppingEngineResponseTransformer(_settings);
-            var bookingUsbTransformer = new BookingUsbV4ResponseTransformer(_settings);
+            var shoppingEngineTransformer = new ShoppingEngineResponseTransformer(_settings, _provider);
+            var bookingUsbTransformer = new BookingUsbV4ResponseTransformer(_settings, _provider);
 
             // Act
             var shoopingEngineTransformedResult = GetTransformedResultWithTransformer(shoppingEngineTransformer, DerbySoftRes.ShoppingEngineResponse);

@@ -1,10 +1,11 @@
 ﻿namespace ThirdParty.Factories
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Intuitive;
     using ThirdParty;
+    using ThirdParty.Interfaces;
     using ThirdParty.Search.Settings;
-    using System.Linq;
 
     /// <summary>Factory that takes in a source or supplier and returns the correct third party search or booking class</summary>
     public class ThirdPartyFactory : IThirdPartyFactory
@@ -16,17 +17,20 @@
             IEnumerable<IThirdPartySearch> propertySearchServices,
             IEnumerable<IThirdParty> propertyBookServices)
         {
-            _propertySearchServices = Ensure.IsNotNull(propertySearchServices, nameof(propertySearchServices))
-                .ToDictionary(x => x.Source, x => x);
-            _propertyBookServices = Ensure.IsNotNull(propertyBookServices, nameof(propertyBookServices))
-                .ToDictionary(x => x.Source, x => x);
-            //_propertyBookServices = Ensure.IsNotNull(propertyBookServices, nameof(propertyBookServices))
-            //    .Where(x => x is ISingleThirdParty)
-            //    .Select(x => ((x as ISingleThirdParty).Source, x))
-            //    .Concat(propertyBookServices
-            //        .Where(x => x is IMultiThirdParty)
-            //        .SelectMany(x => (x as IMultiThirdParty).Sources.Select(s => (s, x))))
-            //    .ToDictionary(x => x.Item1, x => x.Item2);
+            _propertySearchServices = GetThirdPartyDictionary(propertySearchServices);
+            _propertyBookServices = GetThirdPartyDictionary(propertyBookServices);
+        }
+
+        private Dictionary<string, T> GetThirdPartyDictionary<T>(IEnumerable<T> servces)
+        {
+            Ensure.IsNotNull(servces, nameof(servces));
+            return servces
+                .Where(x => x is ISingleSource)
+                .Select(x => ((x as ISingleSource).Source, x))
+                .Concat(servces
+                    .Where(x => x is IMultiSource)
+                    .SelectMany(x => (x as IMultiSource).Sources.Select(s => (s, x))))
+                .ToDictionary(x => x.Item1, x => x.Item2);
         }
 
         /// <inheritdoc />

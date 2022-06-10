@@ -6,7 +6,7 @@
 
     public static class JuniperHelper
     {
-        #region "Request Builder"
+        #region Request Builder
 
         public static Request BuildWebRequest(
             string url,
@@ -49,7 +49,7 @@
 
         #endregion
 
-        #region "Common methods"
+        #region Common methods
 
         public static string BuildSoap<T>(T request, ISerializer serializer)
         {

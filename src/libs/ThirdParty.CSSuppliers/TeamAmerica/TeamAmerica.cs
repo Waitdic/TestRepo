@@ -8,17 +8,18 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.TeamAmerica.Models;
-    using Microsoft.Extensions.Logging;
 
-    public class TeamAmerica : IThirdParty
+    public class TeamAmerica : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly ITeamAmericaSettings _settings;
         private readonly ITPSupport _support;
@@ -26,13 +27,14 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<TeamAmerica> _logger;
 
-        public string Source { get => ThirdParties.TEAMAMERICA; }
+        public string Source => ThirdParties.TEAMAMERICA;
+
         public bool SupportsBookingSearch => true;
         public bool SupportsRemarks => true;
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public TeamAmerica(
             ITeamAmericaSettings settings,
@@ -50,7 +52,8 @@
 
         #endregion
 
-        #region "PreBook"
+        #region PreBook
+
         public bool PreBook(PropertyDetails oPropertyDetails)
         {
             bool bReturn = true;
@@ -134,7 +137,7 @@
 
         #endregion
 
-        #region"Book"
+        #region Book
 
         public string Book(PropertyDetails oPropertyDetails)
         {
@@ -183,7 +186,8 @@
 
         #endregion
 
-        #region "CancelBooking"
+        #region CancelBooking
+
         public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
         {
             var TPCancelResponse = new ThirdPartyCancellationResponse
@@ -233,7 +237,7 @@
 
         #endregion
 
-        #region "Other methods"
+        #region Other methods
 
         public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
         {
@@ -259,12 +263,12 @@
         {
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
@@ -275,7 +279,7 @@
 
         #endregion
 
-        #region "Helpers"
+        #region Helpers
 
         public static bool IsEveryNightAvailable(HotelOffer oHotelOffer)
         {

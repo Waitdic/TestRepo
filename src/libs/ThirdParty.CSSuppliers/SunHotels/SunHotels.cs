@@ -11,12 +11,12 @@
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
 
-    public class SunHotels : IThirdParty
+    public class SunHotels : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -40,40 +40,23 @@
 
         private readonly ILogger<SunHotels> _logger;
 
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool SupportsRemarks => true;
 
-        public bool SupportsBookingSearch
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.SUNHOTELS;
 
-        private bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => SupportsLiveCancellation(searchDetails, source);
-
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 

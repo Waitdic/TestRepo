@@ -14,11 +14,12 @@
     using Models.Common;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class BedsWithEaseSearch : IThirdPartySearch
+    public class BedsWithEaseSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IBedsWithEaseSettings _settings;
         private readonly ISerializer _serializer;
@@ -198,7 +199,7 @@
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

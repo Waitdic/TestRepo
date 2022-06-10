@@ -22,7 +22,7 @@
     <Compile Remove="C:\ProjectsStash\thirdparty.api\build\src\Common.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="NetStorming\Resources\NetstormingRes.Designer.cs">
+    <Compile Update="Netstorming\Resources\NetstormingRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>NetstormingRes.resx</DependentUpon>
@@ -39,7 +39,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="NetStorming\Resources\NetstormingRes.resx">
+    <EmbeddedResource Update="Netstorming\Resources\NetstormingRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>

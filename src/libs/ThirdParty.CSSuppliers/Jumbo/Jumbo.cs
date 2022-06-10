@@ -11,10 +11,11 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class Jumbo : IThirdParty
+    public class Jumbo : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -47,10 +48,10 @@
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.get_AllowCancellations(searchDetails);
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.get_OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info) => false;
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 

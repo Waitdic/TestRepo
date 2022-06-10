@@ -9,12 +9,12 @@
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class BonotelSearch : IThirdPartySearch
+    public class BonotelSearch : IThirdPartySearch, ISingleSource
     {
         #region Properties
 
@@ -23,8 +23,6 @@
         private readonly ISerializer _serializer;
 
         public string Source => ThirdParties.BONOTEL;
-
-        public bool SupportsNonRefundableTagging { get; } = false;
 
         #endregion
 
@@ -40,47 +38,45 @@
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
+            bool restrictions = false;
 
-            bool bRestrictions = false;
-
-            if (oSearchDetails.Duration > 30)
+            if (searchDetails.Duration > 30)
             {
-                bRestrictions = true;
+                restrictions = true;
             }
 
-            return bRestrictions;
-
+            return restrictions;
         }
 
         #endregion
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oRequests = new List<Request>();
+            var requests = new List<Request>();
 
-            foreach (ResortSplit oResortSplit in oResortSplits)
+            foreach (var resortSplit in resortSplits)
             {
                 // Dim oFinalResults As New Results
                 var sb = new StringBuilder();
                 sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 sb.Append("<availabilityRequest>");
                 sb.Append("<control>");
-                sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(oSearchDetails));
-                sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(oSearchDetails));
+                sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(searchDetails));
+                sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(searchDetails));
                 sb.Append("</control>");
-                sb.AppendFormat("<checkIn>{0}</checkIn>", oSearchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
-                sb.AppendFormat("<checkOut>{0}</checkOut>", oSearchDetails.PropertyDepartureDate.ToString("dd-MMM-yyyy"));
-                sb.AppendFormat("<noOfRooms>{0}</noOfRooms>", oSearchDetails.Rooms);
-                sb.AppendFormat("<noOfNights>{0}</noOfNights>", oSearchDetails.PropertyDuration);
-                sb.AppendFormat("<city>{0}</city>", oResortSplit.ResortCode);
+                sb.AppendFormat("<checkIn>{0}</checkIn>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
+                sb.AppendFormat("<checkOut>{0}</checkOut>", searchDetails.PropertyDepartureDate.ToString("dd-MMM-yyyy"));
+                sb.AppendFormat("<noOfRooms>{0}</noOfRooms>", searchDetails.Rooms);
+                sb.AppendFormat("<noOfNights>{0}</noOfNights>", searchDetails.PropertyDuration);
+                sb.AppendFormat("<city>{0}</city>", resortSplit.ResortCode);
                 sb.AppendFormat("<hotelCodes>");
-                if (oResortSplit.Hotels.Count == 1)
+                if (resortSplit.Hotels.Count == 1)
                 {
-                    sb.AppendFormat("<hotelCode>{0}</hotelCode>", oResortSplit.Hotels[0].TPKey);
+                    sb.AppendFormat("<hotelCode>{0}</hotelCode>", resortSplit.Hotels[0].TPKey);
                 }
                 else
                 {
@@ -88,101 +84,99 @@
                 }
                 sb.AppendFormat("</hotelCodes>");
                 sb.AppendFormat("<roomsInformation>");
-                foreach (RoomDetail oRoom in oSearchDetails.RoomDetails)
+
+                foreach (var room in searchDetails.RoomDetails)
                 {
                     sb.AppendFormat("<roomInfo>");
                     sb.AppendFormat("<roomTypeId>0</roomTypeId>");
                     sb.AppendFormat("<bedTypeId>0</bedTypeId> ");
-                    sb.AppendFormat("<adultsNum>{0}</adultsNum>", oRoom.Adults);
-                    sb.AppendFormat("<childNum>{0}</childNum>", oRoom.Children + oRoom.Infants);
-                    if (oRoom.Children + oRoom.Infants > 0)
+                    sb.AppendFormat("<adultsNum>{0}</adultsNum>", room.Adults);
+                    sb.AppendFormat("<childNum>{0}</childNum>", room.Children + room.Infants);
+
+                    if (room.Children + room.Infants > 0)
                     {
                         sb.AppendFormat("<childAges>");
-                        foreach (int iChildAge in oRoom.ChildAndInfantAges())
+                        foreach (int iChildAge in room.ChildAndInfantAges())
                             sb.AppendFormat("<childAge>{0}</childAge>", iChildAge);
                         sb.AppendFormat("</childAges>");
                     }
+
                     sb.AppendFormat("</roomInfo>");
                 }
+
                 sb.AppendFormat("</roomsInformation>");
                 sb.Append("</availabilityRequest>");
 
-                var oRequest = new Request
+                var request = new Request
                 {
-                    EndPoint = _settings.get_URL(oSearchDetails) + "GetAvailability.do",
+                    EndPoint = _settings.get_URL(searchDetails) + "GetAvailability.do",
                     ContentType = ContentTypes.Text_xml,
                     Method = eRequestMethod.POST,
-                    ExtraInfo = oSearchDetails
+                    ExtraInfo = searchDetails
                 };
 
-                oRequest.SetRequest(sb.ToString());
+                request.SetRequest(sb.ToString());
 
-                oRequests.Add(oRequest);
+                requests.Add(request);
             }
 
-            return oRequests;
+            return requests;
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oResponses = new List<AvailabilityResponse>();
-            var oTransformedResults = new TransformedResultCollection();
+            var responses = new List<AvailabilityResponse>();
+            var transformedResults = new TransformedResultCollection();
 
-            var results = oRequests.Select(o => _serializer.DeSerialize<AvailabilityResponse>(o.ResponseXML));
-            var oHotels = results.Where(o=> o.status == "Y").SelectMany(o => o.hotelList.hotel).ToList();
+            var results = requests.Select(o => _serializer.DeSerialize<AvailabilityResponse>(o.ResponseXML));
+            var hotels = results.Where(o=> o.status == "Y").SelectMany(o => o.hotelList.hotel).ToList();
 
-            oTransformedResults.TransformedResults.AddRange(oHotels.SelectMany(o => CreateTransformedResponse(o)));
+            transformedResults.TransformedResults.AddRange(hotels.SelectMany(o => CreateTransformedResponse(o)));
 
-            return oTransformedResults;
+            return transformedResults;
         }
 
         public List<TransformedResult> CreateTransformedResponse(Hotel hotel)
         {
-
             var results = new List<TransformedResult>();
 
-            var totalTax = default(decimal);
+            decimal totalTax = 0;
 
-            foreach (RoomInformation room in hotel.roomInformation)
+            foreach (var room in hotel.roomInformation)
             {
-                foreach (Tax tax in room.rateInformation.taxInformation)
+                foreach (var tax in room.rateInformation.taxInformation)
+                {
                     totalTax += tax.taxAmount;
+                }
             }
 
-            foreach (RoomInformation room in hotel.roomInformation)
+            foreach (var room in hotel.roomInformation)
             {
-                var result = new TransformedResult();
-
-                result.TPKey = hotel.hotelCode.ToSafeString();
-                result.CurrencyCode = hotel.rateCurrencyCode;
-                result.PropertyRoomBookingID = room.roomNo.ToSafeInt();
-                result.RoomType = room.roomType;
-                result.MealBasisCode = room.rateInformation.ratePlanCode;
-                result.Amount = room.rateInformation.totalRate;
-                result.TPReference = $"{room.roomCode}|{room.roomTypeCode}|{room.bedTypeCode}|{hotel.rateCurrencyCode}|{room.rateInformation.ratePlanCode}|{totalTax}";
+                var result = new TransformedResult
+                {
+                    TPKey = hotel.hotelCode.ToSafeString(),
+                    CurrencyCode = hotel.rateCurrencyCode,
+                    PropertyRoomBookingID = room.roomNo.ToSafeInt(),
+                    RoomType = room.roomType,
+                    MealBasisCode = room.rateInformation.ratePlanCode,
+                    Amount = room.rateInformation.totalRate,
+                    TPReference = $"{room.roomCode}|{room.roomTypeCode}|{room.bedTypeCode}|{hotel.rateCurrencyCode}|{room.rateInformation.ratePlanCode}|{totalTax}"
+                };
 
                 results.Add(result);
-
             }
 
             return results;
-
         }
 
         #endregion
 
         #region ResponseHasExceptions
 
-        public bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
-
-        #endregion
-
-        #region Helpers
-
-
 
         #endregion
     }

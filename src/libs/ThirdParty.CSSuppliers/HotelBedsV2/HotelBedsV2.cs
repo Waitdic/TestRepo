@@ -1,28 +1,23 @@
-﻿#pragma warning disable CA1062 // Validate arguments of public methods
-#pragma warning disable CA1031 // Do not catch general exception types
-#pragma warning disable CA1303 // Do not pass literals as localized parameters
-#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1724 // Type names should not match namespaces
-
-namespace ThirdParty.CSSuppliers.HotelBedsV2
+﻿namespace ThirdParty.CSSuppliers.HotelBedsV2
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Security;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Models;
-    using Intuitive.Helpers.Extensions;
     using ThirdParty.Search.Models;
-    using Intuitive.Helpers.Security;
-    using System.Net.Http;
-    using Microsoft.Extensions.Logging;
 
-    public class HotelBedsV2 : IThirdParty
+    public class HotelBedsV2 : IThirdParty, ISingleSource
     {
         #region Properties
 
@@ -60,15 +55,12 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
 
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        bool IThirdParty.RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        bool IThirdParty.RequiresVCard(VirtualCardInfo info, string source) => false;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
@@ -529,9 +521,3 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
 
     #endregion
 }
-
-#pragma warning restore CA1062 // Validate arguments of public methods
-#pragma warning restore CA1031 // Do not catch general exception types
-#pragma warning restore CA1303 // Do not pass literals as localized parameters
-#pragma warning restore CA1305 // Specify IFormatProvider
-#pragma warning restore CA1724 // Type names should not match namespaces

@@ -1,38 +1,13 @@
 ﻿namespace ThirdParty
 {
-    using System.Collections.Generic;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-
-    //public interface IMultiThirdParty : IThirdParty
-    //{
-    //    /// <summary>
-    //    /// Gets or sets the source.
-    //    /// </summary>
-    //    /// <value>
-    //    /// The source.
-    //    /// </value>
-    //    List<string> Sources { get; }
-    //}
-
-    //public interface ISingleThirdParty : IThirdParty
-    //{
-    //    /// <summary>
-    //    /// Gets or sets the source.
-    //    /// </summary>
-    //    string Source { get; }
-    //}
 
     /// <summary>
     /// Defines a third party
     /// </summary>
     public interface IThirdParty
     {
-        /// <summary>
-        /// Gets or sets the source.
-        /// </summary>
-        string Source { get; }
-
         /// <summary>
         /// Gets a value indicating whether [supports remarks].
         /// </summary>
@@ -47,7 +22,7 @@
         /// Gets the supports live cancellation.
         /// </summary>
         /// <param name="searchDetails">The search details.</param>
-        /// <param name="source">The s source.</param>
+        /// <param name="source">The source.</param>
         /// <returns>A Boolean</returns>
         bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source);
 
@@ -55,18 +30,17 @@
         /// Gets the offset cancellation days.
         /// </summary>
         /// <param name="searchDetails">The search details.</param>
+        /// <param name="source">The source.</param>
         /// <returns>The number of Offset Cancellation Days</returns>
-        int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source);
 
         /// <summary>
         /// Gets a value indicating whether [requires v card].
         /// </summary>
         /// <param name="info">The information.</param>
+        /// <param name="source">The source.</param>
         /// <returns>a boolean</returns>
-        /// <value>
-        ///   <c>true</c> if [requires v card]; otherwise, <c>false</c>.
-        /// </value>
-        bool RequiresVCard(VirtualCardInfo info);
+        bool RequiresVCard(VirtualCardInfo info, string source);
 
         /// <summary>
         /// Returns success if the pre book succeeds.

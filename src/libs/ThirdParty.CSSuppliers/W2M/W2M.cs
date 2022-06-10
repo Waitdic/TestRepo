@@ -6,17 +6,18 @@
     using System.Net.Http;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.Helpers.W2M;
     using ThirdParty.CSSuppliers.Models.W2M;
-    using Microsoft.Extensions.Logging;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
-    public class W2M : IThirdParty
+    public class W2M : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IW2MSettings _settings;
         private readonly W2MHelper _w2mHelper;
@@ -27,7 +28,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public W2M(IW2MSettings settings, ISerializer serializer, HttpClient httpClient, ILogger<W2M> logger)
         {
@@ -127,7 +128,7 @@
                 CurrencyCode = propertyDetails.CurrencyCode
             };
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new NotImplementedException();
         }
@@ -186,7 +187,7 @@
             }
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             throw new NotImplementedException();
         }

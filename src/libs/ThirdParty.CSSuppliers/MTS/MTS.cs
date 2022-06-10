@@ -11,10 +11,11 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public partial class MTS : IThirdParty
+    public partial class MTS : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -44,12 +45,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }

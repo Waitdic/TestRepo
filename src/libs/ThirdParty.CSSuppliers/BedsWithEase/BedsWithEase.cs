@@ -12,12 +12,13 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.BedsWithEase.Models;
     using ThirdParty.CSSuppliers.BedsWithEase.Models.Common;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
-    public class BedsWithEase : IThirdParty
+    public class BedsWithEase : IThirdParty, ISingleSource
     {
         private readonly IBedsWithEaseSettings _settings;
         private readonly ISerializer _serializer;
@@ -43,12 +44,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }

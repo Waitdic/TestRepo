@@ -3,23 +3,24 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using Intuitive;
-    using Intuitive.Net.WebRequests;
-    using Newtonsoft.Json;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
     using ThirdParty;
+    using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.Yalago;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Models.Yalago;
-    using ThirdParty.Lookups;
-    using System.Net.Http;
-    using Microsoft.Extensions.Logging;
 
-    public class Yalago : IThirdParty
+    public class Yalago : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IYalagoSettings _settings;
         private readonly ITPSupport _support;
@@ -35,19 +36,19 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             throw new NotImplementedException();
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return 0;
         }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public Yalago(IYalagoSettings settings, ITPSupport support, HttpClient httpClient, ILogger<Yalago> logger)
         {
@@ -513,8 +514,8 @@
                     propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago Book Response", bookingRequest.ResponseString);
                 }
             }
+
             return reference;
         }
-
     }
 }

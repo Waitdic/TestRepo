@@ -14,8 +14,9 @@
     using Models.Common;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Interfaces;
 
-    public class Serhs : IThirdParty
+    public class Serhs : IThirdParty, ISingleSource
     {
         private readonly ISerhsSettings _settings;
         private readonly ISerializer _serializer;
@@ -41,15 +42,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         public bool PreBook(PropertyDetails propertyDetails)
         {

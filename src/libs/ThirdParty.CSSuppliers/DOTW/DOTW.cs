@@ -12,11 +12,12 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Models;
-    using ThirdParty.Lookups;
 
-    public class DOTW : IThirdParty
+    public class DOTW : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -63,9 +64,10 @@
 
         public bool SupportsBookingSearch => false;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => _settings.OffsetCancellationDays(searchDetails, false);
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info) => false;
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 

@@ -9,21 +9,21 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.CSSuppliers.Helpers.W2M;
+    using ThirdParty.CSSuppliers.Xml.W2M;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.Helpers.W2M;
-    using ThirdParty.CSSuppliers.Xml.W2M;
-    using Microsoft.Extensions.Logging;
 
-    public class W2MSearch : IThirdPartySearch
+    public class W2MSearch : IThirdPartySearch, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IW2MSettings _settings;
         private readonly ISerializer _serializer;
@@ -37,14 +37,14 @@
             return request.ResponseString.Contains(Constants.ErrorsNode);
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return _settings.SplitMultiroom(searchDetails) && searchDetails.Rooms > 1;
         }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public W2MSearch(IW2MSettings settings, ISerializer serializer, HttpClient httpClient, ILogger<W2MSearch> logger)
         {
@@ -55,7 +55,7 @@
 
         #endregion
 
-        #region "Build Search Request"
+        #region Build Search Request
 
         public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
@@ -66,7 +66,7 @@
 
         #endregion
 
-        #region "Transform Response"
+        #region Transform Response
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {

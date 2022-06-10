@@ -9,16 +9,16 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Security;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using Models;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Results;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
     using static RestelCommon;
 
-    public class RestelSearch : IThirdPartySearch
+    public class RestelSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IRestelSettings _settings;
         private readonly ISerializer _serializer;
@@ -136,7 +136,7 @@
             return transformedResults;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             // doesn't do more than 3 rooms
             if (searchDetails.Rooms > 3)

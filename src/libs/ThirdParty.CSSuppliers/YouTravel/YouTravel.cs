@@ -11,19 +11,17 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class YouTravel : IThirdParty
+    public class YouTravel : IThirdParty, ISingleSource
     {
-
         #region Constructor
 
-        public YouTravel(IYouTravelSettings settings, ITPSupport support, HttpClient httpClient, ISerializer serializer, ILogger<YouTravel> logger)
+        public YouTravel(IYouTravelSettings settings, HttpClient httpClient, ISerializer serializer, ILogger<YouTravel> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -33,13 +31,11 @@
 
         #region Properties
 
-        private IYouTravelSettings _settings { get; set; }
+        private readonly IYouTravelSettings _settings;
 
-        private ITPSupport _support { get; set; }
+        private readonly HttpClient _httpClient;
 
-        private HttpClient _httpClient { get; set; }
-
-        private ISerializer _serializer { get; set; }
+        private readonly ISerializer _serializer;
 
         private readonly ILogger<YouTravel> _logger;
 
@@ -51,12 +47,10 @@
             }
         }
 
-        private bool IThirdParty_SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_AllowCancellations(searchDetails, false);
         }
-
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => IThirdParty_SupportsLiveCancellation(searchDetails, source);
 
         public bool SupportsBookingSearch
         {
@@ -68,12 +62,12 @@
 
         public string Source => ThirdParties.YOUTRAVEL;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }

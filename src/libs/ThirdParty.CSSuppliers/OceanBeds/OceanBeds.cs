@@ -10,6 +10,7 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.OceanBeds.Models;
@@ -17,7 +18,7 @@
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
 
-    public class OceanBeds : IThirdParty
+    public class OceanBeds : IThirdParty, ISingleSource
     {
         private readonly IOceanBedsSettings _settings;
         private readonly ISerializer _serializer;
@@ -38,13 +39,13 @@
 
         public bool SupportsBookingSearch => false;
 
-        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) 
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.AllowCancellations(searchDetails);
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) 
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
             => 0;
 
-        public bool RequiresVCard(VirtualCardInfo info) 
+        public bool RequiresVCard(VirtualCardInfo info, string source)
             => false;
 
         public bool PreBook(PropertyDetails propertyDetails)
@@ -66,7 +67,7 @@
                 propertyDetails.Errata.AddNew("Booking Remark", propertyAvailabilityRs.Response[0].CancellationText);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Prebook Exception", ex.ToString());
             }
@@ -151,7 +152,7 @@
                 cancellationResponse.Amount = confirmCancellationRs.Response[0].CancellationCharge.ToSafeDecimal();
                 cancellationResponse.TPCancellationReference = $"{bookingReference}|{cancellationKey}";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Cancel Booking Exception", ex.ToString());
             }
@@ -193,7 +194,7 @@
                 propertyDetails.TPRef1 = bookingCancellationRs.Response[0].Key.ToSafeString();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Cancellation Cost Exception", ex.ToString());
             }
@@ -215,7 +216,7 @@
 
         public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails) => new();
 
-        public string CreateReconciliationReference(string inputReference) 
+        public string CreateReconciliationReference(string inputReference)
             => string.Empty;
 
         public void EndSession(PropertyDetails propertyDetails)
@@ -227,9 +228,9 @@
 
         public bool PreBookPriceCheck(AvailabilityRS oceanBedsAvailabilityRs, PropertyDetails propertyDetails)
         {
-            foreach(var room in oceanBedsAvailabilityRs.Response)
+            foreach (var room in oceanBedsAvailabilityRs.Response)
             {
-                foreach(var roomList in room.RoomList)
+                foreach (var roomList in room.RoomList)
                 {
                     var searchRoomCode = roomList.Code;
 
@@ -241,7 +242,7 @@
                         if (searchRoomCode.Equals(preBookRoomCode))
                         {
                             var preBookCost = Math.Round(roomList.NetPrice, 2);
-                            
+
                             if (searchCost.Equals(preBookCost))
                                 continue;
 
@@ -255,7 +256,7 @@
 
         private static ConfirmCancellationRQ BuildConfirmCancellation(int cancelKey, Credential credentials)
         {
-            return new ConfirmCancellationRQ 
+            return new ConfirmCancellationRQ
             {
                 Credential = credentials,
                 Key = cancelKey

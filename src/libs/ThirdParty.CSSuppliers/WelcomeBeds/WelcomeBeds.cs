@@ -7,17 +7,18 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.WelcomeBeds;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.Models.WelcomeBeds;
-    using Microsoft.Extensions.Logging;
 
-    public class WelcomeBeds : IThirdParty
+    public class WelcomeBeds : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         public readonly IWelcomeBedsSettings _settings;
         public readonly ITPSupport _tpSupport;
@@ -36,19 +37,19 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public WelcomeBeds(
             IWelcomeBedsSettings settings,
@@ -265,7 +266,7 @@
 
         #endregion
 
-        #region "Booking
+        #region Booking
 
         public string Book(PropertyDetails propertyDetails)
         {
@@ -430,7 +431,7 @@
 
         #endregion
 
-        #region "Cancelation"
+        #region Cancelation
 
         public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
         {

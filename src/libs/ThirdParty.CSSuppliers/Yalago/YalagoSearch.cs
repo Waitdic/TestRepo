@@ -5,22 +5,22 @@
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Newtonsoft.Json;
-    using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.Yalago;
     using ThirdParty.Models;
     using ThirdParty.Lookups;
-    using ThirdParty.Search.Support;
     using ThirdParty.Results;
-    using ThirdParty.CSSuppliers.Models.Yalago;
-    using Intuitive.Helpers.Extensions;
-    using Microsoft.Extensions.Logging;
+    using ThirdParty.Search.Models;
+    using ThirdParty.Search.Support;
+    using ThirdParty.Interfaces;
 
-    public class YalagoSearch : IThirdPartySearch
+    public class YalagoSearch : IThirdPartySearch, ISingleSource
     {
-        #region "Constructors"
+        #region Constructors
 
         private readonly IYalagoSettings _settings;
 
@@ -34,7 +34,7 @@
 
         #endregion
 
-        #region "Properties"
+        #region Properties
 
         public string Source => ThirdParties.YALAGO;
 
@@ -43,7 +43,7 @@
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

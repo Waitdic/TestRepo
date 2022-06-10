@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.NetStorming.Models
+﻿namespace ThirdParty.CSSuppliers.Netstorming.Models
 {
     using System.Xml.Serialization;
-    using ThirdParty.CSSuppliers.NetStorming.Models.Common;
+    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
 
     [XmlRoot("envelope")]
     public class NetstormingAvailabilityResponse : EnvelopeBase

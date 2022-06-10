@@ -12,11 +12,6 @@
     public interface IThirdPartySearch
     {
         /// <summary>
-        /// Gets or sets the source.
-        /// </summary>
-        string Source { get; }
-
-        /// <summary>
         /// Builds the search requests.
         /// </summary>
         /// <param name="searchDetails">The search details.</param>
@@ -37,7 +32,7 @@
         /// </summary>
         /// <param name="searchDetails">The search details.</param>
         /// <returns>If there any search restrictions for the third party.</returns>
-        bool SearchRestrictions(SearchDetails searchDetails);
+        bool SearchRestrictions(SearchDetails searchDetails, string source);
 
         /// <summary>
         /// Responses the has exceptions.

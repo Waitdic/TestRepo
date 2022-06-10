@@ -11,13 +11,14 @@
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.AceRooms.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.AceRooms.Models;
 
-    public class Acerooms : IThirdParty
+    public class Acerooms : IThirdParty, ISingleSource
     {
         #region "Properties"
 
@@ -33,12 +34,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }

@@ -12,17 +12,16 @@
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class JonView : IThirdParty
+    public class JonView : IThirdParty, ISingleSource
     {
         #region Properties
 
         private readonly IJonViewSettings _settings;
-
-        private readonly ITPSupport _support;
 
         private readonly HttpClient _httpClient;
 
@@ -30,35 +29,23 @@
 
         private readonly ILogger<JonView> _logger;
 
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsRemarks => false;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        public bool SupportsBookingSearch
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.JONVIEW;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
@@ -67,10 +54,9 @@
 
         #region Constructor
 
-        public JonView(IJonViewSettings settings, ITPSupport support, HttpClient httpClient, IMemoryCache cache, ILogger<JonView> logger)
+        public JonView(IJonViewSettings settings, HttpClient httpClient, IMemoryCache cache, ILogger<JonView> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _cache= Ensure.IsNotNull(cache, nameof(cache));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
