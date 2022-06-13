@@ -18,8 +18,8 @@
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class W2MSearch : IThirdPartySearch, ISingleSource
     {

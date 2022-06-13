@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Results
+﻿namespace ThirdParty.Search.Results.Models
 {
     using System.Xml.Serialization;
 

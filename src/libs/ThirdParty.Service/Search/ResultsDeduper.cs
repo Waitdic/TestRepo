@@ -5,8 +5,8 @@
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using ThirdParty.Repositories;
-    using ThirdParty.Results.Models;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Enums;
 
     /// <summary>
     ///   <br />

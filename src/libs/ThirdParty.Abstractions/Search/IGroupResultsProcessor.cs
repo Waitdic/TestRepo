@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVector.Search.Property;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     /// <summary>Defines a class responsible for grouping results.</summary>
     public interface IGroupResultsProcessor
@@ -21,6 +21,6 @@
             TransformedResultCollection thirdPartyResults,
             string source,
             SearchDetails searchDetails,
-            IEnumerable<IResortSplit> resortSplits);
+            IEnumerable<iVector.Search.Property.IResortSplit> resortSplits);
     }
 }

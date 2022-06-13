@@ -1,6 +1,6 @@
 ﻿namespace ThirdParty.Search.Settings
 {
-    using ThirdParty.Results.Models;
+    using ThirdParty.Search.Results.Enums;
 
     /// <summary>
     /// Settings used to configure the search

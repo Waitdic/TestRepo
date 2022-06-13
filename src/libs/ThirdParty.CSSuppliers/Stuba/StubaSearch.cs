@@ -11,10 +11,9 @@
     using Intuitive.Net.WebRequests;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class StubaSearch : IThirdPartySearch, ISingleSource
     {

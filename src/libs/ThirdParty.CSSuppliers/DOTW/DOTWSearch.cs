@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -10,12 +11,11 @@
     using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Lookups;
-    using ThirdParty.Results;
     using ThirdParty.CSSuppliers.DOTW.Models;
-    using System.Threading.Tasks;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {

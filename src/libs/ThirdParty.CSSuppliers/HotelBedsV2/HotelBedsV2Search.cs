@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
@@ -16,8 +17,7 @@
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Results;
-    using System.Threading.Tasks;
+    using ThirdParty.Search.Results.Models;
 
     public class HotelBedsV2Search : IThirdPartySearch, ISingleSource
     {

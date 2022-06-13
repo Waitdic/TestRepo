@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
@@ -11,9 +12,8 @@
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using System.Threading.Tasks;
+    using ThirdParty.Search.Results.Models;
 
     public class SerhsSearch : IThirdPartySearch, ISingleSource
     {

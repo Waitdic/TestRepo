@@ -11,8 +11,8 @@
     using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
     using ThirdParty.Tests.DerbySoft;
 

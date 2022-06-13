@@ -6,8 +6,8 @@
     using System.Threading.Tasks;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     /// <summary>
     /// Processes search results

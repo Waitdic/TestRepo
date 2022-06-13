@@ -11,8 +11,8 @@
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.TeamAmerica.Models;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class TeamAmericaSearch : IThirdPartySearch
     {

@@ -8,8 +8,8 @@
     using Newtonsoft.Json;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
     using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class ShoppingEngineResponseTransformer : ISearchResponseTransformer
     {

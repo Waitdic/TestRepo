@@ -3,18 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.OceanBeds.Models;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.OceanBeds.Models;
+    using ThirdParty.Search.Results.Models;
     using static OceanBedsHelper;
-    using System.Threading.Tasks;
 
     public class OceanBedsSearch : IThirdPartySearch, ISingleSource
     {

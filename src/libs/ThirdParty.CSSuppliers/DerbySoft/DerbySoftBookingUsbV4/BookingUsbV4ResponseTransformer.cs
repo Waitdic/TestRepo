@@ -7,8 +7,8 @@
     using Intuitive.Net.WebRequests;
     using Newtonsoft.Json;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class BookingUsbV4ResponseTransformer : ISearchResponseTransformer
     {

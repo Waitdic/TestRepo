@@ -12,6 +12,7 @@
     using iVector.Search.Property;
     using ThirdParty.Search.Settings;
 
+    // todo - clean up
     /// <summary>
     /// A search details object
     /// </summary>
@@ -19,11 +20,6 @@
     /// <seealso cref="IThirdPartyAttributeSearch" />
     public class SearchDetails : ISearchDetails, IThirdPartyAttributeSearch
     {
-        /// <summary>
-        /// class wouldn't serialize if this was a public property
-        /// </summary>
-        private System.Collections.Specialized.NameValueCollection queryString = new System.Collections.Specialized.NameValueCollection();
-
         /// <summary>Gets or sets the settings.</summary>
         /// <value>The settings.</value>
         public Settings Settings { get; set; } = new();
@@ -557,11 +553,6 @@
         /// Gets or sets a value indicating whether The HLP search charter
         /// </summary>
         public bool HlpSearchCharter { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets Decides if we're going to de-dupe in code or the database
-        /// </summary>
-        public VBDedupeMode VBDedupe { get; set; } = VBDedupeMode.Off;
 
         /// <summary>
         /// Gets or sets a value indicating whether we want to de-dupes.

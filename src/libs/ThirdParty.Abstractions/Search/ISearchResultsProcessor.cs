@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVector.Search.Property;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     /// <summary>
     /// An interface that defines a class to process results

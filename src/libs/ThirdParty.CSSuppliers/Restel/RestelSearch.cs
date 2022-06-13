@@ -13,9 +13,9 @@
     using Models;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
-    using ThirdParty.Results;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
     using static RestelCommon;
 
     public class RestelSearch : IThirdPartySearch, ISingleSource

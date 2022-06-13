@@ -6,8 +6,8 @@
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using ThirdParty.Repositories;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     /// <summary>
     /// Groups third Party results by property into our own format

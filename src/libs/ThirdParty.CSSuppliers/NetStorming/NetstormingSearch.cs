@@ -18,8 +18,8 @@
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
     using Cancellation = ThirdParty.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 

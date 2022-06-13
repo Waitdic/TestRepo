@@ -9,8 +9,8 @@
     using ThirdParty;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class DerbySoftSearch : IThirdPartySearch, IMultiSource
     {

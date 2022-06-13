@@ -15,8 +15,8 @@
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class SunHotelsSearch : IThirdPartySearch, ISingleSource
     {
@@ -124,10 +124,10 @@
 
                         requests.Add(request);
 
-                        propertyRoomBookingId++;
-
                         from += numberToTake;
                     }
+
+                    propertyRoomBookingId++;
                 }
             }
 
@@ -188,7 +188,6 @@
                         sb.Append("&resortIDs=");
                         break;
                     }
-
             }
 
             sb.AppendFormat("&accommodationTypes=");

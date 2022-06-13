@@ -15,13 +15,13 @@
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
     using static ThirdParty.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
 
     public class AceroomsSearch : IThirdPartySearch, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IAceroomsSettings _settings;
         private readonly ITPSupport _support;
@@ -40,7 +40,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public AceroomsSearch(IAceroomsSettings settings, ITPSupport support)
         {
@@ -50,7 +50,7 @@
 
         #endregion
 
-        #region "Build Search Request"
+        #region Build Search Request
 
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
@@ -94,7 +94,7 @@
 
         #endregion
 
-        #region "Transform Response"
+        #region Transform Response
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
@@ -123,7 +123,7 @@
 
         #endregion
 
-        #region "Helper classes"
+        #region Helper classes
 
         public List<TransformedResult> GetResultFromResponse(AceroomsAvailabilityResponse response, SearchDetails searchDetails)
         {

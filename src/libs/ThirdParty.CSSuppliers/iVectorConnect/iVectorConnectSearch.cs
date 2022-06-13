@@ -11,8 +11,8 @@
     using Intuitive.Net.WebRequests;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
-    using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using ThirdParty.Search.Results.Models;
 
     public class iVectorConnectSearch : IThirdPartySearch, IMultiSource
     {

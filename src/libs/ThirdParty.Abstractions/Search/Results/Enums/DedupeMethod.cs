@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Results.Models
+﻿namespace ThirdParty.Search.Results.Enums
 {
     /// <summary>The de-duplicating strategy for property results</summary>
     public enum DedupeMethod
