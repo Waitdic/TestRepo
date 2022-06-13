@@ -5,6 +5,7 @@
     using System.IO;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -13,7 +14,6 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
@@ -66,357 +66,324 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails PropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-
             try
             {
-                GetCancellationPolicy(PropertyDetails);
+                await GetCancellationPolicyAsync(propertyDetails);
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
+                propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
                 return false;
-
             }
 
             return true;
-
         }
 
         #endregion
 
         #region Book
 
-        public string Book(PropertyDetails PropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-
-            var oResponse = new XmlDocument();
-            string oRequest = string.Empty;
-            string sBookingReference = "";
+            var response = new XmlDocument();
+            string request = string.Empty;
+            string bookingReference = "";
 
             try
             {
-
                 // build request
-                oRequest = BuildBookingURL(PropertyDetails);
+                request = BuildBookingURL(propertyDetails);
 
                 // send the request
-                var oBookingRequest = new Request();
-                oBookingRequest.EndPoint = _settings.get_URL(PropertyDetails) + GetRequestHeader(PropertyDetails) + oRequest;
-                oBookingRequest.Source = ThirdParties.JONVIEW;
-                oBookingRequest.ContentType = ContentTypes.Text_xml;
-                oBookingRequest.Send(_httpClient, _logger);
+                var bookingRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
+                    Source = ThirdParties.JONVIEW,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "Book",
+                    CreateLog = true
+                };
+                await bookingRequest.Send(_httpClient, _logger);
 
-                oResponse = oBookingRequest.ResponseXML;
-
+                response = bookingRequest.ResponseXML;
 
                 // get booking reference
-                var oBookingStatus = oResponse.SelectSingleNode("/message/actionseg/status");
-                if (oBookingStatus is not null && oBookingStatus.InnerText == "C")
+                var bookingStatus = response.SelectSingleNode("/message/actionseg/status");
+                if (bookingStatus is not null && bookingStatus.InnerText == "C")
                 {
-                    sBookingReference = oResponse.SelectSingleNode("/message/actionseg/resnumber").InnerText;
+                    bookingReference = response.SelectSingleNode("/message/actionseg/resnumber").InnerText;
                 }
-
 
                 // return reference or failed
-                if (string.IsNullOrEmpty(sBookingReference) || sBookingReference.ToLower() == "error")
+                if (string.IsNullOrEmpty(bookingReference) || bookingReference.ToLower() == "error")
                 {
-                    sBookingReference = "failed";
+                    bookingReference = "failed";
                 }
             }
-
             catch (Exception ex)
             {
-                PropertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
-                sBookingReference = "failed";
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
+                bookingReference = "failed";
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(oRequest))
+                if (!string.IsNullOrEmpty(request))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Request", oRequest);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Request", request);
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Response", response);
                 }
-
             }
 
-            return sBookingReference;
-
+            return bookingReference;
         }
 
         #endregion
 
         #region Get Cancellation Policy
 
-        public void GetCancellationPolicy(PropertyDetails PropertyDetails)
+        public async Task GetCancellationPolicyAsync(PropertyDetails propertyDetails)
         {
-
             // create an array variable to hold the policy for each room
-            var aPolicies = new Cancellations[PropertyDetails.Rooms.Count];
+            var policies = new Cancellations[propertyDetails.Rooms.Count];
 
             // we'll need this regular expression too (declared here for efficiency)
-            var oDailyRegEx = new System.Text.RegularExpressions.Regex(@"on (?<type>\S+) (?<numberofdays>[0-9]+) day(\(s\))?");
+            var dailyRegEx = new System.Text.RegularExpressions.Regex(@"on (?<type>\S+) (?<numberofdays>[0-9]+) day(\(s\))?");
 
             // loop through the rooms
-            int iLoop = 0;
-            foreach (RoomDetails oRoomDetails in PropertyDetails.Rooms)
+            int loop = 0;
+            foreach (var roomDetails in propertyDetails.Rooms)
             {
-
                 // build request
-                string cancellationURL = BuildCancellationURL(PropertyDetails, oRoomDetails);
+                string cancellationURL = BuildCancellationURL(propertyDetails, roomDetails);
 
                 // get response
-                var oResponse = new XmlDocument();
+                var response = new XmlDocument();
 
-                var oWebRequest = new Request();
-                oWebRequest.EndPoint = _settings.get_URL(PropertyDetails) + GetRequestHeader(PropertyDetails) + cancellationURL;
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.Source = ThirdParties.JONVIEW;
-                oWebRequest.LogFileName = "CancellationPolicy";
-                oWebRequest.CreateLog = true;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + cancellationURL,
+                    ContentType = ContentTypes.Text_xml,
+                    Source = ThirdParties.JONVIEW,
+                    LogFileName = "CancellationPolicy",
+                    CreateLog = true
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponse = oWebRequest.ResponseXML;
-
+                response = webRequest.ResponseXML;
 
                 // make sure we initialize the final policy for this room
-                aPolicies[iLoop] = new Cancellations();
-
+                policies[loop] = new Cancellations();
 
                 // check the status
-                if (oResponse.SafeNodeValue("/message/actionseg/status") == "C")
+                if (response.SafeNodeValue("/message/actionseg/status") == "C")
                 {
-
                     // we need to get the end date and amount for each cancellation item, and add them to the final cancellation policy for this room
-                    foreach (XmlNode oCancellationNode in oResponse.SelectNodes("/message/productlistseg/listrecord/cancellation/canitem"))
+                    foreach (XmlNode cancellationNode in response.SelectNodes("/message/productlistseg/listrecord/cancellation/canitem"))
                     {
+                        int fromDaysBeforeArrival = cancellationNode.SelectSingleNode("fromdays").InnerText.ToSafeInt();
+                        int toDaysBeforeArrival = cancellationNode.SelectSingleNode("todays").InnerText.ToSafeInt();
+                        string chargeType = cancellationNode.SelectSingleNode("chargetype").InnerText;
+                        string cancellationRateType = cancellationNode.SelectSingleNode("ratetype").InnerText;
+                        double cancellationRate = (double)cancellationNode.SelectSingleNode("canrate").InnerText.ToSafeDecimal();
 
-                        int iFromDaysBeforeArrival = oCancellationNode.SelectSingleNode("fromdays").InnerText.ToSafeInt();
-                        int iToDaysBeforeArrival = oCancellationNode.SelectSingleNode("todays").InnerText.ToSafeInt();
-                        string sChargeType = oCancellationNode.SelectSingleNode("chargetype").InnerText;
-                        string sCancellationRateType = oCancellationNode.SelectSingleNode("ratetype").InnerText;
-                        double nCancellationRate = (double)oCancellationNode.SelectSingleNode("canrate").InnerText.ToSafeDecimal();
-
-                        var oNoteNode = oCancellationNode.SelectSingleNode("cannote");
-                        string sNote = oNoteNode is not null ? oNoteNode.InnerText : "";
-
+                        var noteNode = cancellationNode.SelectSingleNode("cannote");
+                        string note = noteNode is not null ? noteNode.InnerText : "";
 
                         // get start date
-                        var dStartDate = PropertyDetails.ArrivalDate.AddDays(-iFromDaysBeforeArrival);
-                        if (iToDaysBeforeArrival < 0)
+                        var startDate = propertyDetails.ArrivalDate.AddDays(-fromDaysBeforeArrival);
+                        if (toDaysBeforeArrival < 0)
                         {
-                            dStartDate = PropertyDetails.ArrivalDate;
+                            startDate = propertyDetails.ArrivalDate;
                         }
                         else
                         {
-                            dStartDate = PropertyDetails.ArrivalDate.AddDays(-iFromDaysBeforeArrival);
+                            startDate = propertyDetails.ArrivalDate.AddDays(-fromDaysBeforeArrival);
                         }
 
                         // get end date
-                        DateTime dEndDate;
-                        if (iToDaysBeforeArrival < 0)
+                        DateTime endDate;
+                        if (toDaysBeforeArrival < 0)
                         {
-                            dEndDate = PropertyDetails.ArrivalDate;
+                            endDate = propertyDetails.ArrivalDate;
                         }
                         else
                         {
-                            dEndDate = PropertyDetails.ArrivalDate.AddDays(-iToDaysBeforeArrival);
+                            endDate = propertyDetails.ArrivalDate.AddDays(-toDaysBeforeArrival);
                         }
 
-
                         // calculate the base amounts (the amounts we're going to use to get the final amount from)
-                        var aBaseAmounts = new List<decimal>();
+                        var baseAmounts = new List<decimal>();
 
-                        switch (sChargeType ?? "")
+                        switch (chargeType ?? "")
                         {
-
                             case "EI":
                             case "ENTIRE ITEM":
                                 {
-                                    aBaseAmounts.Add(oRoomDetails.LocalCost);
+                                    baseAmounts.Add(roomDetails.LocalCost);
                                     break;
                                 }
 
                             case "P":
                             case "PER PERSON": // unfortunately we have to guess these as we are using the wrong search request (CT instead of CU)
                                 {
-
-                                    for (int i = 1, loopTo = oRoomDetails.Adults + oRoomDetails.Children; i <= loopTo; i++)
-                                        aBaseAmounts.Add(oRoomDetails.LocalCost / oRoomDetails.Adults + oRoomDetails.Children);
+                                    for (int i = 1; i <= roomDetails.Adults + roomDetails.Children; i++)
+                                    {
+                                        baseAmounts.Add(roomDetails.LocalCost / roomDetails.Adults + roomDetails.Children);
+                                    }
                                     break;
                                 }
 
                             case "DAILY":
                                 {
-
-                                    var oDailyRegMatch = oDailyRegEx.Match(sNote);
-                                    string sType = oDailyRegMatch.Groups["type"].Value.ToLower();
-                                    int iNumberOfDays = oDailyRegMatch.Groups["numberofdays"].Value.ToSafeInt();
+                                    var dailyRegMatch = dailyRegEx.Match(note);
+                                    string type = dailyRegMatch.Groups["type"].Value.ToLower();
+                                    int numberOfDays = dailyRegMatch.Groups["numberofdays"].Value.ToSafeInt();
 
                                     // make sure we don't get zero rates (we have to be careful of this because if there is a 'stay X pay Y' special offer,
                                     // often the first night will be zero - and the cancellation fee should be based on the second night instead)
-                                    var aRates = Array.FindAll(oRoomDetails.ThirdPartyReference.Split('_')[1].Split('/'), (sRate) => sRate.ToSafeDecimal() != 0m);
+                                    var rates = Array.FindAll(roomDetails.ThirdPartyReference.Split('_')[1].Split('/'), (sRate) => sRate.ToSafeDecimal() != 0m);
 
-                                    var aRatesWeWant = new string[iNumberOfDays];
-                                    var iSourceIndex = default(int);
+                                    var ratesWeWant = new string[numberOfDays];
+                                    var sourceIndex = default(int);
 
                                     // I'm not sure the type is ever anything other than 'first' but I thought I'd check here just in case
-                                    if (sType == "first")
+                                    if (type == "first")
                                     {
-                                        iSourceIndex = 0;
+                                        sourceIndex = 0;
                                     }
-                                    else if (sType == "last")
+                                    else if (type == "last")
                                     {
-                                        iSourceIndex = aRates.Length - iNumberOfDays;
+                                        sourceIndex = rates.Length - numberOfDays;
                                     }
 
-                                    if (aRates.Length > iSourceIndex)
-                                        Array.ConstrainedCopy(aRates, iSourceIndex, aRatesWeWant, 0, iNumberOfDays);
+                                    if (rates.Length > sourceIndex)
+                                    {
+                                        Array.ConstrainedCopy(rates, sourceIndex, ratesWeWant, 0, numberOfDays);
+                                    }
 
-                                    foreach (string sRate in aRatesWeWant)
-                                        aBaseAmounts.Add(sRate.ToSafeDecimal());
+                                    foreach (string rate in ratesWeWant)
+                                    {
+                                        baseAmounts.Add(rate.ToSafeDecimal());
+                                    }
                                     break;
                                 }
-
                         }
 
-
                         // now, for each base amount, we're going to either add a value or a percentage to the final amount
-                        double nFinalAmountForThisRule = 0d;
+                        double finalAmountForThisRule = 0d;
 
-                        foreach (decimal nAmount in aBaseAmounts)
+                        foreach (decimal amount in baseAmounts)
                         {
-
-                            switch (sCancellationRateType ?? "")
+                            switch (cancellationRateType ?? "")
                             {
-
                                 case "D": // fixed amount in dollars
                                     {
-                                        nFinalAmountForThisRule += (double)nAmount;
+                                        finalAmountForThisRule += (double)amount;
                                         break;
                                     }
 
                                 case "P": // percentage of base amount
                                     {
-                                        nFinalAmountForThisRule += (double)nAmount * (nCancellationRate / 100.0d);
+                                        finalAmountForThisRule += (double)amount * (cancellationRate / 100.0d);
                                         break;
                                     }
-
                             }
-
                         }
 
                         // we've got everything we need (finally) - now lets add it to the policy
-                        aPolicies[iLoop].AddNew(dStartDate, dEndDate, nFinalAmountForThisRule.ToSafeDecimal());
-
+                        policies[loop].AddNew(startDate, endDate, finalAmountForThisRule.ToSafeDecimal());
                     }
 
-
                     // solidify the policy (turns our random collection of rules into a proper (continuous) policy ready for merging)
-                    aPolicies[iLoop].Solidify(SolidifyType.Max, new DateTime(2099, 12, 31), oRoomDetails.LocalCost);
-
+                    policies[loop].Solidify(SolidifyType.Max, new DateTime(2099, 12, 31), roomDetails.LocalCost);
                 }
 
-
                 // increment the loop counter 
-                iLoop += 1;
+                loop++;
 
                 // Add the Logs to the booking
                 if (!string.IsNullOrEmpty(cancellationURL))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Request", cancellationURL);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Request", cancellationURL);
                 }
 
                 if (cancellationURL is not null)
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Response", cancellationURL);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Response", cancellationURL);
                 }
-
             }
 
             // merge the policies and add it to the booking
-            PropertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(aPolicies);
-
+            propertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(policies);
         }
 
         #endregion
 
         #region Cancellation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails PropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-
-            var oThirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
-            string sRequest = "";
-            var oResponse = new XmlDocument();
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            string request = "";
+            var response = new XmlDocument();
 
             try
             {
-
                 // build request
-                sRequest = BuildReservationCancellationURL(PropertyDetails.SourceReference);
+                request = BuildReservationCancellationURL(propertyDetails.SourceReference);
 
                 // Send the request
-                var oWebRequest = new Request();
-                oWebRequest.EndPoint = _settings.get_URL(PropertyDetails) + GetRequestHeader(PropertyDetails) + sRequest;
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.Source = ThirdParties.JONVIEW;
-                oWebRequest.LogFileName = "Cancel";
-                oWebRequest.CreateLog = true;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
+                    ContentType = ContentTypes.Text_xml,
+                    Source = ThirdParties.JONVIEW,
+                    LogFileName = "Cancel",
+                    CreateLog = true
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-
-                oResponse = oWebRequest.ResponseXML;
-
+                response = webRequest.ResponseXML;
 
                 // get reference
-                if (oResponse.SelectSingleNode("message/actionseg/status").InnerText == "D")
+                if (response.SelectSingleNode("message/actionseg/status").InnerText == "D")
                 {
-                    oThirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
-                    oThirdPartyCancellationResponse.Success = true;
+                    thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
+                    thirdPartyCancellationResponse.Success = true;
                 }
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
-                oThirdPartyCancellationResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
+                thirdPartyCancellationResponse.Success = false;
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sRequest))
+                if (!string.IsNullOrEmpty(request))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Request", sRequest);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Request", request);
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Response", response);
                 }
-
             }
 
-            return oThirdPartyCancellationResponse;
-
+            return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails PropertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails PropertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion

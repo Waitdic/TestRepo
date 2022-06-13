@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty.Lookups
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The support functions for third parties
@@ -188,7 +189,7 @@
         /// <param name="source">The source.</param>
         /// <param name="propertyId">The property id.</param>
         /// <returns>The resort ID</returns>
-        string TPResortCodeByPropertyIdLookup(string source, int propertyId);
+        Task<string> TPResortCodeByPropertyIdLookupAsync(string source, int propertyId);
 
         /// <summary>
         /// The resort code lookup by geography id.
@@ -196,8 +197,10 @@
         /// <param name="source">The source.</param>
         /// <param name="geographyId">The geography id.</param>
         /// <returns>The resort ID</returns>
-        string TPResortCodeByGeographyIdLookup(string source, int geographyId);
-        int TPCurrencyIDLookup(string currencyCode);
-        string TPCurrencyCodeLookup(int currencyID);
+        Task<string> TPResortCodeByGeographyIdLookupAsync(string source, int geographyId);
+
+        Task<int> TPCurrencyIDLookupAsync(string currencyCode);
+
+        Task<string> TPCurrencyCodeLookupAsync(int currencyId);
     }
 }

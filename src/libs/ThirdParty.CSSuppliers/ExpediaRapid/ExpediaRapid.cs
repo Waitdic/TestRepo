@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
@@ -51,12 +52,12 @@
             return;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             try
             {
                 // retry search to get cancellation and errata
-                var searchResponse = GetPrebookSearchRedoResponse(propertyDetails);
+                var searchResponse = await GetPrebookSearchRedoResponseAsync(propertyDetails);
 
                 if (searchResponse is null)
                 {
@@ -75,7 +76,6 @@
                 propertyDetails.Cancellations = GetCancellationsFromAllRooms(propertyDetails, responseRooms);
                 propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Prebook RedoSearch Error", ex.ToString());
@@ -83,12 +83,13 @@
             }
 
             var roomPrebookResponses = new List<PrebookResponse>();
+
             // prebook to get the costs and book link
             try
             {
                 var firstRoom = propertyDetails.Rooms.First();
 
-                var prebookResponse = GetResponse<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
+                var prebookResponse = await GetResponseAsync<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
 
                 if (prebookResponse is null)
                 {
@@ -98,7 +99,6 @@
                 UpdateCostsAtRoomLevel(propertyDetails, prebookResponse);
                 GetBookingLink(propertyDetails, firstRoom, prebookResponse);
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Prebook Price Check Error", ex.ToString());
@@ -111,16 +111,14 @@
             return true;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var roomBookResults = new Dictionary<string, Result>();
-
             try
             {
                 var firstRoom = propertyDetails.Rooms.First();
                 string bookRequestBody = BuildBookRequestBody(propertyDetails);
 
-                var bookResponse = GetResponse<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
+                var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
 
                 if (bookResponse is null)
                 {
@@ -138,7 +136,7 @@
             }
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             decimal amount = 0m;
             var cancelReferences = new List<string>();
@@ -146,21 +144,21 @@
 
             try
             {
-                var bookingItineraryResponse1 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
+                var bookingItineraryResponse1 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
 
                 if (bookingItineraryResponse1 is null)
                 {
                     throw new ArgumentNullException("bookingItineraryResponse1", "Unable to find booking itinerary for room.");
                 }
 
-                cancelReferences = CancelRooms(propertyDetails, bookingItineraryResponse1);
+                cancelReferences = await CancelRoomsAsync(propertyDetails, bookingItineraryResponse1);
 
                 if (propertyDetails.Warnings.Any())
                 {
                     throw new Exception("Unable to cancel a room.");
                 }
 
-                var bookingItineraryResponse2 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
+                var bookingItineraryResponse2 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
 
                 if (bookingItineraryResponse2 is null)
                 {
@@ -180,7 +178,6 @@
 
                 }
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Cancel Error", ex.ToString());
@@ -197,14 +194,14 @@
             };
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             decimal amount = 0m;
             bool success = true;
 
             try
             {
-                var precancelResponse = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
+                var precancelResponse = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
 
                 if (precancelResponse is null)
                 {
@@ -254,7 +251,7 @@
             return string.Empty;
         }
 
-        private List<string> CancelRooms(PropertyDetails propertyDetails, BookingItineraryResponse bookingItineraryResponse1)
+        private async Task<List<string>> CancelRoomsAsync(PropertyDetails propertyDetails, BookingItineraryResponse bookingItineraryResponse1)
         {
             var cancelReferences = new List<string>();
 
@@ -267,7 +264,7 @@
                     string url = BuildDefaultURL(propertyDetails, cancelLink);
                     var request = BuildRequest(propertyDetails, url, "Cancel", eRequestMethod.DELETE, true);
 
-                    string cancelResponseString = _api.GetResponse(propertyDetails, request);
+                    string cancelResponseString = await _api.GetResponseAsync(propertyDetails, request);
                     int statusCode = (int)request.ResponseStatusCode;
 
                     if (!string.IsNullOrWhiteSpace(cancelResponseString) && (statusCode != 202 || statusCode != 204))
@@ -320,19 +317,19 @@
             }
         }
 
-        private TResponse GetResponse<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
+        private async Task<TResponse> GetResponseAsync<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
             string url = BuildDefaultURL(propertyDetails, link);
             var request = BuildRequest(propertyDetails, url, logName, method, addCustomerIPHeader, requestBody);
-            var response = _api.GetDeserializedResponse<TResponse>(propertyDetails, request);
+            var response = await _api.GetDeserializedResponseAsync<TResponse>(propertyDetails, request);
             return response;
         }
 
-        private SearchResponse GetPrebookSearchRedoResponse(PropertyDetails propertyDetails)
+        private async Task<SearchResponse> GetPrebookSearchRedoResponseAsync(PropertyDetails propertyDetails)
         {
             string searchURL = BuildPrebookSearchURL(propertyDetails);
             var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", eRequestMethod.GET, false);
-            var searchResponse = _api.GetDeserializedResponse<SearchResponse>(propertyDetails, searchRequest);
+            var searchResponse = await _api.GetDeserializedResponseAsync<SearchResponse>(propertyDetails, searchRequest);
             return searchResponse;
         }
 
@@ -487,11 +484,13 @@
             var propertyAvail = searchResponse.First(sr => (sr.PropertyID ?? "") == (propertyDetails.TPKey ?? ""));
 
             if (propertyAvail is null || !propertyAvail.Rooms.Any())
+            {
                 return null;
+            }
 
             var sameRoomRates = new List<SearchResponseRoom>();
 
-            foreach (RoomDetails room in propertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
                 string roomID = room.RoomTypeCode.Split('|')[0];
                 string rateID = room.RoomTypeCode.Split('|')[1];
@@ -500,18 +499,23 @@
                 var matchedRoom = propertyAvail.Rooms.First(r => (r.RoomID ?? "") == (roomID ?? ""));
 
                 if (matchedRoom is null || !matchedRoom.Rates.Any())
+                {
                     return null;
+                }
 
                 var matchedRate = matchedRoom.Rates.First(r => (r.RateID ?? "") == (rateID ?? ""));
 
                 if (matchedRate is null || matchedRate.BedGroupAvailabilities is null || !matchedRate.BedGroupAvailabilities.ContainsKey(bedGroupID))
-
+                {
                     return null;
+                }
 
                 var occupancy = new ExpediaRapidOccupancy(room.Adults, room.ChildAges, room.Infants);
 
                 if (matchedRate.OccupancyRoomRates[occupancy.GetExpediaRapidOccupancy()] is null)
+                {
                     return null;
+                }
 
                 sameRoomRates.Add(matchedRoom);
             }

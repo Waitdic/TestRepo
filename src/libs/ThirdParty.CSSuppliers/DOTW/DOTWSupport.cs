@@ -126,12 +126,11 @@
             return _settings.DefaultCurrencyID(searchDetails);
         }
 
-        public int GetCurrencyCode(int currencyId, IThirdPartyAttributeSearch searchDetails)
+        public async Task<int> GetCurrencyCodeAsync(int currencyId, IThirdPartyAttributeSearch searchDetails)
         {
             string currencyCode = _support.TPCurrencyLookup(ThirdParties.DOTW, currencyId.ToSafeString());
 
-            // todo - make async
-            var currencyCache = GetCurrencyCacheAsync(searchDetails).Result;
+            var currencyCache = await GetCurrencyCacheAsync(searchDetails);
             if (currencyCache.ContainsKey(currencyCode))
             {
                 return currencyCache[currencyCode];
@@ -172,7 +171,7 @@
             return Regex.Replace(text.Normalize(NormalizationForm.FormD), "[^A-Za-z]*", string.Empty).Trim();
         }
 
-        private async Task<Dictionary<string, int>> GetCurrencyCacheAsync(IThirdPartyAttributeSearch SearchDetails)
+        private async Task<Dictionary<string, int>> GetCurrencyCacheAsync(IThirdPartyAttributeSearch searchDetails)
         {
             async Task<Dictionary<string, int>> cacheBuilder()
             {
@@ -181,23 +180,23 @@
                 var sb = new StringBuilder();
 
                 sb.AppendLine("<customer>");
-                sb.AppendFormat("<username>{0}</username>", _settings.Username(SearchDetails)).AppendLine();
-                sb.AppendFormat("<password>{0}</password>", MD5Password(_settings.Password(SearchDetails))).AppendLine();
-                sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(SearchDetails)).AppendLine();
+                sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails)).AppendLine();
+                sb.AppendFormat("<password>{0}</password>", MD5Password(_settings.Password(searchDetails))).AppendLine();
+                sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails)).AppendLine();
                 sb.AppendLine("<source>1</source>");
                 sb.AppendLine("<request command=\"getcurrenciesids\" />");
                 sb.AppendLine("</customer>");
 
                 // get the xml response for all currencies
                 var headers = new RequestHeaders();
-                if (_settings.UseGZip(SearchDetails))
+                if (_settings.UseGZip(searchDetails))
                 {
                     headers.AddNew("Accept-Encoding", "gzip");
                 }
 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(SearchDetails),
+                    EndPoint = _settings.ServerURL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     Headers = headers,

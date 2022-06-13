@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Linq;
     using Intuitive;
@@ -35,13 +36,13 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool result;
 
             try
             {
-                var xml = SendRequest("Pre-Book", BookReservationRequest(propertyDetails, false), propertyDetails);
+                var xml = await SendRequestAsync("Pre-Book", BookReservationRequest(propertyDetails, false), propertyDetails);
                 ExtractErrata(xml, propertyDetails);
                 result = CostsAndCancellation(propertyDetails, xml);
             }
@@ -53,13 +54,13 @@
             return result;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "";
 
             try
             {
-                var xml = SendRequest("Book", BookReservationRequest(propertyDetails, true), propertyDetails);
+                var xml = await SendRequestAsync("Book", BookReservationRequest(propertyDetails, true), propertyDetails);
 
                 if (xml.SelectSingleNode("BookingCreateResult/Booking/HotelBooking/Status").InnerText.ToLower() == "confirmed")
                 {
@@ -74,13 +75,13 @@
             return reference;
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
 
             try
             {
-                var xml = SendRequest("Cancel", CancelRequest(propertyDetails, true), propertyDetails);
+                var xml = await SendRequestAsync("Cancel", CancelRequest(propertyDetails, true), propertyDetails);
 
                 if (xml.SelectSingleNode("BookingCancelResult/Booking/HotelBooking/Status").InnerText.ToLower() == "cancelled")
                 {
@@ -97,13 +98,13 @@
             return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
 
             try
             {
-                var xml = SendRequest("Cancellation Charge", CancelRequest(propertyDetails, false), propertyDetails);
+                var xml = await SendRequestAsync("Cancellation Charge", CancelRequest(propertyDetails, false), propertyDetails);
                 decimal totalCancellationFee = 0m;
 
                 foreach (var room in propertyDetails.Rooms)
@@ -134,7 +135,7 @@
             return thirdPartyCancellationFeeResult;
         }
 
-        private XmlDocument SendRequest(string requestType, string xml, PropertyDetails propertyDetails)
+        private async Task<XmlDocument> SendRequestAsync(string requestType, string xml, PropertyDetails propertyDetails)
         {
             var request = new Request
             {
@@ -146,7 +147,7 @@
                 UseGZip = true
             };
             request.SetRequest(xml);
-            request.Send(_httpClient, _logger);
+            await request.Send(_httpClient, _logger);
 
             if (!string.IsNullOrEmpty(request.RequestLog))
             {
@@ -170,7 +171,7 @@
             string currencyCode = _settings.get_Currency(propertyDetails);
 
             EnsurePassengerNamesNotNull(propertyDetails);
-            var oRequest = new XElement("BookingCreate",
+            var request = new XElement("BookingCreate",
                             new XElement("Authority",
                                 new XElement("Org", org),
                                 new XElement("User", user),
@@ -188,7 +189,7 @@
                                         select new XElement("Child", new XAttribute("title", oGuest.Title), new XAttribute("first", oGuest.FirstName), new XAttribute("last", oGuest.LastName), new XAttribute("age", oGuest.Age)))))),
                             new XElement("CommitLevel", confirm ? "confirm" : "prepare")
                             );
-            return oRequest.ToString();
+            return request.ToString();
         }
 
         private string CancelRequest(PropertyDetails propertyDetails, bool confirm)
@@ -217,17 +218,11 @@
         {
             var rand = new Random();
             int charAsInt = char.ConvertToUtf32("A", 0);
-            foreach (Passenger guest in propertyDetails.Rooms.SelectMany(room => room.Passengers))
+            foreach (var guest in propertyDetails.Rooms.SelectMany(room => room.Passengers))
             {
                 if (string.IsNullOrEmpty(guest.Title))
                 {
-                    /* TODO ERROR: Skipped WarningDirectiveTrivia
-                    #Disable Warning SCS0005 ' Weak random generator
-                    */
                     guest.Title = rand.Next(2) == 0 ? "Ms" : "Mr";
-                    /* TODO ERROR: Skipped WarningDirectiveTrivia
-                    #Enable Warning SCS0005 ' Weak random generator
-                    */
                 }
                 if (string.IsNullOrEmpty(guest.FirstName))
                 {

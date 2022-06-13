@@ -20,6 +20,7 @@
     using ThirdParty.CSSuppliers.Restel.Models;
     using static RestelThirdPartyReference;
     using static RestelCommon;
+    using System.Threading.Tasks;
 
     public class Restel : IThirdParty, ISingleSource
     {
@@ -67,7 +68,7 @@
             return false;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             string codusu = _settings.Codusu(propertyDetails);
 
@@ -83,7 +84,7 @@
                 {
                     request = CreateRequest(_settings, propertyDetails, "PreBook");
                     request.SetRequest(Reservation(propertyDetails));
-                    request.Send(_httpClient, _logger).RunSynchronously();
+                    await request.Send(_httpClient, _logger);
 
                     var response = _serializer.DeSerialize<RestelPreBookResponse>(request.ResponseXML);
 
@@ -110,8 +111,8 @@
                 else // if We don't have guest names, All we can do is do the search again.
                 {
                     string resortCode = propertyDetails.GeographyLevel3ID == 0
-                        ? _support.TPResortCodeByPropertyIdLookup(ThirdParties.RESTEL, propertyDetails.PropertyID)
-                        : _support.TPResortCodeByGeographyIdLookup(ThirdParties.RESTEL, propertyDetails.GeographyLevel3ID);
+                        ? await _support.TPResortCodeByPropertyIdLookupAsync(ThirdParties.RESTEL, propertyDetails.PropertyID)
+                        : await _support.TPResortCodeByGeographyIdLookupAsync(ThirdParties.RESTEL, propertyDetails.GeographyLevel3ID);
 
                     var xmlAvailabilityRequest = CreateAvailabilityRequestXml(
                         resortCode,
@@ -125,7 +126,7 @@
                     // get response
                     request = CreateRequest(_settings, propertyDetails, "Restel Availability Check");
                     request.SetRequest(xmlAvailabilityRequest);
-                    request.Send(_httpClient, _logger).RunSynchronously();
+                    await request.Send(_httpClient, _logger);
 
                     var response = _serializer.DeSerialize<RestelAvailabilityResponse>(request.ResponseXML);
 
@@ -180,7 +181,7 @@
                 }
 
                 // cancellation charges
-                GetCancellations(propertyDetails);
+                await GetCancellationsAsync(propertyDetails);
 
                 // If we've reached here without incident mark as a success (not failing the prebook based on any errata or value added info errors)
                 if (propertyDetails.Warnings.Count == 0)
@@ -189,10 +190,10 @@
                 }
 
                 // Get Errata
-                GetErrata(propertyDetails);
+                await GetErrataAsync(propertyDetails);
 
                 // Get Value Added Info
-                GetAddedValues(propertyDetails);
+                await GetAddedValuesAsync(propertyDetails);
             }
             catch (Exception exception)
             {
@@ -220,7 +221,7 @@
             return preBookSuccess;
         }
 
-        private void GetCancellations(PropertyDetails propertyDetails)
+        private async Task GetCancellationsAsync(PropertyDetails propertyDetails)
         {
             string requestLog = string.Empty;
             string responseLog = string.Empty;
@@ -257,12 +258,12 @@
                         dailyRefsList = dailyRef.Split('@').ToList();
                     }
 
-                    foreach (string sLin in dailyRefsList.Where(sLin => !string.IsNullOrEmpty(sLin)))
+                    foreach (string lin in dailyRefsList.Where(lin => !string.IsNullOrEmpty(lin)))
                     {
-                        request.Parametros.DatosReserva.Lin.Add(sLin);
+                        request.Parametros.DatosReserva.Lin.Add(lin);
 
                         // pick out the rates
-                        decimal dRate = sLin.Split('#')[3].ToSafeDecimal();
+                        decimal dRate = lin.Split('#')[3].ToSafeDecimal();
                         rates.Add(dRate);
                     }
 
@@ -270,7 +271,7 @@
                     // Send the Request
                     var webRequest = CreateRequest(_settings, propertyDetails, $"Cancellation Costs Room {roomNumber}");
                     webRequest.SetRequest(_serializer.Serialize(request));
-                    webRequest.Send(_httpClient, _logger).RunSynchronously();
+                    await webRequest.Send(_httpClient, _logger);
 
                     // Grab the Logs to add to the booking later.
                     requestLog += $"{Environment.NewLine}Room {roomNumber}{Environment.NewLine}{webRequest.RequestLog}";
@@ -325,7 +326,6 @@
             }
             finally
             {
-
                 // add logs to booking
                 propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Costs Request", requestLog);
                 propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Costs Response", responseLog);
@@ -334,7 +334,7 @@
             propertyDetails.Cancellations = cancellations;
         }
 
-        private void GetErrata(PropertyDetails propertyDetails)
+        private async Task GetErrataAsync(PropertyDetails propertyDetails)
         {
             Request? webRequest = null;
 
@@ -354,7 +354,7 @@
                 // Send the Request to Restel
                 webRequest = CreateRequest(_settings, propertyDetails, "Get Errata");
                 webRequest.SetRequest(_serializer.Serialize(request));
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
                 var response = _serializer.DeSerialize<RestelGetErrataResponse>(webRequest.ResponseXML);
@@ -381,7 +381,7 @@
             }
         }
 
-        private void GetAddedValues(PropertyDetails propertyDetails)
+        private async Task GetAddedValuesAsync(PropertyDetails propertyDetails)
         {
             Request? webRequest = null;
 
@@ -402,7 +402,7 @@
                 // Send the Request to Restel
                 webRequest = CreateRequest(_settings, propertyDetails, "Get Added Values");
                 webRequest.SetRequest(_serializer.Serialize(request));
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
                 var response = _serializer.DeSerialize<RestelGetAddedValuesResponse>(webRequest.ResponseXML);
@@ -445,10 +445,10 @@
                     FormaPago = 25,
                     Res =
                     {
-                        Lin = (from oRoomDetails in propertyDetails.Rooms
-                            from sLin in FromEncryptedString(oRoomDetails.ThirdPartyReference, _secretKeeper).ThirdPartyReferences
-                            where !string.IsNullOrEmpty(sLin)
-                            select sLin).ToArray()
+                        Lin = (from roomDetails in propertyDetails.Rooms
+                            from lin in FromEncryptedString(roomDetails.ThirdPartyReference, _secretKeeper).ThirdPartyReferences
+                            where !string.IsNullOrEmpty(lin)
+                            select lin).ToArray()
                     },
                     Idioma = 2
                 }
@@ -457,7 +457,7 @@
             return _serializer.Serialize(preBookRequest);
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
             string preBookRequestLog = string.Empty;
@@ -475,7 +475,7 @@
 
                     var prebookWebRequest = CreateRequest(_settings, propertyDetails, "PreBook");
                     prebookWebRequest.SetRequest(prebookRequest);
-                    prebookWebRequest.Send(_httpClient, _logger).RunSynchronously();
+                    await prebookWebRequest.Send(_httpClient, _logger);
 
                     // Grab the Logs for later
                     preBookRequestLog = prebookWebRequest.RequestLog;
@@ -508,7 +508,7 @@
                 var bookWebRequest = CreateRequest(_settings, propertyDetails, "Book");
                 bookWebRequest.CreateErrorLog = true;
                 bookWebRequest.SetRequest(_serializer.Serialize(bookRequest));
-                bookWebRequest.Send(_httpClient, _logger).RunSynchronously();
+                await bookWebRequest.Send(_httpClient, _logger);
 
                 // Grab the Logs
                 bookRequestLog = bookWebRequest.RequestLog;
@@ -539,7 +539,6 @@
             {
                 if (!nameSupplied)
                 {
-
                     // Store the Pre-Book Logs
                     propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel PreBook Request", preBookRequestLog);
                     propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel PreBook Response", preBookResponseLog);
@@ -553,7 +552,7 @@
             return reference;
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             Request? webRequest = null;
@@ -573,7 +572,7 @@
                 // Send the Request
                 webRequest = CreateRequest(_settings, propertyDetails, "Cancellation");
                 webRequest.SetRequest(_serializer.Serialize(request));
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
                 var response = _serializer.DeSerialize<RestelCancellationResponse>(webRequest.ResponseXML);
@@ -610,7 +609,7 @@
             return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             string codusu = _settings.Codusu(propertyDetails);
             Request? webRequest = null;
@@ -632,7 +631,7 @@
                 // Send the request to restel
                 webRequest = CreateRequest(_settings, propertyDetails, "Cancellation Costs");
                 webRequest.SetRequest(_serializer.Serialize(request));
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
                 var response = _serializer.DeSerialize<RestelCancellationCostResponse>(webRequest.ResponseXML);
@@ -643,7 +642,7 @@
                 {
                     var cancellation = new CancellationHelper();
                     int nightsCharged = politicaCanc.NochesGasto.ToSafeInt();
-                    decimal nPercentage = politicaCanc.EstComGasto.ToSafeDecimal();
+                    decimal percentage = politicaCanc.EstComGasto.ToSafeDecimal();
                     cancellation.NightsBeforeArrival = politicaCanc.DiasAntelacion.ToSafeInt();
                     cancellation.StartDate = propertyDetails.ArrivalDate.AddDays(-cancellation.NightsBeforeArrival);
 
@@ -654,7 +653,7 @@
                     }
                     else
                     {
-                        cancellation.Amount = propertyDetails.LocalCost * (nPercentage / 100m);
+                        cancellation.Amount = propertyDetails.LocalCost * (percentage / 100m);
                     }
 
                     // Add it to the collection if it could potentially apply

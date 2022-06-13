@@ -1,5 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.DOTW
 {
+    using System.Threading.Tasks;
+
     public interface IDOTWSupport
     {
         string MD5Password(string password);
@@ -8,7 +10,7 @@
 
         int GetCurrencyID(IThirdPartyAttributeSearch searchDetails);
 
-        int GetCurrencyCode(int currencyId, IThirdPartyAttributeSearch searchDetails);
+        Task<int> GetCurrencyCodeAsync(int currencyId, IThirdPartyAttributeSearch searchDetails);
 
         string CleanName(string name);
     }

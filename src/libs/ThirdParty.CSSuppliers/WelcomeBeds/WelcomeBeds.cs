@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
@@ -69,10 +70,10 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            string sReservationRequest = string.Empty;
-            string sReservationResponse = string.Empty;
+            string reservationRequest = string.Empty;
+            string reservationResponse = string.Empty;
 
             try
             {
@@ -105,19 +106,20 @@
                         PromotionCode = ro.PromotionCode,
                         AvailabilityStatus = Constant.AvailableForSale,
                         Rates = new List<Rate>
-                    {
-                        new Rate {
-                            Total = new RateTotal
+                        {
+                            new Rate
                             {
-                                AmountAfterTax = ro.LocalCost.ToString(),  //decimal to string                           
-                                CurrencyCode = ro.CurrencyCode
-                            },
-                            TpaExtensions = new TpaExtensions
-                            {
-                                RoomToken = new RoomToken { Token = ro.Token }
+                                Total = new RateTotal
+                                {
+                                    AmountAfterTax = ro.LocalCost.ToString(),
+                                    CurrencyCode = ro.CurrencyCode
+                                },
+                                TpaExtensions = new TpaExtensions
+                                {
+                                    RoomToken = new RoomToken { Token = ro.Token }
+                                }
                             }
-                        }
-                    },
+                        },
                         GuestCounts = ro.Adults.Concat(ro.Children).Concat(ro.Infants).ToList()
                     }).ToList(),
                     TimeSpan = new StayTimeSpan
@@ -131,22 +133,24 @@
                     }
                 };
 
-                string[] sResort = _tpSupport.TPResortCodeByGeographyIdLookup(Source, propertyDetails.GeographyLevel3ID).Split('|');
+                string[] sResort = _tpSupport.TPResortCodeByGeographyIdLookupAsync(Source, propertyDetails.GeographyLevel3ID).Split('|');
 
                 var reservationTpaExtensions = new TpaExtensions
                 {
-                    Providers = new List<Provider> {
-                    new Provider {
-                        Name = Constant.ProviderName,
-                        Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings),
-                        ProviderAreas = new List<Area>
+                    Providers = new List<Provider>
+                    {
+                        new Provider
                         {
-                            new Area { TypeCode = "Country", AreaCode=sResort[0] },
-                            new Area { TypeCode = "Province", AreaCode=sResort[1] },
-                            new Area { TypeCode = "Town", AreaCode=sResort[2] },
+                            Name = Constant.ProviderName,
+                            Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings),
+                            ProviderAreas = new List<Area>
+                            {
+                                new Area { TypeCode = "Country", AreaCode=sResort[0] },
+                                new Area { TypeCode = "Province", AreaCode=sResort[1] },
+                                new Area { TypeCode = "Town", AreaCode=sResort[2] },
+                            }
                         }
-                    }
-                },
+                    },
                     ProviderID = new ProviderID { Provider = Constant.ProviderName }
                 };
 
@@ -155,19 +159,19 @@
                     ResStatus = Constant.PreBookResStatus,
                     Version = _settings.Version(propertyDetails),
                     HotelReservations = new List<HotelReservation>
-                {
-                    new HotelReservation
                     {
-                        RoomStays = new List<RoomStay> { roomStay },
-                        TpaExtensions = reservationTpaExtensions
+                        new HotelReservation
+                        {
+                            RoomStays = new List<RoomStay> { roomStay },
+                            TpaExtensions = reservationTpaExtensions
+                        }
                     }
-                }
                 };
 
                 var xmlReservationRequest = Envelope<OtaHotelResRq>.Serialize(preBookRequest, _serializer);
-                sReservationRequest = xmlReservationRequest.ToString();
+                reservationRequest = xmlReservationRequest.ToString();
 
-                var oReservationRequest = new Request
+                var webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelRes",
@@ -178,10 +182,10 @@
                     Source = Source,
                 };
 
-                oReservationRequest.SetRequest(xmlReservationRequest);
-                oReservationRequest.Send(_httpClient, _logger).RunSynchronously();
+                webRequest.SetRequest(xmlReservationRequest);
+                await webRequest.Send(_httpClient, _logger);
 
-                var soapEnvelopeXml = oReservationRequest.ResponseXML;
+                var soapEnvelopeXml = webRequest.ResponseXML;
                 var oResponse = Envelope<OtaHotelResRs>.DeSerialize(soapEnvelopeXml, _serializer);
 
                 // Check to see if there were any errors
@@ -250,14 +254,14 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(sReservationRequest))
+                if (!string.IsNullOrEmpty(reservationRequest))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Request", sReservationRequest);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Request", reservationRequest);
                 }
 
-                if (!string.IsNullOrEmpty(sReservationResponse))
+                if (!string.IsNullOrEmpty(reservationResponse))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Response", sReservationResponse);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Response", reservationResponse);
                 }
             }
 
@@ -268,66 +272,57 @@
 
         #region Booking
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             int guestCount = 0;
             var resGuests = new List<ResGuest>();
-            string sReference = string.Empty;
-            string sReservationRequest = string.Empty;
-            string sReservationResponse = string.Empty;
+            string reference = string.Empty;
+            string reservationRequest = string.Empty;
+            string reservationResponse = string.Empty;
 
             try
             {
-
-                foreach (var r in propertyDetails.Rooms)
+                foreach (var room in propertyDetails.Rooms)
                 {
-                    foreach (var p in r.Passengers)
+                    foreach (var passenger in room.Passengers)
                     {
                         guestCount++;
 
                         string guestAge = Constant.AdultConstAge;
-                        switch (p.PassengerType)
+                        guestAge = passenger.PassengerType switch
                         {
-                            case PassengerType.Child:
-                                guestAge = p.Age.ToString();
-                                break;
-                            case PassengerType.Infant:
-                                guestAge = Constant.InfantConstAge;
-                                break;
-                            case PassengerType.Adult:
-                            default:
-                                guestAge = Constant.AdultConstAge;
-                                break;
-                        }
-
+                            PassengerType.Child => passenger.Age.ToString(),
+                            PassengerType.Infant => Constant.InfantConstAge,
+                            _ => Constant.AdultConstAge,
+                        };
                         var resGuest = new ResGuest
                         {
                             Age = guestAge,
                             Profiles = new List<ProfileInfo>
-                        {
-                            new ProfileInfo { Profile = new Profile { Customer = new Customer
                             {
-                                PersonName = new PersonName
+                                new ProfileInfo { Profile = new Profile { Customer = new Customer
                                 {
-                                    GivenName = string.Equals(p.FirstName, Constant.TBA)? $"{Constant.TBA}{guestCount}" : p.FirstName,
-                                    Surname = string.Equals(p.LastName, Constant.TBA)? $"{Constant.TBA}{guestCount}" : p.LastName
-                                },
-                                TpaExtensions = new TpaExtensions
-                                {
-                                    ProviderTokens = new List<Token>
+                                    PersonName = new PersonName
                                     {
-                                        new Token
+                                        GivenName = string.Equals(passenger.FirstName, Constant.TBA)? $"{Constant.TBA}{guestCount}" : passenger.FirstName,
+                                        Surname = string.Equals(passenger.LastName, Constant.TBA)? $"{Constant.TBA}{guestCount}" : passenger.LastName
+                                    },
+                                    TpaExtensions = new TpaExtensions
+                                    {
+                                        ProviderTokens = new List<Token>
                                         {
-                                            TokenCode = Constant.PaxType,
-                                            TokenName = (p.PassengerType == PassengerType.Adult ||
-                                                (p.PassengerType == PassengerType.Child && p.Age >= 12))
-                                                ? Constant.ADULT
-                                                : Constant.CHILD
+                                            new Token
+                                            {
+                                                TokenCode = Constant.PaxType,
+                                                TokenName = (passenger.PassengerType == PassengerType.Adult ||
+                                                    (passenger.PassengerType == PassengerType.Child && passenger.Age >= 12))
+                                                    ? Constant.ADULT
+                                                    : Constant.CHILD
+                                            }
                                         }
                                     }
-                                }
-                            }}}
-                        }
+                                }}}
+                            }
                         };
                         resGuests.Add(resGuest);
                     }
@@ -342,18 +337,19 @@
                     },
                     TpaExtensions = new TpaExtensions
                     {
-                        Providers = new List<Provider> {
-                        new Provider
+                        Providers = new List<Provider>
                         {
-                            Name = Constant.ProviderName,
-                            Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings)
-                        }
-                    },
+                            new Provider
+                            {
+                                Name = Constant.ProviderName,
+                                Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings)
+                            }
+                        },
                         ProviderTokens = new List<Token>
-                    {
-                        new Token { TokenCode = propertyDetails.BookingReference, TokenName = "RecordId" },
-                        new Token { TokenCode = _settings.AgencyName(propertyDetails), TokenName = "TravelAgentName" }
-                    },
+                        {
+                            new Token { TokenCode = propertyDetails.BookingReference, TokenName = "RecordId" },
+                            new Token { TokenCode = _settings.AgencyName(propertyDetails), TokenName = "TravelAgentName" }
+                        },
                         ProviderID = new ProviderID { Provider = Constant.ProviderName }
                     }
                 };
@@ -366,9 +362,9 @@
                 };
 
                 var xmlReservationRequest = Envelope<OtaHotelResRq>.Serialize(bookRequest, _serializer);
-                sReservationRequest = xmlReservationRequest.ToString();
+                reservationRequest = xmlReservationRequest.ToString();
 
-                var oReservationRequest = new Request
+                var webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelRes",
@@ -379,14 +375,14 @@
                     Source = Source,
                 };
 
-                oReservationRequest.SetRequest(xmlReservationRequest);
+                webRequest.SetRequest(xmlReservationRequest);
 
                 // Send the request
-                oReservationRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
-                sReservationResponse = oReservationRequest.ResponseString;
+                reservationResponse = webRequest.ResponseString;
 
-                var oResponse = Envelope<OtaHotelResRs>.DeSerialize(oReservationRequest.ResponseXML, _serializer);
+                var oResponse = Envelope<OtaHotelResRs>.DeSerialize(webRequest.ResponseXML, _serializer);
 
                 // Check for a successful response
                 if (oResponse.Errors.Any())
@@ -404,28 +400,28 @@
                 }
 
                 // Get the booking reference
-                sReference = oResponse.HotelReservations.FirstOrDefault()?.ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "failed";
+                reference = oResponse.HotelReservations.FirstOrDefault()?.ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "failed";
 
             }
             catch (Exception e)
             {
                 propertyDetails.Warnings.AddNew("Book Exception", e.Message);
-                sReference = "failed";
+                reference = "failed";
             }
             finally
             {
-                if (!string.IsNullOrEmpty(sReservationRequest))
+                if (!string.IsNullOrEmpty(reservationRequest))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Request", sReservationRequest);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Request", reservationRequest);
                 }
 
-                if (!string.IsNullOrEmpty(sReservationResponse))
+                if (!string.IsNullOrEmpty(reservationResponse))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Response", sReservationResponse);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Response", reservationResponse);
                 }
             }
 
-            return sReference;
+            return reference;
         }
 
 
@@ -433,11 +429,11 @@
 
         #region Cancelation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            ThirdPartyCancellationResponse oTPCancellationResponse = new();
-            string sCancellationRequest = string.Empty;
-            string sCancellationResponse = string.Empty;
+            ThirdPartyCancellationResponse tpCancellationResponse = new();
+            string cancellationRequest = string.Empty;
+            string cancellationResponse = string.Empty;
 
             try
             {
@@ -455,8 +451,10 @@
                     UniqueId = new UniqueId { Id = propertyDetails.SourceReference },
                     TpaExtensions = new TpaExtensions
                     {
-                        Providers = new List<Provider> {
-                            new Provider{
+                        Providers = new List<Provider>
+                        {
+                            new Provider
+                            {
                                 Name = Constant.ProviderName,
                                 Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings)
                             }
@@ -465,9 +463,9 @@
                     }
                 };
 
-                var sCancelationRequest = Envelope<OtaCancelRq>.Serialize(cancelationRequest, _serializer);
+                var xmlCancelationRequest = Envelope<OtaCancelRq>.Serialize(cancelationRequest, _serializer);
 
-                var oCancellationRequest = new Request
+                var webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelCancel",
@@ -477,11 +475,11 @@
                     CreateLog = true,
                 };
 
-                oCancellationRequest.SetRequest(sCancelationRequest);
-                oCancellationRequest.Send(_httpClient, _logger).RunSynchronously();
+                webRequest.SetRequest(xmlCancelationRequest);
+                await webRequest.Send(_httpClient, _logger);
 
-                sCancellationResponse = oCancellationRequest.ResponseString;
-                var cancelResponse = Envelope<OtaCancelRs>.DeSerialize(oCancellationRequest.ResponseXML, _serializer);
+                cancellationResponse = webRequest.ResponseString;
+                var cancelResponse = Envelope<OtaCancelRs>.DeSerialize(webRequest.ResponseXML, _serializer);
 
                 if (!cancelResponse.IsSuccess)
                 {
@@ -490,8 +488,8 @@
 
                 if (!string.IsNullOrEmpty(cancelResponse.CancelInfoRs.UniqueId.Id))
                 {
-                    oTPCancellationResponse.Success = true;
-                    oTPCancellationResponse.TPCancellationReference = cancelResponse.CancelInfoRs.UniqueId.Id;
+                    tpCancellationResponse.Success = true;
+                    tpCancellationResponse.TPCancellationReference = cancelResponse.CancelInfoRs.UniqueId.Id;
                 }
                 else
                 {
@@ -501,22 +499,22 @@
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Cancellation Exception", ex.Message);
-                oTPCancellationResponse.Success = false;
-                oTPCancellationResponse.TPCancellationReference = string.Empty;
+                tpCancellationResponse.Success = false;
+                tpCancellationResponse.TPCancellationReference = string.Empty;
             }
             finally
             {
-                if (!string.IsNullOrEmpty(sCancellationRequest))
+                if (!string.IsNullOrEmpty(cancellationRequest))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Request", sCancellationRequest);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Request", cancellationRequest);
                 }
 
-                if (!string.IsNullOrEmpty(sCancellationResponse))
+                if (!string.IsNullOrEmpty(cancellationResponse))
                 {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Response", sCancellationResponse);
+                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Response", cancellationResponse);
                 }
             }
-            return oTPCancellationResponse;
+            return tpCancellationResponse;
         }
 
         #endregion
@@ -538,9 +536,9 @@
 
         public void EndSession(PropertyDetails propertyDetails) { }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
     }
 }

@@ -16,6 +16,7 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.Juniper.Model;
+    using System.Threading.Tasks;
 
     public class Juniper : IThirdParty, IMultiSource
     {
@@ -63,7 +64,7 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool success = false;
             string hotelBookRuleURL = JuniperHelper.ConstructUrl(
@@ -80,14 +81,14 @@
                 {
                     string preBookRequest = BuildPreBookRequest(propertyDetails, room.ThirdPartyReference);
                     request = JuniperHelper.BuildWebRequest(hotelBookRuleURL, sSOAPAction, preBookRequest, Constant.PreBookLogFile, propertyDetails.Source, useGzip);
-                    request.Send(_httpClient, _logger).RunSynchronously();
+                    await request.Send(_httpClient, _logger);
 
                     var responseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);
                     var responseBody = responseXml.SelectSingleNode("Envelope/Body").FirstChild.OuterXml;
                     var response = _serializer.DeSerialize<OTA_HotelBookingRuleServiceResponse>(responseBody);
                     var bookingRule = response.HotelBookingRuleRS.RuleMessage.BookingRules.First();
 
-                    var cost = SafeTypeExtensions.ToSafeDecimal(bookingRule.TpaExtensions.TotalPrice.Content);
+                    var cost = bookingRule.TpaExtensions.TotalPrice.Content.ToSafeDecimal();
 
                     if (cost == 0)
                     {
@@ -134,7 +135,7 @@
                 }
             }
 
-            //'merge policies
+            // merge policies
             propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
 
             return success;
@@ -193,7 +194,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             var references = new List<string>();
             var bookRequest = "";
@@ -220,7 +221,7 @@
                     };
 
                     request.SetRequest(bookRequest);
-                    request.Send(_httpClient, _logger).RunSynchronously();
+                    await request.Send(_httpClient, _logger);
 
                     responseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);
                     var responseBody = responseXml.SelectSingleNode("Envelope/Body").FirstChild.OuterXml;
@@ -412,7 +413,7 @@
 
         #region Cancellations
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse { Success = true };
             var cancellationReferences = new List<string>();
@@ -440,7 +441,7 @@
                             _settings.UseGZip(propertyDetails, propertyDetails.Source)
                         );
 
-                    request.Send(_httpClient, _logger).RunSynchronously();
+                    await request.Send(_httpClient, _logger);
 
                     var responseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);
                     var responseBody = responseXml.SelectSingleNode("Envelope/Body").FirstChild.OuterXml;
@@ -474,6 +475,7 @@
                     }
                 }
             }
+
             thirdPartyCancellationResponse.TPCancellationReference = string.Join("|", cancellationReferences);
             return thirdPartyCancellationResponse;
         }
@@ -499,9 +501,9 @@
             return JuniperHelper.BuildSoap(sbCancellationRequest, _serializer);
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -67,68 +68,70 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails oPropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             //'Check if prebook multirooms is allowed
-            if (oPropertyDetails.Rooms.Count > 1 && !_settings.SplitMultiRoom(oPropertyDetails))
+            if (propertyDetails.Rooms.Count > 1 && !_settings.SplitMultiRoom(propertyDetails))
             {
-                oPropertyDetails.Warnings.AddNew("Altura Exception", "Cannot proceed with Prebook as Multiroom is turned off.");
+                propertyDetails.Warnings.AddNew("Altura Exception", "Cannot proceed with Prebook as Multiroom is turned off.");
                 return false;
             }
 
             try
             {
                 //'Send a check request for each room  to see if still available 
-                foreach (var oRoom in oPropertyDetails.Rooms)
+                foreach (var room in propertyDetails.Rooms)
                 {
-                    var sRateId = oRoom.ThirdPartyReference.Split('|')[1];
-                    var sSessionId = oRoom.ThirdPartyReference.Split('|')[0];
+                    var rateId = room.ThirdPartyReference.Split('|')[1];
+                    var sessionId = room.ThirdPartyReference.Split('|')[0];
 
-                    var checkRequest = SetCheckRequest(oPropertyDetails, sRateId, sSessionId);
-                    var oCheckResponseXML = SendRequest(checkRequest, oPropertyDetails, Constant.LogfilePrebook);
-                    var oResponse = _serializer.DeSerialize<AlturaPrebookResponse>(oCheckResponseXML);
+                    var checkRequest = SetCheckRequest(propertyDetails, rateId, sessionId);
+                    var checkResponseXml = await SendRequestAsync(checkRequest, propertyDetails, Constant.LogfilePrebook);
+                    var response = _serializer.DeSerialize<AlturaPrebookResponse>(checkResponseXml);
 
                     //'Fail entire booking if any room is unavailable
-                    if (!string.Equals(oResponse?.Response.Result.State ?? "", Constant.StatusAvailable))
+                    if (!string.Equals(response?.Response.Result.State ?? "", Constant.StatusAvailable))
                     {
                         return false;
                     }
+
                     //'Retrieve booking price
-                    decimal dBookingPrice = SafeTypeExtensions.ToSafeDecimal(oResponse.Response.RateDetails.TotalPrice) / 100;
+                    decimal bookingPrice = SafeTypeExtensions.ToSafeDecimal(response.Response.RateDetails.TotalPrice) / 100;
 
                     //'Check if non-refundable
-                    var bIsNoNRefundable = string.Equals(oResponse.Response.RateDetails.NoRefundable, "1");
+                    var isNonRefundable = string.Equals(response.Response.RateDetails.NoRefundable, "1");
 
-                    if (!bIsNoNRefundable)
+                    if (!isNonRefundable)
                     {
                         // 'set the cancellation charges
-                        foreach (var oCancellationCharge in oResponse.Response.CancellationPrices)
+                        foreach (var cancellationCharge in response.Response.CancellationPrices)
                         {
-                            TimeSpan oTimeSpan = new TimeSpan(SafeTypeExtensions.ToSafeInt(oCancellationCharge.Timeframe), 0, 0, 0);
-                            DateTime dStartDate = oPropertyDetails.ArrivalDate.Subtract(oTimeSpan);
-                            decimal nFee = SafeTypeExtensions.ToSafeDecimal(oCancellationCharge.TotalPrice) / 100;
+                            TimeSpan timeSpan = new TimeSpan(SafeTypeExtensions.ToSafeInt(cancellationCharge.Timeframe), 0, 0, 0);
+                            DateTime startDate = propertyDetails.ArrivalDate.Subtract(timeSpan);
+                            decimal fee = SafeTypeExtensions.ToSafeDecimal(cancellationCharge.TotalPrice) / 100;
 
-                            oPropertyDetails.Cancellations.AddNew(dStartDate, Constant.DateMax, nFee);
+                            propertyDetails.Cancellations.AddNew(startDate, Constant.DateMax, fee);
                         }
                     }
                     else
                     {
-                        oPropertyDetails.Cancellations.AddNew(DateTime.Now, Constant.DateMax, dBookingPrice);
+                        propertyDetails.Cancellations.AddNew(DateTime.Now, Constant.DateMax, bookingPrice);
                     }
 
                     //'Pick up Erratum
-                    var sErrata = oResponse.Response.ContractRemarks.FirstOrDefault() ?? "";
-                    if (!string.IsNullOrEmpty(sErrata))
+                    var errata = response.Response.ContractRemarks.FirstOrDefault() ?? "";
+                    if (!string.IsNullOrEmpty(errata))
                     {
-                        oPropertyDetails.Errata.AddNew("Contract Remarks", sErrata);
+                        propertyDetails.Errata.AddNew("Contract Remarks", errata);
                     }
                 }
+
                 //'Merge policies
-                oPropertyDetails.Cancellations.Solidify(SolidifyType.Sum);
+                propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
             }
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("PreBookExceptionRS", ex.Message);
+                propertyDetails.Warnings.AddNew("PreBookExceptionRS", ex.Message);
                 return false;
             }
 
@@ -139,116 +142,116 @@
 
         #region Book
 
-        public string Book(PropertyDetails oPropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var oReferences = new List<string>();
-            var oSupplierSourceReferences = new List<string>();
+            var references = new List<string>();
+            var supplierSourceReferences = new List<string>();
 
             //'Send a book reqeust for each room 
-            foreach (var oRoom in oPropertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
                 try
                 {
                     //'Check if room has been already booked
-                    var iRoomIndex = oPropertyDetails.Rooms.IndexOf(oRoom);
-                    if (IsRoomBooked(oPropertyDetails, iRoomIndex))
+                    var roomIndex = propertyDetails.Rooms.IndexOf(room);
+                    if (IsRoomBooked(propertyDetails, roomIndex))
                     {
-                        oReferences.Add(GetSourceReference(oPropertyDetails).Split('|')[iRoomIndex]);
-                        oSupplierSourceReferences.Add(oPropertyDetails.SupplierSourceReference.Split('|')[iRoomIndex]);
+                        references.Add(GetSourceReference(propertyDetails).Split('|')[roomIndex]);
+                        supplierSourceReferences.Add(propertyDetails.SupplierSourceReference.Split('|')[roomIndex]);
                         continue;
                     }
 
                     //'Seperate the session and rate IDs
-                    var sRateId = oRoom.ThirdPartyReference.Split('|')[1];
-                    var sSessionId = oRoom.ThirdPartyReference.Split('|')[0];
+                    var rateId = room.ThirdPartyReference.Split('|')[1];
+                    var sessionId = room.ThirdPartyReference.Split('|')[0];
 
-                    var oConfirmationRequest = SetConfirmationRequest(oPropertyDetails, sRateId, sSessionId, iRoomIndex);
-                    var oConfirmationResponse = SendRequest(oConfirmationRequest, oPropertyDetails, Constant.LogFileBook);
-                    var oResponse = _serializer.DeSerialize<AlturaBookResponse>(oConfirmationResponse).Response;
+                    var confirmationRequest = SetConfirmationRequest(propertyDetails, rateId, sessionId, roomIndex);
+                    var confirmationResponse = await SendRequestAsync(confirmationRequest, propertyDetails, Constant.LogFileBook);
+                    var response = _serializer.DeSerialize<AlturaBookResponse>(confirmationResponse).Response;
 
                     //'Save confirmationRef else set to fail 
-                    if (string.Equals(oResponse.BookingConfirmation.Status, Constant.StatusConfirmed))
+                    if (string.Equals(response.BookingConfirmation.Status, Constant.StatusConfirmed))
                     {
-                        var sBookingReference = oResponse.BookingConfirmation.Id;
-                        oReferences.Add(sBookingReference);
-                        oSupplierSourceReferences.Add(sBookingReference);
+                        var bookingReference = response.BookingConfirmation.Id;
+                        references.Add(bookingReference);
+                        supplierSourceReferences.Add(bookingReference);
                     }
                     else
                     {
-                        oReferences.Add(Constant.FailedReference);
-                        oSupplierSourceReferences.Add(Constant.FailedReference);
+                        references.Add(Constant.FailedReference);
+                        supplierSourceReferences.Add(Constant.FailedReference);
                     }
                 }
                 catch (Exception ex)
                 {
-                    oPropertyDetails.Warnings.AddNew("BookException", ex.Message);
-                    oReferences.Add(Constant.FailedReference);
-                    oSupplierSourceReferences.Add(Constant.FailedReference);
+                    propertyDetails.Warnings.AddNew("BookException", ex.Message);
+                    references.Add(Constant.FailedReference);
+                    supplierSourceReferences.Add(Constant.FailedReference);
                 }
             }
 
-            oPropertyDetails.SupplierSourceReference = string.Join("|", oSupplierSourceReferences);
-            var sReference = string.Join("|", oReferences);
+            propertyDetails.SupplierSourceReference = string.Join("|", supplierSourceReferences);
+            var reference = string.Join("|", references);
 
             //'fail entire booking if one of the request failed
-            if (oReferences.Contains(Constant.FailedReference))
+            if (references.Contains(Constant.FailedReference))
             {
-                oPropertyDetails.SourceSecondaryReference = sReference;
+                propertyDetails.SourceSecondaryReference = reference;
                 return "failed";
             }
 
-            return sReference;
+            return reference;
         }
 
         #endregion
 
         #region Cancellations
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            GetCancellationCost(oPropertyDetails);
+            await GetCancellationCostAsync(propertyDetails);
 
-            var oSupplierSourceReferences = oPropertyDetails.SupplierSourceReference.Split('|');
-            var oCancellationPrices = oPropertyDetails.TPRef1.Split('|');
-            var oSessionIds = oPropertyDetails.TPRef2.Split('|');
+            var supplierSourceReferences = propertyDetails.SupplierSourceReference.Split('|');
+            var cancellationPrices = propertyDetails.TPRef1.Split('|');
+            var sessionIds = propertyDetails.TPRef2.Split('|');
 
-            var oThirdPartyCancellationResponse = new ThirdPartyCancellationResponse
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse
             {
                 Success = true
             };
 
-            var oCancellationReferences = new List<string>();
-            decimal dAmount = 0M;
-            var oCurrencyCodes = new List<string>();
+            var cancellationReferences = new List<string>();
+            decimal amount = 0M;
+            var currencyCodes = new List<string>();
 
             //'Send a cancellation request for each confirmed booking 
-            for (int iRoomIndex = 0; iRoomIndex < oSupplierSourceReferences.Count(); iRoomIndex++)
+            for (int roomIndex = 0; roomIndex < supplierSourceReferences.Count(); roomIndex++)
             {
                 try
                 {
-                    var sCancellationPrice = SafeTypeExtensions.ToSafeDecimal(oCancellationPrices[iRoomIndex]);
-                    var sSessionId = oSessionIds[iRoomIndex];
-                    var sSupplierSourceReference = oSupplierSourceReferences[iRoomIndex];
+                    var cancellationPrice = cancellationPrices[roomIndex].ToSafeDecimal();
+                    var sessionId = sessionIds[roomIndex];
+                    var supplierSourceReference = supplierSourceReferences[roomIndex];
 
                     //'Check if booking was confirmed and cancellation request was sucessful
-                    if (!string.Equals(sCancellationPrice, Constant.FailedReference)
-                        && !string.Equals(sSessionId, Constant.FailedReference)
-                        && !string.Equals(sSupplierSourceReference, Constant.FailedReference))
+                    if (!Equals(cancellationPrice, Constant.FailedReference)
+                        && !string.Equals(sessionId, Constant.FailedReference)
+                        && !string.Equals(supplierSourceReference, Constant.FailedReference))
                     {
-                        var oCancellationRequest = SetCancelConfirmationRequest(oPropertyDetails, sSessionId, sSupplierSourceReference, sCancellationPrice);
-                        var oCancellationResponse = SendRequest(oCancellationRequest, oPropertyDetails, Constant.LogFileCancel);
-                        var oResponse = _serializer.DeSerialize<AlturaCancellationResponse>(oCancellationResponse).Response;
+                        var cancellationRequest = SetCancelConfirmationRequest(propertyDetails, sessionId, supplierSourceReference, cancellationPrice);
+                        var cancellationResponse = await SendRequestAsync(cancellationRequest, propertyDetails, Constant.LogFileCancel);
+                        var response = _serializer.DeSerialize<AlturaCancellationResponse>(cancellationResponse).Response;
 
-                        if (string.Equals(oResponse.Result.Status, Constant.StatusCancelled))
+                        if (string.Equals(response.Result.Status, Constant.StatusCancelled))
                         {
-                            dAmount += SafeTypeExtensions.ToSafeDecimal(oResponse.Result.CancellationPrice) / 100;
-                            oCurrencyCodes.Add(oResponse.Result.Currency);
-                            oCancellationReferences.Add(sSupplierSourceReference);
+                            amount += response.Result.CancellationPrice.ToSafeDecimal() / 100;
+                            currencyCodes.Add(response.Result.Currency);
+                            cancellationReferences.Add(supplierSourceReference);
                         }
                         else
                         {
-                            oCancellationReferences.Add(Constant.FailedReference);
-                            oThirdPartyCancellationResponse.Success = false;
+                            cancellationReferences.Add(Constant.FailedReference);
+                            thirdPartyCancellationResponse.Success = false;
                         }
                     }
                     else
@@ -258,92 +261,92 @@
                 }
                 catch (Exception)
                 {
-                    oCancellationReferences.Add(Constant.FailedReference);
-                    oThirdPartyCancellationResponse.Success = false;
+                    cancellationReferences.Add(Constant.FailedReference);
+                    thirdPartyCancellationResponse.Success = false;
                 }
             }
 
             //'Check if all currency codes returned are same
-            if (oCurrencyCodes.Count() != oCurrencyCodes.Distinct().Count())
+            if (currencyCodes.Count() != currencyCodes.Distinct().Count())
             {
-                oPropertyDetails.Warnings.AddNew("Cancellation confirmation exception", $"Different currencies were returned for cancellations, the distinct currency is:: {oCurrencyCodes.Distinct().First()}");
-                oThirdPartyCancellationResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancellation confirmation exception", $"Different currencies were returned for cancellations, the distinct currency is:: {currencyCodes.Distinct().First()}");
+                thirdPartyCancellationResponse.Success = false;
             }
 
-            oThirdPartyCancellationResponse.TPCancellationReference = string.Join("|", oCancellationReferences);
-            oThirdPartyCancellationResponse.Amount = dAmount;
-            oThirdPartyCancellationResponse.CurrencyCode = oCurrencyCodes.FirstOrDefault();
+            thirdPartyCancellationResponse.TPCancellationReference = string.Join("|", cancellationReferences);
+            thirdPartyCancellationResponse.Amount = amount;
+            thirdPartyCancellationResponse.CurrencyCode = currencyCodes.FirstOrDefault();
 
-            return oThirdPartyCancellationResponse;
+            return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails oPropertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            var oCancellationFeeResult = new ThirdPartyCancellationFeeResult
+            var cancellationFeeResult = new ThirdPartyCancellationFeeResult
             {
                 Success = true
             };
 
-            var oSupplierSourceReferences = oPropertyDetails.SupplierSourceReference.Split('|').ToList();
-            var oCancellationPrices = new List<string>();
+            var supplierSourceReferences = propertyDetails.SupplierSourceReference.Split('|').ToList();
+            var cancellationPrices = new List<string>();
 
-            var oSessionIds = new List<string>();
-            decimal dAmount = 0.00M;
-            var oCurrencyCodes = new List<string>();
+            var sessionIds = new List<string>();
+            decimal amount = 0.00M;
+            var currencyCodes = new List<string>();
 
             //'Send a cancellation request for each confirmed booking 
-            foreach (var sSupplierSourceRef in oSupplierSourceReferences)
+            foreach (string supplierSourceRef in supplierSourceReferences)
             {
                 try
                 {
-                    if (!string.Equals(sSupplierSourceRef, Constant.FailedReference))
+                    if (!string.Equals(supplierSourceRef, Constant.FailedReference))
                     {
-                        var oCancellationCostRequest = SetCancellationRequest(oPropertyDetails, sSupplierSourceRef);
-                        var oCancellationCostResponse = SendRequest(oCancellationCostRequest, oPropertyDetails, Constant.LogFilePreCancel);
+                        var cancellationCostRequest = SetCancellationRequest(propertyDetails, supplierSourceRef);
+                        var cancellationCostResponse = await SendRequestAsync(cancellationCostRequest, propertyDetails, Constant.LogFilePreCancel);
 
-                        var preCancelResponse = _serializer.DeSerialize<AlturaCancellationResponse>(oCancellationCostResponse).Response;
+                        var preCancelResponse = _serializer.DeSerialize<AlturaCancellationResponse>(cancellationCostResponse).Response;
 
-                        dAmount += SafeTypeExtensions.ToSafeDecimal(preCancelResponse.Result.CancellationPrice) / 100;
-                        oCancellationPrices.Add($"{dAmount}");
-                        oCurrencyCodes.Add(preCancelResponse.Result.Currency);
-                        oSessionIds.Add(preCancelResponse.Session.Id);
+                        amount += SafeTypeExtensions.ToSafeDecimal(preCancelResponse.Result.CancellationPrice) / 100;
+                        cancellationPrices.Add($"{amount}");
+                        currencyCodes.Add(preCancelResponse.Result.Currency);
+                        sessionIds.Add(preCancelResponse.Session.Id);
                     }
                     else
                     {
                         //'Set cacelationfee and session id to failed if booking was not sucessfull
-                        oCancellationPrices.Add(Constant.FailedReference);
-                        oSessionIds.Add(Constant.FailedReference);
-                        oCancellationFeeResult.Success = false;
+                        cancellationPrices.Add(Constant.FailedReference);
+                        sessionIds.Add(Constant.FailedReference);
+                        cancellationFeeResult.Success = false;
                         continue;
                     }
                 }
                 catch (Exception ex)
                 {
-                    oPropertyDetails.Warnings.AddNew("Cancellation exception", ex.Message);
-                    oCancellationPrices.Add(Constant.FailedReference);
-                    oSessionIds.Add(Constant.FailedReference);
-                    oCancellationFeeResult.Success = false;
+                    propertyDetails.Warnings.AddNew("Cancellation exception", ex.Message);
+                    cancellationPrices.Add(Constant.FailedReference);
+                    sessionIds.Add(Constant.FailedReference);
+                    cancellationFeeResult.Success = false;
                 }
             }
             //'Check if all currency codes returned are same
-            if (oCurrencyCodes.Count() != oCurrencyCodes.Distinct().Count())
+            if (currencyCodes.Count() != currencyCodes.Distinct().Count())
             {
-                oPropertyDetails.Warnings.AddNew("Cancellation exception", $"Different currencies were returned for cancellations, the distinct currency is: {oCurrencyCodes.Distinct().First()}");
-                oCancellationFeeResult.Success = false;
+                propertyDetails.Warnings.AddNew("Cancellation exception", $"Different currencies were returned for cancellations, the distinct currency is: {currencyCodes.Distinct().First()}");
+                cancellationFeeResult.Success = false;
             }
 
-            oCancellationFeeResult.Amount = dAmount;
-            oCancellationFeeResult.CurrencyCode = oCurrencyCodes.FirstOrDefault();
+            cancellationFeeResult.Amount = amount;
+            cancellationFeeResult.CurrencyCode = currencyCodes.FirstOrDefault();
 
             //'Store cancellation prices for each cancellation to be sent for cacellation confirmation request
-            oPropertyDetails.TPRef1 = string.Join("|", oCancellationPrices);
+            propertyDetails.TPRef1 = string.Join("|", cancellationPrices);
 
             //'Update session ids to be sent for cancellation confirmation request
-            oPropertyDetails.TPRef2 = string.Join("|", oSessionIds);
+            propertyDetails.TPRef2 = string.Join("|", sessionIds);
 
-            oPropertyDetails.CancellationAmount = dAmount;
+            propertyDetails.CancellationAmount = amount;
 
-            return oCancellationFeeResult;
+            return cancellationFeeResult;
         }
 
         #endregion
@@ -491,7 +494,7 @@
                         : propertyDetails.SourceSecondaryReference;
         }
 
-        public XmlDocument SendRequest<T>(T request, PropertyDetails propertyDetails, string logFilename)
+        public async Task<XmlDocument> SendRequestAsync<T>(T request, PropertyDetails propertyDetails, string logFilename)
         {
             var xmlRequest = _serializer.Serialize(request);
 
@@ -509,7 +512,7 @@
 
             webRequest.SetRequest(xmlRequest);
 
-            webRequest.Send(_httpClient, _logger).RunSynchronously();
+            await webRequest.Send(_httpClient, _logger);
 
             //'save the xml for the front end
             if (!string.IsNullOrEmpty(xmlRequest.OuterXml))

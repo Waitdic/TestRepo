@@ -17,6 +17,7 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Constants;
+    using System.Threading.Tasks;
 
     public class iVectorConnect : IThirdParty, IMultiSource
     {
@@ -63,7 +64,7 @@
             return false;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             Request? webRequest = null;
             bool success = false;
@@ -85,7 +86,7 @@
                 };
 
                 webRequest.SetRequest(requestXml);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 var responseXml = webRequest.ResponseXML;
                 var response = _serializer.DeSerialize<PropertyPreBookResponse>(responseXml);
@@ -104,24 +105,22 @@
                     // booking token
                     propertyDetails.TPRef1 = response.BookingToken;
 
-                    decimal dLocalCost = response.TotalPrice;
-                    decimal dRoomCost = dLocalCost / propertyDetails.Rooms.Count;
-                    foreach (var oRoomDetails in propertyDetails.Rooms.Where(oRoomDetails => dRoomCost != oRoomDetails.LocalCost))
+                    decimal localCost = response.TotalPrice;
+                    decimal roomCost = localCost / propertyDetails.Rooms.Count;
+
+                    foreach (var roomDetails in propertyDetails.Rooms.Where(o => roomCost != o.LocalCost))
                     {
-                        oRoomDetails.LocalCost = dRoomCost;
+                        roomDetails.LocalCost = roomCost;
                     }
 
-                    // Cancellations
-                    foreach (var oCancellation in response.Cancellations)
+                    foreach (var cancellation in response.Cancellations)
                     {
-                        propertyDetails.Cancellations.AddNew(oCancellation.StartDate, oCancellation.EndDate,
-                            oCancellation.Amount);
+                        propertyDetails.Cancellations.AddNew(cancellation.StartDate, cancellation.EndDate, cancellation.Amount);
                     }
 
-                    // Errata
-                    foreach (var oErratum in response.Errata)
+                    foreach (var erratum in response.Errata)
                     {
-                        propertyDetails.Errata.AddNew(oErratum.ErratumSubject, oErratum.ErratumDescription);
+                        propertyDetails.Errata.AddNew(erratum.ErratumSubject, erratum.ErratumDescription);
                     }
                 }
             }
@@ -147,7 +146,7 @@
             return success;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "failed";
             Request? request = null;
@@ -167,7 +166,7 @@
                 };
 
                 request.SetRequest(bookRequestXml);
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = _serializer.DeSerialize<BasketBookResponse>(request.ResponseXML);
                 var returnStatus = response.PropertyBookings.PropertyBookResponse.ReturnStatus;
@@ -200,7 +199,7 @@
             return reference;
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             Request? request = null;
             Request? preCancelRequest = null;
@@ -227,7 +226,7 @@
                 };
 
                 preCancelRequest.SetRequest(preCancelWebRequest.ToString());
-                preCancelRequest.Send(_httpClient, _logger).RunSynchronously();
+                await preCancelRequest.Send(_httpClient, _logger);
 
                 // 3b. Process the Response
                 // store the amount as TPRef2
@@ -254,7 +253,7 @@
                 };
 
                 request.SetRequest(cancelRequest.ToString());
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 // 3. Process Response
                 var cancelResponse = _serializer.DeSerialize<CancelResponse>(request.ResponseXML);
@@ -298,7 +297,7 @@
             return response;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
             Request? webRequest = null;
@@ -326,7 +325,7 @@
                 };
 
                 webRequest.SetRequest(preCancelRequestXml);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 // 3a. Check the Response was OK
                 var preCancelResponse = _serializer.DeSerialize<PreCancelResponse>(webRequest.ResponseXML);

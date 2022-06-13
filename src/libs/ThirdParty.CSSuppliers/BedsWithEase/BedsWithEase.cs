@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -54,9 +55,9 @@
             return false;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            bool bSuccess = true;
+            bool success = true;
             try
             {
                 // SessionID has been passed into the room tp reference field via XSL 
@@ -67,7 +68,7 @@
                 // Send reservation requests and store returned errata and reservation book codes
                 foreach (var xmlRequest in BuildReservationRequests(propertyDetails))
                 {
-                    var reserveResult = BedsWithEaseHelper.SendRequest(propertyDetails, xmlRequest, _settings.SOAPHotelReservation(propertyDetails), _settings, _httpClient, _logger);
+                    var reserveResult = await BedsWithEaseHelper.SendRequestAsync(propertyDetails, xmlRequest, _settings.SOAPHotelReservation(propertyDetails), _settings, _httpClient, _logger);
 
                     var response = _serializer.DeSerialize<Envelope<HotelReservationResponse>>(reserveResult.Response).Body.Content;
 
@@ -78,7 +79,7 @@
                     sbErrata.AppendLine();
 
                     // Send CancellationInfoRequest - one per reservation request
-                    GetPrebookCancellationDetails(propertyDetails, bookCode);
+                    GetPrebookCancellationDetailsAsync(propertyDetails, bookCode);
 
                     if (reserveResult.Request != null)
                     {
@@ -102,18 +103,18 @@
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("PreBookExceptionRS", ex.ToString());
-                bSuccess = false;
+                success = false;
             }
 
-            return bSuccess;
+            return success;
         }
 
-        private void GetPrebookCancellationDetails(PropertyDetails propertyDetails, string bookCode)
+        private async Task GetPrebookCancellationDetailsAsync(PropertyDetails propertyDetails, string bookCode)
         {
             Result? result = null;
             try
             {
-                result = BedsWithEaseHelper.SendRequest(
+                result = await BedsWithEaseHelper.SendRequestAsync(
                     propertyDetails,
                     BuildPrebookCancellationInfoRequest(propertyDetails, bookCode),
                     _settings.SOAPCancellationInfo(propertyDetails),
@@ -224,14 +225,14 @@
                 .Select(envelope => _serializer.Serialize(envelope)).ToList();
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string sReference = string.Empty;
             Result? oResult = null;
 
             try
             {
-                oResult = BedsWithEaseHelper.SendRequest(
+                oResult = await BedsWithEaseHelper.SendRequestAsync(
                     propertyDetails,
                     BuildReservationConfirmation(propertyDetails),
                     _settings.SOAPReservationConfirmation(propertyDetails),
@@ -277,7 +278,7 @@
                 propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Book Response", oResult.Response);
             }
 
-            BedsWithEaseHelper.EndSession(propertyDetails, _settings, _serializer, _httpClient, _logger);
+            await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
 
             return sReference;
         }
@@ -368,7 +369,7 @@
             return _serializer.Serialize(envelope);
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var response = new ThirdPartyCancellationResponse();
             bool success = false;
@@ -376,8 +377,8 @@
 
             try
             {
-                propertyDetails.TPRef1 = BedsWithEaseHelper.GetSessionId(propertyDetails, _settings, _serializer, _httpClient, _logger);
-                result = BedsWithEaseHelper.SendRequest(
+                propertyDetails.TPRef1 = await BedsWithEaseHelper.GetSessionIdAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
+                result = await BedsWithEaseHelper.SendRequestAsync(
                     propertyDetails,
                     BuildCancelBookingRequest(propertyDetails),
                     _settings.SOAPCancelBooking(propertyDetails),
@@ -415,7 +416,7 @@
                     propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Cancel Booking Response", result.Response);
                 }
 
-                BedsWithEaseHelper.EndSession(propertyDetails, _settings, _serializer, _httpClient, _logger);
+                await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
             }
 
             response.Success = success;
@@ -440,7 +441,7 @@
             return _serializer.Serialize(envelope);
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             Result? result = null;
             var feeResult = new ThirdPartyCancellationFeeResult();
@@ -448,8 +449,8 @@
             try
             {
                 // Store sessionid on the propertybooking for the book
-                propertyDetails.TPRef1 = BedsWithEaseHelper.GetSessionId(propertyDetails, _settings, _serializer, _httpClient, _logger);
-                result = BedsWithEaseHelper.SendRequest(
+                propertyDetails.TPRef1 = await BedsWithEaseHelper.GetSessionIdAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
+                result = await BedsWithEaseHelper.SendRequestAsync(
                     propertyDetails,
                     BuildCancelationInfoRequest(propertyDetails),
                     _settings.SOAPCancellationInfo(propertyDetails),
@@ -487,7 +488,7 @@
                     propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "CancellationInfo Response", result.Response);
                 }
 
-                BedsWithEaseHelper.EndSession(propertyDetails, _settings, _serializer, _httpClient, _logger);
+                await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
             }
 
             return feeResult;

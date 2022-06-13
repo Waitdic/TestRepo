@@ -50,7 +50,6 @@
         {
             try
             {
-                // todo - email logs to
                 // todo - request tracker, use mini profiler?
                 StartTime = DateTime.Now; // needed for timeouts
                 var taskList = new List<Task>();

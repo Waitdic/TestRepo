@@ -433,23 +433,23 @@
         /// <summary>ISO currency id lookup.</summary>
         /// <param name="currencyCode">The ISO currency code.</param>
         /// <returns>The currency id of the corresponding currencyCode</returns>
-        public int TPCurrencyIDLookup(string currencyCode)
+        public async Task<int> TPCurrencyIDLookupAsync(string currencyCode)
         {
-            // todo - caching and async
-            return _sql.ReadScalarAsync<int>(
+            // todo - caching
+            return await _sql.ReadScalarAsync<int>(
                 "select ISOCurrencyID from ISOCurrency where CurrencyCode = @currencyCode",
-                new CommandSettings().WithParameters(new { currencyCode })).Result;
+                new CommandSettings().WithParameters(new { currencyCode }));
         }
 
         /// <summary>ISO currency code lookup.</summary>
-        /// <param name="currencyID">The ISO currency id.</param>
+        /// <param name="currencyId">The ISO currency id.</param>
         /// <returns>The currency code of corresponding currency id</returns>
-        public string TPCurrencyCodeLookup(int currencyID)
+        public async Task<string> TPCurrencyCodeLookupAsync(int currencyId)
         {
-            // todo - caching and async
-            return _sql.ReadScalarAsync<string>(
+            // todo - caching
+            return await _sql.ReadScalarAsync<string>(
                 "select CurrencyCode from ISOCurrency where ISOCurrencyID = @currencyID",
-                new CommandSettings().WithParameters(new { currencyID })).Result;
+                new CommandSettings().WithParameters(new { currencyId }));
         }
 
         /// <summary>Country code lookup</summary>
@@ -478,13 +478,13 @@
         }
 
         /// <inheritdoc />
-        public string TPResortCodeByPropertyIdLookup(string source, int propertyId)
+        public async Task<string> TPResortCodeByPropertyIdLookupAsync(string source, int propertyId)
         {
-            return TPResortCodeByPropertyIdLookup(source)
+            return (await TPResortCodeByPropertyIdLookupAsync(source))
                 .TryGetValue(propertyId, out string resortCode) ? resortCode : string.Empty;
         }
 
-        private Dictionary<int, string> TPResortCodeByPropertyIdLookup(string source)
+        private async Task<Dictionary<int, string>> TPResortCodeByPropertyIdLookupAsync(string source)
         {
             string cacheKey = "TPResortCodeByPropertyIdLookup_" + source;
 
@@ -498,8 +498,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            // todo - make async
-            return _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60).Result;
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
         private class Property
@@ -509,13 +508,13 @@
         }
 
         /// <inheritdoc />
-        public string TPResortCodeByGeographyIdLookup(string source, int geographyId)
+        public async Task<string> TPResortCodeByGeographyIdLookupAsync(string source, int geographyId)
         {
-            return TPResortCodeByGeographyIdLookup(source)
+            return (await TPResortCodeByGeographyIdLookupAsync(source))
                 .TryGetValue(geographyId, out string resortCode) ? resortCode : string.Empty;
         }
 
-        private Dictionary<int, string> TPResortCodeByGeographyIdLookup(string source)
+        private async Task<Dictionary<int, string>> TPResortCodeByGeographyIdLookupAsync(string source)
         {
             string cacheKey = "TPResortCodeByGeographyIdLookup_" + source;
 
@@ -527,8 +526,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            // todo - make async
-            return _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60).Result;
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
         private class Geography

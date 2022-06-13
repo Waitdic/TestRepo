@@ -1,5 +1,6 @@
 ﻿namespace ThirdParty
 {
+    using System.Threading.Tasks;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
@@ -47,28 +48,28 @@
         /// </summary>
         /// <param name="propertyDetails">The property details.</param>
         /// <returns>A boolean</returns>
-        bool PreBook(PropertyDetails propertyDetails);
+        Task<bool> PreBookAsync(PropertyDetails propertyDetails);
 
         /// <summary>
         /// Books the specified property details.
         /// </summary>
         /// <param name="propertyDetails">The property details.</param>
         /// <returns>the booking reference</returns>
-        string Book(PropertyDetails propertyDetails);
+        Task<string> BookAsync(PropertyDetails propertyDetails);
 
         /// <summary>
         /// Cancels the booking.
         /// </summary>
         /// <param name="propertyDetails">The property details.</param>
         /// <returns>a third party cancellation response</returns>
-        ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails);
+        Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails);
 
         /// <summary>
         /// Gets the cancellation cost.
         /// </summary>
         /// <param name="propertyDetails">The property details.</param>
         /// <returns>A third party cancellation fee result</returns>
-        ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails);
+        Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails);
 
         /// <summary>
         /// Bookings the search.

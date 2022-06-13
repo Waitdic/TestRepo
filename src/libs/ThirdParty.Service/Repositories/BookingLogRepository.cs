@@ -8,6 +8,7 @@
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A repository responsible for logging book, pre book and cancellation logs to the database
@@ -33,7 +34,7 @@
         /// <param name="response">The response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public void LogPrebook(Prebook.Request request, Prebook.Response response, User user, string exception = "")
+        public async Task LogPrebookAsync(Prebook.Request request, Prebook.Response response, User user, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -41,7 +42,7 @@
                 responseObject = response.Warnings;
             }
 
-            this.InsertLogs(request, responseObject, LogType.Prebook, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Prebook, user, exception);
         }
 
         /// <summary>
@@ -51,7 +52,7 @@
         /// <param name="response">The response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public void LogBook(Book.Request request, Book.Response response, User user, string exception = "")
+        public async Task LogBookAsync(Book.Request request, Book.Response response, User user, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -59,7 +60,7 @@
                 responseObject = response.Warnings;
             }
 
-            this.InsertLogs(request, responseObject, LogType.Book, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Book, user, exception);
         }
 
         /// <summary>
@@ -69,7 +70,7 @@
         /// <param name="response">The response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public void LogCancel(Cancel.Request request, Cancel.Response response, User user, string exception = "")
+        public async Task LogCancelAsync(Cancel.Request request, Cancel.Response response, User user, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -77,7 +78,7 @@
                 responseObject = response.Warnings;
             }
 
-            this.InsertLogs(request, responseObject, LogType.Cancel, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Cancel, user, exception);
         }
 
         /// <summary>
@@ -88,7 +89,7 @@
         /// <param name="logType">The log type.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        private void InsertLogs(object request, object response, LogType logType, User user, string exception = "")
+        private async Task InsertLogsAsync(object request, object response, LogType logType, User user, string exception = "")
         {
             try
             {
@@ -104,8 +105,7 @@
                     responseString = exception;
                 }
 
-#if !DEBUG
-                _sql.ExecuteAsync(
+                await _sql.ExecuteAsync(
                     "Insert into APILog (Type, Time, RequestLog, ResponseLog, Login) values (@logType,@time,@requestLog,@responseLog,@login)",
                     new CommandSettings()
                         .WithParameters(new
@@ -115,14 +115,11 @@
                             @requestLog = requestString,
                             @responseLog = responseString,
                             @login = user.Login,
-                        }))
-                    .RunSynchronously();
-#endif
-
+                        }));
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, $"{logType.ToString()} log exception");
+                this._logger.LogError(ex, $"{logType} log exception");
             }
         }
     }

@@ -43,7 +43,7 @@
         public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            string sessionId = BedsWithEaseHelper.GetSessionId(searchDetails, _settings, _serializer, _httpClient, _logger);
+            string sessionId = BedsWithEaseHelper.GetSessionIdAsync(searchDetails, _settings, _serializer, _httpClient, _logger).Result;
 
             foreach (var resortSplit in resortSplits)
             {

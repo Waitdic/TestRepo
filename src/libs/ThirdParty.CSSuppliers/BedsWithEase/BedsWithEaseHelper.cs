@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
@@ -14,7 +15,7 @@
 
     public class BedsWithEaseHelper
     {
-        public static Result SendRequest(
+        public static async Task<Result> SendRequestAsync(
             IThirdPartyAttributeSearch searchDetails,
             XmlDocument xmlRequest,
             string soapAction,
@@ -33,12 +34,12 @@
             };
 
             webRequest.SetRequest(xmlRequest);
-            webRequest.Send(httpClient, logger).RunSynchronously();
+            await webRequest.Send(httpClient, logger);
 
             return new Result(xmlRequest, webRequest.ResponseXML);
         }
 
-        public static void EndSession(
+        public static async Task EndSessionAsync(
             PropertyDetails propertyDetails,
             IBedsWithEaseSettings settings,
             ISerializer serializer,
@@ -56,7 +57,7 @@
                 }
             };
 
-            SendRequest(
+            await SendRequestAsync(
                 propertyDetails,
                 serializer.Serialize(envelope),
                 settings.SOAPEndSession(propertyDetails),
@@ -65,7 +66,7 @@
                 logger);
         }
 
-        public static string GetSessionId(
+        public static async Task<string> GetSessionIdAsync(
             IThirdPartyAttributeSearch searchDetails,
             IBedsWithEaseSettings settings,
             ISerializer serializer,
@@ -85,7 +86,7 @@
                 }
             };
 
-            var result = SendRequest(
+            var result = await SendRequestAsync(
                 searchDetails,
                 serializer.Serialize(envelope),
                 settings.SOAPStart(searchDetails),

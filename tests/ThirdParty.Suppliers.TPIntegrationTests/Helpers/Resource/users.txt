@@ -183,7 +183,7 @@
       {
         "Supplier": "Acerooms",
         "Configurations": {
-          "GenericURL": "https://stage-gateway.azurewebsites.net/hotel-api/1.0/",
+          "BaseURL": "https://stage-gateway.azurewebsites.net/hotel-api/1.0/",
           "APIKey": "19R6dkI20Vgik15aLZ575Xea1",
           "SecretKey": "wSQRn1epBAhLDWT",
           "Signature": "243e84e47c43e270c9375a6adc36fd84",

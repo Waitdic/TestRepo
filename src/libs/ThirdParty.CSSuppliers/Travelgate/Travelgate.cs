@@ -6,6 +6,7 @@
     using System.Net.Http;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Xml;
     using Intuitive;
@@ -86,7 +87,7 @@
 
         #region Prebook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             var requestXml = new XmlDocument();
             var responseXml = new XmlDocument();
@@ -97,7 +98,7 @@
                 // Send request
                 string request = GenericRequest(BuildPrebookRequest(propertyDetails), propertyDetails);
                 requestXml.LoadXml(request);
-                responseXml = SendRequest(request, "Prebook", propertyDetails);
+                responseXml = await SendRequestAsync(request, "Prebook", propertyDetails);
 
                 // Retrieve, decode and clean provider response
                 string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/ValuationResponse/ValuationResult/providerRS/rs");
@@ -220,7 +221,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             var requestXml = new XmlDocument();
             var responseXml = new XmlDocument();
@@ -231,7 +232,7 @@
                 // Send request
                 string request = GenericRequest(BuildBookRequest(propertyDetails), propertyDetails);
                 requestXml.LoadXml(request);
-                responseXml = SendRequest(request, "Book", propertyDetails);
+                responseXml = await SendRequestAsync(request, "Book", propertyDetails);
 
                 // Retrieve, decode and clean provider response
                 string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/ReservationResponse/ReservationResult/providerRS/rs");
@@ -272,7 +273,7 @@
 
         #region Cancellation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var requestXml = new XmlDocument();
             var responseXml = new XmlDocument();
@@ -283,7 +284,7 @@
                 // Send request
                 string request = GenericRequest(BuildCancellationRequest(propertyDetails), propertyDetails);
                 requestXml.LoadXml(request);
-                responseXml = SendRequest(request, "Cancellation", propertyDetails);
+                responseXml = await SendRequestAsync(request, "Cancellation", propertyDetails);
 
                 // Retrieve, decode and clean provider response
                 string decodedProviderResponse = responseXml.SafeNodeValue("Envelope/Body/CancelResponse/CancelResult/providerRS/rs");
@@ -326,9 +327,9 @@
             return cancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion
@@ -354,7 +355,7 @@
 
         #region Helpers
 
-        public XmlDocument SendRequest(string requestString, string requestType, PropertyDetails propertyDetails)
+        public async Task<XmlDocument> SendRequestAsync(string requestString, string requestType, PropertyDetails propertyDetails)
         {
             string soapAction = string.Empty;
             switch (requestType.ToLower() ?? "")
@@ -387,7 +388,7 @@
                 SoapAction = soapAction
             };
             webRequest.SetRequest(requestString);
-            webRequest.Send(_httpClient, _logger);
+            await webRequest.Send(_httpClient, _logger);
 
             var responseXML = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 

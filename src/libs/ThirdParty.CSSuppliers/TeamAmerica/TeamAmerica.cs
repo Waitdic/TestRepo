@@ -16,6 +16,7 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.TeamAmerica.Models;
+    using System.Threading.Tasks;
 
     public class TeamAmerica : IThirdParty, ISingleSource
     {
@@ -54,194 +55,194 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails oPropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            bool bReturn = true;
-            var oSearchRequests = new List<Request>();
+            bool @return = true;
+            var searchRequests = new List<Request>();
 
             //'check availability/cancelllation policy for each room
-            var bAvailable = true;
+            var available = true;
 
             try
             {
                 //'check availability/cancelllation policy for each room
-                foreach (var oRoomDetails in oPropertyDetails.Rooms)
+                foreach (var roomDetails in propertyDetails.Rooms)
                 {
                     //'Build/send search
-                    var sRequest = BuildSearchXml(oPropertyDetails, oRoomDetails);
-                    var oSearchRequest = SendRequest(Constant.SoapActionPreBook, sRequest, oPropertyDetails, Constant.SoapActionPreBook, oPropertyDetails.CreateLogs);
-                    var oHotelOffer = Envelope<PriceSearchResponse>.DeSerialize(oSearchRequest.ResponseXML, _serializer).HotelSearchResponse.Offers.First();
+                    var request = BuildSearchXml(propertyDetails, roomDetails);
+                    var searchRequest = await SendRequestAsync(Constant.SoapActionPreBook, request, propertyDetails, Constant.SoapActionPreBook, propertyDetails.CreateLogs);
+                    var hotelOffer = Envelope<PriceSearchResponse>.DeSerialize(searchRequest.ResponseXML, _serializer).HotelSearchResponse.Offers.First();
 
                     // 'check availability
-                    if (!IsEveryNightAvailable(oHotelOffer))
+                    if (!IsEveryNightAvailable(hotelOffer))
                     {
-                        bAvailable = false;
+                        available = false;
                     }
                     else
                     {
                         //'check the price
 
                         //'get the occupancy returned at search (Single, Double, Triple or Quad)
-                        string sOccupancy = GetOccupancy(oRoomDetails, true);
+                        string occupancy = GetOccupancy(roomDetails, true);
 
-                        decimal nCost = oHotelOffer.NightlyInfos.Select(night => SafeTypeExtensions.ToSafeDecimal(
-                            night.Prices.FirstOrDefault(x => string.Equals(x.Occupancy, sOccupancy))?.AdultPrice ?? "0")).Sum();
+                        decimal cost = hotelOffer.NightlyInfos.Select(night
+                            => (night.Prices.FirstOrDefault(x => string.Equals(x.Occupancy, occupancy))?.AdultPrice ?? "0").ToSafeDecimal()).Sum();
 
                         //'Compare with the original price
-                        if (nCost > 0 && SafeTypeExtensions.ToSafeDecimal(oRoomDetails.LocalCost) != nCost)
+                        if (cost > 0 && roomDetails.LocalCost.ToSafeDecimal() != cost)
                         {
-                            oRoomDetails.LocalCost = SafeTypeExtensions.ToSafeDecimal(nCost);
-                            oRoomDetails.GrossCost = SafeTypeExtensions.ToSafeDecimal(nCost);
+                            roomDetails.LocalCost = cost.ToSafeDecimal();
+                            roomDetails.GrossCost = cost.ToSafeDecimal();
                         }
 
-                        string avarageNightRate = oHotelOffer.AverageRates.FirstOrDefault(rate => string.Equals(rate.Occupancy, sOccupancy))?.AverageNightlyRate ?? "";
+                        string averageNightRate = hotelOffer.AverageRates.FirstOrDefault(rate => string.Equals(rate.Occupancy, occupancy))?.AverageNightlyRate ?? "";
 
-                        oRoomDetails.ThirdPartyReference += $"|{avarageNightRate}";
+                        roomDetails.ThirdPartyReference += $"|{averageNightRate}";
                     }
 
-                    oSearchRequests.Add(oSearchRequest);
+                    searchRequests.Add(searchRequest);
 
-                    if (!bAvailable)
+                    if (!available)
                     {
-                        bReturn = false;
+                        @return = false;
                     }
                     else
                     {
-                        GetCancellationCosts(oPropertyDetails, oHotelOffer);
+                        GetCancellationCosts(propertyDetails, hotelOffer);
                     }
                 }
             }
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("PreBookExcpetion", ex.Message);
-                bReturn = false;
+                propertyDetails.Warnings.AddNew("PreBookExcpetion", ex.Message);
+                @return = false;
             }
             finally
             {
                 //'Add the xml to the booking
-                foreach (var oSearchRequest in oSearchRequests)
+                foreach (var searchRequest in searchRequests)
                 {
-                    if (!string.IsNullOrEmpty(oSearchRequest.RequestLog))
+                    if (!string.IsNullOrEmpty(searchRequest.RequestLog))
                     {
-                        oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Price Check Request", oSearchRequest.RequestLog);
+                        propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Price Check Request", searchRequest.RequestLog);
                     }
-                    if (!string.IsNullOrEmpty(oSearchRequest.ResponseLog))
+                    if (!string.IsNullOrEmpty(searchRequest.ResponseLog))
                     {
-                        oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Price Check Response", oSearchRequest.ResponseLog);
+                        propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Price Check Response", searchRequest.ResponseLog);
                     }
                 }
             }
 
-            return bReturn;
+            return @return;
         }
 
         #endregion
 
         #region Book
 
-        public string Book(PropertyDetails oPropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            string sReference = "";
-            var oRequest = new Request();
+            string reference = "";
+            var request = new Request();
 
             try
             {
                 //'Build/send Confirmation
-                string sRequest = BuildBookXml(oPropertyDetails);
-                oRequest = SendRequest(Constant.SoapActionBook, sRequest, oPropertyDetails, "Book", oPropertyDetails.CreateLogs);
-                var oResponse = Envelope<NewMultiItemReservationResponse>.DeSerialize(oRequest.ResponseXML, _serializer).ReservationResponse;
-                string sResponse = oRequest.ResponseString;
+                string requestBody = BuildBookXml(propertyDetails);
+                request = await SendRequestAsync(Constant.SoapActionBook, requestBody, propertyDetails, "Book", propertyDetails.CreateLogs);
+                var response = Envelope<NewMultiItemReservationResponse>.DeSerialize(request.ResponseXML, _serializer).ReservationResponse;
+                string responseBody = request.ResponseString;
 
                 //'Check for errors or pending bookings
-                if (sResponse.ToLower().Contains("error") || string.Equals(oResponse.ReservationInformation.ReservationStatus, "RQ"))
+                if (responseBody.ToLower().Contains("error") || string.Equals(response.ReservationInformation.ReservationStatus, "RQ"))
                 {
-                    sReference = Constant.Failed;
+                    reference = Constant.Failed;
                 }
                 else
                 {
                     //'get the confirmation code
-                    sReference = oResponse.ReservationInformation.ReservationNumber;
+                    reference = response.ReservationInformation.ReservationNumber;
                 }
             }
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("BookException", ex.Message);
-                sReference = Constant.Failed;
+                propertyDetails.Warnings.AddNew("BookException", ex.Message);
+                reference = Constant.Failed;
             }
             finally
             {
                 //'Attach the logs to the booking
-                if (!string.IsNullOrEmpty(oRequest.RequestLog))
+                if (!string.IsNullOrEmpty(request.RequestLog))
                 {
-                    oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Book Request", oRequest.RequestLog);
+                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Book Request", request.RequestLog);
                 }
-                if (!string.IsNullOrEmpty(oRequest.ResponseLog))
+                if (!string.IsNullOrEmpty(request.ResponseLog))
                 {
-                    oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Book Response", oRequest.ResponseLog);
+                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Book Response", request.ResponseLog);
                 }
             }
 
-            return sReference;
+            return reference;
         }
 
         #endregion
 
         #region CancelBooking
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            var TPCancelResponse = new ThirdPartyCancellationResponse
+            var cancelResponse = new ThirdPartyCancellationResponse
             {
                 Success = true
             };
 
-            var oRequest = new Request();
+            var request = new Request();
 
             try
             {
-                var sRequest = BuildCancelXml(oPropertyDetails);
-                oRequest = SendRequest(Constant.SoapActionCancel, sRequest, oPropertyDetails, Constant.SoapActionCancel, oPropertyDetails.CreateLogs);
+                var requestBody = BuildCancelXml(propertyDetails);
+                request = await SendRequestAsync(Constant.SoapActionCancel, requestBody, propertyDetails, Constant.SoapActionCancel, propertyDetails.CreateLogs);
 
-                var oResponse = Envelope<CancelReservationResponse>.DeSerialize(oRequest.ResponseXML, _serializer).CancelResponse;
+                var response = Envelope<CancelReservationResponse>.DeSerialize(request.ResponseXML, _serializer).CancelResponse;
 
-                if (string.Equals(oResponse.ReservationStatusCode, "CX"))
+                if (string.Equals(response.ReservationStatusCode, "CX"))
                 {
-                    TPCancelResponse.TPCancellationReference = oPropertyDetails.SourceReference;
+                    cancelResponse.TPCancellationReference = propertyDetails.SourceReference;
                 }
                 else
                 {
-                    TPCancelResponse.TPCancellationReference = Constant.Failed;
-                    TPCancelResponse.Success = false;
+                    cancelResponse.TPCancellationReference = Constant.Failed;
+                    cancelResponse.Success = false;
                 }
             }
             catch (Exception)
             {
-                TPCancelResponse.TPCancellationReference = Constant.Failed;
-                TPCancelResponse.Success = false;
+                cancelResponse.TPCancellationReference = Constant.Failed;
+                cancelResponse.Success = false;
             }
             finally
             {
                 //'Attach the logs to the booking
-                if (!string.IsNullOrEmpty(oRequest.RequestLog))
+                if (!string.IsNullOrEmpty(request.RequestLog))
                 {
-                    oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Cancellation Request", oRequest.RequestLog);
+                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Cancellation Request", request.RequestLog);
                 }
-                if (!string.IsNullOrEmpty(oRequest.ResponseLog))
+                if (!string.IsNullOrEmpty(request.ResponseLog))
                 {
-                    oPropertyDetails.Logs.AddNew(oPropertyDetails.Source, "TeamAmerica Cancellation Response", oRequest.ResponseLog);
+                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Cancellation Response", request.ResponseLog);
                 }
             }
 
-            return TPCancelResponse;
+            return cancelResponse;
         }
 
         #endregion
 
         #region Other methods
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         public string CreateReconciliationReference(string inputReference)
@@ -281,209 +282,210 @@
 
         #region Helpers
 
-        public static bool IsEveryNightAvailable(HotelOffer oHotelOffer)
+        public static bool IsEveryNightAvailable(HotelOffer hotelOffer)
         {
-            return oHotelOffer.NightlyInfos.All(night => string.Equals(night.Status, Constant.Available));
+            return hotelOffer.NightlyInfos.All(night => string.Equals(night.Status, Constant.Available));
         }
 
-        public Request SendRequest(string sSoapAction, string sXml, IThirdPartyAttributeSearch SearchDetails, string sLogFile, bool bLog)
+        public async Task<Request> SendRequestAsync(string soapAction, string xml, IThirdPartyAttributeSearch searchDetails, string logFile, bool log)
         {
-            var oRequest = new Request
+            var request = new Request
             {
-                EndPoint = _settings.URL(SearchDetails),
-                SoapAction = $"{_settings.URL(SearchDetails)}/{sSoapAction}",
+                EndPoint = _settings.URL(searchDetails),
+                SoapAction = $"{_settings.URL(searchDetails)}/{soapAction}",
                 Method = eRequestMethod.POST,
                 Source = Source,
                 ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                LogFileName = sLogFile,
-                CreateLog = bLog
+                LogFileName = logFile,
+                CreateLog = log
             };
-            oRequest.SetRequest(sXml);
-            oRequest.Send(_httpClient, _logger).RunSynchronously();
-            return oRequest;
+            request.SetRequest(xml);
+            await request.Send(_httpClient, _logger);
+
+            return request;
         }
 
-        public string BuildSearchXml(PropertyDetails oPropertyDetails, RoomDetails oRoomDetails)
+        public string BuildSearchXml(PropertyDetails propertyDetails, RoomDetails roomDetails)
         {
             var request = new PriceSearch
             {
-                UserName = _settings.Username(oPropertyDetails),
-                Password = _settings.Password(oPropertyDetails),
-                CityCode = oPropertyDetails.ResortCode,
-                ProductCode = oRoomDetails.ThirdPartyReference.Split('|')[0],
+                UserName = _settings.Username(propertyDetails),
+                Password = _settings.Password(propertyDetails),
+                CityCode = propertyDetails.ResortCode,
+                ProductCode = roomDetails.ThirdPartyReference.Split('|')[0],
                 RequestType = Constant.SearchTypeHotel,
                 Occupancy = "",
-                ArrivalDate = oPropertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
-                NumberOfNights = oPropertyDetails.Duration,
-                NumberOfRooms = oPropertyDetails.Rooms.Count,
+                ArrivalDate = propertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
+                NumberOfNights = propertyDetails.Duration,
+                NumberOfRooms = propertyDetails.Rooms.Count,
                 DisplayClosedOut = Constant.TokenNo,
                 DisplayOnRequest = Constant.TokenNo,
-                VendorIds = { oPropertyDetails.TPKey }
+                VendorIds = { propertyDetails.TPKey }
             };
 
             return Envelope<PriceSearch>.Serialize(request, _serializer);
         }
 
-        public void GetCancellationCosts(PropertyDetails oPropertyDetails, HotelOffer oHotelOffer)
+        public void GetCancellationCosts(PropertyDetails propertyDetails, HotelOffer hotelOffer)
         {
-            foreach (var oPolicy in oHotelOffer.CancellationPolicies)
+            foreach (var policy in hotelOffer.CancellationPolicies)
             {
-                var oCancellation = new Cancellation
+                var cancellation = new Cancellation
                 {
-                    StartDate = oPropertyDetails.ArrivalDate.AddDays(-oPolicy.NumberDaysPrior),
-                    EndDate = oPropertyDetails.ArrivalDate,
+                    StartDate = propertyDetails.ArrivalDate.AddDays(-policy.NumberDaysPrior),
+                    EndDate = propertyDetails.ArrivalDate,
                 };
 
-                var nPenaltyAmount = SafeTypeExtensions.ToSafeDecimal(oPolicy.PenaltyAmount);
+                var penaltyAmount = policy.PenaltyAmount.ToSafeDecimal();
 
-                switch (oPolicy.PenaltyType)
+                switch (policy.PenaltyType)
                 {
                     case "Nights":
-                        oCancellation.Amount = nPenaltyAmount * oPropertyDetails.LocalCost / oPropertyDetails.Duration;
+                        cancellation.Amount = penaltyAmount * propertyDetails.LocalCost / propertyDetails.Duration;
                         break;
                     case "Percent":
-                        oCancellation.Amount = nPenaltyAmount * oPropertyDetails.LocalCost / 100;
+                        cancellation.Amount = penaltyAmount * propertyDetails.LocalCost / 100;
                         break;
                     case "Dollars":
-                        oCancellation.Amount = nPenaltyAmount;
+                        cancellation.Amount = penaltyAmount;
                         break;
                 }
 
-                oPropertyDetails.Cancellations.Add(oCancellation);
+                propertyDetails.Cancellations.Add(cancellation);
             }
 
-            oPropertyDetails.Cancellations.Solidify(SolidifyType.LatestStartDate);
+            propertyDetails.Cancellations.Solidify(SolidifyType.LatestStartDate);
         }
 
-        public string GetOccupancy(RoomDetails oRoomDetails, bool bAdultOnly)
+        public string GetOccupancy(RoomDetails roomDetails, bool adultOnly)
         {
-            string sOccupancy = "";
-            string sFamilyPlan = oRoomDetails.ThirdPartyReference.Split('|')[1];
-            int iChildAge = SafeTypeExtensions.ToSafeInt(oRoomDetails.ThirdPartyReference.Split('|')[2]);
+            string occupancy = "";
+            string familyPlan = roomDetails.ThirdPartyReference.Split('|')[1];
+            int childAge = roomDetails.ThirdPartyReference.Split('|')[2].ToSafeInt();
 
-            int iAdults;
-            int iChildren = 0;
+            int adults;
+            int children = 0;
 
-            if (string.Equals(sFamilyPlan, Constant.TokenYes))
+            if (string.Equals(familyPlan, Constant.TokenYes))
             {
-                iAdults = oRoomDetails.AdultsSetAgeOrOver(iChildAge + 1);
-                iChildren = bAdultOnly ? 0 : oRoomDetails.ChildrenUnderSetAge(iChildAge + 1) + oRoomDetails.Infants;
+                adults = roomDetails.AdultsSetAgeOrOver(childAge + 1);
+                children = adultOnly ? 0 : roomDetails.ChildrenUnderSetAge(childAge + 1) + roomDetails.Infants;
             }
             else
             {
-                iAdults = oRoomDetails.Adults + oRoomDetails.Children + oRoomDetails.Infants;
+                adults = roomDetails.Adults + roomDetails.Children + roomDetails.Infants;
             }
 
-            switch (iAdults)
+            switch (adults)
             {
                 case 1:
-                    switch (iChildren)
+                    switch (children)
                     {
                         case 0:
-                            sOccupancy = "Single";
+                            occupancy = "Single";
                             break;
                         case 1:
-                            sOccupancy = "SGL+1CH";
+                            occupancy = "SGL+1CH";
                             break;
                         //'iAdults must be greater or equal to iChildren, else use DBL room
                         case 2:
-                            sOccupancy = "DBL+1CH";
+                            occupancy = "DBL+1CH";
                             break;
                         case 3:
-                            sOccupancy = "DBL+2CH";
+                            occupancy = "DBL+2CH";
                             break;
                     }
                     break;
                 case 2:
-                    switch (iChildren)
+                    switch (children)
                     {
                         case 0:
-                            sOccupancy = "Double";
+                            occupancy = "Double";
                             break;
                         case 1:
-                            sOccupancy = "DBL+1CH";
+                            occupancy = "DBL+1CH";
                             break;
                         case 2:
-                            sOccupancy = "DBL+2CH";
+                            occupancy = "DBL+2CH";
                             break;
                     }
                     break;
                 case 3:
-                    switch (iChildren)
+                    switch (children)
                     {
                         case 0:
-                            sOccupancy = "Triple";
+                            occupancy = "Triple";
                             break;
                         case 1:
-                            sOccupancy = "TPL+1CH";
+                            occupancy = "TPL+1CH";
                             break;
                     }
                     break;
                 case 4:
-                    sOccupancy = "Quad";
+                    occupancy = "Quad";
                     break;
             }
 
-            return sOccupancy;
+            return occupancy;
         }
 
-        public string BuildBookXml(PropertyDetails oPropertyDetails)
+        public string BuildBookXml(PropertyDetails propertyDetails)
         {
             var bookRequest = new NewMultiItemReservation
             {
-                UserName = _settings.Username(oPropertyDetails),
-                Password = _settings.Password(oPropertyDetails),
-                AgentName = _settings.CompanyName(oPropertyDetails),
-                AgentEmail = _settings.CompanyAddressEmail(oPropertyDetails),
-                ClientReference = oPropertyDetails.BookingReference,
-                RoomItems = oPropertyDetails.Rooms.Select(oRoomDetails =>
+                UserName = _settings.Username(propertyDetails),
+                Password = _settings.Password(propertyDetails),
+                AgentName = _settings.CompanyName(propertyDetails),
+                AgentEmail = _settings.CompanyAddressEmail(propertyDetails),
+                ClientReference = propertyDetails.BookingReference,
+                RoomItems = propertyDetails.Rooms.Select(roomDetails =>
                 {
                     return new RoomItem
                     {
-                        ProductCode = oRoomDetails.ThirdPartyReference.Split('|')[0],
-                        ProductDate = oPropertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
-                        Occupancy = GetOccupancy(oRoomDetails, false),
-                        NumberOfNights = oPropertyDetails.Duration,
+                        ProductCode = roomDetails.ThirdPartyReference.Split('|')[0],
+                        ProductDate = propertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
+                        Occupancy = GetOccupancy(roomDetails, false),
+                        NumberOfNights = propertyDetails.Duration,
                         Language = Constant.ENG,
                         Quantity = 1,
-                        ItemRemarks = oPropertyDetails.BookingComments.ToString(),
-                        RateExpected = oRoomDetails.ThirdPartyReference.Split('|')[3],
-                        Passangers = oRoomDetails.Passengers.Select(oPassenger =>
+                        ItemRemarks = propertyDetails.BookingComments.ToString(),
+                        RateExpected = roomDetails.ThirdPartyReference.Split('|')[3],
+                        Passangers = roomDetails.Passengers.Select(passenger =>
                         {
-                            string title = string.Equals(oPassenger.Title, "Master")
+                            string title = string.Equals(passenger.Title, "Master")
                                     ? "Mstr"
-                                    : ((oPassenger.Title.Length > 4)
-                                        ? oPassenger.Title.Substring(0, 4)
-                                        : oPassenger.Title);
+                                    : ((passenger.Title.Length > 4)
+                                        ? passenger.Title.Substring(0, 4)
+                                        : passenger.Title);
 
-                            string sFamilyPlan = oRoomDetails.ThirdPartyReference.Split('|')[1];
-                            int iChildAge = SafeTypeExtensions.ToSafeInt(oRoomDetails.ThirdPartyReference.Split('|')[2]);
-                            string sPassangerType = (oPassenger.PassengerType == PassengerType.Adult
-                                                    || string.Equals(sFamilyPlan, Constant.TokenNo))
-                                                    || oPassenger.Age > iChildAge
-                                ? Constant.AdultCode
-                                : Constant.ChildCode;
+                            string familyPlan = roomDetails.ThirdPartyReference.Split('|')[1];
+                            int childAge = roomDetails.ThirdPartyReference.Split('|')[2].ToSafeInt();
+                            string sPassangerType = passenger.PassengerType == PassengerType.Adult ||
+                                    string.Equals(familyPlan, Constant.TokenNo) ||
+                                    passenger.Age > childAge ?
+                                Constant.AdultCode :
+                                Constant.ChildCode;
 
-                            int passangerAge = oPassenger.Age;
-                            if (passangerAge == 0)
+                            int passengerAge = passenger.Age;
+                            if (passengerAge == 0)
                             {
-                                if (oPassenger.PassengerType == PassengerType.Adult) passangerAge = Constant.AgeAdult;
-                                if (oPassenger.PassengerType == PassengerType.Child) passangerAge = Constant.AgeChild;
-                                if (oPassenger.PassengerType == PassengerType.Infant) passangerAge = Constant.AgeInfant;
+                                if (passenger.PassengerType == PassengerType.Adult) passengerAge = Constant.AgeAdult;
+                                if (passenger.PassengerType == PassengerType.Child) passengerAge = Constant.AgeChild;
+                                if (passenger.PassengerType == PassengerType.Infant) passengerAge = Constant.AgeInfant;
                             }
 
-                            string sNationalityCode = (oPassenger.NationalityID != 0)
-                                ? _support.TPNationalityLookup(Source, oPassenger.NationalityID)
-                                : _settings.DefaultNationalityCode(oPropertyDetails);
+                            string sNationalityCode = (passenger.NationalityID != 0) ?
+                                _support.TPNationalityLookup(Source, passenger.NationalityID) :
+                                _settings.DefaultNationalityCode(propertyDetails);
 
                             return new NewPassanger
                             {
                                 Salutation = title,
-                                FamilyName = oPassenger.LastName,
-                                FirstName = oPassenger.FirstName,
+                                FamilyName = passenger.LastName,
+                                FirstName = passenger.FirstName,
                                 PassengerType = sPassangerType,
                                 NationalityCode = sNationalityCode,
-                                PassengerAge = passangerAge
+                                PassengerAge = passengerAge
                             };
                         }).ToList()
                     };
@@ -492,13 +494,13 @@
             return Envelope<NewMultiItemReservation>.Serialize(bookRequest, _serializer);
         }
 
-        public string BuildCancelXml(PropertyDetails oPropertyDetails)
+        public string BuildCancelXml(PropertyDetails propertyDetails)
         {
             var cancelResponse = new CancelReservation
             {
-                UserName = _settings.Username(oPropertyDetails),
-                Password = _settings.Password(oPropertyDetails),
-                ReservationNumber = oPropertyDetails.SourceReference
+                UserName = _settings.Username(propertyDetails),
+                Password = _settings.Password(propertyDetails),
+                ReservationNumber = propertyDetails.SourceReference
             };
 
             return Envelope<CancelReservation>.Serialize(cancelResponse, _serializer);

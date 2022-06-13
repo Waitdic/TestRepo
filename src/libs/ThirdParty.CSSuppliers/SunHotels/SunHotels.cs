@@ -3,6 +3,7 @@
     using System;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -62,38 +63,38 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails PropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-
             // build the search url
             var sbPrebookURL = new StringBuilder();
-            var oPrebookResponseXML = new XmlDocument();
+            var prebookResponseXml = new XmlDocument();
 
             try
             {
+                sbPrebookURL.Append(_settings.get_PreBookURL(propertyDetails));
+                sbPrebookURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
+                sbPrebookURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
+                sbPrebookURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
+                sbPrebookURL.AppendFormat("&currency={0}", _settings.get_Currency(propertyDetails));
+                sbPrebookURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(propertyDetails.ArrivalDate));
+                sbPrebookURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(propertyDetails.DepartureDate));
+                sbPrebookURL.AppendFormat("&roomId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[0]);
+                sbPrebookURL.AppendFormat("&rooms={0}", propertyDetails.Rooms.Count);
+                sbPrebookURL.AppendFormat("&adults={0}", propertyDetails.Rooms[0].Adults);
+                sbPrebookURL.AppendFormat("&children={0}", propertyDetails.Rooms[0].Children);
 
-                sbPrebookURL.Append(_settings.get_PreBookURL(PropertyDetails));
-                sbPrebookURL.AppendFormat("userName={0}", _settings.get_Username(PropertyDetails));
-                sbPrebookURL.AppendFormat("&password={0}", _settings.get_Password(PropertyDetails));
-                sbPrebookURL.AppendFormat("&language={0}", _settings.get_Language(PropertyDetails));
-                sbPrebookURL.AppendFormat("&currency={0}", _settings.get_Currency(PropertyDetails));
-                sbPrebookURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(PropertyDetails.ArrivalDate));
-                sbPrebookURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(PropertyDetails.DepartureDate));
-                sbPrebookURL.AppendFormat("&roomId={0}", PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[0]);
-                sbPrebookURL.AppendFormat("&rooms={0}", PropertyDetails.Rooms.Count);
-                sbPrebookURL.AppendFormat("&adults={0}", PropertyDetails.Rooms[0].Adults);
-                sbPrebookURL.AppendFormat("&children={0}", PropertyDetails.Rooms[0].Children);
-                if (PropertyDetails.Rooms[0].Children > 0)
+                if (propertyDetails.Rooms[0].Children > 0)
                 {
-                    sbPrebookURL.AppendFormat("&childrenAges={0}", PropertyDetails.Rooms[0].GetChildAgeCsv());
+                    sbPrebookURL.AppendFormat("&childrenAges={0}", propertyDetails.Rooms[0].GetChildAgeCsv());
                 }
                 else
                 {
                     sbPrebookURL.AppendFormat("&childrenAges=");
                 }
-                sbPrebookURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(PropertyDetails.Rooms[0]));
-                sbPrebookURL.AppendFormat("&mealId={0}", PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[1]);
-                sbPrebookURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(PropertyDetails));
+
+                sbPrebookURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(propertyDetails.Rooms[0]));
+                sbPrebookURL.AppendFormat("&mealId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[1]);
+                sbPrebookURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(propertyDetails));
                 sbPrebookURL.Append("&B2C=");
                 sbPrebookURL.Append("&searchPrice=");
                 sbPrebookURL.AppendFormat("&showPriceBreakdown=0");
@@ -101,204 +102,192 @@
                 sbPrebookURL.Append("&blockSuperDeal=0");
 
                 // send the request to SunHotels
-                var oWebRequest = new Request();
-                oWebRequest.EndPoint = sbPrebookURL.ToString();
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Source = ThirdParties.SUNHOTELS;
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.LogFileName = "Prebook";
-                oWebRequest.CreateLog = true;
-                oWebRequest.TimeoutInSeconds = 100;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    EndPoint = sbPrebookURL.ToString(),
+                    Method = eRequestMethod.GET,
+                    Source = ThirdParties.SUNHOTELS,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "Prebook",
+                    CreateLog = true,
+                    TimeoutInSeconds = 100
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oPrebookResponseXML = oWebRequest.ResponseXML;
+                prebookResponseXml = webRequest.ResponseXML;
 
                 // strip out anything we don't need
-                oPrebookResponseXML = _serializer.CleanXmlNamespaces(oPrebookResponseXML);
+                prebookResponseXml = _serializer.CleanXmlNamespaces(prebookResponseXml);
 
-                if (oPrebookResponseXML.SelectSingleNode("preBookResult/Error") is not null)
+                if (prebookResponseXml.SelectSingleNode("preBookResult/Error") is not null)
                 {
-                    PropertyDetails.Warnings.AddNew("Prebook Failed", oPrebookResponseXML.SafeNodeValue("preBookResult/Error/Message"));
+                    propertyDetails.Warnings.AddNew("Prebook Failed", prebookResponseXml.SafeNodeValue("preBookResult/Error/Message"));
                     return false;
                 }
 
                 // store the Errata if we have any
-                var Errata = oPrebookResponseXML.SelectNodes("preBookResult/Notes/Note");
-                foreach (XmlNode Erratum in Errata)
-                    PropertyDetails.Errata.AddNew("Important Information", Erratum.SelectSingleNode("text").InnerText);
+                var errata = prebookResponseXml.SelectNodes("preBookResult/Notes/Note");
+                foreach (XmlNode erratum in errata)
+                {
+                    propertyDetails.Errata.AddNew("Important Information", erratum.SelectSingleNode("text").InnerText);
+                }
 
                 // recheck the price in case it has changed
                 // ** needs to be changed if we implement multi-rooms in the future**
-                decimal nPrice = 0m;
-                var oCancellations = new Cancellations();
-                nPrice = oPrebookResponseXML.SafeNodeValue("preBookResult/Price").ToSafeMoney();
-                PropertyDetails.TPRef1 = oPrebookResponseXML.SafeNodeValue("preBookResult/PreBookCode");
+                decimal price = 0m;
+                var cancellations = new Cancellations();
+                price = prebookResponseXml.SafeNodeValue("preBookResult/Price").ToSafeMoney();
+                propertyDetails.TPRef1 = prebookResponseXml.SafeNodeValue("preBookResult/PreBookCode");
 
                 // override the cancellations
+                int cancellationPolicyCount = 0;
 
-                int iCancellationPolicyCount = 0;
-
-                foreach (XmlNode oCancellationPolicy in oPrebookResponseXML.SelectNodes("preBookResult/CancellationPolicies/CancellationPolicy"))
+                foreach (XmlNode cancellationPolicy in prebookResponseXml.SelectNodes("preBookResult/CancellationPolicies/CancellationPolicy"))
                 {
+                    cancellationPolicyCount += 1;
 
-                    iCancellationPolicyCount += 1;
-
-                    var oHours = new TimeSpan(oCancellationPolicy.SelectSingleNode("deadline").InnerText.ToSafeInt(), 0, 0);
-                    DateTime dStartDate;
+                    var hours = new TimeSpan(cancellationPolicy.SelectSingleNode("deadline").InnerText.ToSafeInt(), 0, 0);
+                    DateTime startDate;
 
                     // for 100% cancel;lations we don't get an hours before
                     // so force the start date to be from now
-                    if (oHours.TotalHours == 0d)
+                    if (hours.TotalHours == 0d)
                     {
-                        dStartDate = DateTime.Now.Date;
+                        startDate = DateTime.Now.Date;
                     }
                     else
                     {
-                        dStartDate = PropertyDetails.ArrivalDate.Subtract(oHours);
+                        startDate = propertyDetails.ArrivalDate.Subtract(hours);
                     }
 
-                    decimal nCancellationCost = (nPrice * oCancellationPolicy.SelectSingleNode("percentage").InnerText.ToSafeDecimal() / 100m).ToSafeDecimal();
+                    decimal cancellationCost = (price * cancellationPolicy.SelectSingleNode("percentage").InnerText.ToSafeDecimal() / 100m).ToSafeDecimal();
 
                     // take the end date of the next cancellation policy otherwise set it a long way off
-                    DateTime dEndDate;
-                    if (oPrebookResponseXML.SelectSingleNode(string.Format("preBookResult/CancellationPolicies/CancellationPolicy[{0}]", iCancellationPolicyCount + 1)) is not null)
+                    DateTime endDate;
+                    if (prebookResponseXml.SelectSingleNode(string.Format("preBookResult/CancellationPolicies/CancellationPolicy[{0}]", cancellationPolicyCount + 1)) is not null)
                     {
-
                         // the hours of the end dates need to be rounded to the nearest 24 hours to stop them overlapping with the start of the next cancellation policy and making
                         // the charges add together
-                        var oEndHours = new TimeSpan(RoundHoursUpToTheNearest24Hours(oPrebookResponseXML.SelectSingleNode(string.Format("preBookResult/CancellationPolicies/CancellationPolicy[{0}]/deadline", iCancellationPolicyCount + 1)).InnerText.ToSafeInt()), 0, 0);
+                        var endHours = new TimeSpan(RoundHoursUpToTheNearest24Hours(prebookResponseXml.SelectSingleNode(string.Format("preBookResult/CancellationPolicies/CancellationPolicy[{0}]/deadline", cancellationPolicyCount + 1)).InnerText.ToSafeInt()), 0, 0);
 
-                        dEndDate = PropertyDetails.ArrivalDate.Subtract(oEndHours);
-                        dEndDate = dEndDate.AddDays(-1);
+                        endDate = propertyDetails.ArrivalDate.Subtract(endHours);
+                        endDate = endDate.AddDays(-1);
                     }
-
                     else
                     {
-                        dEndDate = new DateTime(2099, 1, 1);
-
+                        endDate = new DateTime(2099, 1, 1);
                     }
 
-                    oCancellations.AddNew(dStartDate, dEndDate, nCancellationCost);
-
+                    cancellations.AddNew(startDate, endDate, cancellationCost);
                 }
 
-                PropertyDetails.Cancellations = oCancellations;
+                propertyDetails.Cancellations = cancellations;
 
-                if (nPrice > 0m && nPrice != PropertyDetails.LocalCost)
+                if (price > 0m && price != propertyDetails.LocalCost)
                 {
-                    PropertyDetails.Rooms[0].GrossCost = nPrice;
-                    PropertyDetails.Rooms[0].LocalCost = nPrice;
-                    PropertyDetails.GrossCost = nPrice;
-                    PropertyDetails.LocalCost = nPrice;
-                    PropertyDetails.AddLog(ThirdParties.SUNHOTELS, "Third Party / Prebook Price Changed");
+                    propertyDetails.Rooms[0].GrossCost = price;
+                    propertyDetails.Rooms[0].LocalCost = price;
+                    propertyDetails.GrossCost = price;
+                    propertyDetails.LocalCost = price;
+                    propertyDetails.AddLog(ThirdParties.SUNHOTELS, "Third Party / Prebook Price Changed");
                 }
+
                 return true;
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("SunHotels Exception", ex.ToString());
+                propertyDetails.Warnings.AddNew("SunHotels Exception", ex.ToString());
                 return false;
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
                 if (!string.IsNullOrEmpty(sbPrebookURL.ToString()))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels PreBook Request", sbPrebookURL.ToString());
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels PreBook Request", sbPrebookURL.ToString());
                 }
 
-                if (!string.IsNullOrEmpty(oPrebookResponseXML.InnerXml))
+                if (!string.IsNullOrEmpty(prebookResponseXml.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Prebook Response", oPrebookResponseXML);
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Prebook Response", prebookResponseXml);
                 }
-
             }
-
         }
 
         #endregion
 
         #region Book
 
-        public string Book(PropertyDetails PropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-
             // **NOTE - THIS ONLY WORKS FOR SINGLE ROOM BOOKINGS**
-            string sRequestURL = "";
-            var oResponse = new XmlDocument();
-            string sBookingReference = "";
+            string requestURL = "";
+            var response = new XmlDocument();
+            string bookingReference = "";
 
             try
             {
-
                 // split out the room reference and the meal type
-                string sRoomID = PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[0];
+                string roomId = propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[0];
 
                 // Grab the BookingReference If we have it
-                string siVectorReference = "";
-                if (string.IsNullOrEmpty(PropertyDetails.BookingReference))
+                string iVectorReference = "";
+                if (string.IsNullOrEmpty(propertyDetails.BookingReference))
                 {
-                    siVectorReference = _settings.get_SupplierReference(PropertyDetails);
+                    iVectorReference = _settings.get_SupplierReference(propertyDetails);
                 }
                 else
                 {
-                    siVectorReference = PropertyDetails.BookingReference;
+                    iVectorReference = propertyDetails.BookingReference;
                 }
 
                 // build the book request url
                 var sbBookingRequestURL = new StringBuilder();
 
+                sbBookingRequestURL.Append(_settings.get_BookURL(propertyDetails));
+                sbBookingRequestURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&currency={0}", _settings.get_Currency(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&email={0}", _settings.get_EmailAddress(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(propertyDetails.ArrivalDate));
+                sbBookingRequestURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(propertyDetails.DepartureDate));
+                sbBookingRequestURL.AppendFormat("&roomId={0}", roomId);
+                sbBookingRequestURL.AppendFormat("&rooms={0}", propertyDetails.Rooms.Count);
+                sbBookingRequestURL.AppendFormat("&adults={0}", propertyDetails.Adults);
+                sbBookingRequestURL.AppendFormat("&children={0}", propertyDetails.Children);
+                sbBookingRequestURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(propertyDetails.Rooms[0]));
+                sbBookingRequestURL.AppendFormat("&yourRef={0}", iVectorReference);
 
-                sbBookingRequestURL.Append(_settings.get_BookURL(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("userName={0}", _settings.get_Username(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("&password={0}", _settings.get_Password(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("&currency={0}", _settings.get_Currency(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("&language={0}", _settings.get_Language(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("&email={0}", _settings.get_EmailAddress(PropertyDetails));
-                sbBookingRequestURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(PropertyDetails.ArrivalDate));
-                sbBookingRequestURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(PropertyDetails.DepartureDate));
-                sbBookingRequestURL.AppendFormat("&roomId={0}", sRoomID);
-                sbBookingRequestURL.AppendFormat("&rooms={0}", PropertyDetails.Rooms.Count);
-                sbBookingRequestURL.AppendFormat("&adults={0}", PropertyDetails.Adults);
-                sbBookingRequestURL.AppendFormat("&children={0}", PropertyDetails.Children);
-                sbBookingRequestURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(PropertyDetails.Rooms[0]));
-                sbBookingRequestURL.AppendFormat("&yourRef={0}", siVectorReference);
-
-                if (PropertyDetails.BookingComments.Count != 0)
+                if (propertyDetails.BookingComments.Count != 0)
                 {
-                    sbBookingRequestURL.AppendFormat("&specialrequest={0}", PropertyDetails.BookingComments[0].Text);
+                    sbBookingRequestURL.AppendFormat("&specialrequest={0}", propertyDetails.BookingComments[0].Text);
                 }
                 else
                 {
                     sbBookingRequestURL.Append("&specialrequest=");
                 }
 
-                sbBookingRequestURL.AppendFormat("&mealId={0}", PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[1]);
+                sbBookingRequestURL.AppendFormat("&mealId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[1]);
 
-                int iAdults = 1;
-                int iChildren = 1;
+                int adults = 1;
+                int children = 1;
 
                 // add the adults that in the booking
-                foreach (Passenger oPassenger in PropertyDetails.Rooms[0].Passengers)
+                foreach (var passenger in propertyDetails.Rooms[0].Passengers)
                 {
-                    if (oPassenger.PassengerType == PassengerType.Adult)
+                    if (passenger.PassengerType == PassengerType.Adult)
                     {
-
-                        sbBookingRequestURL.AppendFormat("&adultGuest{0}FirstName={1}", iAdults, oPassenger.FirstName);
-                        sbBookingRequestURL.AppendFormat("&adultGuest{0}LastName={1}", iAdults, oPassenger.LastName);
-                        iAdults += 1;
-
+                        sbBookingRequestURL.AppendFormat("&adultGuest{0}FirstName={1}", adults, passenger.FirstName);
+                        sbBookingRequestURL.AppendFormat("&adultGuest{0}LastName={1}", adults, passenger.LastName);
+                        adults += 1;
                     }
                 }
 
                 // add empty elements for all the other adults up to 9
                 for (int i = 1; i <= 9; i++)
                 {
-                    if (i >= iAdults)
+                    if (i >= adults)
                     {
                         sbBookingRequestURL.AppendFormat("&adultGuest{0}FirstName=", i);
                         sbBookingRequestURL.AppendFormat("&adultGuest{0}LastName=", i);
@@ -306,169 +295,156 @@
                 }
 
                 // add the children
-                foreach (Passenger oPassenger in PropertyDetails.Rooms[0].Passengers)
+                foreach (var passenger in propertyDetails.Rooms[0].Passengers)
                 {
-                    if (oPassenger.PassengerType == PassengerType.Child && oPassenger.Age <= 17)
+                    if (passenger.PassengerType == PassengerType.Child && passenger.Age <= 17)
                     {
-
-                        sbBookingRequestURL.AppendFormat("&childrenGuest{0}FirstName={1}", iChildren, oPassenger.FirstName);
-                        sbBookingRequestURL.AppendFormat("&childrenGuest{0}LastName={1}", iChildren, oPassenger.LastName);
-                        sbBookingRequestURL.AppendFormat("&childrenGuestAge{0}={1}", iChildren, oPassenger.Age);
-                        iChildren += 1;
-
+                        sbBookingRequestURL.AppendFormat("&childrenGuest{0}FirstName={1}", children, passenger.FirstName);
+                        sbBookingRequestURL.AppendFormat("&childrenGuest{0}LastName={1}", children, passenger.LastName);
+                        sbBookingRequestURL.AppendFormat("&childrenGuestAge{0}={1}", children, passenger.Age);
+                        children += 1;
                     }
                 }
 
                 // add empty elements for all the other adults up to 9
                 for (int i = 1; i <= 9; i++)
                 {
-                    if (i >= iChildren)
+                    if (i >= children)
                     {
                         sbBookingRequestURL.AppendFormat("&childrenGuest{0}FirstName=", i);
                         sbBookingRequestURL.AppendFormat("&childrenGuest{0}LastName=", i);
                         sbBookingRequestURL.AppendFormat("&childrenGuestAge{0}=", i);
                     }
                 }
-                sbBookingRequestURL.AppendFormat("&paymentMethodId={0}", PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[3]);
-                sbBookingRequestURL.AppendFormat(GetCardDetails(PropertyDetails.Rooms[0].ThirdPartyReference.Split('_')[3], PropertyDetails));
+
+                sbBookingRequestURL.AppendFormat("&paymentMethodId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[3]);
+                sbBookingRequestURL.AppendFormat(GetCardDetails(propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[3], propertyDetails));
                 sbBookingRequestURL.Append("&customerEmail=");
                 sbBookingRequestURL.Append("&invoiceRef=");
                 sbBookingRequestURL.Append("&commissionAmountInHotelCurrency=");
-                sbBookingRequestURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(PropertyDetails));
+                sbBookingRequestURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(propertyDetails));
                 sbBookingRequestURL.Append("&B2C=");
 
-                sbBookingRequestURL.AppendFormat("&PreBookCode={0}", PropertyDetails.TPRef1);
+                sbBookingRequestURL.AppendFormat("&PreBookCode={0}", propertyDetails.TPRef1);
 
-                sRequestURL = sbBookingRequestURL.ToString();
+                requestURL = sbBookingRequestURL.ToString();
 
-                var oWebRequest = new Request();
-                oWebRequest.Source = ThirdParties.SUNHOTELS;
-                oWebRequest.EndPoint = sRequestURL;
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.Send(_httpClient, _logger);
-
-                oResponse = _serializer.CleanXmlNamespaces(oWebRequest.ResponseXML);
-
-                if (oResponse.SelectSingleNode("bookResult/booking/Error") is null)
+                var webRequest = new Request
                 {
+                    Source = ThirdParties.SUNHOTELS,
+                    EndPoint = requestURL,
+                    Method = eRequestMethod.GET,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "Prebook",
+                    CreateLog = true,
+                };
+                await webRequest.Send(_httpClient, _logger);
 
+                response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
+
+                if (response.SelectSingleNode("bookResult/booking/Error") is null)
+                {
                     // grab the booking reference
-                    sBookingReference = oResponse.SelectSingleNode("bookResult/booking/bookingnumber").InnerText;
+                    bookingReference = response.SelectSingleNode("bookResult/booking/bookingnumber").InnerText;
                 }
-
                 else
                 {
-
-                    sBookingReference = "failed";
-
+                    bookingReference = "failed";
                 }
             }
-
             catch (Exception ex)
             {
-
-                sBookingReference = "failed";
-                PropertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
+                bookingReference = "failed";
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sRequestURL))
+                if (!string.IsNullOrEmpty(requestURL))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Request", sRequestURL);
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Request", requestURL);
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Response", response);
                 }
-
             }
 
-            return sBookingReference;
-
+            return bookingReference;
         }
 
         #endregion
 
         #region Cancellations
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails PropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-
-            var oThirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
 
             var sbCancellationRequestURL = new StringBuilder();
-            var oCancellationResponseXML = new XmlDocument();
+            var cancellationResponseXML = new XmlDocument();
 
             try
             {
-
                 // build the cancellation url
-                sbCancellationRequestURL.Append(_settings.get_CancelURL(PropertyDetails));
-                sbCancellationRequestURL.AppendFormat("userName={0}", _settings.get_Username(PropertyDetails));
-                sbCancellationRequestURL.AppendFormat("&password={0}", _settings.get_Password(PropertyDetails));
-                sbCancellationRequestURL.AppendFormat("&bookingID={0}", PropertyDetails.SourceReference.ToString());
-                sbCancellationRequestURL.AppendFormat("&language={0}", _settings.get_Language(PropertyDetails));
+                sbCancellationRequestURL.Append(_settings.get_CancelURL(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("&bookingID={0}", propertyDetails.SourceReference.ToString());
+                sbCancellationRequestURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
 
                 // Send the request
-                var oWebRequest = new Request();
-                oWebRequest.EndPoint = sbCancellationRequestURL.ToString();
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Source = ThirdParties.SUNHOTELS;
-                oWebRequest.ContentType = ContentTypes.Text_xml;
-                oWebRequest.LogFileName = "Cancel";
-                oWebRequest.CreateLog = true;
-                oWebRequest.TimeoutInSeconds = 100;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    EndPoint = sbCancellationRequestURL.ToString(),
+                    Method = eRequestMethod.GET,
+                    Source = ThirdParties.SUNHOTELS,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "Cancel",
+                    CreateLog = true,
+                    TimeoutInSeconds = 100
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oCancellationResponseXML = oWebRequest.ResponseXML;
+                cancellationResponseXML = webRequest.ResponseXML;
 
                 // tidy up the response
-                oCancellationResponseXML = _serializer.CleanXmlNamespaces(oCancellationResponseXML);
+                cancellationResponseXML = _serializer.CleanXmlNamespaces(cancellationResponseXML);
 
                 // Check for success
-                var oResultCodeNode = oCancellationResponseXML.SelectSingleNode("result/Code");
-                if (oResultCodeNode is not null && oResultCodeNode.InnerText.ToSafeInt() != -1)
+                var resultCodeNode = cancellationResponseXML.SelectSingleNode("result/Code");
+                if (resultCodeNode is not null && resultCodeNode.InnerText.ToSafeInt() != -1)
                 {
-                    oThirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("dd MMM/HH:mm");
-                    oThirdPartyCancellationResponse.Success = true;
+                    thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("dd MMM/HH:mm");
+                    thirdPartyCancellationResponse.Success = true;
                 }
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
-                oThirdPartyCancellationResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
+                thirdPartyCancellationResponse.Success = false;
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
                 if (!string.IsNullOrEmpty(sbCancellationRequestURL.ToString()))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Request", sbCancellationRequestURL.ToString());
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Request", sbCancellationRequestURL.ToString());
                 }
 
-                if (!string.IsNullOrEmpty(oCancellationResponseXML.InnerXml))
+                if (!string.IsNullOrEmpty(cancellationResponseXML.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Response", oCancellationResponseXML);
+                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Response", cancellationResponseXML);
                 }
-
             }
 
-            return oThirdPartyCancellationResponse;
-
+            return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails PropertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return GetCancellationCost(PropertyDetails);
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion
@@ -495,101 +471,96 @@
         }
 
         #endregion
-        public void EndSession(PropertyDetails oPropertyDetails)
+
+        public void EndSession(PropertyDetails propertyDetails)
         {
 
         }
 
-
         #region Helpers
 
-        public static string GetSunHotelsDate(DateTime dDate)
+        public static string GetSunHotelsDate(DateTime date)
         {
-
-            return dDate.ToString("yyyy-MM-dd");
-
+            return date.ToString("yyyy-MM-dd");
         }
 
         public static int IsInfantIncluded(SearchDetails searchDetails)
         {
-            int iInfantIncluded = 0;
+            int infantIncluded = 0;
+
             if (searchDetails.TotalInfants > 0)
             {
-                iInfantIncluded = 1;
+                infantIncluded = 1;
             }
-            return iInfantIncluded;
+
+            return infantIncluded;
         }
 
         public static int IsInfantIncluded(ThirdParty.Models.Property.Booking.RoomDetails roomDetails)
         {
-            int iInfantIncluded = 0;
+            int infantIncluded = 0;
+
             if (roomDetails.Infants > 0)
             {
-                iInfantIncluded = 1;
+                infantIncluded = 1;
             }
-            return iInfantIncluded;
+
+            return infantIncluded;
         }
 
-        public static string GetAdultsFromSearchDetails(SearchDetails SearchDetails)
+        public static string GetAdultsFromSearchDetails(SearchDetails searchDetails)
         {
+            int adultCount = 0;
 
-            int iAdultCount = 0;
-
-            foreach (RoomDetail oRoom in SearchDetails.RoomDetails)
+            foreach (var room in searchDetails.RoomDetails)
             {
+                adultCount += room.Adults;
 
-                iAdultCount += oRoom.Adults;
-
-                foreach (int iAge in oRoom.ChildAges)
+                foreach (int age in room.ChildAges)
                 {
-                    if (iAge > 17)
-                        iAdultCount += 1;
+                    if (age > 17)
+                    {
+                        adultCount += 1;
+                    }
                 }
-
             }
 
-            return iAdultCount.ToString();
-
+            return adultCount.ToString();
         }
 
-        public static string GetChildrenFromSearchDetails(SearchDetails SearchDetails)
+        public static string GetChildrenFromSearchDetails(SearchDetails searchDetails)
         {
+            int childCount = 0;
 
-            int iChildCount = 0;
-
-            foreach (RoomDetail oRoom in SearchDetails.RoomDetails)
+            foreach (var room in searchDetails.RoomDetails)
             {
-
-                foreach (int iAge in oRoom.ChildAges)
+                foreach (int age in room.ChildAges)
                 {
-                    if (iAge <= 17)
-                        iChildCount += 1;
+                    if (age <= 17)
+                    {
+                        childCount += 1;
+                    }
                 }
-
             }
 
-            return iChildCount.ToString();
-
+            return childCount.ToString();
         }
 
         public static string GetChildrenAges(SearchDetails SearchDetails)
         {
-
-            string sChildAges = "";
             var sb = new StringBuilder();
 
-            foreach (RoomDetail oRoom in SearchDetails.RoomDetails)
-                sb.Append(oRoom.ChildAgeCSV);
-            sChildAges = string.Join(",", sb.ToString());
-            return sChildAges;
+            foreach (var room in SearchDetails.RoomDetails)
+            {
+                sb.Append(room.ChildAgeCSV);
+            }
 
+            return string.Join(",", sb.ToString());
         }
 
-        public static int RoundHoursUpToTheNearest24Hours(int Hours)
+        public static int RoundHoursUpToTheNearest24Hours(int hours)
         {
-
-            int i;
-            i = Math.Round((Hours / 24d).ToSafeDecimal(), 0, MidpointRounding.AwayFromZero).ToSafeInt();
+            int i = Math.Round((hours / 24d).ToSafeDecimal(), 0, MidpointRounding.AwayFromZero).ToSafeInt();
 
             return i * 24;
 

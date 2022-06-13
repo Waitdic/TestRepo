@@ -16,6 +16,7 @@
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
+    using System.Threading.Tasks;
 
     public class HotelBedsV2 : IThirdParty, ISingleSource
     {
@@ -40,12 +41,12 @@
 
         public bool SupportsBookingSearch => false;
 
-        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails oBookingSearchDetails)
+        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             return new ThirdPartyBookingSearchResults();
         }
 
-        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails oPropertyDetails)
+        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails)
         {
             return new ThirdPartyBookingStatusUpdateResult();
         }
@@ -73,29 +74,25 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool prebookSuccess = true;
             var request = new Request();
-            HotelBedsV2CheckRatesResponse response = new HotelBedsV2CheckRatesResponse();
+            var response = new HotelBedsV2CheckRatesResponse();
 
             try
             {
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
+                var checkRatesRequest = new HotelBedsV2CheckRatesRequest()
                 {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
-                HotelBedsV2CheckRatesRequest checkRatesRequest = new HotelBedsV2CheckRatesRequest()
-                {
-                    language = _settings.ContentLanguage(searchDetails),
+                    language = _settings.ContentLanguage(propertyDetails),
                 };
 
-                List<HotelBedsV2CheckRatesRequest.Room> rooms = new List<HotelBedsV2CheckRatesRequest.Room>();
+                var rooms = new List<HotelBedsV2CheckRatesRequest.Room>();
 
-                foreach (RoomDetails roomDetails in propertyDetails.Rooms)
+                foreach (var roomDetails in propertyDetails.Rooms)
                 {
-                    HotelBedsV2Reference reference = HotelBedsV2Reference.FromEncryptedString(roomDetails.ThirdPartyReference, _secretKeeper);
-                    HotelBedsV2CheckRatesRequest.Room room = new HotelBedsV2CheckRatesRequest.Room()
+                    var reference = HotelBedsV2Reference.FromEncryptedString(roomDetails.ThirdPartyReference, _secretKeeper);
+                    var room = new HotelBedsV2CheckRatesRequest.Room()
                     {
                         rateKey = reference.RateKey,
                     };
@@ -103,11 +100,11 @@
                 }
                 checkRatesRequest.rooms = rooms.ToArray();
 
-                request.EndPoint = _settings.CheckRatesURL(searchDetails);
+                request.EndPoint = _settings.CheckRatesURL(propertyDetails);
                 request.Method = eRequestMethod.POST;
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
-                request.UseGZip = _settings.UseGZIP(searchDetails);
+                request.UseGZip = _settings.UseGZIP(propertyDetails);
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.LogFileName = "Prebook";
                 request.Accept = "application/json";
@@ -116,10 +113,10 @@
                 requestString = requestString.Replace("\"upselling\":null,", "");
                 request.SetRequest(requestString);
 
-                request.Headers.AddNew("Api-key", _settings.User(searchDetails));
-                request.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(searchDetails), _settings.Password(searchDetails)));
+                request.Headers.AddNew("Api-key", _settings.User(propertyDetails));
+                request.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(propertyDetails), _settings.Password(propertyDetails)));
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 if (!string.IsNullOrWhiteSpace(request.ResponseString))
                 {
@@ -132,12 +129,12 @@
 
                 var processedRooms = new List<int>();
 
-                foreach (HotelBedsV2CheckRatesResponse.Room room in response.hotel.rooms)
+                foreach (var room in response.hotel.rooms)
                 {
-                    foreach (HotelBedsV2CheckRatesResponse.Rate rate in room.rates)
+                    foreach (var rate in room.rates)
                     {
                         bool rateUsed = false;
-                        foreach (RoomDetails roomDetails in propertyDetails.Rooms
+                        foreach (var roomDetails in propertyDetails.Rooms
                             .Where(o =>
                                 o.RoomTypeCode == room.code &&
                                 HotelBedsV2Reference.FromEncryptedString(o.ThirdPartyReference, _secretKeeper).MealBasisCode == rate.boardCode &&
@@ -151,9 +148,8 @@
                             if (!rateUsed && !processedRooms.Contains(roomDetails.PropertyRoomBookingID))
                             {
                                 roomDetails.ThirdPartyReference = HotelBedsV2Reference.Create(rate.rateKey, rate.paymentType, rate.boardCode, _secretKeeper);
-                                roomDetails.LocalCost = SafeTypeExtensions.ToSafeDecimal(rate.net);
-                                roomDetails.GrossCost = SafeTypeExtensions.ToSafeDecimal(rate.net);
-
+                                roomDetails.LocalCost = rate.net.ToSafeDecimal();
+                                roomDetails.GrossCost = rate.net.ToSafeDecimal();
 
                                 if (!string.IsNullOrWhiteSpace(rate.rateComments))
                                 {
@@ -165,9 +161,11 @@
                                 {
                                     var cancellationCharge = orderedCancellations[i];
                                     var endDate = (i + 1) < orderedCancellations.Count ?
-                                        orderedCancellations[i + 1].from.Date.AddDays(-1) : propertyDetails.ArrivalDate;
+                                        orderedCancellations[i + 1].from.Date.AddDays(-1) :
+                                        propertyDetails.ArrivalDate;
                                     propertyDetails.Cancellations.AddNew(cancellationCharge.from.Date, endDate, SafeTypeExtensions.ToSafeDecimal(cancellationCharge.amount));
                                 }
+
                                 rateUsed = true;
                                 processedRooms.Add(roomDetails.PropertyRoomBookingID);
                             }
@@ -197,7 +195,6 @@
                 {
                     propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 PreBook Response", request.ResponseString);
                 }
-
             }
 
             return prebookSuccess;
@@ -217,7 +214,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "";
             var webRequest = new Request();
@@ -241,7 +238,7 @@
                 for (int i = 0; i <= totalRooms - 1; i++)
                 {
                     var room = propertyDetails.Rooms.ElementAt(i);
-                    HotelBedsV2Reference hotelBedsV2Reference = HotelBedsV2Reference.FromEncryptedString(room.ThirdPartyReference, _secretKeeper);
+                    var hotelBedsV2Reference = HotelBedsV2Reference.FromEncryptedString(room.ThirdPartyReference, _secretKeeper);
                     var hotelBedsRoom = new HotelBedsV2CreateBookingRequest.Room()
                     {
                         rateKey = hotelBedsV2Reference.RateKey
@@ -270,18 +267,13 @@
                     request.rooms[i] = hotelBedsRoom;
                 }
 
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
-
                 webRequest.Source = ThirdParties.HOTELBEDSV2;
                 webRequest.Method = eRequestMethod.POST;
-                webRequest.EndPoint = _settings.BookingURL(searchDetails);
+                webRequest.EndPoint = _settings.BookingURL(propertyDetails);
 
                 if (RequiresVCard)
                 {
-                    webRequest.EndPoint = _settings.SecureBookingURL(searchDetails);
+                    webRequest.EndPoint = _settings.SecureBookingURL(propertyDetails);
                     var paymentData = new PaymentData()
                     {
                         contactData = new ContactData()
@@ -302,7 +294,7 @@
                 }
 
                 webRequest.ContentType = ContentTypes.Application_json;
-                webRequest.UseGZip = _settings.UseGZIP(searchDetails);
+                webRequest.UseGZip = _settings.UseGZIP(propertyDetails);
                 webRequest.CreateLog = propertyDetails.CreateLogs;
                 webRequest.LogFileName = "Book";
                 webRequest.Accept = "application/json";
@@ -313,15 +305,14 @@
                 requestString = requestString.Replace(",\"remark\":null", "");
                 webRequest.SetRequest(requestString);
 
-                webRequest.Headers.AddNew("Api-key", _settings.User(searchDetails));
-                webRequest.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(searchDetails), _settings.Password(searchDetails)));
+                webRequest.Headers.AddNew("Api-key", _settings.User(propertyDetails));
+                webRequest.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(propertyDetails), _settings.Password(propertyDetails)));
 
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
-                HotelBedsV2CreateBookingResponse response = new HotelBedsV2CreateBookingResponse();
-                response = JsonConvert.DeserializeObject<HotelBedsV2CreateBookingResponse>(webRequest.ResponseString);
+                var response = JsonConvert.DeserializeObject<HotelBedsV2CreateBookingResponse>(webRequest.ResponseString);
 
-                if (!String.IsNullOrEmpty(response.booking.reference))
+                if (!string.IsNullOrEmpty(response.booking.reference))
                 {
                     reference = response.booking.reference;
                 }
@@ -334,7 +325,6 @@
                 {
                     propertyDetails.SupplierInfo = $"Payable through {response.booking.hotel.supplier.name}, acting as agent for the service operating company, details of which can be provided upon request. VAT: {response.booking.hotel.supplier.vatNumber} Reference: {response.booking.reference}";
                 }
-
             }
             catch (Exception exception)
             {
@@ -353,6 +343,7 @@
                     propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 Book Response", webRequest.ResponseString);
                 }
             }
+
             return reference;
         }
 
@@ -360,10 +351,11 @@
 
         #region Cancel
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
             var cancellationResponse = new ThirdPartyCancellationResponse();
+
             try
             {
                 IThirdPartyAttributeSearch searchDetails = new SearchDetails
@@ -385,16 +377,14 @@
                 request.Headers.AddNew("Api-key", _settings.User(searchDetails));
                 request.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(searchDetails), _settings.Password(searchDetails)));
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
-                HotelBedsV2CancellationResponse response = new HotelBedsV2CancellationResponse();
-                response = JsonConvert.DeserializeObject<HotelBedsV2CancellationResponse>(request.ResponseString);
+                var response = JsonConvert.DeserializeObject<HotelBedsV2CancellationResponse>(request.ResponseString);
 
                 cancellationResponse.Success = response.booking.status == "CANCELLED";
                 cancellationResponse.CurrencyCode = response.booking.currency;
                 cancellationResponse.Amount = response.booking.hotel.cancellationAmount.ToSafeDecimal();
                 cancellationResponse.TPCancellationReference = response.booking.cancellationReference;
-
             }
             catch (Exception exception)
             {
@@ -424,22 +414,18 @@
 
         #region GetCancellationCosts
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
             var cancellationCostResponse = new ThirdPartyCancellationFeeResult();
+
             try
             {
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
-
                 request.Method = eRequestMethod.DELETE;
-                request.EndPoint = _settings.CancellationURL(searchDetails);
+                request.EndPoint = _settings.CancellationURL(propertyDetails);
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
-                request.UseGZip = _settings.UseGZIP(searchDetails);
+                request.UseGZip = _settings.UseGZIP(propertyDetails);
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.LogFileName = "Cancel";
                 request.Accept = "application/json";
@@ -447,10 +433,10 @@
                 request.EndPoint = request.EndPoint.Replace("{{bookingReference}}", propertyDetails.SourceReference);
                 request.EndPoint = request.EndPoint.Replace("cancellationFlag=CANCELLATION", "cancellationFlag=SIMULATION");
 
-                request.Headers.AddNew("Api-key", _settings.User(searchDetails));
-                request.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(searchDetails), _settings.Password(searchDetails)));
+                request.Headers.AddNew("Api-key", _settings.User(propertyDetails));
+                request.Headers.AddNew("X-Signature", HotelBedsV2Search.GetSignature(_settings.User(propertyDetails), _settings.Password(propertyDetails)));
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = new HotelBedsV2CancellationResponse();
                 response = JsonConvert.DeserializeObject<HotelBedsV2CancellationResponse>(request.ResponseString);

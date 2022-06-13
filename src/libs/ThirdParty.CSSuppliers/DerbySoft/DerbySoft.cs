@@ -15,6 +15,7 @@
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
+    using System.Threading.Tasks;
 
     public class DerbySoft : IThirdParty, IMultiSource
     {
@@ -57,20 +58,20 @@
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool preBookSuccess = true;
 
             foreach (var roomDetails in propertyDetails.Rooms)
             {
-                preBookSuccess = CheckAvailability(propertyDetails, roomDetails);
+                preBookSuccess = await CheckAvailabilityAsync(propertyDetails, roomDetails);
 
                 if (!preBookSuccess)
                 {
                     break;
                 }
 
-                preBookSuccess = PreBookRoom(propertyDetails, roomDetails, true) && preBookSuccess;
+                preBookSuccess = await PreBookRoomAsync(propertyDetails, roomDetails, true) && preBookSuccess;
             }
 
             //combine cancellations for multiroom
@@ -85,10 +86,10 @@
             return preBookSuccess;
         }
 
-        private bool CheckAvailability(PropertyDetails propertyDetails, RoomDetails roomDetails)
+        private async Task<bool> CheckAvailabilityAsync(PropertyDetails propertyDetails, RoomDetails roomDetails)
         {
             bool availabilitySuccess = true;
-            var availabilityRequest = new Request();
+
             try
             {
                 PreBookHelper preBookHelper = PreBookHelper.DeserializePreBookHelper(roomDetails.ThirdPartyReference);
@@ -96,9 +97,8 @@
                 var availabilityDeserialisedRequest = BuildAvailabilityRequest(propertyDetails, roomDetails, preBookHelper);
 
                 var availabilityResponse =
-                    GetResponse<DerbySoftBookingUsbV4AvailabilityRequest, DerbySoftBookingUsbV4AvailabilityResponse>(
+                    await GetResponseAsync<DerbySoftBookingUsbV4AvailabilityRequest, DerbySoftBookingUsbV4AvailabilityResponse>(
                         propertyDetails,
-                        availabilityRequest,
                         availabilityDeserialisedRequest,
                         _settings.SearchURL(propertyDetails, propertyDetails.Source),
                         "Prebook - Availability");
@@ -153,10 +153,10 @@
             return availabilitySuccess;
         }
 
-        private bool PreBookRoom(PropertyDetails propertyDetails, RoomDetails roomDetails, bool addCancellations)
+        private async Task<bool> PreBookRoomAsync(PropertyDetails propertyDetails, RoomDetails roomDetails, bool addCancellations)
         {
-            var preBookSuccess = true;
-            var prebookRequest = new Request();
+            bool preBookSuccess;
+
             try
             {
                 //Data stored from search
@@ -165,9 +165,8 @@
                 var prebookDeserialisedRequest = BuildPreBookRequest(propertyDetails, preBookHelper, roomDetails);
 
                 var prebookResponse =
-                    GetResponse<DerbySoftBookingUsbV4PreBookRequest, DerbySoftBookingUsbV4PreBookResponse>(
+                    await GetResponseAsync<DerbySoftBookingUsbV4PreBookRequest, DerbySoftBookingUsbV4PreBookResponse>(
                         propertyDetails,
-                        prebookRequest,
                         prebookDeserialisedRequest,
                         _settings.PreBookURL(propertyDetails, propertyDetails.Source),
                         "Prebook");
@@ -351,7 +350,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             var references = new List<string>();
             var supplierSourceReferences = new List<string>();
@@ -359,8 +358,6 @@
 
             foreach (var roomDetails in propertyDetails.Rooms)
             {
-                var webRequest = new Request();
-
                 try
                 {
                     //check we haven't already booked this room
@@ -374,7 +371,7 @@
                     }
 
                     //prebook token only lasts 300 seconds so run another prebook
-                    var preBook = PreBookRoom(propertyDetails, roomDetails, false);
+                    var preBook = await PreBookRoomAsync(propertyDetails, roomDetails, false);
                     if (!preBook)
                     {
                         references.Add("[Failed]");
@@ -386,9 +383,8 @@
                     //request
                     var bookRequest = BuildBookRequest(propertyDetails, roomDetails, roomIndex + 1);
                     var response =
-                        GetResponse<DerbySoftBookingUsbV4BookRequest, DerbySoftBookingUsbV4BookResponse>(
+                        await GetResponseAsync<DerbySoftBookingUsbV4BookRequest, DerbySoftBookingUsbV4BookResponse>(
                             propertyDetails,
-                            webRequest,
                             bookRequest,
                             _settings.BookURL(propertyDetails, propertyDetails.Source),
                             "Book");
@@ -545,7 +541,7 @@
 
         #region Cancel
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var cancellationResponse = new ThirdPartyCancellationResponse() { Success = true };
             var cancellationReferences = new List<string>();
@@ -559,11 +555,8 @@
             supplierSourceReferences.AddRange(propertyDetails.SupplierSourceReference.Split('|'));
             refForCancellations.AddRange(propertyDetails.TPRef1.Split('|'));
 
-
             foreach (var sourceReference in roomSourceReferences.Where(s => s != "[Failed]"))
             {
-                var request = new Request();
-
                 var roomIndex = roomSourceReferences.IndexOf(sourceReference);
 
                 try
@@ -571,9 +564,8 @@
                     var cancelRequest = BuildCancelRequest(propertyDetails, sourceReference, supplierSourceReferences[roomIndex], refForCancellations[roomIndex]);
 
                     var response =
-                        GetResponse<DerbySoftBookingUsbV4CancelRequest, DerbySoftBookingUsbV4CancelResponse>(
+                        await GetResponseAsync<DerbySoftBookingUsbV4CancelRequest, DerbySoftBookingUsbV4CancelResponse>(
                             propertyDetails,
-                            request,
                             cancelRequest,
                             _settings.CancelURL(propertyDetails, propertyDetails.Source),
                             "Cancel");
@@ -624,36 +616,38 @@
             };
         }
 
-
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion
 
         #region Helpers
 
-        private TResponse GetResponse<TRequest, TResponse>(
+        private async Task<TResponse> GetResponseAsync<TRequest, TResponse>(
             PropertyDetails propertyDetails,
-            Request request,
             TRequest deserialisedRequest,
             string endPoint,
             string logFileName)
         {
-            request.EndPoint = endPoint;
-            request.Method = eRequestMethod.POST;
-            request.Source = propertyDetails.Source;
-            request.ContentType = ContentTypes.Application_json;
-            request.UseGZip = _settings.UseGZip(propertyDetails, propertyDetails.Source);
-            request.CreateLog = propertyDetails.CreateLogs;
-            request.LogFileName = logFileName;
-            request.Accept = "application/json";
+            var request = new Request
+            {
+                EndPoint = endPoint,
+                Method = eRequestMethod.POST,
+                Source = propertyDetails.Source,
+                ContentType = ContentTypes.Application_json,
+                UseGZip = _settings.UseGZip(propertyDetails, propertyDetails.Source),
+                CreateLog = propertyDetails.CreateLogs,
+                LogFileName = logFileName,
+                Accept = "application/json"
+            };
 
             string availabilityRequestString = JsonConvert.SerializeObject(deserialisedRequest, DerbySoftSupport.GetJsonSerializerSettings());
-            request.SetRequest(availabilityRequestString);
             request.Headers.AddNew("Authorization", "Bearer " + _settings.Password(propertyDetails, propertyDetails.Source));
-            request.Send(_httpClient, _logger).RunSynchronously();
+            request.SetRequest(availabilityRequestString);
+
+            await request.Send(_httpClient, _logger);
 
             if (!string.IsNullOrWhiteSpace(request.RequestString) && !string.IsNullOrWhiteSpace(request.ResponseString))
             {

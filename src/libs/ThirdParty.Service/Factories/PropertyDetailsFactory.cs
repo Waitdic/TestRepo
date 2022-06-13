@@ -12,11 +12,11 @@
     using ThirdParty.Models.Tokens;
     using ThirdParty.SDK.V2;
     using ThirdParty.Services;
+    using ThirdParty.Utility;
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
-    using ThirdParty.Utility;
 
     /// <summary>
     /// Factory that builds up property details from api requests, used to pass into the third party code
@@ -72,7 +72,7 @@
                     TPPropertyID = propertyToken.PropertyID,
                     TPKey = propertyToken.TPKey,
                     NationalityID = request.NationalityID,
-                    CurrencyCode = _support.TPCurrencyCodeLookup(propertyToken.CurrencyID),
+                    CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = user.Configurations,
@@ -219,7 +219,7 @@
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
                     NationalityID = request.NationalityID,
-                    CurrencyCode = _support.TPCurrencyCodeLookup(propertyToken.CurrencyID),
+                    CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = user.Configurations,
@@ -327,7 +327,7 @@
                     Source = token.Source,
                     CreateLogs = true,
                     TPKey = propertyToken.TPKey,
-                    CurrencyCode = _support.TPCurrencyCodeLookup(propertyToken.CurrencyID),
+                    CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     ThirdPartyConfigurations = user.Configurations,
                 };
 
@@ -364,7 +364,7 @@
                     Source = token.Source,
                     CreateLogs = true,
                     TPKey = propertyToken.TPKey,
-                    CurrencyCode = _support.TPCurrencyCodeLookup(propertyToken.CurrencyID),
+                    CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     ThirdPartyConfigurations = user.Configurations,
                 };
 

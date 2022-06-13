@@ -12,6 +12,7 @@ using ThirdParty.CSSuppliers.Models.W2M;
 using ThirdParty.CSSuppliers.Xml.W2M;
 using Log = ThirdParty.Models.Log;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace ThirdParty.CSSuppliers.Helpers.W2M
 {
@@ -43,10 +44,10 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
                         ? price * policyRule.Nights / duration
                         : 0;
 
-        public ThirdPartyCancellationResponse CancelBooking(BaseRequestParameters parameters, List<string> cancellationRefs)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(BaseRequestParameters parameters, List<string> cancellationRefs)
         {
-
             var cancellationResponse = new ThirdPartyCancellationResponse();
+
             foreach (var cancellationRef in cancellationRefs)
             {
                 var cancellationRequest = _soapRequestXmlBuilder.BuildCancellation(parameters, cancellationRef);
@@ -54,7 +55,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
 
                 try
                 {
-                    webRequest.Send(_httpClient, _logger).RunSynchronously();
+                    await webRequest.Send(_httpClient, _logger);
                     var response = _serializer.DeSerialize<CancelBookingResponse>(_serializer.CleanSoapDocument(webRequest.ResponseString));
 
                     var error = response.BookingRS.Errors?.Error;
@@ -95,7 +96,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
             return cancellationResponse;
         }
 
-        public PreBookResult PreBook(PreBookRequestParameters parameters, List<RoomDetails> rooms)
+        public async Task<PreBookResult> PreBookAsync(PreBookRequestParameters parameters, List<RoomDetails> rooms)
         {
             var preBookResult = new PreBookResult();
 
@@ -103,14 +104,14 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
             {
                 foreach (var room in rooms)
                 {
-
                     var ratePlanCode = room.ThirdPartyReference;
 
                     var availabilityRequestString = _soapRequestXmlBuilder.BuildAvailabilityCheck(parameters, ratePlanCode);
                     preBookResult.Logs.Add(AvailabilityRequestLog(availabilityRequestString));
 
-                    var responseString = _searchRequestBuilder.GetAvailabilityCheckResponse(availabilityRequestString,
-                            parameters.BaseRequestParameters);
+                    var responseString = await _searchRequestBuilder.GetAvailabilityCheckResponseAsync(
+                        availabilityRequestString,
+                        parameters.BaseRequestParameters);
 
                     preBookResult.Logs.Add(AvailabilityResponseLog(responseString));
 
@@ -144,7 +145,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
 
                     preBookResult.Logs.Add(BookingRulesRequestLog(bookingRulesRequestString));
 
-                    bookingRulesRequest.Send(_httpClient, _logger).RunSynchronously();
+                    await bookingRulesRequest.Send(_httpClient, _logger);
                     var bookingRulesResponseString = bookingRulesRequest.ResponseString;
 
                     preBookResult.Logs.Add(BookingRulesResponseLog(bookingRulesResponseString));
@@ -212,7 +213,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
             room.ThirdPartyReference = ratePlanCode;
         }
 
-        public BookResult Book(PropertyDetails propertyDetails)
+        public async Task<BookResult> BookAsync(PropertyDetails propertyDetails)
         {
             var startDate = propertyDetails.ArrivalDate.ToString(Constants.DateTimeFormat);
             var endDate = propertyDetails.DepartureDate.ToString(Constants.DateTimeFormat);
@@ -263,7 +264,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
 
                 bookResult.Logs.Add(BookingRequestLog(request.RequestString));
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 bookResult.Logs.Add(BookingResponseLog(request.ResponseString));
 

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -58,7 +59,7 @@
             return _settings.OffsetCancellationDays(searchDetails, source);
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             XmlDocument? xmlRequest = null;
             XmlDocument? xmlResponse = null;
@@ -121,7 +122,7 @@
                     Param = string.Empty
                 };
                 availabilityRequest.SetRequest(xmlRequest);
-                availabilityRequest.Send(_httpClient, _logger).RunSynchronously();
+                await availabilityRequest.Send(_httpClient, _logger);
 
                 xmlResponse = availabilityRequest.ResponseXML;
 
@@ -200,7 +201,7 @@
                     Param = string.Empty
                 };
                 cancellationRequest.SetRequest(xmlCancellationCostRequest);
-                cancellationRequest.Send(_httpClient, _logger).RunSynchronously();
+                await cancellationRequest.Send(_httpClient, _logger);
 
                 xmlCancellationCostResponse = cancellationRequest.ResponseXML;
 
@@ -360,7 +361,7 @@
             return rooms.Select(room => room.ThirdPartyReference.Split('_')[0]).ToList();
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             XmlDocument? xmlRequest = null;
             XmlDocument? xmlResponse = null;
@@ -395,7 +396,8 @@
                     ContentType = ContentTypes.Application_x_www_form_urlencoded
                 };
                 webRequest.SetRequest(xmlRequest);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
+
                 xmlResponse = webRequest.ResponseXML;
 
                 var bookingResponse = NetstormingSupport.DeSerialize<NetstormingBookResponse>(xmlResponse, _serializer);
@@ -416,7 +418,6 @@
             }
             finally
             {
-
                 // store the request and response xml on the property booking
                 if (xmlRequest != null && !string.IsNullOrEmpty(xmlRequest.InnerXml))
                 {
@@ -433,14 +434,14 @@
         }
 
         // there is a cancellation feature but it is not instant and the cancellation status goes to pending so we will not use it
-        public virtual ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            return new ThirdPartyCancellationResponse();
+            return Task.FromResult(new ThirdPartyCancellationResponse());
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)

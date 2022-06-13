@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
@@ -72,17 +73,15 @@
             return new ThirdPartyBookingStatusUpdateResult();
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
             var cancellationResponse = new ThirdPartyCancellationResponse();
 
-            ThirdPartyCancellationFeeResult thirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
+            var thirdPartyCancellationFeeResult = await GetCancellationCostAsync(propertyDetails);
 
-            thirdPartyCancellationFeeResult = GetCancellationCost(propertyDetails);
-
-            YalagoCancellationRequest.ExpectedCharge expectedCharge = new YalagoCancellationRequest.ExpectedCharge();
-            YalagoCancellationRequest.Charge charge = new YalagoCancellationRequest.Charge()
+            var expectedCharge = new YalagoCancellationRequest.ExpectedCharge();
+            var charge = new YalagoCancellationRequest.Charge()
             {
                 Amount = thirdPartyCancellationFeeResult.Amount,
                 Currency = thirdPartyCancellationFeeResult.CurrencyCode
@@ -90,7 +89,7 @@
 
             expectedCharge.charge = charge;
 
-            YalagoCancellationRequest cancelRequest = new YalagoCancellationRequest()
+            var cancelRequest = new YalagoCancellationRequest()
             {
                 BookingRef = propertyDetails.SourceReference,
                 expectedCharge = expectedCharge
@@ -100,14 +99,9 @@
 
             try
             {
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
+                request = BuildRequest("Cancel", cancelRequestString, propertyDetails, propertyDetails, _settings.CancelURL(propertyDetails));
 
-                request = BuildRequest("Cancel", cancelRequestString, searchDetails, propertyDetails, _settings.CancelURL(searchDetails));
-
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = JsonConvert.DeserializeObject<YalagoCancellationResponse>(request.ResponseString);
                 if (thirdPartyCancellationFeeResult.Success && response.Status == "1")
@@ -123,7 +117,6 @@
                     cancellationResponse.TPCancellationReference = "failed";
                 }
             }
-
             catch (Exception exception)
             {
                 cancellationResponse.Success = false;
@@ -132,7 +125,6 @@
 
                 propertyDetails.Warnings.AddNew("Cancellation Exception", exception.ToString());
             }
-
             finally
             {
                 if (request.EndPoint != "")
@@ -156,30 +148,25 @@
 
         public void EndSession(PropertyDetails propertyDetails)
         {
-
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
-            YalagoPreCancelRequest preCancelRequest = new YalagoPreCancelRequest()
+            var preCancelRequest = new YalagoPreCancelRequest()
             {
                 BookingRef = propertyDetails.SourceReference,
                 GetTaxBreakdown = false
             };
             string preCancelRequestString = JsonConvert.SerializeObject(preCancelRequest);
             var cancellationCostResponse = new ThirdPartyCancellationFeeResult();
-            var response = new YalagoPreCancelResponse();
+
             try
             {
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
-                request = BuildRequest("PreCancel", preCancelRequestString, searchDetails, propertyDetails, _settings.PreCancelURL(searchDetails));
-                request.Send(_httpClient, _logger).RunSynchronously();
+                request = BuildRequest("PreCancel", preCancelRequestString, propertyDetails, propertyDetails, _settings.PreCancelURL(propertyDetails));
+                await request.Send(_httpClient, _logger);
 
-                response = JsonConvert.DeserializeObject<YalagoPreCancelResponse>(request.ResponseString);
+                var response = JsonConvert.DeserializeObject<YalagoPreCancelResponse>(request.ResponseString);
 
                 if (response.IsCancellable)
                 {
@@ -237,30 +224,25 @@
             return request;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool prebookSuccess = true;
             var response = new YalagoPreBookResponse();
             var request = new Request();
             try
             {
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
-
                 string sourceMarket = _support.TPCountryCodeLookup(ThirdParties.YALAGO, propertyDetails.SellingCountry);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
-                    sourceMarket = _settings.CountryCode(searchDetails);
+                    sourceMarket = _settings.CountryCode(propertyDetails);
                 }
 
                 var opaqueSearch = SafeTypeExtensions.ToSafeBoolean(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[4]);
                 var getPackagePrice = opaqueSearch && _settings.ReturnOpaqueRates(propertyDetails) && propertyDetails.OpaqueRates;
 
-                YalagoPreBookRequest preBookRequest = new YalagoPreBookRequest()
+                var preBookRequest = new YalagoPreBookRequest()
                 {
-                    Culture = _settings.Language(searchDetails),
+                    Culture = _settings.Language(propertyDetails),
                     CheckInDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                     CheckOutDate = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                     LocationId = SafeTypeExtensions.ToSafeInt(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[2]),
@@ -270,11 +252,11 @@
                     GetPackagePrice = getPackagePrice
                 };
 
-                List<YalagoPreBookRequest.Room> rooms = new List<YalagoPreBookRequest.Room>();
+                var rooms = new List<YalagoPreBookRequest.Room>();
 
-                foreach (RoomDetails roomDetails in propertyDetails.Rooms)
+                foreach (var roomDetails in propertyDetails.Rooms)
                 {
-                    YalagoPreBookRequest.Room room = new YalagoPreBookRequest.Room()
+                    var room = new YalagoPreBookRequest.Room()
                     {
                         BoardCode = roomDetails.ThirdPartyReference.Split('|')[1],
                         RoomCode = roomDetails.ThirdPartyReference.Split('|')[3],
@@ -289,9 +271,9 @@
 
                 string requestString = JsonConvert.SerializeObject(preBookRequest);
 
-                request = BuildRequest("PreBook", requestString, searchDetails, propertyDetails, _settings.PreBookURL(searchDetails));
+                request = BuildRequest("PreBook", requestString, propertyDetails, propertyDetails, _settings.PreBookURL(propertyDetails));
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 response = JsonConvert.DeserializeObject<YalagoPreBookResponse>(request.ResponseString);
 
@@ -303,28 +285,26 @@
                     return false;
                 }
 
-                foreach (YalagoPreBookResponse.Room room in response.establishment.Rooms.Where(r => r?.Boards is object))
+                foreach (var room in response.establishment.Rooms.Where(r => r?.Boards is object))
                 {
-                    foreach (YalagoPreBookResponse.Board board in room.Boards.Where(b => b is object))
+                    foreach (var board in room.Boards.Where(b => b is object))
                     {
-
-                        foreach (RoomDetails roomDetails in propertyDetails.Rooms.Where(o =>
-                                                                                     !processedRooms.Contains(o.PropertyRoomBookingID) &&
-                                                                                     propertyDetails.Rooms.IndexOf(o) == SafeTypeExtensions.ToSafeInt(board.RequestedRoomIndex) &&
-                                                                                     SafeTypeExtensions.ToSafeString(o.RoomType).ToLower() == SafeTypeExtensions.ToSafeString(room.Description).ToLower() &&
-                                                                                     o.ThirdPartyReference.Split('|')[3].ToLower() == room.Code.ToLower() &&
-                                                                                     o.ThirdPartyReference.Split('|')[5] == SafeTypeExtensions.ToSafeString(board.Type)))
+                        foreach (var roomDetails in propertyDetails.Rooms
+                            .Where(o =>
+                                !processedRooms.Contains(o.PropertyRoomBookingID) &&
+                                propertyDetails.Rooms.IndexOf(o) == board.RequestedRoomIndex.ToSafeInt() &&
+                                o.RoomType.ToSafeString().ToLower() == room.Description.ToSafeString().ToLower() &&
+                                o.ThirdPartyReference.Split('|')[3].ToLower() == room.Code.ToLower() &&
+                                o.ThirdPartyReference.Split('|')[5] == board.Type.ToSafeString()))
 
                         {
-                            foreach (YalagoLocalCharge localCharge in board.LocalCharges)
+                            foreach (var localCharge in board.LocalCharges)
                             {
                                 propertyDetails.Errata.Add(new Erratum("Local Charge", localCharge.Amount.Currency.ToString() + localCharge.Amount.Amount.ToString()));
-
                             }
 
-                            roomDetails.LocalCost = SafeTypeExtensions.ToSafeDecimal(board.netCost.Amount);
-                            roomDetails.GrossCost = SafeTypeExtensions.ToSafeDecimal(board.netCost.Amount);
-
+                            roomDetails.LocalCost = board.netCost.Amount.ToSafeDecimal();
+                            roomDetails.GrossCost = board.netCost.Amount.ToSafeDecimal();
 
                             if (response.InfoItems != null)
                             {
@@ -347,7 +327,6 @@
                             }
 
                             processedRooms.Add(roomDetails.PropertyRoomBookingID);
-
                         }
                     }
                 }
@@ -356,13 +335,11 @@
 
                 prebookSuccess = response.establishment != null;
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
                 prebookSuccess = false;
             }
-
             finally
             {
                 if (request.RequestString != "")
@@ -374,15 +351,12 @@
                 {
                     propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago PreBook Response", request.ResponseString);
                 }
-
-
             }
-
 
             return prebookSuccess;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = string.Empty;
             bool opaqueSearch = false;
@@ -392,19 +366,20 @@
             try
             {
                 var totalRooms = propertyDetails.Rooms.Count;
-                List<YalagoCreateBookingRequest.Room> roomsList = new List<YalagoCreateBookingRequest.Room>();
-                foreach (RoomDetails room in propertyDetails.Rooms)
-                {
-                    List<YalagoCreateBookingRequest.Guest> guestList = new List<YalagoCreateBookingRequest.Guest>();
+                var roomsList = new List<YalagoCreateBookingRequest.Room>();
 
-                    foreach (Passenger passenger in room.Passengers)
+                foreach (var room in propertyDetails.Rooms)
+                {
+                    var guestList = new List<YalagoCreateBookingRequest.Guest>();
+
+                    foreach (var passenger in room.Passengers)
                     {
                         if (passenger.Age == 0 && passenger.PassengerType != PassengerType.Infant)
                         {
                             passenger.Age = 25;
                         }
 
-                        YalagoCreateBookingRequest.Guest guest = new YalagoCreateBookingRequest.Guest()
+                        var guest = new YalagoCreateBookingRequest.Guest()
                         {
                             Age = passenger.Age,
                             FirstName = passenger.FirstName,
@@ -413,31 +388,30 @@
                         };
                         guestList.Add(guest);
                     }
-                    YalagoCreateBookingRequest.ExpectedNetCost expectedNetCost = new YalagoCreateBookingRequest.ExpectedNetCost
+                    var expectedNetCost = new YalagoCreateBookingRequest.ExpectedNetCost
                     {
                         Amount = Math.Round(SafeTypeExtensions.ToSafeDecimal(room.GrossCost), 2),
                         Currency = propertyDetails.CurrencyCode
                     };
 
-                    YalagoCreateBookingRequest.Room requestRoom = new YalagoCreateBookingRequest.Room()
+                    var requestRoom = new YalagoCreateBookingRequest.Room()
                     {
                         Guests = guestList.ToArray(),
                         RoomCode = room.ThirdPartyReference.Split('|')[3],
                         BoardCode = room.ThirdPartyReference.Split('|')[1],
-                        AffiliateRoomRef = SafeTypeExtensions.ToSafeString("room" + i++),
-                        SpecialRequests = SafeTypeExtensions.ToSafeString(propertyDetails.BookingComments),
+                        AffiliateRoomRef = ("room" + i++).ToSafeString(),
+                        SpecialRequests = propertyDetails.BookingComments.ToSafeString(),
                         ExpectedNetCost = expectedNetCost
                     };
 
                     roomsList.Add(requestRoom);
 
-                    opaqueSearch = SafeTypeExtensions.ToSafeBoolean(room.ThirdPartyReference.Split('|')[4]);
-
+                    opaqueSearch = room.ThirdPartyReference.Split('|')[4].ToSafeBoolean();
                 }
 
                 var getPackagePrice = opaqueSearch && _settings.ReturnOpaqueRates(propertyDetails) && propertyDetails.OpaqueRates; ;
 
-                YalagoCreateBookingRequest.ContactDetails contactDetails = new YalagoCreateBookingRequest.ContactDetails()
+                var contactDetails = new YalagoCreateBookingRequest.ContactDetails()
                 {
                     Title = propertyDetails.LeadGuestTitle,
                     Address1 = propertyDetails.LeadGuestAddress1,
@@ -473,16 +447,11 @@
 
                 string requestString = JsonConvert.SerializeObject(request);
 
-                IThirdPartyAttributeSearch searchDetails = new SearchDetails
-                {
-                    ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-                };
+                bookingRequest = BuildRequest("Book", requestString, propertyDetails, propertyDetails, _settings.BookingURL(propertyDetails));
 
-                bookingRequest = BuildRequest("Book", requestString, searchDetails, propertyDetails, _settings.BookingURL(searchDetails));
+                await bookingRequest.Send(_httpClient, _logger);
 
-                bookingRequest.Send(_httpClient, _logger).RunSynchronously();
-
-                YalagoCreateBookingResponse response = new YalagoCreateBookingResponse();
+                var response = new YalagoCreateBookingResponse();
 
                 response = JsonConvert.DeserializeObject<YalagoCreateBookingResponse>(bookingRequest.ResponseString);
 
@@ -494,7 +463,6 @@
                 {
                     reference = "failed";
                 }
-
             }
             catch (Exception exception)
             {

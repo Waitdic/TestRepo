@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
@@ -38,9 +39,9 @@
 
         #endregion
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var bookResult = _w2mHelper.Book(propertyDetails);
+            var bookResult = await _w2mHelper.BookAsync(propertyDetails);
 
             foreach (var log in bookResult.Logs)
             {
@@ -61,7 +62,6 @@
             return string.Join("|", bookResult.References);
         }
 
-
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             throw new NotImplementedException();
@@ -72,7 +72,7 @@
             throw new NotImplementedException();
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             List<string> referencesForCancellation;
 
@@ -99,7 +99,7 @@
                 CreateLogs = propertyDetails.CreateLogs
             };
 
-            var cancellationResponse = _w2mHelper.CancelBooking(baseParams, referencesForCancellation);
+            var cancellationResponse = await _w2mHelper.CancelBookingAsync(baseParams, referencesForCancellation);
 
             foreach (var log in cancellationResponse.Logs)
             {
@@ -121,19 +121,20 @@
             throw new NotImplementedException();
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails) =>
-            new ThirdPartyCancellationFeeResult
-            {
-                Success = true,
-                CurrencyCode = propertyDetails.CurrencyCode
-            };
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
+            => Task.FromResult(
+                new ThirdPartyCancellationFeeResult
+                    {
+                        Success = true,
+                        CurrencyCode = propertyDetails.CurrencyCode
+                    });
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new NotImplementedException();
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             try
             {
@@ -154,7 +155,7 @@
                     propertyDetails.Source,
                     propertyDetails.LeadGuestBookingCountry);
 
-                var preBookResult = _w2mHelper.PreBook(parameters, propertyDetails.Rooms);
+                var preBookResult = await _w2mHelper.PreBookAsync(parameters, propertyDetails.Rooms);
                 foreach (var log in preBookResult.Logs)
                 {
                     propertyDetails.Logs.AddNew(log.Source, log.Title, log.Log);
