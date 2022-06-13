@@ -14,6 +14,7 @@
     using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.Models.W2M;
     using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
 
     internal class SearchRequestBuilder
     {
@@ -104,12 +105,12 @@
             return webRequest;
         }
 
-        internal virtual string GetAvailabilityCheckResponse(string hotelAvailCheck, BaseRequestParameters parameters)
+        internal async Task<string> GetAvailabilityCheckResponseAsync(string hotelAvailCheck, BaseRequestParameters parameters)
         {
             var request = BuildJuniperWebRequest(hotelAvailCheck, Constants.RequestNames.AvailabilityCheck, parameters,
                 Constants.SoapActions.HotelAvailabilityCheck);
             request.Source = ThirdParties.W2M;
-            request.Send(_httpClient, _logger).RunSynchronously();
+            await request.Send(_httpClient, _logger);
 
             return request.ResponseString;
         }

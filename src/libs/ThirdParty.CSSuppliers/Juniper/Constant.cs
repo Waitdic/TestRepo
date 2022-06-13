@@ -1,5 +1,8 @@
 ﻿namespace ThirdParty.CSSuppliers.Juniper
 {
+    using System.Collections.Generic;
+    using ThirdParty.Constants;
+
     public static class Constant
     {
         public const string RequestorTypeCode = "1";
@@ -19,5 +22,12 @@
         public const string DiscountFeatureName = "PRICE";
         public const string FailedToken = "[Failed]";
         public const string FailedBookReference = "failed";
+
+        public static List<string> JuniperSources => new()
+        {
+            ThirdParties.JUNIPERECTRAVEL,
+            ThirdParties.JUNIPERELEVATE,
+            ThirdParties.JUNIPERFASTPAYHOTELS,
+        };
     }
 }

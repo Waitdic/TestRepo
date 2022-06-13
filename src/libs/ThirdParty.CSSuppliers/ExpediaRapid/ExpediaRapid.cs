@@ -4,30 +4,29 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using MoreLinq;
     using Newtonsoft.Json;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
-    public class ExpediaRapid : IThirdParty
+    public class ExpediaRapid : IThirdParty, ISingleSource
     {
-
         private readonly IExpediaRapidAPI _api;
 
         private readonly IExpediaRapidSettings _settings;
-
-        private readonly string _source = ThirdParties.EXPEDIARAPID;
 
         private readonly ITPSupport _support;
 
@@ -40,28 +39,25 @@
             _support = Ensure.IsNotNull(support, nameof(support));
         }
 
-        public bool SupportsRemarks { get; private set; } = true;
-        public bool SupportsBookingSearch { get; private set; } = false;
+        public bool SupportsRemarks => true;
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.EXPEDIARAPID;
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            throw new NotImplementedException();
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source)
+            => throw new NotImplementedException();
 
         public void EndSession(PropertyDetails propertyDetails)
         {
             return;
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-
             try
             {
                 // retry search to get cancellation and errata
-                var searchResponse = GetPrebookSearchRedoResponse(propertyDetails);
+                var searchResponse = await GetPrebookSearchRedoResponseAsync(propertyDetails);
 
                 if (searchResponse is null)
                 {
@@ -80,7 +76,6 @@
                 propertyDetails.Cancellations = GetCancellationsFromAllRooms(propertyDetails, responseRooms);
                 propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Prebook RedoSearch Error", ex.ToString());
@@ -88,12 +83,13 @@
             }
 
             var roomPrebookResponses = new List<PrebookResponse>();
+
             // prebook to get the costs and book link
             try
             {
                 var firstRoom = propertyDetails.Rooms.First();
 
-                var prebookResponse = GetResponse<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
+                var prebookResponse = await GetResponseAsync<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
 
                 if (prebookResponse is null)
                 {
@@ -103,7 +99,6 @@
                 UpdateCostsAtRoomLevel(propertyDetails, prebookResponse);
                 GetBookingLink(propertyDetails, firstRoom, prebookResponse);
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Prebook Price Check Error", ex.ToString());
@@ -116,17 +111,14 @@
             return true;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-
-            var roomBookResults = new Dictionary<string, Result>();
-
             try
             {
                 var firstRoom = propertyDetails.Rooms.First();
                 string bookRequestBody = BuildBookRequestBody(propertyDetails);
 
-                var bookResponse = GetResponse<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
+                var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
 
                 if (bookResponse is null)
                 {
@@ -144,30 +136,29 @@
             }
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-
             decimal amount = 0m;
             var cancelReferences = new List<string>();
             bool success = true;
 
             try
             {
-                var bookingItineraryResponse1 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
+                var bookingItineraryResponse1 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
 
                 if (bookingItineraryResponse1 is null)
                 {
                     throw new ArgumentNullException("bookingItineraryResponse1", "Unable to find booking itinerary for room.");
                 }
 
-                cancelReferences = CancelRooms(propertyDetails, bookingItineraryResponse1);
+                cancelReferences = await CancelRoomsAsync(propertyDetails, bookingItineraryResponse1);
 
                 if (propertyDetails.Warnings.Any())
                 {
                     throw new Exception("Unable to cancel a room.");
                 }
 
-                var bookingItineraryResponse2 = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
+                var bookingItineraryResponse2 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
 
                 if (bookingItineraryResponse2 is null)
                 {
@@ -187,7 +178,6 @@
 
                 }
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Cancel Error", ex.ToString());
@@ -204,15 +194,14 @@
             };
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-
             decimal amount = 0m;
             bool success = true;
 
             try
             {
-                var precancelResponse = GetResponse<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
+                var precancelResponse = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
 
                 if (precancelResponse is null)
                 {
@@ -262,9 +251,8 @@
             return string.Empty;
         }
 
-        private List<string> CancelRooms(PropertyDetails propertyDetails, BookingItineraryResponse bookingItineraryResponse1)
+        private async Task<List<string>> CancelRoomsAsync(PropertyDetails propertyDetails, BookingItineraryResponse bookingItineraryResponse1)
         {
-
             var cancelReferences = new List<string>();
 
             foreach (BookingItineraryResponseRoom room in bookingItineraryResponse1.Rooms)
@@ -276,7 +264,7 @@
                     string url = BuildDefaultURL(propertyDetails, cancelLink);
                     var request = BuildRequest(propertyDetails, url, "Cancel", eRequestMethod.DELETE, true);
 
-                    string cancelResponseString = _api.GetResponse(propertyDetails, request);
+                    string cancelResponseString = await _api.GetResponseAsync(propertyDetails, request);
                     int statusCode = (int)request.ResponseStatusCode;
 
                     if (!string.IsNullOrWhiteSpace(cancelResponseString) && (statusCode != 202 || statusCode != 204))
@@ -300,9 +288,7 @@
 
         private void GetBookingLink(PropertyDetails propertyDetails, RoomDetails firstRoom, PrebookResponse prebookResponse)
         {
-
-            Link bookLink = null;
-            if (!prebookResponse.Links.TryGetValue("book", out bookLink))
+            if (!prebookResponse.Links.TryGetValue("book", out Link bookLink))
             {
                 throw new Exception("Couldn't find booklink for room in prebook response");
             }
@@ -331,25 +317,24 @@
             }
         }
 
-        private TResponse GetResponse<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
+        private async Task<TResponse> GetResponseAsync<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
             string url = BuildDefaultURL(propertyDetails, link);
             var request = BuildRequest(propertyDetails, url, logName, method, addCustomerIPHeader, requestBody);
-            var response = _api.GetDeserializedResponse<TResponse>(propertyDetails, request);
+            var response = await _api.GetDeserializedResponseAsync<TResponse>(propertyDetails, request);
             return response;
         }
 
-        private SearchResponse GetPrebookSearchRedoResponse(PropertyDetails propertyDetails)
+        private async Task<SearchResponse> GetPrebookSearchRedoResponseAsync(PropertyDetails propertyDetails)
         {
             string searchURL = BuildPrebookSearchURL(propertyDetails);
             var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", eRequestMethod.GET, false);
-            var searchResponse = _api.GetDeserializedResponse<SearchResponse>(propertyDetails, searchRequest);
+            var searchResponse = await _api.GetDeserializedResponseAsync<SearchResponse>(propertyDetails, searchRequest);
             return searchResponse;
         }
 
         private Cancellations GetCancellationsFromAllRooms(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
-
             var cancellations = new Cancellations();
 
             foreach (RoomDetails room in propertyDetails.Rooms)
@@ -375,7 +360,6 @@
 
         private Cancellation BuildCancellation(OccupancyRoomRate occupancyRoomRate, CancelPenalty cancelPenalty)
         {
-
             decimal amount = 0m;
 
             if (cancelPenalty.Amount != 0m)
@@ -407,9 +391,8 @@
 
         private Errata GetErrataFromAllRooms(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
-
             var errata = new Errata();
-            string currencyCode = _support.TPCurrencyLookup(_source, propertyDetails.CurrencyCode);
+            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
 
             var mandatoryFees = new List<OccupancyRateFee>();
             var resortFees = new List<OccupancyRateFee>();
@@ -478,7 +461,6 @@
 
         private OccupancyRoomRate GetExactOccupancyRoomRate(List<SearchResponseRoom> responseRooms, ExpediaRapidOccupancy occuapncy, string roomID, string rateID)
         {
-
             var roomRate = GetExactRoomRate(responseRooms, roomID, rateID);
             var occupancyRoomRate = roomRate.OccupancyRoomRates[occuapncy.GetExpediaRapidOccupancy()];
 
@@ -487,7 +469,6 @@
 
         private RoomRate GetExactRoomRate(List<SearchResponseRoom> responseRooms, string roomID, string rateID)
         {
-
             var responseRoom = responseRooms.First(r => (r.RoomID ?? "") == (roomID ?? ""));
             var roomRate = responseRoom.Rates.First(r => (r.RateID ?? "") == (rateID ?? ""));
             return roomRate;
@@ -495,21 +476,21 @@
 
         private Erratum BuildErrata(string feeName, decimal amount, string currencyCode)
         {
-
             return new Erratum(ErrataTitle, $"{feeName}: {currencyCode}/{amount}");
         }
 
         private List<SearchResponseRoom> GetPrebookSpecificRoomRates(PropertyDetails propertyDetails, SearchResponse searchResponse)
         {
-
             var propertyAvail = searchResponse.First(sr => (sr.PropertyID ?? "") == (propertyDetails.TPKey ?? ""));
 
             if (propertyAvail is null || !propertyAvail.Rooms.Any())
+            {
                 return null;
+            }
 
             var sameRoomRates = new List<SearchResponseRoom>();
 
-            foreach (RoomDetails room in propertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
                 string roomID = room.RoomTypeCode.Split('|')[0];
                 string rateID = room.RoomTypeCode.Split('|')[1];
@@ -518,18 +499,23 @@
                 var matchedRoom = propertyAvail.Rooms.First(r => (r.RoomID ?? "") == (roomID ?? ""));
 
                 if (matchedRoom is null || !matchedRoom.Rates.Any())
+                {
                     return null;
+                }
 
                 var matchedRate = matchedRoom.Rates.First(r => (r.RateID ?? "") == (rateID ?? ""));
 
                 if (matchedRate is null || matchedRate.BedGroupAvailabilities is null || !matchedRate.BedGroupAvailabilities.ContainsKey(bedGroupID))
-
+                {
                     return null;
+                }
 
                 var occupancy = new ExpediaRapidOccupancy(room.Adults, room.ChildAges, room.Infants);
 
                 if (matchedRate.OccupancyRoomRates[occupancy.GetExpediaRapidOccupancy()] is null)
+                {
                     return null;
+                }
 
                 sameRoomRates.Add(matchedRoom);
             }
@@ -539,9 +525,8 @@
 
         private string BuildPrebookSearchURL(PropertyDetails propertyDetails)
         {
-
             var tpKeys = new List<string>() { propertyDetails.TPKey };
-            string currencyCode = _support.TPCurrencyLookup(_source, propertyDetails.CurrencyCode);
+            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
@@ -596,7 +581,7 @@
                                 City = propertyDetails.LeadGuestTownCity,
                                 StateProvinceCode = propertyDetails.LeadGuestCounty,
                                 PostalCode = propertyDetails.LeadGuestPostcode,
-                                CountryCode = _support.TPBookingCountryLookup(_source, propertyDetails.LeadGuestBookingCountryID)
+                                CountryCode = _support.TPBookingCountryLookup(Source, propertyDetails.LeadGuestBookingCountryID)
                             }
                         }
                     }
@@ -608,7 +593,6 @@
 
         private BookRequestRoom CreateBookRequestRoom(PropertyDetails propertyDetails, Passenger firstPasseneger, int index)
         {
-
             if (index == 0)
             {
                 return new BookRequestRoom()
@@ -637,7 +621,6 @@
 
         private string BuildDefaultURL(PropertyDetails propertyDetails, string path)
         {
-
             var uriBuilder = new UriBuilder(_settings.get_Scheme(propertyDetails), _settings.get_Host(propertyDetails), -1);
 
             if (string.IsNullOrWhiteSpace(path))
@@ -651,7 +634,7 @@
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new NotImplementedException();
         }

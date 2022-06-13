@@ -8,12 +8,13 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class YouTravelSearch : IThirdPartySearch
+    public class YouTravelSearch : IThirdPartySearch, ISingleSource
     {
         #region Constructor
 
@@ -37,7 +38,7 @@
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             bool restrictions = false;
 

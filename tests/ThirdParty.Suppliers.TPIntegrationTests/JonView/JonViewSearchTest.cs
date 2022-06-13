@@ -1,5 +1,6 @@
 ﻿namespace ThirdParty.Suppliers.TPIntegrationTests.JonView
 {
+    using Intuitive.Helpers.Serialization;
     using ThirdParty.CSSuppliers.JonView;
     using ThirdParty.Search.Models;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
@@ -17,7 +18,7 @@
             _provider,
             new List<SearchDetails>() { _searchDetails },
             _settings,
-            new JonViewSearch(_settings))
+            new JonViewSearch(_settings, new Serializer()))
         {
         }
 

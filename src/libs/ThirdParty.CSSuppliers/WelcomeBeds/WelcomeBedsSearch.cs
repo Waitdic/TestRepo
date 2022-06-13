@@ -7,17 +7,17 @@
     using Intuitive.Net.WebRequests;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.WelcomeBeds;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.Models.WelcomeBeds;
-    using Microsoft.Extensions.Logging;
 
-    public class WelcomeBedsSearch : IThirdPartySearch
+    public class WelcomeBedsSearch : IThirdPartySearch, ISingleSource
     {
-        #region "Constructor"
+        #region Constructor
 
         public readonly IWelcomeBedsSettings _settings;
         public readonly ITPSupport _tpSupport;
@@ -35,13 +35,13 @@
 
         #endregion
 
-        #region "Properties"
+        #region Properties
 
         public string Source => ThirdParties.WELCOMEBEDS;
 
         #endregion
 
-        #region "Build Search Request"
+        #region Build Search Request
 
         public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
@@ -147,7 +147,7 @@
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return searchDetails.Rooms > 3;
         }
@@ -189,7 +189,8 @@
         }
         #endregion
 
-        #region "Transform Response"
+        #region Transform Response
+
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();

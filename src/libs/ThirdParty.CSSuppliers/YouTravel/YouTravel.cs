@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -11,19 +12,17 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class YouTravel : IThirdParty
+    public class YouTravel : IThirdParty, ISingleSource
     {
-
         #region Constructor
 
-        public YouTravel(IYouTravelSettings settings, ITPSupport support, HttpClient httpClient, ISerializer serializer, ILogger<YouTravel> logger)
+        public YouTravel(IYouTravelSettings settings, HttpClient httpClient, ISerializer serializer, ILogger<YouTravel> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -33,426 +32,366 @@
 
         #region Properties
 
-        private IYouTravelSettings _settings { get; set; }
+        private readonly IYouTravelSettings _settings;
 
-        private ITPSupport _support { get; set; }
+        private readonly HttpClient _httpClient;
 
-        private HttpClient _httpClient { get; set; }
-
-        private ISerializer _serializer { get; set; }
+        private readonly ISerializer _serializer;
 
         private readonly ILogger<YouTravel> _logger;
 
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public bool SupportsRemarks => true;
 
-        private bool IThirdParty_SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-        {
-            return _settings.get_AllowCancellations(searchDetails, false);
-        }
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.get_AllowCancellations(searchDetails, false);
 
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => IThirdParty_SupportsLiveCancellation(searchDetails, source);
-
-        public bool SupportsBookingSearch
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.YOUTRAVEL;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
-        {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
-        }
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.get_OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails PropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            var oResponse = new XmlDocument();
-            bool bSuccess = true;
-            var oWebRequest = new Request();
+            var response = new XmlDocument();
+            bool success = true;
+            var webRequest = new Request();
 
             try
             {
                 // Get Errata details
                 var sb = new StringBuilder();
-                sb.AppendFormat("{0}{1}", _settings.get_PrebookURL(PropertyDetails), "?");
-                sb.AppendFormat("&LangID={0}", _settings.get_LangID(PropertyDetails));
-                sb.AppendFormat("&HID={0}", PropertyDetails.TPKey);
-                sb.AppendFormat("&UserName={0}", _settings.get_Username(PropertyDetails));
-                sb.AppendFormat("&Password={0}", _settings.get_Password(PropertyDetails));
+                sb.AppendFormat("{0}{1}", _settings.get_PrebookURL(propertyDetails), "?");
+                sb.AppendFormat("&LangID={0}", _settings.get_LangID(propertyDetails));
+                sb.AppendFormat("&HID={0}", propertyDetails.TPKey);
+                sb.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
+                sb.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
 
-                oWebRequest.Source = ThirdParties.YOUTRAVEL;
-                oWebRequest.CreateLog = true;
-                oWebRequest.LogFileName = "Prebook";
-                oWebRequest.EndPoint = sb.ToString();
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Send(_httpClient, _logger);
+                webRequest.Source = ThirdParties.YOUTRAVEL;
+                webRequest.CreateLog = true;
+                webRequest.LogFileName = "Prebook";
+                webRequest.EndPoint = sb.ToString();
+                webRequest.Method = eRequestMethod.GET;
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponse = _serializer.CleanXmlNamespaces(oWebRequest.ResponseXML);
-                var oErrataNode = oResponse.SelectSingleNode("/HtSearchRq/Hotel/Erratas");
-                string sErrata = oErrataNode.InnerText;
-                PropertyDetails.Errata.AddNew("Important Information", sErrata);
+                response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
+                var errataNode = response.SelectSingleNode("/HtSearchRq/Hotel/Erratas");
+                string errata = errataNode.InnerText;
+                propertyDetails.Errata.AddNew("Important Information", errata);
+
                 // Get cancellation policies
-                foreach (RoomDetails oRoomDetails in PropertyDetails.Rooms)
+                foreach (var roomDetails in propertyDetails.Rooms)
                 {
-                    var oCancellationPolicyWebRequest = new Request();
                     var sbCancelPolicy = new StringBuilder();
-                    var oCancelPolicyResponseXML = new XmlDocument();
-                    sbCancelPolicy.AppendFormat("{0}{1}", _settings.get_CancellationPolicyURL(PropertyDetails), "?");
-                    sbCancelPolicy.AppendFormat("token={0}", oRoomDetails.ThirdPartyReference.Split('_')[2]);
-                    oCancellationPolicyWebRequest.Source = ThirdParties.YOUTRAVEL;
-                    oCancellationPolicyWebRequest.CreateLog = true;
-                    oCancellationPolicyWebRequest.LogFileName = "Cancellation Cost";
-                    oCancellationPolicyWebRequest.EndPoint = sbCancelPolicy.ToString();
-                    oCancellationPolicyWebRequest.Method = eRequestMethod.GET;
-                    oCancellationPolicyWebRequest.Send(_httpClient, _logger);
+                    var cancelPolicyResponseXml = new XmlDocument();
+                    sbCancelPolicy.AppendFormat("{0}{1}", _settings.get_CancellationPolicyURL(propertyDetails), "?");
+                    sbCancelPolicy.AppendFormat("token={0}", roomDetails.ThirdPartyReference.Split('_')[2]);
 
-                    oCancelPolicyResponseXML = _serializer.CleanXmlNamespaces(oCancellationPolicyWebRequest.ResponseXML);
-                    foreach (XmlNode oCancellationNode in oCancelPolicyResponseXML.SelectNodes("/HtSearchRq/Policies/Policy"))
+                    var cancellationPolicyWebRequest = new Request
                     {
-                        var dFromDate = oCancellationNode.SelectSingleNode("FromDate").InnerText.ToSafeDate();
-                        var dToDate = new DateTime(2099, 1, 1);
-                        decimal nCancellationCost = oCancellationNode.SelectSingleNode("Fees").InnerText.ToSafeDecimal();
-                        PropertyDetails.Cancellations.AddNew(dFromDate, dToDate, nCancellationCost);
+                        Source = ThirdParties.YOUTRAVEL,
+                        CreateLog = true,
+                        LogFileName = "Cancellation Cost",
+                        EndPoint = sbCancelPolicy.ToString(),
+                        Method = eRequestMethod.GET
+                    };
+                    await cancellationPolicyWebRequest.Send(_httpClient, _logger);
+
+                    cancelPolicyResponseXml = _serializer.CleanXmlNamespaces(cancellationPolicyWebRequest.ResponseXML);
+                    
+                    foreach (XmlNode cancellationNode in cancelPolicyResponseXml.SelectNodes("/HtSearchRq/Policies/Policy"))
+                    {
+                        var fromDate = cancellationNode.SelectSingleNode("FromDate").InnerText.ToSafeDate();
+                        var toDate = new DateTime(2099, 1, 1);
+                        decimal cancellationCost = cancellationNode.SelectSingleNode("Fees").InnerText.ToSafeDecimal();
+                        propertyDetails.Cancellations.AddNew(fromDate, toDate, cancellationCost);
                     }
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Request " + oRoomDetails.PropertyRoomBookingID, oCancellationPolicyWebRequest.RequestLog);
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Response " + oRoomDetails.PropertyRoomBookingID, oCancellationPolicyWebRequest.ResponseLog);
+
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Request " + roomDetails.PropertyRoomBookingID, cancellationPolicyWebRequest.RequestLog);
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Response " + roomDetails.PropertyRoomBookingID, cancellationPolicyWebRequest.ResponseLog);
                 }
-                PropertyDetails.Cancellations.Solidify(SolidifyType.Sum);
+
+                propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
             }
             catch (Exception ex)
             {
-                bSuccess = false;
-                PropertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
+                success = false;
+                propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
             }
             finally
             {
                 // save the xml for the front end
-                PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Request", oWebRequest.RequestLog);
-                PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Response", oWebRequest.ResponseLog);
-
+                propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Request", webRequest.RequestLog);
+                propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Response", webRequest.ResponseLog);
             }
 
-            PropertyDetails.LocalCost = PropertyDetails.Rooms.Sum(r => r.LocalCost);
+            propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
 
-            return bSuccess;
+            return success;
         }
 
         #endregion
 
         #region Book
 
-        public string Book(PropertyDetails PropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var oResponse = new XmlDocument();
-            string sRequestURL = "";
-            string sReference = "";
+            var response = new XmlDocument();
+            string requestURL = "";
+            string reference = "";
 
             try
             {
-
                 // build url
                 var sbURL = new StringBuilder();
-                sbURL.AppendFormat("{0}{1}", _settings.get_BookingURL(PropertyDetails), "?");
-                sbURL.AppendFormat("&LangID={0}", _settings.get_LangID(PropertyDetails));
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(PropertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(PropertyDetails));
-                sbURL.AppendFormat("&session_ID={0}", PropertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0]);
-                sbURL.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(PropertyDetails.ArrivalDate));
-                sbURL.AppendFormat("&Nights={0}", PropertyDetails.Duration);
-                sbURL.AppendFormat("&Rooms={0}", PropertyDetails.Rooms.Count);
+                sbURL.AppendFormat("{0}{1}", _settings.get_BookingURL(propertyDetails), "?");
+                sbURL.AppendFormat("&LangID={0}", _settings.get_LangID(propertyDetails));
+                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
+                sbURL.AppendFormat("&session_ID={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0]);
+                sbURL.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(propertyDetails.ArrivalDate));
+                sbURL.AppendFormat("&Nights={0}", propertyDetails.Duration);
+                sbURL.AppendFormat("&Rooms={0}", propertyDetails.Rooms.Count);
 
-                sbURL.AppendFormat("&HID={0}", PropertyDetails.TPKey);
+                sbURL.AppendFormat("&HID={0}", propertyDetails.TPKey);
 
                 // adults and children
-                int iRoomIndex = 0;
-                foreach (RoomDetails oRoomDetails in PropertyDetails.Rooms)
+                int roomIndex = 0;
+                foreach (var roomDetails in propertyDetails.Rooms)
                 {
+                    roomIndex += 1;
 
-                    iRoomIndex += 1;
+                    sbURL.AppendFormat("&ADLTS_{0}={1}", roomIndex, roomDetails.Adults);
 
-                    sbURL.AppendFormat("&ADLTS_{0}={1}", iRoomIndex, oRoomDetails.Adults);
-
-                    if (oRoomDetails.Children + oRoomDetails.Infants > 0)
+                    if (roomDetails.Children + roomDetails.Infants > 0)
                     {
+                        sbURL.AppendFormat("&CHILD_{0}={1}", roomIndex, roomDetails.Children + roomDetails.Infants);
 
-                        sbURL.AppendFormat("&CHILD_{0}={1}", iRoomIndex, oRoomDetails.Children + oRoomDetails.Infants);
-
-                        for (int i = 1, loopTo = oRoomDetails.Children + oRoomDetails.Infants; i <= loopTo; i++)
+                        for (int i = 1; i <= roomDetails.Children + roomDetails.Infants; i++)
                         {
-
-                            if (oRoomDetails.ChildAges.Count > i - 1)
+                            if (roomDetails.ChildAges.Count > i - 1)
                             {
-
-                                sbURL.AppendFormat("&ChildAgeR{0}C{1}={2}", iRoomIndex, i, oRoomDetails.ChildAges[i - 1]);
+                                sbURL.AppendFormat("&ChildAgeR{0}C{1}={2}", roomIndex, i, roomDetails.ChildAges[i - 1]);
                             }
-
                             else
                             {
-
-                                sbURL.AppendFormat("&ChildAgeR{0}C{1}={2}", iRoomIndex, i, -1);
-
+                                sbURL.AppendFormat("&ChildAgeR{0}C{1}={2}", roomIndex, i, -1);
                             }
                         }
                     }
-
                     else
                     {
-
-                        sbURL.AppendFormat("&CHILD_{0}=0", iRoomIndex);
-
+                        sbURL.AppendFormat("&CHILD_{0}=0", roomIndex);
                     }
 
-                    if (iRoomIndex == 1)
+                    if (roomIndex == 1)
                     {
-                        sbURL.AppendFormat("&RID={0}", oRoomDetails.ThirdPartyReference.Split('|')[1]);
+                        sbURL.AppendFormat("&RID={0}", roomDetails.ThirdPartyReference.Split('|')[1]);
                     }
                     else
                     {
-                        sbURL.AppendFormat("&RID_{0}={1}", iRoomIndex, oRoomDetails.ThirdPartyReference.Split('|')[1]);
+                        sbURL.AppendFormat("&RID_{0}={1}", roomIndex, roomDetails.ThirdPartyReference.Split('|')[1]);
                     }
 
-                    sbURL.AppendFormat("&Room{0}_Rate={1}", iRoomIndex, oRoomDetails.GrossCost.ToSafeMoney());
-
+                    sbURL.AppendFormat("&Room{0}_Rate={1}", roomIndex, roomDetails.GrossCost.ToSafeMoney());
                 }
 
-                sbURL.AppendFormat("&Customer_title={0}", PropertyDetails.Rooms[0].Passengers[0].Title);
-                sbURL.AppendFormat("&Customer_firstname={0}", PropertyDetails.Rooms[0].Passengers[0].FirstName);
-                sbURL.AppendFormat("&Customer_Lastname={0}", PropertyDetails.Rooms[0].Passengers[0].LastName);
+                sbURL.AppendFormat("&Customer_title={0}", propertyDetails.Rooms[0].Passengers[0].Title);
+                sbURL.AppendFormat("&Customer_firstname={0}", propertyDetails.Rooms[0].Passengers[0].FirstName);
+                sbURL.AppendFormat("&Customer_Lastname={0}", propertyDetails.Rooms[0].Passengers[0].LastName);
 
-                if (PropertyDetails.BookingComments.Count > 0)
+                if (propertyDetails.BookingComments.Count > 0)
                 {
                     // max 250 characters
-                    sbURL.AppendFormat("&Requests={0}", PropertyDetails.BookingComments[0].Text.Substring(0, Math.Min(PropertyDetails.BookingComments[0].Text.Length, 250)));
+                    sbURL.AppendFormat("&Requests={0}", propertyDetails.BookingComments[0].Text.Substring(0, Math.Min(propertyDetails.BookingComments[0].Text.Length, 250)));
                 }
 
-                sRequestURL = sbURL.ToString();
+                requestURL = sbURL.ToString();
 
-                var oWebRequest = new Request();
-                oWebRequest.Source = ThirdParties.YOUTRAVEL;
-                oWebRequest.CreateLog = true;
-                oWebRequest.LogFileName = "Book";
-                oWebRequest.EndPoint = sRequestURL;
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    Source = ThirdParties.YOUTRAVEL,
+                    CreateLog = true,
+                    LogFileName = "Book",
+                    EndPoint = requestURL,
+                    Method = eRequestMethod.GET
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponse = oWebRequest.ResponseXML;
+                response = webRequest.ResponseXML;
 
                 // return booking reference if it exists
-                var oNode = oResponse.SelectSingleNode("/HtSearchRq/Booking_ref");
-                if (oNode is not null && !string.IsNullOrEmpty(oResponse.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText))
+                var node = response.SelectSingleNode("/HtSearchRq/Booking_ref");
+                if (node is not null && !string.IsNullOrEmpty(response.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText))
                 {
-                    sReference = oResponse.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText;
+                    reference = response.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText;
                 }
                 else
                 {
-
-                    sReference = "failed";
-
+                    reference = "failed";
                 }
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
-                sReference = "failed";
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
+                reference = "failed";
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sRequestURL))
+                if (!string.IsNullOrEmpty(requestURL))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Request", sRequestURL);
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Request", requestURL);
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Response", response);
                 }
-
             }
 
-            return sReference;
-
+            return reference;
         }
 
         #endregion
 
         #region Cancellation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails PropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-
-            var oThirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             var sbURL = new StringBuilder();
-            var oResponse = new XmlDocument();
+            var response = new XmlDocument();
 
             try
             {
-
                 // build url
-                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationURL(PropertyDetails), "?");
-                sbURL.AppendFormat("Booking_ref={0}", PropertyDetails.SourceReference);
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(PropertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(PropertyDetails));
-
+                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationURL(propertyDetails), "?");
+                sbURL.AppendFormat("Booking_ref={0}", propertyDetails.SourceReference);
+                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
 
                 // Send the request
-                var oWebRequest = new Request();
-                oWebRequest.Source = ThirdParties.YOUTRAVEL;
-                oWebRequest.CreateLog = true;
-                oWebRequest.LogFileName = "Cancel";
-                oWebRequest.EndPoint = sbURL.ToString();
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    Source = ThirdParties.YOUTRAVEL,
+                    CreateLog = true,
+                    LogFileName = "Cancel",
+                    EndPoint = sbURL.ToString(),
+                    Method = eRequestMethod.GET
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponse = oWebRequest.ResponseXML;
-
+                response = webRequest.ResponseXML;
 
                 // check response
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-
-                    if (oResponse.SelectSingleNode("/HtSearchRq/Success").InnerText == "True")
+                    if (response.SelectSingleNode("/HtSearchRq/Success").InnerText == "True")
                     {
-
-                        oThirdPartyCancellationResponse.TPCancellationReference = oResponse.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText;
-                        oThirdPartyCancellationResponse.Success = true;
+                        thirdPartyCancellationResponse.TPCancellationReference = response.SelectSingleNode("/HtSearchRq/Booking_ref").InnerText;
+                        thirdPartyCancellationResponse.Success = true;
                     }
-
                     else
                     {
-
-                        oThirdPartyCancellationResponse.Success = false;
-
+                        thirdPartyCancellationResponse.Success = false;
                     }
-
                 }
             }
-
             catch (Exception ex)
             {
-
-                PropertyDetails.Warnings.AddNew("Cancellation Exception", ex.ToString());
-                oThirdPartyCancellationResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancellation Exception", ex.ToString());
+                thirdPartyCancellationResponse.Success = false;
             }
-
             finally
             {
-
                 // store the request and response xml on the property booking
                 if (!string.IsNullOrEmpty(sbURL.ToString()))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Request", sbURL.ToString());
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Request", sbURL.ToString());
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Response", response);
                 }
-
             }
 
-            return oThirdPartyCancellationResponse;
-
+            return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails PropertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-
-            var oResult = new ThirdPartyCancellationFeeResult();
+            var result = new ThirdPartyCancellationFeeResult();
             var sbURL = new StringBuilder();
-            var oResponse = new XmlDocument();
+            var response = new XmlDocument();
 
             try
             {
-
-                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationFeeURL(PropertyDetails), "?");
-                sbURL.AppendFormat("Booking_ref={0}", PropertyDetails.SourceReference);
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(PropertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(PropertyDetails));
-
+                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationFeeURL(propertyDetails), "?");
+                sbURL.AppendFormat("Booking_ref={0}", propertyDetails.SourceReference);
+                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
 
                 // Send the request
-                var oWebRequest = new Request();
-                oWebRequest.Source = ThirdParties.YOUTRAVEL;
-                oWebRequest.CreateLog = true;
-                oWebRequest.LogFileName = "Cancellation Cost";
-                oWebRequest.EndPoint = sbURL.ToString();
-                oWebRequest.Method = eRequestMethod.GET;
-                oWebRequest.Send(_httpClient, _logger);
+                var webRequest = new Request
+                {
+                    Source = ThirdParties.YOUTRAVEL,
+                    CreateLog = true,
+                    LogFileName = "Cancellation Cost",
+                    EndPoint = sbURL.ToString(),
+                    Method = eRequestMethod.GET
+                };
+                await webRequest.Send(_httpClient, _logger);
 
-                oResponse = oWebRequest.ResponseXML;
+                response = webRequest.ResponseXML;
 
                 // return a fees result if found
-                var oNode = oResponse.SelectSingleNode("/HtSearchRq/Success");
-                if (oNode is not null && oResponse.SelectSingleNode("/HtSearchRq/Success").InnerText == "True")
+                var node = response.SelectSingleNode("/HtSearchRq/Success");
+                if (node is not null && response.SelectSingleNode("/HtSearchRq/Success").InnerText == "True")
                 {
-
-                    oResult.Success = true;
-                    oResult.Amount = oResponse.SelectSingleNode("/HtSearchRq/Fees").InnerText.ToSafeDecimal();
-                    oResult.CurrencyCode = oResponse.SelectSingleNode("/HtSearchRq/Currency").InnerText.ToSafeString();
+                    result.Success = true;
+                    result.Amount = response.SelectSingleNode("/HtSearchRq/Fees").InnerText.ToSafeDecimal();
+                    result.CurrencyCode = response.SelectSingleNode("/HtSearchRq/Currency").InnerText.ToSafeString();
                 }
-
                 else
                 {
-
-                    oResult.Success = false;
-
+                    result.Success = false;
                 }
             }
-
             catch (Exception ex)
             {
-
-                oResult.Success = false;
-                PropertyDetails.Warnings.AddNew("Cancellation Cost Exception", ex.ToString());
+                result.Success = false;
+                propertyDetails.Warnings.AddNew("Cancellation Cost Exception", ex.ToString());
             }
-
             finally
             {
-
                 if (!string.IsNullOrEmpty(sbURL.ToString()))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Request", sbURL.ToString());
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Request", sbURL.ToString());
                 }
 
-                if (!string.IsNullOrEmpty(oResponse.InnerXml))
+                if (!string.IsNullOrEmpty(response.InnerXml))
                 {
-                    PropertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Response", oResponse);
+                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Response", response);
                 }
-
             }
 
-            return oResult;
-
+            return result;
         }
 
         #endregion
 
         #region Booking Search
 
-        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails oBookingSearchDetails)
+        public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             return new ThirdPartyBookingSearchResults();
         }
@@ -466,13 +405,14 @@
 
         #region Booking Status Update
 
-        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails oPropertyDetails)
+        public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails)
         {
             return new ThirdPartyBookingStatusUpdateResult();
         }
 
         #endregion
-        public void EndSession(PropertyDetails oPropertyDetails)
+
+        public void EndSession(PropertyDetails propertyDetails)
         {
 
         }

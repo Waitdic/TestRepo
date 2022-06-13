@@ -83,13 +83,13 @@
             {
                 var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(split.Supplier);
 
-                if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails))
+                if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails, split.Supplier))
                 {
                     // todo - request tracker
                     taskList.Add(
                         _searchRunner.SearchAsync(
                             searchDetails,
-                            split.ResortSplits,
+                            split,
                             thirdPartySearch,
                             cancellationTokenSource));
                 }

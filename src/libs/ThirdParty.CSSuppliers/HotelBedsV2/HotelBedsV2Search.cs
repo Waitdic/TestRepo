@@ -1,27 +1,25 @@
-﻿#pragma warning disable CA1305 // Specify IFormatProvider
-#pragma warning disable CA1062 // Validate arguments of public methods
-
-namespace ThirdParty.CSSuppliers.HotelBedsV2
+﻿namespace ThirdParty.CSSuppliers.HotelBedsV2
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Security;
     using Intuitive.Net.WebRequests;
+    using iVector.Search.Property;
     using Newtonsoft.Json;
     using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
-    using ThirdParty.Search.Support;
-    using ThirdParty.Results;
-    using iVector.Search.Property;
+    using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using Intuitive.Helpers.Extensions;
-    using Intuitive.Helpers.Security;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Support;
 
-    public class HotelBedsV2Search : IThirdPartySearch
+    public class HotelBedsV2Search : IThirdPartySearch, ISingleSource
     {
         #region Properties
 
@@ -36,10 +34,7 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
-        {
-            return false;
-        }
+        public bool SearchRestrictions(SearchDetails searchDetails, string source) => false;
 
         #endregion
 
@@ -436,6 +431,3 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
         public List<string> PropertyIDs { get; } = new List<string>();
     }
 }
-
-#pragma warning restore CA1305 // Specify IFormatProvider
-#pragma warning restore CA1062 // Validate arguments of public methods

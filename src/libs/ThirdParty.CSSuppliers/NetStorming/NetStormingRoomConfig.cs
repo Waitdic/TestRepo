@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.NetStorming
+﻿namespace ThirdParty.CSSuppliers.Netstorming
 {
     using System.Collections;
 
-    public class NetStormingRoomConfig
+    public class NetstormingRoomConfig
     {
         public ArrayList Config = new();
         public int Adults;
@@ -13,7 +13,7 @@
         public int ConfigNumber;
 
         // for a new config store the number of each type of passenger and create a list of config codes that can be associated with it 
-        public NetStormingRoomConfig(int adults, int children, int infants, int childAge, int quantity, int roomNumber)
+        public NetstormingRoomConfig(int adults, int children, int infants, int childAge, int quantity, int roomNumber)
         {
             Adults = adults;
             Children = children;

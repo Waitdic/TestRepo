@@ -81,7 +81,7 @@
 
                     if (thirdParty != null)
                     {
-                        var supplierReference = thirdParty.Book(propertyDetails);
+                        var supplierReference = await thirdParty.BookAsync(propertyDetails);
                         propertyDetails.SupplierSourceReference = supplierReference;
                         success = supplierReference.ToLower() != "failed";
                     }
@@ -103,7 +103,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                this.logRepository.LogBook(bookRequest, response!, user, exceptionString);
+                await this.logRepository.LogBookAsync(bookRequest, response!, user, exceptionString);
             }
 
             return response!;

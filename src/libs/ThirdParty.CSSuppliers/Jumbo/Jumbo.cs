@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -11,10 +12,11 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class Jumbo : IThirdParty
+    public class Jumbo : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -47,16 +49,16 @@
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.get_AllowCancellations(searchDetails);
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.get_OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info) => false;
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 
         #region Prebook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             var webRequest = new Request();
             bool success = false;
@@ -73,7 +75,7 @@
                 webRequest.LogFileName = "PreBook";
                 webRequest.CreateLog = true;
                 webRequest.SetRequest(request);
-                webRequest.Send(_httpClient, _logger);
+                await webRequest.Send(_httpClient, _logger);
 
                 var response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 
@@ -84,11 +86,11 @@
 
                 // store the Errata if we have any
                 var errata = response.SelectNodes("Envelope/Body/valuateExtendsV13Response/result/remarks[type = 'ERRATA']");
-                foreach (XmlNode Erratum in errata)
+                foreach (XmlNode erratum in errata)
                 {
                     propertyDetails.Errata.AddNew(
                         "Important Information",
-                        Erratum.SelectSingleNode("text").InnerText);
+                        erratum.SelectSingleNode("text").InnerText);
                 }
 
                 // get the costs from the response and match up with the room bookings
@@ -118,7 +120,6 @@
             }
             finally
             {
-
                 if (!string.IsNullOrEmpty(webRequest.RequestLog))
                 {
                     propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Prebook Request", webRequest.RequestLog);
@@ -137,12 +138,12 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             var webRequest = new Request();
             string reference = "";
 
-            if (CheckAvailability(propertyDetails))
+            if (await CheckAvailabilityAsync(propertyDetails))
             {
                 try
                 {
@@ -155,7 +156,7 @@
                     webRequest.LogFileName = "Book";
                     webRequest.CreateLog = true;
                     webRequest.SetRequest(sRequest);
-                    webRequest.Send(_httpClient, _logger);
+                    await webRequest.Send(_httpClient, _logger);
 
                     var response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 
@@ -202,7 +203,7 @@
             return reference;
         }
 
-        public bool CheckAvailability(PropertyDetails propertyDetails)
+        public async Task<bool> CheckAvailabilityAsync(PropertyDetails propertyDetails)
         {
             var webRequest = new Request();
             bool available = false;
@@ -219,7 +220,7 @@
                 webRequest.LogFileName = "BookAvailability";
                 webRequest.CreateLog = true;
                 webRequest.SetRequest(request);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 var response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 
@@ -266,7 +267,7 @@
 
         #region Cancellations
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var requestXml = new XmlDocument();
             var responseXml = new XmlDocument();
@@ -309,7 +310,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(sbCancellationRequest.ToString());
-                webRequest.Send(_httpClient, _logger);
+                await webRequest.Send(_httpClient, _logger);
 
                 // send the request
                 responseXml = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
@@ -346,9 +347,9 @@
             return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails PropertyDetails)
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails PropertyDetails)
         {
-            return new ThirdPartyCancellationFeeResult();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion
@@ -453,7 +454,6 @@
             }
 
             propertyDetails.Cancellations = cancellations;
-
         }
 
         #endregion

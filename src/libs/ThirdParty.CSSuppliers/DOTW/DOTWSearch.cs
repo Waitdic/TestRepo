@@ -5,18 +5,18 @@
     using System.Text;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Lookups;
     using ThirdParty.Results;
     using ThirdParty.CSSuppliers.DOTW.Models;
-    using Intuitive.Helpers.Serialization;
 
-    public class DOTWSearch : IThirdPartySearch
+    public class DOTWSearch : IThirdPartySearch, ISingleSource
     {
         #region Constructor
 
@@ -48,10 +48,7 @@
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
-        {
-            return false;
-        }
+        public bool SearchRestrictions(SearchDetails searchDetails, string source) => false;
 
         #endregion
 

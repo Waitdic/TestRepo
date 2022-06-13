@@ -110,10 +110,12 @@
                             SupplierReference1 = roomResult.RoomData.TPReference,
                             SupplierReference2 = roomResult.RoomData.RoomTypeCode,
                             Name = roomResult.RoomData.RoomType,
+                            Code = roomResult.RoomData.RoomTypeCode,
                             CurrencyCode = await this.currencyRepository.GetCurrencyCodeFromISOCurrencyIDAsync(roomResult.RoomData.Source, roomResult.PriceData.CurrencyID),
                             TotalCost = Math.Round(roomResult.PriceData.TotalCost + 0.00M, 2),
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
-                            CancellationTerms = GetCancellationTerms(roomResult.Cancellations)
+                            CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
+                            Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2)
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

@@ -79,7 +79,7 @@
 
                     if (thirdParty != null)
                     {
-                        success = thirdParty.PreBook(propertyDetails);
+                        success = await thirdParty.PreBookAsync(propertyDetails);
                     }
 
                     if (success)
@@ -99,7 +99,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                this.logRepository.LogPrebook(prebookRequest, response!, user, exceptionString);
+                await this.logRepository.LogPrebookAsync(prebookRequest, response!, user, exceptionString);
             }
 
             return response;

@@ -5,21 +5,23 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.AceRooms.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.AceRooms.Models;
 
-    public class Acerooms : IThirdParty
+    public class Acerooms : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IAceroomsSettings _settings;
         private readonly ITPSupport _support;
@@ -33,12 +35,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
@@ -54,7 +56,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public Acerooms(IAceroomsSettings settings, ITPSupport support, HttpClient httpClient, ILogger<Acerooms> logger)
         {
@@ -66,9 +68,9 @@
 
         #endregion
 
-        #region "Prebook"
+        #region Prebook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool prebookSuccess = true;
             var request = new Request();
@@ -79,7 +81,7 @@
                 string requestString = JsonConvert.SerializeObject(aceroomsPrebookRequest);
 
                 request = CreateWebRequest(ref propertyDetails, "PreBookRoom", "Prebook", eRequestMethod.POST, requestString);
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 string responseString = request.ResponseString;
                 AceroomsPrebookResponse response = responseString is not null and not ""
@@ -116,22 +118,22 @@
 
         #endregion
 
-        #region "Book"
+        #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "";
             var webRequest = new Request();
 
             try
             {
-                AceroomsBookRequest aceroomsBookRequest = CreateBookRequest(propertyDetails);
+                var aceroomsBookRequest = CreateBookRequest(propertyDetails);
                 string requestString = JsonConvert.SerializeObject(aceroomsBookRequest);
 
                 webRequest = CreateWebRequest(ref propertyDetails, "ConfirmRoom", "Book", eRequestMethod.POST, requestString);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
-                AceroomsBookResponse response = JsonConvert.DeserializeObject<AceroomsBookResponse>(webRequest.ResponseString);
+                var response = JsonConvert.DeserializeObject<AceroomsBookResponse>(webRequest.ResponseString);
 
                 reference = (response.Booking.Rooms != null &&
                              string.IsNullOrEmpty(response.ErrorInfo) &&
@@ -161,7 +163,7 @@
 
         #endregion
 
-        #region "Booking Search"
+        #region Booking Search
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
@@ -170,7 +172,7 @@
 
         #endregion
 
-        #region "Booking Status Update"
+        #region Booking Status Update
 
         public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails)
         {
@@ -179,25 +181,25 @@
 
         #endregion
 
-        #region "Cancel Booking"
+        #region Cancel Booking
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            List<string> roomBookingIDs = propertyDetails.SourceReference.Split(',').ToList(); // Create a list of all room bookings to be cancelled
-            ThirdPartyCancellationResponse cancellationResponse = new ThirdPartyCancellationResponse
+            var roomBookingIDs = propertyDetails.SourceReference.Split(',').ToList(); // Create a list of all room bookings to be cancelled
+            var cancellationResponse = new ThirdPartyCancellationResponse
             {
                 Success = true
             };
 
             try
             {
-                List<string> cancelReferences = new List<string>();
+                var cancelReferences = new List<string>();
 
                 // sent a cancel request for each room
                 foreach (var roomBookingID in roomBookingIDs)
                 {
                     var webRequest = CreateWebRequest(ref propertyDetails, "CancelRoom/", "Cancel", eRequestMethod.GET);
-                    var responseSucess = CancelRoomBooking(roomBookingID, ref cancellationResponse, webRequest, ref cancelReferences, ref propertyDetails);
+                    var responseSucess = await CancelRoomBookingAsync(roomBookingID, cancellationResponse, webRequest, cancelReferences, propertyDetails);
 
                     if (!responseSucess)
                     {
@@ -212,7 +214,6 @@
                     cancellationResponse.TPCancellationReference = string.Join("|", cancelReferences);
                     cancellationResponse.CostRecievedFromThirdParty = cancellationResponse.Amount > 0;
                 }
-
             }
             catch (Exception exception)
             {
@@ -228,15 +229,16 @@
 
         #endregion
 
-        #region "Get cancellation cost"
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        #region Get cancellation cost
+
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         #endregion
 
-        #region "Helper Classes"
+        #region Helper Classes
 
         /// <summary>
         /// Creates and returns a AceroomPrebookRequest object
@@ -393,12 +395,15 @@
         /// <param name="cancelReferences">List of cancellation identifiers</param>
         /// <param name="propertyDetails">The propererty details</param>
         /// <returns>A tuple with a bool indicating sucess of cancellation and cancellation references</returns>
-        private bool CancelRoomBooking(string roomBookingID, ref ThirdPartyCancellationResponse cancellationResponse,
-                                                        Request webRequest, ref List<string> cancelReferences,
-                                                        ref PropertyDetails propertyDetails)
+        private async Task<bool> CancelRoomBookingAsync(
+            string roomBookingID,
+            ThirdPartyCancellationResponse cancellationResponse,
+            Request webRequest,
+            List<string> cancelReferences,
+            PropertyDetails propertyDetails)
         {
             webRequest.EndPoint += roomBookingID;
-            webRequest.Send(_httpClient, _logger).RunSynchronously();
+            await webRequest.Send(_httpClient, _logger);
 
             if (webRequest.ResponseString != "")
             {
@@ -472,7 +477,7 @@
 
         #endregion
 
-        #region "End Session"
+        #region End Session
 
         public void EndSession(PropertyDetails propertyDetails)
         {
@@ -482,4 +487,3 @@
         #endregion
     }
 }
-

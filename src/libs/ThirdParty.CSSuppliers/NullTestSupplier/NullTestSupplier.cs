@@ -5,11 +5,12 @@
     using Intuitive.Net.WebRequests;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class NullTestSupplier : IThirdPartySearch
+    public class NullTestSupplier : IThirdPartySearch, ISingleSource
     {
         private readonly INullTestSupplierSettings _settings;
 
@@ -83,7 +84,7 @@
             return transformedResults;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

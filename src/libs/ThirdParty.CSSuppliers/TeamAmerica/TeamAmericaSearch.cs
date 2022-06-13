@@ -40,45 +40,46 @@
 
         #endregion
 
-        #region "SearchFunctions"
+        #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSerchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails serchDetails, List<ResortSplit> resortSplits)
         {
-            var oRequests = oResortSplits.Select(oResortSplit =>
+            var requests = resortSplits.Select(resortSplit =>
             {
-                var oRequestXML = BuildRequestXml(oSerchDetails, oResortSplit);
+                var requestXml = BuildRequestXml(serchDetails, resortSplit);
 
                 //'set a unique code. if the is one request we only need the source name
-                string sUniqueCode = (oResortSplits.Count() > 1)
-                                    ? $"{Source}_{oResortSplit.ResortCode}"
+                string uniqueCode = (resortSplits.Count() > 1)
+                                    ? $"{Source}_{resortSplit.ResortCode}"
                                     : Source;
 
-                var oRequest = new Request
+                var request = new Request
                 {
-                    EndPoint = _settings.URL(oSerchDetails),
-                    SoapAction = $"{_settings.URL(oSerchDetails)}/{Constant.SoapActionPreBook}",
+                    EndPoint = _settings.URL(serchDetails),
+                    SoapAction = $"{_settings.URL(serchDetails)}/{Constant.SoapActionPreBook}",
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                    ExtraInfo = new SearchExtraHelper(oSerchDetails, sUniqueCode),
+                    ExtraInfo = new SearchExtraHelper(serchDetails, uniqueCode),
                 };
-                oRequest.SetRequest(oRequestXML);
+                request.SetRequest(requestXml);
 
-                return oRequest;
+                return request;
             }).ToList();
-            return oRequests;
+
+            return requests;
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oResponses = requests.SelectMany(oRequest => Envelope<PriceSearchResponse>
+            var responses = requests.SelectMany(oRequest => Envelope<PriceSearchResponse>
                                         .DeSerialize(oRequest.ResponseXML, _serializer).HotelSearchResponse.Offers).ToList();
 
-            var aRooms = searchDetails.RoomDetails.ToArray().Select((oRoomDetail, iRoomIndex) => new
+            var rooms = searchDetails.RoomDetails.ToArray().Select(roomDetail => new
             {
-                PRBID = iRoomIndex + 1,
-                Adults = oRoomDetail.Adults,
-                Children = oRoomDetail.Children + oRoomDetail.Infants,
-                ChildAges = oRoomDetail.ChildAndInfantAges()
+                PRBID = roomDetail.PropertyRoomBookingID,
+                Adults = roomDetail.Adults,
+                Children = roomDetail.Children + roomDetail.Infants,
+                ChildAges = roomDetail.ChildAndInfantAges()
             });
 
             var occupancyDict = new Dictionary<int, string>
@@ -89,49 +90,51 @@
                 { 4, "Quad"},
             };
 
-            var aTransformedResults = oResponses.Where(oHotelOffer => TeamAmerica.IsEveryNightAvailable(oHotelOffer)
-                                                                   && !string.IsNullOrEmpty(oHotelOffer.RoomType))
-            .SelectMany(oHotelOffer =>
-            {
-                return aRooms.Where(oRoom => oRoom.Adults + oRoom.Children <= oHotelOffer.MaxOccupancy)
-                .Select(oRoom =>
-                {
-                    int paxCount = string.Equals(oHotelOffer.FamilyPlan, Constant.TokenYes)
-                    ? oRoom.Adults + oRoom.ChildAges.Where(age => age > oHotelOffer.ChildAge).Count()
-                    : oRoom.Adults + oRoom.Children;
-
-                    occupancyDict.TryGetValue(paxCount, out string occupancy);
-
-                    decimal amount = oHotelOffer.NightlyInfos.Select(info => SafeTypeExtensions.ToSafeDecimal(
-                        info.Prices.First(price => string.Equals(price.Occupancy, occupancy)).AdultPrice))
-                        .Sum();
-
-                    return new TransformedResult
+            var results = responses
+                .Where(hotelOffer => TeamAmerica.IsEveryNightAvailable(hotelOffer) && 
+                    !string.IsNullOrEmpty(hotelOffer.RoomType))
+                .SelectMany(oHotelOffer =>
                     {
-                        MasterID = SafeTypeExtensions.ToSafeInt(oHotelOffer.TeamVendorID),
-                        TPKey = oHotelOffer.TeamVendorID,
-                        CurrencyCode = "USD",
-                        PropertyRoomBookingID = oRoom.PRBID,
-                        RoomType = oHotelOffer.RoomType,
-                        MealBasisCode = oHotelOffer.MealPlan,
-                        Amount = amount,
-                        TPReference = $"{oHotelOffer.ProductCode}|{oHotelOffer.FamilyPlan}|{oHotelOffer.ChildAge}",
-                        NonRefundableRates = Equals(oHotelOffer.NonRefundable.Trim(), "1")
-                    };
-                });
-            }).ToList();
+                        return rooms.Where(oRoom => oRoom.Adults + oRoom.Children <= oHotelOffer.MaxOccupancy)
+                        .Select(oRoom =>
+                        {
+                            int paxCount = string.Equals(oHotelOffer.FamilyPlan, Constant.TokenYes)
+                            ? oRoom.Adults + oRoom.ChildAges.Where(age => age > oHotelOffer.ChildAge).Count()
+                            : oRoom.Adults + oRoom.Children;
+
+                            occupancyDict.TryGetValue(paxCount, out string occupancy);
+
+                            decimal amount = oHotelOffer.NightlyInfos.Select(info => SafeTypeExtensions.ToSafeDecimal(
+                                info.Prices.First(price => string.Equals(price.Occupancy, occupancy)).AdultPrice))
+                                .Sum();
+
+                            return new TransformedResult
+                            {
+                                MasterID = SafeTypeExtensions.ToSafeInt(oHotelOffer.TeamVendorID),
+                                TPKey = oHotelOffer.TeamVendorID,
+                                CurrencyCode = "USD",
+                                PropertyRoomBookingID = oRoom.PRBID,
+                                RoomType = oHotelOffer.RoomType,
+                                MealBasisCode = oHotelOffer.MealPlan,
+                                Amount = amount,
+                                TPReference = $"{oHotelOffer.ProductCode}|{oHotelOffer.FamilyPlan}|{oHotelOffer.ChildAge}",
+                                NonRefundableRates = Equals(oHotelOffer.NonRefundable.Trim(), "1")
+                            };
+                        });
+                    })
+                .ToList();
 
             var transformedResults = new TransformedResultCollection();
-            transformedResults.TransformedResults.AddRange(aTransformedResults);
+            transformedResults.TransformedResults.AddRange(results);
 
             return transformedResults;
         }
 
         #endregion
 
-        #region "SearchRestrictions"
+        #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             //'Must be between 1 to 21 nights
             bool moreThan21nights = searchDetails.Duration > 21;
@@ -145,24 +148,24 @@
 
         #endregion
 
-        #region "Helpers"
+        #region Helpers
 
-        public string BuildRequestXml(SearchDetails oSerchDetails, ResortSplit oResortSplit)
+        public string BuildRequestXml(SearchDetails serchDetails, ResortSplit resortSplit)
         {
             var request = new PriceSearch
             {
-                UserName = _settings.Username(oSerchDetails),
-                Password = _settings.Password(oSerchDetails),
-                CityCode = oResortSplit.ResortCode,
+                UserName = _settings.Username(serchDetails),
+                Password = _settings.Password(serchDetails),
+                CityCode = resortSplit.ResortCode,
                 ProductCode = "",
                 RequestType = Constant.SearchTypeHotel,
                 Occupancy = "",
-                ArrivalDate = oSerchDetails.PropertyArrivalDate.ToString(Constant.DateTimeFormat),
-                NumberOfNights = oSerchDetails.PropertyDuration,
-                NumberOfRooms = oSerchDetails.Rooms,
+                ArrivalDate = serchDetails.PropertyArrivalDate.ToString(Constant.DateTimeFormat),
+                NumberOfNights = serchDetails.PropertyDuration,
+                NumberOfRooms = serchDetails.Rooms,
                 DisplayClosedOut = Constant.TokenNo,
                 DisplayOnRequest = Constant.TokenNo,
-                VendorIds = oResortSplit.Hotels.Select(oHotel => oHotel.TPKey).ToList()
+                VendorIds = resortSplit.Hotels.Select(oHotel => oHotel.TPKey).ToList()
             };
 
             var xmlDoc = Envelope<PriceSearch>.Serialize(request, _serializer);

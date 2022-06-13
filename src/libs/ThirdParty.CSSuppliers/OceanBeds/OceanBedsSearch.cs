@@ -4,19 +4,18 @@
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive;
-    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.CSSuppliers.OceanBeds.Models;
     using static OceanBedsHelper;
 
-    public class OceanBedsSearch : IThirdPartySearch
+    public class OceanBedsSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IOceanBedsSettings _settings;
         private readonly ISerializer _serializer;
@@ -55,7 +54,7 @@
             return transformedResult;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return searchDetails.Duration < 7;
         }

@@ -18,7 +18,7 @@
     using ThirdParty.Search.Support;
 
     /// <summary>
-    /// Third Party Property Search Base
+    /// Third Party Property Search Runner
     /// </summary>
     public class ThirdPartyPropertySearchRunner : IThirdPartyPropertySearchRunner
     {
@@ -44,47 +44,47 @@
 
         public async Task SearchAsync(
             SearchDetails searchDetails,
-            List<ResortSplit> resortSplits,
+            SupplierResortSplit supplierResortSplit,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {
             try
             {
-                // todo - email logs to
                 // todo - request tracker, use mini profiler?
                 StartTime = DateTime.Now; // needed for timeouts
                 var taskList = new List<Task>();
+                string source = supplierResortSplit.Supplier;
+                var resortSplits = supplierResortSplit.ResortSplits;
 
                 var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits);
 
                 foreach (var request in requests)
                 {
-                    request.Source = thirdPartySearch.Source;
+                    request.Source = source;
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
-                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails);
-                    request.UseGZip = UseGZip(searchDetails, thirdPartySearch.Source);
+                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source);
+                    request.UseGZip = UseGZip(searchDetails, source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
                 }
 
                 await Task.WhenAll(taskList);
 
-                if (!string.IsNullOrWhiteSpace(searchDetails.EmailLogsToAddress))
+                if (requests.Any())
                 {
-                    foreach (var request in requests)
+                    if (!string.IsNullOrWhiteSpace(searchDetails.EmailLogsToAddress))
                     {
-                        EmailSearchLogs(searchDetails.EmailLogsToAddress, thirdPartySearch.Source, request);
+                        foreach (var request in requests)
+                        {
+                            EmailSearchLogs(searchDetails.EmailLogsToAddress, source, request);
+                        }
                     }
+
+                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
+
+                    await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails, resortSplits);
                 }
-
-                var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
-
-                await _searchResultsProcessor.ProcessTPResultsAsync(
-                    transformedResponses,
-                    thirdPartySearch.Source,
-                    searchDetails,
-                    resortSplits);
             }
             catch (Exception ex)
             {
@@ -157,12 +157,13 @@
 
         /// <summary>Requests the time out seconds.</summary>
         /// <param name="searchDetails">The search details.</param>
+        /// <param name="source">The source.</param>
         /// <returns>
         ///   The time out in seconds as an integer
         /// </returns>
-        public int RequestTimeOutSeconds(SearchDetails searchDetails)
+        public int RequestTimeOutSeconds(SearchDetails searchDetails, string source)
         {
-            int timeOutSeconds = this.TimeoutSeconds(searchDetails) - this.CurrentTimeTakenInSeconds - 2;
+            int timeOutSeconds = this.TimeoutSeconds(searchDetails, source) - this.CurrentTimeTakenInSeconds - 2;
             if (timeOutSeconds <= 0)
             {
                 timeOutSeconds = 1;
@@ -173,12 +174,17 @@
 
         /// <summary>Timeouts the seconds.</summary>
         /// <param name="searchDetails">The search details.</param>
+        /// <param name="source">The source.</param>
         /// <returns>
         ///   The seconds as an integer
         /// </returns>
-        public int TimeoutSeconds(SearchDetails searchDetails)
+        public int TimeoutSeconds(SearchDetails searchDetails, string source)
         {
-            return searchDetails.Settings.SearchTimeoutSeconds;
+            var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == source);
+             
+            return configuration.Configurations.ContainsKey("SearchTimeout") ? 
+                configuration.Configurations["SearchTimeout"].ToSafeInt() :
+                searchDetails.Settings.SearchTimeoutSeconds;
         }
 
         /// <summary>A boolean to decide if we want to compress the request</summary>

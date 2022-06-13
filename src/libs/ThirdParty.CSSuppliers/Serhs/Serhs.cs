@@ -14,8 +14,10 @@
     using Models.Common;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Interfaces;
+    using System.Threading.Tasks;
 
-    public class Serhs : IThirdParty
+    public class Serhs : IThirdParty, ISingleSource
     {
         private readonly ISerhsSettings _settings;
         private readonly ISerializer _serializer;
@@ -41,17 +43,14 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool preBookSuccess = true;
             var request = new Request();
@@ -134,7 +133,7 @@
                 request.LogFileName = "PreBook";
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.SetRequest(xmlRequest);
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 //SERHS response returns error codes
                 if (string.IsNullOrEmpty(request.ResponseXML.InnerText) || request.ResponseXML.InnerText.Substring(0, 3) == "000")
@@ -230,7 +229,6 @@
                 {
                     //don't record cancellation charges if something goes wrong but carry on with booking
                 }
-
             }
             catch (Exception exception)
             {
@@ -255,13 +253,15 @@
 
         public DateTime ConvertSerhsDate(string date)
         {
-            return new DateTime(SafeTypeExtensions.ToSafeInt(date.Substring(0, 4)),
-                SafeTypeExtensions.ToSafeInt(date.Substring(4, 2)), SafeTypeExtensions.ToSafeInt(date.Substring(6, 2)));
+            return new DateTime(
+                date.Substring(0, 4).ToSafeInt(),
+                date.Substring(4, 2).ToSafeInt(),
+                date.Substring(6, 2).ToSafeInt());
         }
 
         public decimal ConvertSerhsPrice(string price)
         {
-            return SafeTypeExtensions.ToSafeDecimal(price.Replace(".", "").Replace(",", "."));
+            return price.Replace(".", "").Replace(",", ".").ToSafeDecimal();
         }
 
         private class TpReference
@@ -271,7 +271,6 @@
             public readonly string ConceptCode;
             public readonly string OfferCode;
             public readonly string Ticket = string.Empty;
-            //public string CancelPolicyId = string.Empty;
 
             public TpReference(string tpReference)
             {
@@ -284,12 +283,11 @@
                 if (aParts.Length > 4)
                 {
                     Ticket = aParts[4];
-                    //cancelPolicyId = aParts[5];
                 }
             }
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
             var request = new Request();
@@ -354,7 +352,7 @@
                 request.ContentType = ContentTypes.Text_xml;
 
                 request.SetRequest(xmlRequest);
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = _serializer.DeSerialize<SerhsBookResponse>(request.ResponseXML);
                 var booking = response.Bookings.FirstOrDefault();
@@ -385,10 +383,11 @@
                     propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS Book Response", request.ResponseString);
                 }
             }
+
             return reference;
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
             var cancellationResponse = new ThirdPartyCancellationResponse();
@@ -402,8 +401,7 @@
                 request.LogFileName = "Cancel";
                 request.CreateLog = propertyDetails.CreateLogs;
 
-                var cancellationRequest =
-                    BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "1");
+                var cancellationRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "1");
 
                 var xmlRequest = _serializer.Serialize(cancellationRequest);
                 var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
@@ -411,7 +409,7 @@
 
                 request.SetRequest(xmlRequest);
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = _serializer.DeSerialize<SerhsCancellationResponse>(request.ResponseXML);
 
@@ -442,7 +440,7 @@
             return cancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var request = new Request();
             var cancellationCostResponse = new ThirdPartyCancellationFeeResult();
@@ -456,8 +454,7 @@
                 request.LogFileName = "Cancellation Costs";
                 request.CreateLog = propertyDetails.CreateLogs;
 
-                var getCancellationCostRequest =
-                    BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "0");
+                var getCancellationCostRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "0");
 
                 var xmlRequest = _serializer.Serialize(getCancellationCostRequest);
                 var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
@@ -465,7 +462,7 @@
 
                 request.SetRequest(xmlRequest);
 
-                request.Send(_httpClient, _logger).RunSynchronously();
+                await request.Send(_httpClient, _logger);
 
                 var response = _serializer.DeSerialize<SerhsCancellationResponse>(request.ResponseXML);
 

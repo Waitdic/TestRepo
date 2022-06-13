@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using System.Xml.Linq;
     using Intuitive;
@@ -10,13 +11,13 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public class Stuba : IThirdParty
+    public class Stuba : IThirdParty, ISingleSource
     {
-
         private readonly IStubaSettings _settings;
 
         private readonly ITPSupport _support;
@@ -35,201 +36,193 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        public bool PreBook(PropertyDetails oPropertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            bool bReturn;
+            bool result;
 
             try
             {
-                var oXML = SendRequest("Pre-Book", BookReservationRequest(oPropertyDetails, false), oPropertyDetails);
-                ExtractErrata(oXML, oPropertyDetails);
-                bReturn = CostsAndCancellation(oPropertyDetails, oXML);
+                var xml = await SendRequestAsync("Pre-Book", BookReservationRequest(propertyDetails, false), propertyDetails);
+                ExtractErrata(xml, propertyDetails);
+                result = CostsAndCancellation(propertyDetails, xml);
             }
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("PreBookException", ex.ToString());
-                bReturn = false;
+                propertyDetails.Warnings.AddNew("PreBookException", ex.ToString());
+                result = false;
             }
-            return bReturn;
+            return result;
         }
 
-        public string Book(PropertyDetails oPropertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            string sReference = "";
+            string reference = "";
 
             try
             {
-                var oXML = SendRequest("Book", BookReservationRequest(oPropertyDetails, true), oPropertyDetails);
+                var xml = await SendRequestAsync("Book", BookReservationRequest(propertyDetails, true), propertyDetails);
 
-                if (oXML.SelectSingleNode("BookingCreateResult/Booking/HotelBooking/Status").InnerText.ToLower() == "confirmed")
+                if (xml.SelectSingleNode("BookingCreateResult/Booking/HotelBooking/Status").InnerText.ToLower() == "confirmed")
                 {
-                    sReference = oXML.SelectSingleNode("BookingCreateResult/Booking/Id").InnerText;
+                    reference = xml.SelectSingleNode("BookingCreateResult/Booking/Id").InnerText;
                 }
             }
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("BookException", ex.ToString());
-                sReference = "Failed";
+                propertyDetails.Warnings.AddNew("BookException", ex.ToString());
+                reference = "Failed";
             }
-            return sReference;
+            return reference;
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails oPropertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            var oThirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
 
             try
             {
-                var oXML = SendRequest("Cancel", CancelRequest(oPropertyDetails, true), oPropertyDetails);
+                var xml = await SendRequestAsync("Cancel", CancelRequest(propertyDetails, true), propertyDetails);
 
-                if (oXML.SelectSingleNode("BookingCancelResult/Booking/HotelBooking/Status").InnerText.ToLower() == "cancelled")
+                if (xml.SelectSingleNode("BookingCancelResult/Booking/HotelBooking/Status").InnerText.ToLower() == "cancelled")
                 {
-                    oThirdPartyCancellationResponse.TPCancellationReference = oXML.SelectSingleNode("BookingCancelResult/Booking/HotelBooking/Id").InnerText;
-                    oThirdPartyCancellationResponse.Success = true;
+                    thirdPartyCancellationResponse.TPCancellationReference = xml.SelectSingleNode("BookingCancelResult/Booking/HotelBooking/Id").InnerText;
+                    thirdPartyCancellationResponse.Success = true;
                 }
             }
 
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("CancelException", ex.ToString());
-                oThirdPartyCancellationResponse.TPCancellationReference = "Failed";
+                propertyDetails.Warnings.AddNew("CancelException", ex.ToString());
+                thirdPartyCancellationResponse.TPCancellationReference = "Failed";
             }
-            return oThirdPartyCancellationResponse;
+            return thirdPartyCancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails oPropertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            var oThirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
+            var thirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
 
             try
             {
-                var oXML = SendRequest("Cancellation Charge", CancelRequest(oPropertyDetails, false), oPropertyDetails);
-                decimal nTotalCancellationFee = 0m;
+                var xml = await SendRequestAsync("Cancellation Charge", CancelRequest(propertyDetails, false), propertyDetails);
+                decimal totalCancellationFee = 0m;
 
-                foreach (RoomDetails oRoom in oPropertyDetails.Rooms)
+                foreach (var room in propertyDetails.Rooms)
                 {
-                    var dLastDate = new DateTime(1900, 1, 1);
-                    decimal nRoomAmount = 0m;
-                    var oRoomNode = oXML.SelectSingleNode(string.Format("BookingCancelResult/Booking/HotelBooking/Room[RoomType/@code = '{0}']", oRoom.RoomTypeCode));
+                    var lastDate = new DateTime(1900, 1, 1);
+                    decimal roomAmount = 0m;
+                    var roomNode = xml.SelectSingleNode(string.Format("BookingCancelResult/Booking/HotelBooking/Room[RoomType/@code = '{0}']", room.RoomTypeCode));
 
-                    foreach (XmlNode oCXL in oRoomNode.SelectNodes("CanxFees/Fee"))
+                    foreach (XmlNode cancelNode in roomNode.SelectNodes("CanxFees/Fee"))
                     {
-                        var dStartDate = oCXL.SelectSingleNode("@from").InnerText.ToSafeDate();
-                        if (dStartDate < DateTime.Now && dStartDate > dLastDate)
+                        var dStartDate = cancelNode.SelectSingleNode("@from").InnerText.ToSafeDate();
+                        if (dStartDate < DateTime.Now && dStartDate > lastDate)
                         {
-                            nRoomAmount = oCXL.SelectSingleNode("Amount/@amt").InnerText.ToSafeDecimal();
+                            roomAmount = cancelNode.SelectSingleNode("Amount/@amt").InnerText.ToSafeDecimal();
                         }
                     }
-                    nTotalCancellationFee += nRoomAmount;
+                    totalCancellationFee += roomAmount;
                 }
 
-                oThirdPartyCancellationFeeResult.Amount = nTotalCancellationFee;
-                oThirdPartyCancellationFeeResult.CurrencyCode = oPropertyDetails.CurrencyCode;
+                thirdPartyCancellationFeeResult.Amount = totalCancellationFee;
+                thirdPartyCancellationFeeResult.CurrencyCode = propertyDetails.CurrencyCode;
             }
-
             catch (Exception ex)
             {
-                oPropertyDetails.Warnings.AddNew("CancellationChargeException", ex.ToString());
+                propertyDetails.Warnings.AddNew("CancellationChargeException", ex.ToString());
             }
 
-            return oThirdPartyCancellationFeeResult;
+            return thirdPartyCancellationFeeResult;
         }
 
-        private XmlDocument SendRequest(string RequestType, string XML, PropertyDetails PropertyDetails)
+        private async Task<XmlDocument> SendRequestAsync(string requestType, string xml, PropertyDetails propertyDetails)
         {
-
-            var oRequest = new Request();
-            oRequest.EndPoint = _settings.get_URL(PropertyDetails);
-            oRequest.SetRequest(XML);
-            oRequest.Method = eRequestMethod.POST;
-            oRequest.Source = ThirdParties.STUBA;
-            oRequest.LogFileName = RequestType;
-            oRequest.CreateLog = true;
-            oRequest.UseGZip = true;
-            oRequest.Send(_httpClient, _logger);
-
-            if (!string.IsNullOrEmpty(oRequest.RequestLog))
+            var request = new Request
             {
-                PropertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + RequestType + " Request", oRequest.RequestLog);
+                EndPoint = _settings.get_URL(propertyDetails),
+                Method = eRequestMethod.POST,
+                Source = ThirdParties.STUBA,
+                LogFileName = requestType,
+                CreateLog = true,
+                UseGZip = true
+            };
+            request.SetRequest(xml);
+            await request.Send(_httpClient, _logger);
+
+            if (!string.IsNullOrEmpty(request.RequestLog))
+            {
+                propertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + requestType + " Request", request.RequestLog);
             }
 
-            if (!string.IsNullOrEmpty(oRequest.ResponseLog))
+            if (!string.IsNullOrEmpty(request.ResponseLog))
             {
-                PropertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + RequestType + " Response", oRequest.ResponseLog);
+                propertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + requestType + " Response", request.ResponseLog);
             }
 
-            return oRequest.ResponseXML;
+            return request.ResponseXML;
         }
 
-        private string BookReservationRequest(PropertyDetails oPropertyDetails, bool Confirm)
+        private string BookReservationRequest(PropertyDetails propertyDetails, bool confirm)
         {
+            string org = _settings.get_Organisation(propertyDetails);
+            string user = _settings.get_Username(propertyDetails);
+            string password = _settings.get_Password(propertyDetails);
+            string version = _settings.get_Version(propertyDetails);
+            string currencyCode = _settings.get_Currency(propertyDetails);
 
-            string sOrg = _settings.get_Organisation(oPropertyDetails);
-            string sUser = _settings.get_Username(oPropertyDetails);
-            string sPassword = _settings.get_Password(oPropertyDetails);
-            string sVersion = _settings.get_Version(oPropertyDetails);
-            string sCurrencyCode = _settings.get_Currency(oPropertyDetails);
-
-            EnsurePassengerNamesNotNull(oPropertyDetails);
-            var oRequest = new XElement("BookingCreate",
+            EnsurePassengerNamesNotNull(propertyDetails);
+            var request = new XElement("BookingCreate",
                             new XElement("Authority",
-                                new XElement("Org", sOrg),
-                                new XElement("User", sUser),
-                                new XElement("Password", sPassword),
-                                new XElement("Currency", sCurrencyCode),
-                                new XElement("Version", sVersion)
+                                new XElement("Org", org),
+                                new XElement("User", user),
+                                new XElement("Password", password),
+                                new XElement("Currency", currencyCode),
+                                new XElement("Version", version)
                             ),
                             new XElement("HotelBooking",
-                            new XElement("QuoteId", oPropertyDetails.Rooms.FirstOrDefault().ThirdPartyReference.Split('|')[1].ToSafeString()),
+                            new XElement("QuoteId", propertyDetails.Rooms.FirstOrDefault().ThirdPartyReference.Split('|')[1].ToSafeString()),
                             new XElement("HotelStayDetails",
-                            new XElement("Nationality", GetNationality(oPropertyDetails)), from oRoom in oPropertyDetails.Rooms
+                            new XElement("Nationality", GetNationality(propertyDetails)), from oRoom in propertyDetails.Rooms
                                 select new XElement("Room",
                                     new XElement("Guests", from oGuest in oRoom.Passengers.Where(p => p.PassengerType == PassengerType.Adult)
                                         select new XElement("Adult", new XAttribute("title", oGuest.Title), new XAttribute("first", oGuest.FirstName), new XAttribute("last", oGuest.LastName)), from oGuest in oRoom.Passengers.Where(p => p.PassengerType != PassengerType.Adult)
                                         select new XElement("Child", new XAttribute("title", oGuest.Title), new XAttribute("first", oGuest.FirstName), new XAttribute("last", oGuest.LastName), new XAttribute("age", oGuest.Age)))))),
-                            new XElement("CommitLevel", Confirm ? "confirm" : "prepare")
+                            new XElement("CommitLevel", confirm ? "confirm" : "prepare")
                             );
-            return oRequest.ToString();
+            return request.ToString();
         }
 
-        private string CancelRequest(PropertyDetails oPropertyDetails, bool bConfirm)
+        private string CancelRequest(PropertyDetails propertyDetails, bool confirm)
         {
-            string sOrg = _settings.get_Organisation(oPropertyDetails);
-            string sUser = _settings.get_Username(oPropertyDetails);
-            string sPassword = _settings.get_Password(oPropertyDetails);
-            string sVersion = _settings.get_Version(oPropertyDetails);
-            string sCurrencyCode = _settings.get_Currency(oPropertyDetails);
+            string org = _settings.get_Organisation(propertyDetails);
+            string user = _settings.get_Username(propertyDetails);
+            string password = _settings.get_Password(propertyDetails);
+            string version = _settings.get_Version(propertyDetails);
+            string currencyCode = _settings.get_Currency(propertyDetails);
 
-            var oRequest = new XElement("BookingCancel",
-    new XElement("Authority",
-    new XElement("Org", sOrg),
-    new XElement("User", sUser),
-    new XElement("Password", sPassword),
-    new XElement("Currency", sCurrencyCode),
-    new XElement("Version", sVersion)
-    ),
-    new XElement("BookingId", oPropertyDetails.SourceReference),
-    new XElement("CommitLevel", bConfirm ? "confirm" : "prepare")
-    );
+            var request = new XElement("BookingCancel",
+                            new XElement("Authority",
+                            new XElement("Org", org),
+                            new XElement("User", user),
+                            new XElement("Password", password),
+                            new XElement("Currency", currencyCode),
+                            new XElement("Version", version)),
+                                new XElement("BookingId", propertyDetails.SourceReference),
+                                new XElement("CommitLevel", confirm ? "confirm" : "prepare")
+                            );
 
-            return oRequest.ToString();
+            return request.ToString();
         }
 
         private void EnsurePassengerNamesNotNull(PropertyDetails propertyDetails)
         {
             var rand = new Random();
             int charAsInt = char.ConvertToUtf32("A", 0);
-            foreach (Passenger guest in propertyDetails.Rooms.SelectMany(room => room.Passengers))
+            foreach (var guest in propertyDetails.Rooms.SelectMany(room => room.Passengers))
             {
                 if (string.IsNullOrEmpty(guest.Title))
                 {
-                    /* TODO ERROR: Skipped WarningDirectiveTrivia
-                    #Disable Warning SCS0005 ' Weak random generator
-                    */
                     guest.Title = rand.Next(2) == 0 ? "Ms" : "Mr";
-                    /* TODO ERROR: Skipped WarningDirectiveTrivia
-                    #Enable Warning SCS0005 ' Weak random generator
-                    */
                 }
                 if (string.IsNullOrEmpty(guest.FirstName))
                 {
@@ -257,98 +250,81 @@
             return sNationality;
         }
 
-        private bool CostsAndCancellation(PropertyDetails oPropertyDetails, XmlDocument oXML)
+        private bool CostsAndCancellation(PropertyDetails propertyDetails, XmlDocument xml)
         {
-            bool bAvailable = false;
+            bool available = false;
 
-            foreach (RoomDetails oRoom in oPropertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
-
                 // Check costs
-                var oRoomNode = oXML.SelectSingleNode(string.Format("BookingCreateResult/Booking/HotelBooking/Room[RoomType/@code = '{0}']", oRoom.RoomTypeCode));
-                oRoom.LocalCost = oRoomNode.SelectSingleNode("TotalSellingPrice/@amt").InnerText.ToSafeDecimal();
-                oRoom.GrossCost = oRoomNode.SelectSingleNode("TotalSellingPrice/@amt").InnerText.ToSafeDecimal();
+                var roomNode = xml.SelectSingleNode(string.Format("BookingCreateResult/Booking/HotelBooking/Room[RoomType/@code = '{0}']", room.RoomTypeCode));
+                room.LocalCost = roomNode.SelectSingleNode("TotalSellingPrice/@amt").InnerText.ToSafeDecimal();
+                room.GrossCost = roomNode.SelectSingleNode("TotalSellingPrice/@amt").InnerText.ToSafeDecimal();
 
                 // Cancellation charges
-                foreach (XmlNode oCXL in oRoomNode.SelectNodes("CanxFees/Fee"))
+                foreach (XmlNode cancelNode in roomNode.SelectNodes("CanxFees/Fee"))
                 {
-                    DateTime dStartDate;
+                    DateTime startDate;
 
-                    if (oCXL.SelectSingleNode("@from") is null)
+                    if (cancelNode.SelectSingleNode("@from") is null)
                     {
-                        dStartDate = DateTime.Now.Date;
+                        startDate = DateTime.Now.Date;
                     }
                     else
                     {
-                        dStartDate = oCXL.SelectSingleNode("@from").InnerText.ToSafeDate();
+                        startDate = cancelNode.SelectSingleNode("@from").InnerText.ToSafeDate();
                     }
 
-                    var dEndDate = new DateTime(2099, 12, 25);
+                    var endDate = new DateTime(2099, 12, 25);
 
-                    var oNextStartDate = oCXL.NextSibling;
-                    if (oNextStartDate is not null)
+                    var nextStartDate = cancelNode.NextSibling;
+                    if (nextStartDate is not null)
                     {
-                        dEndDate = oNextStartDate.SelectSingleNode("@from").InnerText.ToSafeDate().AddDays(-1);
+                        endDate = nextStartDate.SelectSingleNode("@from").InnerText.ToSafeDate().AddDays(-1);
                     }
 
-                    decimal nAmount = oCXL.SelectSingleNode("Amount/@amt").InnerText.ToSafeDecimal();
-                    oPropertyDetails.Cancellations.AddNew(dStartDate, dEndDate, nAmount);
+                    decimal amount = cancelNode.SelectSingleNode("Amount/@amt").InnerText.ToSafeDecimal();
+                    propertyDetails.Cancellations.AddNew(startDate, endDate, amount);
                 }
-
             }
 
-            oPropertyDetails.LocalCost = oPropertyDetails.Rooms.Sum(r => r.LocalCost);
+            propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
 
-            oPropertyDetails.Cancellations.Solidify(SolidifyType.Sum);
-            bAvailable = oXML.SelectNodes("BookingCreateResult/Booking/HotelBooking/Room").Count == oPropertyDetails.Rooms.Count;
+            propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
+            available = xml.SelectNodes("BookingCreateResult/Booking/HotelBooking/Room").Count == propertyDetails.Rooms.Count;
 
-            return bAvailable;
+            return available;
         }
 
-        private void ExtractErrata(XmlDocument oResponse, PropertyDetails oPropertyDetails)
+        private void ExtractErrata(XmlDocument response, PropertyDetails propertyDetails)
         {
-            var oErrataNodes = oResponse.SelectNodes("BookingCreateResult/Booking/HotelBooking/Room/Messages/Message[Type = 'Supplier Notes']/Text");
+            var oErrataNodes = response.SelectNodes("BookingCreateResult/Booking/HotelBooking/Room/Messages/Message[Type = 'Supplier Notes']/Text");
             if (0 is var arg2 && (oErrataNodes?.Count) is { } arg1 && arg1 > arg2)
             {
                 foreach (XmlNode oErratum in oErrataNodes)
-                    oPropertyDetails.Errata.AddNew("Important Informations", oErratum.InnerText);
+                {
+                    propertyDetails.Errata.AddNew("Important Informations", oErratum.InnerText);
+                }
             }
         }
 
-        private bool IThirdParty_SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_AllowCancellations(searchDetails);
         }
 
-        bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => IThirdParty_SupportsLiveCancellation(searchDetails, source);
-
         #region Stuff
 
-        public bool SupportsRemarks
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsRemarks => false;
 
-        public bool SupportsBookingSearch
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool SupportsBookingSearch => false;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.get_OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails oBookingSearchDetails)
         {

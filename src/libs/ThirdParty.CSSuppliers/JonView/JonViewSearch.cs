@@ -1,141 +1,128 @@
 ﻿namespace ThirdParty.CSSuppliers.JonView
 {
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Xml.Serialization;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class JonViewSearch : IThirdPartySearch
+    public class JonViewSearch : IThirdPartySearch, ISingleSource
     {
-
         #region Properties
 
         private readonly IJonViewSettings _settings;
+        private readonly ISerializer _serializer;
 
         public string Source => ThirdParties.JONVIEW;
 
-        public JonViewSearch(IJonViewSettings settings)
+        public JonViewSearch(IJonViewSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
-
-        public bool SupportsNonRefundableTagging { get; } = false;
 
         #endregion
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
+            bool restrictions = false;
 
-            bool bRestrictions = false;
-
-            if (oSearchDetails.RoomDetails.Count > 1)
+            if (searchDetails.RoomDetails.Count > 1)
             {
+                int adults = searchDetails.RoomDetails[0].Adults;
+                int children = searchDetails.RoomDetails[0].Children;
+                int infants = searchDetails.RoomDetails[0].Infants;
+                string childAgesCsv = searchDetails.RoomDetails[0].ChildAgeCSV;
 
-                int iAdults = oSearchDetails.RoomDetails[0].Adults;
-                int iChildren = oSearchDetails.RoomDetails[0].Children;
-                int iInfants = oSearchDetails.RoomDetails[0].Infants;
-                string sChildAgesCSV = oSearchDetails.RoomDetails[0].ChildAgeCSV;
-
-                foreach (RoomDetail oRoomDetails in oSearchDetails.RoomDetails)
+                foreach (var roomDetails in searchDetails.RoomDetails)
                 {
-                    if (!(oRoomDetails.Adults == iAdults && oRoomDetails.Children == iChildren && oRoomDetails.Infants == iInfants && (oRoomDetails.ChildAgeCSV ?? "") == (sChildAgesCSV ?? "")))
+                    if (!(roomDetails.Adults == adults &&
+                        roomDetails.Children == children &&
+                        roomDetails.Infants == infants &&
+                        (roomDetails.ChildAgeCSV ?? "") == (childAgesCsv ?? "")))
                     {
-                        bRestrictions = true;
+                        restrictions = true;
                     }
                 }
-
-
             }
 
-            return bRestrictions;
-
+            return restrictions;
         }
 
         #endregion
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oRequests = new List<Request>();
+            var requests = new List<Request>();
 
             // build request xml for each resort
-            foreach (ResortSplit oResort in oResortSplits)
+            foreach (var resort in resortSplits)
             {
-
-                string sCityCode = oResort.ResortCode;
+                string cityCode = resort.ResortCode;
 
                 // Build request url
-                string url = BuildSearchURL(oSearchDetails, sCityCode);
+                string url = BuildSearchURL(searchDetails, cityCode);
 
-                var oRequest = new Request
+                var request = new Request
                 {
-                    EndPoint = _settings.get_URL(oSearchDetails) + url,
+                    EndPoint = _settings.get_URL(searchDetails) + url,
                     Method = eRequestMethod.POST,
                     Source = Source,
-                    ExtraInfo = oSearchDetails,
+                    ExtraInfo = searchDetails,
                     UseGZip = true
                 };
 
-                oRequests.Add(oRequest);
-
+                requests.Add(request);
             }
 
-            return oRequests;
-
+            return requests;
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-
             var transformedResults = new TransformedResultCollection();
             var jonviewSearchResponses = new List<JonViewSearchResponse>();
-            var serializer = new XmlSerializer(typeof(JonViewSearchResponse));
-
-            foreach (Request request in oRequests)
+            
+            foreach (var request in requests)
             {
-
                 var searchResponse = new JonViewSearchResponse();
                 bool success = request.Success;
 
                 if (success)
                 {
-                    using (TextReader reader = new StringReader(request.ResponseString))
-                    {
-                        searchResponse = (JonViewSearchResponse)serializer.Deserialize(reader);
-                    }
+                    searchResponse = _serializer.DeSerialize<JonViewSearchResponse>(request.ResponseString);
+
                     if (searchResponse.Response is not null)
                     {
                         jonviewSearchResponses.Add(searchResponse);
                     }
                 }
-
             }
 
-            transformedResults.TransformedResults.AddRange(jonviewSearchResponses.Where(r => r.Response.Rooms.Count > 0).SelectMany(x => GetResultFromResponse(x)));
+            transformedResults.TransformedResults
+                .AddRange(jonviewSearchResponses
+                    .Where(r => r.Response.Rooms.Count > 0)
+                    .SelectMany(x => GetResultFromResponse(x)));
 
             return transformedResults;
-
         }
 
         #endregion
 
         #region ResponseHasExceptions
 
-        public bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
@@ -146,66 +133,70 @@
 
         private string BuildSearchURL(SearchDetails searchDetails, string cityCode)
         {
+            var sb = new StringBuilder();
 
-            var url = new StringBuilder();
+            sb.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.get_ClientLoc(searchDetails), _settings.get_UserID(searchDetails), _settings.get_Password(searchDetails));
 
-            url.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.get_ClientLoc(searchDetails), _settings.get_UserID(searchDetails), _settings.get_Password(searchDetails));
-
-            url.AppendFormat("<message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode>" + "<searchtype>CITY</searchtype>");
-            url.AppendFormat("<citycode>{0}</citycode>", cityCode);
-            url.AppendFormat("<startdate>{0}</startdate>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
-            url.AppendFormat("<duration>{0}</duration>", searchDetails.PropertyDuration);
-            url.AppendFormat("<status>AVAILABLE</status>");
-            url.AppendFormat("<displayname>Y</displayname>");
-            url.AppendFormat("<displaynamedetails>Y</displaynamedetails>");
-            url.AppendFormat("<displayroomconf>Y</displayroomconf>");
-            url.AppendFormat("<displayprice>Y</displayprice>");
-            url.AppendFormat("<displaysuppliercd>Y</displaysuppliercd>");
-            url.AppendFormat("<displayavail>Y</displayavail>");
-            url.AppendFormat("<displaypolicy>Y</displaypolicy>");
-            url.AppendFormat("<displayrestriction>Y</displayrestriction>");
-            url.AppendFormat("<displaydynamicrates>Y</displaydynamicrates>");
+            sb.AppendFormat("<message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode>" + "<searchtype>CITY</searchtype>");
+            sb.AppendFormat("<citycode>{0}</citycode>", cityCode);
+            sb.AppendFormat("<startdate>{0}</startdate>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
+            sb.AppendFormat("<duration>{0}</duration>", searchDetails.PropertyDuration);
+            sb.AppendFormat("<status>AVAILABLE</status>");
+            sb.AppendFormat("<displayname>Y</displayname>");
+            sb.AppendFormat("<displaynamedetails>Y</displaynamedetails>");
+            sb.AppendFormat("<displayroomconf>Y</displayroomconf>");
+            sb.AppendFormat("<displayprice>Y</displayprice>");
+            sb.AppendFormat("<displaysuppliercd>Y</displaysuppliercd>");
+            sb.AppendFormat("<displayavail>Y</displayavail>");
+            sb.AppendFormat("<displaypolicy>Y</displaypolicy>");
+            sb.AppendFormat("<displayrestriction>Y</displayrestriction>");
+            sb.AppendFormat("<displaydynamicrates>Y</displaydynamicrates>");
 
             var room = searchDetails.RoomDetails[0];
-            var childAges = new StringBuilder();
-            childAges.Append(room.ChildAgeCSV.Replace(",", "/"));
-            for (int i = 1, loopTo = room.Infants; i <= loopTo; i++)
-                childAges.Append("/1");
-            string sChildAges = childAges.ToString();
-            if (!string.IsNullOrEmpty(sChildAges) && sChildAges.Substring(0, 1) == "/")
+            var sbChildAges = new StringBuilder();
+            sbChildAges.Append(room.ChildAgeCSV.Replace(",", "/"));
+
+            for (int i = 1; i <= room.Infants; i++)
             {
-                sChildAges = sChildAges.Substring(1, sChildAges.Length - 1);
+                sbChildAges.Append("/1");
             }
 
-            url.AppendFormat("<adults>{0}</adults>", room.Adults);
-            url.AppendFormat("<children>{0}</children>", room.Children + room.Infants);
-            url.AppendFormat("<childrenage>{0}</childrenage>", childAges);
-            url.AppendFormat("<displaypolicy>Y</displaypolicy>");
-            url.AppendFormat("</searchseg>");
-            url.AppendFormat("</message>");
+            string childAges = sbChildAges.ToString();
+            if (!string.IsNullOrEmpty(childAges) && childAges.Substring(0, 1) == "/")
+            {
+                childAges = childAges.Substring(1, childAges.Length - 1);
+            }
+
+            sb.AppendFormat("<adults>{0}</adults>", room.Adults);
+            sb.AppendFormat("<children>{0}</children>", room.Children + room.Infants);
+            sb.AppendFormat("<childrenage>{0}</childrenage>", childAges);
+            sb.AppendFormat("<displaypolicy>Y</displaypolicy>");
+            sb.AppendFormat("</searchseg>");
+            sb.AppendFormat("</message>");
 
             // Add the request body
 
-            return url.ToSafeString();
-
+            return sb.ToSafeString();
         }
 
         private List<TransformedResult> GetResultFromResponse(JonViewSearchResponse response)
         {
             var transformedResults = new List<TransformedResult>();
 
-            foreach (JonViewSearchResponse.Room room in response.Response.Rooms)
+            foreach (var room in response.Response.Rooms)
             {
-                var transformedResult = new TransformedResult();
-                transformedResult.TPKey = room.suppliercode;
-                transformedResult.CurrencyCode = room.currencycode;
-                transformedResult.RoomTypeCode = GetRoomType(room.productname);
-                transformedResult.MealBasisCode = "RO";
-                transformedResult.Amount = GetPrice(room.dayprice);
-                transformedResult.PropertyRoomBookingID = 1;
-                transformedResult.TPReference = room.prodcode + "_" + room.dayprice;
-                transformedResult.NonRefundableRates = room.cancellationPolicy.item.fromdays.Equals("999");
-                transformedResult.RoomType = room.roomDetails.roomtype;
+                var transformedResult = new TransformedResult
+                {
+                    TPKey = room.suppliercode,
+                    CurrencyCode = room.currencycode,
+                    RoomTypeCode = GetRoomType(room.productname),
+                    MealBasisCode = "RO",
+                    Amount = GetPrice(room.dayprice),
+                    PropertyRoomBookingID = 1,
+                    TPReference = room.prodcode + "_" + room.dayprice,
+                    NonRefundableRates = room.cancellationPolicy.item.fromdays.Equals("999"),
+                    RoomType = room.roomDetails.roomtype
+                };
 
                 transformedResults.Add(transformedResult);
             }
@@ -228,13 +219,14 @@
         private decimal GetPrice(string dayPrice)
         {
             decimal price = 0m;
-            foreach (string sPrice in dayPrice.Split('/'))
-                price += sPrice.ToSafeDecimal();
+            foreach (string priceString in dayPrice.Split('/'))
+            {
+                price += priceString.ToSafeDecimal();
+            }
 
             return price;
         }
 
         #endregion
-
     }
 }

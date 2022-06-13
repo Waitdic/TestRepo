@@ -21,7 +21,7 @@
             _provider,
             new List<SearchDetails>() { _searchDetails },
             _settings,
-            new YouTravelSearch(_settings, new Mock<ITPSupport>().Object, new Serializer()))
+            new YouTravelSearch(_settings, new Serializer()))
         {
         }
 

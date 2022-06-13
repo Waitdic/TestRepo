@@ -30,7 +30,7 @@
         public IEnumerable<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            int hotelSearchLimit = _settings.HotelSearchLimit(searchDetails);
+            int hotelSearchLimit = _settings.HotelSearchLimit(searchDetails, _source);
 
             var hotelKeys = resortSplits
                 .SelectMany(rs => rs.Hotels)
@@ -62,12 +62,12 @@
 
                     var request = new Request
                     {
-                        EndPoint = _settings.SearchURL(searchDetails),
+                        EndPoint = _settings.SearchURL(searchDetails, _source),
                         Method = eRequestMethod.POST,
                         Source = _source,
                         ContentType = ContentTypes.Application_json,
                         Accept = "application/json",
-                        UseGZip = _settings.UseGZip(searchDetails),
+                        UseGZip = _settings.UseGZip(searchDetails, _source),
                         ExtraInfo = searchHelper,
                         TimeoutInSeconds = 100,
                     };
@@ -75,7 +75,7 @@
                     string availabilityRequestString = JsonConvert.SerializeObject(availabilityRequest, DerbySoftSupport.GetJsonSerializerSettings());
                     request.SetRequest(availabilityRequestString);
 
-                    request.Headers.AddNew("Authorization", "Bearer " + _settings.Password(searchDetails));
+                    request.Headers.AddNew("Authorization", "Bearer " + _settings.Password(searchDetails, _source));
                     requests.Add(request);
 
                     propertyRoomBookingID++;
@@ -92,8 +92,8 @@
         {
             var header = new Header
             {
-                SupplierId = _settings.SupplierID(searchDetails),
-                DistributorId = _settings.User(searchDetails),
+                SupplierId = _settings.SupplierID(searchDetails, _source),
+                DistributorId = _settings.User(searchDetails, _source),
                 Token = _guid.ToSafeString(),
                 Version = "v4"
             };

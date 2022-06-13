@@ -50,6 +50,15 @@
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the code.
+        /// </summary>
+        /// <value>
+        /// The code.
+        /// </value>
+        [JsonPropertyName("RoomTypeCode")]
+        public string Code { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the type of the supplier room.
         /// </summary>
         /// <value>
@@ -80,6 +89,14 @@
         /// The total cost.
         /// </value>
         public decimal TotalCost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the discount.
+        /// </summary>
+        /// <value>
+        /// The discount.
+        /// </value>
+        public decimal Discount { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether [non refundable].

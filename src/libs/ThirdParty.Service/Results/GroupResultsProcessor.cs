@@ -83,7 +83,8 @@
                     {
                         TotalCost = searchResult.Amount.ToSafeDecimal(),
                         Total = searchResult.Amount.ToSafeDecimal(),
-                        NonRefundableRates = searchResult.NonRefundableRates
+                        NonRefundableRates = searchResult.NonRefundableRates,
+                        Discount = searchResult.Discount
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
