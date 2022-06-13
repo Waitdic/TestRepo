@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Web;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -20,7 +21,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class ExpediaRapidSearch : IThirdPartySearch, ISingleSource
     {
@@ -36,38 +36,48 @@
 
         public string Source => ThirdParties.EXPEDIARAPID;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
             var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
 
-            return MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize).Select(tpKeys => BuildSearchRequest(tpKeys, searchDetails)).ToList();
+            return (await Task.WhenAll(MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize)
+                    .Select(async tpKeys => await BuildSearchRequestAsync(tpKeys, searchDetails))))
+                .ToList();
         }
 
-        private Request BuildSearchRequest(IEnumerable<string> tpKeys, SearchDetails searchDetails)
+        private async Task<Request> BuildSearchRequestAsync(IEnumerable<string> tpKeys, SearchDetails searchDetails)
         {
-            string searchURL = BuildSearchURL(tpKeys, searchDetails);
+            string searchURL = await BuildSearchURLAsync(tpKeys, searchDetails);
             bool useGzip = _settings.get_UseGZIP(searchDetails);
             string apiKey = _settings.get_ApiKey(searchDetails);
             string secret = _settings.get_Secret(searchDetails);
             string userAgent = _settings.get_UserAgent(searchDetails);
 
             string tpSessionID = Guid.NewGuid().ToString();
-            var headers = new RequestHeaders() { new RequestHeader(SearchHeaderKeys.CustomerSessionID, tpSessionID), CreateAuthorizationHeader(apiKey, secret) };
+            var headers = new RequestHeaders()
+            {
+                new RequestHeader(SearchHeaderKeys.CustomerSessionID, tpSessionID),
+                CreateAuthorizationHeader(apiKey, secret)
+            };
 
-            var request = BuildDefaultRequest(searchURL, eRequestMethod.GET, headers, useGzip, userAgent);
-
-            request.ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails };
+            var request = BuildDefaultRequest(
+                searchURL,
+                eRequestMethod.GET,
+                headers,
+                useGzip,
+                userAgent,
+                extraInfo: await _support.TPMealBasesAsync(Source));
 
             return request;
         }
 
-        private string BuildSearchURL(IEnumerable<string> tpKeys, SearchDetails searchDetails)
+        private async Task<string> BuildSearchURLAsync(IEnumerable<string> tpKeys, SearchDetails searchDetails)
         {
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
-            string currencyCode = _support.TPCurrencyLookup(Source, searchDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyLookupAsync(Source, searchDetails.CurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
@@ -96,7 +106,8 @@
             RequestHeaders headers,
             bool useGzip,
             string userAgent,
-            string requestBody = null)
+            string requestBody = null,
+            object extraInfo = null)
         {
             var request = new Request()
             {
@@ -108,7 +119,8 @@
                 Headers = headers,
                 UserAgent = userAgent,
                 EndPoint = url,
-                SuppressExpectHeaders = true
+                SuppressExpectHeaders = true,
+                ExtraInfo = extraInfo,
             };
 
             if (!string.IsNullOrWhiteSpace(requestBody))
@@ -128,7 +140,7 @@
                 nvc.Add(SearchQueryKeys.PlatformName, settings.get_PlatformName(tpAttributeSearch));
             }
 
-            foreach (ExpediaRapidOccupancy occupancy in occupancies)
+            foreach (var occupancy in occupancies)
             {
                 nvc.Add(SearchQueryKeys.Occupancy, occupancy.GetExpediaRapidOccupancy());
             }
@@ -145,6 +157,7 @@
 
         private static string AddQueryParams(NameValueCollection @params)
         {
+            // todo - move to utilities as a query string builder / serializer
             var queryString = from key in @params.AllKeys
                               from value in @params.GetValues(key)
                               select string.Format("{0}={1}", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
@@ -156,6 +169,7 @@
         {
             var transformedResults = new TransformedResultCollection();
             var allAvailabilities = new List<PropertyAvailablility>();
+            var mealbases = (Dictionary<string, int>)requests.First().ExtraInfo;
 
             string tpSessionID = requests.First().ResponseHeaders["Transaction-Id"];
 
@@ -166,12 +180,16 @@
                 allAvailabilities.AddRange(response);
             }
 
-            transformedResults.TransformedResults.AddRange(allAvailabilities.SelectMany(pa => GetResultFromPropertyAvailability(searchDetails, pa, tpSessionID)));
+            transformedResults.TransformedResults.AddRange(allAvailabilities.SelectMany(pa => GetResultFromPropertyAvailability(searchDetails, pa, tpSessionID, mealbases)));
 
             return transformedResults;
         }
 
-        private IEnumerable<TransformedResult> GetResultFromPropertyAvailability(SearchDetails searchDetails, PropertyAvailablility propertyAvailability, string tpSessionID)
+        private IEnumerable<TransformedResult> GetResultFromPropertyAvailability(
+            SearchDetails searchDetails,
+            PropertyAvailablility propertyAvailability,
+            string tpSessionID,
+            Dictionary<string, int> mealBases)
         {
             if (searchDetails.Rooms > 1)
             {
@@ -180,7 +198,7 @@
                 propertyAvailability.Rooms.RemoveAll(r => (r.RoomID ?? "") != (cheapestRoom.RoomID ?? ""));
             }
 
-            return propertyAvailability.Rooms.SelectMany(room => BuildResultFromRoom(searchDetails, propertyAvailability.PropertyID, room, tpSessionID));
+            return propertyAvailability.Rooms.SelectMany(room => BuildResultFromRoom(searchDetails, propertyAvailability.PropertyID, room, tpSessionID, mealBases));
         }
 
         private decimal GetTotalInclusiveRate(Dictionary<string, OccupancyRoomRate> occupancyRoomRates)
@@ -188,7 +206,12 @@
             return occupancyRoomRates.Sum(orr => orr.Value.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount);
         }
 
-        private IEnumerable<TransformedResult> BuildResultFromRoom(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, string tpSessionID)
+        private IEnumerable<TransformedResult> BuildResultFromRoom(
+            SearchDetails searchDetails,
+            string tpKey,
+            SearchResponseRoom room,
+            string tpSessionID,
+            Dictionary<string, int> mealBases)
         {
             if (searchDetails.Rooms > 1)
             {
@@ -197,22 +220,43 @@
                 room.Rates.RemoveAll(r => (r.RateID ?? "") != (cheapestRate.RateID ?? ""));
             }
 
-            return room.Rates.SelectMany(rate => BuildResultFromRoomRates(searchDetails, tpKey, room, rate, tpSessionID));
+            return room.Rates.SelectMany(rate => BuildResultFromRoomRates(searchDetails, tpKey, room, rate, tpSessionID, mealBases));
         }
 
-        private IEnumerable<TransformedResult> BuildResultFromRoomRates(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, string tpSessionID)
+        private IEnumerable<TransformedResult> BuildResultFromRoomRates(
+            SearchDetails searchDetails,
+            string tpKey,
+            SearchResponseRoom room,
+            RoomRate rate,
+            string tpSessionID,
+            Dictionary<string, int> mealBases)
         {
-            return rate.BedGroupAvailabilities.Values.SelectMany(bedGroup => BuildResultFromBedGroups(searchDetails, tpKey, room, rate, bedGroup, tpSessionID));
+            return rate.BedGroupAvailabilities.Values.SelectMany(bedGroup => BuildResultFromBedGroups(searchDetails, tpKey, room, rate, bedGroup, tpSessionID, mealBases));
         }
 
-        private IEnumerable<TransformedResult> BuildResultFromBedGroups(SearchDetails searchDetails, string tpKey, SearchResponseRoom room, RoomRate rate, BedGroupAvailability bedGroup, string tpSessionID)
+        private IEnumerable<TransformedResult> BuildResultFromBedGroups(
+            SearchDetails searchDetails,
+            string tpKey,
+            SearchResponseRoom room,
+            RoomRate rate,
+            BedGroupAvailability bedGroup,
+            string tpSessionID,
+            Dictionary<string, int> mealBases)
         {
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return occupancies.Select((occupancy, i) => BuildResultFromOccupancy(tpKey, room, rate, bedGroup, occupancy, i + 1, tpSessionID));
+            return occupancies.Select((occupancy, i) => BuildResultFromOccupancy(tpKey, room, rate, bedGroup, occupancy, i + 1, tpSessionID, mealBases));
         }
 
-        private TransformedResult BuildResultFromOccupancy(string tpKey, SearchResponseRoom room, RoomRate rate, BedGroupAvailability bedGroup, ExpediaRapidOccupancy occupancy, int propertyRoomBookingID, string tpSessionID)
+        private TransformedResult BuildResultFromOccupancy(
+            string tpKey,
+            SearchResponseRoom room,
+            RoomRate rate,
+            BedGroupAvailability bedGroup,
+            ExpediaRapidOccupancy occupancy,
+            int propertyRoomBookingID,
+            string tpSessionID,
+            Dictionary<string, int> mealBases)
         {
             var occupancyRoomRate = rate.OccupancyRoomRates[occupancy.GetExpediaRapidOccupancy()];
 
@@ -226,7 +270,7 @@
 
             decimal totalTax = taxes.Sum(t => t.TaxAmount);
 
-            var lookupMealBasisCodes = Enumerable.ToHashSet(_support.TPMealBases(Source).Keys);
+            var lookupMealBasisCodes = Enumerable.ToHashSet(mealBases.Keys);
 
             string mealBasisCode = GetMealBasisCode(rate.Amenities.Keys, lookupMealBasisCodes);
 

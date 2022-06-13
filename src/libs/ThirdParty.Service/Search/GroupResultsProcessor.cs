@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Results
+﻿namespace ThirdParty.Search
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,12 +6,13 @@
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using ThirdParty.Repositories;
+    using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
     /// <summary>
     /// Groups third Party results by property into our own format
     /// </summary>
-    public class GroupResultsProcessor : ThirdParty.Results.IGroupResultsProcessor
+    public class GroupResultsProcessor : IGroupResultsProcessor
     {
         /// <summary>The filter</summary>
         private readonly IFilter _filter;

@@ -799,12 +799,12 @@
         public bool StoreSearchLogging { get; set; } = false;
 
         /// <summary>
-        /// Get or sets the unique nationality identifier 
+        /// Get or sets the unique nationality code 
         /// </summary>
         /// <value>
-        ///  The nationality identifier
+        ///  The nationality code
         /// </value>
-        public string NationalityID { get; set; } = string.Empty;
+        public string NationalityCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Get or sets the currency code

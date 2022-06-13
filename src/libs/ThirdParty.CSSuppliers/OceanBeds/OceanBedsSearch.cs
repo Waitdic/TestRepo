@@ -14,6 +14,7 @@
     using ThirdParty.Search.Models;
     using ThirdParty.CSSuppliers.OceanBeds.Models;
     using static OceanBedsHelper;
+    using System.Threading.Tasks;
 
     public class OceanBedsSearch : IThirdPartySearch, ISingleSource
     {
@@ -28,7 +29,7 @@
 
         public string Source => ThirdParties.OCEANBEDS;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = from resort in resortSplits
                            select new OceanBedsPropertyDetails(searchDetails, resort.ResortCode)
@@ -37,7 +38,7 @@
                 into request
                            select BuildSearchRequest(searchDetails, request);
 
-            return requests.ToList();
+            return Task.FromResult(requests.ToList());
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

@@ -34,7 +34,6 @@
     using ThirdParty.Lookups;
     using ThirdParty.Factories;
     using ThirdParty.Repositories;
-    using ThirdParty.Results;
     using ThirdParty.Models.Tokens;
     using ThirdParty.Search.Models;
     using ThirdParty.Services;
@@ -46,6 +45,7 @@
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using ThirdParty.Search;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {

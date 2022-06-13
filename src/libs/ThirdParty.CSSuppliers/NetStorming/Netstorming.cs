@@ -93,7 +93,7 @@
 
                 string hotelCode = firstRoomDetailsSplit[4];
                 string cityCode = firstRoomDetailsSplit[6];
-                string nationality = _support.TPNationalityLookup(propertyDetails.Source, propertyDetails.NationalityID);
+                string nationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.NationalityCode);
 
                 // build and log the request
                 xmlRequest = BuildSearchRequest(
@@ -371,7 +371,7 @@
             {
                 string bookingRef = GenerateBookingReference(propertyDetails.BookingReference);
                 string[] ref2Split = propertyDetails.TPRef2.Split('_');
-                string nationality = _support.TPNationalityLookup(propertyDetails.Source, propertyDetails.NationalityID);
+                string nationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.NationalityCode);
                 xmlRequest = BuildBookRequest(
                     propertyDetails,
                     _settings.Actor(propertyDetails, propertyDetails.Source),

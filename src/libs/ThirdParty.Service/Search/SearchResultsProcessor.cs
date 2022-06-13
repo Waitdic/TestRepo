@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Results
+﻿namespace ThirdParty.Search
 {
     using System;
     using System.Collections.Generic;
@@ -6,13 +6,14 @@
     using System.Threading.Tasks;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
     /// <summary>
     /// Processes search results
     /// </summary>
-    /// <seealso cref="ThirdParty.ISearchResultsProcessor" />
-    public class SearchResultsProcessor : ThirdParty.ISearchResultsProcessor
+    /// <seealso cref="Search.ISearchResultsProcessor" />
+    public class SearchResultsProcessor : ISearchResultsProcessor
     {
         /// <summary>The de-duplicator</summary>
         private readonly IResultDeduper _deduper;

@@ -32,11 +32,11 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPNationalityLookup(It.IsAny<string>(), It.IsAny<int>())).Returns("ES");
+            mockSupport.Setup(x => x.TPNationalityLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("ES"));
             return mockSupport;
         }
 
-        public new bool ValidBuildSearchRequest(string requestLog)
+        public new async Task<bool> ValidBuildSearchRequestAsync(string requestLog)
         {
             // Arrange 
             var mockRequests = GetRequests(requestLog);
@@ -48,7 +48,7 @@
             // Act
             foreach (var searchDetails in SearchDetailsList)
             {
-                var request = SearchClass.BuildSearchRequests(searchDetails, ResortSplits)[0];
+                var request = (await SearchClass.BuildSearchRequestsAsync(searchDetails, ResortSplits))[0];
                 string requestString = Regex.Replace(request.RequestString, pattern, replacement); // remove timestamp
                 request.SetRequest(requestString); 
                 builtRequests.Add(request);
@@ -59,11 +59,11 @@
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(ValidBuildSearchRequest(NetstormingRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(NetstormingRes.RequestLog));
+            Assert.True(await ValidBuildSearchRequestAsync(NetstormingRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(NetstormingRes.RequestLog));
         }
 
         [Fact]

@@ -691,7 +691,7 @@
                 // Load the return class
                 var cancellationFeeResult = new ThirdPartyCancellationFeeResult
                     {
-                        Amount = finalCancellationPolicy.Amount, CurrencyCode = _support.TPCurrencyLookup(propertyDetails.Source, propertyDetails.CurrencyCode),
+                        Amount = finalCancellationPolicy.Amount, CurrencyCode = await _support.TPCurrencyLookupAsync(propertyDetails.Source, propertyDetails.CurrencyCode),
                         Success = true
                     };
 

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -12,7 +13,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class YouTravelSearch : IThirdPartySearch, ISingleSource
     {
@@ -55,7 +55,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -104,14 +104,15 @@
                 if (room.Children + room.Infants > 0)
                 {
                     sb.AppendFormat("&CHILD_{0}={1}", roomIndex, room.Children + room.Infants);
-                    int iChildCount = 1;
-                    foreach (int iChildAge in room.ChildAndInfantAges(1))
+                    int childCount = 1;
+                    foreach (int childAge in room.ChildAndInfantAges(1))
                     {
-                        sb.AppendFormat("&ChildAgeR{0}C{1}={2}", roomIndex, iChildCount, iChildAge);
-                        iChildCount += 1;
+                        sb.AppendFormat("&ChildAgeR{0}C{1}={2}", roomIndex, childCount, childAge);
+                        childCount += 1;
                     }
                 }
             }
+
             sb.Append("&CanxPol=1");
 
             foreach (var url in urls)
@@ -127,13 +128,12 @@
                 {
                     EndPoint = url.URL + sb.ToString(),
                     Method = eRequestMethod.GET,
-                    ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode)
                 };
 
                 requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

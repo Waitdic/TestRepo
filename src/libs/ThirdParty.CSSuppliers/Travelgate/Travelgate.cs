@@ -96,7 +96,7 @@
             try
             {
                 // Send request
-                string request = GenericRequest(BuildPrebookRequest(propertyDetails), propertyDetails);
+                string request = GenericRequest(await BuildPrebookRequestAsync(propertyDetails), propertyDetails);
                 requestXml.LoadXml(request);
                 responseXml = await SendRequestAsync(request, "Prebook", propertyDetails);
 
@@ -230,7 +230,7 @@
             try
             {
                 // Send request
-                string request = GenericRequest(BuildBookRequest(propertyDetails), propertyDetails);
+                string request = GenericRequest(await BuildBookRequestAsync(propertyDetails), propertyDetails);
                 requestXml.LoadXml(request);
                 responseXml = await SendRequestAsync(request, "Book", propertyDetails);
 
@@ -404,7 +404,7 @@
 
         #region Request builders
 
-        public string BuildPrebookRequest(PropertyDetails propertyDetails)
+        public async Task<string> BuildPrebookRequestAsync(PropertyDetails propertyDetails)
         {
             var sbPrebookRequest = new StringBuilder();
 
@@ -464,7 +464,7 @@
             sbPrebookRequest.Append("<OptionType>Hotel</OptionType>");
 
             string nationality = "";
-            string nationalityLookupValue = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, propertyDetails.NationalityID);
+            string nationalityLookupValue = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, propertyDetails.NationalityCode);
             string defaultNationality = _settings.get_DefaultNationality(propertyDetails, propertyDetails.Source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
@@ -552,7 +552,7 @@
             return sbPrebookRequest.ToString();
         }
 
-        public string BuildBookRequest(PropertyDetails propertyDetails)
+        public async Task<string> BuildBookRequestAsync(PropertyDetails propertyDetails)
         {
             string source = propertyDetails.Source;
 
@@ -619,7 +619,7 @@
             sbBookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", propertyDetails.TPKey);
 
             string nationality = "";
-            string nationalityLookupValue = _support.TPNationalityLookup(source, propertyDetails.NationalityID);
+            string nationalityLookupValue = await _support.TPNationalityLookupAsync(source, propertyDetails.NationalityCode);
             string defaultNationality = _settings.get_DefaultNationality(propertyDetails, source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
@@ -635,7 +635,7 @@
                 sbBookRequest.AppendFormat("<Nationality>{0}</Nationality>", nationality);
             }
 
-            string currencyCode = _support.TPCurrencyLookup(source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyLookupAsync(source, propertyDetails.CurrencyCode);
             // send gross cost as gross net down can be used (local is the net)
             sbBookRequest.AppendFormat("<Price currency = \"{0}\" amount = \"{1}\" binding = \"{2}\" commission = \"{3}\"/>", currencyCode, propertyDetails.GrossCost, propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[6], propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[5]);
             sbBookRequest.Append("<ResGuests>");

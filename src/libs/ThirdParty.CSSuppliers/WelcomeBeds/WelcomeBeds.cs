@@ -22,7 +22,7 @@
         #region Properties
 
         public readonly IWelcomeBedsSettings _settings;
-        public readonly ITPSupport _tpSupport;
+        public readonly ITPSupport _support;
         private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<WelcomeBeds> _logger;
@@ -54,13 +54,13 @@
 
         public WelcomeBeds(
             IWelcomeBedsSettings settings,
-            ITPSupport tpSupport,
+            ITPSupport support,
             ISerializer serializer,
             HttpClient httpClient,
             ILogger<WelcomeBeds> logger)
         {
             _settings = settings;
-            _tpSupport = tpSupport;
+            _support = support;
             _serializer = serializer;
             _httpClient = httpClient;
             _logger = logger;
@@ -133,7 +133,7 @@
                     }
                 };
 
-                string[] sResort = _tpSupport.TPResortCodeByGeographyIdLookupAsync(Source, propertyDetails.GeographyLevel3ID).Split('|');
+                string[] sResort = (await _support.TPResortCodeByGeographyIdLookupAsync(Source, propertyDetails.GeographyLevel3ID)).Split('|');
 
                 var reservationTpaExtensions = new TpaExtensions
                 {

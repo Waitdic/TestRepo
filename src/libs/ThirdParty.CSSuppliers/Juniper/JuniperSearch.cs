@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -13,7 +14,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class JuniperSearch : IThirdPartySearch, IMultiSource
     {
@@ -38,7 +38,7 @@
 
         #region Build Search Requests
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string source = resortSplits.First().ThirdPartySupplier;
             var hotelList = new List<string>();
@@ -60,7 +60,7 @@
                 .Select((x, iUniqueReqID) => BuildSearchWebRequest(searchDetails, source, x.hotels, x.room, x.prbid, iUniqueReqID))
                 .ToList();
 
-            return searchRequests;
+            return Task.FromResult(searchRequests);
         }
 
         public Request BuildSearchWebRequest(
@@ -82,14 +82,7 @@
 
             var searchRequest = JuniperHelper.BuildWebRequest(hotelAvailUrl, soapAction, searchRequestSoap, Constant.SearchLogFile, source, useGZip);
 
-            var uniqueCode = $"{source}{iUniqueReqID}";
-            var extraHelper = new SearchExtraHelper(SearchDetails, uniqueCode)
-            {
-                //' make a note of the room number so we know what we're dealing with in the transform
-                ExtraInfo = prbid.ToString()
-            };
-
-            searchRequest.ExtraInfo = extraHelper;
+            searchRequest.ExtraInfo = prbid;
 
             return searchRequest;
         }
@@ -165,7 +158,7 @@
                 var oResponseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);
                 var sResponse = oResponseXml.SelectSingleNode("Envelope/Body").FirstChild.OuterXml;
                 var oResponse = _serializer.DeSerialize<OTA_HotelAvailServiceResponse>(sResponse);
-                var prbid = SafeTypeExtensions.ToSafeInt((request.ExtraInfo as SearchExtraHelper)?.ExtraInfo);
+                var prbid = request.ExtraInfo.ToSafeInt();
 
                 if (oResponse.HotelAvailResponse.FirstOrDefault()?.Success ?? false)
                 {

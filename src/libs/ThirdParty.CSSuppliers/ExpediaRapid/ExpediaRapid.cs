@@ -71,7 +71,7 @@
                     throw new Exception("Room(s) no longer available. Retry search.");
                 }
 
-                propertyDetails.Errata = GetErrataFromAllRooms(propertyDetails, responseRooms);
+                propertyDetails.Errata = await GetErrataFromAllRoomsAsync(propertyDetails, responseRooms);
 
                 propertyDetails.Cancellations = GetCancellationsFromAllRooms(propertyDetails, responseRooms);
                 propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
@@ -116,7 +116,7 @@
             try
             {
                 var firstRoom = propertyDetails.Rooms.First();
-                string bookRequestBody = BuildBookRequestBody(propertyDetails);
+                string bookRequestBody = await BuildBookRequestBodyAsync(propertyDetails);
 
                 var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
 
@@ -327,7 +327,7 @@
 
         private async Task<SearchResponse> GetPrebookSearchRedoResponseAsync(PropertyDetails propertyDetails)
         {
-            string searchURL = BuildPrebookSearchURL(propertyDetails);
+            string searchURL = await BuildPrebookSearchURLAsync(propertyDetails);
             var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", eRequestMethod.GET, false);
             var searchResponse = await _api.GetDeserializedResponseAsync<SearchResponse>(propertyDetails, searchRequest);
             return searchResponse;
@@ -389,10 +389,10 @@
             return cancellation;
         }
 
-        private Errata GetErrataFromAllRooms(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
+        private async Task<Errata> GetErrataFromAllRoomsAsync(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
             var errata = new Errata();
-            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyLookupAsync(Source, propertyDetails.CurrencyCode);
 
             var mandatoryFees = new List<OccupancyRateFee>();
             var resortFees = new List<OccupancyRateFee>();
@@ -523,10 +523,10 @@
             return sameRoomRates;
         }
 
-        private string BuildPrebookSearchURL(PropertyDetails propertyDetails)
+        private async Task<string> BuildPrebookSearchURLAsync(PropertyDetails propertyDetails)
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
-            string currencyCode = _support.TPCurrencyLookup(Source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyLookupAsync(Source, propertyDetails.CurrencyCode);
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
@@ -556,7 +556,7 @@
             return request;
         }
 
-        private string BuildBookRequestBody(PropertyDetails propertyDetails)
+        private async Task<string> BuildBookRequestBodyAsync(PropertyDetails propertyDetails)
         {
             var bookRequest = new BookRequest()
             {
@@ -581,7 +581,7 @@
                                 City = propertyDetails.LeadGuestTownCity,
                                 StateProvinceCode = propertyDetails.LeadGuestCounty,
                                 PostalCode = propertyDetails.LeadGuestPostcode,
-                                CountryCode = _support.TPBookingCountryLookup(Source, propertyDetails.LeadGuestBookingCountryID)
+                                CountryCode = await _support.TPBookingCountryLookupAsync(Source, propertyDetails.LeadGuestBookingCountryID)
                             }
                         }
                     }

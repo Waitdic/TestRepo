@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
@@ -9,27 +10,20 @@
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Models.WelcomeBeds;
     using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class WelcomeBedsSearch : IThirdPartySearch, ISingleSource
     {
         #region Constructor
 
         public readonly IWelcomeBedsSettings _settings;
-        public readonly ITPSupport _tpSupport;
         public readonly ISerializer _serializer;
 
-        public WelcomeBedsSearch(
-            IWelcomeBedsSettings settings,
-            ITPSupport tpSupport,
-            ISerializer serializer)
+        public WelcomeBedsSearch(IWelcomeBedsSettings settings, ISerializer serializer)
         {
             _settings = settings;
-            _tpSupport = tpSupport;
             _serializer = serializer;
         }
 
@@ -43,7 +37,7 @@
 
         #region Build Search Request
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -131,7 +125,6 @@
                 {
                     EndPoint = _settings.URL(searchDetails),
                     Method = eRequestMethod.POST,
-                    ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
                     UseGZip = true,
                     SoapAction = "HotelAvail"
                 };
@@ -139,7 +132,8 @@
 
                 requests.Add(request);
             }
-            return requests;
+
+            return Task.FromResult(requests);
         }
 
         public bool ResponseHasExceptions(Request request)

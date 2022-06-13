@@ -153,7 +153,7 @@
 
             try
             {
-                var bookRequestXml = BuildBookXml(propertyDetails);
+                var bookRequestXml = await BuildBookXmlAsync(propertyDetails);
 
                 request = new Request
                 {
@@ -426,7 +426,7 @@
             return _serializer.Serialize(request);
         }
 
-        private XmlDocument BuildBookXml(PropertyDetails propertyDetails)
+        private async Task<XmlDocument> BuildBookXmlAsync(PropertyDetails propertyDetails)
         {
             var bookRequest = new BasketBookRequest
             {
@@ -454,7 +454,7 @@
 
             if (_settings.UseAgentDetails(propertyDetails, propertyDetails.Source))
             {
-                var address = new Address(_settings.AgentAddress(propertyDetails, propertyDetails.Source), propertyDetails.Source, _support);
+                var address = await new Address().SetupAddressAsync(_settings.AgentAddress(propertyDetails, propertyDetails.Source), propertyDetails.Source, _support);
                 bookRequest.LeadCustomer.CustomerAddress1 = address.Line1;
                 bookRequest.LeadCustomer.CustomerAddress2 = address.Line2;
                 bookRequest.LeadCustomer.CustomerTownCity = address.City;
@@ -534,23 +534,23 @@
             return roomBookings.ToArray();
         }
 
-        #region "Helper Classes"
+        #region Helper Classes
 
         private class Address
         {
-            public string Line1 { get; }
+            public string Line1 { get; set; }
 
-            public string Line2 { get; }
+            public string Line2 { get; set; }
 
-            public string City { get; }
+            public string City { get; set; }
 
-            public string County { get; }
+            public string County { get; set; }
 
-            public string PostCode { get; }
+            public string PostCode { get; set; }
 
-            public int BookingCountryID { get; }
+            public int BookingCountryID { get; set; }
 
-            public Address(string config, string source, ITPSupport support)
+            public async Task<Address> SetupAddressAsync(string config, string source, ITPSupport support)
             {
                 string[] items = config.Split('|');
 
@@ -559,7 +559,9 @@
                 City = items[2];
                 County = items[3];
                 PostCode = items[4];
-                BookingCountryID = support.TPBookingCountryCodeLookup(source, items[5]);
+                BookingCountryID = await support.TPBookingCountryCodeLookupAsync(source, items[5]);
+
+                return this;
             }
         }
 

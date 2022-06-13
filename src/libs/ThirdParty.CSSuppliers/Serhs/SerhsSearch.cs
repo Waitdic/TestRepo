@@ -13,6 +13,7 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
+    using System.Threading.Tasks;
 
     public class SerhsSearch : IThirdPartySearch, ISingleSource
     {
@@ -29,7 +30,7 @@
 
         public string Source => ThirdParties.SERHS;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string version = _settings.Version(searchDetails);
             string clientCode = _settings.ClientCode(searchDetails);
@@ -119,7 +120,7 @@
 
             request.SetRequest(xmlRequest);
 
-            return new List<Request>{ request };
+            return Task.FromResult(new List<Request>{ request });
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

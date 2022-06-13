@@ -34,9 +34,9 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCountryCodeLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("GB");
-            mockSupport.Setup(x => x.TPCurrencyLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("EUR");
-            mockSupport.Setup(x => x.TPNationalityLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("GB");
+            mockSupport.Setup(x => x.TPCountryCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GB"));
+            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("EUR"));
+            mockSupport.Setup(x => x.TPNationalityLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GB"));
             return mockSupport;
         }
 
@@ -72,11 +72,11 @@
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(AlturaRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(AlturaRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(AlturaRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(AlturaRes.RequestLog));
         }
 
         [Fact]

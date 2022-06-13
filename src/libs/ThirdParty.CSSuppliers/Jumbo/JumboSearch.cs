@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -59,7 +60,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -74,9 +75,9 @@
             sb.Append("<typ:availableHotelsByMultiQueryV12>");
 
             sb.Append("<AvailableHotelsByMultiQueryRQ_1>");
-            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "AgencyCode", _settings));
-            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "BrandCode", _settings));
-            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "POS", _settings));
+            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "AgencyCode", _settings));
+            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "BrandCode", _settings));
+            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "POS", _settings));
             sb.AppendFormat("<checkin>{0}</checkin>", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<checkout>{0}</checkout>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<fromPrice>{0}</fromPrice>", "0");
@@ -146,7 +147,7 @@
             request.SetRequest(sb.ToString());
             requests.Add(request);
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

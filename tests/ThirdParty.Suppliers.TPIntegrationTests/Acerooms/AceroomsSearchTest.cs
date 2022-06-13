@@ -30,17 +30,17 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPNationalityLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("115");
-            mockSupport.Setup(x => x.TPCurrencyLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("GBP");
+            mockSupport.Setup(x => x.TPNationalityLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("115"));
+            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
             return mockSupport;
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(AceroomsRes.RequestLogs));
-            Assert.False(base.InvalidBuildSearchRequest(AceroomsRes.RequestLogs));
+            Assert.True(await base.ValidBuildSearchRequestAsync(AceroomsRes.RequestLogs));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(AceroomsRes.RequestLogs));
         }
 
         [Fact]

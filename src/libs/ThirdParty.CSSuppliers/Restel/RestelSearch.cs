@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -15,7 +16,6 @@
     using ThirdParty.Results;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
     using static RestelCommon;
 
     public class RestelSearch : IThirdPartySearch, ISingleSource
@@ -36,7 +36,7 @@
 
         public string Source => ThirdParties.RESTEL;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails,  List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails,  List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -53,21 +53,15 @@
                     searchDetails.RoomDetails.Select(roomDetail => $"{roomDetail.Adults}-{roomDetail.Children}"),
                     _serializer);
 
-                // set a unique code. if the is one request we only need the source name
-                string uniqueCode = Source;
-                if (resortSplits.Count > 1)
-                    uniqueCode = $"{Source}_{resortSplit.ResortCode}";
-
                 // Build the Request Object
-                var oRequest = CreateRequest(_settings, searchDetails, "Search");
-                oRequest.ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode);
+                var request = CreateRequest(_settings, searchDetails, "Search");
                 
-                oRequest.SetRequest(xmlRequest);
+                request.SetRequest(xmlRequest);
 
-                requests.Add(oRequest);
+                requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

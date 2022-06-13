@@ -14,8 +14,8 @@
     using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Models;
+    using ThirdParty.Search;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     /// <summary>
     /// Third Party Property Search Runner
@@ -42,6 +42,23 @@
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
         }
 
+        /// <summary>Gets or sets a value indicating whether [exclude non refundable].</summary>
+        [XmlIgnore]
+        public bool ExcludeNonRefundable { get; set; }
+
+        /// <summary>Gets the current time taken in seconds.</summary>
+        public int CurrentTimeTakenInSeconds
+            => (int)(DateTime.Now - this.StartTime).TotalSeconds;
+
+        /// <summary>Gets or sets the start time.</summary>
+        public DateTime StartTime { get; set; }
+
+        /// <summary>Gets or sets the log collection.</summary>
+        public List<LogCollection> LogCollection { get; set; } = new List<LogCollection>();
+
+        /// <summary>Gets or sets the request tracker.</summary>
+        public IRequestTracker RequestTracker { get; set; } = null!;
+
         public async Task SearchAsync(
             SearchDetails searchDetails,
             SupplierResortSplit supplierResortSplit,
@@ -56,7 +73,7 @@
                 string source = supplierResortSplit.Supplier;
                 var resortSplits = supplierResortSplit.ResortSplits;
 
-                var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits);
+                var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, resortSplits);
 
                 foreach (var request in requests)
                 {
@@ -90,69 +107,6 @@
             {
                 _logger.LogError(ex.Message, ex);
             }
-        }
-
-        /// <summary>Gets or sets a value indicating whether [exclude non refundable].</summary>
-        /// <value>
-        /// <c>true</c> if [exclude non refundable]; otherwise, <c>false</c>.</value>
-        [XmlIgnore]
-        public bool ExcludeNonRefundable { get; set; }
-
-        /// <summary>Gets the current time taken in seconds.</summary>
-        /// <value>The current time taken in seconds.</value>
-        public int CurrentTimeTakenInSeconds
-        {
-            get
-            {
-                return (int)(DateTime.Now - this.StartTime).TotalSeconds;
-            }
-        }
-
-        /// <summary>Gets or sets the start time.</summary>
-        /// <value>The start time.</value>
-        public DateTime StartTime { get; set; }
-
-        /// <summary>Gets or sets the log collection.</summary>
-        /// <value>The log collection.</value>
-        public List<LogCollection> LogCollection { get; set; } = new List<LogCollection>();
-
-        /// <summary>Gets or sets the request tracker.</summary>
-        /// <value>The request tracker.</value>
-        public IRequestTracker RequestTracker { get; set; } = null!;
-
-        /// <summary>gets a unique request identifier.</summary>
-        /// <param name="source">The source.</param>
-        /// <param name="extraInfo">The o extra information.</param>
-        /// <returns>
-        ///   the unique request identifier as a string
-        /// </returns>
-        public static string UniqueRequestID(string source, object extraInfo)
-        {
-            var type = extraInfo.GetType();
-
-            //// loop until we find a search extra helper or get to the base class
-            while (!(type == null))
-            {
-                if (type == typeof(SearchExtraHelper))
-                {
-                    SearchExtraHelper searchHelper = (SearchExtraHelper)extraInfo;
-                    string requestIdentifier = searchHelper.UniqueRequestID;
-
-                    //// if the source is empty string then return the parent source
-                    if (string.IsNullOrEmpty(requestIdentifier))
-                    {
-                        requestIdentifier = source;
-                    }
-
-                    return requestIdentifier;
-                }
-                else
-                {
-                    type = type.BaseType;
-                }
-            }
-
-            return source;
         }
 
         /// <summary>Requests the time out seconds.</summary>

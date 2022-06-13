@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Net.WebRequests;
     using ThirdParty;
@@ -13,7 +14,7 @@
 
     public class DerbySoftSearch : IThirdPartySearch, IMultiSource
     {
-        #region "Constructor"
+        #region Constructor
 
         private readonly IDerbySoftSettings _settings;
 
@@ -34,13 +35,13 @@
 
         #endregion
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string source = resortSplits.First().ThirdPartySupplier;
             var requestBuilderFactory = new SearchFactory(_settings, source, Guid.NewGuid());
             var requestBuilder = requestBuilderFactory.GetSearchRequestBuilder(searchDetails);
 
-            return requestBuilder.BuildSearchRequests(searchDetails, resortSplits).ToList();
+            return Task.FromResult(requestBuilder.BuildSearchRequests(searchDetails, resortSplits).ToList());
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -51,7 +52,7 @@
             var responseTransformerFactory = new SearchFactory(_settings, source, Guid.NewGuid());
             var responseTransformer = responseTransformerFactory.GetSearchResponseTransformer(searchDetails);
 
-            transformedResults.TransformedResults.AddRange(responseTransformer.TransformResponses(requests));
+            transformedResults.TransformedResults.AddRange(responseTransformer.TransformResponses(requests, searchDetails));
 
             return transformedResults;
         }

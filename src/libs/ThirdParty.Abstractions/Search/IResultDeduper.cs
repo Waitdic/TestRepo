@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Results
+﻿namespace ThirdParty.Search
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

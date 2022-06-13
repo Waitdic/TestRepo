@@ -2,21 +2,21 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.TeamAmerica.Models;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.TeamAmerica.Models;
 
     public class TeamAmericaSearch : IThirdPartySearch
     {
-        #region "Properties"
+        #region Properties
 
         private readonly ITeamAmericaSettings _settings;
         private readonly ISerializer _serializer;
@@ -30,7 +30,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public TeamAmericaSearch(ITeamAmericaSettings settings, ISerializer serializer)
         {
@@ -42,7 +42,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails serchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails serchDetails, List<ResortSplit> resortSplits)
         {
             var requests = resortSplits.Select(resortSplit =>
             {
@@ -59,14 +59,13 @@
                     SoapAction = $"{_settings.URL(serchDetails)}/{Constant.SoapActionPreBook}",
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                    ExtraInfo = new SearchExtraHelper(serchDetails, uniqueCode),
                 };
                 request.SetRequest(requestXml);
 
                 return request;
             }).ToList();
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -93,32 +92,32 @@
             var results = responses
                 .Where(hotelOffer => TeamAmerica.IsEveryNightAvailable(hotelOffer) && 
                     !string.IsNullOrEmpty(hotelOffer.RoomType))
-                .SelectMany(oHotelOffer =>
+                .SelectMany(hotelOffer =>
                     {
-                        return rooms.Where(oRoom => oRoom.Adults + oRoom.Children <= oHotelOffer.MaxOccupancy)
-                        .Select(oRoom =>
+                        return rooms.Where(oRoom => oRoom.Adults + oRoom.Children <= hotelOffer.MaxOccupancy)
+                        .Select(room =>
                         {
-                            int paxCount = string.Equals(oHotelOffer.FamilyPlan, Constant.TokenYes)
-                            ? oRoom.Adults + oRoom.ChildAges.Where(age => age > oHotelOffer.ChildAge).Count()
-                            : oRoom.Adults + oRoom.Children;
+                            int paxCount = string.Equals(hotelOffer.FamilyPlan, Constant.TokenYes)
+                            ? room.Adults + room.ChildAges.Where(age => age > hotelOffer.ChildAge).Count()
+                            : room.Adults + room.Children;
 
                             occupancyDict.TryGetValue(paxCount, out string occupancy);
 
-                            decimal amount = oHotelOffer.NightlyInfos.Select(info => SafeTypeExtensions.ToSafeDecimal(
-                                info.Prices.First(price => string.Equals(price.Occupancy, occupancy)).AdultPrice))
+                            decimal amount = hotelOffer.NightlyInfos
+                                .Select(info => info.Prices.First(price => string.Equals(price.Occupancy, occupancy)).AdultPrice.ToSafeDecimal())
                                 .Sum();
 
                             return new TransformedResult
                             {
-                                MasterID = SafeTypeExtensions.ToSafeInt(oHotelOffer.TeamVendorID),
-                                TPKey = oHotelOffer.TeamVendorID,
+                                MasterID = hotelOffer.TeamVendorID.ToSafeInt(),
+                                TPKey = hotelOffer.TeamVendorID,
                                 CurrencyCode = "USD",
-                                PropertyRoomBookingID = oRoom.PRBID,
-                                RoomType = oHotelOffer.RoomType,
-                                MealBasisCode = oHotelOffer.MealPlan,
+                                PropertyRoomBookingID = room.PRBID,
+                                RoomType = hotelOffer.RoomType,
+                                MealBasisCode = hotelOffer.MealPlan,
                                 Amount = amount,
-                                TPReference = $"{oHotelOffer.ProductCode}|{oHotelOffer.FamilyPlan}|{oHotelOffer.ChildAge}",
-                                NonRefundableRates = Equals(oHotelOffer.NonRefundable.Trim(), "1")
+                                TPReference = $"{hotelOffer.ProductCode}|{hotelOffer.FamilyPlan}|{hotelOffer.ChildAge}",
+                                NonRefundableRates = Equals(hotelOffer.NonRefundable.Trim(), "1")
                             };
                         });
                     })

@@ -15,6 +15,7 @@
     using ThirdParty.Lookups;
     using ThirdParty.Results;
     using ThirdParty.CSSuppliers.DOTW.Models;
+    using System.Threading.Tasks;
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {
@@ -54,7 +55,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -88,7 +89,7 @@
                 // create the search request for this city
                 var city = cityKeyValue.Value;
 
-                string requestString = BuildSearchRequestXML(searchDetails, city);
+                string requestString = await BuildSearchRequestXMLAsync(searchDetails, city);
 
                 var request = new Request
                 {
@@ -143,7 +144,7 @@
 
         #region Helpers
 
-        public string BuildSearchRequestXML(SearchDetails searchDetails, DOTWSupport.City city)
+        public async Task<string> BuildSearchRequestXMLAsync(SearchDetails searchDetails, DOTWSupport.City city)
         {
             var sb = new StringBuilder();
 
@@ -189,7 +190,7 @@
                 // Nationality and Country of residence
                 if (_settings.Version(searchDetails) == 2)
                 {
-                    string nationality = DOTW.GetNationality(searchDetails.NationalityID, searchDetails, _support, _settings);
+                    string nationality = await DOTW.GetNationalityAsync(searchDetails.NationalityCode, searchDetails, _support, _settings);
                     string countryCode = DOTW.GetCountryOfResidence(nationality, searchDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))

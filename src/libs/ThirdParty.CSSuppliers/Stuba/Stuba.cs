@@ -42,7 +42,7 @@
 
             try
             {
-                var xml = await SendRequestAsync("Pre-Book", BookReservationRequest(propertyDetails, false), propertyDetails);
+                var xml = await SendRequestAsync("Pre-Book", await BookReservationRequestAsync(propertyDetails, false), propertyDetails);
                 ExtractErrata(xml, propertyDetails);
                 result = CostsAndCancellation(propertyDetails, xml);
             }
@@ -60,7 +60,7 @@
 
             try
             {
-                var xml = await SendRequestAsync("Book", BookReservationRequest(propertyDetails, true), propertyDetails);
+                var xml = await SendRequestAsync("Book", await BookReservationRequestAsync(propertyDetails, true), propertyDetails);
 
                 if (xml.SelectSingleNode("BookingCreateResult/Booking/HotelBooking/Status").InnerText.ToLower() == "confirmed")
                 {
@@ -162,7 +162,7 @@
             return request.ResponseXML;
         }
 
-        private string BookReservationRequest(PropertyDetails propertyDetails, bool confirm)
+        private async Task<string> BookReservationRequestAsync(PropertyDetails propertyDetails, bool confirm)
         {
             string org = _settings.get_Organisation(propertyDetails);
             string user = _settings.get_Username(propertyDetails);
@@ -182,7 +182,7 @@
                             new XElement("HotelBooking",
                             new XElement("QuoteId", propertyDetails.Rooms.FirstOrDefault().ThirdPartyReference.Split('|')[1].ToSafeString()),
                             new XElement("HotelStayDetails",
-                            new XElement("Nationality", GetNationality(propertyDetails)), from oRoom in propertyDetails.Rooms
+                            new XElement("Nationality", await GetNationalityAsync(propertyDetails)), from oRoom in propertyDetails.Rooms
                                 select new XElement("Room",
                                     new XElement("Guests", from oGuest in oRoom.Passengers.Where(p => p.PassengerType == PassengerType.Adult)
                                         select new XElement("Adult", new XAttribute("title", oGuest.Title), new XAttribute("first", oGuest.FirstName), new XAttribute("last", oGuest.LastName)), from oGuest in oRoom.Passengers.Where(p => p.PassengerType != PassengerType.Adult)
@@ -236,18 +236,18 @@
             }
         }
 
-        private string GetNationality(PropertyDetails propertyDetails)
+        private async Task<string> GetNationalityAsync(PropertyDetails propertyDetails)
         {
-            string sNationality = "";
-            if (propertyDetails.LeadGuestNationalityID != 0)
+            string nationality = string.Empty;
+            if (!string.IsNullOrWhiteSpace(propertyDetails.NationalityCode))
             {
-                sNationality = _support.TPNationalityLookup(ThirdParties.STUBA, propertyDetails.LeadGuestNationalityID);
+                nationality = await _support.TPNationalityLookupAsync(ThirdParties.STUBA, propertyDetails.NationalityCode);
             }
-            if (string.IsNullOrEmpty(sNationality))
+            if (string.IsNullOrEmpty(nationality))
             {
-                sNationality = _settings.get_Nationality(propertyDetails);
+                nationality = _settings.get_Nationality(propertyDetails);
             }
-            return sNationality;
+            return nationality;
         }
 
         private bool CostsAndCancellation(PropertyDetails propertyDetails, XmlDocument xml)

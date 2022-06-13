@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -54,7 +55,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -96,8 +97,10 @@
                     if (room.Children + room.Infants > 0)
                     {
                         sb.AppendFormat("<childAges>");
-                        foreach (int iChildAge in room.ChildAndInfantAges())
-                            sb.AppendFormat("<childAge>{0}</childAge>", iChildAge);
+                        foreach (int childAge in room.ChildAndInfantAges())
+                        {
+                            sb.AppendFormat("<childAge>{0}</childAge>", childAge);
+                        }
                         sb.AppendFormat("</childAges>");
                     }
 
@@ -120,7 +123,7 @@
                 requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

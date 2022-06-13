@@ -148,7 +148,7 @@
             try
             {
                 //'Build/send Confirmation
-                string requestBody = BuildBookXml(propertyDetails);
+                string requestBody = await BuildBookXmlAsync(propertyDetails);
                 request = await SendRequestAsync(Constant.SoapActionBook, requestBody, propertyDetails, "Book", propertyDetails.CreateLogs);
                 var response = Envelope<NewMultiItemReservationResponse>.DeSerialize(request.ResponseXML, _serializer).ReservationResponse;
                 string responseBody = request.ResponseString;
@@ -429,7 +429,7 @@
             return occupancy;
         }
 
-        public string BuildBookXml(PropertyDetails propertyDetails)
+        public async Task<string> BuildBookXmlAsync(PropertyDetails propertyDetails)
         {
             var bookRequest = new NewMultiItemReservation
             {
@@ -438,74 +438,79 @@
                 AgentName = _settings.CompanyName(propertyDetails),
                 AgentEmail = _settings.CompanyAddressEmail(propertyDetails),
                 ClientReference = propertyDetails.BookingReference,
-                RoomItems = propertyDetails.Rooms.Select(roomDetails =>
-                {
-                    return new RoomItem
-                    {
-                        ProductCode = roomDetails.ThirdPartyReference.Split('|')[0],
-                        ProductDate = propertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
-                        Occupancy = GetOccupancy(roomDetails, false),
-                        NumberOfNights = propertyDetails.Duration,
-                        Language = Constant.ENG,
-                        Quantity = 1,
-                        ItemRemarks = propertyDetails.BookingComments.ToString(),
-                        RateExpected = roomDetails.ThirdPartyReference.Split('|')[3],
-                        Passangers = roomDetails.Passengers.Select(passenger =>
-                        {
-                            string title = string.Equals(passenger.Title, "Master")
-                                    ? "Mstr"
-                                    : ((passenger.Title.Length > 4)
-                                        ? passenger.Title.Substring(0, 4)
-                                        : passenger.Title);
-
-                            string familyPlan = roomDetails.ThirdPartyReference.Split('|')[1];
-                            int childAge = roomDetails.ThirdPartyReference.Split('|')[2].ToSafeInt();
-                            string sPassangerType = passenger.PassengerType == PassengerType.Adult ||
-                                    string.Equals(familyPlan, Constant.TokenNo) ||
-                                    passenger.Age > childAge ?
-                                Constant.AdultCode :
-                                Constant.ChildCode;
-
-                            int passengerAge = passenger.Age;
-                            if (passengerAge == 0)
-                            {
-                                if (passenger.PassengerType == PassengerType.Adult) passengerAge = Constant.AgeAdult;
-                                if (passenger.PassengerType == PassengerType.Child) passengerAge = Constant.AgeChild;
-                                if (passenger.PassengerType == PassengerType.Infant) passengerAge = Constant.AgeInfant;
-                            }
-
-                            string sNationalityCode = (passenger.NationalityID != 0) ?
-                                _support.TPNationalityLookup(Source, passenger.NationalityID) :
-                                _settings.DefaultNationalityCode(propertyDetails);
-
-                            return new NewPassanger
-                            {
-                                Salutation = title,
-                                FamilyName = passenger.LastName,
-                                FirstName = passenger.FirstName,
-                                PassengerType = sPassangerType,
-                                NationalityCode = sNationalityCode,
-                                PassengerAge = passengerAge
-                            };
-                        }).ToList()
-                    };
-                }).ToList()
             };
+
+            foreach (var roomDetails in propertyDetails.Rooms)
+            {
+                var roomItem = new RoomItem()
+                {
+                    ProductCode = roomDetails.ThirdPartyReference.Split('|')[0],
+                    ProductDate = propertyDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
+                    Occupancy = GetOccupancy(roomDetails, false),
+                    NumberOfNights = propertyDetails.Duration,
+                    Language = Constant.ENG,
+                    Quantity = 1,
+                    ItemRemarks = propertyDetails.BookingComments.ToString(),
+                    RateExpected = roomDetails.ThirdPartyReference.Split('|')[3],
+                };
+
+                foreach (var passenger in roomDetails.Passengers)
+                {
+                    string title = string.Equals(passenger.Title, "Master")
+                            ? "Mstr"
+                            : ((passenger.Title.Length > 4)
+                                ? passenger.Title.Substring(0, 4)
+                                : passenger.Title);
+
+                    string familyPlan = roomDetails.ThirdPartyReference.Split('|')[1];
+                    int childAge = roomDetails.ThirdPartyReference.Split('|')[2].ToSafeInt();
+                    string passengerType = passenger.PassengerType == PassengerType.Adult ||
+                            string.Equals(familyPlan, Constant.TokenNo) ||
+                            passenger.Age > childAge ?
+                        Constant.AdultCode :
+                        Constant.ChildCode;
+
+                    int passengerAge = passenger.Age;
+                    if (passengerAge == 0)
+                    {
+                        if (passenger.PassengerType == PassengerType.Adult) passengerAge = Constant.AgeAdult;
+                        if (passenger.PassengerType == PassengerType.Child) passengerAge = Constant.AgeChild;
+                        if (passenger.PassengerType == PassengerType.Infant) passengerAge = Constant.AgeInfant;
+                    }
+
+                    string nationalityCode = !string.IsNullOrWhiteSpace(passenger.NationalityCode) ?
+                        (await _support.TPNationalityLookupAsync(Source, passenger.NationalityCode)) :
+                        _settings.DefaultNationalityCode(propertyDetails);
+
+                    roomItem.Passengers.Add(new NewPassenger
+                    {
+                        Salutation = title,
+                        FamilyName = passenger.LastName,
+                        FirstName = passenger.FirstName,
+                        PassengerType = passengerType,
+                        NationalityCode = nationalityCode,
+                        PassengerAge = passengerAge
+                    });
+                }
+
+                bookRequest.RoomItems.Add(roomItem);
+            }
+
             return Envelope<NewMultiItemReservation>.Serialize(bookRequest, _serializer);
         }
 
-        public string BuildCancelXml(PropertyDetails propertyDetails)
+    public string BuildCancelXml(PropertyDetails propertyDetails)
+    {
+        var cancelResponse = new CancelReservation
         {
-            var cancelResponse = new CancelReservation
-            {
-                UserName = _settings.Username(propertyDetails),
-                Password = _settings.Password(propertyDetails),
-                ReservationNumber = propertyDetails.SourceReference
-            };
+            UserName = _settings.Username(propertyDetails),
+            Password = _settings.Password(propertyDetails),
+            ReservationNumber = propertyDetails.SourceReference
+        };
 
-            return Envelope<CancelReservation>.Serialize(cancelResponse, _serializer);
-        }
-
-        #endregion
+        return Envelope<CancelReservation>.Serialize(cancelResponse, _serializer);
     }
+
+    #endregion
+}
 }

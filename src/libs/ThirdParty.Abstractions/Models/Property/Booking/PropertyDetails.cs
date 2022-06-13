@@ -309,11 +309,6 @@
         public string CancellationReason { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets The lead guest nationality identifier
-        /// </summary>
-        public int LeadGuestNationalityID { get; set; } = 0;
-
-        /// <summary>
         /// Gets or sets The lead guest residence geography level1 identifier
         /// </summary>
         public int LeadGuestResidenceGeographyLevel1ID { get; set; } = 0;
@@ -391,12 +386,12 @@
         public bool PayLocalRequired { get; set; }
 
         /// <summary>
-        /// Get or sets the unique nationality identifier 
+        /// Get or sets the unique nationality code 
         /// </summary>
         /// <value>
-        ///  The nationality identifier
+        ///  The nationality code
         /// </value>
-        public string NationalityID { get; set; } = string.Empty;
+        public string NationalityCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the boolean to decide whether opaque rates are supported.

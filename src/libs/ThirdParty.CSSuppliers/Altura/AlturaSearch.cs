@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -16,7 +17,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class AlturaSearch : IThirdPartySearch, ISingleSource
     {
@@ -55,23 +55,15 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             // Create for each resort a list of hotels
             var hotels = resortSplits.SelectMany(rs => rs.Hotels.Select(h => h.TPKey)).Distinct().ToList();
             List<Request> requests = new();
-            // Create a request for each room 
-            requests = searchDetails.RoomDetails.Select((room) =>
+
+            foreach (var room in searchDetails.RoomDetails)
             {
-                var searchRequest = GetSearchRequestXml(searchDetails, string.Join(",", hotels), room);
-
-                // Set a unique code. if the is one request we only need the source name
-                var uniqueCode = Source;
-
-                var extraInfo = new SearchExtraHelper(searchDetails, uniqueCode)
-                {
-                    ExtraInfo = room.PropertyRoomBookingID.ToString()
-                };
+                var searchRequest = await GetSearchRequestXmlAsync(searchDetails, string.Join(",", hotels), room);
 
                 var request = new Request
                 {
@@ -79,13 +71,12 @@
                     Method = eRequestMethod.POST,
                     Param = "xml",
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
-                    ExtraInfo = extraInfo,
+                    ExtraInfo = room.PropertyRoomBookingID,
                 };
 
                 request.SetRequest(searchRequest);
-
-                return request;
-            }).ToList();
+                requests.Add(request);
+            }
 
             return requests;
         }
@@ -115,7 +106,7 @@
         }
 
         private int GetRoomBookingId(Request request)
-            => ((request.ExtraInfo as SearchExtraHelper)?.ExtraInfo).ToSafeInt();
+            => request.ExtraInfo.ToSafeInt();
 
         #endregion
 
@@ -130,12 +121,12 @@
 
         #region Helpers
 
-        private XmlDocument GetSearchRequestXml(SearchDetails searchDetails, string hotelList, RoomDetail room)
+        private async Task<XmlDocument> GetSearchRequestXmlAsync(SearchDetails searchDetails, string hotelList, RoomDetail room)
         {
-            var sellingCountry = _support.TPCountryCodeLookup(Source, searchDetails.SellingCountry);
+            var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry);
             var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
-            var nationalityLookupValue = _support.TPNationalityLookup(Source, searchDetails.NationalityID);
+            var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
             var leadGuestNationality = !string.IsNullOrEmpty(nationalityLookupValue) ? nationalityLookupValue : _settings.DefaultNationality(searchDetails);
 
             var childAges = room.ChildAges ?? new List<int>()

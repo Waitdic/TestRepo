@@ -9,7 +9,6 @@
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class BookingUsbV4ResponseTransformer : ISearchResponseTransformer
     {
@@ -20,15 +19,14 @@
             _resultBuilder = new TransformedResultBuilder(settings, source);
         }
 
-        public IEnumerable<TransformedResult> TransformResponses(List<Request> requests)
+        public IEnumerable<TransformedResult> TransformResponses(List<Request> requests, SearchDetails searchDetails)
         {
             var responses = new List<Tuple<int, DerbySoftBookingUsbV4AvailabilityResponse>>();
             var hotelList = new List<string>();
-            var searchHelper = (SearchExtraHelper)requests.First().ExtraInfo;
 
-            foreach (var request in requests.OrderBy(o => ((SearchExtraHelper)o.ExtraInfo).ExtraInfo.ToSafeInt()))
+            foreach (var request in requests.OrderBy(o => o.ExtraInfo.ToSafeInt()))
             {
-                var propertyRoomBookingID = ((SearchExtraHelper)request.ExtraInfo).ExtraInfo.ToSafeInt();
+                var propertyRoomBookingID = request.ExtraInfo.ToSafeInt();
                 var response = new DerbySoftBookingUsbV4AvailabilityResponse();
 
                 if (!request.Success)
@@ -51,10 +49,10 @@
                 responses.Add(new Tuple<int, DerbySoftBookingUsbV4AvailabilityResponse>(propertyRoomBookingID, response));
             }
 
-            var validHotels = HotelValidator.HotelsWithCompleteRoomSelection(hotelList, searchHelper.SearchDetails.Rooms, responses);
+            var validHotels = HotelValidator.HotelsWithCompleteRoomSelection(hotelList, searchDetails.Rooms, responses);
 
             return responses.Where(r => validHotels.Contains(r.Item2.HotelId))
-                .SelectMany(r => GetResultFromResponse(searchHelper.SearchDetails, r));
+                .SelectMany(r => GetResultFromResponse(searchDetails, r));
         }
 
         private IEnumerable<TransformedResult> GetResultFromResponse(SearchDetails searchDetails, Tuple<int, DerbySoftBookingUsbV4AvailabilityResponse> roomResponse)

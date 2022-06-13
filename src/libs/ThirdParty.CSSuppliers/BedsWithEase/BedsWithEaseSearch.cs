@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -40,7 +41,7 @@
 
         public string Source => ThirdParties.BEDSWITHEASE;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             string sessionId = BedsWithEaseHelper.GetSessionIdAsync(searchDetails, _settings, _serializer, _httpClient, _logger).Result;
@@ -61,7 +62,7 @@
                 requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         private XmlDocument BuildAvailableRequest(string sessionId, SearchDetails searchDetails, string resortCode)

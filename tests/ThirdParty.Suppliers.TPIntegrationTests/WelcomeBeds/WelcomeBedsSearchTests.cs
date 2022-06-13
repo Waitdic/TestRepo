@@ -21,18 +21,18 @@
             _provider,
             new List<SearchDetails> { _searchDetails },
             _settings,
-            new WelcomeBedsSearch(_settings, new Mock<ITPSupport>().Object, new Serializer()))
+            new WelcomeBedsSearch(_settings, new Serializer()))
         {
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             ResortSplits = Helper.CreateResortSplits(Supplier, Helper.CreateHotels(2795805, 49886, "Torre Hogar", "102245"), "15304|140965");
 
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(WelcomeBedsRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(WelcomeBedsRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(WelcomeBedsRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(WelcomeBedsRes.RequestLog));
         }
 
         [Fact]

@@ -9,7 +9,7 @@
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
     using ThirdParty.CSSuppliers.DerbySoft.Models;
     using ThirdParty.Results;
-    using ThirdParty.Search.Support;
+    using ThirdParty.Search.Models;
 
     public class ShoppingEngineResponseTransformer : ISearchResponseTransformer
     {
@@ -20,20 +20,21 @@
             _resultBuilder = new TransformedResultBuilder(settings, source);
         }
 
-        public IEnumerable<TransformedResult> TransformResponses(List<Request> requests)
+        public IEnumerable<TransformedResult> TransformResponses(List<Request> requests, SearchDetails searchDetails)
         {
            return requests
                 .Where(r => r.Success)
                 .SelectMany(r => TransformResponse(
-                    (SearchExtraHelper)r.ExtraInfo,
+                    searchDetails,
+                    r.ExtraInfo.ToSafeInt(),
                     JsonConvert.DeserializeObject<DerbySoftShoppingEngineV4SearchResponse>(r.ResponseString, DerbySoftSupport.GetJsonSerializerSettings())));
         }
 
         public IEnumerable<TransformedResult> TransformResponse(
-            SearchExtraHelper searchExtraHelper,
+            SearchDetails searchDetails,
+            int propertyReferenceId,
             DerbySoftShoppingEngineV4SearchResponse searchResponse)
         {
-            var searchDetails = searchExtraHelper.SearchDetails;
             if (searchResponse?.AvailableHotels is null || !searchResponse.AvailableHotels.Any())
             {
                 yield break;
@@ -46,7 +47,7 @@
                     var transformedResult =
                         _resultBuilder.BuildTransformedResult(
                             searchDetails,
-                            searchExtraHelper.ExtraInfo.ToSafeInt(),
+                            propertyReferenceId,
                             hotel.HotelId,
                             searchResponse.Header.Token,
                             roomRate);

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using CSSuppliers.iVectorConnect.Models;
     using CSSuppliers.iVectorConnect.Models.Common;
     using Intuitive;
@@ -26,7 +27,7 @@
 
         public List<string> Sources => Helper.iVectorConnectSources;
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             //1. set up some start values
             string source = resortSplits.First().ThirdPartySupplier;
@@ -49,7 +50,7 @@
 
             requests.Add(request);
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public PropertySearchRequest BuildSearchXml(SearchDetails searchDetails, List<ResortSplit> resortSplits, string source)

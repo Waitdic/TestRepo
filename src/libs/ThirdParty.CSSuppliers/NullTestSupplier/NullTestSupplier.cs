@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Net.WebRequests;
     using ThirdParty;
@@ -21,13 +22,13 @@
             _settings = Ensure.IsNotNull(settings, nameof(settings));
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
-            return new List<Request>() { new Request() {
+            return Task.FromResult(new List<Request>() { new Request() {
                 EndPoint = "",
                 ExtraInfo = searchDetails,
-                Method=eRequestMethod.GET} };
+                Method=eRequestMethod.GET} });
         }
 
         public bool ResponseHasExceptions(Request request)

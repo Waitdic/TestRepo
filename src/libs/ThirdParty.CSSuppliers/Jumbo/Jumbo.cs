@@ -284,9 +284,9 @@
                 sbCancellationRequest.Append("<soap:Body>");
                 sbCancellationRequest.Append("<tns:cancel>");
                 sbCancellationRequest.Append("<CancelRQ_1>");
-                sbCancellationRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "AgencyCode", _settings));
-                sbCancellationRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "BrandCode", _settings));
-                sbCancellationRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "POS", _settings));
+                sbCancellationRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "AgencyCode", _settings));
+                sbCancellationRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "BrandCode", _settings));
+                sbCancellationRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "POS", _settings));
                 sbCancellationRequest.AppendFormat("<basketId>{0}</basketId>", propertyDetails.SourceReference);
                 sbCancellationRequest.Append("<comment/>");
                 sbCancellationRequest.Append("<language>en</language>");
@@ -474,9 +474,9 @@
 
             // body
             sbPreBookRequest.Append("<ValuationRQ_1>");
-            sbPreBookRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "AgencyCode", _settings));
-            sbPreBookRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "BrandCode", _settings));
-            sbPreBookRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "POS", _settings));
+            sbPreBookRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "AgencyCode", _settings));
+            sbPreBookRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "BrandCode", _settings));
+            sbPreBookRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "POS", _settings));
             sbPreBookRequest.AppendFormat("<checkin>{0}</checkin>", propertyDetails.ArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sbPreBookRequest.AppendFormat("<checkout>{0}</checkout>", propertyDetails.ArrivalDate.AddDays(propertyDetails.Duration).ToString("yyyy-MM-ddThh:mm:ss"));
             sbPreBookRequest.AppendFormat("<establishmentId>{0}</establishmentId>", propertyDetails.TPKey);
@@ -527,9 +527,9 @@
 
             // body
             sbBookRequest.Append("<ConfirmRQ_1>");
-            sbBookRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "AgencyCode", _settings));
-            sbBookRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "BrandCode", _settings));
-            sbBookRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.LeadGuestNationalityID, "POS", _settings));
+            sbBookRequest.AppendFormat("<agencyCode>{0}</agencyCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "AgencyCode", _settings));
+            sbBookRequest.AppendFormat("<brandCode>{0}</brandCode>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "BrandCode", _settings));
+            sbBookRequest.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", GetCredentials(propertyDetails, propertyDetails.NationalityCode, "POS", _settings));
             sbBookRequest.AppendFormat("<checkin>{0}</checkin>", propertyDetails.ArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sbBookRequest.AppendFormat("<checkout>{0}</checkout>", propertyDetails.ArrivalDate.AddDays(propertyDetails.Duration).ToString("yyyy-MM-ddThh:mm:ss"));
             sbBookRequest.AppendFormat("<establishmentId>{0}</establishmentId>", propertyDetails.TPKey);
@@ -604,7 +604,7 @@
 
         #region Credentials
 
-        public static string GetCredentials(IThirdPartyAttributeSearch searchDetails, int searchNationalityId, string type, IJumboSettings settings)
+        public static string GetCredentials(IThirdPartyAttributeSearch searchDetails, string nationalityCode, string type, IJumboSettings settings)
         {
             // credentials
             string agencyCode = settings.get_AgencyCode(searchDetails);
@@ -621,7 +621,7 @@
                     {
                         string nationalities = nationalityBasedCredential.Split('|')[3];
 
-                        if (nationalities.Split(',').Contains(searchNationalityId.ToString()))
+                        if (nationalities.Split(',').Contains(nationalityCode.ToString()))
                         {
                             brandCode = nationalityBasedCredential.Split('|')[0];
                             pos = nationalityBasedCredential.Split('|')[1];

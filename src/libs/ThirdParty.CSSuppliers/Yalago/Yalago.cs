@@ -231,7 +231,7 @@
             var request = new Request();
             try
             {
-                string sourceMarket = _support.TPCountryCodeLookup(ThirdParties.YALAGO, propertyDetails.SellingCountry);
+                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
                     sourceMarket = _settings.CountryCode(propertyDetails);
@@ -422,13 +422,13 @@
                 };
 
                 string sourceMarket;
-                if (string.IsNullOrEmpty(_support.TPCountryCodeLookup(ThirdParties.YALAGO, propertyDetails.SellingCountry)))
+                if (string.IsNullOrEmpty(await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry)))
                 {
                     sourceMarket = _settings.CountryCode(propertyDetails);
                 }
                 else
                 {
-                    sourceMarket = _support.TPCountryCodeLookup(ThirdParties.YALAGO, propertyDetails.SellingCountry);
+                    sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry);
                 }
                 var request = new YalagoCreateBookingRequest()
                 {

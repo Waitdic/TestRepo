@@ -10,7 +10,6 @@
     using ThirdParty.CSSuppliers.DerbySoft.Models;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class BookingUsbV4AvailabilityRequestBuilder : ISearchRequestBuilder
     {
@@ -51,13 +50,6 @@
                         uniqueCode = $"{_source}_{resortSplits.First().ResortCode}";
                     }
 
-                    var searchHelper = new SearchExtraHelper
-                    {
-                        UniqueRequestID = uniqueCode,
-                        SearchDetails = searchDetails,
-                        ExtraInfo = propertyRoomBookingID.ToString()
-                    };
-
                     var availabilityRequest = GetAvailabilityRequest(searchDetails, roomDetail, hotelKey);
 
                     var request = new Request
@@ -68,7 +60,7 @@
                         ContentType = ContentTypes.Application_json,
                         Accept = "application/json",
                         UseGZip = _settings.UseGZip(searchDetails, _source),
-                        ExtraInfo = searchHelper,
+                        ExtraInfo = propertyRoomBookingID,
                         TimeoutInSeconds = 100,
                     };
 

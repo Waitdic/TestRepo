@@ -13,7 +13,6 @@
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
     using ThirdParty.Tests.DerbySoft;
 
@@ -79,12 +78,12 @@
             // Arrange
             var transformedResults = new TransformedResultCollection();
             var guid = new Guid("2a774834-63a2-4a29-a699-7706e4bb1f42");
-            var requests = new List<Request> { CreateResponseWebRequest(responseString, SearchDetailsList[0], new SearchExtraHelper { SearchDetails = SearchDetailsList[0], ExtraInfo = "1" }) };
+            var requests = new List<Request> { CreateResponseWebRequest(responseString, SearchDetailsList[0], 1) };
             var searchDetails = SearchDetailsList[0];
             var serializer = new Serializer();
 
             // Act 
-            transformedResults.TransformedResults.AddRange(transformer.TransformResponses(requests));
+            transformedResults.TransformedResults.AddRange(transformer.TransformResponses(requests, searchDetails));
             var xmlResults = transformedResults.DistinctValidResults.Select(r => serializer.Serialize(r)).ToList();
 
             var sb = new StringBuilder();

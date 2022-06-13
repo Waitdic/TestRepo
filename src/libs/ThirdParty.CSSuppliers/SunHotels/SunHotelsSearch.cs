@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -16,7 +17,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class SunHotelsSearch : IThirdPartySearch, ISingleSource
     {
@@ -59,7 +59,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var searchCodes = new Dictionary<List<string>, string>();
@@ -91,14 +91,8 @@
 
                 foreach (var roomDetail in searchDetails.RoomDetails)
                 {
-                    var extraInfo = new SearchExtraHelper(searchDetails, uniqueCode)
-                    {
-                        // record the room id for the transform
-                        ExtraInfo = propertyRoomBookingId.ToString()
-                    };
-
                     int total = searchCode.Key.Count;
-                    var from = default(int);
+                    int from = 0;
                     int numberToTake = total;
 
                     if (hotelRequestLimit > 0)
@@ -125,7 +119,7 @@
                         {
                             EndPoint = requestBody.ToString(),
                             Method = eRequestMethod.GET,
-                            ExtraInfo = extraInfo
+                            ExtraInfo = propertyRoomBookingId
                         };
 
                         requests.Add(request);
@@ -137,7 +131,7 @@
                 }
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public string BuildSearchRequestString(
@@ -241,9 +235,10 @@
             var roomTypes = GetRoomTypes();
 
             // order by property room booking id - stored in extra info
-            foreach (var request in requests.OrderBy(o => ((SearchExtraHelper)o.ExtraInfo).ExtraInfo.ToSafeInt()))
+            foreach (var request in requests.OrderBy(o => o.ExtraInfo.ToSafeInt()))
             {
                 SunhotelsSearchResponse response = null;
+
                 try
                 {
                     response = _serializer.DeSerialize<SunhotelsSearchResponse>(request.ResponseXML);
@@ -252,7 +247,8 @@
                 {
                     var exception = ex.ToString();
                 }
-                response.PropertyRoomBookingID = ((SearchExtraHelper)request.ExtraInfo).ExtraInfo.ToSafeInt();
+
+                response.PropertyRoomBookingID = request.ExtraInfo.ToSafeInt();
                 var roomDetail = searchDetails.RoomDetails.Single(o => o.PropertyRoomBookingID == response.PropertyRoomBookingID);
 
                 foreach (var hotel in response.hotels)

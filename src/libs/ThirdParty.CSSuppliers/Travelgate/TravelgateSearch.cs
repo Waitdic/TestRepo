@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Web;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -53,7 +54,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             string source = resortSplits.First().ThirdPartySupplier;
@@ -102,8 +103,6 @@
                 sbSearchRequest.Append("<ns:timeoutMilliseconds>25000</ns:timeoutMilliseconds>"); // max general search timeout is 25s
                 sbSearchRequest.Append("<ns:version>1</ns:version>");
                 sbSearchRequest.Append("<ns:providerRQs>");
-
-                int requestCount = 1;
 
                 // Some third parties don't support searches by TPKey, so use these to check what kind of search we want to be doing
                 int maximumHotelSearchNumber = _settings.get_MaximumHotelSearchNumber(searchDetails, source);
@@ -174,10 +173,9 @@
                     searchBatchDetails.SetSearchIDs();
                 }
 
-                BuildSearchBatch(searchDetails, searchBatchDetails, ref sbSearchRequest, ref requestCount);
+                await BuildSearchBatchAsync(searchDetails, searchBatchDetails, sbSearchRequest);
 
                 // Next
-
                 sbSearchRequest.Append("</ns:providerRQs>");
                 sbSearchRequest.Append("</ns:availRQ>");
                 sbSearchRequest.Append("</ns:Avail>");
@@ -203,10 +201,14 @@
             return requests;
         }
 
-        public void BuildSearchBatch(SearchDetails searchDetails, SearchBatchDetails searchBatchDetails, ref StringBuilder searchRequest, ref int requestCount)
+        public async Task BuildSearchBatchAsync(
+            SearchDetails searchDetails,
+            SearchBatchDetails searchBatchDetails,
+            StringBuilder searchRequest)
         {
             // Index to keep track of where we're at
             int index = 0;
+            int requestCount = 0;
 
             // Loop through the batches
             for (int batchNumber = 1; batchNumber <= searchBatchDetails.BatchCount; batchNumber++)
@@ -269,7 +271,7 @@
                 searchRequest.AppendFormat("<EndDate>{0}</EndDate>", searchDetails.DepartureDate.ToString("dd/MM/yyyy"));
                 searchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.get_CurrencyCode(searchDetails, searchBatchDetails.Source));
 
-                string nationality = _support.TPNationalityLookup(ThirdParties.TRAVELGATE, searchDetails.NationalityID);
+                string nationality = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, searchDetails.NationalityCode);
                 if (string.IsNullOrEmpty(nationality))
                 {
                     nationality = _settings.get_DefaultNationality(searchDetails, searchBatchDetails.Source);
@@ -351,7 +353,7 @@
                 searchRequest.Append("</ns:rqXML>");
                 searchRequest.Append("</ns:ProviderRQ>");
 
-                requestCount += 1;
+                requestCount++;
             }
         }
 

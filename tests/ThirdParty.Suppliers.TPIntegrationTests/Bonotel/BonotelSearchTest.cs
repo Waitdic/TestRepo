@@ -24,11 +24,11 @@
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(BonotelRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(BonotelRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(BonotelRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(BonotelRes.RequestLog));
         }
 
         [Fact]

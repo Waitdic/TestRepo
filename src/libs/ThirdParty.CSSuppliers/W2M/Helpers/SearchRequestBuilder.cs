@@ -4,17 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
+    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.W2M;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.Models.W2M;
-    using Microsoft.Extensions.Logging;
-    using System.Threading.Tasks;
 
     internal class SearchRequestBuilder
     {
@@ -67,12 +66,8 @@
 
                     var searchRequest = _xmlRequestBuilder.BuildAvailabilityRequest(parameters, startDate, endDate, room, leadGuestNationality, codes);
                     var request = BuildJuniperWebRequest(searchRequest, Constants.RequestNames.Search, parameters, Constants.SoapActions.AvailabilityCheck);
-                    var uniqueCode = $"{source}_{Guid.NewGuid()}";
-                    var searchHelper = new SearchExtraHelper(searchDetails, uniqueCode)
-                    {
-                        ExtraInfo = propertyRoomBookingID.ToString()
-                    };
-                    request.ExtraInfo = searchHelper;
+                    
+                    request.ExtraInfo = propertyRoomBookingID;
                     requests.Add(request);
                 }
             }

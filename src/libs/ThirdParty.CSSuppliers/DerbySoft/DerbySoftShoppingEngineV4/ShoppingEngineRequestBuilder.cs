@@ -7,12 +7,11 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Newtonsoft.Json;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
     using ThirdParty;
-    using ThirdParty.Search.Support;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
     using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using ThirdParty.Models;
+    using ThirdParty.Search.Models;
 
     public class ShoppingEngineRequestBuilder : ISearchRequestBuilder
     {
@@ -116,20 +115,13 @@
             int propertyRoomBookingId,
             string uniqueCode)
         {
-            var searchHelper = new SearchExtraHelper
-            {
-                UniqueRequestID = uniqueCode,
-                SearchDetails = searchDetails,
-                ExtraInfo = propertyRoomBookingId.ToString()
-            };
-
             var request = new Request
             {
                 EndPoint = _settings.ShoppingEngineURL(searchDetails, _source),
                 Method = eRequestMethod.POST,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",
-                ExtraInfo = searchHelper,
+                ExtraInfo = propertyRoomBookingId,
             };
 
             var serialisedRequest = JsonConvert.SerializeObject(deserialisedRequest, DerbySoftSupport.GetJsonSerializerSettings());

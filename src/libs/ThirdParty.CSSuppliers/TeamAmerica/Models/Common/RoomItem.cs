@@ -31,6 +31,6 @@
 
         [XmlArray("Passengers")]
         [XmlArrayItem("NewPassenger")]
-        public List<NewPassanger> Passangers { get; set; } = new();
+        public List<NewPassenger> Passengers { get; set; } = new();
     }
 }

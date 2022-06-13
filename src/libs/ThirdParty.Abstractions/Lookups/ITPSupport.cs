@@ -9,20 +9,12 @@
     public interface ITPSupport
     {
         /// <summary>
-        /// Returns the station code.
-        /// </summary>
-        /// <param name="source">The s source.</param>
-        /// <param name="stationID">The i station identifier.</param>
-        /// <returns>Station code</returns>
-        string TPStationCodeLookup(string source, int stationID);
-
-        /// <summary>
         /// Returns the booking country.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="bookingCountryID">The booking country identifier.</param>
+        /// <param name="bookingCountryId">The booking country identifier.</param>
         /// <returns>Booking country</returns>
-        string TPBookingCountryLookup(string source, int bookingCountryID);
+        Task<string> TPBookingCountryLookupAsync(string source, int bookingCountryId);
 
         /// <summary>
         /// The country code lookup.
@@ -32,7 +24,7 @@
         /// <returns>
         /// The third party country code
         /// </returns>
-        string TPCountryCodeLookup(string source, string countryCode);
+        Task<string> TPCountryCodeLookupAsync(string source, string countryCode);
 
         /// <summary>
         /// The credit card lookup.
@@ -48,77 +40,22 @@
         /// <param name="source">The source.</param>
         /// <param name="currencyCode">The ISO currency code.</param>
         /// <returns>The currency</returns>
-        string TPCurrencyLookup(string source, string currencyCode);
-
-        /// <summary>
-        /// The flight class lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="flightClassID">The flight class identifier.</param>
-        /// <returns>flight class</returns>
-        string TPFlightClassLookup(string source, int flightClassID);
-
-        /// <summary>
-        /// The language code lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="languageID">The language identifier.</param>
-        /// <returns>The third party language code</returns>
-        string TPLanguageCodeLookup(string source, int languageID);
+        Task<string> TPCurrencyLookupAsync(string source, string currencyCode);
 
         /// <summary>
         /// The meal basis lookup.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="mealBasisID">The meal basis identifier.</param>
+        /// <param name="mealBasisId">The meal basis identifier.</param>
         /// <returns>meal basis</returns>
-        string TPMealBasisLookup(string source, int mealBasisID);
-
-        /// <summary>
-        /// The nationality lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="nationalityID">The nationality identifier.</param>
-        /// <returns>The Nationality</returns>
-        string TPNationalityLookup(string source, int nationalityID);
-
-        /// <summary>
-        /// The offsite payment type lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="offsitePaymentTypeID">The offsite payment type identifier.</param>
-        /// <returns>offsite payment type</returns>
-        string TPOffsitePaymentTypeLookup(string source, int offsitePaymentTypeID);
+        Task<string> TPMealBasisLookupAsync(string source, int mealBasisId);
 
         /// <summary>
         /// Currencies lookup.
         /// </summary>
-        /// <param name="currencyID">The currency identifier.</param>
+        /// <param name="currencyId">The currency identifier.</param>
         /// <returns>The currency that matches the provided currencyID</returns>
-        string CurrencyLookup(int currencyID);
-
-        /// <summary>
-        /// The interface lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <returns>The Third Party Interface</returns>
-        string TPInterfaceLookup(string source);
-
-        /// <summary>
-        /// The extra type lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="extraTypeID">The extra type identifier.</param>
-        /// <returns>extra type</returns>
-        string TPExtraTypeLookup(string source, int extraTypeID);
-
-        /// <summary>
-        /// The resort lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="resort">The resort.</param>
-        /// <returns>The resort ID</returns>
-        int TPResortLookup(string source, string resort);
+        string CurrencyLookup(int currencyId);
 
         /// <summary>
         /// The booking country code lookup.
@@ -126,31 +63,7 @@
         /// <param name="source">The source.</param>
         /// <param name="bookingCountryCode">The booking country code.</param>
         /// <returns>booking country code</returns>
-        int TPBookingCountryCodeLookup(string source, string bookingCountryCode);
-
-        /// <summary>
-        /// The credit card lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="creditCard">The credit card.</param>
-        /// <returns>credit card</returns>
-        int TPCreditCardLookup(string source, string creditCard);
-
-        /// <summary>
-        /// The flight class lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="flightClass">The flight class.</param>
-        /// <returns>flight class</returns>
-        int TPFlightClassLookup(string source, string flightClass);
-
-        /// <summary>
-        /// The language code lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="languageCode">The language code.</param>
-        /// <returns>language code </returns>
-        int TPLanguageCodeLookup(string source, string languageCode);
+        Task<int> TPBookingCountryCodeLookupAsync(string source, string bookingCountryCode);
 
         /// <summary>
         /// The meal basis lookup.
@@ -158,7 +71,7 @@
         /// <param name="source">The source.</param>
         /// <param name="mealBasis">The meal basis.</param>
         /// <returns>meal basis</returns>
-        int TPMealBasisLookup(string source, string mealBasis);
+        Task<int> TPMealBasisLookupAsync(string source, string mealBasis);
 
         /// <summary>
         /// The nationality lookup.
@@ -166,22 +79,14 @@
         /// <param name="source">The source.</param>
         /// <param name="nationality">The nationality.</param>
         /// <returns>The Nationality</returns>
-        string TPNationalityLookup(string source, string nationality);
-
-        /// <summary>
-        /// The extra type lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="extraType">Type of the extra.</param>
-        /// <returns>extra type</returns>
-        int TPExtraTypeLookup(string source, string extraType);
+        Task<string> TPNationalityLookupAsync(string source, string nationality);
 
         /// <summary>
         /// The meal bases.
         /// </summary>
         /// <param name="source">The s source.</param>
         /// <returns>meal bases</returns>
-        Dictionary<string, int> TPMealBases(string source);
+        Task<Dictionary<string, int>> TPMealBasesAsync(string source);
 
         /// <summary>
         /// The resort code lookup by property id.
@@ -199,8 +104,14 @@
         /// <returns>The resort ID</returns>
         Task<string> TPResortCodeByGeographyIdLookupAsync(string source, int geographyId);
 
+        /// <summary>ISO currency id lookup.</summary>
+        /// <param name="currencyCode">The ISO currency code.</param>
+        /// <returns>The currency id of the corresponding currencyCode</returns>
         Task<int> TPCurrencyIDLookupAsync(string currencyCode);
 
+        /// <summary>ISO currency code lookup.</summary>
+        /// <param name="currencyId">The ISO currency id.</param>
+        /// <returns>The currency code of corresponding currency id</returns>
         Task<string> TPCurrencyCodeLookupAsync(int currencyId);
     }
 }

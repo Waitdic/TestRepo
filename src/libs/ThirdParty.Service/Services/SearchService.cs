@@ -6,11 +6,11 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Intuitive;
-    using ThirdParty;
     using ThirdParty.Factories;
     using ThirdParty.Models;
     using ThirdParty.Repositories;
     using ThirdParty.SDK.V2.PropertySearch;
+    using ThirdParty.Search;
     using ThirdParty.Search.Models;
 
     /// <summary>

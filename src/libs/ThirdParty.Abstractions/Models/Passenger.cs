@@ -71,13 +71,14 @@
         /// </value>
         public bool IsLeadGuest { get; set; } = false;
 
+        // todo - populate from prebook / book requests
         /// <summary>
         /// Gets or sets the nationality identifier.
         /// </summary>
         /// <value>
         /// The nationality identifier.
         /// </value>
-        public int NationalityID { get; set; }
+        public string NationalityCode { get; set; }
 
         /// <summary>
         /// Gets or sets the address.

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -19,7 +20,6 @@
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
     using Cancellation = ThirdParty.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 
@@ -55,7 +55,7 @@
             return restrictions;
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string source = resortSplits.First().ThirdPartySupplier;
             var requests = new List<Request>();
@@ -71,23 +71,16 @@
 
                 foreach (var roomCombinationRequest in roomRequests)
                 {
-                    string nationality = _support.TPNationalityLookup(source, searchDetails.NationalityID);
+                    string nationality = await _support.TPNationalityLookupAsync(source, searchDetails.NationalityCode);
                     var xmlRequest = BuildRequest(searchDetails, roomCombinationRequest, resortCode,
                         searchDetails.PropertyArrivalDate, searchDetails.PropertyDepartureDate,
                         _settings.Actor(searchDetails, source), _settings.User(searchDetails, source),
                         _settings.Password(searchDetails, source), _settings.Version(searchDetails, source), nationality);
 
-                    // make a unique code here
-                    string uniqueCode = source;
-                    if (resortSplits.Count > 1)
-                        uniqueCode = $"{uniqueCode}_{resortSplit.ResortCode}";
-                    if (roomRequests.Count > 1)
-                        uniqueCode = $"{uniqueCode}_{roomRequest}";
                     var request = new Request
                     {
                         EndPoint = _settings.URL(searchDetails, source),
                         Method = eRequestMethod.POST,
-                        ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
                     };
                     request.SetRequest(xmlRequest);
                     requests.Add(request);

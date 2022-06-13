@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -19,7 +20,6 @@
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class W2MSearch : IThirdPartySearch, ISingleSource
     {
@@ -57,11 +57,11 @@
 
         #region Build Search Request
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var searchRequests = _searchRequestBuilder.BuildSearchRequests(searchDetails, Source, resortSplits);
 
-            return searchRequests;
+            return Task.FromResult(searchRequests);
         }
 
         #endregion
@@ -81,15 +81,12 @@
                 }
 
                 var hotelAvailResponse = _serializer.DeSerialize<HotelAvailResponse>(responseString);
-                var searchExtraHelper = request.ExtraInfo as SearchExtraHelper;
 
-                if (searchExtraHelper == null)
-                {
-                    continue;
-                }
 
-                var transformedResults = TransformResults(hotelAvailResponse
-                    .AvailabilityRS.Results.HotelResultList, searchExtraHelper);
+                var transformedResults = TransformResults(
+                    hotelAvailResponse.AvailabilityRS.Results.HotelResultList,
+                    searchDetails,
+                    request.ExtraInfo.ToSafeInt());
 
                 resultsCollection.TransformedResults.AddRange(transformedResults);
             }
@@ -98,7 +95,9 @@
         }
 
         private static IEnumerable<TransformedResult> TransformResults(
-            IEnumerable<HotelAvailResponseHotelResult> hotelResultList, SearchExtraHelper helper)
+            IEnumerable<HotelAvailResponseHotelResult> hotelResultList,
+            SearchDetails searchDetails,
+            int propertyRoomBookingId)
         {
             foreach (var hotelResult in hotelResultList)
             {
@@ -116,8 +115,8 @@
                         var transformedResult = new TransformedResult
                         {
                             TPKey = hotelResult.Code,
-                            PropertyRoomBookingID = helper.ExtraInfo.ToSafeInt(),
-                            Cancellations = GetCancellations(hotelOption, totalFixAmounts.Gross, helper).ToList(),
+                            PropertyRoomBookingID = propertyRoomBookingId,
+                            Cancellations = GetCancellations(hotelOption, totalFixAmounts.Gross, searchDetails).ToList(),
                             CurrencyCode = hotelOption.Prices.Price.Currency,
                             RoomType = hotelRoom.Name,
                             RoomTypeCode = roomTypeCode,
@@ -135,9 +134,11 @@
             }
         }
 
-        private static IEnumerable<Cancellation> GetCancellations(HotelOption hotelOption,
-            decimal price, SearchExtraHelper helper) =>
-            hotelOption.CancellationPolicy?.PolicyRules?.RuleList
+        private static IEnumerable<Cancellation> GetCancellations(
+            HotelOption hotelOption,
+            decimal price,
+            SearchDetails searchDetails)
+            => hotelOption.CancellationPolicy?.PolicyRules?.RuleList
                 .Select(policyRule => new Cancellation()
                 {
                     StartDate = policyRule.DateFrom != null
@@ -145,8 +146,8 @@
                         : DateTime.Now.Date,
                     EndDate = policyRule.DateTo != null
                         ? DateTime.ParseExact(policyRule.DateTo, Constants.DateTimeFormat, CultureInfo.InvariantCulture)
-                        : helper.SearchDetails.ArrivalDate,
-                    Amount = W2MHelper.GetCancellationCost(price, helper.SearchDetails.Duration, policyRule)
+                        : searchDetails.ArrivalDate,
+                    Amount = W2MHelper.GetCancellationCost(price, searchDetails.Duration, policyRule)
                 }) ?? new List<Cancellation>();
 
         #endregion

@@ -30,8 +30,8 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCurrencyLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("100");
-            mockSupport.Setup(x => x.TPNationalityLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("100");
+            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("100"));
+            mockSupport.Setup(x => x.TPNationalityLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("100"));
             return mockSupport;
         }
 
@@ -44,14 +44,14 @@
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Arrange 
             ResortSplits = Helper.CreateResortSplits(Supplier, Helper.CreateHotels(2795805, 49886, "Torre Hogar", "102245"), "15304|140965");
 
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(DOTWRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(DOTWRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(DOTWRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(DOTWRes.RequestLog));
         }
 
         [Fact]

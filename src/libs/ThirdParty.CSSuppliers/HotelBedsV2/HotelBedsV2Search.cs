@@ -17,7 +17,7 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Results;
-    using ThirdParty.Search.Support;
+    using System.Threading.Tasks;
 
     public class HotelBedsV2Search : IThirdPartySearch, ISingleSource
     {
@@ -52,7 +52,7 @@
 
         #endregion
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
@@ -97,19 +97,9 @@
                 batches.Add(batchNumber, hotelIDList);
             }
 
-            foreach (KeyValuePair<int, List<int>> batch in batches)
+            foreach (var batch in batches)
             {
-                HotelBedsV2AvailabilityRequest availabilityRequest = GetAvailabilityRequest(searchDetails, batch.Value);
-
-                var searchHelper = new SearchHelper();
-                searchHelper.SearchDetails = searchDetails;
-                searchHelper.ResortSplit = resortSplits.FirstOrDefault();
-                string sUniqueCode = Source;
-                if (resortSplits.Count > 1)
-                {
-                    sUniqueCode = $"{Source}_{resortSplits.FirstOrDefault().ResortCode}";
-                }
-                searchHelper.UniqueRequestID = sUniqueCode;
+                var availabilityRequest = await GetAvailabilityRequestAsync(searchDetails, batch.Value);
 
                 var request = new Request()
                 {
@@ -118,7 +108,6 @@
                     Source = ThirdParties.HOTELBEDSV2,
                     ContentType = ContentTypes.Application_json,
                     Accept = "application/json",
-                    ExtraInfo = searchHelper,
                     TimeoutInSeconds = 100,
                 };
 
@@ -274,17 +263,17 @@
             return transformedResults;
         }
 
-        private HotelBedsV2AvailabilityRequest GetAvailabilityRequest(SearchDetails searchDetails, List<int> hotelIDList)
+        private async Task<HotelBedsV2AvailabilityRequest> GetAvailabilityRequestAsync(SearchDetails searchDetails, List<int> hotelIDList)
         {
-            HotelBedsV2AvailabilityRequest hotelBedsV2AvailabilityRequest = new HotelBedsV2AvailabilityRequest();
-            HotelBedsV2AvailabilityRequest.Stay stay = new HotelBedsV2AvailabilityRequest.Stay();
+            var hotelBedsV2AvailabilityRequest = new HotelBedsV2AvailabilityRequest();
+            var stay = new HotelBedsV2AvailabilityRequest.Stay();
             var occupancies = new List<HotelBedsV2AvailabilityRequest.Occupancy>();
 
             string countryCode = "";
 
             if (searchDetails.LeadGuestBookingCountryID > 0)
             {
-                countryCode = _support.TPBookingCountryLookup(Source, searchDetails.LeadGuestBookingCountryID);
+                countryCode = await _support.TPBookingCountryLookupAsync(Source, searchDetails.LeadGuestBookingCountryID);
             }
 
             if (string.IsNullOrWhiteSpace(countryCode))
@@ -299,31 +288,39 @@
 
             foreach (var roomDetail in searchDetails.RoomDetails)
             {
-                HotelBedsV2AvailabilityRequest.Occupancy occupancy = new HotelBedsV2AvailabilityRequest.Occupancy();
-                List<HotelBedsV2AvailabilityRequest.Pax> paxList = new List<HotelBedsV2AvailabilityRequest.Pax>();
-                occupancy.adults = roomDetail.Adults;
-                occupancy.rooms = 1;
-                occupancy.children = roomDetail.Children + roomDetail.Infants;
+                var paxList = new List<HotelBedsV2AvailabilityRequest.Pax>();
+                var occupancy = new HotelBedsV2AvailabilityRequest.Occupancy
+                {
+                    adults = roomDetail.Adults,
+                    rooms = 1,
+                    children = roomDetail.Children + roomDetail.Infants
+                };
 
                 foreach (int childAge in roomDetail.ChildAges)
                 {
-                    HotelBedsV2AvailabilityRequest.Pax pax = new HotelBedsV2AvailabilityRequest.Pax();
-                    pax.age = childAge;
-                    pax.type = "CH";
+                    var pax = new HotelBedsV2AvailabilityRequest.Pax
+                    {
+                        age = childAge,
+                        type = "CH"
+                    };
                     paxList.Add(pax);
                 }
                 for (int adultIncrementer = 1; adultIncrementer <= roomDetail.Adults; adultIncrementer++)
                 {
-                    HotelBedsV2AvailabilityRequest.Pax pax = new HotelBedsV2AvailabilityRequest.Pax();
-                    pax.age = 30;
-                    pax.type = "AD";
+                    var pax = new HotelBedsV2AvailabilityRequest.Pax
+                    {
+                        age = 30,
+                        type = "AD"
+                    };
                     paxList.Add(pax);
                 }
                 for (int infantIncrementer = 1; infantIncrementer <= roomDetail.Infants; infantIncrementer++)
                 {
-                    HotelBedsV2AvailabilityRequest.Pax pax = new HotelBedsV2AvailabilityRequest.Pax();
-                    pax.age = 1;
-                    pax.type = "CH";
+                    var pax = new HotelBedsV2AvailabilityRequest.Pax
+                    {
+                        age = 1,
+                        type = "CH"
+                    };
                     paxList.Add(pax);
                 }
 
@@ -332,37 +329,42 @@
                 occupancies.Add(occupancy);
             }
 
-            HotelBedsV2AvailabilityRequest.Hotels hotels = new HotelBedsV2AvailabilityRequest.Hotels();
 
-            hotels.hotel = hotelIDList.ToArray();
             if (hotelIDList.Any())
             {
-                hotelBedsV2AvailabilityRequest.hotels = hotels;
+                hotelBedsV2AvailabilityRequest.hotels = new HotelBedsV2AvailabilityRequest.Hotels
+                {
+                    hotel = hotelIDList.ToArray()
+                }; ;
             }
 
-            HotelBedsV2AvailabilityRequest.GeoLocation geoLocation = new HotelBedsV2AvailabilityRequest.GeoLocation();
             if (searchDetails.Radius > 0)
             {
-                geoLocation.Latitude = searchDetails.Latitude;
-                geoLocation.Longitude = searchDetails.Longitude;
-                geoLocation.radius = searchDetails.Radius;
-                hotelBedsV2AvailabilityRequest.geoLocation = geoLocation;
+                hotelBedsV2AvailabilityRequest.geoLocation = new HotelBedsV2AvailabilityRequest.GeoLocation
+                {
+                    Latitude = searchDetails.Latitude,
+                    Longitude = searchDetails.Longitude,
+                    radius = searchDetails.Radius
+                }; ;
             }
 
             var UseDestination = (!hotelIDList.Any()) && !(searchDetails.Radius > 0);
 
-            HotelBedsV2AvailabilityRequest.Boards boards = new HotelBedsV2AvailabilityRequest.Boards();
+            var boards = new HotelBedsV2AvailabilityRequest.Boards();
             if (searchDetails.MealBasisID > 0)
             {
                 boards.included = true;
                 List<string> mealBasisList = new List<string>();
 
-                mealBasisList.Add(_support.TPMealBasisLookup(Source, searchDetails.MealBasisID));
+                mealBasisList.Add(await _support.TPMealBasisLookupAsync(Source, searchDetails.MealBasisID));
                 boards.board = mealBasisList.ToArray();
             }
 
-            HotelBedsV2AvailabilityRequest.Filter filter = new HotelBedsV2AvailabilityRequest.Filter();
-            filter.packaging = _settings.Packaging(searchDetails);
+            var filter = new HotelBedsV2AvailabilityRequest.Filter
+            {
+                packaging = _settings.Packaging(searchDetails)
+            };
+
             if (!_settings.AllowAtHotelPayments(searchDetails))
             {
                 filter.paymentType = "AT_WEB";
@@ -424,10 +426,5 @@
             }
             return hashStringBuilder.ToString();
         }
-    }
-    public class SearchHelper : SearchExtraHelper
-    {
-        public ResortSplit ResortSplit { get; set; } = new();
-        public List<string> PropertyIDs { get; } = new List<string>();
     }
 }

@@ -79,7 +79,7 @@
                     sbErrata.AppendLine();
 
                     // Send CancellationInfoRequest - one per reservation request
-                    GetPrebookCancellationDetailsAsync(propertyDetails, bookCode);
+                    await GetPrebookCancellationDetailsAsync(propertyDetails, bookCode);
 
                     if (reserveResult.Request != null)
                     {

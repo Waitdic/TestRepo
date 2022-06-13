@@ -29,17 +29,17 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCurrencyLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("GBP");
-            mockSupport.Setup(x => x.TPMealBases(It.IsAny<string>())).Returns(Helper.GetMealBasisCodes());
+            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
+            mockSupport.Setup(x => x.TPMealBasesAsync(It.IsAny<string>())).Returns(Task.FromResult(Helper.GetMealBasisCodes()));
             return mockSupport;
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(ExpediaRapidRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(ExpediaRapidRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(ExpediaRapidRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(ExpediaRapidRes.RequestLog));
         }
 
         [Fact]

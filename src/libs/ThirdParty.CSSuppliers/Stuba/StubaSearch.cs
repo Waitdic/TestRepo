@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -14,26 +15,22 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class StubaSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IStubaSettings _settings;
 
-        private readonly ITPSupport _support;
-
         private readonly ISerializer _serializer;
 
         public string Source => ThirdParties.STUBA;
 
-        public StubaSearch(IStubaSettings settings, ITPSupport support, ISerializer serializer)
+        public StubaSearch(IStubaSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
 
@@ -77,13 +74,12 @@
                     EndPoint = _settings.get_URL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.STUBA,
-                    ExtraInfo = new SearchExtraHelper() { SearchDetails = searchDetails }
                 };
                 request.SetRequest(requestBody);
                 requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         private IEnumerable<string> BuildRequests(SearchDetails searchDetails, string resortCode, List<string> hotelIds)

@@ -128,7 +128,7 @@
 
         public async Task<int> GetCurrencyCodeAsync(int currencyId, IThirdPartyAttributeSearch searchDetails)
         {
-            string currencyCode = _support.TPCurrencyLookup(ThirdParties.DOTW, currencyId.ToSafeString());
+            string currencyCode = await _support.TPCurrencyLookupAsync(ThirdParties.DOTW, currencyId.ToSafeString());
 
             var currencyCache = await GetCurrencyCacheAsync(searchDetails);
             if (currencyCache.ContainsKey(currencyCode))

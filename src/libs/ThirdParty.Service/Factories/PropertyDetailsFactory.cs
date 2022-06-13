@@ -57,7 +57,7 @@
         /// </returns>
         public async Task<PropertyDetails> CreateAsync(Prebook.Request request, User user)
         {
-            PropertyDetails propertyDetails = new PropertyDetails();
+            var propertyDetails = new PropertyDetails();
 
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken);
             
@@ -71,7 +71,7 @@
                     PropertyID = propertyToken.CentralPropertyID,
                     TPPropertyID = propertyToken.PropertyID,
                     TPKey = propertyToken.TPKey,
-                    NationalityID = request.NationalityID,
+                    NationalityCode = request.NationalityID,
                     CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
@@ -205,7 +205,7 @@
                     LeadGuestTownCity = leadCustomer.CustomerTownCity,
                     LeadGuestCounty = leadCustomer.CustomerCounty,
                     LeadGuestPostcode = leadCustomer.CustomerPostcode,
-                    LeadGuestBookingCountryID = _support.TPBookingCountryCodeLookup(propertyToken.Source, request.LeadCustomer.CustomerBookingCountryCode),
+                    LeadGuestBookingCountryID = await _support.TPBookingCountryCodeLookupAsync(propertyToken.Source, request.LeadCustomer.CustomerBookingCountryCode),
                     LeadGuestPhone = leadCustomer.CustomerPhone,
                     LeadGuestMobile = leadCustomer.CustomerMobile,
                     LeadGuestEmail = leadCustomer.CustomerEmail,
@@ -218,7 +218,7 @@
                     TPKey = propertyToken.TPKey,
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
-                    NationalityID = request.NationalityID,
+                    NationalityCode = request.NationalityID,
                     CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,

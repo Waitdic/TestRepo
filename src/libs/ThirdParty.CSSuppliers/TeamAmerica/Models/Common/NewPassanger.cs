@@ -2,7 +2,7 @@
 {
     using System.Xml.Serialization;
 
-    public class NewPassanger
+    public class NewPassenger
     {
         [XmlElement("Salutation")]
         public string Salutation { get; set; } = string.Empty;

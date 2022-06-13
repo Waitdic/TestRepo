@@ -807,7 +807,7 @@
                 sb.AppendLine("<extraBed>0</extraBed>");
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = GetNationality(propertyDetails.NationalityID, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))
@@ -956,7 +956,7 @@
 
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = GetNationality(propertyDetails.NationalityID, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))
@@ -1028,7 +1028,7 @@
 
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = GetNationality(propertyDetails.NationalityID, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))
@@ -1066,9 +1066,9 @@
 
         #region Nationality and country of residence
 
-        public static string GetNationality(string nationalityISOCode, IThirdPartyAttributeSearch searchDetails, ITPSupport support, IDOTWSettings settings)
+        public async static Task<string> GetNationalityAsync(string nationalityISOCode, IThirdPartyAttributeSearch searchDetails, ITPSupport support, IDOTWSettings settings)
         {
-            string nationality = support.TPNationalityLookup(ThirdParties.DOTW, nationalityISOCode);
+            string nationality = await support.TPNationalityLookupAsync(ThirdParties.DOTW, nationalityISOCode);
 
             if (string.IsNullOrEmpty(nationality))
             {

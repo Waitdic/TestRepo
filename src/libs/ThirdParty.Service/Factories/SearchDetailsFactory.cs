@@ -23,7 +23,7 @@
                 Duration = searchRequest.Duration,
                 PropertyReferenceIDs = searchRequest.Properties,
                 Rooms = searchRequest.RoomRequests.Count,
-                NationalityID = searchRequest.NaionalityID,
+                NationalityCode = searchRequest.NaionalityID,
                 Settings = user.TPSettings,
                 ThirdPartyConfigurations = user.Configurations,
                 LoggingType = log ? "All" : "None",

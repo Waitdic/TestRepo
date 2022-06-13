@@ -29,17 +29,17 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCountryCodeLookup(It.IsAny<string>(), It.IsAny<string>())).Returns("GB");
+            mockSupport.Setup(x => x.TPCountryCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GB"));
 
             return mockSupport;
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
             // Assert 
-            Assert.True(base.ValidBuildSearchRequest(YalagoRes.RequestLogs));
-            Assert.False(base.InvalidBuildSearchRequest(YalagoRes.RequestLogs));
+            Assert.True(await base.ValidBuildSearchRequestAsync(YalagoRes.RequestLogs));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(YalagoRes.RequestLogs));
         }
 
         [Fact]

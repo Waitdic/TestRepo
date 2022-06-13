@@ -1,16 +1,15 @@
 ﻿namespace ThirdParty.Suppliers.TPIntegrationTests.W2M
 {
     using System.Collections.Generic;
+    using System.Net;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
     using Moq;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
+    using Moq.Protected;
     using ThirdParty.CSSuppliers;
+    using ThirdParty.Search.Models;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
     using ThirdParty.Tests.W2M;
-    using System.Net;
-    using Moq.Protected;
 
     public class W2MSearchTests : ThirdPartyPropertySearchBaseTest
     {
@@ -50,25 +49,17 @@
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
-            // Assert 
-            Assert.True(base.ValidBuildSearchRequest(W2MRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(W2MRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(W2MRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(W2MRes.RequestLog));
         }
 
         [Fact]
         public void TransformResponseTest()
         {
-            // Arrange
-            var searchHelper = new SearchExtraHelper
-            {
-                SearchDetails = SearchDetailsList[0],
-                UniqueRequestID = "W2M"
-            };
-
-            // Assert 
-            Assert.True(base.ValidTransformResponse(W2MRes.ResponseXML, W2MRes.TransformedResultXML, SearchDetailsList[0], searchHelper));
+            // Arrange, Act, Assert
+            Assert.True(base.ValidTransformResponse(W2MRes.ResponseXML, W2MRes.TransformedResultXML, SearchDetailsList[0]));
         }
     }
 }

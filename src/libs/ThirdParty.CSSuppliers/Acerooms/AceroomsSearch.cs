@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
@@ -51,7 +52,7 @@
 
         #region "Build Search Request"
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
@@ -84,7 +85,7 @@
                 // Create a request for each batch 
                 foreach (var batch in batches)
                 {
-                    requests.Add(BuildRequest(SafeTypeExtensions.ToSafeInt(searchResortSplit.ResortCode), searchDetails, batch));
+                    requests.Add(await BuildRequestAsync(searchResortSplit.ResortCode.ToSafeInt(), searchDetails, batch));
                 }
             }
 
@@ -164,9 +165,9 @@
         /// <param name="searchDetails">The search details</param>
         /// <param name="hotelIDs">The list of all hotel identifiers to search for</param>
         /// <returns></returns>
-        private Request BuildRequest(int resortCode, SearchDetails searchDetails, List<int> hotelIDs)
+        private async Task<Request> BuildRequestAsync(int resortCode, SearchDetails searchDetails, List<int> hotelIDs)
         {
-            AceroomsAvailabilityRequest availabilityRequest = CreateSearchRequest(resortCode, searchDetails, hotelIDs);
+            var availabilityRequest = await CreateSearchRequestAsync(resortCode, searchDetails, hotelIDs);
 
             var request = new Request()
             {
@@ -196,7 +197,7 @@
         /// <param name="searchDetails">the search deatails</param>
         /// <param name="hotelIDs">the list of unique hotel identifiers to search for </param>
         /// <returns></returns>
-        private AceroomsAvailabilityRequest CreateSearchRequest(int resortCode, SearchDetails searchDetails, List<int> hotelIDs)
+        private async Task<AceroomsAvailabilityRequest> CreateSearchRequestAsync(int resortCode, SearchDetails searchDetails, List<int> hotelIDs)
         {
             AceroomsAvailabilityRequest aceroomsAvailabilityRequest = new AceroomsAvailabilityRequest
             {
@@ -204,10 +205,10 @@
                 Hotels = hotelIDs,
                 ArrivalDate = searchDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                 Nights = searchDetails.Duration,
-                CurrencyCode = _support.TPCurrencyLookup(Source, searchDetails.CurrencyCode)
+                CurrencyCode = await _support.TPCurrencyLookupAsync(Source, searchDetails.CurrencyCode)
             };
 
-            var tpNationalityCode = _support.TPNationalityLookup(Source, searchDetails.NationalityID);
+            var tpNationalityCode = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
 
             aceroomsAvailabilityRequest.NationalityID = string.IsNullOrEmpty(tpNationalityCode) ? "1" : tpNationalityCode; // Set to default if nationality id is not provided
 

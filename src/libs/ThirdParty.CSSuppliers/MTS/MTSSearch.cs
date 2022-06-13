@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
@@ -13,7 +14,6 @@
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
 
     public class MTSSearch : IThirdPartySearch, ISingleSource
     {
@@ -47,7 +47,7 @@
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
             var regions = new Dictionary<string, string>();
@@ -220,28 +220,10 @@
 
                 sbRequest.Append("</OTA_HotelAvailRQ>");
 
-                // if we have one regions then we can simply use the source here
-                string uniqueCode = Source;
-
-                // unless there is more than one
-                if (regions.Count > 1)
-                {
-                    // get a "unique" key for this thread (if regions and resort names overlap then we are in trouble)
-                    string uniqueCodeKey = "All";
-
-                    if (searchKey.Length > 0)
-                    {
-                        uniqueCodeKey = searchKey[searchKey.Length - 1];
-                    }
-
-                    uniqueCode = string.Format("{0}_{1}", Source, uniqueCodeKey);
-                }
-
                 var request = new Request
                 {
                     EndPoint = _settings.BaseURL(searchDetails),
                     Method = eRequestMethod.POST,
-                    ExtraInfo = new SearchExtraHelper(searchDetails, uniqueCode),
                     ContentType = ContentTypes.Application_json
                 };
 
@@ -250,7 +232,7 @@
                 requests.Add(request);
             }
 
-            return requests;
+            return Task.FromResult(requests);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)

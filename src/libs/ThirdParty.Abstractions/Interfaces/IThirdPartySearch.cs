@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Intuitive.Net.WebRequests;
     using ThirdParty.Models;
     using ThirdParty.Results;
@@ -17,7 +18,7 @@
         /// <param name="searchDetails">The search details.</param>
         /// <param name="resortSplits">The resort splits.</param>
         /// <returns>A list of request</returns>
-        List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits);
+        Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits);
 
         /// <summary>
         /// Transforms the response.

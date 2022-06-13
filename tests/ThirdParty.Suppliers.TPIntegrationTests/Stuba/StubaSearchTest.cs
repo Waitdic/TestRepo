@@ -2,11 +2,8 @@
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using Moq;
     using ThirdParty.CSSuppliers.Stuba;
-    using ThirdParty.Lookups;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
     using ThirdParty.Tests.Stuba;
 
@@ -22,16 +19,15 @@
             _provider,
             new List<SearchDetails>() { _searchDetails },
             _settings,
-            new StubaSearch(_settings, new Mock<ITPSupport>().Object, new Serializer()))
+            new StubaSearch(_settings, new Serializer()))
         {
         }
 
         [Fact]
-        public void BuiltSearchRequestTest()
+        public async Task BuiltSearchRequestTest()
         {
-            // Assert 
-            Assert.True(base.ValidBuildSearchRequest(StubaRes.RequestLog));
-            Assert.False(base.InvalidBuildSearchRequest(StubaRes.RequestLog));
+            Assert.True(await base.ValidBuildSearchRequestAsync(StubaRes.RequestLog));
+            Assert.False(await base.InvalidBuildSearchRequestAsync(StubaRes.RequestLog));
         }
 
         [Fact]

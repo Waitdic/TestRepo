@@ -4,6 +4,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
@@ -11,12 +12,11 @@
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Models.Yalago;
-    using ThirdParty.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
+    using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.Search.Support;
-    using ThirdParty.Interfaces;
 
     public class YalagoSearch : IThirdPartySearch, ISingleSource
     {
@@ -50,18 +50,11 @@
 
         #endregion
 
-        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            var searchHelper = new SearchHelper();
             var apiKey = _settings.API_Key(searchDetails);
-            string uniqueCode = Source;
-            searchHelper.ResortSplit = resortSplits.FirstOrDefault();
-            if (resortSplits.Count() > 1)
-            {
-                uniqueCode = string.Format("{0}_{1}", Source, resortSplits.FirstOrDefault().ResortCode);
-            }
-            searchHelper.UniqueRequestID = uniqueCode;
+
             foreach (var searchResortSplit in resortSplits)
             {
                 var hotelIDList = new List<int>();
@@ -70,10 +63,8 @@
                 {
                     hotelIDList.Add(oHotel.TPKey.ToSafeInt());
                 }
-                searchHelper.SearchDetails = searchDetails;
-                searchHelper.ResortSplit = searchResortSplit;
 
-                YalagoAvailabilityRequest availabilityRequest = GetAvailabilityRequest(searchDetails, hotelIDList, searchHelper.ResortSplit.ResortCode);
+                var availabilityRequest = await GetAvailabilityRequestAsync(searchDetails, hotelIDList, searchResortSplit.ResortCode);
 
                 var request = new Request()
                 {
@@ -83,7 +74,6 @@
                     TimeoutInSeconds = 100,
                     UseGZip = _settings.UseGZip(searchDetails),
                     ContentType = "application/json",
-                    ExtraInfo = searchHelper,
                     KeepAlive = true,
                     Source = Source
                 };
@@ -97,13 +87,13 @@
             return requests;
         }
 
-        private YalagoAvailabilityRequest GetAvailabilityRequest(SearchDetails searchDetails, List<int> hotelIds, string resortCode)
+        private async Task<YalagoAvailabilityRequest> GetAvailabilityRequestAsync(SearchDetails searchDetails, List<int> hotelIds, string resortCode)
         {
-            List<YalagoAvailabilityRequest.Room> roomList = new List<YalagoAvailabilityRequest.Room>();
+            var roomList = new List<YalagoAvailabilityRequest.Room>();
 
             foreach (var roomDetail in searchDetails.RoomDetails)
             {
-                YalagoAvailabilityRequest.Room room = new YalagoAvailabilityRequest.Room()
+                var room = new YalagoAvailabilityRequest.Room()
                 {
                     Adults = roomDetail.Adults,
                     ChildAges = roomDetail.ChildAndInfantAges().ToArray()
@@ -113,7 +103,7 @@
 
             }
 
-            string sourceMarket = _support.TPCountryCodeLookup(ThirdParties.YALAGO, searchDetails.SellingCountry);
+            string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, searchDetails.SellingCountry);
 
             if (string.IsNullOrEmpty(sourceMarket))
             {
@@ -243,12 +233,6 @@
                 }
             }
             return transformedResults;
-        }
-
-        public class SearchHelper : SearchExtraHelper
-        {
-            public ResortSplit ResortSplit;
-            public List<string> PropertyIDs = new List<string>();
         }
     }
 }

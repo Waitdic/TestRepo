@@ -68,7 +68,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             return requests;
         }
 
-        public bool ValidBuildSearchRequest(string requestLog)
+        public async Task<bool> ValidBuildSearchRequestAsync(string requestLog)
         {
             // Arrange 
             var mockRequests = GetRequests(requestLog);
@@ -77,20 +77,21 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             // Act
             for (int i = 0; i < SearchDetailsList.Count(); ++i)
             {
-                builtRequests.Add(SearchClass.BuildSearchRequests(SearchDetailsList[i], ResortSplits)[0]);
+                builtRequests.Add((await SearchClass.BuildSearchRequestsAsync(SearchDetailsList[i], ResortSplits))[0]);
             }
             var resStr = builtRequests.Aggregate("", (all, item) => $"{all}{item.RequestLog}\n");
+
             // Assert
             return Helper.AreSameWebRequests(mockRequests, builtRequests);
         }
 
-        public bool InvalidBuildSearchRequest(string requestLog)
+        public async Task<bool> InvalidBuildSearchRequestAsync(string requestLog)
         {
             // Arrange
             var emptyResortSplits = new List<ResortSplit>();
 
             // Act 
-            var builtRequests = SearchClass.BuildSearchRequests(SearchDetailsList[0], emptyResortSplits);
+            var builtRequests = await SearchClass.BuildSearchRequestsAsync(SearchDetailsList[0], emptyResortSplits);
 
             // Assert
             return Helper.AreSameWebRequests(GetRequests(requestLog), builtRequests);
