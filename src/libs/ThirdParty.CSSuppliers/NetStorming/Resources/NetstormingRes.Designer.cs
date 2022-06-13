@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.NetStorming.Resources {
+namespace ThirdParty.CSSuppliers.Netstorming.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.CSSuppliers.NetStorming.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.NetStorming.Resources.NetstormingRes", typeof(NetstormingRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.Netstorming.Resources.NetstormingRes", typeof(NetstormingRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

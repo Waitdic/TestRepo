@@ -12,11 +12,13 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Models;
-    using ThirdParty.Lookups;
+    using System.Threading.Tasks;
 
-    public class DOTW : IThirdParty
+    public class DOTW : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -63,20 +65,21 @@
 
         public bool SupportsBookingSearch => false;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) => _settings.OffsetCancellationDays(searchDetails, false);
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
+            => _settings.OffsetCancellationDays(searchDetails, false);
 
-        public bool RequiresVCard(VirtualCardInfo info) => false;
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         #endregion
 
         #region PreBook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             try
             {
-                GetAllocationReferences(propertyDetails);
-                BlockRooms(propertyDetails);
+                await GetAllocationReferencesAsync(propertyDetails);
+                await BlockRoomsAsync(propertyDetails);
             }
             catch (Exception ex)
             {
@@ -89,10 +92,10 @@
 
         #region Sub Methods of the pre book
 
-        private void GetAllocationReferences(PropertyDetails propertyDetails)
+        private async Task GetAllocationReferencesAsync(PropertyDetails propertyDetails)
         {
             // get the room rates so we can get the stupidly long allocationDetails code
-            string requestString = BuildPreBookRequest(propertyDetails);
+            string requestString = await BuildPreBookRequestAsync(propertyDetails);
 
             var headers = new RequestHeaders();
             if (_settings.UseGZip(propertyDetails))
@@ -113,7 +116,7 @@
             };
 
             request.SetRequest(requestString);
-            request.Send(_httpClient, _logger).RunSynchronously();
+            await request.Send(_httpClient, _logger);
 
             var response = _serializer.CleanXmlNamespaces(request.ResponseXML);
 
@@ -161,10 +164,10 @@
             propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Availability Response", response);
         }
 
-        private void BlockRooms(PropertyDetails propertyDetails)
+        private async Task BlockRoomsAsync(PropertyDetails propertyDetails)
         {
             // block the rooms
-            string requestString = BuildBlockRequest(propertyDetails);
+            string requestString = await BuildBlockRequestAsync(propertyDetails);
 
             var oHeaders = new RequestHeaders();
             if (_settings.UseGZip(propertyDetails))
@@ -185,7 +188,7 @@
             };
 
             request.SetRequest(requestString);
-            request.Send(_httpClient, _logger).RunSynchronously();
+            await request.Send(_httpClient, _logger);
 
             var response = _serializer.CleanXmlNamespaces(request.ResponseXML);
 
@@ -276,7 +279,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string returnReference = string.Empty;
             var response = new XmlDocument();
@@ -285,7 +288,7 @@
             try
             {
                 // build request
-                string requestString = BuildBookingRequest(propertyDetails);
+                string requestString = await BuildBookingRequestAsync(propertyDetails);
 
                 var headers = new RequestHeaders();
                 if (_settings.UseGZip(propertyDetails))
@@ -305,7 +308,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(requestString);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 request.LoadXml(requestString);
                 response = webRequest.ResponseXML;
@@ -353,13 +356,11 @@
                     throw new Exception("no bookings found in booking response xml");
                 }
             }
-
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
                 returnReference = "failed";
             }
-
             finally
             {
                 // store the request and response xml on the property booking
@@ -486,7 +487,7 @@
 
         #region Cancellation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
 
@@ -513,7 +514,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(request);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 response = webRequest.ResponseXML;
 
@@ -543,7 +544,7 @@
                     CreateLog = true
                 };
                 cancellationWebRequest.SetRequest(canxRequest);
-                cancellationWebRequest.Send(_httpClient, _logger).RunSynchronously();
+                await cancellationWebRequest.Send(_httpClient, _logger);
 
                 canxResponse = cancellationWebRequest.ResponseXML;
 
@@ -650,7 +651,7 @@
 
         #region Cancellation Cost
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var result = new ThirdPartyCancellationFeeResult();
             var request = new XmlDocument();
@@ -674,7 +675,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(requestString);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 response = webRequest.ResponseXML;
 
@@ -727,7 +728,7 @@
 
         #region Build requests
 
-        private string BuildBookingRequest(PropertyDetails propertyDetails)
+        private async Task<string> BuildBookingRequestAsync(PropertyDetails propertyDetails)
         {
             var sb = new StringBuilder();
 
@@ -741,7 +742,7 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")).AppendLine();
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd")).AppendLine();
-            sb.AppendFormat("<currency>{0}</currency>", _dotwSupport.GetCurrencyCode(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
             sb.AppendFormat("<productId>{0}</productId>", propertyDetails.TPKey);
 
             string customerReference = propertyDetails.BookingReference.Trim();
@@ -760,16 +761,16 @@
             sb.AppendFormat("<rooms no=\" {0}\">", propertyDetails.Rooms.Count);
 
             int roomRunNo = 0;
-            foreach (var oRoomDetails in propertyDetails.Rooms)
+            foreach (var roomDetails in propertyDetails.Rooms)
             {
-                string roomTypeCode = oRoomDetails.ThirdPartyReference.Split('|')[0];
-                string mealBasis = oRoomDetails.ThirdPartyReference.Split('|')[1];
-                string allocationDetails = oRoomDetails.ThirdPartyReference.Split('|')[2];
+                string roomTypeCode = roomDetails.ThirdPartyReference.Split('|')[0];
+                string mealBasis = roomDetails.ThirdPartyReference.Split('|')[1];
+                string allocationDetails = roomDetails.ThirdPartyReference.Split('|')[2];
 
-                int adults = oRoomDetails.Passengers.TotalAdults;
+                int adults = roomDetails.Passengers.TotalAdults;
                 int children = 0;
 
-                foreach (var passenger in oRoomDetails.Passengers)
+                foreach (var passenger in roomDetails.Passengers)
                 {
                     if (passenger.PassengerType == PassengerType.Child || passenger.PassengerType == PassengerType.Infant)
                     {
@@ -793,7 +794,7 @@
                 sb.AppendFormat("<children no=\" {0}\">", children);
 
                 int childAgeRunNo = 0;
-                foreach (var passenger in oRoomDetails.Passengers)
+                foreach (var passenger in roomDetails.Passengers)
                 {
                     if (passenger.PassengerType == PassengerType.Child && passenger.Age <= 12 || passenger.PassengerType == PassengerType.Infant)
                     {
@@ -823,7 +824,7 @@
                 sb.AppendLine("<passengersDetails>");
 
                 int guestRunNo = 0;
-                foreach (var passenger in oRoomDetails.Passengers)
+                foreach (var passenger in roomDetails.Passengers)
                 {
                     // get the guest title
                     int titleId;
@@ -912,7 +913,7 @@
             return sb.ToString();
         }
 
-        private string BuildPreBookRequest(PropertyDetails propertyDetails)
+        private async Task<string> BuildPreBookRequestAsync(PropertyDetails propertyDetails)
         {
             var sb = new StringBuilder();
 
@@ -926,24 +927,24 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("<currency>{0}</currency>", _dotwSupport.GetCurrencyCode(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
             sb.AppendFormat("<rooms no = \"{0}\">", propertyDetails.Rooms.Count);
 
             int roomRunNo = 0;
-            foreach (RoomDetails oRoomDetails in propertyDetails.Rooms)
+            foreach (var roomDetails in propertyDetails.Rooms)
             {
-                string roomTypeCode = oRoomDetails.ThirdPartyReference.Split('|')[0];
-                string mealBasis = oRoomDetails.ThirdPartyReference.Split('|')[1];
+                string roomTypeCode = roomDetails.ThirdPartyReference.Split('|')[0];
+                string mealBasis = roomDetails.ThirdPartyReference.Split('|')[1];
 
-                int adults = oRoomDetails.AdultsSetAgeOrOver(13);
-                int children = oRoomDetails.ChildrenUnderSetAge(13);
+                int adults = roomDetails.AdultsSetAgeOrOver(13);
+                int children = roomDetails.ChildrenUnderSetAge(13);
 
                 sb.AppendFormat("<room runno=\"{0}\">", roomRunNo);
                 sb.AppendFormat("<adultsCode>{0}</adultsCode>", adults);
                 sb.AppendFormat("<children no=\"{0}\">", children);
 
                 int childAgeRunNo = 0;
-                foreach (int age in oRoomDetails.Passengers.ChildAgesUnderSetAge(13))
+                foreach (int age in roomDetails.Passengers.ChildAgesUnderSetAge(13))
                 {
                     sb.AppendFormat("<child runno=\"{0}\">{1}</child>", childAgeRunNo, age);
                     childAgeRunNo++;
@@ -983,7 +984,7 @@
             return sb.ToString();
         }
 
-        private string BuildBlockRequest(PropertyDetails propertyDetails)
+        private async Task<string> BuildBlockRequestAsync(PropertyDetails propertyDetails)
         {
             var sb = new StringBuilder();
 
@@ -997,7 +998,7 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("<currency>{0}</currency>", _dotwSupport.GetCurrencyCode(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
             sb.AppendFormat("<rooms no = \"{0}\">", propertyDetails.Rooms.Count);
 
             int roomRunNo = 0;

@@ -10,16 +10,17 @@
     using iVector.Search.Property;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.Altura;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.Models.Altura;
 
-    public class AlturaSearch : IThirdPartySearch
+    public class AlturaSearch : IThirdPartySearch, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IAlturaSettings _settings;
         private readonly ITPSupport _support;
@@ -29,7 +30,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public AlturaSearch(
             IAlturaSettings settings,
@@ -43,173 +44,168 @@
 
         #endregion
 
-        #region "SearchRestrictions"
+        #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return oSearchDetails.Rooms > 1 && !_settings.SplitMultiRoom(oSearchDetails);
+            return searchDetails.Rooms > 1 && !_settings.SplitMultiRoom(searchDetails);
         }
 
         #endregion
 
-        #region "SearchFunctions"
+        #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             // Create for each resort a list of hotels
-            var oHotels = oResortSplits.SelectMany(rs => rs.Hotels.Select(h => h.TPKey)).Distinct().ToList();
-            List<Request> oRequests = new();
+            var hotels = resortSplits.SelectMany(rs => rs.Hotels.Select(h => h.TPKey)).Distinct().ToList();
+            List<Request> requests = new();
             // Create a request for each room 
-            oRequests = oSearchDetails.RoomDetails.Select((oRoom, iPropertyRoomBookingID) =>
+            requests = searchDetails.RoomDetails.Select((room) =>
             {
-                var oSearchRequest = GetSearchRequestXml(oSearchDetails, string.Join(",", oHotels), oRoom, ++iPropertyRoomBookingID);
+                var searchRequest = GetSearchRequestXml(searchDetails, string.Join(",", hotels), room);
 
                 // Set a unique code. if the is one request we only need the source name
-                var sUniqueCode = Source;
+                var uniqueCode = Source;
 
-                var oExtraInfo = new SearchExtraHelper(oSearchDetails, sUniqueCode)
+                var extraInfo = new SearchExtraHelper(searchDetails, uniqueCode)
                 {
-                    ExtraInfo = iPropertyRoomBookingID.ToString()
+                    ExtraInfo = room.PropertyRoomBookingID.ToString()
                 };
 
-                var oRequest = new Request
+                var request = new Request
                 {
-                    EndPoint = _settings.URL(oSearchDetails),
+                    EndPoint = _settings.URL(searchDetails),
                     Method = eRequestMethod.POST,
-                    Source = Source,
-                    LogFileName = "Search",
                     Param = "xml",
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
-                    ExtraInfo = oExtraInfo,
-                    UseGZip = true,
+                    ExtraInfo = extraInfo,
                 };
 
-                oRequest.SetRequest(oSearchRequest);
+                request.SetRequest(searchRequest);
 
-                return oRequest;
+                return request;
             }).ToList();
 
-            return oRequests;
+            return requests;
         }
 
         #endregion
 
-        #region "Transform Response"
+        #region Transform Response
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var oAlturaSearchResponses = requests
-                .Where(oRequest => oRequest.Success && !oRequest.ResponseString.Contains("Error"))
-                .OrderBy(oRequest => GetRoomBookingId(oRequest))
-                .Select(oRequest =>
+            var alturaSearchResponses = requests
+                .Where(request => request.Success && !request.ResponseString.Contains("Error"))
+                .OrderBy(request => GetRoomBookingId(request))
+                .Select(request =>
                 {
-                    var oSearchResponse = _serializer.DeSerialize<AlturaSearchResponses>(oRequest.ResponseXML);
-                    oSearchResponse.PropertyRoomBookingID = GetRoomBookingId(oRequest);
-                    return oSearchResponse;
+                    var searchResponse = _serializer.DeSerialize<AlturaSearchResponses>(request.ResponseXML);
+                    searchResponse.PropertyRoomBookingID = GetRoomBookingId(request);
+                    return searchResponse;
                 }).ToList();
 
-            var oTransformedResults = new TransformedResultCollection();
-            oTransformedResults.TransformedResults = oAlturaSearchResponses
+            var transformedResults = new TransformedResultCollection();
+            transformedResults.TransformedResults = alturaSearchResponses
                     .Where(r => r.Response.Hotels.SelectMany(h => h.Rates.Select(r => r.Rooms)).Count() > 0)
-                    .SelectMany(x => GetResultFromResponse(x, searchDetails)).ToList();
+                    .SelectMany(x => GetResultFromResponse(x)).ToList();
 
-            return oTransformedResults;
+            return transformedResults;
         }
 
         private int GetRoomBookingId(Request request)
-            => SafeTypeExtensions.ToSafeInt((request.ExtraInfo as SearchExtraHelper)?.ExtraInfo);
+            => ((request.ExtraInfo as SearchExtraHelper)?.ExtraInfo).ToSafeInt();
 
         #endregion
 
-        #region "Validators"
+        #region Validators
 
         public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
-
         #endregion
 
-        #region "Helpers"
+        #region Helpers
 
-        private XmlDocument GetSearchRequestXml(SearchDetails oSearchDetails, string sHotelList, RoomDetail oRoom, int iRoomCounter)
+        private XmlDocument GetSearchRequestXml(SearchDetails searchDetails, string hotelList, RoomDetail room)
         {
-            var sSellingCountry = _support.TPCountryCodeLookup(Source, oSearchDetails.SellingCountry);
-            var sSourceMarket = !string.IsNullOrEmpty(sSellingCountry) ? sSellingCountry : _settings.SourceMarket(oSearchDetails);
+            var sellingCountry = _support.TPCountryCodeLookup(Source, searchDetails.SellingCountry);
+            var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
-            var sNationalityLookupValue = _support.TPNationalityLookup(Source, oSearchDetails.NationalityID);
-            var sLeadGuestNationality = !string.IsNullOrEmpty(sNationalityLookupValue) ? sNationalityLookupValue : _settings.DefaultNationality(oSearchDetails);
+            var nationalityLookupValue = _support.TPNationalityLookup(Source, searchDetails.NationalityID);
+            var leadGuestNationality = !string.IsNullOrEmpty(nationalityLookupValue) ? nationalityLookupValue : _settings.DefaultNationality(searchDetails);
 
-            var liChildAges = oRoom.ChildAges ?? new List<int>()
-                                .Concat(Enumerable.Range(0, oRoom.Infants).Select(_ => 1)).ToList();
+            var childAges = room.ChildAges ?? new List<int>()
+                .Concat(Enumerable.Range(0, room.Infants).Select(_ => 1))
+                .ToList();
 
-            var oRequest = new AlturaSearchRequest
+            var request = new AlturaSearchRequest
             {
                 Request = {
                     RequestType = Constant.RequestTypeSearch,
                     Version = Constant.ApiVersion,
-                    Currency = _settings.DefaultCurrency(oSearchDetails),
-                    Session = GetSession(_settings, oSearchDetails),
+                    Currency = _settings.DefaultCurrency(searchDetails),
+                    Session = GetSession(_settings, searchDetails),
                     Destination =
                     {
                         DestinationType = Constant.DestinationTypeHotel,
-                        Content = sHotelList
+                        Content = hotelList
                     },
-                    Arrival = oSearchDetails.PropertyArrivalDate.ToString(Constant.ApiDateFormat),
-                    Departure = oSearchDetails.PropertyDepartureDate.ToString(Constant.ApiDateFormat),
+                    Arrival = searchDetails.PropertyArrivalDate.ToString(Constant.ApiDateFormat),
+                    Departure = searchDetails.PropertyDepartureDate.ToString(Constant.ApiDateFormat),
                     NumberOfRooms = 1,
                     RoomOccupancy =
                     {
                         new RequestRoom
                         {
                             Code = 1,
-                            Adults = oRoom.Adults,
-                            Children = oRoom.Children + oRoom.Infants,
-                            ChildrenAges = liChildAges,
+                            Adults = room.Adults,
+                            Children = room.Children + room.Infants,
+                            ChildrenAges = childAges,
 
                         }
                     },
                     Market =
                     {
-                        SourceMarket = sSourceMarket,
-                        ClientNationality = string.IsNullOrEmpty(sLeadGuestNationality)?string.Empty : sLeadGuestNationality
+                        SourceMarket = sourceMarket,
+                        ClientNationality = string.IsNullOrEmpty(leadGuestNationality)?string.Empty : leadGuestNationality
                     }
                 }
             };
 
-            var xmlRequest = _serializer.Serialize(oRequest);
+            var xmlRequest = _serializer.Serialize(request);
             return xmlRequest;
         }
 
-        internal static Session GetSession(IAlturaSettings settings, IThirdPartyAttributeSearch oSearchDetails, string id = "")
+        internal static Session GetSession(IAlturaSettings settings, IThirdPartyAttributeSearch searchDetails, string id = "")
             => new Session
             {
                 Id = id,
-                AgencyId = settings.AgencyId(oSearchDetails),
-                Password = settings.Password(oSearchDetails),
-                ExternalId = settings.ExternalId(oSearchDetails)
+                AgencyId = settings.AgencyId(searchDetails),
+                Password = settings.Password(searchDetails),
+                ExternalId = settings.ExternalId(searchDetails)
             };
 
-        private List<TransformedResult> GetResultFromResponse(AlturaSearchResponses oResponse, SearchDetails oSearchDetails)
+        private IEnumerable<TransformedResult> GetResultFromResponse(AlturaSearchResponses response)
         {
-            return oResponse.Response.Hotels.SelectMany(oHotel => oHotel.Rates
-                .SelectMany(oRate => oRate.Rooms
-                    .Select(oRoom => new TransformedResult
+            return response.Response.Hotels.SelectMany(hotel => hotel.Rates
+                .SelectMany(rate => rate.Rooms
+                    .Select(room => new TransformedResult
                     {
-                        MasterID = SafeTypeExtensions.ToSafeInt(oHotel.Id),
-                        TPKey = oHotel.Id,
-                        CurrencyCode = oRate.Currency,
-                        PropertyRoomBookingID = oResponse.PropertyRoomBookingID,
-                        RoomType = oRoom.Name,
-                        RoomTypeCode = oRoom.Mapping,
-                        MealBasisCode = oRate.Board,
-                        Amount = oRoom.Price / 100,
-                        TPReference = $"{oResponse.Response.Session}|{oRate.Id}",
-                        NonRefundableRates = string.Equals(oRate.NoRefundable, "1")
-                    })
-                )
-            ).ToList();
+                        MasterID = SafeTypeExtensions.ToSafeInt(hotel.Id),
+                        TPKey = hotel.Id,
+                        CurrencyCode = rate.Currency,
+                        PropertyRoomBookingID = response.PropertyRoomBookingID,
+                        RoomType = room.Name,
+                        RoomTypeCode = room.Mapping,
+                        MealBasisCode = rate.Board,
+                        Amount = room.Price / 100,
+                        TPReference = $"{response.Response.Session}|{rate.Id}",
+                        NonRefundableRates = string.Equals(rate.NoRefundable, "1")
+                    })));
         }
 
         #endregion

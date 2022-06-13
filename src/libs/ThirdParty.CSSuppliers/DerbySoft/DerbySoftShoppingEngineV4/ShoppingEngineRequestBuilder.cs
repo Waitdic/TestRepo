@@ -54,7 +54,7 @@
             string uniqueCode,
             int propertyRoomBookingId) =>
             tpKeys
-                .Batch(_settings.ShoppingEngineHotelsBatchSize(searchDetails))
+                .Batch(_settings.ShoppingEngineHotelsBatchSize(searchDetails, _source))
                 .Select(batch => BuildSearchRequest(batch, searchDetails, roomDetails))
                 .Select(request => BuildWebRequest(
                     searchDetails,
@@ -77,15 +77,15 @@
         }
 
         private Header BuildHeader(IThirdPartyAttributeSearch searchDetails) =>
-            new Header
+            new()
             {
-                DistributorId = _settings.User(searchDetails),
+                DistributorId = _settings.User(searchDetails, _source),
                 Token = _guid.ToSafeString(),
                 Version = "v4"
             };
 
         private static RoomCriteria BuildRoomCriteria(RoomDetail roomDetails) =>
-            new RoomCriteria
+            new()
             {
                 RoomCount = 1,
                 AdultCount = roomDetails.Adults,
@@ -102,11 +102,11 @@
             };
         }
 
-        private DerbySoft.Models.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
-            new DerbySoft.Models.Hotel
+        private CSSuppliers.DerbySoft.Models.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
+            new()
             {
                 HotelId = tpKey,
-                SupplierId = _settings.SupplierID(searchDetails),
+                SupplierId = _settings.SupplierID(searchDetails, _source),
                 Status = "Actived"
             };
 
@@ -125,7 +125,7 @@
 
             var request = new Request
             {
-                EndPoint = _settings.ShoppingEngineURL(searchDetails),
+                EndPoint = _settings.ShoppingEngineURL(searchDetails, _source),
                 Method = eRequestMethod.POST,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",
@@ -135,10 +135,10 @@
             var serialisedRequest = JsonConvert.SerializeObject(deserialisedRequest, DerbySoftSupport.GetJsonSerializerSettings());
             request.SetRequest(serialisedRequest);
 
-            var password = _settings.ShoppingEnginePassword(searchDetails);
+            var password = _settings.ShoppingEnginePassword(searchDetails, _source);
             request.Headers.AddNew(
                 "Authorization",
-                "Bearer " + (!string.IsNullOrWhiteSpace(password) ? password : _settings.Password(searchDetails)));
+                "Bearer " + (!string.IsNullOrWhiteSpace(password) ? password : _settings.Password(searchDetails, _source)));
 
             return request;
         }

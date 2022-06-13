@@ -12,13 +12,13 @@
     using iVector.Search.Property;
     using Microsoft.Extensions.Caching.Memory;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class SunHotelsSearch : IThirdPartySearch
+    public class SunHotelsSearch : IThirdPartySearch, ISingleSource
     {
         #region Properties
 
@@ -43,7 +43,7 @@
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             bool restrictions = false;
 

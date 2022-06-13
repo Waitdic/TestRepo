@@ -2,18 +2,19 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty.Constants;
-    using ThirdParty.Models;
-    using ThirdParty.Results;
-    using ThirdParty.Search.Models;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using Intuitive.Helpers.Serialization;
     using Models;
     using Models.Common;
+    using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Models;
+    using ThirdParty.Results;
+    using ThirdParty.Search.Models;
 
-    public class SerhsSearch : IThirdPartySearch
+    public class SerhsSearch : IThirdPartySearch, ISingleSource
     {
         private const string EmptyHotelId = "0";
 
@@ -135,8 +136,7 @@
             return transformedResults;
         }
 
-        public List<TransformedResult> GetResultFromResponse(SerhsAvailabilityResponse response,
-            SearchDetails searchDetails)
+        public List<TransformedResult> GetResultFromResponse(SerhsAvailabilityResponse response, SearchDetails searchDetails)
         {
             var transformedResults = new List<TransformedResult>();
             bool isMultiRoom = searchDetails.Rooms > 1;
@@ -187,10 +187,10 @@
 
         public decimal ConvertSerhsPrice(string price)
         {
-            return SafeTypeExtensions.ToSafeDecimal(price.Replace(".", "").Replace(",", "."));
+            return price.Replace(".", "").Replace(",", ".").ToSafeDecimal();
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return searchDetails.Duration > 30;
         }

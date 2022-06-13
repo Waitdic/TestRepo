@@ -8,15 +8,15 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class StubaSearch : IThirdPartySearch
+    public class StubaSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IStubaSettings _settings;
 
@@ -221,7 +221,11 @@
             foreach (StubaSearchResponse response in results)
             {
                 foreach (HotelAvailability hotelAvail in response.HotelAvailability)
-                    hotelAvail.Result = hotelAvail.Result.Where(o => o.Room.Any(r => (r.CancellationPolicyStatus.ToLower() ?? "") == (policyStatus.ToLower() ?? ""))).ToList();
+                {
+                    hotelAvail.Result = hotelAvail.Result
+                        .Where(o => o.Room.Any(r => (r.CancellationPolicyStatus.ToLower() ?? "") == (policyStatus.ToLower() ?? "")))
+                        .ToList();
+                }
             }
         }
 
@@ -235,12 +239,12 @@
             }
         }
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }
 
-        public bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }

@@ -174,10 +174,9 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
                 var request = Regex.Replace(builtRequests[i].RequestString, @"\s+", string.Empty);  // removes all tabs new lines and whites spaces from request
                 var mockrequest = Regex.Replace(mockRequests[i].RequestString, @"\s+", string.Empty);
 
-                if (!(request.Equals(mockrequest) && mockRequests[i].EndPoint.Equals(builtRequests[i].EndPoint) && builtRequests[i].Source.Equals(mockRequests[i].Source)))
-                {
-                    return false;
-                }
+                Assert.Equal(builtRequests[i].Source, mockRequests[i].Source);
+                Assert.Equal(mockRequests[i].EndPoint, builtRequests[i].EndPoint);
+                Assert.Equal(mockrequest, request);
             }
 
             return true;

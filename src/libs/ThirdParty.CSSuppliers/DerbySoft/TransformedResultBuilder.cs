@@ -7,14 +7,17 @@
     using ThirdParty.Search.Models;
     using ThirdParty.Models.Property.Booking;
     using Intuitive.Helpers.Extensions;
+    using Intuitive;
 
     public class TransformedResultBuilder
     {
         private readonly IDerbySoftSettings _settings;
+        private readonly string _source;
 
-        public TransformedResultBuilder(IDerbySoftSettings settings)
+        public TransformedResultBuilder(IDerbySoftSettings settings, string source)
         {
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _source = source;
         }
 
         public TransformedResult? BuildTransformedResult(
@@ -26,7 +29,7 @@
         {
             var nonRefundableRates = roomRate.CancelPolicy != null && roomRate.CancelPolicy.Code == "AD100P_100P";
 
-            if (_settings.ExcludeNonRefundable(searchDetails) && nonRefundableRates)
+            if (_settings.ExcludeNonRefundable(searchDetails, _source) && nonRefundableRates)
             {
                 return null;
             }

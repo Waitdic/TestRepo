@@ -1,5 +1,6 @@
 ﻿namespace ThirdParty.Repositories
 {
+    using System.Threading.Tasks;
     using ThirdParty.Models;
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
@@ -13,20 +14,20 @@
         /// <param name="response">The book response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        void LogBook(Book.Request request, Book.Response response, User user, string exception = "");
+        Task LogBookAsync(Book.Request request, Book.Response response, User user, string exception = "");
 
         /// <summary>Logs the cancel request</summary>
         /// <param name="request">The cancel request.</param>
         /// <param name="response">The cancel response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        void LogCancel(Cancel.Request request, Cancel.Response response, User user, string exception = "");
+        Task LogCancelAsync(Cancel.Request request, Cancel.Response response, User user, string exception = "");
 
         /// <summary>Logs the pre book request and response.</summary>
         /// <param name="request">The pre book request.</param>
         /// <param name="response">The pre book response.</param>
         /// <param name="user">The user making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        void LogPrebook(Prebook.Request request, Prebook.Response response, User user, string exception = "");
+        Task LogPrebookAsync(Prebook.Request request, Prebook.Response response, User user, string exception = "");
     }
 }

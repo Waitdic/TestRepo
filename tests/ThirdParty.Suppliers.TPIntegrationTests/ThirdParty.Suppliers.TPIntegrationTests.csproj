@@ -44,7 +44,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>BonotelRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="BookABed\BookABedRes.Designer.cs">
+    <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BookABedRes.resx</DependentUpon>
@@ -84,7 +84,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>JumboRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="JuniperElevate\JuniperElevateRes.Designer.cs">
+    <Compile Update="Juniper\JuniperElevateRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>JuniperElevateRes.resx</DependentUpon>
@@ -104,8 +104,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>OceanBedsRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="WHL\WHLRes.Designer.cs">
-      <DependentUpon>WHLRes.resx</DependentUpon>
+    <Compile Update="Netstorming\NetstormingRes.Designer.cs">
+      <DependentUpon>NetstormingRes.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
@@ -168,7 +168,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BonotelRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="BookABed\BookABedRes.resx">
+    <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BookABedRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -200,7 +200,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JumboRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="JuniperElevate\JuniperElevateRes.resx">
+    <EmbeddedResource Update="Juniper\JuniperElevateRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>JuniperElevateRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -216,8 +216,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>OceanBedsRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="WHL\WHLRes.resx">
-      <LastGenOutput>WHLRes.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Netstorming\NetstormingRes.resx">
+      <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Serhs\SerhsRes.resx">

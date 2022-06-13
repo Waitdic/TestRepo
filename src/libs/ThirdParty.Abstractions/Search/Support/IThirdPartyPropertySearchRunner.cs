@@ -10,7 +10,7 @@
     {
         Task SearchAsync(
             SearchDetails searchDetails,
-            List<ResortSplit> resortSplits,
+            SupplierResortSplit resortSplits,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }

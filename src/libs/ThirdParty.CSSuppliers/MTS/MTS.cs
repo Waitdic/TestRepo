@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -11,10 +12,11 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
-    public partial class MTS : IThirdParty
+    public partial class MTS : IThirdParty, ISingleSource
     {
         #region Constructor
 
@@ -44,12 +46,12 @@
             return _settings.AllowCancellations(searchDetails);
         }
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return _settings.OffsetCancellationDays(searchDetails, false);
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             return false;
         }
@@ -83,7 +85,7 @@
 
         #region Prebook
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool success = true;
 
@@ -193,7 +195,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(sbVerifyCart.ToString());
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 response.LoadXml(webRequest.ResponseXML.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
 
@@ -213,8 +215,7 @@
                 }
 
                 // cancellation charges
-                var cancellations = new Cancellations();
-                cancellations = GetCancellations(propertyDetails, response);
+                var cancellations = GetCancellations(propertyDetails, response);
 
                 foreach (var cancellation in cancellations)
                 {
@@ -253,7 +254,7 @@
 
         #region Book
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             var sbRequest = new StringBuilder();
             var response = new XmlDocument();
@@ -374,10 +375,10 @@
                     {
                         sbRequest.Append("<Comments>");
 
-                        foreach (BookingComment oBookingComment in propertyDetails.BookingComments)
+                        foreach (var bookingComment in propertyDetails.BookingComments)
                         {
                             sbRequest.Append("<Comment Name = \"Applicant Notice\">");
-                            sbRequest.AppendFormat("<Text>{0}</Text>", oBookingComment.Text);
+                            sbRequest.AppendFormat("<Text>{0}</Text>", bookingComment.Text);
                             sbRequest.Append("</Comment>");
                         }
 
@@ -402,7 +403,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(sbRequest.ToString());
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 response = webRequest.ResponseXML;
                 response.LoadXml(response.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
@@ -444,7 +445,7 @@
 
         #region Cancellations
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var sbRequest = new StringBuilder();
             var cancellationRequest = new XmlDocument();
@@ -484,7 +485,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(cancellationRequest);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 cancellationResponse = webRequest.ResponseXML;
                 cancellationResponse.LoadXml(cancellationResponse.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
@@ -615,7 +616,7 @@
             return cancellations;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var result = new ThirdPartyCancellationFeeResult();
             var cancelCostRequest = new XmlDocument();
@@ -656,7 +657,7 @@
                     CreateLog = true
                 };
                 webRequest.SetRequest(cancelCostRequest);
-                webRequest.Send(_httpClient, _logger).RunSynchronously();
+                await webRequest.Send(_httpClient, _logger);
 
                 cancelCostResponse = webRequest.ResponseXML;
                 cancelCostResponse.LoadXml(cancelCostResponse.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));

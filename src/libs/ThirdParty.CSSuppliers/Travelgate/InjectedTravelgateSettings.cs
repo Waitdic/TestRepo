@@ -1,324 +1,190 @@
 ﻿namespace ThirdParty.CSSuppliers.Travelgate
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
     using ThirdParty.Support;
 
-    public class InjectedTravelgateArabianASettings : InjectedTravelgateSettings, ITravelgateArabianASettings
+    public class InjectedTravelgateSettings : SettingsBase, ITravelgateSettings
     {
-        protected override string Source => ThirdParties.TRAVELGATEARABIANA;
-    }
+        protected override string Source => string.Empty;
 
-    public class InjectedTravelgateBookohotelSettings : InjectedTravelgateSettings, ITravelgateBookohotelSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEBOOKOHOTEL;
-    }
-
-    public class InjectedTravelgateDarinaSettings : InjectedTravelgateSettings, ITravelgateDarinaSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDARINA;
-    }
-
-    public class InjectedTravelgateDerbysoftSettings : InjectedTravelgateSettings, ITravelgateDerbysoftSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFT;
-    }
-
-    public class InjectedTravelgateDerbysoftBestWesternSettings : InjectedTravelgateSettings, ITravelgateDerbysoftBestWesternSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTBESTWESTERN;
-    }
-
-    public class InjectedTravelgateDerbysoftIHGSettings : InjectedTravelgateSettings, ITravelgateDerbysoftIHGSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTIHG;
-    }
-
-    public class InjectedTravelgateDerbysoftNAVHSettings : InjectedTravelgateSettings, ITravelgateDerbysoftNAVHSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEYALAGO;
-    }
-
-    public class InjectedTravelgateDerbysoftUORSettings : InjectedTravelgateSettings, ITravelgateDerbysoftUORSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDERBYSOFTUOR;
-    }
-
-    public class InjectedTravelgateDingusSettings : InjectedTravelgateSettings, ITravelgateDingusSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDINGUS;
-    }
-
-    public class InjectedTravelgateDingusBlueSeaSettings : InjectedTravelgateSettings, ITravelgateDingusBlueSeaSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDINGUSBLUESEA;
-    }
-
-    public class InjectedTravelgateDingusSpringHotelsSettings : InjectedTravelgateSettings, ITravelgateDingusSpringHotelsSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDINGUSSPRINGHOTELS;
-    }
-
-    public class InjectedTravelgateDingusTHBSettings : InjectedTravelgateSettings, ITravelgateDingusTHBSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDINGUSTHB;
-    }
-
-    public class InjectedTravelgateDOTWv3Settings : InjectedTravelgateSettings, ITravelgateDOTWv3Settings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEDOTWV3;
-    }
-
-    public class InjectedTravelgateEETGlobalSettings : InjectedTravelgateSettings, ITravelgateEETGlobalSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEEETGLOBAL;
-    }
-
-    public class InjectedTravelgateEuroPlayasSettings : InjectedTravelgateSettings, ITravelgateEuroPlayasSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEUROPLAYAS;
-    }
-
-    public class InjectedTravelgateGekkoSettings : InjectedTravelgateSettings, ITravelgateGekkoSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEGEKKO;
-    }
-
-    public class InjectedTravelgateHotelTraderSettings : InjectedTravelgateSettings, ITravelgateHotelTraderSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEHOTELTRADER;
-    }
-
-    public class InjectedTravelgateIxpiraSettings : InjectedTravelgateSettings, ITravelgateIxpiraSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEIXPIRA;
-    }
-
-    public class InjectedTravelgateMethabookSettings : InjectedTravelgateSettings, ITravelgateMethabookSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEMETHABOOK;
-    }
-
-    public class InjectedTravelgateOswaldArrigoSettings : InjectedTravelgateSettings, ITravelgateOswaldArrigoSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEOSWALDARRIGO;
-    }
-
-    public class InjectedTravelgatePerlatoursSettings : InjectedTravelgateSettings, ITravelgatePerlatoursSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEPERLATOURS;
-    }
-
-    public class InjectedTravelgateTBOSettings : InjectedTravelgateSettings, ITravelgateTBOSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATETBO;
-    }
-
-    public class InjectedTravelgateTravellandaSettings : InjectedTravelgateSettings, ITravelgateTravellandaSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATETRAVELLANDA;
-    }
-    
-    public class InjectedTravelgateTraveltinoSettings : InjectedTravelgateSettings, ITravelgateTraveltinoSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATETRAVELTINO;
-    }
-
-    public class InjectedTravelgateViajesOlympiaSettings : InjectedTravelgateSettings, ITravelgateViajesOlympiaSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEVIAJESOLYMPIA;
-    }
-
-    public class InjectedTravelgateWHLSettings : InjectedTravelgateSettings, ITravelgateWHLSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEWHL;
-    }
-
-    public class InjectedTravelgateYalagoSettings : InjectedTravelgateSettings, ITravelgateYalagoSettings
-    {
-        protected override string Source => ThirdParties.TRAVELGATEYALAGO;
-    }
-
-    public abstract class InjectedTravelgateSettings : SettingsBase, ITravelgateSettings
-    {
-        public string get_Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_Username(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Username", tpAttributeSearch);
+            return Get_Value("Username", tpAttributeSearch, source);
         }
 
-        public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Password", tpAttributeSearch);
+            return Get_Value("Password", tpAttributeSearch, source);
         }
 
-        public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("URL", tpAttributeSearch, source);
         }
 
-        public string get_SearchSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_SearchSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("SearchSOAPAction", tpAttributeSearch);
+            return Get_Value("SearchSOAPAction", tpAttributeSearch, source);
         }
 
-        public string get_PrebookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_PrebookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("PrebookSOAPAction", tpAttributeSearch);
+            return Get_Value("PrebookSOAPAction", tpAttributeSearch, source);
         }
 
-        public string get_BookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_BookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("BookSOAPAction", tpAttributeSearch);
+            return Get_Value("BookSOAPAction", tpAttributeSearch, source);
         }
 
-        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("AllowCancellations", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string get_CancelSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_CancelSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CancelSOAPAction", tpAttributeSearch);
+            return Get_Value("CancelSOAPAction", tpAttributeSearch, source);
         }
 
-        public bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZIP", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
+        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
+            return Get_Value("OffsetCancellationDays", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public bool get_RequiresVCard(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_RequiresVCard(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("RequiresVCard", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("RequiresVCard", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string get_ReferenceDelimiter(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
+        public string get_ReferenceDelimiter(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ReferenceDelimiter", tpAttributeSearch);
+            return Get_Value("ReferenceDelimiter", tpAttributeSearch, source);
         }
 
-        public string get_DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
+        public string get_DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("DefaultNationality", tpAttributeSearch);
+            return Get_Value("DefaultNationality", tpAttributeSearch, source);
         }
 
-        public string get_CardHolderName(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_CardHolderName(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CardHolderName", tpAttributeSearch);
+            return Get_Value("CardHolderName", tpAttributeSearch, source);
         }
 
-        public string get_EncryptedCardDetails(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_EncryptedCardDetails(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("EncryptedCardDetails", tpAttributeSearch);
+            return Get_Value("EncryptedCardDetails", tpAttributeSearch, source);
         }
 
-        public string get_Markets(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_Markets(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Markets", tpAttributeSearch);
+            return Get_Value("Markets", tpAttributeSearch, source);
         }
 
-        public string get_ProviderUsername(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_ProviderUsername(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ProviderUsername", tpAttributeSearch);
+            return Get_Value("ProviderUsername", tpAttributeSearch, source);
         }
 
-        public string get_ProviderPassword(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_ProviderPassword(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ProviderPassword", tpAttributeSearch);
+            return Get_Value("ProviderPassword", tpAttributeSearch, source);
         }
 
-        public string get_ProviderCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_ProviderCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ProviderCode", tpAttributeSearch);
+            return Get_Value("ProviderCode", tpAttributeSearch, source);
         }
 
-        public string get_UrlReservation(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_UrlReservation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlReservation", tpAttributeSearch);
+            return Get_Value("UrlReservation", tpAttributeSearch, source);
         }
 
-        public string get_UrlGeneric(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_UrlGeneric(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlGeneric", tpAttributeSearch);
+            return Get_Value("UrlGeneric", tpAttributeSearch, source);
         }
 
-        public string get_UrlValuation(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_UrlValuation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlValuation", tpAttributeSearch);
+            return Get_Value("UrlValuation", tpAttributeSearch, source);
         }
 
-        public string get_UrlAvail(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_UrlAvail(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlAvail", tpAttributeSearch);
+            return Get_Value("UrlAvail", tpAttributeSearch, source);
         }
 
-        public string get_LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("LanguageCode", tpAttributeSearch);
+            return Get_Value("LanguageCode", tpAttributeSearch, source);
         }
 
-        public string get_Parameters(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_Parameters(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Parameters", tpAttributeSearch);
+            return Get_Value("Parameters", tpAttributeSearch, source);
         }
 
-        public string get_CurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_CurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CurrencyCode", tpAttributeSearch);
+            return Get_Value("CurrencyCode", tpAttributeSearch, source);
         }
 
-        public int get_MaximumHotelSearchNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_MaximumHotelSearchNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumHotelSearchNumber", tpAttributeSearch).ToSafeInt();
+            return Get_Value("MaximumHotelSearchNumber", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumCitySearchNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_MaximumCitySearchNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumCitySearchNumber", tpAttributeSearch).ToSafeInt();
+            return Get_Value("MaximumCitySearchNumber", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumRoomNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_MaximumRoomNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumRoomNumber", tpAttributeSearch).ToSafeInt();
+            return Get_Value("MaximumRoomNumber", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumRoomGuestNumber", tpAttributeSearch).ToSafeInt();
+            return Get_Value("MaximumRoomGuestNumber", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MinimumStay(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_MinimumStay(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MinimumStay", tpAttributeSearch).ToSafeInt();
+            return Get_Value("MinimumStay", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public bool get_AllowHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_AllowHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("AllowHotelSearch", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("AllowHotelSearch", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public bool get_UseZoneSearch(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_UseZoneSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UseZoneSearch", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseZoneSearch", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public int get_SearchRequestTimeout(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int get_SearchRequestTimeout(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("SearchRequestTimeout", tpAttributeSearch).ToSafeInt();
+            return Get_Value("SearchRequestTimeout", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public string get_RatePlanCodes(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string get_RatePlanCodes(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("RatePlanCodes", tpAttributeSearch);
+            return Get_Value("RatePlanCodes", tpAttributeSearch, source);
         }
 
-        public bool get_SendGUIDReference(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool get_SendGUIDReference(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("SendGUIDReference", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("SendGUIDReference", tpAttributeSearch, source).ToSafeBoolean();
         }
     }
 }

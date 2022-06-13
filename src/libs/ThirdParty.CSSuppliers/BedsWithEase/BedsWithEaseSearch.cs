@@ -14,11 +14,12 @@
     using Models.Common;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
 
-    public class BedsWithEaseSearch : IThirdPartySearch
+    public class BedsWithEaseSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IBedsWithEaseSettings _settings;
         private readonly ISerializer _serializer;
@@ -42,7 +43,7 @@
         public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            string sessionId = BedsWithEaseHelper.GetSessionId(searchDetails, _settings, _serializer, _httpClient, _logger);
+            string sessionId = BedsWithEaseHelper.GetSessionIdAsync(searchDetails, _settings, _serializer, _httpClient, _logger).Result;
 
             foreach (var resortSplit in resortSplits)
             {
@@ -198,7 +199,7 @@
             return false;
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

@@ -1,16 +1,21 @@
-﻿namespace ThirdParty.CSSuppliers.NetStorming
+﻿namespace ThirdParty.CSSuppliers.Netstorming
 {
     using System;
     using System.Collections.Generic;
     using System.Xml;
-    using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
-    using ThirdParty.CSSuppliers.NetStorming.Models.Common;
+    using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
 
     public class NetstormingSupport
     {
+        public static List<string> NetstormingSources = new()
+        {
+            ThirdParties.WHL,
+        };
+
         public static Header Header(string actor, string user, string password, string version)
         {
             return new Header
@@ -31,9 +36,9 @@
 
         // build a list of the possible room configs 
         // if a room has the same combination of passengers then increase the quantity of the existing config
-        internal static List<NetStormingRoomConfig> BuildListOfConfigs(RoomDetails rooms)
+        internal static List<NetstormingRoomConfig> BuildListOfConfigs(RoomDetails rooms)
         {
-            var roomConfigs = new List<NetStormingRoomConfig>();
+            var roomConfigs = new List<NetstormingRoomConfig>();
             int roomNumber = 1;
 
             foreach (var room in rooms)
@@ -45,7 +50,7 @@
                 int iConfigNumber = RoomConfigExists(roomConfigs, sRoomConfig);
                 if (iConfigNumber == 0)
                 {
-                    roomConfigs.Add(new NetStormingRoomConfig(room.Adults, room.Children, room.Infants, childAge, 1, roomNumber));
+                    roomConfigs.Add(new NetstormingRoomConfig(room.Adults, room.Children, room.Infants, childAge, 1, roomNumber));
                     roomNumber += 1;
                 }
                 else
@@ -58,7 +63,7 @@
         }
 
         // check to see if the combination of occupants already exists
-        internal static int RoomConfigExists(List<NetStormingRoomConfig> roomConfigs, string roomConfig)
+        internal static int RoomConfigExists(List<NetstormingRoomConfig> roomConfigs, string roomConfig)
         {
             foreach (var roomConfigInRoomConfigs in roomConfigs)
             {
@@ -80,7 +85,7 @@
         // if the room configs are the same don't build combinations of the room types just the largest amount for each room request, 
         // eg if there are two rooms requested with the same number of people in each and multiple room types, ie twin and double for 2 adults then we request
         // 2 twins and 2 doubles and don't need to ask for a twin and a double as it is presumed these will now be available
-        internal static List<RoomCombo> GenerateRoomCombos(List<NetStormingRoomConfig> roomConfigs)
+        internal static List<RoomCombo> GenerateRoomCombos(List<NetstormingRoomConfig> roomConfigs)
         {
 
             // build a list of the strings that will actually be used in the request 

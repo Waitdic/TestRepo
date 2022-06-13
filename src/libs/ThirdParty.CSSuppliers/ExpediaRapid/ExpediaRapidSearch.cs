@@ -11,18 +11,18 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Net.WebRequests;
     using MoreLinq;
-    using Newtonsoft.Json;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
+    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
-    using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
 
-    public class ExpediaRapidSearch : IThirdPartySearch
+    public class ExpediaRapidSearch : IThirdPartySearch, ISingleSource
     {
         private readonly IExpediaRapidSettings _settings;
 
@@ -348,7 +348,7 @@
             return matchedMealBasisCodes.Any() ? matchedMealBasisCodes.First() : "RO";
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return searchDetails.Rooms > 8;
         }

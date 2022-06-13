@@ -1,11 +1,11 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
 {
     using System.Net.Http;
-    using Newtonsoft.Json;
     using ThirdParty.Constants;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
     using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
 
     public class ExpediaRapidAPI : IExpediaRapidAPI
     {
@@ -18,9 +18,9 @@
             _logger = logger;
         }
 
-        public TResponse GetDeserializedResponse<TResponse>(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request) where TResponse : IExpediaRapidResponse<TResponse>, new()
+        public async Task<TResponse> GetDeserializedResponseAsync<TResponse>(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
-            string responseString = GetResponse(propertyDetails, request);
+            string responseString = await GetResponseAsync(propertyDetails, request);
             var response = new TResponse();
 
             (bool valid, response) = response.GetValidResults(responseString, (int)request.ResponseStatusCode);
@@ -33,16 +33,14 @@
             return response;
         }
 
-        public string GetResponse(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request)
+        public async Task<string> GetResponseAsync(PropertyDetails propertyDetails, Intuitive.Net.WebRequests.Request request)
         {
-            request.Send(_httpclient, _logger);
+            await request.Send(_httpclient, _logger);
 
             propertyDetails.Logs.AddNew(ThirdParties.EXPEDIARAPID, $"{request.LogFileName} Request", request.RequestString);
             propertyDetails.Logs.AddNew(ThirdParties.EXPEDIARAPID, $"{request.LogFileName} Response", request.ResponseString);
 
             return request.ResponseString;
         }
-
     }
-
 }

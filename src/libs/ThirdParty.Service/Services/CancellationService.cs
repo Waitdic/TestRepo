@@ -77,7 +77,7 @@
 
                     if (thirdParty != null)
                     {
-                        var thirdPartyReponse = thirdParty.CancelBooking(propertyDetails);
+                        var thirdPartyReponse = await thirdParty.CancelBookingAsync(propertyDetails);
                         response = this.responseFactory.Create(thirdPartyReponse);
                     }
                 }
@@ -88,7 +88,7 @@
             }
             finally
             {
-                this.logRepository.LogCancel(cancelRequest, response!, user, exceptionString);
+                await this.logRepository.LogCancelAsync(cancelRequest, response!, user, exceptionString);
             }
 
             return response!;
@@ -123,7 +123,7 @@
 
                     if (thirdParty != null)
                     {
-                        var cancellationFees = thirdParty.GetCancellationCost(propertyDetails);
+                        var cancellationFees = await thirdParty.GetCancellationCostAsync(propertyDetails);
 
                         if (!propertyDetails.Warnings.Any())
                         {

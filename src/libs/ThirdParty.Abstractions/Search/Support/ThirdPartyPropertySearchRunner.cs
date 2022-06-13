@@ -18,7 +18,7 @@
     using ThirdParty.Search.Support;
 
     /// <summary>
-    /// Third Party Property Search Base
+    /// Third Party Property Search Runner
     /// </summary>
     public class ThirdPartyPropertySearchRunner : IThirdPartyPropertySearchRunner
     {
@@ -44,47 +44,47 @@
 
         public async Task SearchAsync(
             SearchDetails searchDetails,
-            List<ResortSplit> resortSplits,
+            SupplierResortSplit supplierResortSplit,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {
             try
             {
-                // todo - email logs to
                 // todo - request tracker, use mini profiler?
                 StartTime = DateTime.Now; // needed for timeouts
                 var taskList = new List<Task>();
+                string source = supplierResortSplit.Supplier;
+                var resortSplits = supplierResortSplit.ResortSplits;
 
                 var requests = thirdPartySearch.BuildSearchRequests(searchDetails, resortSplits);
 
                 foreach (var request in requests)
                 {
-                    request.Source = thirdPartySearch.Source;
+                    request.Source = source;
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
-                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, thirdPartySearch.Source);
-                    request.UseGZip = UseGZip(searchDetails, thirdPartySearch.Source);
+                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source);
+                    request.UseGZip = UseGZip(searchDetails, source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
                 }
 
                 await Task.WhenAll(taskList);
 
-                if (!string.IsNullOrWhiteSpace(searchDetails.EmailLogsToAddress))
+                if (requests.Any())
                 {
-                    foreach (var request in requests)
+                    if (!string.IsNullOrWhiteSpace(searchDetails.EmailLogsToAddress))
                     {
-                        EmailSearchLogs(searchDetails.EmailLogsToAddress, thirdPartySearch.Source, request);
+                        foreach (var request in requests)
+                        {
+                            EmailSearchLogs(searchDetails.EmailLogsToAddress, source, request);
+                        }
                     }
+
+                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
+
+                    await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails, resortSplits);
                 }
-
-                var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
-
-                await _searchResultsProcessor.ProcessTPResultsAsync(
-                    transformedResponses,
-                    thirdPartySearch.Source,
-                    searchDetails,
-                    resortSplits);
             }
             catch (Exception ex)
             {

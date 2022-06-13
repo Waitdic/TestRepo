@@ -9,15 +9,14 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
-    using ThirdParty.Lookups;
+    using ThirdParty.CSSuppliers.Jumbo.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.Jumbo.Models;
 
-    public class JumboSearch : IThirdPartySearch
+    public class JumboSearch : IThirdPartySearch, ISingleSource
     {
         #region Constructor
 
@@ -37,38 +36,35 @@
 
         public string Source => ThirdParties.JUMBO;
 
-        public bool SupportsNonRefundableTagging { get; } = false;
+        public bool SupportsNonRefundableTagging => false;
 
         #endregion
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails oSearchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-
-            bool bRestrictions = false;
+            bool restrictions = false;
 
             // Multi rooms was implemented however did not function correctly, Jumbo returns room combinations rather than available rooms
-            if (oSearchDetails.Rooms > 1)
+            if (searchDetails.Rooms > 1)
             {
-                bRestrictions = true;
+                restrictions = true;
             }
 
-            return bRestrictions;
-
+            return restrictions;
         }
 
         #endregion
 
         #region SearchFunctions
 
-        public List<Request> BuildSearchRequests(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public List<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            var requests = new List<Request>();
 
-            var oRequests = new List<Request>();
-
-            string sHotelID = "";
-            string sURL = _settings.get_HotelBookingURL(oSearchDetails);
+            string hotelId;
+            string url = _settings.get_HotelBookingURL(searchDetails);
             var sb = new StringBuilder();
 
             sb.Append("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://xtravelsystem.com/v1_0rc1/hotel/types\">");
@@ -78,25 +74,28 @@
             sb.Append("<typ:availableHotelsByMultiQueryV12>");
 
             sb.Append("<AvailableHotelsByMultiQueryRQ_1>");
-            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(oSearchDetails, oSearchDetails.LeadGuestNationalityID, "AgencyCode", _settings));
-            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(oSearchDetails, oSearchDetails.LeadGuestNationalityID, "BrandCode", _settings));
-            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(oSearchDetails, oSearchDetails.LeadGuestNationalityID, "POS", _settings));
-            sb.AppendFormat("<checkin>{0}</checkin>", oSearchDetails.PropertyArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
-            sb.AppendFormat("<checkout>{0}</checkout>", oSearchDetails.PropertyDepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
+            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "AgencyCode", _settings));
+            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "BrandCode", _settings));
+            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.LeadGuestNationalityID, "POS", _settings));
+            sb.AppendFormat("<checkin>{0}</checkin>", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
+            sb.AppendFormat("<checkout>{0}</checkout>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<fromPrice>{0}</fromPrice>", "0");
             sb.AppendFormat("<fromRow>{0}</fromRow>", "0");
             sb.AppendFormat("<includeEstablishmentData>{0}</includeEstablishmentData>", "false");
-            sb.AppendFormat("<language>{0}</language>", _settings.get_Language(oSearchDetails));
+            sb.AppendFormat("<language>{0}</language>", _settings.get_Language(searchDetails));
             sb.AppendFormat("<maxRoomCombinationsPerEstablishment>{0}</maxRoomCombinationsPerEstablishment>", "10");
             sb.AppendFormat("<numRows>{0}</numRows>", "1000");
 
-            foreach (RoomDetail oRoom in oSearchDetails.RoomDetails)
+            foreach (var room in searchDetails.RoomDetails)
             {
                 sb.Append("<occupancies>");
-                sb.AppendFormat("<adults>{0}</adults>", oRoom.Adults);
-                sb.AppendFormat("<children>{0}</children>", oRoom.Children + oRoom.Infants);
-                foreach (int iChildAge in oRoom.ChildAndInfantAges())
-                    sb.AppendFormat("<childrenAges>{0}</childrenAges>", iChildAge);
+                sb.AppendFormat("<adults>{0}</adults>", room.Adults);
+                sb.AppendFormat("<children>{0}</children>", room.Children + room.Infants);
+
+                foreach (int childAge in room.ChildAndInfantAges())
+                {
+                    sb.AppendFormat("<childrenAges>{0}</childrenAges>", childAge);
+                }
 
                 sb.AppendFormat("<numberOfRooms>{0}</numberOfRooms>", "1");
                 sb.Append("</occupancies>");
@@ -107,27 +106,26 @@
             sb.Append("<productCode xsi:nil=\"true\" />");
             sb.AppendFormat("<toPrice>{0}</toPrice>", "9999");
 
-            foreach (ResortSplit oResortSplit in oResortSplits)
+            foreach (var resortSplit in resortSplits)
             {
+                string resortCode = resortSplit.ResortCode;
 
-                string sResortCode = oResortSplit.ResortCode;
-
-                if (oResortSplit.Hotels.Count == 1 & oResortSplits.Count == 1)
+                if (resortSplit.Hotels.Count == 1 & resortSplits.Count == 1)
                 {
-                    sHotelID = oResortSplit.Hotels[0].TPKey.ToString();
+                    hotelId = resortSplit.Hotels[0].TPKey.ToString();
                 }
                 else
                 {
-                    sHotelID = "0";
+                    hotelId = "0";
                 }
 
-                if (sHotelID.ToString() != "0" && !string.IsNullOrEmpty(sHotelID.ToString()))
+                if (hotelId.ToString() != "0" && !string.IsNullOrEmpty(hotelId.ToString()))
                 {
-                    sb.AppendFormat("<establishmentId>{0}</establishmentId>", sHotelID.ToString());
+                    sb.AppendFormat("<establishmentId>{0}</establishmentId>", hotelId.ToString());
                 }
                 else
                 {
-                    sb.AppendFormat("<areaCode>{0}</areaCode>", sResortCode.ToString());
+                    sb.AppendFormat("<areaCode>{0}</areaCode>", resortCode.ToString());
                 }
 
             }
@@ -138,37 +136,34 @@
             sb.Append("</soapenv:Body>");
             sb.Append("</soapenv:Envelope>");
 
-            var oRequest = new Request();
-            oRequest.EndPoint = sURL;
-            oRequest.SetRequest(sb.ToString());
-            oRequest.Method = eRequestMethod.POST;
-            oRequest.ExtraInfo = oSearchDetails;
+            var request = new Request
+            {
+                EndPoint = url,
+                Method = eRequestMethod.POST,
+                ExtraInfo = searchDetails
+            };
 
-            oRequests.Add(oRequest);
+            request.SetRequest(sb.ToString());
+            requests.Add(request);
 
-            return oRequests;
-
+            return requests;
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> oRequests, SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
+        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-
             var transformedResults = new TransformedResultCollection();
-            string sResponse = _serializer.CleanXmlNamespaces(oRequests[0].ResponseXML).InnerXml.ToString();
+            string responseBody = _serializer.CleanXmlNamespaces(requests[0].ResponseXML).InnerXml.ToString();
 
-            var oResponse = new XmlDocument();
+            var response = new XmlDocument();
 
-            if (!sResponse.Contains("<faultcode>"))
+            if (!responseBody.Contains("<faultcode>"))
             {
+                var results = _serializer.DeSerialize<Envelope>(responseBody);
 
-                var oResults = _serializer.DeSerialize<Envelope>(sResponse);
-
-                transformedResults.TransformedResults.AddRange(oResults.Body.Content.result.availableHotels.SelectMany(o => CreateHotelResults(o)));
-
+                transformedResults.TransformedResults.AddRange(results.Body.Content.result.availableHotels.SelectMany(o => CreateHotelResults(o)));
             }
 
             return transformedResults;
-
         }
 
         private IEnumerable<TransformedResult> CreateHotelResults(AvailableHotel hotel)
@@ -205,53 +200,11 @@
 
         #region ResponseHasExceptions
 
-        public bool ResponseHasExceptions(Request oRequest)
+        public bool ResponseHasExceptions(Request request)
         {
             return false;
         }
 
         #endregion
-
-        #region Helpers
-
-        public XmlDocument DeDupeJumboResults(XmlDocument Result)
-        {
-
-            var oAddedRooms = new List<string>();
-            var sbDeDupedXml = new StringBuilder();
-            var oDeDupedXml = new XmlDocument();
-
-            // add the rooms to the collection
-            foreach (XmlNode oRoomResult in Result.SelectNodes("/Results/Result"))
-            {
-
-                bool bNewRoom = true;
-                string sRoomResult = oRoomResult.OuterXml;
-
-                if (!oAddedRooms.Contains(sRoomResult))
-                {
-                    oAddedRooms.Add(sRoomResult);
-                }
-
-            }
-
-            // build up the new xml
-            sbDeDupedXml.Append("<Results>");
-
-            foreach (string sRoomXmlNode in oAddedRooms)
-                sbDeDupedXml.Append(sRoomXmlNode);
-
-            sbDeDupedXml.Append("</Results>");
-
-            // load
-            oDeDupedXml.LoadXml(sbDeDupedXml.ToString());
-
-            return oDeDupedXml;
-
-        }
-
-        #endregion
-
     }
-
 }

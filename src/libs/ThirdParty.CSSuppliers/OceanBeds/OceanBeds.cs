@@ -10,14 +10,16 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.OceanBeds.Models;
     using ThirdParty.CSSuppliers.OceanBeds.Models.Common;
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
+    using System.Threading.Tasks;
 
-    public class OceanBeds : IThirdParty
+    public class OceanBeds : IThirdParty, ISingleSource
     {
         private readonly IOceanBedsSettings _settings;
         private readonly ISerializer _serializer;
@@ -38,16 +40,16 @@
 
         public bool SupportsBookingSearch => false;
 
-        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) 
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
             => _settings.AllowCancellations(searchDetails);
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails) 
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
             => 0;
 
-        public bool RequiresVCard(VirtualCardInfo info) 
+        public bool RequiresVCard(VirtualCardInfo info, string source)
             => false;
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             const string requestType = "GetPropertyAvailability";
             string endpoint = _settings.SearchEndPoint(propertyDetails);
@@ -58,7 +60,7 @@
             {
                 var propertyAvailabilityRequest = BuildPropertyAvailabilityRequest(new OceanBedsPropertyDetails(propertyDetails), propertyDetails, _settings);
 
-                webRequest = SendRequest(_serializer.Serialize(propertyAvailabilityRequest), propertyDetails, endpoint, requestType);
+                webRequest = await SendRequestAsync(_serializer.Serialize(propertyAvailabilityRequest), propertyDetails, endpoint, requestType);
                 var propertyAvailabilityRs = _serializer.DeSerialize<AvailabilityRS>(webRequest.ResponseXML);
 
                 success = CheckSuccess(propertyAvailabilityRs.Status) && PreBookPriceCheck(propertyAvailabilityRs, propertyDetails);
@@ -66,7 +68,7 @@
                 propertyDetails.Errata.AddNew("Booking Remark", propertyAvailabilityRs.Response[0].CancellationText);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Prebook Exception", ex.ToString());
             }
@@ -82,7 +84,7 @@
             return success;
         }
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
             Request? bookWebRequest = null;
@@ -90,7 +92,7 @@
             try
             {
                 var bookingMultipleRq = BuildBookingRequest(propertyDetails);
-                bookWebRequest = SendRequest(
+                bookWebRequest = await SendRequestAsync(
                     _serializer.Serialize(bookingMultipleRq),
                     propertyDetails,
                     _settings.BookEndPoint(propertyDetails),
@@ -122,7 +124,7 @@
 
         #region Cancellation
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             const string requestType = "ConfirmCancellation";
             var cancellationResponse = new ThirdPartyCancellationResponse();
@@ -131,7 +133,7 @@
             try
             {
                 //We need to get the Cancellation Token inorder to cancel
-                CancellationCosts(propertyDetails);
+                await CancellationCostsAsync(propertyDetails);
                 string cancellationKey = propertyDetails.TPRef1;
 
                 if (string.IsNullOrWhiteSpace(cancellationKey))
@@ -143,7 +145,7 @@
                 var confirmCancellationRq = BuildConfirmCancellation(cancellationKey.ToSafeInt(), credentials);
                 var request = _serializer.Serialize(confirmCancellationRq);
 
-                webRequest = SendRequest(request, propertyDetails, endpoint, requestType);
+                webRequest = await SendRequestAsync(request, propertyDetails, endpoint, requestType);
                 var confirmCancellationRs = _serializer.DeSerialize<ConfirmCancellationRS>(webRequest.ResponseXML);
                 var bookingReference = confirmCancellationRs.Response[0].BookingRef;
 
@@ -151,7 +153,7 @@
                 cancellationResponse.Amount = confirmCancellationRs.Response[0].CancellationCharge.ToSafeDecimal();
                 cancellationResponse.TPCancellationReference = $"{bookingReference}|{cancellationKey}";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Cancel Booking Exception", ex.ToString());
             }
@@ -167,9 +169,10 @@
             return cancellationResponse;
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails) => CancellationCosts(propertyDetails);
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
+            => await CancellationCostsAsync(propertyDetails);
 
-        private ThirdPartyCancellationFeeResult CancellationCosts(PropertyDetails propertyDetails)
+        private async Task<ThirdPartyCancellationFeeResult> CancellationCostsAsync(PropertyDetails propertyDetails)
         {
             Request? webRequest = null;
             var cancellationFeeResult = new ThirdPartyCancellationFeeResult();
@@ -183,7 +186,7 @@
                 var cancellationRequest = BuildBookingCancellation(propertyDetails.SourceReference, credentials);
                 var request = _serializer.Serialize(cancellationRequest);
 
-                webRequest = SendRequest(request, propertyDetails, endpoint, requestType);
+                webRequest = await SendRequestAsync(request, propertyDetails, endpoint, requestType);
                 var bookingCancellationRs = _serializer.DeSerialize<BookingCancellationRS>(webRequest.ResponseXML);
 
                 cancellationFeeResult.Amount = bookingCancellationRs.Response[0].CancellationCharge.ToSafeDecimal();
@@ -193,7 +196,7 @@
                 propertyDetails.TPRef1 = bookingCancellationRs.Response[0].Key.ToSafeString();
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("Ocean Beds Cancellation Cost Exception", ex.ToString());
             }
@@ -215,7 +218,7 @@
 
         public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails) => new();
 
-        public string CreateReconciliationReference(string inputReference) 
+        public string CreateReconciliationReference(string inputReference)
             => string.Empty;
 
         public void EndSession(PropertyDetails propertyDetails)
@@ -227,9 +230,9 @@
 
         public bool PreBookPriceCheck(AvailabilityRS oceanBedsAvailabilityRs, PropertyDetails propertyDetails)
         {
-            foreach(var room in oceanBedsAvailabilityRs.Response)
+            foreach (var room in oceanBedsAvailabilityRs.Response)
             {
-                foreach(var roomList in room.RoomList)
+                foreach (var roomList in room.RoomList)
                 {
                     var searchRoomCode = roomList.Code;
 
@@ -241,7 +244,7 @@
                         if (searchRoomCode.Equals(preBookRoomCode))
                         {
                             var preBookCost = Math.Round(roomList.NetPrice, 2);
-                            
+
                             if (searchCost.Equals(preBookCost))
                                 continue;
 
@@ -255,14 +258,15 @@
 
         private static ConfirmCancellationRQ BuildConfirmCancellation(int cancelKey, Credential credentials)
         {
-            return new ConfirmCancellationRQ 
+            return new ConfirmCancellationRQ
             {
                 Credential = credentials,
                 Key = cancelKey
             };
         }
 
-        private Request SendRequest(XmlDocument request,
+        private async Task<Request> SendRequestAsync(
+            XmlDocument request,
             IThirdPartyAttributeSearch thirdPartyAttributeSearch,
             string endpoint,
             string requestType)
@@ -279,7 +283,7 @@
             };
 
             webRequest.SetRequest(request);
-            webRequest.Send(_httpClient, _logger).RunSynchronously();
+            await webRequest.Send(_httpClient, _logger);
 
             return webRequest;
         }

@@ -13,13 +13,11 @@
 
     public class ShoppingEngineResponseTransformer : ISearchResponseTransformer
     {
-        private readonly IDerbySoftSettings _settings;
         private readonly TransformedResultBuilder _resultBuilder;
 
-        public ShoppingEngineResponseTransformer(IDerbySoftSettings settings)
+        public ShoppingEngineResponseTransformer(IDerbySoftSettings settings, string source)
         {
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-            _resultBuilder = new TransformedResultBuilder(_settings);
+            _resultBuilder = new TransformedResultBuilder(settings, source);
         }
 
         public IEnumerable<TransformedResult> TransformResponses(List<Request> requests)
@@ -27,7 +25,7 @@
            return requests
                 .Where(r => r.Success)
                 .SelectMany(r => TransformResponse(
-                    ((SearchExtraHelper)r.ExtraInfo),
+                    (SearchExtraHelper)r.ExtraInfo,
                     JsonConvert.DeserializeObject<DerbySoftShoppingEngineV4SearchResponse>(r.ResponseString, DerbySoftSupport.GetJsonSerializerSettings())));
         }
 

@@ -9,12 +9,13 @@
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.MTS.Models;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Results;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Support;
 
-    public class MTSSearch : IThirdPartySearch
+    public class MTSSearch : IThirdPartySearch, ISingleSource
     {
         #region Constructor
 
@@ -37,7 +38,7 @@
 
         #region SearchRestrictions
 
-        public bool SearchRestrictions(SearchDetails searchDetails)
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
             return false;
         }

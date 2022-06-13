@@ -4,19 +4,21 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
     using ThirdParty.CSSuppliers.Helpers.W2M;
     using ThirdParty.CSSuppliers.Models.W2M;
-    using Microsoft.Extensions.Logging;
+    using ThirdParty.Interfaces;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
 
-    public class W2M : IThirdParty
+    public class W2M : IThirdParty, ISingleSource
     {
-        #region "Properties"
+        #region Properties
 
         private readonly IW2MSettings _settings;
         private readonly W2MHelper _w2mHelper;
@@ -27,7 +29,7 @@
 
         #endregion
 
-        #region "Constructors"
+        #region Constructors
 
         public W2M(IW2MSettings settings, ISerializer serializer, HttpClient httpClient, ILogger<W2M> logger)
         {
@@ -37,9 +39,9 @@
 
         #endregion
 
-        public string Book(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var bookResult = _w2mHelper.Book(propertyDetails);
+            var bookResult = await _w2mHelper.BookAsync(propertyDetails);
 
             foreach (var log in bookResult.Logs)
             {
@@ -60,7 +62,6 @@
             return string.Join("|", bookResult.References);
         }
 
-
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             throw new NotImplementedException();
@@ -71,7 +72,7 @@
             throw new NotImplementedException();
         }
 
-        public ThirdPartyCancellationResponse CancelBooking(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             List<string> referencesForCancellation;
 
@@ -98,7 +99,7 @@
                 CreateLogs = propertyDetails.CreateLogs
             };
 
-            var cancellationResponse = _w2mHelper.CancelBooking(baseParams, referencesForCancellation);
+            var cancellationResponse = await _w2mHelper.CancelBookingAsync(baseParams, referencesForCancellation);
 
             foreach (var log in cancellationResponse.Logs)
             {
@@ -120,19 +121,20 @@
             throw new NotImplementedException();
         }
 
-        public ThirdPartyCancellationFeeResult GetCancellationCost(PropertyDetails propertyDetails) =>
-            new ThirdPartyCancellationFeeResult
-            {
-                Success = true,
-                CurrencyCode = propertyDetails.CurrencyCode
-            };
+        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
+            => Task.FromResult(
+                new ThirdPartyCancellationFeeResult
+                    {
+                        Success = true,
+                        CurrencyCode = propertyDetails.CurrencyCode
+                    });
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new NotImplementedException();
         }
 
-        public bool PreBook(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             try
             {
@@ -153,7 +155,7 @@
                     propertyDetails.Source,
                     propertyDetails.LeadGuestBookingCountry);
 
-                var preBookResult = _w2mHelper.PreBook(parameters, propertyDetails.Rooms);
+                var preBookResult = await _w2mHelper.PreBookAsync(parameters, propertyDetails.Rooms);
                 foreach (var log in preBookResult.Logs)
                 {
                     propertyDetails.Logs.AddNew(log.Source, log.Title, log.Log);
@@ -186,7 +188,7 @@
             }
         }
 
-        public bool RequiresVCard(VirtualCardInfo info)
+        public bool RequiresVCard(VirtualCardInfo info, string source)
         {
             throw new NotImplementedException();
         }
