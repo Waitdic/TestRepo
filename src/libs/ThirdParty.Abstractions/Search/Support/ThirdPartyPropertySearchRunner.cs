@@ -62,7 +62,7 @@
                     request.Source = thirdPartySearch.Source;
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
-                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails);
+                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, thirdPartySearch.Source);
                     request.UseGZip = UseGZip(searchDetails, thirdPartySearch.Source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
@@ -157,12 +157,13 @@
 
         /// <summary>Requests the time out seconds.</summary>
         /// <param name="searchDetails">The search details.</param>
+        /// <param name="source">The source.</param>
         /// <returns>
         ///   The time out in seconds as an integer
         /// </returns>
-        public int RequestTimeOutSeconds(SearchDetails searchDetails)
+        public int RequestTimeOutSeconds(SearchDetails searchDetails, string source)
         {
-            int timeOutSeconds = this.TimeoutSeconds(searchDetails) - this.CurrentTimeTakenInSeconds - 2;
+            int timeOutSeconds = this.TimeoutSeconds(searchDetails, source) - this.CurrentTimeTakenInSeconds - 2;
             if (timeOutSeconds <= 0)
             {
                 timeOutSeconds = 1;
@@ -173,12 +174,17 @@
 
         /// <summary>Timeouts the seconds.</summary>
         /// <param name="searchDetails">The search details.</param>
+        /// <param name="source">The source.</param>
         /// <returns>
         ///   The seconds as an integer
         /// </returns>
-        public int TimeoutSeconds(SearchDetails searchDetails)
+        public int TimeoutSeconds(SearchDetails searchDetails, string source)
         {
-            return searchDetails.Settings.SearchTimeoutSeconds;
+            var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == source);
+             
+            return configuration.Configurations.ContainsKey("SearchTimeout") ? 
+                configuration.Configurations["SearchTimeout"].ToSafeInt() :
+                searchDetails.Settings.SearchTimeoutSeconds;
         }
 
         /// <summary>A boolean to decide if we want to compress the request</summary>
