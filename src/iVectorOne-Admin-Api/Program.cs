@@ -29,6 +29,16 @@ app.MapGet("/tenants/{tenantid}/subscriptions/{subscriptionid}", (ConfigContext 
     return sub;
 });
 
+app.MapGet("/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", (ConfigContext context, IMapper mapper, int tenantid, int subscriptionid) =>
+{
+    var subscription = context.Subscriptions.Where(s => s.SubscriptionId == subscriptionid && s.TenantId == tenantid)
+                                            .Include("SupplierSubscriptions")
+                                            .Include("SupplierSubscriptions.Supplier").FirstOrDefault();
+    SupplierSubscriptionDTO suppliers = mapper.Map<SupplierSubscriptionDTO>(subscription);
+
+    return suppliers;
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
