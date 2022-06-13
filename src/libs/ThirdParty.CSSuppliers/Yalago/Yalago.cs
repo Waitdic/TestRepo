@@ -237,7 +237,7 @@
                     sourceMarket = _settings.CountryCode(propertyDetails);
                 }
 
-                var opaqueSearch = SafeTypeExtensions.ToSafeBoolean(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[4]);
+                var opaqueSearch = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[4].ToSafeBoolean();
                 var getPackagePrice = opaqueSearch && _settings.ReturnOpaqueRates(propertyDetails) && propertyDetails.OpaqueRates;
 
                 var preBookRequest = new YalagoPreBookRequest()
@@ -245,8 +245,8 @@
                     Culture = _settings.Language(propertyDetails),
                     CheckInDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                     CheckOutDate = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
-                    LocationId = SafeTypeExtensions.ToSafeInt(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[2]),
-                    EstablishmentId = SafeTypeExtensions.ToSafeInt(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0]),
+                    LocationId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[2].ToSafeInt(),
+                    EstablishmentId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0].ToSafeInt(),
                     SourceMarket = sourceMarket,
                     GetLocalCharges = true,
                     GetPackagePrice = getPackagePrice
@@ -323,7 +323,7 @@
                                 var cancellationCharge = orderedCancellations[i];
                                 var startDate = (i + 1) < orderedCancellations.Count ?
                                     orderedCancellations[i + 1].ExpiryDate.Date.AddDays(1) : DateTime.Now.Date;
-                                propertyDetails.Cancellations.AddNew(startDate, cancellationCharge.ExpiryDate.Date, SafeTypeExtensions.ToSafeDecimal(cancellationCharge.charge.Amount));
+                                propertyDetails.Cancellations.AddNew(startDate, cancellationCharge.ExpiryDate.Date, cancellationCharge.charge.Amount.ToSafeDecimal());
                             }
 
                             processedRooms.Add(roomDetails.PropertyRoomBookingID);
@@ -390,7 +390,7 @@
                     }
                     var expectedNetCost = new YalagoCreateBookingRequest.ExpectedNetCost
                     {
-                        Amount = Math.Round(SafeTypeExtensions.ToSafeDecimal(room.GrossCost), 2),
+                        Amount = Math.Round(room.GrossCost.ToSafeDecimal(), 2),
                         Currency = propertyDetails.CurrencyCode
                     };
 
@@ -435,7 +435,7 @@
                     AffiliateRef = propertyDetails.BookingReference,
                     CheckInDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                     CheckOutDate = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
-                    EstablishmentId = SafeTypeExtensions.ToSafeInt(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0]),
+                    EstablishmentId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0].ToSafeInt(),
                     Culture = _settings.Language(propertyDetails),
                     GetPackagePrice = getPackagePrice,
                     GetTaxBreakdown = true,

@@ -180,18 +180,18 @@
                                     Children = 0,
                                     ChildAgeCSV = string.Empty,
                                     Infants = 0,
-                                    Amount = SafeTypeExtensions.ToSafeDecimal(roomRate.Rates.First().Total.AmountAfterTax),
+                                    Amount = roomRate.Rates.First().Total.AmountAfterTax.ToSafeDecimal(),
                                     TPReference = $"{SequenceNumber}|{roomRate.RatePlanCode}|{roomStay.Total.CurrencyCode}",
                                     SpecialOffer = roomRate.Features.FirstOrDefault(f => string.Equals(f.RoomViewCode, Constant.RoomViewCodePromo)
                                                                             && string.Equals(f.Description.Name, Constant.SpecialOfferFeatureName))?.Description.Text ?? "",
-                                    Discount = SafeTypeExtensions.ToSafeDecimal(roomRate.Features.FirstOrDefault(f => string.Equals(f.RoomViewCode, Constant.RoomViewCodePromo) &&
-                                                                string.Equals(f.Description.Name, Constant.DiscountFeatureName))?.Description.Text ?? "0.00"),
+                                    Discount = (roomRate.Features.FirstOrDefault(f => string.Equals(f.RoomViewCode, Constant.RoomViewCodePromo) &&
+                                                                string.Equals(f.Description.Name, Constant.DiscountFeatureName))?.Description.Text ?? "0.00").ToSafeDecimal(),
                                     NonRefundableRates = string.Equals(roomRate.RoomRateExtension.NonRefundable, "1"),
                                     Adjustments = roomRate.RoomRateExtension.Elements.Select(e => new TransformedResultAdjustment
                                     {
                                         AdjustmentType = "S",
                                         AdjustmentName = e.Name,
-                                        AdjustmentAmount = SafeTypeExtensions.ToSafeDecimal(e.Price),
+                                        AdjustmentAmount = e.Price.ToSafeDecimal(),
                                         AdjustmentDescription = e.Description.Replace('{', '(').Replace('}', ')')
                                     }).ToList()
                                 };

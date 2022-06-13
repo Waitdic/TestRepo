@@ -151,7 +151,7 @@
 
                 foreach (var extraCost in response.ExtraCharges)
                 {
-                    if (extraCost.Name == null || !SafeTypeExtensions.ToSafeBoolean(extraCost.Obligatory) || extraCost.Type == "included")
+                    if (extraCost.Name == null || !extraCost.Obligatory.ToSafeBoolean() || extraCost.Type == "included")
                     {
                         continue;
                     }
@@ -467,7 +467,7 @@
                 var response = _serializer.DeSerialize<SerhsCancellationResponse>(request.ResponseXML);
 
                 cancellationCostResponse.Success = response.Status == "0";
-                cancellationCostResponse.Amount = SafeTypeExtensions.ToSafeDecimal(response.AmountDetails.TotalAmount);
+                cancellationCostResponse.Amount = response.AmountDetails.TotalAmount.ToSafeDecimal();
                 cancellationCostResponse.CurrencyCode = response.AmountDetails.CurrencyCode;
             }
             catch (Exception exception)

@@ -163,7 +163,7 @@
                                     var endDate = (i + 1) < orderedCancellations.Count ?
                                         orderedCancellations[i + 1].from.Date.AddDays(-1) :
                                         propertyDetails.ArrivalDate;
-                                    propertyDetails.Cancellations.AddNew(cancellationCharge.from.Date, endDate, SafeTypeExtensions.ToSafeDecimal(cancellationCharge.amount));
+                                    propertyDetails.Cancellations.AddNew(cancellationCharge.from.Date, endDate, cancellationCharge.amount.ToSafeDecimal());
                                 }
 
                                 rateUsed = true;
@@ -250,7 +250,7 @@
                         {
                             name = passenger.FirstName,
                             surname = passenger.LastName,
-                            roomId = SafeTypeExtensions.ToSafeString(1)
+                            roomId = "1",
                         };
 
                         if (passenger.PassengerType == PassengerType.Adult)

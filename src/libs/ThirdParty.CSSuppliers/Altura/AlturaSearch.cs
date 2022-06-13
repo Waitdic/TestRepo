@@ -186,7 +186,7 @@
                 .SelectMany(rate => rate.Rooms
                     .Select(room => new TransformedResult
                     {
-                        MasterID = SafeTypeExtensions.ToSafeInt(hotel.Id),
+                        MasterID = hotel.Id.ToSafeInt(),
                         TPKey = hotel.Id,
                         CurrencyCode = rate.Currency,
                         PropertyRoomBookingID = response.PropertyRoomBookingID,

@@ -238,7 +238,7 @@
                         RoomTypeCode = roomTypeCode,
                         MealBasisCode = mealBasisCode,
                         PropertyRoomBookingID = roomDatails.FirstOrDefault(rd => string.Equals(rd.RoomComparable, roomComparable)).PropertyRoomBookingId,
-                        Amount = SafeTypeExtensions.ToSafeDecimal(roomRate.Rates.First().Total.AmountAfterTax),
+                        Amount = roomRate.Rates.First().Total.AmountAfterTax.ToSafeDecimal(),
                         NonRefundableRates = string.Equals("true", roomRate.Rates.First().CancelPolicies?.FirstOrDefault()?.NonRefundable.ToLower() ?? string.Empty),
                         TPReference = $"{tpReference}|{roomTypeCode}|{mealBasisCode}|{roomRate.PromotionCode}|{currencyCode}"
                     };

@@ -96,7 +96,7 @@
                     }
 
                     //'Retrieve booking price
-                    decimal bookingPrice = SafeTypeExtensions.ToSafeDecimal(response.Response.RateDetails.TotalPrice) / 100;
+                    decimal bookingPrice = response.Response.RateDetails.TotalPrice.ToSafeDecimal() / 100;
 
                     //'Check if non-refundable
                     var isNonRefundable = string.Equals(response.Response.RateDetails.NoRefundable, "1");
@@ -106,9 +106,9 @@
                         // 'set the cancellation charges
                         foreach (var cancellationCharge in response.Response.CancellationPrices)
                         {
-                            TimeSpan timeSpan = new TimeSpan(SafeTypeExtensions.ToSafeInt(cancellationCharge.Timeframe), 0, 0, 0);
+                            var timeSpan = new TimeSpan(cancellationCharge.Timeframe.ToSafeInt(), 0, 0, 0);
                             DateTime startDate = propertyDetails.ArrivalDate.Subtract(timeSpan);
-                            decimal fee = SafeTypeExtensions.ToSafeDecimal(cancellationCharge.TotalPrice) / 100;
+                            decimal fee = cancellationCharge.TotalPrice.ToSafeDecimal() / 100;
 
                             propertyDetails.Cancellations.AddNew(startDate, Constant.DateMax, fee);
                         }
@@ -306,7 +306,7 @@
 
                         var preCancelResponse = _serializer.DeSerialize<AlturaCancellationResponse>(cancellationCostResponse).Response;
 
-                        amount += SafeTypeExtensions.ToSafeDecimal(preCancelResponse.Result.CancellationPrice) / 100;
+                        amount += preCancelResponse.Result.CancellationPrice.ToSafeDecimal() / 100;
                         cancellationPrices.Add($"{amount}");
                         currencyCodes.Add(preCancelResponse.Result.Currency);
                         sessionIds.Add(preCancelResponse.Session.Id);

@@ -65,7 +65,7 @@
                 {
                     if (hotelIDList.Count < batchLimit) // Limit number of hotels per request
                     {
-                        hotelIDList.Add(SafeTypeExtensions.ToSafeInt(oHotel.TPKey));
+                        hotelIDList.Add(oHotel.TPKey.ToSafeInt());
                     }
                 }
 

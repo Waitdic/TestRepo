@@ -191,7 +191,7 @@
                 // Check to see if there were any errors
                 if (oResponse.Errors.Any()) return false;
 
-                decimal totalCost = SafeTypeExtensions.ToSafeDecimal(oResponse.HotelReservations.First().RoomStays.First().Total.AmountAfterTax);
+                decimal totalCost = oResponse.HotelReservations.First().RoomStays.First().Total.AmountAfterTax.ToSafeDecimal();
 
                 // Check for price changes
                 if (propertyDetails.LocalCost != totalCost)
@@ -218,9 +218,9 @@
                 cancellations.AddRange(oResponse.HotelReservations.First().RoomStays.First().RoomRates.First().Rates.First().CancelPolicies
                     .Select(cp =>
                     {
-                        var startDt = SafeTypeExtensions.ToSafeDate(cp.Start);
+                        var startDt = cp.Start.ToSafeDate();
                         var start = new DateTime(startDt.Year, startDt.Month, startDt.Day);
-                        var endDt = SafeTypeExtensions.ToSafeDate(cp.End);
+                        var endDt = cp.End.ToSafeDate();
                         var end = new DateTime(endDt.Year, endDt.Month, endDt.Day + 1);
                         decimal amount = SafeTypeExtensions.ToSafeDecimal(cp.AmountPercent.Amount);
 
