@@ -73,23 +73,14 @@ steps:
   inputs:
     nuGetServiceConnections: 'Intuitive'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Restore packages'
-  inputs:
-    command: 'restore'
-    projects: 'src/$(project)/**/*.csproj'
-    feedsToUse: 'config'
-    nugetConfigPath: 'NuGet.config'
-    includeNuGetOrg: false
+- task: NuGetToolInstaller@1
 
-- task: DotNetCoreCLI@2
-  displayName: 'Restore packages'
+- task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    projects: 'tests/$(testProject)**/*.csproj'
+    restoreSolution: '$(solution)'
     feedsToUse: 'config'
     nugetConfigPath: 'NuGet.config'
-    includeNuGetOrg: false
+    externalFeedCredentials: 'Intuitive'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Project'
