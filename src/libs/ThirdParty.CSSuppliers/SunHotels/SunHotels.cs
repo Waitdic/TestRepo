@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.SunHotels
 {
     using System;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
@@ -259,9 +260,9 @@
                 sbBookingRequestURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(propertyDetails.Rooms[0]));
                 sbBookingRequestURL.AppendFormat("&yourRef={0}", iVectorReference);
 
-                if (propertyDetails.BookingComments.Count != 0)
+                if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
                 {
-                    sbBookingRequestURL.AppendFormat("&specialrequest={0}", propertyDetails.BookingComments[0].Text);
+                    sbBookingRequestURL.AppendFormat("&specialrequest={0}", string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)));
                 }
                 else
                 {

@@ -562,7 +562,7 @@
             {
                 AffiliateReferenceId = propertyDetails.BookingReference.Trim(),
                 Hold = false,
-                Rooms = propertyDetails.Rooms.Select((r, i) => CreateBookRequestRoom(propertyDetails, r.Passengers.First(), i)).ToList(),
+                Rooms = propertyDetails.Rooms.Select((r, i) => CreateBookRequestRoom(propertyDetails, r.Passengers.First(), r,i)).ToList(),
                 Payments = new List<Payment>()
                 {
                     new Payment()
@@ -591,7 +591,7 @@
             return JsonConvert.SerializeObject(bookRequest);
         }
 
-        private BookRequestRoom CreateBookRequestRoom(PropertyDetails propertyDetails, Passenger firstPasseneger, int index)
+        private BookRequestRoom CreateBookRequestRoom(PropertyDetails propertyDetails, Passenger firstPasseneger, RoomDetails room,int index)
         {
             if (index == 0)
             {
@@ -602,7 +602,7 @@
                     FamilyName = propertyDetails.LeadGuestLastName,
                     Email = propertyDetails.LeadGuestEmail,
                     Phone = new Phone(propertyDetails.LeadGuestPhone),
-                    SpecialRequest = string.Join(Environment.NewLine, propertyDetails.BookingComments.Select(bc => bc.Text))
+                    SpecialRequest = room.SpecialRequest
                 };
             }
             else
@@ -614,7 +614,7 @@
                     FamilyName = firstPasseneger.LastName,
                     Email = propertyDetails.LeadGuestEmail,
                     Phone = new Phone(propertyDetails.LeadGuestPhone),
-                    SpecialRequest = string.Join(Environment.NewLine, propertyDetails.BookingComments.Select(bc => bc.Text))
+                    SpecialRequest = room.SpecialRequest
                 };
             }
         }

@@ -561,9 +561,12 @@
             sbBookRequest.Append("<basketId/>");
             sbBookRequest.Append("<closeBasket>true</closeBasket>");
 
-            if (propertyDetails.BookingComments.Count != 0)
+            if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
             {
-                string bookingComment = string.Join(" ", propertyDetails.BookingComments.Select(comment => comment.Text));
+                string bookingComment = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                         string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                         "";
+
                 sbBookRequest.Append("<comments>");
                 sbBookRequest.AppendFormat("<text>{0}</text>", bookingComment.Trim());
                 sbBookRequest.Append("<type>Guest requests</type>");

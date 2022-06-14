@@ -148,9 +148,9 @@
                 sb.Append("<comment>");
 
                 // any comments for the hotel
-                foreach (var comment in propertyDetails.BookingComments)
+                if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
                 {
-                    sb.AppendFormat("<hotel>{0}</hotel>", comment.Text);
+                    sb.AppendFormat("<hotel>{0}</hotel>", string.Join("\n", propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Select(x => x.SpecialRequest)));
                 }
 
                 // any other comments from the customer

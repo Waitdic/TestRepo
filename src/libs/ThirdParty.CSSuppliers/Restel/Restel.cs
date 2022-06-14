@@ -440,7 +440,9 @@
                 {
                     CodigoHotel = propertyDetails.TPKey,
                     NombreCliente = $"{firstPassenger.FirstName} {firstPassenger.LastName}",
-                    Observaciones = propertyDetails.BookingComments.Any() ? propertyDetails.BookingComments[0].Text : string.Empty,
+                    Observaciones =  propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                     string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)):
+                     "",
                     NumMensaje = string.Empty,
                     FormaPago = 25,
                     Res =

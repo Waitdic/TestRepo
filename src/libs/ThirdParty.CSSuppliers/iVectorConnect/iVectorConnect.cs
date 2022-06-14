@@ -439,7 +439,9 @@
                         ArrivalDate = propertyDetails.ArrivalDate.ToString(DateFormat),
                         Duration = propertyDetails.Duration,
                         ExpectedTotal = propertyDetails.LocalCost,
-                        Request = AddBookingCommentsToRequest(propertyDetails.BookingComments),
+                        Request = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                                     string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                                     "",
                         RoomBookings = AddRoomBookingsToRequest(propertyDetails),
                     }
                 },
@@ -475,13 +477,6 @@
             }
 
             return _serializer.Serialize(bookRequest);
-        }
-
-        private static string AddBookingCommentsToRequest(BookingComments bookingComments)
-        {
-            return bookingComments.Count > 0
-                ? bookingComments.ToString()
-                : string.Empty;
         }
 
         private static GuestDetail[] AddGuestDetailsToRequest(PropertyDetails propertyDetails)

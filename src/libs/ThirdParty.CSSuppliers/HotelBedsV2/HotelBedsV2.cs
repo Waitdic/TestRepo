@@ -231,7 +231,9 @@
                     },
                     rooms = new HotelBedsV2CreateBookingRequest.Room[totalRooms],
                     tolerance = 2,
-                    remark = propertyDetails.BookingComments.Any() ? propertyDetails.BookingComments.First().Text : "",
+                    remark = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ? 
+                     string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)):
+                     "", 
                     clientReference = propertyDetails.BookingReference
                 };
 

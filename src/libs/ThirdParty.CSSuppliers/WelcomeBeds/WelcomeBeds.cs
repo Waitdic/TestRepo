@@ -333,7 +333,7 @@
                     ResGuests = resGuests,
                     ResGlobalInfo = new ResGlobalInfo
                     {
-                        Comments = propertyDetails.BookingComments.Select(bc => new Comment { Text = bc.Text }).ToList()
+                        Comments = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Select(x => new Comment { Text = x.SpecialRequest }).ToList()
                     },
                     TpaExtensions = new TpaExtensions
                     {

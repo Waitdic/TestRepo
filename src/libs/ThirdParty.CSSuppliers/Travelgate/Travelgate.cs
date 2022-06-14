@@ -722,10 +722,10 @@
 
             sbBookRequest.Append("</RoomCandidates>");
 
-            if (!string.IsNullOrEmpty(propertyDetails.BookingComments.ToString()))
+            if (!propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
             {
                 sbBookRequest.Append("<Remarks>");
-                sbBookRequest.Append(propertyDetails.BookingComments.ToString().Trim());
+                sbBookRequest.Append(string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)));
                 sbBookRequest.Append("</Remarks>");
             }
 

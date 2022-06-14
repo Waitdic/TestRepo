@@ -241,7 +241,9 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
                 CreateLogs = propertyDetails.CreateLogs
             };
 
-            var hotelRequest = propertyDetails.BookingComments.FirstOrDefault()?.Text ?? string.Empty;
+            var hotelRequest = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                     string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                     "";
 
             var bookRequestParameters = new BookRequestParameters(parameters,
                 propertyDetails.BookingReference,

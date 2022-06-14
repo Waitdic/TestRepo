@@ -207,10 +207,12 @@
                 sbURL.AppendFormat("&Customer_firstname={0}", propertyDetails.Rooms[0].Passengers[0].FirstName);
                 sbURL.AppendFormat("&Customer_Lastname={0}", propertyDetails.Rooms[0].Passengers[0].LastName);
 
-                if (propertyDetails.BookingComments.Count > 0)
+                if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
                 {
+                    var request = string.Join(",", propertyDetails.Rooms.Select(x => x.SpecialRequest)); 
+
                     // max 250 characters
-                    sbURL.AppendFormat("&Requests={0}", propertyDetails.BookingComments[0].Text.Substring(0, Math.Min(propertyDetails.BookingComments[0].Text.Length, 250)));
+                    sbURL.AppendFormat("&Requests={0}", request.Substring(0, Math.Min(request.Length, 250)));
                 }
 
                 requestURL = sbURL.ToString();

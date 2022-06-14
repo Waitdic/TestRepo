@@ -486,7 +486,7 @@
             };
 
             var comments = new List<string>();
-            comments.AddRange(propertyDetails.BookingComments.Select(c => c.Text));
+            comments.AddRange(propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Select(x => x.SpecialRequest));
 
             var roomRates = new List<RoomRate>();
             var roomRate = new RoomRate

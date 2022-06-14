@@ -356,9 +356,9 @@
                                         },
                                         PaxCountry = _settings.PaxCountry(propertyDetails, propertyDetails.Source)
                                     },
-                                    Comments = propertyDetails.BookingComments.Select(oComment => new Comment
+                                     Comments = propertyDetails.Rooms.Where(x => !string.IsNullOrWhiteSpace(x.SpecialRequest)).Select(x => new Comment
                                     {
-                                        Text = oComment.Text
+                                        Text = x.SpecialRequest
                                     }).ToList()
                                 }
                             },

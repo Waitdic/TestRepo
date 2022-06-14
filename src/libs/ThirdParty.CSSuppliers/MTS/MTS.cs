@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
@@ -356,7 +357,7 @@
 
                 sbRequest.Append("</ResGuests>");
 
-                if (propertyDetails.BookingReference != "" || propertyDetails.BookingComments.Count > 0)
+                if (propertyDetails.BookingReference != "" || propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
                 {
                     sbRequest.Append("<ResGlobalInfo>");
 
@@ -371,14 +372,14 @@
                         }
                     }
 
-                    if (propertyDetails.BookingComments.Count > 0)
+                    if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
                     {
                         sbRequest.Append("<Comments>");
 
-                        foreach (var bookingComment in propertyDetails.BookingComments)
+                        foreach (var room in propertyDetails.Rooms)
                         {
                             sbRequest.Append("<Comment Name = \"Applicant Notice\">");
-                            sbRequest.AppendFormat("<Text>{0}</Text>", bookingComment.Text);
+                            sbRequest.AppendFormat("<Text>{0}</Text>", room.SpecialRequest);
                             sbRequest.Append("</Comment>");
                         }
 

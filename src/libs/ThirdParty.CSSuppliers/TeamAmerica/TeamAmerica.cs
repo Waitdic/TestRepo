@@ -450,7 +450,9 @@
                     NumberOfNights = propertyDetails.Duration,
                     Language = Constant.ENG,
                     Quantity = 1,
-                    ItemRemarks = propertyDetails.BookingComments.ToString(),
+                    ItemRemarks = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                                         string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                                         "",
                     RateExpected = roomDetails.ThirdPartyReference.Split('|')[3],
                 };
 

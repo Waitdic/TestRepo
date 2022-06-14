@@ -400,7 +400,7 @@
                         RoomCode = room.ThirdPartyReference.Split('|')[3],
                         BoardCode = room.ThirdPartyReference.Split('|')[1],
                         AffiliateRoomRef = ("room" + i++).ToSafeString(),
-                        SpecialRequests = propertyDetails.BookingComments.ToSafeString(),
+                        SpecialRequests = room.SpecialRequest, 
                         ExpectedNetCost = expectedNetCost
                     };
 

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
@@ -465,10 +466,9 @@
 
 
             // get hotel request if it exists
-            string sComment = "";
-            foreach (BookingComment oComment in propertyDetails.BookingComments)
-                sComment += oComment.Text + " ";
-
+            string sComment = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                     string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                     "";
 
             // for each room
             int iRoomIndex = 0;

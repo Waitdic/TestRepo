@@ -407,9 +407,9 @@
                     BookingConfirmation =
                     {
                         RateId = rateId,
-                        SpecialRequest = propertyDetails.BookingComments.Any()
-                                ? $"{string.Join(",", propertyDetails.BookingComments.Select(c => c.Text))} (Room {roomIndex + 1}/{propertyDetails.Rooms.Count})"
-                                : $"(Room {roomIndex + 1}/{propertyDetails.Rooms.Count})",
+                        SpecialRequest = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
+                                $"{string.Join(",", propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Select(x => x.SpecialRequest))} (Room {roomIndex + 1}/{propertyDetails.Rooms.Count})" 
+                                : $"(Room {roomIndex + 1}/{propertyDetails.Rooms.Count})"
                     },
                     Guest =
                     {
