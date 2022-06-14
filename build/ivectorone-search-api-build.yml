@@ -69,7 +69,7 @@ steps:
     projectKey: 'Intuitive_iVectorOne_Search_Api'
     projectName: 'iVectorOne Search Api'
 
-- task: NuGetAuthenticate@0
+- task: NuGetAuthenticate@1
   inputs:
     nuGetServiceConnections: 'Intuitive'
 
