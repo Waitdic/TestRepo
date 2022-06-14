@@ -69,6 +69,10 @@ steps:
     projectKey: 'Intuitive_iVectorOne_Search_Api'
     projectName: 'iVectorOne Search Api'
 
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: 'Intuitive'
+
 - task: DotNetCoreCLI@2
   displayName: 'Restore packages'
   inputs:
