@@ -115,7 +115,8 @@
                             TotalCost = Math.Round(roomResult.PriceData.TotalCost + 0.00M, 2),
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
                             CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
-                            Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2)
+                            Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
+                            TPRateCode = roomResult.RoomData.RateCode
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

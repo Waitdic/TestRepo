@@ -99,6 +99,14 @@
         public decimal Discount { get; set; }
 
         /// <summary>
+        /// Gets or sets the third party rate code.
+        /// </summary>
+        /// <value>
+        /// The third party rate code.
+        /// </value>
+        public string TPRateCode { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets a value indicating whether [non refundable].
         /// </summary>
         /// <value>

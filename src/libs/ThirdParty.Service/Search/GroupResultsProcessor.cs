@@ -78,7 +78,8 @@
                         PayLocalRequired = searchResult.PayLocalRequired,
                         PayLocalAvailable = searchResult.PayLocalAvailable,
                         MealBasisCode = await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
-                        MealBasisID = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode)
+                        MealBasisID = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
+                        RateCode  = searchResult.TPRateCode
                     },
                     PriceData = new PriceData()
                     {
