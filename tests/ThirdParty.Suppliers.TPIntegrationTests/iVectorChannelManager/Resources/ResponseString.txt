@@ -1,0 +1,154 @@
+﻿﻿<SearchResponse>
+  <ReturnStatus>
+    <Success>true</Success>
+    <Errors />
+    <Warnings />
+  </ReturnStatus>
+  <Properties>
+    <Property>
+      <PropertyReferenceID>1266</PropertyReferenceID>
+      <CurrencyID>1</CurrencyID>
+      <ChannelManager>Vertical Booking</ChannelManager>
+      <Rooms>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yJq60q8X6cZlRhOvYK+RpbpjDq5RkNFBp3ZQLPdPrHfvu1N/ectTEvbhkK/3dTFznmWzGZ2wF+cwmAApVBTObA5VW4sqg8n6cvD5LCwoKBO+efSNV4duX4Z</RoomBookingToken>
+          <RateCodeID>15269</RateCodeID>
+          <RateCode>C2BAR</RateCode>
+          <RateDescription>Double Classic BB BAR</RateDescription>
+          <PropertyRoomTypeID>53079</PropertyRoomTypeID>
+          <RoomTypeID>221</RoomTypeID>
+          <RoomType>Double Classic</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>867.68</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>false</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|121.440000|121.44!Aug 22 2022 12:00AM|121.440000|121.44!Aug 23 2022 12:00AM|121.440000|121.44!Aug 24 2022 12:00AM|121.440000|121.44!Aug 25 2022 12:00AM|121.440000|121.44!Aug 26 2022 12:00AM|130.240000|130.24!Aug 27 2022 12:00AM|130.240000|130.24</DailyRates>
+          <Adjustments />
+        </Room>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yI4G2wPV0wSWcI/JWvaZQz5G4VtPtktVNxLm+vcFZzO2/56bOWVWoCqxzwOfI5B/qc+X6qWdQeEBKrryykkyCgYqRjBi34ZfryK1EyesFb0FVolU+/H3xtv</RoomBookingToken>
+          <RateCodeID>15278</RateCodeID>
+          <RateCode>E2BAR</RateCode>
+          <RateDescription>Double Small Economy BB BAR</RateDescription>
+          <PropertyRoomTypeID>53082</PropertyRoomTypeID>
+          <RoomTypeID>3885</RoomTypeID>
+          <RoomType>Double Small Economy</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>775.28</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>false</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|108.240000|108.24!Aug 22 2022 12:00AM|108.240000|108.24!Aug 23 2022 12:00AM|108.240000|108.24!Aug 24 2022 12:00AM|108.240000|108.24!Aug 25 2022 12:00AM|108.240000|108.24!Aug 26 2022 12:00AM|117.040000|117.04!Aug 27 2022 12:00AM|117.040000|117.04</DailyRates>
+          <Adjustments />
+        </Room>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yKeTNTK5XDpzH4qH9/gkfc3r+7gjYX3SW/vLfoO/m25V7FApJQYCElIoWMmB501eZbIQnG+kJhKRYn50YdpsRiR+53ZHMPI7w1w7XUNF48Paj5UxzpZ4dLj</RoomBookingToken>
+          <RateCodeID>15280</RateCodeID>
+          <RateCode>U2BAR</RateCode>
+          <RateDescription>Double Superior BB BAR</RateDescription>
+          <PropertyRoomTypeID>53083</PropertyRoomTypeID>
+          <RoomTypeID>192</RoomTypeID>
+          <RoomType>Double Superior</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>867.68</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>false</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|121.440000|121.44!Aug 22 2022 12:00AM|121.440000|121.44!Aug 23 2022 12:00AM|121.440000|121.44!Aug 24 2022 12:00AM|121.440000|121.44!Aug 25 2022 12:00AM|121.440000|121.44!Aug 26 2022 12:00AM|130.240000|130.24!Aug 27 2022 12:00AM|130.240000|130.24</DailyRates>
+          <Adjustments />
+        </Room>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yLHtj7rHJ94DhuyVaocbVTmn3clDUVBz9jCtMJf7syrkJ64LD19lVZ5V3at+go0om5ttd0ydcxI2h9QuG5FCdWb/LNrd6ryv8cnDOYp4TIBJBRuGXlNbczE</RoomBookingToken>
+          <RateCodeID>15283</RateCodeID>
+          <RateCode>C2NR</RateCode>
+          <RateDescription>Double Classic BB NR</RateDescription>
+          <PropertyRoomTypeID>53086</PropertyRoomTypeID>
+          <RoomTypeID>221</RoomTypeID>
+          <RoomType>Double Classic</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>788.80</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>true</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|110.400000|110.40!Aug 22 2022 12:00AM|110.400000|110.40!Aug 23 2022 12:00AM|110.400000|110.40!Aug 24 2022 12:00AM|110.400000|110.40!Aug 25 2022 12:00AM|110.400000|110.40!Aug 26 2022 12:00AM|118.400000|118.40!Aug 27 2022 12:00AM|118.400000|118.40</DailyRates>
+          <Adjustments />
+        </Room>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yL63FZvrSiZil6hAwsVsG5sZOYqENAdTufdohe959Nwwx2d+O+oVOvxffJJ/O2R7r1AfcALYGpoy/oesJJL6mS54/inrCpt/RJ2WixG3QWL+QlqpJBnwhBT</RoomBookingToken>
+          <RateCodeID>15286</RateCodeID>
+          <RateCode>E2NR</RateCode>
+          <RateDescription>Double Small Economy BB NR</RateDescription>
+          <PropertyRoomTypeID>53089</PropertyRoomTypeID>
+          <RoomTypeID>3885</RoomTypeID>
+          <RoomType>Double Small Economy</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>704.80</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>true</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|98.400000|98.40!Aug 22 2022 12:00AM|98.400000|98.40!Aug 23 2022 12:00AM|98.400000|98.40!Aug 24 2022 12:00AM|98.400000|98.40!Aug 25 2022 12:00AM|98.400000|98.40!Aug 26 2022 12:00AM|106.400000|106.40!Aug 27 2022 12:00AM|106.400000|106.40</DailyRates>
+          <Adjustments />
+        </Room>
+        <Room>
+          <Seq>1</Seq>
+          <RoomBookingToken>15dXgilQnDzr/H6M+Go6VHgOU2gzdL01jziZJ4guI1ueBqUsrMZARpYcqqyw/gvkEnnpJIkTzaIfIIQAJQMlp58ApU2kBBYCdmyzChoJ4yKHV8N1dzrMAU3HS3C79yFrcXRTNjDP5R9Z3TLy1G04ki0wb6qiHOtFkZ6rcaCIahARNK7MsG7TOH9IQutjM13qqgTU5mBzxjR4Vnwt89OYVTFbSwOraSUD</RoomBookingToken>
+          <RateCodeID>15289</RateCodeID>
+          <RateCode>U2NR</RateCode>
+          <RateDescription>Double Superior BB NR</RateDescription>
+          <PropertyRoomTypeID>53092</PropertyRoomTypeID>
+          <RoomTypeID>192</RoomTypeID>
+          <RoomType>Double Superior</RoomType>
+          <RoomViewID>52</RoomViewID>
+          <RoomView />
+          <MealBasisID>30</MealBasisID>
+          <NetCost>788.80</NetCost>
+          <Commission>0.00</Commission>
+          <CommissionPercentage>0.00</CommissionPercentage>
+          <NonRefundable>true</NonRefundable>
+          <PropertyID>1245</PropertyID>
+          <PackageRate>false</PackageRate>
+          <BrandID>7</BrandID>
+          <TaxAmount>0.00</TaxAmount>
+          <DailyRates>*~Aug 21 2022 12:00AM|110.400000|110.40!Aug 22 2022 12:00AM|110.400000|110.40!Aug 23 2022 12:00AM|110.400000|110.40!Aug 24 2022 12:00AM|110.400000|110.40!Aug 25 2022 12:00AM|110.400000|110.40!Aug 26 2022 12:00AM|118.400000|118.40!Aug 27 2022 12:00AM|118.400000|118.40</DailyRates>
+          <Adjustments />
+        </Room>
+      </Rooms>
+    </Property>
+  </Properties>
+</SearchResponse>

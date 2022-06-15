@@ -306,5 +306,10 @@ namespace ThirdParty.Constants
         /// The third party Elevate
         /// </summary>
         public const string JUNIPERECTRAVEL = "JuniperECTravel";
+
+        /// <summary>
+        /// Channel Manager
+        /// </summary>
+        public const string CHANNELMANAGER = "ChannelManager";
     }
 }

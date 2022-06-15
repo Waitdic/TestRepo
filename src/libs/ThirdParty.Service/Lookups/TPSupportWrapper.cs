@@ -25,7 +25,7 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-       /// <inheritdoc />
+        /// <inheritdoc />
         public string CurrencyLookup(int currencyId)
         {
             // todo - implement or remove
