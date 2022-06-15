@@ -46,6 +46,11 @@
         public const string BOOKABED = "BookABed";
 
         /// <summary>
+        /// Channel Manager
+        /// </summary>
+        public const string CHANNELMANAGER = "ChannelManager";
+
+        /// <summary>
         /// The third party DerbySoftClubMed
         /// </summary>
         public const string DERBYSOFTCLUBMED = "DerbySoftClubMed";

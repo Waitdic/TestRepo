@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\libs\ThirdParty.CSSuppliers\ThirdParty.CSSuppliers.csproj" />
     <ProjectReference Include="..\..\src\libs\ThirdParty.Service\ThirdParty.Service.csproj" />
   </ItemGroup>
 
@@ -43,6 +44,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>BonotelRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="iVectorChannelManager\ChannelManagerRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ChannelManagerRes.resx</DependentUpon>
     </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -167,6 +173,10 @@
     <EmbeddedResource Update="Bonotel\BonotelRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BonotelRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="iVectorChannelManager\ChannelManagerRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChannelManagerRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

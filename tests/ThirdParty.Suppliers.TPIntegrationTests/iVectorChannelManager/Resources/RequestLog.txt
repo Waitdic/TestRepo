@@ -1,0 +1,201 @@
+﻿﻿URL: http://imperatoretestcm.ivector.co.uk/xml/book.ashx
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Host: imperatoretestcm.ivector.co.uk
+Content-Length: 2709
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <UserName>iVector</UserName>
+    <Password>ie85dfhuq</Password>
+  </LoginDetails>
+  <BrandID>0</BrandID>
+  <SearchPackageRates>false</SearchPackageRates>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <CheckInDate>2021-09-01</CheckInDate>
+  <CheckOutDate>2021-09-06</CheckOutDate>
+  <Rooms>
+    <Room>
+      <Seq>0</Seq>
+      <Adults>1</Adults>
+      <Children>0</Children>
+      <Infants>0</Infants>
+    </Room>
+  </Rooms>
+</SearchRequest>
+
+URL: http://imperatoretestcm.ivector.co.uk/xml/book.ashx
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Host: imperatoretestcm.ivector.co.uk
+Content-Length: 2709
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <UserName>iVector</UserName>
+    <Password>ie85dfhuq</Password>
+  </LoginDetails>
+  <BrandID>0</BrandID>
+  <SearchPackageRates>false</SearchPackageRates>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <CheckInDate>2021-09-01</CheckInDate>
+  <CheckOutDate>2021-09-06</CheckOutDate>
+  <Rooms>
+    <Room>
+      <Seq>0</Seq>
+      <Adults>2</Adults>
+      <Children>0</Children>
+      <Infants>0</Infants>
+    </Room>
+  </Rooms>
+</SearchRequest>
+
+URL: http://imperatoretestcm.ivector.co.uk/xml/book.ashx
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Host: imperatoretestcm.ivector.co.uk
+Content-Length: 2709
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <UserName>iVector</UserName>
+    <Password>ie85dfhuq</Password>
+  </LoginDetails>
+  <BrandID>0</BrandID>
+  <SearchPackageRates>false</SearchPackageRates>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <CheckInDate>2021-09-01</CheckInDate>
+  <CheckOutDate>2021-09-06</CheckOutDate>
+  <Rooms>
+    <Room>
+      <Seq>0</Seq>
+      <Adults>1</Adults>
+      <Children>1</Children>
+      <Infants>0</Infants>
+      <ChildAgeCSV>8</ChildAgeCSV>
+    </Room>
+  </Rooms>
+</SearchRequest>
+
+URL: http://imperatoretestcm.ivector.co.uk/xml/book.ashx
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Host: imperatoretestcm.ivector.co.uk
+Content-Length: 2709
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <UserName>iVector</UserName>
+    <Password>ie85dfhuq</Password>
+  </LoginDetails>
+  <BrandID>0</BrandID>
+  <SearchPackageRates>false</SearchPackageRates>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <CheckInDate>2021-09-01</CheckInDate>
+  <CheckOutDate>2021-09-06</CheckOutDate>
+  <Rooms>
+    <Room>
+      <Seq>0</Seq>
+      <Adults>1</Adults>
+      <Children>0</Children>
+      <Infants>1</Infants>
+    </Room>
+  </Rooms>
+</SearchRequest>
+
+URL: http://imperatoretestcm.ivector.co.uk/xml/book.ashx
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/x-www-form-urlencoded
+Host: imperatoretestcm.ivector.co.uk
+Content-Length: 2709
+Expect: 100-continue
+Connection: Close
+Timeout: 58
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <UserName>iVector</UserName>
+    <Password>ie85dfhuq</Password>
+  </LoginDetails>
+  <BrandID>0</BrandID>
+  <SearchPackageRates>false</SearchPackageRates>
+  <PropertyReferenceIDs>
+    <PropertyReferenceID>102245</PropertyReferenceID>
+  </PropertyReferenceIDs>
+  <CheckInDate>2021-09-01</CheckInDate>
+  <CheckOutDate>2021-09-06</CheckOutDate>
+  <Rooms>
+    <Room>
+      <Seq>0</Seq>
+      <Adults>1</Adults>
+      <Children>1</Children>
+      <Infants>1</Infants>
+      <ChildAgeCSV>8</ChildAgeCSV>
+    </Room>
+  </Rooms>
+</SearchRequest>
