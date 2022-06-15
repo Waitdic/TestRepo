@@ -78,7 +78,7 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'restore'
-    restoreSolution: '$(solution)'
+    restoreSolution: '**/*.sln'
     feedsToUse: 'config'
     nugetConfigPath: 'NuGet.config'
     externalFeedCredentials: 'Intuitive'
