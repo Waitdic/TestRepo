@@ -46,6 +46,7 @@
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
     using ThirdParty.Search;
+    using ThirdParty.CSSuppliers.iVectorChannelManager;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -133,6 +134,7 @@
             services.AddSingleton<IAlturaSettings, InjectedAlturaSettings>();
             services.AddSingleton<IBedsWithEaseSettings, InjectedBedsWithEaseSettings>();
             services.AddSingleton<IBonotelSettings, InjectedBonotelSettings>();
+            services.AddSingleton<IChannelManagerSettings, InjectedChannelManagerSettings>();
             services.AddSingleton<IDerbySoftSettings, InjectedDerbySoftSettings>();
             services.AddSingleton<IDOTWSettings, InjectedDOTWSettings>();
             services.AddSingleton<IExpediaRapidSettings, InjectedExpediaRapidSettings>();
@@ -163,6 +165,7 @@
             services.AddSingleton<IThirdPartySearch, AlturaSearch>();
             services.AddSingleton<IThirdPartySearch, BedsWithEaseSearch>();
             services.AddSingleton<IThirdPartySearch, BonotelSearch>();
+            services.AddSingleton<IThirdPartySearch, ChannelManagerSearch>();
             services.AddSingleton<IThirdPartySearch, DerbySoftSearch>();
             services.AddSingleton<IThirdPartySearch, DOTWSearch>();
             services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
@@ -193,6 +196,7 @@
             services.AddSingleton<IThirdParty, Altura>();
             services.AddSingleton<IThirdParty, BedsWithEase>();
             services.AddSingleton<IThirdParty, Bonotel>();
+            services.AddSingleton<IThirdParty, ChannelManager>();
             services.AddSingleton<IThirdParty, DerbySoft>();
             services.AddSingleton<IThirdParty, DOTW>();
             services.AddSingleton<IThirdParty, ExpediaRapid>();
