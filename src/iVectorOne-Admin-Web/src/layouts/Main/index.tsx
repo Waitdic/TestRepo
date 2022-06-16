@@ -30,7 +30,7 @@ const MainLayout: FC<Props> = ({ title = null, children }) => {
       ? `${currentTenant?.name.substring(0, 20)}...`
       : currentTenant?.name || '';
   const moduleName = currentModule?.name || '';
-  const headerTitle = title || `${tenantName} / ${moduleName}` || '';
+  const headerTitle = `${tenantName} / ${moduleName}` || title || '';
 
   const handleChangeModule = (moduleId: string, uri: string) => {
     const updatedModuleList: Module[] = modules.map((module) => ({
@@ -43,24 +43,22 @@ const MainLayout: FC<Props> = ({ title = null, children }) => {
 
   return (
     <>
-      {/* Layout Inner */}
-      <div className='min-h-screen h-full flex flex-col flex-1'>
-        {/* Masthead */}
-        <Navigation
-          title={headerTitle as string}
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-          handleChangeModule={handleChangeModule}
-        />
-        {/* Main */}
-        <div className='relative flex-1 max-w-screen w-full h-full max-w-3xl mx-auto px-3 sm:px-6 lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-12 lg:gap-8 py-6'>
-          {/* Static sidebar for desktop */}
-          <Sidebar />
-          <main className='main-content lg:col-span-10'>
-            {/* Main Content */}
-            {children}
-          </main>
-        </div>
+      {/* Sidebar */}
+      <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <div className='md:pl-64 flex flex-col flex-1'>
+        {/* Navigation */}
+        <Navigation setShowSidebar={setShowSidebar} />
+        {/* Main content */}
+        <main className='flex-1'>
+          <div className='py-6'>
+            <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
+              <h1 className='text-2xl font-semibold text-gray-900'>{title}</h1>
+            </div>
+            <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
+              <div className='py-4'>{children}</div>
+            </div>
+          </div>
+        </main>
       </div>
     </>
   );

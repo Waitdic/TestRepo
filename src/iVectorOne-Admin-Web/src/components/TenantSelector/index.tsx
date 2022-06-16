@@ -33,7 +33,7 @@ const TenantSelector: FC<Props> = ({ position = 'right' }) => {
   };
 
   return (
-    <Menu as='div' className='relative'>
+    <Menu as='div' className='relative p-4'>
       <div>
         <Menu.Button
           className='max-w-xs p-1 flex items-center text-sm focus:outline-none'
@@ -53,7 +53,7 @@ const TenantSelector: FC<Props> = ({ position = 'right' }) => {
       >
         <Menu.Items
           className={classnames(
-            'origin-top-right absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50',
+            'origin-bottom-left bottom-0 absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50',
             {
               'left-0': position === 'left',
               'right-0': position === 'right',
