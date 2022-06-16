@@ -9,7 +9,7 @@
         {
             return new BookingLogin
             {
-                UserName = settings.Login(searchDetails),
+                UserName = settings.User(searchDetails),
                 Password = settings.Password(searchDetails),
             };
         }

@@ -2,13 +2,12 @@
 {
     using System.Collections.Generic;
 
-    public partial class SearchResponse
+    public class SearchResponse
     {
-
-        public ReturnStatus ReturnStatus { get; set; } = new ReturnStatus();
+        public ReturnStatus ReturnStatus { get; set; } = new();
         public List<Property> Properties { get; set; }
 
-        public partial class Property
+        public class Property
         {
             public int PropertyReferenceID { get; set; }
             public int CurrencyID { get; set; }
@@ -16,7 +15,7 @@
             public List<Room> Rooms { get; set; }
         }
 
-        public partial class Room
+        public class Room
         {
             public int Seq { get; set; }
             public string RoomBookingToken { get; set; }
@@ -41,12 +40,10 @@
             public decimal TaxAmount { get; set; }
             public string DailyRates { get; set; }
             public List<Adjustment> Adjustments { get; set; }
-
         }
 
-        public partial class Adjustment
+        public class Adjustment
         {
-
             public string AdjustmentType { get; set; }
             public int AdjustmentID { get; set; }
             public string AdjustmentName { get; set; }
@@ -72,8 +69,6 @@
             {
                 return false;
             }
-
         }
-
     }
 }

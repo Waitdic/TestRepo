@@ -29,25 +29,37 @@
         #region Lookups
 
         /// <inheritdoc />
-        public string CurrencyLookup(int currencyId)
-        {
-            // todo - implement or remove
-            return string.Empty;
-        }
-
-        /// <inheritdoc />
         public async Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int subscriptionId)
         {
             string countryCode;
             if (IsSingleTenant(source))
             {
-                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out countryCode);
+                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out var country);
+                countryCode = country.CountryCode;
             }
             else
             {
-                (await this.TPCountryCodeAsync(source)).TryGetValue(isoCode, out countryCode);
+                (await this.TPCountryCodeAsync(source)).TryGetValue(isoCode, out var country);
+                countryCode = country.TPCountryCode;
             }
             return countryCode;
+        }
+
+        /// <inheritdoc />
+        public async Task<string> TPCountryLookupAsync(string source, string isoCode, int subscriptionId)
+        {
+            string countryName;
+            if (IsSingleTenant(source))
+            {
+                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out var country);
+                countryName = country.Country;
+            }
+            else
+            {
+                (await this.TPCountryCodeAsync(source)).TryGetValue(isoCode, out var country);
+                countryName = country.Country;
+            }
+            return countryName;
         }
 
         /// <inheritdoc />
@@ -58,17 +70,9 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> TPMealBasisLookupAsync(string source, int mealBasisId)
+        public async Task<string> TPCurrencyCodeLookupAsync(string source, string isoCode)
         {
-            return (await this.TPMealBasesAsync(source)).FirstOrDefault(c => c.Value == mealBasisId).Key;
-        }
-
-        /// <inheritdoc />
-        public async Task<int> TPMealBasisLookupAsync(string source, string mealBasis)
-        {
-            (await this.TPMealBasesAsync(source)).TryGetValue(mealBasis, out int mealBasisId);
-
-            return mealBasisId;
+            return (await this.TPCurrencyAsync(source)).FirstOrDefault(c => c.Value == isoCode).Key;
         }
 
         /// <inheritdoc />
@@ -98,7 +102,8 @@
             throw new NotImplementedException();
         }
 
-        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
+        private bool IsSingleTenant(string source)
+            => source.InList(ThirdParties.OWNSTOCK, ThirdParties.CHANNELMANAGER);
 
         #endregion
 
@@ -112,7 +117,7 @@
             async Task<Dictionary<string, int>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select MealBasisCode, MealBasisID from Mealbasis where Source = @source",
+                    "select MealBasisCode, MealBasisID from MealBasis where Source = @source",
                     async r => (await r.ReadAllAsync<MealBasis>()).ToDictionary(x => x.MealBasisCode, x => x.MealBasisID),
                     new CommandSettings().WithParameters(new { source }));
             }
@@ -174,31 +179,31 @@
         /// <summary>Country code lookup</summary>
         /// <param name="source">The source.</param>
         /// <returns>a dictionary of ISO country code and thirdparty country code</returns>
-        private async Task<Dictionary<string, string>> TPCountryCodeAsync(string source)
+        private async Task<Dictionary<string, CountryLookup>> TPCountryCodeAsync(string source)
         {
             string cacheKey = "TPCountyCodeLookup_" + source;
 
-            async Task<Dictionary<string, string>> cacheBuilder()
+            async Task<Dictionary<string, CountryLookup>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select ISOCode, TPCountryCode from CountryCodeLookup where Source = @source",
-                    async r => (await r.ReadAllAsync<Country>()).ToDictionary(x => x.ISOCode, x => x.TPCountryCode),
+                    "select ISOCode, TPCountryCode, Country from CountryCodeLookup where Source = @source",
+                    async r => (await r.ReadAllAsync<CountryLookup>()).ToDictionary(x => x.ISOCode, x => x),
                     new CommandSettings().WithParameters(new { source }));
             }
 
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
-        private async Task<Dictionary<(int, string), string>> SubscriptionCountryAsync()
+        private async Task<Dictionary<(int, string), SubscriptionCountry>> SubscriptionCountryAsync()
         {
             string cacheKey = "SubscriptionCountryLookup";
 
-            async Task<Dictionary<(int, string), string>> cacheBuilder()
+            async Task<Dictionary<(int, string), SubscriptionCountry>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select SubscriptionID, CountryCode, ISOCountryCode from SubscriptionCountry",
+                    "select SubscriptionID, CountryCode, ISOCountryCode, Country from SubscriptionCountry",
                     async r => (await r.ReadAllAsync<SubscriptionCountry>())
-                        .ToDictionary(x => (x.SubscriptionID, x.ISOCountryCode), x => x.CountryCode));
+                        .ToDictionary(x => (x.SubscriptionID, x.ISOCountryCode), x => x));
             }
 
             var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
@@ -240,10 +245,11 @@
             public string CurrencyCode { get; set; } = string.Empty;
         }
 
-        private class Country
+        private class CountryLookup
         {
             public string ISOCode { get; set; } = string.Empty;
             public string TPCountryCode { get; set; } = string.Empty;
+            public string Country { get; set; } = string.Empty;
         }
 
         private class SubscriptionCountry
@@ -251,6 +257,7 @@
             public int SubscriptionID { get; set; }
             public string CountryCode { get; set; } = string.Empty;
             public string ISOCountryCode { get; set; } = string.Empty;
+            public string Country { get; set; } = string.Empty;
         }
 
         #endregion

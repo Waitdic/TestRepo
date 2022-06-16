@@ -709,15 +709,10 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")).AppendLine();
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd")).AppendLine();
-            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.ISOCurrencyCode, propertyDetails));
             sb.AppendFormat("<productId>{0}</productId>", propertyDetails.TPKey);
 
             string customerReference = propertyDetails.BookingReference.Trim();
-
-            if (_settings.SendTradeReference(propertyDetails))
-            {
-                customerReference = propertyDetails.TradeReference;
-            }
 
             if (string.IsNullOrEmpty(customerReference))
             {
@@ -774,7 +769,7 @@
                 sb.AppendLine("<extraBed>0</extraBed>");
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.ISONationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))
@@ -894,7 +889,7 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.ISOCurrencyCode, propertyDetails));
             sb.AppendFormat("<rooms no = \"{0}\">", propertyDetails.Rooms.Count);
 
             int roomRunNo = 0;
@@ -923,7 +918,7 @@
 
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.ISONationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))
@@ -965,7 +960,7 @@
             sb.AppendLine("<bookingDetails>");
             sb.AppendFormat("<fromDate>{0}</fromDate>", propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("<toDate>{0}</toDate>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.CurrencyID, propertyDetails));
+            sb.AppendFormat("<currency>{0}</currency>", await _dotwSupport.GetCurrencyCodeAsync(propertyDetails.ISOCurrencyCode, propertyDetails));
             sb.AppendFormat("<rooms no = \"{0}\">", propertyDetails.Rooms.Count);
 
             int roomRunNo = 0;
@@ -995,7 +990,7 @@
 
                 if (_settings.Version(propertyDetails) == 2)
                 {
-                    string nationality = await GetNationalityAsync(propertyDetails.NationalityCode, propertyDetails, _support, _settings);
+                    string nationality = await GetNationalityAsync(propertyDetails.ISONationalityCode, propertyDetails, _support, _settings);
                     string countryCode = GetCountryOfResidence(nationality, propertyDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))

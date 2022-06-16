@@ -2,9 +2,9 @@
 {
     public interface IChannelManagerSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Login(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        int BrandID(IThirdPartyAttributeSearch tpAttributeSearch);
+        int BrandCode(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

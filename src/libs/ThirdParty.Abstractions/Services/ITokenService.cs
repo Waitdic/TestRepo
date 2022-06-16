@@ -10,17 +10,17 @@
         /// <summary>Decodes the book token.</summary>
         /// <param name="tokenString">The token string.</param>
         /// <returns>a book Token object</returns>
-        Task<BookToken> DecodeBookTokenAsync(string tokenString, Subscription user);
+        Task<BookToken?> DecodeBookTokenAsync(string tokenString, Subscription user);
 
         /// <summary>Decodes the property token.</summary>
         /// <param name="tokenString">The token string.</param>
         /// <returns>a Property Token object</returns>
-        Task<PropertyToken> DecodePropertyTokenAsync(string tokenString, Subscription user);
+        Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Subscription user);
 
         /// <summary>Decodes the room token.</summary>
         /// <param name="tokenString">The token string.</param>
         /// <returns>A room booking token object</returns>
-        RoomToken DecodeRoomToken(string tokenString);
+        RoomToken? DecodeRoomToken(string tokenString);
 
         /// <summary>Encodes the property token.</summary>
         /// <param name="bookToken">The book token.</param>

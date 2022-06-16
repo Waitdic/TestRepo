@@ -9,14 +9,14 @@
     {
         protected override string Source => ThirdParties.CHANNELMANAGER;
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string Login(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Login", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -24,9 +24,9 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public int BrandID(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int BrandCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BrandID", tpAttributeSearch).ToSafeInt();
+            return Get_Value("BrandCode", tpAttributeSearch).ToSafeInt();
         }
     }
 }

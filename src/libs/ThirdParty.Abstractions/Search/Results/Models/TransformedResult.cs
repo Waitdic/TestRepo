@@ -52,13 +52,13 @@
         /// Gets or sets the warnings.
         /// </summary>
         [XmlIgnore]
-        public List<string> Warnings { get; set; } = new List<string>();
+        public List<string> Warnings { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the child ages.
         /// </summary>
         [XmlIgnore]
-        public List<int> ChildAges { get; set; } = new List<int>();
+        public List<int> ChildAges { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the master identifier.
@@ -77,13 +77,6 @@
         /// </summary>
         [XmlAttribute("CC")]
         public string CurrencyCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the currency identifier.
-        /// </summary>
-        [DefaultValue(0)]
-        [XmlAttribute("CID")]
-        public int CurrencyID { get; set; }
 
         /// <summary>
         /// Gets or sets the property room booking identifier.
@@ -110,13 +103,6 @@
         /// </summary>
         [XmlAttribute("MBC")]
         public string MealBasisCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the meal basis identifier.
-        /// </summary>
-        [DefaultValue(0)]
-        [XmlAttribute("MBID")]
-        public int MealBasisID { get; set; }
 
         /// <summary>
         /// Gets or sets the adults.
@@ -164,9 +150,6 @@
         /// <summary>
         /// Gets or sets the gross cost.
         /// </summary>
-        /// <value>
-        /// The gross cost.
-        /// </value>
         [XmlAttribute("GS")]
         public decimal GrossCost { get; set; }
 
@@ -210,19 +193,6 @@
         public bool DynamicProperty { get; set; }
 
         /// <summary>
-        /// Gets or sets the non package amount.
-        /// </summary>
-        [XmlAttribute("NPA")]
-        public decimal NonPackageAmount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the package rate basis.
-        /// </summary>
-        [DefaultValue("")]
-        [XmlAttribute("PRB")]
-        public string PackageRateBasis { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets a value indicating whether [non refundable rates].
         /// </summary>
         [XmlIgnore]
@@ -260,14 +230,14 @@
         /// </summary>
         [DefaultValue("")]
         [XmlAttribute("SELLPR")]
-        public string SellingPrice { get; set; } = string.Empty;
+        public decimal SellingPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the net price.
         /// </summary>
         [DefaultValue("")]
         [XmlAttribute("NETPR")]
-        public string NetPrice { get; set; } = string.Empty;
+        public decimal NetPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the regional tax.
@@ -287,14 +257,7 @@
         /// </summary>
         [DefaultValue("")]
         [XmlAttribute("TPRC")]
-        public string TPRateCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the third party room details.
-        /// </summary>
-        [DefaultValue("")]
-        [XmlAttribute("TPRD")]
-        public string TPRoomDetails { get; set; } = string.Empty;
+        public string RateCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether [on request].
@@ -325,14 +288,14 @@
         /// </summary>
         [XmlArray("Adjustments")]
         [XmlArrayItem("Adjustment")]
-        public List<TransformedResultAdjustment> Adjustments { get; set; } = new List<TransformedResultAdjustment>();
+        public List<TransformedResultAdjustment> Adjustments { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the cancellations.
         /// </summary>
         [XmlArray("Cs")]
         [XmlArrayItem("C")]
-        public List<Cancellation> Cancellations { get; set; } = new List<Cancellation>();
+        public List<Cancellation> Cancellations { get; set; } = new();
 
         /// <summary>
         /// Should we serialize adjustments.

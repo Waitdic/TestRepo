@@ -145,13 +145,13 @@
 
                             // Get the Details for the Room we want
                             var rooms = from pax in hotel.Res.Pax
-                                where pax.Cod == occupancy
-                                from hab in pax.Hab
-                                where hab.Cod == roomCode
-                                      && string.Equals(hab.Desc, roomType, StringComparison.CurrentCultureIgnoreCase)
-                                from reg in hab.Reg
-                                where reg.Cod == mealBasis
-                                select reg;
+                                        where pax.Cod == occupancy
+                                        from hab in pax.Hab
+                                        where hab.Cod == roomCode
+                                              && string.Equals(hab.Desc, roomType, StringComparison.CurrentCultureIgnoreCase)
+                                        from reg in hab.Reg
+                                        where reg.Cod == mealBasis
+                                        select reg;
 
                             var room = rooms.First();
 
@@ -665,10 +665,11 @@
 
                 // Load the return class
                 var cancellationFeeResult = new ThirdPartyCancellationFeeResult
-                    {
-                        Amount = finalCancellationPolicy.Amount, CurrencyCode = await _support.TPCurrencyLookupAsync(propertyDetails.Source, propertyDetails.CurrencyCode),
-                        Success = true
-                    };
+                {
+                    Amount = finalCancellationPolicy.Amount,
+                    CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
+                    Success = true
+                };
 
                 return cancellationFeeResult;
             }

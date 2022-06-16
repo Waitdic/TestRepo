@@ -29,7 +29,7 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
+            mockSupport.Setup(x => x.TPCurrencyCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
             mockSupport.Setup(x => x.TPMealBasesAsync(It.IsAny<string>())).Returns(Task.FromResult(Helper.GetMealBasisCodes()));
             return mockSupport;
         }

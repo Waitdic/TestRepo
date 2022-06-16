@@ -9,13 +9,14 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.iVectorChannelManager.Models;
     using ThirdParty.Interfaces;
+    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
 
@@ -23,15 +24,24 @@
     {
         private readonly IChannelManagerSettings _settings;
 
-        private readonly Serializer _serializer;
+        private readonly ITPSupport _support;
+
+        private readonly ISerializer _serializer;
 
         private readonly HttpClient _httpClient;
 
         private readonly ILogger<ChannelManager> _logger;
 
-        public ChannelManager(IChannelManagerSettings settings, HttpClient httpClient, ILogger<ChannelManager> logger)
+        public ChannelManager(
+            IChannelManagerSettings settings,
+            ITPSupport support,
+            ISerializer serializer,
+            HttpClient httpClient,
+            ILogger<ChannelManager> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _support = Ensure.IsNotNull(support, nameof(support));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
@@ -47,11 +57,6 @@
             return true;
         }
 
-        public bool TakeSavingFromCommissionMargin(IThirdPartyAttributeSearch searchDetails)
-        {
-            return false;
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
             return 0;
@@ -64,7 +69,7 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            Request? webRequest = null;
+            var webRequest = new Request();
             bool success = false;
 
             try
@@ -73,8 +78,8 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    EndPoint = _settings.GenericURL(propertyDetails),
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
                     Source = propertyDetails.Source,
@@ -97,11 +102,10 @@
                     {
                         var matchingRoom = response.Rooms.First(r => r.Seq == roomDetails.PropertyRoomBookingID);
                         roomDetails.LocalCost = matchingRoom.NetCost;
+                        roomDetails.ThirdPartyReference = matchingRoom.RoomBookingToken;
                     }
 
                     propertyDetails.LocalCost = response.NetCost;
-                    propertyDetails.CurrencyID = response.CurrencyID;
-                    propertyDetails.TotalCommission = response.Commission;
                 }
             }
             catch (Exception ex)
@@ -111,15 +115,7 @@
             }
             finally
             {
-                if (webRequest?.RequestXML != null && !string.IsNullOrEmpty(webRequest.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "ChannelManager Prebook Request", webRequest.RequestXML);
-                }
-
-                if (webRequest?.ResponseXML != null && !string.IsNullOrEmpty(webRequest.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "ChannelManager Prebook Response", webRequest.ResponseXML);
-                }
+                propertyDetails.AddLog("Prebook", webRequest);
             }
 
             return success;
@@ -128,16 +124,16 @@
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "failed";
-            Request? request = null;
+            var request = new Request();
 
             try
             {
-                var bookRequestXml = BuildBookRequest(propertyDetails);
+                var bookRequestXml = await BuildBookRequestAsync(propertyDetails);
 
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    EndPoint = _settings.GenericURL(propertyDetails),
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     Source = propertyDetails.Source,
                     LogFileName = "Book",
@@ -163,15 +159,7 @@
             }
             finally
             {
-                if (request?.RequestXML != null && !string.IsNullOrEmpty(request.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Book Request", request.RequestXML);
-                }
-
-                if (request?.ResponseXML != null && !string.IsNullOrEmpty(request.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Book Response", request.ResponseXML);
-                }
+                propertyDetails.AddLog("Book", request);
             }
 
             return reference;
@@ -179,7 +167,7 @@
 
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            Request? request = null;
+            var request = new Request();
 
             var response = new ThirdPartyCancellationResponse { Success = true };
 
@@ -204,15 +192,15 @@
 
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    EndPoint = _settings.GenericURL(propertyDetails),
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
                     Source = propertyDetails.Source,
                     LogFileName = "Cancellation",
                 };
 
-                request.SetRequest(cancelRequest.ToString());
+                request.SetRequest(_serializer.Serialize(cancelRequest));
                 await request.Send(_httpClient, _logger);
 
                 var cancelResponse = _serializer.DeSerialize<CancelResponse>(request.ResponseXML);
@@ -231,15 +219,7 @@
             }
             finally
             {
-                if (request?.RequestXML != null && !string.IsNullOrEmpty(request.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Cancel Request", request.RequestXML);
-                }
-
-                if (request?.ResponseXML != null && !string.IsNullOrEmpty(request.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Cancel Response", request.ResponseXML);
-                }
+                propertyDetails.AddLog("Cancel", request);
             }
 
             return response;
@@ -276,9 +256,9 @@
                 return;
 
             var sbWarning = new StringBuilder();
-            foreach (string sWarning in exceptions)
+            foreach (string warning in exceptions)
             {
-                sbWarning.AppendLine(Helper.RemoveLoginDetailsFromWarnings(sWarning));
+                sbWarning.AppendLine(Helper.RemoveLoginDetailsFromWarnings(warning));
             }
 
             throw new Exception(sbWarning.ToString());
@@ -289,27 +269,28 @@
             var request = new PreBookRequest
             {
                 LoginDetails = Helper.GetLoginDetails(propertyDetails, _settings),
-                BrandID = _settings.BrandID(propertyDetails),
+                BrandID = _settings.BrandCode(propertyDetails),
                 PropertyReferenceID = propertyDetails.TPKey.ToSafeInt(),
                 CheckInDate = propertyDetails.ArrivalDate,
                 CheckOutDate = propertyDetails.ArrivalDate.AddDays(propertyDetails.Duration),
-                Rooms = (List<PreBookRequest.Room>)propertyDetails.Rooms.Select(room => new PreBookRequest.Room
-                {
-                    RoomBookingToken = room.ThirdPartyReference,
-                    Adults = room.Adults,
-                    Children = room.Children,
-                    Infants = room.Infants,
-                    ChildAgeCSV = string.Join<int>(",", room.ChildAges),
-                    PropertyRoomTypeID = room.PropertyRoomBookingID,
-                    PropertyID = propertyDetails.PropertyID,
-                    BrandID = _settings.BrandID(propertyDetails),
-                })
+                Rooms = propertyDetails.Rooms
+                    .Select(room => new PreBookRequest.Room
+                        {
+                            RoomBookingToken = room.ThirdPartyReference,
+                            Adults = room.Adults,
+                            Children = room.Children,
+                            Infants = room.Infants,
+                            ChildAgeCSV = string.Join(",", room.ChildAges),
+                            Seq = room.PropertyRoomBookingID,
+                            BrandID = _settings.BrandCode(propertyDetails),
+                        })
+                    .ToList()
             };
 
             return _serializer.Serialize(request);
         }
 
-        private XmlDocument BuildBookRequest(PropertyDetails propertyDetails)
+        private async Task<XmlDocument> BuildBookRequestAsync(PropertyDetails propertyDetails)
         {
             var bookRequest = new BookRequest
             {
@@ -320,23 +301,17 @@
                 CheckInDate = propertyDetails.ArrivalDate,
                 CheckOutDate = propertyDetails.ArrivalDate.AddDays(propertyDetails.Duration),
 
-                Rooms = AddRoomBookingsToRequest(propertyDetails),
-                HotelRequests = AddBookingCommentsToRequest(propertyDetails.BookingComments),
+                Rooms = BuildRoomBookings(propertyDetails),
+                HotelRequests = BuildBookingComments(propertyDetails.BookingComments),
 
                 LeadGuestDetails = new BookRequest.LeadGuestDetail
                 {
                     Title = propertyDetails.LeadGuestTitle,
                     FirstName = propertyDetails.LeadGuestFirstName,
                     LastName = propertyDetails.LeadGuestLastName,
-                    DateOfBirth = propertyDetails.DateOfBirth,
+                    DateOfBirth = propertyDetails.LeadGuestDateOfBirth,
                     Telephone = propertyDetails.LeadGuestPhone
                 },
-
-                PaymentDetails = new BookRequest.PaymentDetail
-                {
-                    Amount = propertyDetails.LocalCost,
-                    CurrencyCode = propertyDetails.CurrencyCode
-                }
             };
 
             bookRequest.LeadGuestDetails.Address1 = propertyDetails.LeadGuestAddress1;
@@ -344,25 +319,41 @@
             bookRequest.LeadGuestDetails.TownCity = propertyDetails.LeadGuestTownCity;
             bookRequest.LeadGuestDetails.County = propertyDetails.LeadGuestCounty;
             bookRequest.LeadGuestDetails.Postcode = propertyDetails.LeadGuestPostcode;
-            bookRequest.LeadGuestDetails.Country = propertyDetails.LeadGuestBookingCountry;
+            bookRequest.LeadGuestDetails.Country = await _support.TPCountryLookupAsync(
+                propertyDetails.Source,
+                propertyDetails.LeadGuestCountryCode,
+                propertyDetails.SubscriptionID);
             bookRequest.LeadGuestDetails.Email = propertyDetails.LeadGuestEmail;
 
             return _serializer.Serialize(bookRequest);
         }
 
-        private static List<string> AddBookingCommentsToRequest(BookingComments bookingComments)
+        private static List<BookRequest.Room> BuildRoomBookings(PropertyDetails propertyDetails)
         {
-            var requests = new List<string>();
+            var roomBookings = new List<BookRequest.Room>();
 
-            foreach (var comment in bookingComments)
+            foreach (var room in propertyDetails.Rooms)
             {
-                requests.Add(comment.Text);
+                var roomBooking = new BookRequest.Room
+                {
+                    Seq = room.PropertyRoomBookingID,
+                    Adults = room.Adults,
+                    Children = room.Children,
+                    Infants = room.Infants,
+                    ChildAgeCSV = string.Join(",", room.ChildAges),
+                    RoomBookingToken = room.ThirdPartyReference,
+                    RoomType = room.RoomType,
+                    MealBasis = room.MealBasis,
+                    GuestDetails = BuildGuestDetails(room),
+                };
+
+                roomBookings.Add(roomBooking);
             }
 
-            return requests;
+            return roomBookings;
         }
 
-        private static List<BookRequest.GuestDetail> AddGuestDetailsToRequest(RoomDetails room)
+        private static List<BookRequest.GuestDetail> BuildGuestDetails(RoomDetails room)
         {
             var guestDetails = new List<BookRequest.GuestDetail>();
 
@@ -381,31 +372,20 @@
             return guestDetails;
         }
 
-        private static List<BookRequest.Room> AddRoomBookingsToRequest(PropertyDetails propertyDetails)
+        private static List<string> BuildBookingComments(BookingComments bookingComments)
         {
-            var roomBookings = new List<BookRequest.Room>();
+            var requests = new List<string>();
 
-            foreach (var room in propertyDetails.Rooms)
+            foreach (var comment in bookingComments)
             {
-                var roomBooking = new BookRequest.Room
-                {
-                    Adults = room.Adults,
-                    Children = room.Children,
-                    Infants = room.Infants,
-                    ChildAgeCSV = string.Join<int>(",", room.ChildAges),
-                    RoomBookingToken = room.ThirdPartyReference,
-                    RoomType = room.RoomType,
-                    MealBasis = room.MealBasis,
-                    GuestDetails = AddGuestDetailsToRequest(room),
-                };
-
-                roomBookings.Add(roomBooking);
+                requests.Add(comment.Text);
             }
 
-            return roomBookings;
+            return requests;
         }
 
-        #region "Helper Classes"
+
+        #region Helper Classes
 
         private class Address
         {

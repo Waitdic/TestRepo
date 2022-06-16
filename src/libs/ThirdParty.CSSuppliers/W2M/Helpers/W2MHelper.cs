@@ -224,7 +224,7 @@
                 City = propertyDetails.LeadGuestTownCity,
                 Country = propertyDetails.LeadGuestCountryCode, // todo - should use TP lookup here but data not in DB yet
                 Nationality = _settings.LeadGuestNationality(propertyDetails),
-                PassportNumber = propertyDetails.PassportNumber,
+                PassportNumber = propertyDetails.LeadGuestPassportNumber,
                 Email = propertyDetails.LeadGuestEmail,
                 Phone = propertyDetails.LeadGuestPhone,
                 PostCode = propertyDetails.LeadGuestPostcode
@@ -247,7 +247,7 @@
             var bookRequestParameters = new BookRequestParameters(parameters,
                 propertyDetails.BookingReference,
                 startDate, endDate, hotelRequest, propertyDetails.TPKey,
-                propertyDetails.CurrencyCode, bookingCodes, leadGuest);
+                propertyDetails.ISOCurrencyCode, bookingCodes, leadGuest);
 
             var rooms = propertyDetails.Rooms;
 

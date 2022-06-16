@@ -110,9 +110,9 @@
             return bits;
         }
 
-        public async Task<BookToken> DecodeBookTokenAsync(string tokenString, Subscription user)
+        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Subscription user)
         {
-            BookToken token = null!;
+            BookToken? token = null;
             try
             {
                 _tokenValues.Clear();
@@ -129,15 +129,16 @@
             }
             catch (Exception ex)
             {
+                token = null;
                 _logger.LogError(ex, "BookTokenDecodeError");
             }
 
             return token;
         }
 
-        public async Task<PropertyToken> DecodePropertyTokenAsync(string tokenString, Subscription user)
+        public async Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Subscription user)
         {
-            PropertyToken token = null!;
+            PropertyToken? token = null;
 
             try
             {
@@ -160,22 +161,29 @@
                     CurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID)
                 };
 
+                int day = _tokenValues.GetValue(TokenValueType.Day);
+                int month = _tokenValues.GetValue(TokenValueType.Month);
                 int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
-                token.ArrivalDate = new DateTime(year, _tokenValues.GetValue(TokenValueType.Month), _tokenValues.GetValue(TokenValueType.Day));
+
+                if (day > 1 && month > 1)
+                {
+                    token.ArrivalDate = new DateTime(year, month, day);
+                }
 
                 await PopulatePropertyTokenFieldsAsync(token, user);
             }
             catch (Exception ex)
             {
+                token = null;
                 _logger.LogError(ex, "PropertyTokenDecodeError");
             }
 
             return token;
         }
 
-        public RoomToken DecodeRoomToken(string tokenString)
+        public RoomToken? DecodeRoomToken(string tokenString)
         {
-            RoomToken token = null!;
+            RoomToken? token = null;
 
             try
             {
@@ -230,6 +238,7 @@
             }
             catch (Exception ex)
             {
+                token = null;
                 _logger.LogError(ex, "RoomTokenDecodeError");
             }
 

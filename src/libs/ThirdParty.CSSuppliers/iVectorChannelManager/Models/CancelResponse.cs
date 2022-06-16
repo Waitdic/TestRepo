@@ -4,19 +4,17 @@
     using System.Xml;
     using System.Xml.Serialization;
 
-    public partial class CancelResponse
+    public class CancelResponse
     {
-
-        public ReturnStatus ReturnStatus { get; set; }
+        public ReturnStatus ReturnStatus { get; set; } = new();
 
         public string CancellationReference { get; set; } = string.Empty;
         [XmlArrayItem("BookingXML")]
-        public List<XmlDocument> BookingXMLs { get; set; } = new List<XmlDocument>();
+        public List<XmlDocument> BookingXMLs { get; set; } = new();
 
-        public string SupplierReference { get; set; } = "";
+        public string SupplierReference { get; set; } = string.Empty;
 
         [XmlArrayItem("TaskListItemDescription")]
-        public List<string> TaskListItemDescriptions { get; set; } = new List<string>();
-
+        public List<string> TaskListItemDescriptions { get; set; } = new();
     }
 }

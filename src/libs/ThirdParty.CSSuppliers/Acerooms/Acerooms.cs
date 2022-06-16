@@ -194,7 +194,7 @@
 
                 if (cancellationResponse.Success)
                 {
-                    cancellationResponse.CurrencyCode = _support.CurrencyLookup(propertyDetails.CurrencyID);
+                    cancellationResponse.CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode);
                     cancellationResponse.TPCancellationReference = string.Join("|", cancelReferences);
                     cancellationResponse.CostRecievedFromThirdParty = cancellationResponse.Amount > 0;
                 }

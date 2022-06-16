@@ -126,9 +126,9 @@
             return _settings.DefaultCurrencyID(searchDetails);
         }
 
-        public async Task<int> GetCurrencyCodeAsync(int currencyId, IThirdPartyAttributeSearch searchDetails)
+        public async Task<int> GetCurrencyCodeAsync(string isoCurrencyCode, IThirdPartyAttributeSearch searchDetails)
         {
-            string currencyCode = await _support.TPCurrencyLookupAsync(ThirdParties.DOTW, currencyId.ToSafeString());
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(ThirdParties.DOTW, isoCurrencyCode);
 
             var currencyCache = await GetCurrencyCacheAsync(searchDetails);
             if (currencyCache.ContainsKey(currencyCode))

@@ -145,11 +145,6 @@
 
             transformedResults.TransformedResults.AddRange(sessions.SelectMany(o => CreateTransformedResponse(o)));
 
-            if (searchDetails.StarRating is not null)
-            {
-                searchDetails.StarRating = searchDetails.StarRating.Replace("+", "");
-            }
-
             return transformedResults;
         }
 

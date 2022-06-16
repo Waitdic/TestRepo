@@ -19,6 +19,7 @@
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
     using Erratum = ThirdParty.Models.Property.Booking.Erratum;
+    using Intuitive.Helpers.Extensions;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -27,10 +28,16 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<ATI> _logger;
 
-        public ATI(IATISettings settings, ISerializer serializer)
+        public ATI(
+            IATISettings settings,
+            ISerializer serializer,
+            HttpClient httpClient,
+            ILogger<ATI> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
         public string Source => ThirdParties.ATI;
@@ -165,7 +172,7 @@
                 bookRequest.Body.Content = new AtiBookRequest
                 {
                     Version = apiVersion,
-                    TransactionIdentifier = propertyDetails.BookingID,
+                    TransactionIdentifier = propertyDetails.BookingReference.ToSafeInt(),
                     POS = new Pos { Source = new Source { UserId = userId, } },
                     HotelReservations = new[]
                     {

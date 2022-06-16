@@ -231,9 +231,9 @@
         {
             _roomStayNode = _roomStays
                 .Where(stayExp)
-                .First(r => r.RoomRates.Any(rateExp)) ?? null;
+                .First(r => r.RoomRates.Any(rateExp)) ?? null!;
 
-            _roomRateNode = _roomStayNode?.RoomRates.First();
+            _roomRateNode = _roomStayNode?.RoomRates.First()!;
         }
     }
 }

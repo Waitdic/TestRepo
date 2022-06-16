@@ -4,10 +4,9 @@
     using System.Collections.Generic;
     using System.Xml.Serialization;
 
-    public partial class BookRequest
+    public class BookRequest
     {
-
-        public BookingLogin LoginDetails { get; set; }
+        public BookingLogin LoginDetails { get; set; } = new();
 
         public string BookingReference { get; set; }
         public int PropertyReferenceID { get; set; }
@@ -19,9 +18,8 @@
         public List<string> HotelRequests { get; set; }
         public LeadGuestDetail LeadGuestDetails { get; set; }
         public PaymentDetail PaymentDetails { get; set; }
-        public Intuitive.Domain.Financial.PciPaymentDetails PciPaymentDetails { get; set; }
 
-        public partial class Room
+        public class Room
         {
             public int Seq { get; set; }
             public int Adults { get; set; }
@@ -34,7 +32,7 @@
             public List<GuestDetail> GuestDetails { get; set; }
         }
 
-        public partial class LeadGuestDetail
+        public class LeadGuestDetail
         {
             public string Title { get; set; }
             public string FirstName { get; set; }
@@ -51,7 +49,7 @@
             public string ISOCode { get; set; }
         }
 
-        public partial class GuestDetail
+        public class GuestDetail
         {
             public string GuestType { get; set; }
             public string Title { get; set; }
@@ -60,28 +58,19 @@
             public DateTime DateOfBirth { get; set; }
         }
 
-        public partial class PaymentDetail
+        public class PaymentDetail
         {
-            public decimal Amount;
-            public string CurrencyCode;
-            public DateTime StartDate;
-            public DateTime EndDate;
-            public string CardNumber;
-            public string CVV;
-            public decimal CreditLimit;
-            public string CardHolderName;
-            public string ExpiryMonth;
-            public string ExpiryYear;
-            public string Status;
-        }
-
-        public enum eVCardStatus
-        {
-            None,
-            Live,
-            FailedGeneration,
-            Cancelled,
-            FailedCancellation
+            public decimal Amount { get; set; }
+            public string CurrencyCode { get; set; }
+            public DateTime StartDate { get; set; }
+            public DateTime EndDate { get; set; }
+            public string CardNumber { get; set; }
+            public string CVV { get; set; }
+            public decimal CreditLimit { get; set; }
+            public string CardHolderName { get; set; }
+            public string ExpiryMonth { get; set; }
+            public string ExpiryYear { get; set; }
+            public string Status { get; set; }
         }
     }
 }

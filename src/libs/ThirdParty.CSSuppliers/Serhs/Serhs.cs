@@ -330,7 +330,7 @@
                         Confirmed = "1",
                         Type = "A",
                         Code = propertyDetails.TPRef1,
-                        ClientReference = propertyDetails.BookingID == 0 ? "iVector" : propertyDetails.BookingID.ToString()
+                        ClientReference = propertyDetails.BookingReference == string.Empty ? "iVector" : propertyDetails.BookingReference
                     }
                 };
 

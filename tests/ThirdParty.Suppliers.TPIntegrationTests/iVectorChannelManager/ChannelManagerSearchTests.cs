@@ -1,5 +1,6 @@
 ﻿namespace ThirdParty.Suppliers.TPIntegrationTests.iVectorChannelManager
 {
+    using Intuitive.Helpers.Serialization;
     using System.Collections.Generic;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.iVectorChannelManager;
@@ -18,7 +19,7 @@
             _provider,
             new List<SearchDetails>() { _searchDetails },
             _settings,
-            new ChannelManagerSearch(_settings))
+            new ChannelManagerSearch(_settings, new Serializer()))
         {
         }
 

@@ -59,11 +59,6 @@
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
-        public bool SendTradeReference(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("SendTradeReference", tpAttributeSearch).ToSafeBoolean();
-        }
-
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("GenericURL", tpAttributeSearch);

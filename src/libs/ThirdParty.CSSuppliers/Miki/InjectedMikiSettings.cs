@@ -34,11 +34,6 @@
             return Get_Value("Language", tpAttributeSearch);
         }
 
-        public bool SendTradeReference(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("SendTradeReference", tpAttributeSearch).ToSafeBoolean();
-        }
-
         public string AgentCodeUSD(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("AgentCodeUSD", tpAttributeSearch);

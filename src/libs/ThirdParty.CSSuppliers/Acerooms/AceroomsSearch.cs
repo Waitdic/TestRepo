@@ -141,7 +141,7 @@
                             MealBasisCode = rate.BoardID.ToString(),
                             RoomType = rate.Room,
                             Amount = rate.Rate,
-                            SellingPrice = rate.Rate.ToString(),
+                            SellingPrice = rate.Rate,
                             MinimumPrice = 0,
                             CurrencyCode = response.SearchInfo.CurrencyCode,
                             TPReference = response.AuditData.SearchToken + "~" + rate.RoomID,
@@ -205,10 +205,10 @@
                 Hotels = hotelIDs,
                 ArrivalDate = searchDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                 Nights = searchDetails.Duration,
-                CurrencyCode = await _support.TPCurrencyLookupAsync(Source, searchDetails.CurrencyCode)
+                CurrencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode)
             };
 
-            var tpNationalityCode = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
+            var tpNationalityCode = await _support.TPNationalityLookupAsync(Source, searchDetails.ISONationalityCode);
 
             aceroomsAvailabilityRequest.NationalityID = string.IsNullOrEmpty(tpNationalityCode) ? "1" : tpNationalityCode; // Set to default if nationality id is not provided
 

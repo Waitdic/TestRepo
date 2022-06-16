@@ -5,10 +5,9 @@
     using System.Xml;
     using System.Xml.Serialization;
 
-    public partial class BookResponse
+    public class BookResponse
     {
-
-        public ReturnStatus ReturnStatus { get; set; } = new ReturnStatus();
+        public ReturnStatus ReturnStatus { get; set; } = new();
 
         public string BookingReference { get; set; }
         public string ChannelManagerReference { get; set; }
@@ -17,14 +16,14 @@
         public string ChannelManager { get; set; }
         public decimal NetCost { get; set; }
         public decimal Commission { get; set; }
-        public List<Room> Rooms { get; set; } = new List<Room>();
+        public List<Room> Rooms { get; set; } = new();
         public Audit BookingAuditXML { get; set; }
         [XmlArrayItem("BookingXML")]
-        public List<XmlDocument> BookingXMLs { get; set; } = new List<XmlDocument>();
+        public List<XmlDocument> BookingXMLs { get; set; } = new();
         [XmlArrayItem("TaskListItemDescription")]
-        public List<string> TaskListItemDescriptions { get; set; } = new List<string>();
+        public List<string> TaskListItemDescriptions { get; set; } = new();
 
-        public partial class Room
+        public class Room
         {
             public int Seq { get; set; }
             public int RateCodeID { get; set; }
@@ -34,7 +33,7 @@
             public decimal Commission { get; set; }
         }
 
-        public partial class Audit
+        public class Audit
         {
             [XmlArrayItem("Room")]
             public List<AuditRoom> Rooms { get; set; }
@@ -47,7 +46,7 @@
                 public List<Date> Dates { get; set; }
             }
 
-            public partial class Date
+            public class Date
             {
                 public DateTime StayDate { get; set; }
                 public int Day { get; set; }
@@ -60,7 +59,7 @@
                 public RateBreakdown RateBreakdown { get; set; }
             }
 
-            public partial class RateBreakdown
+            public class RateBreakdown
             {
                 public decimal RoomRate { get; set; }
                 public decimal PackageRate { get; set; }
@@ -122,7 +121,6 @@
                 {
                     return SecondChildRate > 0m;
                 }
-
             }
         }
     }

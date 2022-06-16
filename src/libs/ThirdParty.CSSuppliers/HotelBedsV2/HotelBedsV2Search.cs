@@ -213,8 +213,8 @@
                                 MealBasisCode = rate.boardCode,
                                 RoomType = room.name,
                                 Amount = amount,
-                                SellingPrice = amount.ToSafeString(),
-                                NetPrice = amount.ToSafeString(),
+                                SellingPrice = amount,
+                                NetPrice = amount,
                                 MinimumPrice = rate.hotelMandatory ? rate.sellingRate.ToSafeDecimal() : 0,
                                 CurrencyCode = hotel.currency,
                                 TPReference = HotelBedsV2Reference.Create(rate.rateKey, rate.paymentType, rate.boardCode, _secretKeeper),
@@ -344,15 +344,6 @@
             }
 
             var boards = new HotelBedsV2AvailabilityRequest.Boards();
-            if (searchDetails.MealBasisID > 0)
-            {
-                boards.included = true;
-                var mealBasisList = new List<string>
-                {
-                    await _support.TPMealBasisLookupAsync(Source, searchDetails.MealBasisID)
-                };
-                boards.board = mealBasisList.ToArray();
-            }
 
             var filter = new HotelBedsV2AvailabilityRequest.Filter
             {

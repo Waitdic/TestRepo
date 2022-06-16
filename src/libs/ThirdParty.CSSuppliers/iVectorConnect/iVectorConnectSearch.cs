@@ -90,16 +90,9 @@
                 searchRequest.RoomRequests.Add(new RoomRequest { GuestConfiguration = guestConfiguration });
             }
 
-            searchRequest.MealBasisID = searchDetails.MealBasisID;
-
             if (!string.IsNullOrEmpty(searchDetails.StarRating))
             {
                 searchRequest.MinStarRating = searchDetails.StarRating;
-            }
-
-            if (searchDetails.ProductAttributeIDs.Count > 0)
-            {
-                searchRequest.ProductAttributes = searchDetails.ProductAttributeIDs;
             }
 
             return searchRequest;
@@ -139,7 +132,7 @@
                         Amount = roomType.Total,
                         TPReference = $"{propertyResult.BookingToken}|{roomType.RoomBookingToken}",
                         SpecialOffer = roomType.SpecialOffer,
-                        TPRateCode = roomType.SupplierDetails.RateCode,
+                        RateCode = roomType.SupplierDetails.RateCode,
                         NonRefundableRates = roomType.NonRefundable,
                         Discount = roomType.Adjustments.Where(a => a.AdjustmentType == "Offer").Sum(a => -a.Total),
                         Cancellations = roomType.SupplierCancellations

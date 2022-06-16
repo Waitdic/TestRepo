@@ -65,9 +65,7 @@
 
                 var propertyId = supplierSplit.AllHotels.FirstOrDefault(h => h.TPKey == propertyData.TPKey).PropertyID;
 
-                var currencyId = !string.IsNullOrEmpty(searchDetails.CurrencyCode) ?
-                    (await _support.ISOCurrencyIDLookupAsync(searchDetails.CurrencyCode)) :
-                    0;
+                var currencyId = result.Value.RoomResults.First().PriceData.CurrencyID;
 
                 var propertyToken = new PropertyToken()
                 {

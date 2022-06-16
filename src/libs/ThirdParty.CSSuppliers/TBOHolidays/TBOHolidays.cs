@@ -525,9 +525,9 @@
 
             string guestNationality = string.Empty;
 
-            if (!string.IsNullOrEmpty(propertyDetails.NationalityCode))
+            if (!string.IsNullOrEmpty(propertyDetails.ISONationalityCode))
             {
-                guestNationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.NationalityCode);
+                guestNationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.ISONationalityCode);
             }
 
             if (string.IsNullOrEmpty(guestNationality))

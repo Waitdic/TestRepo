@@ -4,6 +4,7 @@
     using ThirdParty.Models;
     using ThirdParty.Factories;
     using ThirdParty.Repositories;
+    using ThirdParty.Lookups;
 
     public class CancelPropertyResponseFactoryTests
     {
@@ -11,7 +12,7 @@
         public void Create_Should_SetTheSupplierCancellationReference_When_ItIsOnTheThirdPartyResponse()
         {
             // Arrange
-            var repoMock = new Mock<ICurrencyLookupRepository>();
+            var repoMock = new Mock<ITPSupport>();
             var factory = new CancelPropertyResponseFactory(repoMock.Object);
 
             var thirdPartyResponse = new ThirdPartyCancellationResponse()
@@ -30,7 +31,7 @@
         public void Create_Should_SetTheSupplierCancellationReferenceToFailed_When_ItIsNullOrEmptyOnTheThirdPartyResponse()
         {
             // Arrange
-            var repoMock = new Mock<ICurrencyLookupRepository>();
+            var repoMock = new Mock<ITPSupport>();
             var factory = new CancelPropertyResponseFactory(repoMock.Object);
 
             var thirdPartyResponse = new ThirdPartyCancellationResponse();

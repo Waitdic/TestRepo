@@ -20,6 +20,17 @@
         Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int subscriptionId);
 
         /// <summary>
+        /// The country lookup.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="isoCode">The iso country code.</param>
+        /// <param name="subscriptionId">The subscription identifier</param>
+        /// <returns>
+        /// The third party country name
+        /// </returns>
+        Task<string> TPCountryLookupAsync(string source, string isoCode, int subscriptionId);
+
+        /// <summary>
         /// The credit card lookup.
         /// </summary>
         /// <param name="source">The source.</param>
@@ -31,32 +42,17 @@
         /// The currency lookup.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="currencyCode">The ISO currency code.</param>
-        /// <returns>The currency</returns>
+        /// <param name="currencyCode">The third party currency code.</param>
+        /// <returns>The ISO currency code.</returns>
         Task<string> TPCurrencyLookupAsync(string source, string currencyCode);
 
         /// <summary>
-        /// The meal basis lookup.
+        /// The currency code lookup.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="mealBasisId">The meal basis identifier.</param>
-        /// <returns>meal basis</returns>
-        Task<string> TPMealBasisLookupAsync(string source, int mealBasisId);
-
-        /// <summary>
-        /// Currencies lookup.
-        /// </summary>
-        /// <param name="currencyId">The currency identifier.</param>
-        /// <returns>The currency that matches the provided currencyID</returns>
-        string CurrencyLookup(int currencyId);
-
-        /// <summary>
-        /// The meal basis lookup.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="mealBasis">The meal basis.</param>
-        /// <returns>meal basis</returns>
-        Task<int> TPMealBasisLookupAsync(string source, string mealBasis);
+        /// <param name="currencyCode">The ISO currency code.</param>
+        /// <returns>The third party currency code.</returns>
+        Task<string> TPCurrencyCodeLookupAsync(string source, string isoCode);
 
         /// <summary>
         /// The nationality lookup.

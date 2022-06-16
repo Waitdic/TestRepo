@@ -131,7 +131,7 @@
             var details = factory.Create(request, user, false);
 
             // Assert
-            Assert.Equal("GBP", details.CurrencyCode);
+            Assert.Equal("GBP", details.ISOCurrencyCode);
         }
 
         [Fact]
@@ -338,7 +338,7 @@
             var details = factory.Create(request, user, false);
 
             // Assert
-            Assert.Equal("GBP", details.CurrencyCode);
+            Assert.Equal("GBP", details.ISOCurrencyCode);
         }
     }
 }

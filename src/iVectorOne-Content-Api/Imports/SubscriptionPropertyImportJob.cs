@@ -9,14 +9,14 @@
     using Newtonsoft.Json;
     using TPImport.Local.Properties;
 
-    [ScheduledJob("Own Stock Import", trigger: TriggerType.Once)]
-    public class OwnStockPropertyImportJob : IScheduledJob
+    [ScheduledJob("Subscription Property Import", trigger: TriggerType.Once)]
+    public class SubscriptionPropertyImportJob : IScheduledJob
     {
         private readonly ISql _sql;
         private readonly IPropertyListService _propertyListService;
-        private readonly ILogger<OwnStockPropertyImportJob> _logger;
+        private readonly ILogger<SubscriptionPropertyImportJob> _logger;
 
-        public OwnStockPropertyImportJob(ISql sql, IPropertyListService propertyListService, ILogger<OwnStockPropertyImportJob> logger)
+        public SubscriptionPropertyImportJob(ISql sql, IPropertyListService propertyListService, ILogger<SubscriptionPropertyImportJob> logger)
         {
             _sql = Ensure.IsNotNull(sql, nameof(sql));
             _propertyListService = Ensure.IsNotNull(propertyListService, nameof(propertyListService));
@@ -28,13 +28,8 @@
             try
             {
                 var customers = await _sql.ReadAllAsync<Customer>(
-                "Customer_GetSupplierSpecificCustomer",
-                new CommandSettings()
-                    .IsStoredProcedure()
-                    .WithParameters(new
-                    {
-                        supplierName = "Own"
-                    }));
+                    "Customer_GetSingleTenantCustomers",
+                    new CommandSettings().IsStoredProcedure());
 
                 foreach (var customer in customers)
                 {
@@ -43,7 +38,7 @@
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError(e, "{message}", e.Message);
             }
         }
 
@@ -55,20 +50,19 @@
                 {
                     BaseAddress = customer.BaseUrl,
                     DateModifiedSince = DateTime.Now.AddDays(-1),
+                    Sources = customer.Suppliers,
                 };
-#if DEBUG
-                request.BaseAddress = "http://localhost:5001/";
-#endif
+
                 var properties = await _propertyListService.GetOwnStockPropertiesAsync(request);
 
-                foreach (var property in properties)
+                foreach (var property in properties.Where(p => customer.SuppliersList.Contains(p.PropertyType!)))
                 {
                     await ImportProperty(customer, property);
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError(e, "{message}", e.Message);
             }
         }
 
@@ -106,7 +100,7 @@
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError(e, "{message}", e.Message);
             }
         }
 
@@ -116,7 +110,9 @@
             public string Name { get; set; } = string.Empty;
             public string BaseUrl { get; set; } = string.Empty;
             public int SubscriptionID { get; set; }
+            public string Suppliers { get; set; } = string.Empty;
             public string PropertyIDs { get; set; } = string.Empty;
+            public List<string> SuppliersList => Suppliers.Split(",").ToList();
             public HashSet<string> PropertyIDSet => PropertyIDs.Split(",").ToHashSet();
         }
     }

@@ -373,6 +373,7 @@
             var bookRequest = new BasketBookRequest
             {
                 LoginDetails = Helper.GetLoginDetails(propertyDetails, _settings, propertyDetails.Source),
+                ExternalReference = propertyDetails.BookingReference,
                 PropertyBookings = new PropertyBookings
                 {
                     PropertyBookRequest = new PropertyBookRequest
@@ -383,7 +384,7 @@
                         ExpectedTotal = propertyDetails.LocalCost,
                         Request = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?
                                      string.Join("\n", propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
-                                     "",
+                                     string.Empty,
                         RoomBookings = AddRoomBookingsToRequest(propertyDetails),
                     }
                 },

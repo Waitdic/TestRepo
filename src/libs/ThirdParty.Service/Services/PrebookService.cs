@@ -65,7 +65,7 @@
                 }
                 else
                 {
-                    IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
+                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
                         prebookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
@@ -77,6 +77,14 @@
                     if (success)
                     {
                         response = await this.responseFactory.CreateAsync(propertyDetails);
+                    }
+                    else
+                    {
+                        exceptionString = "Suppplier prebook failed";
+                        response = new Response()
+                        {
+                            Warnings = new System.Collections.Generic.List<string>() { exceptionString }
+                        };
                     }
                 }
             }

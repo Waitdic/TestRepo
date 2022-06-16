@@ -6,8 +6,8 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
     using Models;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -19,11 +19,12 @@
     {
         private readonly IChannelManagerSettings _settings;
 
-        private readonly Serializer serializer = new();
+        private readonly ISerializer _serializer;
 
-        public ChannelManagerSearch(IChannelManagerSettings settings)
+        public ChannelManagerSearch(IChannelManagerSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
         public string Source => ThirdParties.CHANNELMANAGER;
@@ -36,8 +37,8 @@
 
             var request = new Request
             {
-                EndPoint = _settings.URL(searchDetails),
-                Method = eRequestMethod.POST,
+                EndPoint = _settings.GenericURL(searchDetails),
+                Method = RequestMethod.POST,
                 ContentType = ContentTypes.Application_x_www_form_urlencoded,
                 ExtraInfo = searchDetails,
             };
@@ -59,20 +60,16 @@
             var searchRequest = new SearchRequest(Helper.GetLoginDetails(searchDetails, _settings))
             {
                 PropertyReferenceIDs = propertyReferenceIDs,
-                CheckInDate = searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd"),
-                CheckOutDate = searchDetails.PropertyArrivalDate.AddDays(searchDetails.Duration).ToString("yyyy-MM-dd"),
-                BrandID = _settings.BrandID(searchDetails),
+                CheckInDate = searchDetails.ArrivalDate.ToString("yyyy-MM-dd"),
+                CheckOutDate = searchDetails.DepartureDate.ToString("yyyy-MM-dd"),
+                BrandID = _settings.BrandCode(searchDetails),
             };
-
-            var rooms = new List<SearchRequest.Room>();
-
-            var seq = 1;
 
             foreach (var room in searchDetails.RoomDetails)
             {
                 var roomRequest = new SearchRequest.Room
                 {
-                    Seq = seq,
+                    Seq = room.PropertyRoomBookingID,
                     Adults = room.Adults,
                     Infants = room.Infants,
                     Children = room.Children
@@ -87,18 +84,13 @@
                         childAges.Add(age);
                     }
 
-                    roomRequest.ChildAgeCSV = string.Join<int>(",", childAges);
+                    roomRequest.ChildAgeCSV = string.Join(",", childAges);
                 }
 
-                rooms.Add(roomRequest);
-
-                seq++;
+                searchRequest.Rooms.Add(roomRequest);
             }
 
-            searchRequest.Rooms = rooms;
-
-            return serializer.Serialize(searchRequest);
-
+            return _serializer.Serialize(searchRequest);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -108,14 +100,14 @@
             var allResponses =
                 from request in requests
                 where request.Success
-                select serializer.DeSerialize<SearchResponse>(request.ResponseString);
+                select _serializer.DeSerialize<SearchResponse>(request.ResponseString);
 
-            transformedResults.TransformedResults.AddRange(allResponses.SelectMany(r => GetResultFromResponse(r, searchDetails)));
+            transformedResults.TransformedResults.AddRange(allResponses.SelectMany(r => GetResultFromResponse(r)));
 
             return transformedResults;
         }
 
-        public List<TransformedResult> GetResultFromResponse(SearchResponse response, SearchDetails searchDetails)
+        public List<TransformedResult> GetResultFromResponse(SearchResponse response)
         {
             var transformedResult = new List<TransformedResult>();
 
@@ -126,29 +118,27 @@
                     var adjustments = new List<TransformedResultAdjustment>();
                     foreach (var adjustment in roomType.Adjustments)
                     {
-                        var transformedAdjustment = new TransformedResultAdjustment
-                        {
-                            AdjustmentID = adjustment.AdjustmentID,
-                            AdjustmentType = adjustment.AdjustmentType,
-                            AdjustmentName = adjustment.AdjustmentName,
-                            AdjustmentAmount = adjustment.AdjustmentAmount,
-                            PayLocal = adjustment.PayLocal
-                        };
+                        var transformedAdjustment = new TransformedResultAdjustment(
+                            adjustment.AdjustmentType.ToSafeEnum<SDK.V2.PropertySearch.AdjustmentType>()
+                                ?? SDK.V2.PropertySearch.AdjustmentType.Supplement,
+                            adjustment.AdjustmentName,
+                            string.Empty,
+                            adjustment.AdjustmentAmount);
                         adjustments.Add(transformedAdjustment);
                     }
 
                     transformedResult.Add(new TransformedResult
                     {
-                        TPKey = propertyResult.PropertyReferenceID.ToSafeString(),
-                        CurrencyID = propertyResult.CurrencyID,
+                        TPKey = propertyResult.PropertyReferenceID.ToString(),
+                        CurrencyCode = propertyResult.CurrencyID.ToString(),
                         PropertyRoomBookingID = roomType.Seq,
                         RoomType = roomType.RoomType,
-                        MealBasisID = roomType.MealBasisID,
-                        NetPrice = roomType.NetCost.ToSafeString(),
+                        MealBasisCode = roomType.MealBasisID.ToString(),
+                        Amount = roomType.NetCost,
                         TPReference = roomType.RoomBookingToken,
                         CommissionPercentage = roomType.CommissionPercentage,
                         NonRefundableRates = roomType.NonRefundable,
-                        TPRateCode = roomType.RateCode,
+                        RateCode = roomType.RateCode,
                         Adjustments = adjustments
                     });
                 }

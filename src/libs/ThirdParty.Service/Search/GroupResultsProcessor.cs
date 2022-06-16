@@ -1,6 +1,6 @@
 ﻿namespace ThirdParty.Search
 {
-    using System; 
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -82,7 +82,7 @@
                         PayLocalAvailable = searchResult.PayLocalAvailable,
                         MealBasisCode = await GetMealBasis(source, searchResult, searchDetails),
                         MealBasisID = await GetMealBasisID(source, searchResult, searchDetails),
-                        RateCode = searchResult.TPRateCode,
+                        RateCode = searchResult.RateCode,
                         OnRequest = searchResult.OnRequest
                     },
                     PriceData = new PriceData()
@@ -101,9 +101,9 @@
                         EndDate = x.EndDate,
                         Amount = x.Amount,
                     }).ToList(),
-                    Adjustments = searchResult.Adjustments.Select(x => new iVector.Search.Property.Adjustment() 
+                    Adjustments = searchResult.Adjustments.Select(x => new iVector.Search.Property.Adjustment()
                     {
-                        AdjustmentType = Enum.GetName(typeof(AdjustmentType),x.AdjustmentType),
+                        AdjustmentType = Enum.GetName(typeof(AdjustmentType), x.AdjustmentType),
                         AdjustmentName = x.AdjustmentName,
                         TotalCost = x.AdjustmentAmount,
                         CustomerNotes = x.AdjustmentDescription
@@ -133,7 +133,7 @@
 
         private async Task<int> GetISOCurrencyID(PropertyData propertyData, TransformedResult searchResult, SearchDetails searchDetails)
         {
-            int currencyId = searchResult.CurrencyID;
+            int currencyId = 0;
 
             if (!string.IsNullOrWhiteSpace(searchResult.CurrencyCode))
             {
@@ -143,14 +143,15 @@
                 }
                 else
                 {
-                currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(propertyData.Source, searchResult.CurrencyCode);
-            }
+                    currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(propertyData.Source, searchResult.CurrencyCode);
+                }
             }
 
             return currencyId;
         }
 
-        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
+        private bool IsSingleTenant(string source)
+            => source.InList(ThirdParties.OWNSTOCK, ThirdParties.CHANNELMANAGER);
 
         /// <summary>Gets the property room booking identifier.</summary>
         /// <param name="searchResult">The search result.</param>

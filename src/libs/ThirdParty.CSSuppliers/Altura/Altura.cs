@@ -344,8 +344,6 @@
             //'Update session ids to be sent for cancellation confirmation request
             propertyDetails.TPRef2 = string.Join("|", sessionIds);
 
-            propertyDetails.CancellationAmount = amount;
-
             return cancellationFeeResult;
         }
 

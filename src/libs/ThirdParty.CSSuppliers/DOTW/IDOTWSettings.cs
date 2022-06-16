@@ -12,7 +12,6 @@
         string RequestCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
-        bool SendTradeReference(IThirdPartyAttributeSearch tpAttributeSearch);
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string ThreadedSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseMinimumSellingPrice(IThirdPartyAttributeSearch tpAttributeSearch);

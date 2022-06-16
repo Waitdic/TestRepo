@@ -59,7 +59,6 @@
                         AvailableRooms = 39,
                         CommissionPercentage = 0,
                         DynamicProperty = false,
-                        NonPackageAmount = 0,
                         NonRefundableRates = false,
                         FixPrice = false,
                         RegionalTax = "112.69",

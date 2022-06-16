@@ -21,12 +21,12 @@
             var searchDetails = new SearchDetails()
             {
                 Duration = searchRequest.Duration,
-                NationalityCode = searchRequest.NationalityID,
+                ISONationalityCode = searchRequest.NationalityID,
                 SubscriptionID = user.SubscriptionID,
                 Settings = user.TPSettings,
                 ThirdPartyConfigurations = user.Configurations,
                 LoggingType = log ? "All" : "None",
-                CurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? user.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
+                ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? user.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 OpaqueSearch = searchRequest.OpaqueRates,
                 SellingCountry = searchRequest.SellingCountry,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
@@ -45,6 +45,7 @@
                     roomRequest.Children,
                     roomRequest.Infants,
                     string.Join(",", roomRequest.ChildAges));
+
                 searchDetails.RoomDetails.Add(roomDetails);
             }
 

@@ -366,7 +366,7 @@
                     var expectedNetCost = new YalagoCreateBookingRequest.ExpectedNetCost
                     {
                         Amount = Math.Round(room.GrossCost.ToSafeDecimal(), 2),
-                        Currency = propertyDetails.CurrencyCode
+                        Currency = propertyDetails.ISOCurrencyCode
                     };
 
                     var requestRoom = new YalagoCreateBookingRequest.Room()

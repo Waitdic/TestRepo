@@ -3,18 +3,17 @@
     using System;
     using System.Collections.Generic;
 
-    public partial class PreBookRequest
+    public class PreBookRequest
     {
-
-        public BookingLogin LoginDetails { get; set; }
+        public BookingLogin LoginDetails { get; set; } = new();
 
         public int BrandID { get; set; }
         public int PropertyReferenceID { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
-        public List<Room> Rooms { get; set; }
+        public List<Room> Rooms { get; set; } = new();
 
-        public partial class Room
+        public class Room
         {
             public int Seq { get; set; }
             public int Adults { get; set; }
@@ -27,7 +26,5 @@
             public int PropertyID { get; set; }
             public int BrandID { get; set; }
         }
-
-
     }
 }

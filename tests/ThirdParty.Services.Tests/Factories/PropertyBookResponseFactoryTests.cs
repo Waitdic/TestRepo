@@ -4,7 +4,6 @@
     using ThirdParty.Models.Property.Booking;
     using ThirdParty.Factories;
     using ThirdParty.Models.Tokens;
-    using ThirdParty.Repositories;
     using ThirdParty.Services;
 
     public class PropertyBookResponseFactoryTests
@@ -19,7 +18,7 @@
             var factory = new PropertyBookResponseFactory(tokenServiceMock.Object);
 
             var details = new PropertyDetails() {
-                CurrencyID = 5,
+                ISOCurrencyCode = "GBP",
                 PropertyID = 5,
                 SupplierSourceReference = "testREf",
                 SourceSecondaryReference = "TestsecondaryRef",

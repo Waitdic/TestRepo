@@ -25,14 +25,14 @@
             _provider,
             new List<SearchDetails> { _searchDetails },
             _settings,
-            new MikiSearch(_settings, _mockSupport.Object, new Serializer(), null))
+            new MikiSearch(_settings, _mockSupport.Object, new Serializer(), null!))
         {
         }
 
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
+            mockSupport.Setup(x => x.TPCurrencyCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GBP"));
             return mockSupport;
         }
 

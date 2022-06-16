@@ -271,7 +271,7 @@
                 searchRequest.AppendFormat("<EndDate>{0}</EndDate>", searchDetails.DepartureDate.ToString("dd/MM/yyyy"));
                 searchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.Currency(searchDetails, searchBatchDetails.Source));
 
-                string nationality = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, searchDetails.NationalityCode);
+                string nationality = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, searchDetails.ISONationalityCode);
                 if (string.IsNullOrEmpty(nationality))
                 {
                     nationality = _settings.LeadGuestNationality(searchDetails, searchBatchDetails.Source);
@@ -492,10 +492,10 @@
                                 CommissionPercentage = option.Price.Commission.ToSafeDecimal(),
                                 NonRefundableRates = IsNonRefundable(option.RateRules, room.NonRefunfable),
                                 FixPrice = IsFixedPrice(option.Price.Binding, option.Price.Commission),
-                                SellingPrice = GetSellingPrice(option.Price.Binding, option.Price.Amount),
-                                NetPrice = CalculateNetPrice(option.Price.Binding, option.Price.Amount, option.Price.Commission),
-                                TPRateCode = GetTPRateCode(response.DailyRatePlans),
-                                TPReference = room.ID + "~" + room.RoomTypeCode + "~" + room.RoomType + "~" + option.PaymentType + "~" + encryptedParamters + "~" + option.Price.Commission + "~" + option.Price.Binding + "~" + mealPlans.MealBaisCode
+                                SellingPrice = GetSellingPrice(option.Price.Binding, option.Price.Amount.ToSafeDecimal()),
+                                NetPrice = CalculateNetPrice(option.Price.Binding, option.Price.Amount.ToSafeDecimal(), option.Price.Commission.ToSafeDecimal()),
+                                RateCode = GetTPRateCode(response.DailyRatePlans),
+                                TPReference = string.Join("~", room.ID, room.RoomTypeCode, room.RoomType, option.PaymentType, encryptedParamters, option.Price.Commission, option.Price.Binding, mealPlans.MealBaisCode)
                             };
 
                             transformedResults.Add(transformedResult);
@@ -539,24 +539,24 @@
             return binding.Equals("true") && !comissions.Equals("-1");
         }
 
-        private string GetSellingPrice(string binding, string amount)
+        private decimal GetSellingPrice(string binding, decimal amount)
         {
             if (binding.Equals("true"))
             {
                 return amount;
             }
 
-            return "0";
+            return 0;
         }
 
-        private string CalculateNetPrice(string binding, string amount, string commission)
+        private decimal CalculateNetPrice(string binding, decimal amount, decimal commission)
         {
             if (binding.Equals("true"))
             {
-                return (amount.ToSafeDecimal() * ((100m - commission.ToSafeDecimal()) / 100m)).ToSafeString();
+                return amount * ((100m - commission) / 100m);
             }
 
-            return "0";
+            return 0;
         }
 
         private string GetTPRateCode(List<TravelgateSearchResponse.RatePlan> dailyRatePlans)

@@ -103,12 +103,13 @@
         private class SubscriptionMealBasis
         {
             public int SubscriptionID { get; set; }
-            public string MealBasisCode { get; set; }
-            public string MealBasis { get; set; }
+            public string MealBasisCode { get; set; } = string.Empty;
+            public string MealBasis { get; set; } = string.Empty;
             public int SubscriptionMealBasisID { get; set; }
         }
 
-        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
+        private bool IsSingleTenant(string source)
+            => source.InList(ThirdParties.OWNSTOCK, ThirdParties.CHANNELMANAGER);
 
         private async Task<MealBasis> GetMealBasisFromCodeAsync(string source, string thirdPartyMealBasis)
         {

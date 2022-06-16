@@ -34,16 +34,19 @@
         /// </summary>
         public string EmailLogsToAddress { get; set; } = string.Empty;
 
+        // todo - remove or set in factory
         /// <summary>
         /// Gets or sets the latitude.
         /// </summary>
         public decimal Latitude { get; set; } = 0;
 
+        // todo - remove or set in factory
         /// <summary>
         /// Gets or sets the longitude.
         /// </summary>
         public decimal Longitude { get; set; } = 0;
 
+        // todo - remove or set in factory
         /// <summary>
         /// Gets or sets the radius.
         /// </summary>
@@ -74,11 +77,7 @@
         /// </summary>
         public int Rooms => RoomDetails.Count();
 
-        /// <summary>
-        /// Gets or sets the meal basis identifier.
-        /// </summary>
-        public int MealBasisID { get; set; }
-
+        // todo - remove or set in factory
         /// <summary>
         /// Gets or sets the star rating.
         /// </summary>
@@ -88,11 +87,6 @@
         /// Gets or sets the selling country.
         /// </summary>
         public string SellingCountry { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the product attribute i ds.
-        /// </summary>
-        public List<int> ProductAttributeIDs { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the room details.
@@ -112,12 +106,12 @@
         /// <summary>
         /// Get or sets the unique nationality code 
         /// </summary>
-        public string NationalityCode { get; set; } = string.Empty;
+        public string ISONationalityCode { get; set; } = string.Empty;
 
         /// <summary>
-        /// Get or sets the currency code
+        /// Get or sets the ISO currency code
         /// </summary>
-        public string CurrencyCode { get; set; } = string.Empty;
+        public string ISOCurrencyCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether we search for opaque rates
