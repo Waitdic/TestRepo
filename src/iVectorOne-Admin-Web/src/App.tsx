@@ -55,8 +55,7 @@ type StateProps = ReturnType<typeof mapState>;
 type Props = AmplifyProps & StateProps;
 
 const App: FC<Props> = ({ signOut, user, app }) => {
-  // const { username } = user;
-  const username = 'admin';
+  const { username } = user;
   const { lang, theme } = app;
 
   const dispatch = useDispatch();
@@ -239,4 +238,4 @@ const App: FC<Props> = ({ signOut, user, app }) => {
   );
 };
 
-export default connect(mapState)(memo(App));
+export default connect(mapState)(withAuthenticator(memo(App)));
