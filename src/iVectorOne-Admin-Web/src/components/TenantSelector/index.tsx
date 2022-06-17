@@ -8,13 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Tenant } from '@/types';
 import { RootState } from '@/store';
 
-type Props = {
-  position?: 'right' | 'left';
-};
-
-const TenantSelector: FC<Props> = ({ position = 'right' }) => {
+const TenantSelector: FC = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
+  const activeTenant = user?.tenants?.find((tenant) => tenant.isActive);
+
   const dispatch = useDispatch();
 
   const handleChangeTenant = (tenantId: string) => {
@@ -40,7 +38,9 @@ const TenantSelector: FC<Props> = ({ position = 'right' }) => {
           title='Change Tenant'
         >
           <UsersIcon className='navbar__hover h-6 w-6 dark:text-gray-400 text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white' />
-          <p className='ml-2 text-gray-600 text-sm font-medium'>Tenants</p>
+          <p className='ml-2 text-gray-600 text-sm font-medium'>
+            {activeTenant?.name}
+          </p>
         </Menu.Button>
       </div>
       <Transition
