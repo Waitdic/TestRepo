@@ -25,12 +25,6 @@ const MainLayout: FC<Props> = ({ title = null, children }) => {
 
   const currentTenant = user?.tenants.filter((tenant) => tenant.isActive)[0];
   const currentModule = modules.filter((module) => module.isActive)[0];
-  const tenantName =
-    currentTenant?.name && currentTenant?.name.length > 20
-      ? `${currentTenant?.name.substring(0, 20)}...`
-      : currentTenant?.name || '';
-  const moduleName = currentModule?.name || '';
-  const headerTitle = `${tenantName} / ${moduleName}` || title || '';
 
   const handleChangeModule = (moduleId: string, uri: string) => {
     const updatedModuleList: Module[] = modules.map((module) => ({
@@ -50,8 +44,8 @@ const MainLayout: FC<Props> = ({ title = null, children }) => {
         <Navigation setShowSidebar={setShowSidebar} />
         {/* Main content */}
         <main className='flex-1'>
-          <div className='py-6'>
-            <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
+          <div className='relative py-6'>
+            <div className='absolute top-10 left-0 max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
               <h1 className='text-2xl font-semibold text-gray-900'>{title}</h1>
             </div>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>

@@ -78,7 +78,7 @@ export const ModuleCreate: FC<Props> = memo(({ error, isLoading }) => {
 
   return (
     <>
-      <MainLayout>
+      <MainLayout title='Module Create'>
         <div className='flex flex-col'>
           {/* Create Module */}
           <div className='mb-6'>

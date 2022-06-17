@@ -109,7 +109,7 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
 
   return (
     <>
-      <MainLayout>
+      <MainLayout title='Tenant Edit'>
         <div className='flex flex-col'>
           {/* Edit Tenant */}
           {fetchedTenantList.error ? (

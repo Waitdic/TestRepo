@@ -55,7 +55,7 @@ export const ModuleList: FC<Props> = memo(({ fetchedModuleList }) => {
 
   return (
     <>
-      <MainLayout>
+      <MainLayout title='Module List'>
         <div className='flex flex-col'>
           {/* Modules */}
 

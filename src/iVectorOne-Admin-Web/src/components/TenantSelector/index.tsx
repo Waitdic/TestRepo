@@ -33,13 +33,14 @@ const TenantSelector: FC<Props> = ({ position = 'right' }) => {
   };
 
   return (
-    <Menu as='div' className='relative p-4'>
+    <Menu as='div' className='relative'>
       <div>
         <Menu.Button
           className='max-w-xs p-1 flex items-center text-sm focus:outline-none'
           title='Change Tenant'
         >
           <UsersIcon className='navbar__hover h-6 w-6 dark:text-gray-400 text-gray-700 hover:text-primary dark:text-gray-400 dark:hover:text-white' />
+          <p className='ml-2 text-gray-600 text-sm font-medium'>Tenants</p>
         </Menu.Button>
       </div>
       <Transition

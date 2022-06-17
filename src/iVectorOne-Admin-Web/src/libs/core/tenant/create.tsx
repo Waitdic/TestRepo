@@ -71,7 +71,7 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
 
   return (
     <>
-      <MainLayout>
+      <MainLayout title='Tenant Create'>
         <div className='flex flex-col'>
           {/* Create Tenants */}
           <div className='mb-6'>
