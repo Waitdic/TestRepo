@@ -144,7 +144,6 @@ const App: FC<Props> = ({ app }) => {
       {() => (
         <>
           <Helmet htmlAttributes={{ lang }} />
-
           <IntlProvider
             locale={lang}
             textComponent={Fragment}
@@ -152,9 +151,8 @@ const App: FC<Props> = ({ app }) => {
             defaultLocale='en-US'
           >
             <Routes>
-              {/* Root Route */}
-              <Route path='/' element={<CoreView />} />
-
+              {/* Core Route */}
+              <Route path='/core' element={<CoreView />} />
               {/* Tenant Routes */}
               <Route
                 path='/tenant/list'
@@ -190,7 +188,6 @@ const App: FC<Props> = ({ app }) => {
                   />
                 }
               />
-
               {/* Module Routes */}
               <Route
                 path='/module/list'
@@ -215,10 +212,8 @@ const App: FC<Props> = ({ app }) => {
                 path='/module/edit/:slug'
                 element={<ModuleEdit error={null} isLoading={false} />}
               />
-
               {/* IVO Landing */}
-              <Route path='/ivo' element={<IvoView />} />
-
+              <Route path='/' element={<IvoView />} />
               {/* Subscription Routes */}
               <Route
                 path='/ivo/subscription/create'
@@ -254,7 +249,6 @@ const App: FC<Props> = ({ app }) => {
                   />
                 }
               />
-
               {/* Provider Routes */}
               <Route
                 path='/ivo/provider/list'
@@ -279,13 +273,10 @@ const App: FC<Props> = ({ app }) => {
                 path='/ivo/provider/edit/:slug'
                 element={<ProviderEdit error={null} />}
               />
-
-              {/* Customer Edit (Dummy) */}
+              {/*//? Customer Edit (Dummy) */}
               <Route path='/customer/edit/:id' element={<CustomerEdit />} />
-
               {/* Docs */}
               <Route path='/docs/:id' element={<Docs />} />
-
               {/* Not Found Route */}
               <Route path='*' element={<NotFound />} />
             </Routes>

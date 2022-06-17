@@ -1,4 +1,4 @@
-import { Dispatch, FC, Fragment, memo, SetStateAction } from 'react';
+import { Dispatch, FC, Fragment, memo, SetStateAction, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -7,6 +7,7 @@ import { XIcon } from '@heroicons/react/outline';
 //
 import { RootState } from '@/store';
 import TenantSelector from '../TenantSelector';
+import getStaticConsoleIcon from '@/utils/getStaticConsoleIcon';
 
 type Props = {
   showSidebar: boolean;
@@ -16,10 +17,35 @@ type Props = {
 const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
   const { pathname } = useLocation();
   const modules = useSelector((state: RootState) => state.app.modules);
-  const user = useSelector((state: RootState) => state.app.user);
+  //? const user = useSelector((state: RootState) => state.app.user);
 
   const activeModule = modules.filter((module) => module.isActive)[0];
   const currentConsoles = activeModule?.consoles;
+
+  const renderConsoles = () => {
+    return currentConsoles?.map(({ name, uri }) => (
+      <Link
+        key={name}
+        to={uri}
+        className={classNames(
+          pathname.includes(name.toLowerCase()) && pathname !== '/'
+            ? 'text-primary'
+            : 'text-gray-600 hover:text-gray-900',
+          'group flex items-center text-sm font-medium rounded-md'
+        )}
+      >
+        <>
+          <span className='mr-2 group-hover:text-primary'>
+            {getStaticConsoleIcon(
+              name.toLowerCase(),
+              pathname.includes(name.toLowerCase()) && pathname !== '/'
+            )}
+          </span>
+          <span className='group-hover:text-primary'>{name}</span>
+        </>
+      </Link>
+    ));
+  };
 
   return (
     <>
@@ -83,23 +109,7 @@ const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
                       alt='Workflow'
                     />
                   </div>
-                  <nav className='mt-5 px-4 space-y-1'>
-                    {currentConsoles?.map(({ name, uri }) => (
-                      <Link
-                        key={name}
-                        to={uri}
-                        className={classNames(
-                          pathname.includes(name.toLowerCase()) &&
-                            pathname !== '/'
-                            ? 'bg-gray-100 text-gray-900 px-2'
-                            : 'text-gray-600 hover:text-gray-900',
-                          'group flex items-center py-2 text-sm font-medium rounded-md'
-                        )}
-                      >
-                        {name}
-                      </Link>
-                    ))}
-                  </nav>
+                  <nav className='mt-5 px-4 space-y-2'>{renderConsoles()}</nav>
                 </div>
                 <div className='flex-shrink-0 flex border-t border-gray-200 py-3 px-2'>
                   {/* Tenant Selector */}
@@ -126,21 +136,8 @@ const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
                 alt='Workflow'
               />
             </div>
-            <nav className='mt-5 flex-1 px-4 bg-white space-y-1'>
-              {currentConsoles?.map(({ name, uri }) => (
-                <Link
-                  key={name}
-                  to={uri}
-                  className={classNames(
-                    pathname.includes(name.toLowerCase()) && pathname !== '/'
-                      ? 'bg-gray-100 text-gray-900 px-2'
-                      : 'text-gray-600 hover:text-gray-900',
-                    'group flex items-center py-2 text-sm font-medium rounded-md'
-                  )}
-                >
-                  {name}
-                </Link>
-              ))}
+            <nav className='mt-5 flex-1 px-4 bg-white space-y-4'>
+              {renderConsoles()}
             </nav>
           </div>
           <div className='flex-shrink-0 flex border-t border-gray-200 py-3 px-2'>

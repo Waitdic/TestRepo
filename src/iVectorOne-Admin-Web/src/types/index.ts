@@ -2,7 +2,7 @@ import { NotificationStatus } from '@/constants';
 import { NetworkInterfaceInfoIPv4 } from 'os';
 import { ComponentProps } from 'react';
 
-//? TEMP TYPES
+//! TEMP TYPES
 export type ProductProps = {
   id: number;
   slug: string;
@@ -19,7 +19,8 @@ export type ProductFormData = {
   category: { id: number; name: string };
   img: string;
 };
-//? END TEMP TYPES
+//! END TEMP TYPES
+
 export type SelectOption = { id: number | string; name: string };
 export type Tenant = {
   tenantId: number | string;
