@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
 import { store } from './store';
+import { Authenticator } from '@aws-amplify/ui-react';
 //
 import './index.scss';
 //
@@ -14,7 +15,9 @@ ReactDOM.render(
     <BrowserRouter>
       <ReduxProvider store={store}>
         <HelmetProvider>
-          <App />
+          <Authenticator.Provider>
+            <App />
+          </Authenticator.Provider>
         </HelmetProvider>
       </ReduxProvider>
     </BrowserRouter>

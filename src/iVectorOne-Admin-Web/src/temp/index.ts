@@ -26,14 +26,14 @@ export const dummyFetchedUser = {
       isActive: false,
       name: 'Thomas Cook',
       tenantId: '22897',
-    }
+    },
   ],
 };
 
 export const dummyTenantList = [
   { tenantId: '95897', name: 'Alihoco' },
   { tenantId: '43484', name: 'Goway' },
-  { tenantId: '52536', name: 'Thomas Cook' }
+  { tenantId: '52536', name: 'Thomas Cook' },
 ];
 
 export const dummyModuleList = [
@@ -50,10 +50,10 @@ export const dummyModuleList = [
         roles: [{ name: 'module-administrator' }],
       },
     ],
-    isActive: true,
+    isActive: false,
     moduleId: '18472',
     name: 'Core',
-    uri: '/',
+    uri: '/core',
   },
   {
     consoles: [
@@ -68,10 +68,10 @@ export const dummyModuleList = [
         roles: [{ name: 'provider-administrator' }],
       },
     ],
-    isActive: false,
+    isActive: true,
     moduleId: '18473',
     name: 'iVectorOne',
-    uri: '/ivo',
+    uri: '/',
   },
 ];
 

@@ -3,8 +3,8 @@ import { Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { IntlProvider } from 'react-intl';
 import { Amplify } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { connect, useDispatch } from 'react-redux';
 //
 import { RootState } from './store';
 import messages from '@/i18n/messages';
@@ -27,35 +27,36 @@ import { SubscriptionCreate } from '@/libs/ivo/subscription/create';
 import { ProviderList } from '@/libs/ivo/provider/list';
 import { ProviderCreate } from '@/libs/ivo/provider/create';
 import { ProviderEdit } from '@/libs/ivo/provider/edit';
+import Docs from './libs/core/docs';
 //
 import '@aws-amplify/ui-react/styles.css';
 //
 import awsExports from './aws-exports';
-Amplify.configure(awsExports);
-
-//! Temporary data for demo
+import Header from './components/Amplify/Header';
+import Footer from './components/Amplify/Footer';
+import SignInHeader from './components/Amplify/SignIn/Header';
+import SignInFooter from './components/Amplify/SignIn/Footer';
 import {
   dummyFetchedUser,
-  dummyTenantList,
   dummyModuleList,
-  dummySubscriptions,
   dummyProviders,
+  dummySubscriptions,
+  dummyTenantList,
 } from './temp';
 import { Module, Provider, Subscription, Tenant } from './types';
+Amplify.configure(awsExports);
 
 const mapState = (state: RootState) => ({
   app: state.app,
 });
 
-type AmplifyProps = {
-  signOut: () => void;
-  user: { username: string };
-};
 type StateProps = ReturnType<typeof mapState>;
-type Props = AmplifyProps & StateProps;
+type Props = StateProps;
 
-const App: FC<Props> = ({ signOut, user, app }) => {
-  const { username } = user;
+const App: FC<Props> = ({ app }) => {
+  const { user, signOut } = useAuthenticator();
+
+  const username = user?.username || '';
   const { lang, theme } = app;
 
   const dispatch = useDispatch();
@@ -85,6 +86,28 @@ const App: FC<Props> = ({ signOut, user, app }) => {
     dispatch.app.setSignOutCallback(signOut);
   }, []);
 
+  // Temporary not used waiting for the API to be ready
+  // useEffect(() => {
+  //   if (fetchedUser) {
+  //     dispatch.app.updateUser(fetchedUser);
+  //   }
+  //   if (moduleList.length) {
+  //     dispatch.app.updateModuleList(moduleList);
+  //   }
+  //   if (tenantList.length) {
+  //     dispatch.app.updateTenantList(tenantList);
+  //   }
+  // }, [fetchedUser, moduleList, tenantList]);
+
+  // useEffect(() => {
+  //   if (providers.length) {
+  //     dispatch.app.updateProviders(providers);
+  //   }
+  //   if (subscriptions.length) {
+  //     dispatch.app.updateSubscriptions(subscriptions);
+  //   }
+  // }, [providers, subscriptions]);
+  //Temporary used waiting for the API to be ready
   useEffect(() => {
     if (dummyFetchedUser) {
       dispatch.app.updateUser(dummyFetchedUser);
@@ -107,135 +130,170 @@ const App: FC<Props> = ({ signOut, user, app }) => {
   }, [dummyProviders, dummySubscriptions]);
 
   return (
-    <>
-      <Helmet htmlAttributes={{ lang }} />
+    <Authenticator
+      loginMechanisms={['email']}
+      components={{
+        Header,
+        SignIn: {
+          Header: SignInHeader,
+          Footer: SignInFooter,
+        },
+        Footer,
+      }}
+    >
+      {() => (
+        <>
+          <Helmet htmlAttributes={{ lang }} />
 
-      <IntlProvider
-        locale={lang}
-        textComponent={Fragment}
-        messages={messages[lang]}
-        defaultLocale='en-US'
-      >
-        <Routes>
-          {/* Root Route */}
-          <Route path='/' element={<CoreView />} />
+          <IntlProvider
+            locale={lang}
+            textComponent={Fragment}
+            messages={messages[lang]}
+            defaultLocale='en-US'
+          >
+            <Routes>
+              {/* Root Route */}
+              <Route path='/' element={<CoreView />} />
 
-          {/* Tenant Routes */}
-          <Route
-            path='/tenant/list'
-            element={
-              <TenantList
-                fetchedTenantList={{
-                  tenantList: dummyTenantList as Tenant[],
-                  isLoading: false,
-                  error: null,
-                }}
+              {/* Tenant Routes */}
+              <Route
+                path='/tenant/list'
+                element={
+                  <TenantList
+                    fetchedTenantList={{
+                      // tenantList,
+                      // isLoading: coreIsLoading,
+                      // error: coreError,
+                      tenantList: dummyTenantList as Tenant[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path='/tenant/create'
-            element={<TenantCreate error={null} />}
-          />
-          <Route
-            path='/tenant/edit/:slug'
-            element={
-              <TenantEdit
-                fetchedTenantList={{
-                  tenantList: dummyTenantList as Tenant[],
-                  isLoading: false,
-                  error: null,
-                }}
+              <Route
+                path='/tenant/create'
+                element={<TenantCreate error={null} />}
               />
-            }
-          />
-
-          {/* Module Routes */}
-          <Route
-            path='/module/list'
-            element={
-              <ModuleList
-                fetchedModuleList={{
-                  moduleList: dummyModuleList as Module[],
-                  isLoading: false,
-                  error: null,
-                }}
+              <Route
+                path='/tenant/edit/:slug'
+                element={
+                  <TenantEdit
+                    fetchedTenantList={{
+                      // tenantList,
+                      // isLoading: coreIsLoading,
+                      // error: coreError,
+                      tenantList: dummyTenantList as Tenant[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path='/module/create'
-            element={<ModuleCreate error={null} isLoading={false} />}
-          />
-          <Route
-            path='/module/edit/:slug'
-            element={<ModuleEdit error={null} isLoading={false} />}
-          />
 
-          {/* IVO Landing */}
-          <Route path='/ivo' element={<IvoView />} />
-
-          {/* Subscription Routes */}
-          <Route
-            path='/ivo/subscription/create'
-            element={<SubscriptionCreate error={null} />}
-          />
-          <Route
-            path='/ivo/subscription/list'
-            element={
-              <SubscriptionList
-                fetchedSubscriptionList={{
-                  subscriptions: dummySubscriptions as Subscription[],
-                  isLoading: false,
-                  error: null,
-                }}
+              {/* Module Routes */}
+              <Route
+                path='/module/list'
+                element={
+                  <ModuleList
+                    fetchedModuleList={{
+                      // moduleList,
+                      // isLoading: coreIsLoading,
+                      // error: coreError,
+                      moduleList: dummyModuleList as Module[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
               />
-            }
-          />
-          <Route
-            path='/ivo/subscription/edit/:slug'
-            element={
-              <SubscriptionEdit
-                fetchedSubscriptionList={{
-                  subscriptions: dummySubscriptions as Subscription[],
-                  isLoading: false,
-                  error: null,
-                }}
+              <Route
+                path='/module/create'
+                element={<ModuleCreate error={null} isLoading={false} />}
               />
-            }
-          />
-
-          {/* Provider Routes */}
-          <Route
-            path='/ivo/provider/list'
-            element={
-              <ProviderList
-                fetchedProviderList={{
-                  providers: dummyProviders as Provider[],
-                  isLoading: false,
-                  error: null,
-                }}
+              <Route
+                path='/module/edit/:slug'
+                element={<ModuleEdit error={null} isLoading={false} />}
               />
-            }
-          />
-          <Route
-            path='/ivo/provider/create'
-            element={<ProviderCreate error={null} />}
-          />
-          <Route
-            path='/ivo/provider/edit/:slug'
-            element={<ProviderEdit error={null} />}
-          />
 
-          {/* Customer Edit (Dummy) */}
-          <Route path='/customer/edit/:id' element={<CustomerEdit />} />
+              {/* IVO Landing */}
+              <Route path='/ivo' element={<IvoView />} />
 
-          {/* Not Found Route */}
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </IntlProvider>
-    </>
+              {/* Subscription Routes */}
+              <Route
+                path='/ivo/subscription/create'
+                element={<SubscriptionCreate error={null} />}
+              />
+              <Route
+                path='/ivo/subscription/list'
+                element={
+                  <SubscriptionList
+                    fetchedSubscriptionList={{
+                      // subscriptions,
+                      // isLoading: ivoIsLoading,
+                      // error: ivoError,
+                      subscriptions: dummySubscriptions as Subscription[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
+              />
+              <Route
+                path='/ivo/subscription/edit/:slug'
+                element={
+                  <SubscriptionEdit
+                    fetchedSubscriptionList={{
+                      // subscriptions,
+                      // isLoading: ivoIsLoading,
+                      // error: ivoError,
+                      subscriptions: dummySubscriptions as Subscription[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
+              />
+
+              {/* Provider Routes */}
+              <Route
+                path='/ivo/provider/list'
+                element={
+                  <ProviderList
+                    fetchedProviderList={{
+                      // providers,
+                      // isLoading: ivoIsLoading,
+                      // error: ivoError,
+                      providers: dummyProviders as Provider[],
+                      isLoading: false,
+                      error: null,
+                    }}
+                  />
+                }
+              />
+              <Route
+                path='/ivo/provider/create'
+                element={<ProviderCreate error={null} />}
+              />
+              <Route
+                path='/ivo/provider/edit/:slug'
+                element={<ProviderEdit error={null} />}
+              />
+
+              {/* Customer Edit (Dummy) */}
+              <Route path='/customer/edit/:id' element={<CustomerEdit />} />
+
+              {/* Docs */}
+              <Route path='/docs/:id' element={<Docs />} />
+
+              {/* Not Found Route */}
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+          </IntlProvider>
+        </>
+      )}
+    </Authenticator>
   );
 };
 
-export default connect(mapState)(withAuthenticator(memo(App)));
+export default connect(mapState)(memo(App));
