@@ -84,6 +84,39 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers", async (IMediator
     return Results.Ok(response);
 }).RequireAuthorization();
 
+app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers/{suppliersubscriptionid}", (ConfigContext context, IMapper mapper, int subscriptionid, int suppliersubscriptionid) =>
+{
+    var suppliers = context.SupplierSubscriptions.Where(s => s.SupplierSubscriptionId == suppliersubscriptionid)
+                                            .Include(s => s.Supplier)
+                                                .ThenInclude(su => su.SupplierAttributes)
+                                                    .ThenInclude(sa => sa.SupplierSubscriptionAttributes.Where(o => o.SubscriptionId == subscriptionid).Take(1))
+                                            .Include(s => s.Supplier)
+                                                .ThenInclude(su => su.SupplierAttributes)
+                                                    .ThenInclude(sa => sa.Attribute).FirstOrDefault();
+    
+    var configurations = new List<ConfigurationDTO>();
+    foreach (var item in suppliers.Supplier.SupplierAttributes)
+    {
+        foreach (var subAttribute in item.SupplierSubscriptionAttributes)
+        {
+            var configItem = new ConfigurationDTO()
+            {
+                SupplierSubscriptionAttributeID = subAttribute.SupplierSubscriptionAttributeId,
+                Key = "",
+                Name = item.Attribute.AttributeName,
+                Order = 0,
+                Description = "",
+                Value = subAttribute.Value,
+                Type = ConfigurationType.String,
+                DefaultValue = item.Attribute.DefaultValue
+            };
+            configurations.Add(configItem);
+        }
+    }
+
+    return Results.Ok(configurations);
+});
+
 app.ConfigureSwagger();
 
 app.Run();

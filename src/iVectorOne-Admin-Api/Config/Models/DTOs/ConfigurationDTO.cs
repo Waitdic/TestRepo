@@ -1,0 +1,44 @@
+﻿using System.Text.Json.Serialization;
+
+namespace iVectorOne_Admin_Api.Config.Models
+{
+    public class ConfigurationDTO
+    {
+        public int SupplierSubscriptionAttributeID { get; set; }
+        public string Key { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public int Order { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ConfigurationType Type { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? DefaultValue { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? Minimum { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? Maximum { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? MinLength { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? MaxLength { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? Required { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<DropDownOption>? DropDownOptions { get; set; }
+    }
+
+    public class DropDownOption
+    {
+        public string ID { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+    }
+}
