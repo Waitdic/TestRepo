@@ -18,7 +18,7 @@ type Props = {
   hasLabel?: boolean;
   prefix?: string | null;
   prefixPos?: 'left' | 'right';
-  placeholder?: string | undefined;
+  placeholder?: string;
   className?: string;
   defaultValue?: string;
   description?: string;

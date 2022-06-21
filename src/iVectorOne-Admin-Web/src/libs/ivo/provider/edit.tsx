@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 //
 import { RootState } from '@/store';
-import { useProviderInfo } from '@/libs/ivo/data-access';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
 import { ProviderConfiguration, ProviderFormFields } from '@/types';
@@ -98,7 +97,7 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       type: 'boolean',
     },
     {
-      defaultValue:'Sunspot_Sunhotels',
+      defaultValue: 'Sunspot_Sunhotels',
       description: '',
       key: 'string_field',
       name: 'Supplier Reference',
@@ -115,7 +114,8 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       type: 'boolean',
     },
     {
-      defaultValue:'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/SearchV2',
+      defaultValue:
+        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/SearchV2',
       description: '',
       key: 'uri_field',
       name: 'Search URL',
@@ -124,7 +124,8 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       type: 'uri',
     },
     {
-      defaultValue:'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/BookV2',
+      defaultValue:
+        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/BookV2',
       description: '',
       key: 'uri_field',
       name: 'Book URL',
@@ -133,7 +134,8 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       type: 'uri',
     },
     {
-      defaultValue:'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/CancelBooking',
+      defaultValue:
+        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/CancelBooking',
       description: '',
       key: 'uri_field',
       name: 'Cancel URL',
@@ -164,7 +166,8 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       type: 'dropdown',
     },
     {
-      defaultValue:'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/PreBookV2',
+      defaultValue:
+        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/PreBookV2',
       description: '',
       key: 'uri_field',
       name: 'Pre Book URL',

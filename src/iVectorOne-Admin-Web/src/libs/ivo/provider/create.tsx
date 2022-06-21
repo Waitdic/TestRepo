@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 //
 import { RootState } from '@/store';
-import { useProviderInfo } from '@/libs/ivo/data-access';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
 import { ProviderConfiguration, ProviderFormFields } from '@/types';

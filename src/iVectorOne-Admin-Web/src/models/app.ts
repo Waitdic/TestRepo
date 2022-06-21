@@ -26,7 +26,7 @@ export const app = createModel<RootModel>()({
         ? 'dark'
         : 'light',
     error: null,
-    signOut: () => {},
+    signOut: () => void 0,
   } as AppState,
   reducers: {
     updateLang(state, payload: string) {

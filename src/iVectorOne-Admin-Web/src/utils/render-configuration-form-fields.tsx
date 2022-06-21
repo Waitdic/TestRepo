@@ -14,7 +14,7 @@ export const renderConfigurationFormFields = (
   configurations: ProviderConfiguration[],
   register: UseFormRegister<ProviderFormFields>,
   errors: {
-    configurations?: FormErrorMessage[] | undefined;
+    configurations?: FormErrorMessage[];
   }
 ) => {
   const configurationsSortedByOrder = sortBy(configurations, ['order']);
@@ -57,7 +57,7 @@ export const renderConfigurationFormFields = (
                   message: 'This field is required.',
                 },
               })}
-              labelText={name as string}
+              labelText={name}
               description={description}
               required={required}
               defaultValue={defaultValue as boolean}
@@ -68,7 +68,7 @@ export const renderConfigurationFormFields = (
             <Select
               id={`configurations.${idx}.${key}`}
               {...register(`configurations.${idx}.${key}`)}
-              labelText={name as string}
+              labelText={name}
               description={description}
               maxItems={maxItems}
               minItems={minItems}

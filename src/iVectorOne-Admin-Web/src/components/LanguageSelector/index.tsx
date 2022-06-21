@@ -28,8 +28,8 @@ const LanguageSelector: FC = () => {
         leaveTo='transform opacity-0 scale-95'
       >
         <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white'>
-          {locales.map((locale, idx) => (
-            <Menu.Item key={locale[1] as string}>
+          {locales.map((locale) => (
+            <Menu.Item key={locale[1]}>
               {({ active }) => {
                 return (
                   <span
@@ -37,7 +37,7 @@ const LanguageSelector: FC = () => {
                       active ? 'bg-gray-100' : '',
                       'block flex items-center px-4 py-2 text-sm text-gray-700 cursor-pointer'
                     )}
-                    onClick={() => dispatch.app.updateLang(locale[1] as string)}
+                    onClick={() => dispatch.app.updateLang(locale[1])}
                   >
                     {locale[0]}
                   </span>
