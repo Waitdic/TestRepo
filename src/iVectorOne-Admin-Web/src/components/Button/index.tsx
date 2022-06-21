@@ -69,7 +69,7 @@ const Button: FC<Props> = ({
             }
           )}
         >
-          {icon && icon}
+          {icon}
           {text}
         </button>
       </Link>
@@ -93,7 +93,7 @@ const Button: FC<Props> = ({
             }
           )}
         >
-          {icon && icon}
+          {icon}
           {text}
         </button>
       </a>
@@ -118,7 +118,7 @@ const Button: FC<Props> = ({
       )}
       onClick={handleOnClick}
     >
-      {icon && icon}
+      {icon}
       {text}
     </button>
   );

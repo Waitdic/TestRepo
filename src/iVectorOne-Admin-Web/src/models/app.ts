@@ -93,11 +93,9 @@ export const app = createModel<RootModel>()({
         });
       } catch (error) {
         if (typeof error === 'string') {
-          error.toUpperCase();
-          dispatch.app.setError(error);
+          dispatch.app.setError(error.toUpperCase());
         } else if (error instanceof Error) {
-          error.message;
-          dispatch.app.setError(error);
+          dispatch.app.setError(error.message);
         }
       }
     },

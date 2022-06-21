@@ -98,7 +98,7 @@ const TextField: FC<Props> = forwardRef(
                 }
               )}
               ref={ref as LegacyRef<HTMLInputElement>}
-              placeholder={placeholder && placeholder}
+              placeholder={placeholder}
               autoComplete='turnedOff'
             />
             {isDirty && errorMsg && (
