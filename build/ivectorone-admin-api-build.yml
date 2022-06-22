@@ -102,7 +102,8 @@ steps:
     awsCredentials: 'AWS S3 Bucket for Code Deploy'
     regionName: 'eu-west-1'
     bucketName: 'ivectorone-codedeploy'
-    globExpressions: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    globExpressions: '(Build.BuildId).zip'
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
