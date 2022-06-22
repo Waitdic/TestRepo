@@ -1,19 +1,24 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-ivectoradminwebvite-dev-194153-authRole",
-      "UnauthRoleArn": "arn:aws:iam::368857551005:role/amplify-ivectoradminwebvite-dev-194153-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::368857551005:role/amplify-ivectoradminwebvite-dev-194153-authRole",
-      "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-ivectoradminwebvite-dev-194153-deployment",
-      "UnauthRoleName": "amplify-ivectoradminwebvite-dev-194153-unauthRole",
-      "StackName": "amplify-ivectoradminwebvite-dev-194153",
-      "StackId": "arn:aws:cloudformation:eu-central-1:368857551005:stack/amplify-ivectoradminwebvite-dev-194153/253b1260-7c7c-11ec-b46a-06f3cf816f7a",
-      "AmplifyAppId": "d18bzqltd630q"
+      "AuthRoleName": "amplify-ivectoroneadminweb-dev-85746-authRole",
+      "UnauthRoleArn": "arn:aws:iam::378055598595:role/amplify-ivectoroneadminweb-dev-85746-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::378055598595:role/amplify-ivectoroneadminweb-dev-85746-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-ivectoroneadminweb-dev-85746-deployment",
+      "UnauthRoleName": "amplify-ivectoroneadminweb-dev-85746-unauthRole",
+      "StackName": "amplify-ivectoroneadminweb-dev-85746",
+      "StackId": "arn:aws:cloudformation:eu-west-1:378055598595:stack/amplify-ivectoroneadminweb-dev-85746/017fbb00-f201-11ec-ab92-06973e51c143",
+      "AmplifyAppId": "dxsdr2ex1qkb9"
     },
     "categories": {
       "auth": {
-        "ivectoradminwebvite4e908efd": {}
+        "ivectoroneadminweb974a9d87": {
+          "userPoolId": "eu-west-1_NOvkAOqpg",
+          "userPoolName": "Intuitive",
+          "webClientId": "4fgk4rfcqon0dnbt76q01bou32",
+          "nativeClientId": "4fgk4rfcqon0dnbt76q01bou32"
+        }
       }
     }
   }

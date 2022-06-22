@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-ivectoradminwebvite-dev-194153-authRole",
+      "UnauthRoleArn": "arn:aws:iam::368857551005:role/amplify-ivectoradminwebvite-dev-194153-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::368857551005:role/amplify-ivectoradminwebvite-dev-194153-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-ivectoradminwebvite-dev-194153-deployment",
+      "UnauthRoleName": "amplify-ivectoradminwebvite-dev-194153-unauthRole",
+      "StackName": "amplify-ivectoradminwebvite-dev-194153",
+      "StackId": "arn:aws:cloudformation:eu-central-1:368857551005:stack/amplify-ivectoradminwebvite-dev-194153/253b1260-7c7c-11ec-b46a-06f3cf816f7a",
+      "AmplifyAppId": "d18bzqltd630q"
+    },
+    "categories": {
+      "auth": {
+        "ivectoradminwebvite4e908efd": {}
+      }
+    }
+  }
+}
