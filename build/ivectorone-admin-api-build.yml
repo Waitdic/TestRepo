@@ -72,7 +72,7 @@ steps:
   inputs:
     command: 'build'
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+    arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)'
 
 
 - task: DotNetCoreCLI@2
@@ -103,8 +103,6 @@ steps:
     regionName: 'eu-west-1'
     bucketName: 'ivectorone-codedeploy'
     globExpressions: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    logRequest: true
-    logResponse: true
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
@@ -120,8 +118,8 @@ steps:
 #   inputs:
 #     targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
 #     artifactName: '$(project)_$(appVersion)'
-# - task: PublishPipelineArtifact@1
-#   inputs:
-#     targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#     publishLocation: 'pipeline'
-#     artifactName: '$(project)_$(appVersion)'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    publishLocation: 'pipeline'
+    artifactName: '$(project)_$(appVersion)'
