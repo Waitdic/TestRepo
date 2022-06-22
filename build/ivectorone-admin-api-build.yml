@@ -103,6 +103,8 @@ steps:
     regionName: 'eu-west-1'
     bucketName: 'arn:aws:s3:::ivectorone-codedeploy'
     globExpressions: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    logRequest: true
+    logResponse: true
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
