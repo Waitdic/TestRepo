@@ -96,6 +96,7 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
 
+
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
 #   inputs:
@@ -110,3 +111,8 @@ steps:
 #   inputs:
 #     targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
 #     artifactName: '$(project)_$(appVersion)'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    publishLocation: 'pipeline'
+    artifactName: '$(project)_$(appVersion)'
