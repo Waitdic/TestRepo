@@ -88,6 +88,7 @@ steps:
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
@@ -96,6 +97,12 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
     replaceExistingArchive: true
 
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'AWS S3 Bucket for Code Deploy'
+    regionName: 'eu-west-1'
+    bucketName: 'arn:aws:s3:::ivectorone-codedeploy'
+    globExpressions: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
@@ -111,8 +118,8 @@ steps:
 #   inputs:
 #     targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
 #     artifactName: '$(project)_$(appVersion)'
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    publishLocation: 'pipeline'
-    artifactName: '$(project)_$(appVersion)'
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+#     publishLocation: 'pipeline'
+#     artifactName: '$(project)_$(appVersion)'
