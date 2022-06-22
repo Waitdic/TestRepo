@@ -103,7 +103,7 @@ steps:
     regionName: 'eu-west-1'
     bucketName: 'ivectorone-codedeploy'
     sourceFolder: '$(Build.ArtifactStagingDirectory)'
-    globExpressions: '(Build.BuildId).zip'
+    globExpressions: '*.zip'
 
 # - task: DotNetCoreCLI@2
 #   displayName: 'Publish Project'
