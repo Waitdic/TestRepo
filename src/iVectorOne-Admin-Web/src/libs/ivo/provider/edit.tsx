@@ -213,15 +213,13 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   });
 
   const onSubmit: SubmitHandler<ProviderFormFields> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const updatedProvider = await axios.patch(
         'http://localhost:3001/Provider.create',
         data
       );
 
-      console.log(updatedProvider);
+      console.error(updatedProvider);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'Provider edited successfully.',
@@ -229,13 +227,13 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,
@@ -262,13 +260,11 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
       }
 
       if (subscriptions.length > 0) {
-        setValue('subscription', subscriptions[0].key);
+        setValue('subscription', subscriptions[0].userName);
         setValue('provider', providers[0].name);
       }
     }
   }, [isLoading, providerInfoError, configurations, subscriptions, setValue]);
-
-  console.log(errors);
 
   return (
     <>
@@ -295,10 +291,12 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
                           required: 'This field is required.',
                         })}
                         labelText='Subscription'
-                        options={subscriptions.map(({ key, name }) => ({
-                          id: key,
-                          name,
-                        }))}
+                        options={subscriptions.map(
+                          ({ subscriptionId, userName }) => ({
+                            id: subscriptionId,
+                            name: userName,
+                          })
+                        )}
                         disabled
                       />
                     ) : (

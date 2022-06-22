@@ -47,15 +47,12 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
   } = useForm<Tenant>();
 
   const onSubmit: SubmitHandler<Tenant> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const updatedTenant = await axios.patch(
         'http://localhost:3001/tenant.edit/100',
         data
       );
 
-      console.log(updatedTenant);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'Tenant edited successfully.',
@@ -63,13 +60,13 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,
@@ -84,7 +81,7 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
 
     if (fetchedTenantList?.tenantList.length > 0) {
       const currentTenant = fetchedTenantList?.tenantList.filter(
-        (tenant) => tenant.tenantId === slug
+        (tenant) => tenant.tenantId === Number(slug)
       )[0];
 
       if (!currentTenant) {

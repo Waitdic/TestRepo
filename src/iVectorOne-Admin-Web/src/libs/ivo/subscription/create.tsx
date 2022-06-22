@@ -51,15 +51,12 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
       'CurrencyCode',
     ]);
 
-    console.log('Form is valid and submitted.', subscriptionData);
-
     try {
       const newSubscription = await axios.post(
         'http://localhost:3001/subsciption.create',
         subscriptionData
       );
 
-      console.log(newSubscription);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Subscription created successfully.',
@@ -67,13 +64,13 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,
@@ -115,7 +112,8 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
                     <div className='flex-1'>
                       <SectionTitle title='Subscription' />
                     </div>
-                    <div className='flex-1 md:w-3/4'>
+                    {/* TODO */}
+                    {/* <div className='flex-1 md:w-3/4'>
                       <TextField
                         id='name'
                         {...register('name', {
@@ -125,7 +123,7 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
                         isDirty={errors.name ? true : false}
                         errorMsg={errors.name?.message}
                       />
-                    </div>
+                    </div> */}
                     <div className='flex-1 md:w-1/2'>
                       <TextField
                         id='userName'
@@ -158,46 +156,46 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <TextField
-                        id='PropertyTPRequestLimit'
+                        id='propertyTprequestLimit'
                         type={InputTypes.NUMBER}
-                        {...register('PropertyTPRequestLimit', {
+                        {...register('propertyTprequestLimit', {
                           required: 'This field is required.',
                         })}
                         labelText='Property TP Request Limit'
-                        isDirty={errors.PropertyTPRequestLimit ? true : false}
-                        errorMsg={errors.PropertyTPRequestLimit?.message}
+                        isDirty={errors.propertyTprequestLimit ? true : false}
+                        errorMsg={errors.propertyTprequestLimit?.message}
                       />
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <TextField
-                        id='SearchTimeoutSeconds'
+                        id='searchTimeoutSeconds'
                         type={InputTypes.NUMBER}
-                        {...register('SearchTimeoutSeconds', {
+                        {...register('searchTimeoutSeconds', {
                           required: 'This field is required.',
                         })}
                         labelText='Search Timeout Seconds'
-                        isDirty={errors.SearchTimeoutSeconds ? true : false}
-                        errorMsg={errors.SearchTimeoutSeconds?.message}
+                        isDirty={errors.searchTimeoutSeconds ? true : false}
+                        errorMsg={errors.searchTimeoutSeconds?.message}
                       />
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <Select
-                        id='CurrencyCode'
-                        {...register('CurrencyCode', {
+                        id='currencyCode'
+                        {...register('currencyCode', {
                           required: 'This field is required.',
                         })}
                         labelText='Currency Code'
                         options={[
                           {
-                            id: 'gbp',
+                            id: 'GBP',
                             name: 'GBP',
                           },
                           {
-                            id: 'usd',
+                            id: 'USD',
                             name: 'USD',
                           },
                           {
-                            id: 'eur',
+                            id: 'EUR',
                             name: 'EUR',
                           },
                         ]}
@@ -205,11 +203,11 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <Toggle
-                        id='LogMainSearchError'
-                        {...register('LogMainSearchError')}
+                        id='logMainSearchError'
+                        {...register('logMainSearchError')}
                         labelText='Log Main Search Error'
-                        isDirty={errors.LogMainSearchError ? true : false}
-                        errorMsg={errors.LogMainSearchError?.message}
+                        isDirty={errors.logMainSearchError ? true : false}
+                        errorMsg={errors.logMainSearchError?.message}
                       />
                     </div>
                   </div>

@@ -204,15 +204,12 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
   });
 
   const onSubmit: SubmitHandler<ProviderFormFields> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const newProvider = await axios.post(
         'http://localhost:3001/provider.create',
         data
       );
 
-      console.log(newProvider);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Provider created successfully.',
@@ -220,13 +217,13 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,
@@ -253,7 +250,7 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
       }
 
       if (subscriptions.length > 0) {
-        setValue('subscription', subscriptions[0].key);
+        setValue('subscription', subscriptions[0].userName);
       }
     }
   }, [isLoading, providerInfoError, configurations, subscriptions, setValue]);
@@ -283,10 +280,12 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
                           required: 'This field is required.',
                         })}
                         labelText='Subscription'
-                        options={subscriptions.map(({ key, name }) => ({
-                          id: key,
-                          name,
-                        }))}
+                        options={subscriptions.map(
+                          ({ subscriptionId, userName }) => ({
+                            id: subscriptionId,
+                            name: userName,
+                          })
+                        )}
                       />
                     ) : (
                       <Spinner />

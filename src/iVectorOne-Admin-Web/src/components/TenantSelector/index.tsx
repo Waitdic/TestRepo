@@ -15,7 +15,7 @@ const TenantSelector: FC = () => {
 
   const dispatch = useDispatch();
 
-  const handleChangeTenant = (tenantId: string) => {
+  const handleChangeTenant = (tenantId: number) => {
     if (!user) return;
 
     const updatedTenants: Tenant[] = user?.tenants.map((tenant) => ({
@@ -69,7 +69,7 @@ const TenantSelector: FC = () => {
                       isActive ? 'bg-gray-100' : '',
                       'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                     )}
-                    onClick={() => handleChangeTenant(tenantId as string)}
+                    onClick={() => handleChangeTenant(tenantId)}
                   >
                     {name}
                   </span>

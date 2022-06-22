@@ -59,7 +59,6 @@ export const CustomerEdit: FC = () => {
       ...data,
       email: `${data.email}@example.com`,
     };
-    console.log('Form is valid and submitted.', resultData);
   };
 
   const setDefaultValues = useCallback(() => {

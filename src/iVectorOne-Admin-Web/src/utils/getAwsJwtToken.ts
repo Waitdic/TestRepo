@@ -8,7 +8,7 @@ export const getAwsJwtToken = async () => {
     const token = get(res, 'accessToken.jwtToken', null);
     jwtToken = token;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   return jwtToken;

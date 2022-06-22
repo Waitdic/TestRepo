@@ -30,7 +30,6 @@ export const ModuleList: FC<Props> = memo(({ fetchedModuleList }) => {
     { name: 'Name', align: 'left' },
     { name: 'Actions', align: 'right' },
   ];
-  console.log(filteredModuleList);
 
   const tableBodyList = filteredModuleList.map(({ moduleId, name }) => ({
     id: moduleId,

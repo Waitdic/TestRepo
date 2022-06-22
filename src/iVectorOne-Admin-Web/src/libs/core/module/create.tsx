@@ -34,15 +34,12 @@ export const ModuleCreate: FC<Props> = memo(({ error, isLoading }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   const onSubmit: SubmitHandler<Module> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const newModule = await axios.post(
         'http://localhost:3001/module.create',
         data
       );
 
-      console.log(newModule);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Module created successfully.',
@@ -50,13 +47,13 @@ export const ModuleCreate: FC<Props> = memo(({ error, isLoading }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,

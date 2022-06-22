@@ -42,15 +42,11 @@ export const ModuleEdit: FC<Props> = memo(({ error, isLoading }) => {
   });
 
   const onSubmit: SubmitHandler<Module> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const updatedTenant = await axios.patch(
         'http://localhost:3001/module.edit',
         data
       );
-
-      console.log(updatedTenant);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'Tenant edited successfully.',
@@ -58,13 +54,13 @@ export const ModuleEdit: FC<Props> = memo(({ error, isLoading }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,

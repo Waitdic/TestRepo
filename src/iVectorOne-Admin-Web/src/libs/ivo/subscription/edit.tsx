@@ -59,15 +59,12 @@ export const SubscriptionEdit: FC<Props> = memo(
     } = useForm<SubscriptionFields>();
 
     const onSubmit: SubmitHandler<SubscriptionFields> = async (data) => {
-      console.log('Form is valid and submitted.', data);
-
       try {
         const updatedSubscription = await axios.patch(
           `http://localhost:3001/subscription/edit/${slug}`,
           data
         );
 
-        console.log(updatedSubscription);
         setNotification({
           status: NotificationStatus.SUCCESS,
           message: 'Subscription edited successfully.',
@@ -75,13 +72,13 @@ export const SubscriptionEdit: FC<Props> = memo(
         setShowNotification(true);
       } catch (error) {
         if (typeof error === 'string') {
-          console.log(error.toUpperCase());
+          console.error(error.toUpperCase());
           setNotification({
             status: NotificationStatus.ERROR,
             message: error.toUpperCase(),
           });
         } else if (error instanceof Error) {
-          console.log(error.message);
+          console.error(error.message);
           setNotification({
             status: NotificationStatus.ERROR,
             message: error.message,
@@ -97,27 +94,29 @@ export const SubscriptionEdit: FC<Props> = memo(
       if (fetchedSubscriptionList?.subscriptions.length > 0) {
         const currentSubscription =
           fetchedSubscriptionList?.subscriptions.filter(
-            (sub) => sub.name === slug
+            (sub) => sub.subscriptionId === Number(slug)
           )[0];
 
         if (!currentSubscription) {
           navigate('/ivo/subscription/list');
         } else {
-          setValue('name', currentSubscription.name);
+          console.log(currentSubscription);
+
+          //! TODO setValue('name', currentSubscription.name);
           setValue('userName', currentSubscription.userName);
           setValue(
-            'PropertyTPRequestLimit',
-            currentSubscription.PropertyTPRequestLimit
+            'propertyTprequestLimit',
+            currentSubscription.propertyTprequestLimit
           );
           setValue(
-            'SearchTimeoutSeconds',
-            currentSubscription.SearchTimeoutSeconds
+            'searchTimeoutSeconds',
+            currentSubscription.searchTimeoutSeconds
           );
           setValue(
-            'LogMainSearchError',
-            currentSubscription.LogMainSearchError
+            'logMainSearchError',
+            currentSubscription.logMainSearchError
           );
-          setValue('CurrencyCode', currentSubscription.CurrencyCode);
+          setValue('currencyCode', currentSubscription.currencyCode);
         }
       }
     }, [fetchedSubscriptionList, navigate, setValue, slug]);
@@ -159,7 +158,8 @@ export const SubscriptionEdit: FC<Props> = memo(
                     fetchedSubscriptionList.subscriptions.length > 0 ? (
                       <>
                         <div className='flex-1 md:w-3/4'>
-                          <TextField
+                          {/* //! TODO */}
+                          {/* <TextField
                             id='name'
                             {...register('name', {
                               required: 'This field is required.',
@@ -167,7 +167,7 @@ export const SubscriptionEdit: FC<Props> = memo(
                             labelText='Name'
                             isDirty={errors.name ? true : false}
                             errorMsg={errors.name?.message}
-                          />
+                          /> */}
                         </div>
                         <div className='flex-1 md:w-1/2'>
                           <TextField
@@ -202,48 +202,48 @@ export const SubscriptionEdit: FC<Props> = memo(
                         </div>
                         <div className='flex-1 md:w-1/2'>
                           <TextField
-                            id='PropertyTPRequestLimit'
+                            id='propertyTprequestLimit'
                             type={InputTypes.NUMBER}
-                            {...register('PropertyTPRequestLimit', {
+                            {...register('propertyTprequestLimit', {
                               required: 'This field is required.',
                             })}
                             labelText='Property TP Request Limit'
                             isDirty={
-                              errors.PropertyTPRequestLimit ? true : false
+                              errors.propertyTprequestLimit ? true : false
                             }
-                            errorMsg={errors.PropertyTPRequestLimit?.message}
+                            errorMsg={errors.propertyTprequestLimit?.message}
                           />
                         </div>
                         <div className='flex-1 md:w-1/2'>
                           <TextField
-                            id='SearchTimeoutSeconds'
+                            id='searchTimeoutSeconds'
                             type={InputTypes.NUMBER}
-                            {...register('SearchTimeoutSeconds', {
+                            {...register('searchTimeoutSeconds', {
                               required: 'This field is required.',
                             })}
                             labelText='Search Timeout Seconds'
-                            isDirty={errors.SearchTimeoutSeconds ? true : false}
-                            errorMsg={errors.SearchTimeoutSeconds?.message}
+                            isDirty={errors.searchTimeoutSeconds ? true : false}
+                            errorMsg={errors.searchTimeoutSeconds?.message}
                           />
                         </div>
                         <div className='flex-1 md:w-1/2'>
                           <Select
-                            id='CurrencyCode'
-                            {...register('CurrencyCode', {
+                            id='currencyCode'
+                            {...register('currencyCode', {
                               required: 'This field is required.',
                             })}
                             labelText='Currency Code'
                             options={[
                               {
-                                id: 'gbp',
+                                id: 'GBP',
                                 name: 'GBP',
                               },
                               {
-                                id: 'usd',
+                                id: 'USD',
                                 name: 'USD',
                               },
                               {
-                                id: 'eur',
+                                id: 'EUR',
                                 name: 'EUR',
                               },
                             ]}
@@ -251,11 +251,11 @@ export const SubscriptionEdit: FC<Props> = memo(
                         </div>
                         <div className='flex-1 md:w-1/2'>
                           <Toggle
-                            id='LogMainSearchError'
-                            {...register('LogMainSearchError')}
+                            id='logMainSearchError'
+                            {...register('logMainSearchError')}
                             labelText='Log Main Search Error'
-                            isDirty={errors.LogMainSearchError ? true : false}
-                            errorMsg={errors.LogMainSearchError?.message}
+                            isDirty={errors.logMainSearchError ? true : false}
+                            errorMsg={errors.logMainSearchError?.message}
                           />
                         </div>
                       </>

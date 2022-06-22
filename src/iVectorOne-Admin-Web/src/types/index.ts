@@ -23,9 +23,13 @@ export type ProductFormData = {
 
 export type SelectOption = { id: number | string; name: string };
 export type Tenant = {
-  tenantId: number | string;
-  name: string;
+  contactEmail: string;
+  contactName: string;
+  contactTelephone: string;
   isActive: boolean;
+  name: string;
+  tenantId: number;
+  tenantKey: string;
 };
 export type User = {
   fullName: string;
@@ -47,15 +51,15 @@ export type Module = {
   consoles: Console[];
 };
 export type Subscription = {
-  key: string;
-  name: string;
+  subscriptionId: number;
   userName: string;
   password: string;
-  PropertyTPRequestLimit: number;
-  SearchTimeoutSeconds: number;
-  LogMainSearchError: boolean;
-  CurrencyCode: string;
-  isActive: boolean;
+  dummyResponses: boolean;
+  propertyTprequestLimit: number;
+  searchTimeoutSeconds: number;
+  logMainSearchError: boolean;
+  currencyCode: string;
+  environment: string;
 };
 export type Provider = {
   name: string;

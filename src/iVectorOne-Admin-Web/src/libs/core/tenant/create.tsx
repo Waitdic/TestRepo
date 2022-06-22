@@ -27,15 +27,11 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
   const [showNotification, setShowNotification] = useState(false);
 
   const onSubmit: SubmitHandler<Tenant> = async (data) => {
-    console.log('Form is valid and submitted.', data);
-
     try {
       const newTenant = await axios.post(
         'http://localhost:3001/tenant.create',
         data
       );
-
-      console.log(newTenant);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Tenant created successfully.',
@@ -43,13 +39,13 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
       setShowNotification(true);
     } catch (error) {
       if (typeof error === 'string') {
-        console.log(error.toUpperCase());
+        console.error(error.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.toUpperCase(),
         });
       } else if (error instanceof Error) {
-        console.log(error.message);
+        console.error(error.message);
         setNotification({
           status: NotificationStatus.ERROR,
           message: error.message,

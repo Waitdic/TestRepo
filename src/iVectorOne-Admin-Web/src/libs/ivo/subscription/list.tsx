@@ -11,6 +11,13 @@ import {
   SearchField,
 } from '@/components';
 
+interface SubscriptionListItem {
+  name: string;
+  id: number;
+  isActive?: boolean;
+  actions?: { name: string; href: string }[];
+}
+
 type Props = {
   fetchedSubscriptionList: {
     subscriptions: Subscription[];
@@ -21,21 +28,27 @@ type Props = {
 
 export const SubscriptionList: FC<Props> = memo(
   ({ fetchedSubscriptionList }) => {
+    const mappedSubscriptionList = fetchedSubscriptionList.subscriptions?.map(
+      ({ userName, subscriptionId }) => ({
+        name: userName,
+        id: subscriptionId,
+      })
+    );
     const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
-      Subscription[]
-    >(fetchedSubscriptionList.subscriptions);
+      SubscriptionListItem[]
+    >(mappedSubscriptionList);
     const [showError, setShowError] = useState<boolean>(false);
 
     const tableHeaderList = [
       { name: 'Name', align: 'left' },
       { name: 'Actions', align: 'right' },
     ];
-    const tableBodyList = filteredSubscriptionList.map(
-      ({ key, name, isActive }) => ({
-        id: key,
+    const tableBodyList: any[] = filteredSubscriptionList.map(
+      ({ id, name }) => ({
+        id,
         name,
-        isActive,
-        actions: [{ name: 'Edit', href: `/ivo/subscription/edit/${name}` }],
+        isActive: false, //! TODO: this property is not available in the response
+        actions: [{ name: 'Edit', href: `/ivo/subscription/edit/${id}` }],
       })
     );
     const tableEmptyState = {
@@ -51,7 +64,7 @@ export const SubscriptionList: FC<Props> = memo(
       } else {
         setShowError(false);
       }
-      setFilteredSubscriptionList(fetchedSubscriptionList.subscriptions);
+      setFilteredSubscriptionList(mappedSubscriptionList);
     }, [fetchedSubscriptionList]);
 
     return (
@@ -66,7 +79,7 @@ export const SubscriptionList: FC<Props> = memo(
                 <div className='flex align-start justify-end mb-6'>
                   <div className='flex'>
                     <SearchField
-                      list={fetchedSubscriptionList.subscriptions}
+                      list={mappedSubscriptionList}
                       setList={setFilteredSubscriptionList}
                     />
                     <Button

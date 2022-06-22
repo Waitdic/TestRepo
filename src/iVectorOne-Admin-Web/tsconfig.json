@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/components": ["src/components/index.ts"],
+      "@/axios": ["src/axios/index.ts"],
       "@/layouts/*": ["src/layouts/*"],
       "@/libs/*": ["src/libs/*"],
       "@/contexts": ["src/contexts/index.ts"],
