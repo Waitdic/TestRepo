@@ -4,23 +4,21 @@ trigger:
     - main
   paths:
     include:
-    - src/iVectorOne-Search-Api
-    - tests/iVectorOne-Search-Api-BuildTests
+    - src/iVectorOne-Admin-Api
+    - tests/iVectorOne-Admin-Api-BuildTests
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
 - name : project
-  value: 'iVectorOne-Search-Api'
+  value: 'iVectorOne-Admin-Api'
 - name : testProject
-  value: 'iVectorOne-Search-Api-BuildTests'
+  value: 'iVectorOne-Admin-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
   value: 'Release'
-# - name:  majorVersion
-#   value: '2'
 - name:  appVersion
   value : ''
 
@@ -48,10 +46,10 @@ steps:
     LogLevel: 'verbose'
     FailOnWarning: false
     DisableTelemetry: false
-    Company: 'Intuitive Systems'
-    Product: 'iVectorOne Search Api'
-    Description: 'iVectorOne Search Api'
-    Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
+    Company: 'Intuitive'
+    Product: 'iVectorOne Admin Api'
+    Description: 'iVectorOne Admin Api'
+    Copyright: 'Copyright © $(date:YYYY) Intuitive'
     Culture: 'en-GB'
     VersionNumber: '$(appVersion)'
     FileVersionNumber: '$(appVersion)'
@@ -66,15 +64,15 @@ steps:
     SonarCloud: 'SonarCloud'
     organization: 'intuitive-systems'
     scannerMode: 'MSBuild'
-    projectKey: 'Intuitive_iVectorOne_Search_Api'
-    projectName: 'iVectorOne Search Api'
+    projectKey: 'Intuitive_iVectorOne_Admin_Api'
+    projectName: 'iVectorOne Admin Api'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Project'
   inputs:
     command: 'build'
     projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)'
+    arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)'
 
 
 - task: DotNetCoreCLI@2
@@ -91,17 +89,38 @@ steps:
   inputs:
     pollingTimeoutSec: '300'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Project'
+- task: ArchiveFiles@2
   inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: 'src/$(project)/**/*.csproj'
-    arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-    zipAfterPublish: True
-    modifyOutputPath: false
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
 
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'AWS S3 Bucket for Code Deploy'
+    regionName: 'eu-west-1'
+    bucketName: 'ivectorone-codedeploy'
+    sourceFolder: '$(Build.ArtifactStagingDirectory)'
+    globExpressions: '*.zip'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'Publish Project'
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: false
+#     projects: 'src/$(project)/**/*.csproj'
+#     arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+#     zipAfterPublish: True
+#     modifyOutputPath: false
+
+# - task: PublishPipelineArtifact@1
+#   inputs:
+#     targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+#     artifactName: '$(project)_$(appVersion)'
 - task: PublishPipelineArtifact@1
   inputs:
-    targetPath: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
+    targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    publishLocation: 'pipeline'
     artifactName: '$(project)_$(appVersion)'
