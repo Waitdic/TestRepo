@@ -109,7 +109,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          $appSpecContent = "version 0.0"
+          $appSpecContent = "{version}: 0.0"
 
           New-Item -Path $(Build.artifactStagingDirectory) -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory)/code-deploy -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
