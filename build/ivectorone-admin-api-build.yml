@@ -184,6 +184,17 @@ stages:
 #     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
 #     #     globExpressions: '*.zip'
 
+    # - task: CodeDeployDeployApplication@1
+    #   displayName: 'Create code deploy zip'
+    #   inputs:
+    #     awsCredentials: 'AWS S3 Bucket for Code Deploy'
+    #     regionName: 'eu-west-1'
+    #     applicationName: 
+    #     deploymentGroupName: 
+    #     deploymentRevisionSource: 'workspace'
+    #     revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+    #     bucketName: 'ivectorone-codedeploy'
+
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
