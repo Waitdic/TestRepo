@@ -92,7 +92,7 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
 
-- stage: deploy-test
+- stage: deploy_test
   dependsOn:
     - build
   jobs:
