@@ -103,19 +103,29 @@ stages:
   - job:
     displayName: 'Deploy to test'
     steps:
+
     - task: PowerShell@2
-      displayName: 'Set Version Number'
+      displayName: 'Create appspec.yml'
       inputs:
         targetType: 'inline'
         script: |
-          $appSpecContent = @"
-          version: 0.0
-          os: windows
-          files:
-          - source: \index.html
-          destination: C:\inetpub\wwwroot"
-          
+          $appSpecContent = @ "version: 0.0"
+
           Add-Content $(Build.artifactStagingDirectory)/code-deploy/appspec.yml $contentToAdd
+
+    # - task: PowerShell@2
+    #   displayName: 'Set Version Number'
+    #   inputs:
+    #     targetType: 'inline'
+    #     script: |
+    #       $appSpecContent = @"
+    #       version: 0.0
+    #       os: windows
+    #       files:
+    #       - source: \index.html
+    #       destination: C:\inetpub\wwwroot"
+          
+    #       Add-Content $(Build.artifactStagingDirectory)/code-deploy/appspec.yml $contentToAdd
 
 #     - task: ArchiveFiles@2
 #       inputs:
