@@ -95,6 +95,13 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+    
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish pipeline artifact'
+      inputs:
+        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
+        artifact: 'drop'
+        publishLocation: 'pipeline'
 
 - stage: deploy_test
   dependsOn:
@@ -103,6 +110,12 @@ stages:
   - job:
     displayName: 'Deploy to test'
     steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'drop'
+        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
 
     - task: PowerShell@2
       displayName: 'Create appspec.yml'
@@ -115,8 +128,15 @@ stages:
           $appSpecContent += "  - {0}: \source `n" -f "source"
           $appSpecContent += "  - {0}: c`:\www\source `n" -f "destination"
 
-          New-Item -Path $(Build.artifactStagingDirectory) -Name "code-deploy" -ItemType "directory"
-          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
+          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
+          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy/scripts' -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(Build.Repository.LocalPath)/build/scripts
+        Contents: '**'
+        TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
 
     - task: ArchiveFiles@2
       inputs:
