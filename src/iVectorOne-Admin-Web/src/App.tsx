@@ -38,7 +38,7 @@ const App: FC<Props> = ({ app }) => {
       }}
     >
       {() =>
-        !!user?.username ? (
+        !!user ? (
           <AppProvider app={app} user={user} signOut={signOut} />
         ) : (
           <NotFoundUser />

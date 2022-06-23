@@ -38,7 +38,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
   const dispatch = useDispatch();
 
   const { theme, lang } = app;
-  const { username } = user;
+  const username = user?.username || null;
 
   //* Core Data Fetch
   const {

@@ -84,7 +84,8 @@ export const app = createModel<RootModel>()({
     },
   },
   effects: (dispatch) => ({
-    async getUserByAwsJwtToken(payload: { user: string }) {
+    async getUserByAwsJwtToken(payload: { user: string | null }) {
+      if (payload.user == null) return;
       try {
         const jwtToken = await getAwsJwtToken();
         dispatch.app.updateAwsUser({
