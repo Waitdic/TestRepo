@@ -144,7 +144,7 @@ stages:
         targetType: 'inline'
         script: |
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[source]', 'D`:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
-          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[destination]', D`:\Websites\V2\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[destination]', 'D`:\Websites\V2\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[apppool]', 'Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
     
     - task: ArchiveFiles@2
