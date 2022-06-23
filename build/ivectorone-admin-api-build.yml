@@ -126,11 +126,12 @@ stages:
           $appSpecContent += "{0}: windows `n" -f "os"
           $appSpecContent += "{0} `n" -f "files"
           $appSpecContent += "  - {0}: \source `n" -f "source"
-          $appSpecContent += "  - {0}: c`:\www\source `n" -f "destination"
+          $appSpecContent += "  - {0}: D`:\builds\$(project) `n" -f "destination"
 
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
-          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy/scripts" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          (Get-Content C:\New\test.txt) -Replace 'Linux', 'PowerShell' | Set-Content C:\New\test.txt
           
     - task: CopyFiles@2
       inputs:
@@ -138,7 +139,17 @@ stages:
         Contents: '**'
         TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
 
+    - task: PowerShell@2
+      displayName: 'Update deploy script paths'
+      inputs:
+        targetType: 'inline'
+        script: |
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[source]', 'D`:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[destination]', D`:\Websites\V2\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '[apppool]', 'Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+    
     - task: ArchiveFiles@2
+      displayName: 'Create code deploy zip'
       inputs:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
         includeRootFolder: false
