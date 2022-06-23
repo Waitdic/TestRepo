@@ -101,8 +101,8 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          $VersionString = $(appVersion).replace(".", "-")
-          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $(appVersion).replace(".", "-")
+          $VersionString = $(appVersion)
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $VersionString.replace(".", "-")
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish pipeline artifact'
