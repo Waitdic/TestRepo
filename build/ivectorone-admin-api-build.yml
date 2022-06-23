@@ -111,7 +111,8 @@ stages:
         script: |
           $appSpecContent = "version 0.0"
 
-          Add-Content $(Build.artifactStagingDirectory)/code-deploy/appspec.yml $contentToAdd
+          $file = $(Build.artifactStagingDirectory)/code-deploy/appspec.yml
+          New-Item $file -ItemType File -Value appSpecContent
 
     # - task: PowerShell@2
     #   displayName: 'Set Version Number'
