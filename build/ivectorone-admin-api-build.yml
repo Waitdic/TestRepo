@@ -129,7 +129,14 @@ stages:
           $appSpecContent += "  - {0}: c`:\www\source `n" -f "destination"
 
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
-          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
+          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy/scripts' -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: $(Build.Repository.LocalPath)/build/scripts
+        Contents: '**'
+        TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
 
     - task: ArchiveFiles@2
       inputs:
