@@ -131,7 +131,6 @@ stages:
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
           New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
-          (Get-Content C:\New\test.txt) -Replace 'Linux', 'PowerShell' | Set-Content C:\New\test.txt
           
     - task: CopyFiles@2
       inputs:
