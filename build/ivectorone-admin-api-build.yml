@@ -24,18 +24,24 @@ variables:
 - name:  appVersion
   value : ''
 
-steps:
+stages:
+- stage: build
 
-- task: PowerShell@2
-  displayName: 'Set Version Number'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
-      $minorVersion =  (Get-Date).ToString("dd")
-      $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-      $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
-      Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+  jobs:
+  - job:
+    displayName: 'Build the application'
+    steps:
+
+    - task: PowerShell@2
+      displayName: 'Set Version Number'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
+          $minorVersion =  (Get-Date).ToString("dd")
+          $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+          $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
+          Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
 #     - task: Assembly-Info-NetCore@3
 #       displayName: 'Set Assembly Metadata'
