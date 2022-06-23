@@ -67,13 +67,13 @@ stages:
         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
         AddBuildTag: 'v$(appVersion)'
 
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'intuitive-systems'
-        scannerMode: 'MSBuild'
-        projectKey: 'Intuitive_iVectorOne_Admin_Api'
-        projectName: 'iVectorOne Admin Api'
+    # - task: SonarCloudPrepare@1
+    #   inputs:
+    #     SonarCloud: 'SonarCloud'
+    #     organization: 'intuitive-systems'
+    #     scannerMode: 'MSBuild'
+    #     projectKey: 'Intuitive_iVectorOne_Admin_Api'
+    #     projectName: 'iVectorOne Admin Api'
 
     - task: DotNetCoreCLI@2
       displayName: 'Build Project'
@@ -82,19 +82,19 @@ stages:
         projects: 'src/$(project)/**/*.csproj'
         arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Test Project'
-      inputs:
-        command: 'test'
-        projects: 'tests/$(testProject)**/*.csproj'
-        arguments: '-c $(buildConfiguration)'
-        testRunTitle: 'Unit Tests'
+    # - task: DotNetCoreCLI@2
+    #   displayName: 'Test Project'
+    #   inputs:
+    #     command: 'test'
+    #     projects: 'tests/$(testProject)**/*.csproj'
+    #     arguments: '-c $(buildConfiguration)'
+    #     testRunTitle: 'Unit Tests'
 
-    - task: SonarCloudAnalyze@1
+    # - task: SonarCloudAnalyze@1
 
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+    # - task: SonarCloudPublish@1
+    #   inputs:
+    #     pollingTimeoutSec: '300'
     
     - task: PublishPipelineArtifact@1
       displayName: 'Publish pipeline artifact'
@@ -130,7 +130,7 @@ stages:
 
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
-          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy/scripts' -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy/scripts" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
           
     - task: CopyFiles@2
       inputs:
