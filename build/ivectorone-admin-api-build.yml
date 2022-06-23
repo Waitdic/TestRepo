@@ -28,73 +28,73 @@ stages:
 # - stage: build
 
 #   jobs:
-#   - job:
-#     displayName: 'Build the application'
-#     steps:
+  # - job:
+  #   displayName: 'Build the application'
+  #   steps:
 
-#     - task: PowerShell@2
-#       displayName: 'Set Version Number'
-#       inputs:
-#         targetType: 'inline'
-#         script: |
-#           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
-#           $minorVersion =  (Get-Date).ToString("dd")
-#           $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
-#           $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
-#           Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+  #   - task: PowerShell@2
+  #     displayName: 'Set Version Number'
+  #     inputs:
+  #       targetType: 'inline'
+  #       script: |
+  #         $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
+  #         $minorVersion =  (Get-Date).ToString("dd")
+  #         $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
+  #         $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
+  #         Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
-#     - task: Assembly-Info-NetCore@3
-#       displayName: 'Set Assembly Metadata'
-#       inputs:
-#         Path: '$(Build.SourcesDirectory)/src/$(project)'
-#         FileNames: '**/*.csproj'
-#         InsertAttributes: true
-#         FileEncoding: 'auto'
-#         WriteBOM: false
-#         LogLevel: 'verbose'
-#         FailOnWarning: false
-#         DisableTelemetry: false
-#         Company: 'Intuitive'
-#         Product: 'iVectorOne Admin Api'
-#         Description: 'iVectorOne Admin Api'
-#         Copyright: 'Copyright © $(date:YYYY) Intuitive'
-#         Culture: 'en-GB'
-#         VersionNumber: '$(appVersion)'
-#         FileVersionNumber: '$(appVersion)'
-#         InformationalVersion: '$(appVersion)'
-#         PackageVersion: '$(appVersion)'
-#         IgnoreNetFrameworkProjects: false
-#         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
-#         AddBuildTag: 'v$(appVersion)'
+  #   - task: Assembly-Info-NetCore@3
+  #     displayName: 'Set Assembly Metadata'
+  #     inputs:
+  #       Path: '$(Build.SourcesDirectory)/src/$(project)'
+  #       FileNames: '**/*.csproj'
+  #       InsertAttributes: true
+  #       FileEncoding: 'auto'
+  #       WriteBOM: false
+  #       LogLevel: 'verbose'
+  #       FailOnWarning: false
+  #       DisableTelemetry: false
+  #       Company: 'Intuitive'
+  #       Product: 'iVectorOne Admin Api'
+  #       Description: 'iVectorOne Admin Api'
+  #       Copyright: 'Copyright © $(date:YYYY) Intuitive'
+  #       Culture: 'en-GB'
+  #       VersionNumber: '$(appVersion)'
+  #       FileVersionNumber: '$(appVersion)'
+  #       InformationalVersion: '$(appVersion)'
+  #       PackageVersion: '$(appVersion)'
+  #       IgnoreNetFrameworkProjects: false
+  #       UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
+  #       AddBuildTag: 'v$(appVersion)'
 
-#     - task: SonarCloudPrepare@1
-#       inputs:
-#         SonarCloud: 'SonarCloud'
-#         organization: 'intuitive-systems'
-#         scannerMode: 'MSBuild'
-#         projectKey: 'Intuitive_iVectorOne_Admin_Api'
-#         projectName: 'iVectorOne Admin Api'
+  #   - task: SonarCloudPrepare@1
+  #     inputs:
+  #       SonarCloud: 'SonarCloud'
+  #       organization: 'intuitive-systems'
+  #       scannerMode: 'MSBuild'
+  #       projectKey: 'Intuitive_iVectorOne_Admin_Api'
+  #       projectName: 'iVectorOne Admin Api'
 
-#     - task: DotNetCoreCLI@2
-#       displayName: 'Build Project'
-#       inputs:
-#         command: 'build'
-#         projects: 'src/$(project)/**/*.csproj'
-#         arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source'
+  #   - task: DotNetCoreCLI@2
+  #     displayName: 'Build Project'
+  #     inputs:
+  #       command: 'build'
+  #       projects: 'src/$(project)/**/*.csproj'
+  #       arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source'
 
-#     - task: DotNetCoreCLI@2
-#       displayName: 'Test Project'
-#       inputs:
-#         command: 'test'
-#         projects: 'tests/$(testProject)**/*.csproj'
-#         arguments: '-c $(buildConfiguration)'
-#         testRunTitle: 'Unit Tests'
+  #   - task: DotNetCoreCLI@2
+  #     displayName: 'Test Project'
+  #     inputs:
+  #       command: 'test'
+  #       projects: 'tests/$(testProject)**/*.csproj'
+  #       arguments: '-c $(buildConfiguration)'
+  #       testRunTitle: 'Unit Tests'
 
-#     - task: SonarCloudAnalyze@1
+  #   - task: SonarCloudAnalyze@1
 
-#     - task: SonarCloudPublish@1
-#       inputs:
-#         pollingTimeoutSec: '300'
+  #   - task: SonarCloudPublish@1
+  #     inputs:
+  #       pollingTimeoutSec: '300'
 
 - stage: deploy_test
   # dependsOn:
@@ -110,23 +110,10 @@ stages:
         targetType: 'inline'
         script: |
           $appSpecContent = "{0}: 0.0" -f "version"
-
+          $appSpecContent += "{0}: 0.0" -f "version"
+          
           New-Item -Path $(Build.artifactStagingDirectory) -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory)/code-deploy -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
-
-    # - task: PowerShell@2
-    #   displayName: 'Set Version Number'
-    #   inputs:
-    #     targetType: 'inline'
-    #     script: |
-    #       $appSpecContent = @"
-    #       version: 0.0
-    #       os: windows
-    #       files:
-    #       - source: \index.html
-    #       destination: C:\inetpub\wwwroot"
-          
-    #       Add-Content $(Build.artifactStagingDirectory)/code-deploy/appspec.yml $contentToAdd
 
     - task: ArchiveFiles@2
       inputs:
