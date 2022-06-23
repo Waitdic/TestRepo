@@ -9,29 +9,19 @@ type Props = {
   setError: Dispatch<SetStateAction<string | null>>;
 };
 
-export const IvoView: FC<Props> = memo(({ error, setError }) => {
-  const setShow = () => {
-    setError(null);
-  };
-
+export const IvoView: FC<Props> = memo(({ error }) => {
   return (
-    <>
-      <MainLayout>
-        <div className='py-4'>
-          <div className='flex flex-col'>{/* Module Content */}</div>
-        </div>
-      </MainLayout>
-
-      {!!error && (
-        <Notification
-          title='Uncompleted user'
-          description={error}
-          show={!!error}
-          setShow={setShow}
-          status={NotificationStatus.ERROR}
-          autoHide={false}
-        />
-      )}
-    </>
+    <MainLayout>
+      <div className='min-h-screen flex flex-col'>
+        {error && (
+          <div className='min-h-[50vh] h-full flex flex-col justify-center items-center'>
+            <h1 className='text-4xl font-semibold text-red-500 mb-2'>
+              Uncompleted user
+            </h1>
+            <p className='text-lg text-center'>{error}</p>
+          </div>
+        )}
+      </div>
+    </MainLayout>
   );
 });
