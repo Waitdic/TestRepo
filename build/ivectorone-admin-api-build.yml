@@ -95,7 +95,14 @@ stages:
     # - task: SonarCloudPublish@1
     #   inputs:
     #     pollingTimeoutSec: '300'
-    
+
+    - task: PowerShell@2
+      displayName: 'Save version info for later stages'
+      inputs:
+        targetType: 'inline'
+        script: |
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $appVersion
+
     - task: PublishPipelineArtifact@1
       displayName: 'Publish pipeline artifact'
       inputs:
@@ -135,7 +142,7 @@ stages:
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
           New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
-          
+
     - task: CopyFiles@2
       inputs:
         SourceFolder: $(Build.Repository.LocalPath)/build/scripts
@@ -150,7 +157,15 @@ stages:
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{source}', 'D:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', 'D:\Websites\V2\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{apppool}', 'Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
-  
+
+    - task: PowerShell@2
+      displayName: 'Get version from build stage'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $VersionString = Get-Content $(Build.artifactStagingDirectory)/code-deploy/version.txt
+          Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+
     - task: ArchiveFiles@2
       displayName: 'Create code deploy zip'
       inputs:
