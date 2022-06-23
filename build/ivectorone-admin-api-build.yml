@@ -157,7 +157,7 @@ stages:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         replaceExistingArchive: true
 
 #     # - task: S3Upload@1
@@ -170,6 +170,6 @@ stages:
 
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         publishLocation: 'pipeline'
         artifactName: '$(project)_$(appVersion)'
