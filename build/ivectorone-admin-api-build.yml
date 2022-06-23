@@ -128,13 +128,13 @@ stages:
           
     #       Add-Content $(Build.artifactStagingDirectory)/code-deploy/appspec.yml $contentToAdd
 
-#     - task: ArchiveFiles@2
-#       inputs:
-#         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
-#         includeRootFolder: false
-#         archiveType: 'zip'
-#         archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#         replaceExistingArchive: true
+    - task: ArchiveFiles@2
+      inputs:
+        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        replaceExistingArchive: true
 
 #     # - task: S3Upload@1
 #     #   inputs:
@@ -144,8 +144,8 @@ stages:
 #     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
 #     #     globExpressions: '*.zip'
 
-#     - task: PublishPipelineArtifact@1
-#       inputs:
-#         targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#         publishLocation: 'pipeline'
-#         artifactName: '$(project)_$(appVersion)'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        publishLocation: 'pipeline'
+        artifactName: '$(project)_$(appVersion)'
