@@ -30,6 +30,10 @@ const TenantSelector: FC = () => {
     navigate('/');
   };
 
+  if (user?.tenants?.length === 0) {
+    return null;
+  }
+
   return (
     <Menu as='div' className='relative'>
       <div>

@@ -16,13 +16,14 @@ type Props = {
 
 const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
   const { pathname } = useLocation();
+  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
   const modules = useSelector((state: RootState) => state.app.modules);
-  //? const user = useSelector((state: RootState) => state.app.user);
 
   const activeModule = modules.filter((module) => module.isActive)[0];
   const currentConsoles = activeModule?.consoles;
 
   const renderConsoles = () => {
+    if (!tenants?.length) return null;
     return currentConsoles?.map(({ name, uri }) => (
       <Link
         key={name}

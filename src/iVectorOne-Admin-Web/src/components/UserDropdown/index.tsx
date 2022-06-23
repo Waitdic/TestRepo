@@ -64,7 +64,7 @@ const UserDropdown: FC<Props> = ({ position = 'right' }) => {
           <Menu.Item>
             <span
               className='block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer'
-              onClick={signOut}
+              onClick={() => signOut()}
             >
               Sign Out
             </span>

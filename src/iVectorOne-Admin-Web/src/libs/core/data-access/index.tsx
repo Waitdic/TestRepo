@@ -23,10 +23,16 @@ export function useCoreFetching() {
         fullName: userData?.fullName,
         tenants: userData?.tenants,
       };
-
       setUser(user);
-      setTenantList(user?.tenants);
-      setError(null);
+
+      if (user?.tenants.length > 0) {
+        setTenantList(user?.tenants);
+        setError(null);
+      } else {
+        setTenantList([]);
+        setError('Contact support to complete the setup of your account');
+      }
+
       setIsLoading(false);
     } catch (error) {
       if (typeof error === 'string') {
@@ -46,5 +52,5 @@ export function useCoreFetching() {
     }
   }, [fetch, username]);
 
-  return { user, moduleList, tenantList, isLoading, error };
+  return { user, moduleList, tenantList, isLoading, error, setError };
 }

@@ -5,7 +5,7 @@ const Footer = () => {
 
   return (
     <Flex justifyContent='center' padding={tokens.space.medium}>
-      <Text>&copy; All Rights Reserved</Text>
+      <Text>&copy; Intuitive</Text>
     </Flex>
   );
 };
