@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Config.Models
 {
     public partial class SupplierSubscription
     {
@@ -8,9 +6,7 @@ namespace iVectorOne_Admin_Api.Config.Models
         public short SupplierId { get; set; }
         public int SubscriptionId { get; set; }
 
-        [JsonIgnore]
         public virtual Subscription Subscription { get; set; } = null!;
-
         public virtual Supplier Supplier { get; set; } = null!;
     }
 }

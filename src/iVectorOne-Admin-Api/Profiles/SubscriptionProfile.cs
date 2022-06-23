@@ -7,6 +7,7 @@ namespace iVectorOne_Admin_Api.Profiles
     {
         public SubscriptionProfile()
         {
+            CreateMap<Tenant, TenantDTO>();
             CreateMap<Subscription, SubscriptionDTO>()
                 .ForMember(dest => dest.UserName, act=> act.MapFrom(src=> src.Login));
             CreateMap<SupplierSubscription, SupplierDTO>()

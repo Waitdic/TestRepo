@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Config.Models
 {
     public partial class Attribute
     {
@@ -13,7 +11,6 @@ namespace iVectorOne_Admin_Api.Config.Models
         public string AttributeName { get; set; } = null!;
         public string? DefaultValue { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<SupplierAttribute> SupplierAttributes { get; set; }
     }
 }
