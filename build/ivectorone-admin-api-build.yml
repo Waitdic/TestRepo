@@ -8,7 +8,7 @@ trigger:
     - tests/iVectorOne-Admin-Api-BuildTests
 
 pool:
-  vmImage: windows-latest
+  vmImage: 'windows-latest'
 
 variables:
 - name : project
@@ -19,21 +19,18 @@ variables:
   value: 'Any CPU'
 - name: buildConfiguration
   value: 'Release'
+# - name:  majorVersion
+#   value: '2'
 - name:  appVersion
   value : ''
 
-# stages:
-# - stage: build
-#   jobs:
-#   - job:
-#     displayName: 'Build the application'
-
 steps:
+
 - task: PowerShell@2
   displayName: 'Set Version Number'
   inputs:
     targetType: 'inline'
-    script:
+    script: |
       $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
       $minorVersion =  (Get-Date).ToString("dd")
       $build = - [Math]::Truncate(((Get-Date -Hour 0 -Minute 0 -Second 0) - (Get-Date)).TotalMinutes)
