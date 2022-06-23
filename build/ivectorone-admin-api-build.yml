@@ -97,8 +97,8 @@ stages:
 #         pollingTimeoutSec: '300'
 
 - stage: deploy_test
-  dependsOn:
-  - build
+  # dependsOn:
+  # - build
   jobs:
   - job:
     displayName: 'Deploy to test'
