@@ -47,7 +47,6 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
     moduleList,
     isLoading: coreIsLoading,
     error: coreError,
-    setError: setCoreError,
   } = useCoreFetching();
 
   //* IVO Data Fetch
@@ -164,10 +163,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             element={<ModuleEdit error={null} isLoading={false} />}
           />
           {/* IVO Landing */}
-          <Route
-            path='/'
-            element={<IvoView error={coreError} setError={setCoreError} />}
-          />
+          <Route path='/' element={<IvoView error={coreError} />} />
           {/* Subscription Routes */}
           <Route
             path='/ivo/subscription/create'

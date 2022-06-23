@@ -52,5 +52,5 @@ export function useCoreFetching() {
     }
   }, [fetch, username]);
 
-  return { user, moduleList, tenantList, isLoading, error, setError };
+  return { user, moduleList, tenantList, isLoading, error };
 }
