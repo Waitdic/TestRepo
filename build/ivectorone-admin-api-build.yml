@@ -95,6 +95,13 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
+    
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish pipeline artifact'
+      inputs:
+        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
+        artifact: 'drop'
+        publishLocation: 'pipeline'
 
 - stage: deploy_test
   dependsOn:
@@ -103,6 +110,12 @@ stages:
   - job:
     displayName: 'Deploy to test'
     steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'drop'
+        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
 
     - task: PowerShell@2
       displayName: 'Create appspec.yml'
