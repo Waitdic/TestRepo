@@ -12,6 +12,7 @@ import Footer from './components/Amplify/Footer';
 import SignInHeader from './components/Amplify/SignIn/Header';
 import SignInFooter from './components/Amplify/SignIn/Footer';
 import AppProvider from './components/AppProvider';
+import NotFoundUser from './components/NotFoundUser';
 Amplify.configure(awsExports);
 
 const mapState = (state: RootState) => ({
@@ -37,7 +38,11 @@ const App: FC<Props> = ({ app }) => {
       }}
     >
       {() =>
-        user ? <AppProvider app={app} user={user} signOut={signOut} /> : <></>
+        user ? (
+          <AppProvider app={app} user={user} signOut={signOut} />
+        ) : (
+          <NotFoundUser />
+        )
       }
     </Authenticator>
   );
