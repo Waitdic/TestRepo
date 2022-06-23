@@ -128,7 +128,7 @@ stages:
           $appSpecContent += "  - {0}: \source `n" -f "source"
           $appSpecContent += "  - {0}: c`:\www\source `n" -f "destination"
 
-          New-Item -Path $(Build.artifactStagingDirectory) -Name "code-deploy" -ItemType "directory"
+          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory)/code-deploy -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
 
     - task: ArchiveFiles@2
