@@ -101,8 +101,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          $VersionString = $(appVersion)
-          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $VersionString.replace(".", "-")
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $(appVersion)
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish pipeline artifact'
@@ -165,6 +164,7 @@ stages:
         targetType: 'inline'
         script: |
           $VersionString = Get-Content $(Build.artifactStagingDirectory)/code-deploy/version.txt
+          $VersionString = $VersionString.replace(".", "-")
           Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
     - task: ArchiveFiles@2
@@ -188,4 +188,4 @@ stages:
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         publishLocation: 'pipeline'
-        artifactName: '$(project)_$(appVersion)'
+        artifactName: '$(project)-$(appVersion)'
