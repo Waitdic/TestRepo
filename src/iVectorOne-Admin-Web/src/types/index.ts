@@ -105,7 +105,8 @@ export type NavigationProps = {
 };
 export type DropdownNavigationProps = {
   name: string;
-  href: string;
+  href?: string;
+  action?: () => void;
 };
 
 //* App State

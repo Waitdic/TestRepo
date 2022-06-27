@@ -10,10 +10,10 @@ import { RootState } from '@/store';
 import classNames from 'classnames';
 
 type Props = {
-  sidebarExpanded: boolean;
+  sidebarExpanded?: boolean;
 };
 
-const TenantSelector: FC<Props> = ({ sidebarExpanded }) => {
+const TenantSelector: FC<Props> = ({ sidebarExpanded = false }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
   const activeTenant = user?.tenants?.find((tenant) => tenant.isActive);
@@ -44,20 +44,13 @@ const TenantSelector: FC<Props> = ({ sidebarExpanded }) => {
       <div>
         <Menu.Button
           className={classNames(
-            'group flex items-center max-w-xs text-sm focus:outline-none',
-            {
-              'm-auto': !sidebarExpanded,
-            }
+            'group flex items-center max-w-xs text-sm focus:outline-none'
           )}
           title='Change Tenant'
         >
           <>
-            <UsersIcon className='navbar__hover h-6 w-6 text-gray-700 group-hover:text-primary' />
-            {sidebarExpanded && (
-              <p className='ml-2 text-gray-700 text-sm font-medium group-hover:text-primary'>
-                {activeTenant?.name}
-              </p>
-            )}
+            {/* <UsersIcon className='navbar__hover h-6 w-6 text-gray-700 group-hover:text-primary' /> */}
+            <p className='ml-2 text-sm'>{activeTenant?.name}</p>
           </>
         </Menu.Button>
       </div>
@@ -72,7 +65,7 @@ const TenantSelector: FC<Props> = ({ sidebarExpanded }) => {
       >
         <Menu.Items
           className={classnames(
-            'origin-bottom-right bottom-0 left-0 absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50'
+            'origin-top-right top-full right-0 absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50'
           )}
         >
           {user?.tenants &&

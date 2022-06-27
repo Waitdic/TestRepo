@@ -43,19 +43,36 @@ const DropdownMenu: FC<Props> = ({
           )}
         >
           {dropdownNavigation &&
-            dropdownNavigation.map(({ name, href }) => (
+            dropdownNavigation.map(({ name, href, action }) => (
               <Menu.Item key={name}>
-                {({ active }) => (
-                  <Link
-                    className={classnames(
-                      active ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
-                    )}
-                    to={href}
-                  >
-                    {name}
-                  </Link>
-                )}
+                {({ active }) => {
+                  return (
+                    <>
+                      {!!href && (
+                        <Link
+                          className={classnames(
+                            active ? 'bg-gray-100' : '',
+                            'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
+                          )}
+                          to={href}
+                        >
+                          {name}
+                        </Link>
+                      )}
+                      {!!action && (
+                        <span
+                          className={classnames(
+                            active ? 'bg-gray-100' : '',
+                            'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
+                          )}
+                          onClick={() => action()}
+                        >
+                          {name}
+                        </span>
+                      )}
+                    </>
+                  );
+                }}
               </Menu.Item>
             ))}
         </Menu.Items>
