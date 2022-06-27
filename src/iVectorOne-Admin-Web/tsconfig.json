@@ -5,6 +5,7 @@
       "@/components": ["src/components/index.ts"],
       "@/axios": ["src/axios/index.ts"],
       "@/layouts/*": ["src/layouts/*"],
+      "@/partials/*": ["src/partials/*"],
       "@/libs/*": ["src/libs/*"],
       "@/contexts": ["src/contexts/index.ts"],
       "@/store": ["src/store.ts"],

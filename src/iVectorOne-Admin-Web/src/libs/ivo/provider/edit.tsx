@@ -269,7 +269,7 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col'>
+        <div className='flex flex-col col-span-12'>
           {/* Edit Provider */}
           {error ? (
             <ErrorBoundary />

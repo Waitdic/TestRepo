@@ -53,7 +53,9 @@ export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
 
   return (
     <>
-      <MainLayout title='Tenant List'>
+      <MainLayout
+      // title='Tenant List'
+      >
         <div className='flex flex-col h-full'>
           {/* Tenants */}
 

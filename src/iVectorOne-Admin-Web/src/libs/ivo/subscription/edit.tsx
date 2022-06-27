@@ -136,7 +136,7 @@ export const SubscriptionEdit: FC<Props> = memo(
     return (
       <>
         <MainLayout>
-          <div className='flex flex-col'>
+          <div className='flex flex-col col-span-12'>
             {/* Edit Subscription */}
             {fetchedSubscriptionList.error ? (
               <ErrorBoundary />

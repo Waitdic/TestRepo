@@ -93,7 +93,7 @@ export const SubscriptionCreate: FC<Props> = memo(({ error }) => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col'>
+        <div className='flex flex-col col-span-12'>
           {/* Create Subscription */}
           <div className='mb-6'>
             {typeof error === 'string' ? (

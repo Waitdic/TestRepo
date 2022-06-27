@@ -9,6 +9,7 @@ import {
   Button,
   Notification,
   SearchField,
+  CardList,
 } from '@/components';
 
 interface SubscriptionListItem {
@@ -39,10 +40,6 @@ export const SubscriptionList: FC<Props> = memo(
     >(mappedSubscriptionList);
     const [showError, setShowError] = useState<boolean>(false);
 
-    const tableHeaderList = [
-      { name: 'Name', align: 'left' },
-      { name: 'Actions', align: 'right' },
-    ];
     const tableBodyList: any[] = filteredSubscriptionList.map(
       ({ id, name }) => ({
         id,
@@ -70,7 +67,7 @@ export const SubscriptionList: FC<Props> = memo(
     return (
       <>
         <MainLayout>
-          <div className='flex flex-col'>
+          <div className='flex flex-col col-span-12'>
             {/* Subscription */}
             {typeof fetchedSubscriptionList.error === 'string' ? (
               <ErrorBoundary />
@@ -90,8 +87,7 @@ export const SubscriptionList: FC<Props> = memo(
                     />
                   </div>
                 </div>
-                <TableList
-                  headerList={tableHeaderList}
+                <CardList
                   bodyList={tableBodyList}
                   isLoading={fetchedSubscriptionList.isLoading}
                   emptyState={tableEmptyState}

@@ -103,9 +103,9 @@ export const CustomerEdit: FC = () => {
       </Helmet>
 
       <MainLayout
-        title={translateMessage('app.customer.edit.with.name', user?.fullName)}
+      // title={translateMessage('app.customer.edit.with.name', user?.fullName)}
       >
-        <div className='py-5'>
+        <div className='py-5 col-span-12'>
           <form
             className='space-y-8 divide-y divide-gray-200'
             onSubmit={handleSubmit(onSubmit)}

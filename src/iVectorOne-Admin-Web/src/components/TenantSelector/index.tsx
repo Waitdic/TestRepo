@@ -7,8 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { Tenant } from '@/types';
 import { RootState } from '@/store';
+import classNames from 'classnames';
 
-const TenantSelector: FC = () => {
+type Props = {
+  sidebarExpanded: boolean;
+};
+
+const TenantSelector: FC<Props> = ({ sidebarExpanded }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
   const activeTenant = user?.tenants?.find((tenant) => tenant.isActive);
@@ -38,14 +43,21 @@ const TenantSelector: FC = () => {
     <Menu as='div' className='relative'>
       <div>
         <Menu.Button
-          className='group flex items-center max-w-xs p-1 text-sm focus:outline-none'
+          className={classNames(
+            'group flex items-center max-w-xs text-sm focus:outline-none',
+            {
+              'm-auto': !sidebarExpanded,
+            }
+          )}
           title='Change Tenant'
         >
           <>
             <UsersIcon className='navbar__hover h-6 w-6 text-gray-700 group-hover:text-primary' />
-            <p className='ml-2 text-gray-700 text-sm font-medium group-hover:text-primary'>
-              {activeTenant?.name}
-            </p>
+            {sidebarExpanded && (
+              <p className='ml-2 text-gray-700 text-sm font-medium group-hover:text-primary'>
+                {activeTenant?.name}
+              </p>
+            )}
           </>
         </Menu.Button>
       </div>

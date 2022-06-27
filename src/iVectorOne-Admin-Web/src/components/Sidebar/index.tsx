@@ -1,26 +1,32 @@
-import { Dispatch, FC, Fragment, memo, SetStateAction } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+
+import { SidebarLinkGroup, TenantSelector } from '@/components';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames';
-import { Dialog, Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
-//
 import { RootState } from '@/store';
-import TenantSelector from '../TenantSelector';
+import classNames from 'classnames';
 import getStaticConsoleIcon from '@/utils/getStaticConsoleIcon';
 
 type Props = {
-  showSidebar: boolean;
-  setShowSidebar: Dispatch<SetStateAction<boolean>>;
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
+const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const { pathname } = useLocation();
   const tenants = useSelector((state: RootState) => state.app.user?.tenants);
   const modules = useSelector((state: RootState) => state.app.modules);
 
   const activeModule = modules.filter((module) => module.isActive)[0];
   const currentConsoles = activeModule?.consoles;
+
+  const trigger = useRef<any>(null);
+  const sidebar = useRef<any>(null);
+
+  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
+  );
 
   const renderConsoles = () => {
     if (!tenants?.length) return null;
@@ -32,123 +38,143 @@ const Sidebar: FC<Props> = ({ showSidebar, setShowSidebar }) => {
           pathname.includes(name.toLowerCase()) && pathname !== '/'
             ? 'text-primary'
             : 'text-gray-600 hover:text-gray-900',
-          'group flex items-center text-sm font-medium rounded-md'
+          'group flex items-center text-sm font-medium rounded-md mb-3'
         )}
       >
         <>
-          <span className='mr-2 group-hover:text-primary'>
+          <span
+            className={classNames('group-hover:text-primary', {
+              'mr-2': sidebarExpanded,
+            })}
+          >
             {getStaticConsoleIcon(
               name.toLowerCase(),
               pathname.includes(name.toLowerCase()) && pathname !== '/'
             )}
           </span>
-          <span className='group-hover:text-primary'>{name}</span>
+          {sidebarExpanded && (
+            <span className='group-hover:text-primary'>{name}</span>
+          )}
         </>
       </Link>
     ));
   };
 
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }: any) => {
+      if (!sidebar.current || !trigger.current) return;
+      if (
+        !sidebarOpen ||
+        sidebar.current.contains(target) ||
+        trigger.current.contains(target)
+      )
+        return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+  });
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ keyCode }: { keyCode: number }) => {
+      if (!sidebarOpen || keyCode !== 27) return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('keydown', keyHandler);
+    return () => document.removeEventListener('keydown', keyHandler);
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
+    if (sidebarExpanded) {
+      document.querySelector('body')?.classList.add('sidebar-expanded');
+    } else {
+      document.querySelector('body')?.classList.remove('sidebar-expanded');
+    }
+  }, [sidebarExpanded]);
+
   return (
-    <>
-      <Transition.Root show={showSidebar} as={Fragment}>
-        <Dialog
-          as='div'
-          className='relative z-40 md:hidden'
-          onClose={setShowSidebar}
-        >
-          <Transition.Child
-            as={Fragment}
-            enter='transition-opacity ease-linear duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='transition-opacity ease-linear duration-300'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
+    <div>
+      {/* Sidebar backdrop (mobile only) */}
+      <div
+        className={`fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
+          sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden='true'
+      ></div>
+
+      {/* Sidebar */}
+      <div
+        id='sidebar'
+        ref={sidebar}
+        className={`border-gray-200 border-r flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-white p-4 transition-all duration-200 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-64'
+        }`}
+      >
+        {/* Sidebar header */}
+        <div className='flex justify-between mb-10 pr-3 sm:px-2'>
+          {/* Close button */}
+          <button
+            ref={trigger}
+            className='lg:hidden text-slate-500 hover:text-slate-400'
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-controls='sidebar'
+            aria-expanded={sidebarOpen}
           >
-            <div className='fixed inset-0 bg-white' />
-          </Transition.Child>
-
-          <div className='fixed inset-0 flex z-40'>
-            <Transition.Child
-              as={Fragment}
-              enter='transition ease-in-out duration-300 transform'
-              enterFrom='-translate-x-full'
-              enterTo='translate-x-0'
-              leave='transition ease-in-out duration-300 transform'
-              leaveFrom='translate-x-0'
-              leaveTo='-translate-x-full'
+            <span className='sr-only'>Close sidebar</span>
+            <svg
+              className='w-6 h-6 fill-current'
+              viewBox='0 0 24 24'
+              xmlns='http://www.w3.org/2000/svg'
             >
-              <Dialog.Overlay className='relative flex-1 flex flex-col max-w-xs w-full bg-white border-gray-200 border-r'>
-                <Transition.Child
-                  as={Fragment}
-                  enter='ease-in-out duration-300'
-                  enterFrom='opacity-0'
-                  enterTo='opacity-100'
-                  leave='ease-in-out duration-300'
-                  leaveFrom='opacity-100'
-                  leaveTo='opacity-0'
-                >
-                  <div className='absolute top-0 right-0 -mr-12 pt-2'>
-                    <button
-                      type='button'
-                      className='ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-900'
-                      onClick={() => setShowSidebar(false)}
-                    >
-                      <span className='sr-only'>Close sidebar</span>
-                      <XIcon
-                        className='h-6 w-6 text-slate-900'
-                        aria-hidden='true'
-                      />
-                    </button>
-                  </div>
-                </Transition.Child>
-                <div className='flex-1 h-0 pt-5 pb-4 overflow-y-auto overflow-x-hidden'>
-                  <div className='flex-shrink-0 flex items-center px-4'>
-                    <img
-                      className='h-12 w-auto'
-                      src='/iVectorOne_Logo-768x207.png'
-                      alt='Workflow'
-                    />
-                  </div>
-                  <nav className='mt-5 px-4 space-y-2'>{renderConsoles()}</nav>
-                </div>
-                <div className='flex-shrink-0 flex border-t border-gray-200 py-3 px-2'>
-                  {/* Tenant Selector */}
-                  <TenantSelector />
-                </div>
-              </Dialog.Overlay>
-            </Transition.Child>
-            <div className='flex-shrink-0 w-14'>
-              {/* Force sidebar to shrink to fit close icon */}
-            </div>
-          </div>
-        </Dialog>
-      </Transition.Root>
+              <path d='M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z' />
+            </svg>
+          </button>
+          {/* Logo */}
+          <NavLink end to='/' className='block'>
+            <img src='/iVectorOne_Logo-768x207.png' />
+          </NavLink>
+        </div>
 
-      {/* Static sidebar for desktop */}
-      <div className='hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0'>
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className='flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white'>
-          <div className='flex-1 flex flex-col pt-5 pb-4 overflow-y-auto overflow-x-hidden'>
-            <div className='flex items-center flex-shrink-0 px-4'>
-              <img
-                className='h-16 w-auto'
-                src='/iVectorOne_Logo-768x207.png'
-                alt='Workflow'
-              />
-            </div>
-            <nav className='mt-5 flex-1 px-4 bg-white space-y-4'>
-              {renderConsoles()}
-            </nav>
+        {/* Links */}
+        <div className='space-y-8 flex flex-col h-full'>
+          {/* Pages group */}
+          <div
+            className={classNames({
+              'flex flex-col items-center': !sidebarExpanded,
+            })}
+          >
+            {renderConsoles()}
           </div>
-          <div className='flex-shrink-0 flex border-t border-gray-200 py-3 px-2'>
-            {/* Tenant Selector */}
-            <TenantSelector />
+          {/* More group */}
+          <div className='mt-5'>
+            <TenantSelector sidebarExpanded={sidebarExpanded} />
+          </div>
+        </div>
+
+        {/* Expand / collapse button */}
+        <div className='pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto'>
+          <div className='py-2'>
+            <button onClick={() => setSidebarExpanded(!sidebarExpanded)}>
+              <span className='sr-only'>Expand / collapse sidebar</span>
+              <svg
+                className='w-6 h-6 fill-current sidebar-expanded:rotate-180'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  className='text-slate-400'
+                  d='M19.586 11l-5-5L16 4.586 23.414 12 16 19.414 14.586 18l5-5H7v-2z'
+                />
+                <path className='text-slate-600' d='M3 23H1V1h2z' />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default memo(Sidebar);
+export default React.memo(Sidebar);

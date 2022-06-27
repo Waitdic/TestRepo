@@ -31,7 +31,9 @@ const Docs: React.FC = () => {
 
   return (
     <Main>
-      <div className='prose'>{!!doc.component && <doc.component />}</div>
+      <div className='col-span-12 prose'>
+        {!!doc.component && <doc.component />}
+      </div>
     </Main>
   );
 };
