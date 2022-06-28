@@ -107,8 +107,8 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
         defaultLocale='en-US'
       >
         <Routes>
-          {/* Core Route */}
-          <Route path='/core' element={<CoreView />} />
+          {/* Dashboard */}
+          <Route path='/' element={<IvoView error={coreError} />} />
           {/* Tenant Routes */}
           <Route
             path='/tenant/list'
@@ -162,15 +162,13 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             path='/module/edit/:slug'
             element={<ModuleEdit error={null} isLoading={false} />}
           />
-          {/* IVO Landing */}
-          <Route path='/' element={<IvoView error={coreError} />} />
           {/* Subscription Routes */}
           <Route
-            path='/ivo/subscription/create'
+            path='/subscription/create'
             element={<SubscriptionCreate error={null} />}
           />
           <Route
-            path='/ivo/subscription/list'
+            path='/subscriptions'
             element={
               <SubscriptionList
                 fetchedSubscriptionList={{
@@ -182,7 +180,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           <Route
-            path='/ivo/subscription/edit/:slug'
+            path='/subscription/edit/:slug'
             element={
               <SubscriptionEdit
                 fetchedSubscriptionList={{
@@ -195,7 +193,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           />
           {/* Provider Routes */}
           <Route
-            path='/ivo/provider/list'
+            path='/providers'
             element={
               <ProviderList
                 fetchedProviderList={{
@@ -210,11 +208,11 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           <Route
-            path='/ivo/provider/create'
+            path='/provider/create'
             element={<ProviderCreate error={null} />}
           />
           <Route
-            path='/ivo/provider/edit/:slug'
+            path='/provider/edit/:slug'
             element={<ProviderEdit error={null} />}
           />
           {/*//? Customer Edit (Dummy) */}

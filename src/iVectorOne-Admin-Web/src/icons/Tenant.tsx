@@ -1,17 +1,16 @@
-import classNames from 'classnames';
 import React from 'react';
 
-const Provider: React.FC<{ isActive: boolean }> = ({ isActive }) => {
+type Props = {
+  className?: string;
+};
+
+const Provider: React.FC<Props> = ({ className }) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
       enableBackground='new 0 0 24 24'
-      height='24px'
       viewBox='0 0 24 24'
-      width='24px'
-      className={classNames('h-6 w-6 group-hover:fill-primary', {
-        ['fill-primary']: isActive,
-      })}
+      className={className}
     >
       <rect fill='none' height='24' width='24' />
       <g>

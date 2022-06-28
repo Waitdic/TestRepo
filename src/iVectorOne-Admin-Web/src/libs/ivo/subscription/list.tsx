@@ -1,15 +1,15 @@
 import { memo, useState, useEffect, FC } from 'react';
 //
-import { Subscription } from '@/types';
-import { NotificationStatus } from '@/constants';
+import { DropdownFilterProps, Subscription } from '@/types';
+import { ButtonColors, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
   ErrorBoundary,
-  TableList,
   Button,
   Notification,
-  SearchField,
   CardList,
+  DropdownFilter,
+  ModalSearch,
 } from '@/components';
 
 interface SubscriptionListItem {
@@ -33,12 +33,20 @@ export const SubscriptionList: FC<Props> = memo(
       ({ userName, subscriptionId }) => ({
         name: userName,
         id: subscriptionId,
+        isActive: false,
       })
     );
     const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
       SubscriptionListItem[]
     >(mappedSubscriptionList);
     const [showError, setShowError] = useState<boolean>(false);
+    const [filters, setFilters] = useState<DropdownFilterProps[]>([
+      {
+        name: 'Active',
+        value: false,
+      },
+    ]);
+    const [modalOpen, setModalOpen] = useState(false);
 
     const tableBodyList: any[] = filteredSubscriptionList.map(
       ({ id, name }) => ({
@@ -74,16 +82,41 @@ export const SubscriptionList: FC<Props> = memo(
             ) : (
               <>
                 <div className='flex align-start justify-end mb-6'>
-                  <div className='flex'>
-                    <SearchField
-                      list={mappedSubscriptionList}
-                      setList={setFilteredSubscriptionList}
+                  <div className='flex gap-3'>
+                    <Button
+                      color={ButtonColors.OUTLINE}
+                      text='Search'
+                      onClick={() => {
+                        setModalOpen(true);
+                      }}
+                    />
+                    <ModalSearch
+                      id='subscriptionSearch'
+                      searchId='subscriptionSearch'
+                      modalOpen={modalOpen}
+                      setModalOpen={setModalOpen}
+                    />
+                    <DropdownFilter
+                      align='right'
+                      allItems={mappedSubscriptionList}
+                      items={filteredSubscriptionList}
+                      filters={filters}
+                      setFilters={setFilters}
+                      setFilteredItems={setFilteredSubscriptionList}
+                      title='Filter'
                     />
                     <Button
                       text='New'
                       isLink
                       href='/ivo/subscription/create'
-                      className='ml-3'
+                      icon={
+                        <svg
+                          className='w-4 h-4 fill-current opacity-50 shrink-0 mr-1'
+                          viewBox='0 0 16 16'
+                        >
+                          <path d='M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z' />
+                        </svg>
+                      }
                     />
                   </div>
                 </div>

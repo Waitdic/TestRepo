@@ -19,13 +19,16 @@ const ModalSearch: React.FC<Props> = ({
   const modalContent = useRef<any>(null);
   const searchInput = useRef<any>(null);
 
+  const clickHandler = ({ target }: any) => {
+    if (!modalOpen || modalContent.current.contains(target)) return;
+    setModalOpen(false);
+  };
+
   // close on click outside
   useEffect(() => {
-    const clickHandler = ({ target }: any) => {
-      if (!modalOpen || modalContent.current.contains(target)) return;
-      setModalOpen(false);
-    };
-    document.addEventListener('click', clickHandler);
+    setTimeout(() => {
+      document.addEventListener('click', clickHandler);
+    }, 1500);
     return () => document.removeEventListener('click', clickHandler);
   });
 
@@ -258,4 +261,4 @@ const ModalSearch: React.FC<Props> = ({
   );
 };
 
-export default React.memo(ModalSearch);
+export default ModalSearch;

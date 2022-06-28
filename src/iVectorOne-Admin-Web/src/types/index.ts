@@ -108,6 +108,10 @@ export type DropdownNavigationProps = {
   href?: string;
   action?: () => void;
 };
+export type DropdownFilterProps = {
+  name: string;
+  value: boolean;
+};
 
 //* App State
 export type AppState = {

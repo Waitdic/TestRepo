@@ -5,6 +5,7 @@ import classnames from 'classnames';
 //
 import { DropdownNavigationProps } from '@/types';
 import { MenuPosition } from '@/constants';
+import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
 
 type Props = {
   dropdownNavigation: DropdownNavigationProps[];
@@ -19,10 +20,11 @@ const DropdownMenu: FC<Props> = ({
 }) => {
   return (
     <Menu as='div' className='ml-3 relative'>
-      <div>
+      <div className='flex gap-1'>
         <Menu.Button className='max-w-xs flex items-center text-sm focus:outline-none'>
           {children}
         </Menu.Button>
+        {getStaticSVGIcon('chevronDown', 'w-5 h-5')}
       </div>
       <Transition
         as={Fragment}

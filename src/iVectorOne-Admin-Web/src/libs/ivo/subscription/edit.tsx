@@ -100,8 +100,6 @@ export const SubscriptionEdit: FC<Props> = memo(
         if (!currentSubscription) {
           navigate('/ivo/subscription/list');
         } else {
-          console.log(currentSubscription);
-
           //! TODO setValue('name', currentSubscription.name);
           setValue('userName', currentSubscription.userName);
           setValue(

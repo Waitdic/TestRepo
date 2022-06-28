@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Tenant } from '@/types';
 import { RootState } from '@/store';
 import classNames from 'classnames';
+import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
 
 type Props = {
   sidebarExpanded?: boolean;
@@ -48,10 +49,10 @@ const TenantSelector: FC<Props> = ({ sidebarExpanded = false }) => {
           )}
           title='Change Tenant'
         >
-          <>
-            {/* <UsersIcon className='navbar__hover h-6 w-6 text-gray-700 group-hover:text-primary' /> */}
+          <div className='flex gap-1'>
             <p className='ml-2 text-sm'>{activeTenant?.name}</p>
-          </>
+            {getStaticSVGIcon('chevronDown', 'w-5 h-5')}
+          </div>
         </Menu.Button>
       </div>
       <Transition
