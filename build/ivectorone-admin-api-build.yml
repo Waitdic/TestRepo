@@ -137,7 +137,7 @@ stages:
           $appSpecContent += "{0}: `n" -f "hooks"
           $appSpecContent += "  {0}: `n" -f "AfterInstall"
           $appSpecContent += "    - {0}: scripts\DeployUpdate.bat`n" -f "location"
-          $appSpecContent += "    - {0}: 180`n" -f "timeout"
+          $appSpecContent += "      {0}: 180`n" -f "timeout"
 
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
