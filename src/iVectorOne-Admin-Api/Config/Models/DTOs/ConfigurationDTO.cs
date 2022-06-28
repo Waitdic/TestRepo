@@ -33,12 +33,6 @@ namespace iVectorOne_Admin_Api.Config.Models
         public bool? Required { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<DropDownOption>? DropDownOptions { get; set; }
-    }
-
-    public class DropDownOption
-    {
-        public string ID { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        public List<DropDownOptionDTO>? DropDownOptions { get; set; }
     }
 }

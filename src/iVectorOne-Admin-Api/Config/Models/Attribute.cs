@@ -15,23 +15,4 @@
 
         public string Schema { get; set; } = String.Empty;
     }
-    public class Configuration
-    {
-        public string? key { get; set; }
-        public int? order { get; set; }
-        public bool? required { get; set; }
-        public string? type { get; set; }
-        public string? description { get; set; }
-        public int? minimum { get; set; }
-        public int? maximum { get; set; }
-        public int? minLength { get; set; }
-        public int? maxLength { get; set; }
-        public List<Dropdownoption> dropdownOptions { get; set; } = new List<Dropdownoption>();
-    }
-
-    public class Dropdownoption
-    {
-        public string id { get; set; }
-        public string name { get; set; }
-    }
 }
