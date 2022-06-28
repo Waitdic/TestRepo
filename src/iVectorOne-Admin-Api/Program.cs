@@ -11,7 +11,7 @@ builder.RegisterServices();
 var app = builder.Build();
 app.ConfigureApp();
 
-app.MapGet("/user/{key}", async (IMediator mediator, string key) =>
+app.MapGet("v1/users/{key}", async (IMediator mediator, string key) =>
 {
     var request = new UserRequest(key);
     var user = await mediator.Send(request);
@@ -19,7 +19,7 @@ app.MapGet("/user/{key}", async (IMediator mediator, string key) =>
     return user;
 });
 
-app.MapGet("/tenants/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -30,7 +30,7 @@ app.MapGet("/tenants/subscriptions", async (IMediator mediator, HttpContext http
 
     try
     {
-        var request = new TenantRequest(identity.Tenant.TenantId);
+        var request = new TenantRequest(tenantid);
         response = await mediator.Send(request);
     }
     catch (Exception e)
@@ -41,7 +41,7 @@ app.MapGet("/tenants/subscriptions", async (IMediator mediator, HttpContext http
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("/tenants/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int subscriptionid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -52,7 +52,7 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}", async (IMediator mediator,
 
     try
     {
-        var request = new SubscriptionRequest(identity.Tenant.TenantId) { SubscriptionId = subscriptionid };
+        var request = new SubscriptionRequest(tenantid) { SubscriptionId = subscriptionid };
         response = await mediator.Send(request);
     }
     catch (Exception e)
@@ -63,7 +63,7 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}", async (IMediator mediator,
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int subscriptionid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -74,7 +74,7 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers", async (IMediator
 
     try
     {
-        var request = new SupplierSubscriptionRequest(identity.Tenant.TenantId) { SubscriptionId = subscriptionid };
+        var request = new SupplierSubscriptionRequest(tenantid) { SubscriptionId = subscriptionid };
         response = await mediator.Send(request);
     }
     catch (Exception e)
@@ -85,7 +85,7 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers", async (IMediator
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int subscriptionid, int supplierid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -96,7 +96,7 @@ app.MapGet("/tenants/subscriptions/{subscriptionid}/suppliers/{supplierid}", asy
 
     try
     {
-        var request = new SupplierRequest(identity.Tenant.TenantId) { SubscriptionId = subscriptionid, SupplierId = supplierid };
+        var request = new SupplierRequest(tenantid) { SubscriptionId = subscriptionid, SupplierId = supplierid };
         response = await mediator.Send(request);
     }
     catch (Exception e)

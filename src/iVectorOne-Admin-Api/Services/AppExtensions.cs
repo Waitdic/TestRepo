@@ -8,7 +8,6 @@
             var allowedHosts = app.Configuration.GetSection("CorsOrigins").Get<string[]>();
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins(allowedHosts));
 
-            app.UsePathBase(new PathString("/admin/v1"));
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
