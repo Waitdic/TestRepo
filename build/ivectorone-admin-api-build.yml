@@ -155,7 +155,7 @@ stages:
         targetType: 'inline'
         script: |
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{source}', 'D:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
-          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', 'D:\Websites\V2\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', 'D:\Websites\V1\iVectorOne_Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
           (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{apppool}', 'Admin' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
 
     - task: PowerShell@2
@@ -189,8 +189,8 @@ stages:
       inputs:
         awsCredentials: 'AWS S3 Bucket for Code Deploy'
         regionName: 'eu-west-1'
-        applicationName: 'IVOSearch'
-        deploymentGroupName: 'IVOSearch'
+        applicationName: 'Admin'
+        deploymentGroupName: 'Admin'
         deploymentRevisionSource: 'workspace'
         revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         bucketName: 'ivectorone-codedeploy'
