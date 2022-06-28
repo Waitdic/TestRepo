@@ -46,6 +46,9 @@ namespace iVectorOne_Admin_Api.Config.Context
                 entity.Property(e => e.DefaultValue)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Schema)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Subscription>(entity =>

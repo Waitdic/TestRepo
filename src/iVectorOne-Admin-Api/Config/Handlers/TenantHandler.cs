@@ -2,6 +2,7 @@
 using iVectorOne_Admin_Api.Config.Context;
 using iVectorOne_Admin_Api.Config.Models;
 using iVectorOne_Admin_Api.Config.Requests;
+using iVectorOne_Admin_Api.Config.Responses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,18 +25,29 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             var warnings = new List<string>();
             var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId).Include(t => t.Subscriptions).FirstOrDefault();
             bool success = false;
+            int tenantId = request.TenantId;
+            string tenantName = string.Empty;
 
             if (tenant != null)
             {
                 subscriptionDTOs = _mapper.Map<List<SubscriptionDTO>>(tenant.Subscriptions);
                 success = true;
+                tenantId = tenant.TenantId;
+                tenantName = tenant.CompanyName;
             }
             else
             {
                 warnings.Add("No matching tenant could be found");
             }
 
-            return Task.FromResult(new TenantResponse { Subscriptions = subscriptionDTOs, Warnings = warnings, Success = success });
+            return Task.FromResult(new TenantResponse
+            {
+                TenantId = tenantId,
+                TenantName = tenantName,
+                Subscriptions = subscriptionDTOs,
+                Warnings = warnings,
+                Success = success
+            });
         }
     }
 }

@@ -2,6 +2,7 @@
 using iVectorOne_Admin_Api.Config.Context;
 using iVectorOne_Admin_Api.Config.Models;
 using iVectorOne_Admin_Api.Config.Requests;
+using iVectorOne_Admin_Api.Config.Responses;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                                                                                         .ThenInclude(s => s.SupplierSubscriptions)
                                                                                             .ThenInclude(s => s.Supplier).FirstOrDefault();
             Subscription? subscription = null;
-            SupplierSubscriptionDTO? suppliers = new SupplierSubscriptionDTO();
+            List<SupplierDTO> suppliers = new List<SupplierDTO>();
             var warnings = new List<string>();
             bool success = false;
             if (tenant != null)
@@ -32,7 +33,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 subscription = tenant.Subscriptions.Where(s => s.SubscriptionId == request.SubscriptionId).FirstOrDefault();
                 if (subscription != null)
                 {
-                    suppliers = _mapper.Map<SupplierSubscriptionDTO>(subscription);
+                    suppliers = _mapper.Map<List<SupplierDTO>>(subscription.SupplierSubscriptions);
                     success = true;
                 }
                 else
@@ -45,7 +46,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 warnings.Add("Could not find a tenant with a matching key");
             }
 
-            return Task.FromResult(new SupplierSubscriptionResponse() { SupplierSubscription = suppliers, Warnings = warnings, Success = success });
+            return Task.FromResult(new SupplierSubscriptionResponse() { SupplierSubscriptions = suppliers, Warnings = warnings, Success = success });
         }
     }
 }

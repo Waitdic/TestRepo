@@ -3,15 +3,15 @@ using MediatR;
 
 namespace iVectorOne_Admin_Api.Config.Requests
 {
-    public class SubscriptionRequest : IRequest<SubscriptionResponse>
+    public class SupplierRequest : IRequest<SupplierResponse>
     {
-        public SubscriptionRequest(int tenantId)
+        public SupplierRequest(int tenantId)
         {
             TenantId = tenantId;
         }
 
         public int TenantId { get; set; }
-
+        public int SupplierId { get; set; }
         public int SubscriptionId { get; set; }
     }
 }

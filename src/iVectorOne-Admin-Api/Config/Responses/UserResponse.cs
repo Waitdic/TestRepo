@@ -1,7 +1,7 @@
 ﻿using iVectorOne_Admin_Api.Config.Models;
 using System.Text.Json.Serialization;
 
-namespace iVectorOne_Admin_Api.Config.Requests
+namespace iVectorOne_Admin_Api.Config.Responses
 {
     public class UserResponse
     {
