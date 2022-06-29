@@ -117,7 +117,8 @@
                             CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
                             Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
                             TPRateCode = roomResult.RoomData.RateCode,
-                            Adjustments = GetAdjustments(roomResult.Adjustments)
+                            Adjustments = GetAdjustments(roomResult.Adjustments),
+                            CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2)
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

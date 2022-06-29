@@ -130,5 +130,14 @@
         /// </value>
         public List<Adjustment> Adjustments { get; set; } = new List<Adjustment>();
 
+
+        /// <summary>
+        /// Gets or sets the commission percentage.
+        /// </summary>
+        /// <value>
+        /// The commission percentage.
+        /// </value>
+        public decimal CommissionPercentage { get; set; }
+
     }
 }
