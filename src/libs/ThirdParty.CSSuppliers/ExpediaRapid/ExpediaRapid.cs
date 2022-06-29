@@ -450,7 +450,7 @@
             if (mandatoryTaxes.Any())
                 errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
             if (taxAndServiceFee > 0m)
-                errata.Add(BuildErrata("Tax and Service Fee", taxAndServiceFee, currencyCode));
+                errata.Add(BuildErrata("Tax and Service Fee", taxAndServiceFee, currencyCode, "Included"));
             if (salesTax > 0m)
                 errata.Add(BuildErrata("Sales Tax", salesTax, currencyCode));
             if (extraPersonFee > 0m)
@@ -474,9 +474,15 @@
             return roomRate;
         }
 
-        private Erratum BuildErrata(string feeName, decimal amount, string currencyCode)
+        private Erratum BuildErrata(string feeName, decimal amount, string currencyCode, string overrideTitle = "")
         {
-            return new Erratum(ErrataTitle, $"{feeName}: {currencyCode}/{amount}");
+            var title = ErrataTitle;
+            if (!string.IsNullOrEmpty(overrideTitle))
+            {
+                title = overrideTitle;
+            }
+
+            return new Erratum(title, $"{feeName}: {currencyCode}/{amount}");
         }
 
         private List<SearchResponseRoom> GetPrebookSpecificRoomRates(PropertyDetails propertyDetails, SearchResponse searchResponse)
