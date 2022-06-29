@@ -26,6 +26,7 @@ import { ProviderEdit } from '@/libs/ivo/provider/edit';
 //! Temp
 import { dummyModuleList, dummyProviders } from '@/temp';
 import MyAccount from '@/libs/core/settings/my-account';
+import Feedback from '@/libs/core/settings/feedback';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -216,6 +217,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           />
           {/* Settings */}
           <Route path='/settings/my-account' element={<MyAccount />} />
+          <Route path='/settings/feedback' element={<Feedback />} />
           {/* Docs */}
           <Route path='/docs/:id' element={<Docs />} />
           {/* Not Found Route */}
