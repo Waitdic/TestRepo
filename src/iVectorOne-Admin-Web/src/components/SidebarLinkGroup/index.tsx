@@ -1,4 +1,5 @@
 import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -37,9 +38,9 @@ const SidebarLinkGroup: React.FC<Props> = ({
       <>
         <Link
           to={to}
-          className={`block truncate ${
-            open ? 'text-white' : 'text-gray-700 hover:text-primary'
-          }`}
+          className={classNames('block truncate', {
+            'text-white': activecondition || open,
+          })}
           onClick={(e) => {
             if (!links) return;
             e.preventDefault();
@@ -51,7 +52,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
               {getStaticSVGIcon(
                 title.toLowerCase().replace(/ /g, '-'),
                 `fill-gray-700 text-gray-700 shrink-0 h-6 w-6 ${
-                  open && '!fill-white'
+                  activecondition && '!fill-white'
                 }`
               )}
               <span className='text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>

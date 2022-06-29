@@ -164,7 +164,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
               {/* Support */}
               <SidebarLinkGroup
                 activecondition={
-                  pathname === '/support' || pathname.includes('Support')
+                  pathname === '/support' || pathname.includes('support')
                 }
                 to='/support'
                 title='Support'
