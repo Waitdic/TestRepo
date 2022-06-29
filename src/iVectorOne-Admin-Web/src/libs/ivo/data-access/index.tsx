@@ -69,7 +69,7 @@ export function useProviderInfo() {
     try {
       const res = await axios.request({
         method: 'GET' as Method,
-        url: 'http://localhost:3001/ivo/providers/info',
+        url: 'http://localhost:3001/providers/info',
       });
 
       const providersRes = get(res, 'data.data.configuration', []);

@@ -1,9 +1,8 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
-import classnames from 'classnames';
+import classNames from 'classnames';
 //
 import { DropdownEditMenu, EmptyState, Spinner } from '@/components';
-import classNames from 'classnames';
 
 type Props = {
   bodyList: {
@@ -34,10 +33,9 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {bodyList.length > 0 ? (
-        <div>
+        <div className='grid grid-cols-12'>
           {bodyList.map(({ id, name, isActive = undefined, actions }) => (
             <div
               key={id}
@@ -47,7 +45,7 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
                 {/* Card top */}
                 <div className='grow p-5'>
                   <div className='flex justify-between items-start'>
-                    {/* Image + name */}
+                    {/* Name */}
                     <header>
                       <h3 className='text-2xl'>{name}</h3>
                     </header>
@@ -98,7 +96,7 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
                     </div>
                     <Link
                       className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
-                      to={`/ivo/subscription/edit/${id}`}
+                      to={`/subscriptions/edit/${id}`}
                     >
                       <div className='flex items-center justify-center'>
                         <svg

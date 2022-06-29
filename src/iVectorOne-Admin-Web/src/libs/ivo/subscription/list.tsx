@@ -53,13 +53,13 @@ export const SubscriptionList: FC<Props> = memo(
         id,
         name,
         isActive: false, //! TODO: this property is not available in the response
-        actions: [{ name: 'Edit', href: `/ivo/subscription/edit/${id}` }],
+        actions: [{ name: 'Edit', href: `/subscriptions/edit/${id}` }],
       })
     );
     const tableEmptyState = {
       title: 'No subscriptions',
       description: 'Get started by creating a new subscription.',
-      href: '/ivo/subscription/create',
+      href: '/subscriptions/create',
       buttonText: 'New Subscription',
     };
 
@@ -108,7 +108,7 @@ export const SubscriptionList: FC<Props> = memo(
                     <Button
                       text='New'
                       isLink
-                      href='/ivo/subscription/create'
+                      href='/subscriptions/create'
                       icon={
                         <svg
                           className='w-4 h-4 fill-current opacity-50 shrink-0 mr-1'

@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import NotFound from '@/layouts/NotFound';
-import { CoreView } from '@/libs/core';
 import { CustomerEdit } from '@/libs/core/customer/edit';
 import Docs from '@/libs/core/docs';
 import { ModuleCreate } from '@/libs/core/module/create';
@@ -15,16 +14,16 @@ import { ModuleList } from '@/libs/core/module/list';
 import { TenantCreate } from '@/libs/core/tenant/create';
 import { TenantEdit } from '@/libs/core/tenant/edit';
 import { TenantList } from '@/libs/core/tenant/list';
-import { IvoView } from '@/libs/ivo';
-import { ProviderCreate } from '@/libs/ivo/provider/create';
-import { ProviderEdit } from '@/libs/ivo/provider/edit';
-import { ProviderList } from '@/libs/ivo/provider/list';
-import { SubscriptionCreate } from '@/libs/ivo/subscription/create';
-import { SubscriptionEdit } from '@/libs/ivo/subscription/edit';
-import { SubscriptionList } from '@/libs/ivo/subscription/list';
-import { Module, Provider, Subscription, Tenant } from '@/types';
+import { Module, Provider } from '@/types';
 import { useCoreFetching } from '@/libs/core/data-access';
 import { useIvoFetching } from '@/libs/ivo/data-access';
+import { IvoView } from '@/libs/ivo';
+import { SubscriptionCreate } from '@/libs/ivo/subscription/create';
+import { SubscriptionList } from '@/libs/ivo/subscription/list';
+import { SubscriptionEdit } from '@/libs/ivo/subscription/edit';
+import { ProviderList } from '@/libs/ivo/provider/list';
+import { ProviderCreate } from '@/libs/ivo/provider/create';
+import { ProviderEdit } from '@/libs/ivo/provider/edit';
 //! Temp
 import { dummyModuleList, dummyProviders } from '@/temp';
 
@@ -164,7 +163,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           />
           {/* Subscription Routes */}
           <Route
-            path='/subscription/create'
+            path='/subscriptions/create'
             element={<SubscriptionCreate error={null} />}
           />
           <Route
@@ -180,7 +179,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           <Route
-            path='/subscription/edit/:slug'
+            path='/subscriptions/edit/:slug'
             element={
               <SubscriptionEdit
                 fetchedSubscriptionList={{
@@ -208,11 +207,11 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           <Route
-            path='/provider/create'
+            path='/providers/create'
             element={<ProviderCreate error={null} />}
           />
           <Route
-            path='/provider/edit/:slug'
+            path='/providers/edit/:slug'
             element={<ProviderEdit error={null} />}
           />
           {/*//? Customer Edit (Dummy) */}

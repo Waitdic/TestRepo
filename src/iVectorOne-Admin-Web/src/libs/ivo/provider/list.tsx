@@ -34,7 +34,7 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
   const tableEmptyState = {
     title: 'No providers',
     description: 'Get started by creating a new provider.',
-    href: '/ivo/provider/create',
+    href: '/provider/create',
     buttonText: 'New Provider',
   };
 
@@ -65,7 +65,7 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
                   <Button
                     text='New'
                     isLink
-                    href='/ivo/provider/create'
+                    href='/provider/create'
                     className='ml-3'
                   />
                 </div>
@@ -90,7 +90,7 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
                             actions: [
                               {
                                 name: 'Edit',
-                                href: `/ivo/provider/edit/${name}`,
+                                href: `/provider/edit/${name}`,
                               },
                             ],
                           }))}
@@ -107,7 +107,7 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
                   <EmptyState
                     title='No subscriptions'
                     description='Get started by creating a new subscription.'
-                    href='/ivo/provider/create'
+                    href='/provider/create'
                     buttonText='New Subscription'
                   />
                 )}
