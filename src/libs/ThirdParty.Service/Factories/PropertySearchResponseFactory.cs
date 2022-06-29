@@ -148,7 +148,7 @@
                 {
                     StartDate = cancellation.StartDate,
                     EndDate = cancellation.EndDate,
-                    Amount = cancellation.Amount
+                    Amount = Math.Round(cancellation.Amount + 0.00M, 2)
                 });
             }
 
