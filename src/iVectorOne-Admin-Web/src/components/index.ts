@@ -30,6 +30,7 @@ export { default as CardList } from './CardList';
 export { default as SettingsSidebar } from './SettingsSidebar';
 export { default as AccountPanel } from './AccountPanel';
 export { default as FeedbackPanel } from './FeedbackPanel';
+export { default as PaginationClassic } from './PaginationClassic';
 
 //* Form Fields
 export * from './Fields';

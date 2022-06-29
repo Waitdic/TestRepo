@@ -28,6 +28,7 @@ import { dummyModuleList, dummyProviders } from '@/temp';
 import MyAccount from '@/libs/core/settings/my-account';
 import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
+import ChangeLog from '@/libs/core/support/change-log';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -221,6 +222,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           <Route path='/settings/feedback' element={<Feedback />} />
           {/* Support */}
           <Route path='/support/knowledge-base' element={<KnowledgeBase />} />
+          <Route path='/support/change-log' element={<ChangeLog />} />
           {/* Docs */}
           <Route path='/docs/:id' element={<Docs />} />
           {/* Not Found Route */}
