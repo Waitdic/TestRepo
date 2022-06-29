@@ -29,13 +29,7 @@ const Docs: React.FC = () => {
     fetchDoc();
   }, [fetchDoc]);
 
-  return (
-    <Main>
-      <div className='col-span-12 prose'>
-        {!!doc.component && <doc.component />}
-      </div>
-    </Main>
-  );
+  return <Main>{!!doc.component && <doc.component />}</Main>;
 };
 
 export default React.memo(Docs);

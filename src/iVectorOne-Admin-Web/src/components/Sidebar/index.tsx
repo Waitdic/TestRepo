@@ -153,7 +153,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                 links={[
                   {
                     title: 'My account',
-                    to: '/settings/account',
+                    to: '/settings/my-account',
                   },
                   {
                     title: 'Feedback',

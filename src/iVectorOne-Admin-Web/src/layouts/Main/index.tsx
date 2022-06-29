@@ -19,11 +19,9 @@ const Dashboard: React.FC<Props> = ({ children }) => {
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        <main>
-          <div className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto'>
-            {/* Content */}
-            <div className='grid grid-cols-12 gap-6'>{children}</div>
-          </div>
+        <main className='px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto bg-slate-100 h-full'>
+          {/* Content */}
+          {children}
         </main>
       </div>
     </div>

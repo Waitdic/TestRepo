@@ -50,7 +50,7 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col col-span-12'>
+        <div className='flex flex-col'>
           {/* Providers */}
           {fetchedProviderList.error ? (
             <ErrorBoundary />

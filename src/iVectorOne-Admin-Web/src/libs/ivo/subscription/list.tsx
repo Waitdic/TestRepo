@@ -75,7 +75,7 @@ export const SubscriptionList: FC<Props> = memo(
     return (
       <>
         <MainLayout>
-          <div className='flex flex-col col-span-12'>
+          <div className='flex flex-col'>
             {/* Subscription */}
             {typeof fetchedSubscriptionList.error === 'string' ? (
               <ErrorBoundary />

@@ -100,7 +100,7 @@ export const ModuleEdit: FC<Props> = memo(({ error, isLoading }) => {
       <MainLayout
       // title='Module Edit'
       >
-        <div className='flex flex-col col-span-12'>
+        <div className='flex flex-col'>
           {/* Edit Module */}
           {isLoading ? (
             <Spinner />

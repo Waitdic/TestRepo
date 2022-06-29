@@ -258,7 +258,7 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col col-span-12'>
+        <div className='flex flex-col'>
           {/* Create Provider */}
           {error ? (
             <ErrorBoundary />

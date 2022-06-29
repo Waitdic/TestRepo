@@ -51,10 +51,7 @@ const TextField: FC<Props> = forwardRef(
       <Fragment>
         {hasLabel && (
           <>
-            <label
-              htmlFor={id}
-              className='block text-sm font-medium text-gray-700'
-            >
+            <label htmlFor={id} className='block text-sm font-medium mb-1'>
               {`${labelText} ${required ? '(required)' : ''}`}
             </label>
             {description && (
@@ -85,18 +82,12 @@ const TextField: FC<Props> = forwardRef(
               value={value}
               onChange={onChange}
               onBlur={onBlur}
-              className={classnames(
-                `py-2 px-3 block text-sm w-full border rounded-md appearance-none outline-none`,
-                isDirty
-                  ? 'border-red-500 bg-red-100'
-                  : 'border-gray-200 bg-white focus:ring-blue-700 focus:border-blue-700',
-
-                {
-                  'border-r-0 rounded-r-none': prefix && prefixPos === 'right',
-                  'border-l-0 rounded-l-none': prefix && prefixPos === 'left',
-                  [className]: className !== '',
-                }
-              )}
+              className={classnames('form-input w-full', {
+                'border-red-500 bg-red-100': isDirty,
+                'border-r-0 rounded-r-none': prefix && prefixPos === 'right',
+                'border-l-0 rounded-l-none': prefix && prefixPos === 'left',
+                [className]: className !== '',
+              })}
               ref={ref as LegacyRef<HTMLInputElement>}
               placeholder={placeholder}
               autoComplete='turnedOff'

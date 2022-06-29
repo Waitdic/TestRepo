@@ -27,6 +27,8 @@ export { default as ModalSearch } from './ModalSearch';
 export { default as Header } from './Header';
 export { default as SidebarLinkGroup } from './SidebarLinkGroup';
 export { default as CardList } from './CardList';
+export { default as SettingsSidebar } from './SettingsSidebar';
+export { default as AccountPanel } from './AccountPanel';
 
 //* Form Fields
 export * from './Fields';

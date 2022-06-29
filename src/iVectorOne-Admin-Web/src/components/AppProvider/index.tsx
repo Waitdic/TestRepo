@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import NotFound from '@/layouts/NotFound';
-import { CustomerEdit } from '@/libs/core/customer/edit';
 import Docs from '@/libs/core/docs';
 import { ModuleCreate } from '@/libs/core/module/create';
 import { ModuleEdit } from '@/libs/core/module/edit';
@@ -26,6 +25,7 @@ import { ProviderCreate } from '@/libs/ivo/provider/create';
 import { ProviderEdit } from '@/libs/ivo/provider/edit';
 //! Temp
 import { dummyModuleList, dummyProviders } from '@/temp';
+import MyAccount from '@/libs/core/settings/my-account';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -214,8 +214,8 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             path='/providers/edit/:slug'
             element={<ProviderEdit error={null} />}
           />
-          {/*//? Customer Edit (Dummy) */}
-          <Route path='/customer/edit/:id' element={<CustomerEdit />} />
+          {/* Settings */}
+          <Route path='/settings/my-account' element={<MyAccount />} />
           {/* Docs */}
           <Route path='/docs/:id' element={<Docs />} />
           {/* Not Found Route */}

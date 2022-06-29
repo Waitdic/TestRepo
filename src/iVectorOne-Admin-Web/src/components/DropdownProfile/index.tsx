@@ -50,7 +50,7 @@ const DropdownProfile: React.FC<Props> = ({ align }) => {
       >
         <img
           className='w-8 h-8 rounded-full'
-          src={'/images/user-32-01.jpg'}
+          src={'/images/user-avatar-32.png'}
           width='32'
           height='32'
           alt='User'

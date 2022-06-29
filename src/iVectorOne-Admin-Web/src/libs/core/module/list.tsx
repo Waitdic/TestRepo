@@ -57,7 +57,7 @@ export const ModuleList: FC<Props> = memo(({ fetchedModuleList }) => {
       <MainLayout
       // title='Module List'
       >
-        <div className='flex flex-col col-span-12'>
+        <div className='flex flex-col'>
           {/* Modules */}
 
           {fetchedModuleList.error ? (
