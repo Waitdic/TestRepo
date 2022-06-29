@@ -116,7 +116,8 @@
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
                             CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
                             Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
-                            TPRateCode = roomResult.RoomData.RateCode
+                            TPRateCode = roomResult.RoomData.RateCode,
+                            Adjustments = GetAdjustments(roomResult.Adjustments)
                         };
 
                         propertyResult.RoomTypes.Add(roomType);
@@ -152,5 +153,11 @@
 
             return cancellationTerms;
         }
+
+        private List<SDK.V2.PropertySearch.Adjustment> GetAdjustments(List<iVector.Search.Property.Adjustment> adjustments)
+        {
+            return adjustments.Select(x => new SDK.V2.PropertySearch.Adjustment(Enum.Parse<AdjustmentType>(x.AdjustmentType), x.AdjustmentName,
+                x.CustomerNotes, x.TotalCost)).ToList();
+        } 
     }
 }

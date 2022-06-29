@@ -121,5 +121,14 @@
         /// The cancellation terms.
         /// </value>
         public List<CancellationTerm> CancellationTerms { get; set; } = new List<CancellationTerm>();
+
+        /// <summary>
+        /// Gets or sets the adjustments.
+        /// </summary>
+        /// <value>
+        /// The adjustments.
+        /// </value>
+        public List<Adjustment> Adjustments { get; set; } = new List<Adjustment>();
+
     }
 }

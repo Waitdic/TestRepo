@@ -1,11 +1,13 @@
 ﻿namespace ThirdParty.Search
 {
+    using System; 
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using ThirdParty.Repositories;
+    using ThirdParty.SDK.V2.PropertySearch;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Results.Models;
 
@@ -88,11 +90,20 @@
                         NonRefundableRates = searchResult.NonRefundableRates,
                         Discount = searchResult.Discount
                     },
+
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
                         StartDate = x.StartDate,
                         EndDate = x.EndDate,
                         Amount = x.Amount,
+                    }).ToList(),
+
+                    Adjustments = searchResult.Adjustments.Select(x => new iVector.Search.Property.Adjustment() 
+                    {
+                        AdjustmentType = Enum.GetName(typeof(AdjustmentType),x.AdjustmentType),
+                        AdjustmentName = x.AdjustmentName,
+                        TotalCost = x.AdjustmentAmount,
+                        CustomerNotes = x.AdjustmentDescription
                     }).ToList()
                 };
 

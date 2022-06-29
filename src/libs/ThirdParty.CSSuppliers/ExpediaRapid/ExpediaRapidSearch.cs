@@ -313,13 +313,7 @@
 
         private List<TransformedResultAdjustment> GetAdjustments(List<Tax> taxes)
         {
-            return taxes.Select(t => new TransformedResultAdjustment()
-            {
-                AdjustmentType = "T",
-                PayLocal = true,
-                AdjustmentName = t.TaxName,
-                AdjustmentAmount = t.TaxAmount
-            }).ToList();
+            return taxes.Select(t => new TransformedResultAdjustment(SDK.V2.PropertySearch.AdjustmentType.Tax, t.TaxName, "", t.TaxAmount)).ToList();
         }
 
         private List<Tax> GetTaxes(OccupancyRoomRate occupancyRoomRate)

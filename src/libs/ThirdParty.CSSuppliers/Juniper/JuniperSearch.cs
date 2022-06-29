@@ -187,13 +187,8 @@
                                     Discount = (roomRate.Features.FirstOrDefault(f => string.Equals(f.RoomViewCode, Constant.RoomViewCodePromo) &&
                                                                 string.Equals(f.Description.Name, Constant.DiscountFeatureName))?.Description.Text ?? "0.00").ToSafeDecimal(),
                                     NonRefundableRates = string.Equals(roomRate.RoomRateExtension.NonRefundable, "1"),
-                                    Adjustments = roomRate.RoomRateExtension.Elements.Select(e => new TransformedResultAdjustment
-                                    {
-                                        AdjustmentType = "S",
-                                        AdjustmentName = e.Name,
-                                        AdjustmentAmount = e.Price.ToSafeDecimal(),
-                                        AdjustmentDescription = e.Description.Replace('{', '(').Replace('}', ')')
-                                    }).ToList()
+                                    Adjustments = roomRate.RoomRateExtension.Elements.Select(e => new TransformedResultAdjustment(SDK.V2.PropertySearch.AdjustmentType.Supplement, e.Name, 
+                                                  e.Description.Replace('{', '(').Replace('}', ')'), e.Price.ToSafeDecimal())).ToList()
                                 };
                                 if (excludeNonRefundableRates == false || tr.NonRefundableRates == false) transformedResults.TransformedResults.Add(tr);
                             }
