@@ -23,12 +23,13 @@ import { SubscriptionEdit } from '@/libs/ivo/subscription/edit';
 import { ProviderList } from '@/libs/ivo/provider/list';
 import { ProviderCreate } from '@/libs/ivo/provider/create';
 import { ProviderEdit } from '@/libs/ivo/provider/edit';
-//! Temp
-import { dummyModuleList, dummyProviders } from '@/temp';
 import MyAccount from '@/libs/core/settings/my-account';
 import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
 import ChangeLog from '@/libs/core/support/change-log';
+import RoadMap from '@/libs/core/support/road-map';
+//! Temp
+import { dummyModuleList, dummyProviders } from '@/temp';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -223,6 +224,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           {/* Support */}
           <Route path='/support/knowledge-base' element={<KnowledgeBase />} />
           <Route path='/support/change-log' element={<ChangeLog />} />
+          <Route path='/support/road-map' element={<RoadMap />} />
           {/* Docs */}
           <Route path='/docs/:id' element={<Docs />} />
           {/* Not Found Route */}
