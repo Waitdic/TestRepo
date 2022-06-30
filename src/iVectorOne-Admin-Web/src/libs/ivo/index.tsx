@@ -1,6 +1,7 @@
 import { memo, FC } from 'react';
 //
 import MainLayout from '@/layouts/Main';
+import { WelcomeBanner } from '@/components';
 
 type Props = {
   error: string | null;
@@ -9,6 +10,7 @@ type Props = {
 export const IvoView: FC<Props> = memo(({ error }) => {
   return (
     <MainLayout>
+      <WelcomeBanner />
       {error && (
         <div className='min-h-[50vh] h-full flex flex-col justify-center items-center'>
           <h1 className='text-4xl font-semibold text-red-500 mb-2'>
