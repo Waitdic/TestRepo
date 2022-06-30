@@ -118,7 +118,8 @@
                             Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
                             TPRateCode = roomResult.RoomData.RateCode,
                             Adjustments = GetAdjustments(roomResult.Adjustments),
-                            CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2)
+                            CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2),
+                            OnRequest = roomResult.RoomData.OnRequest
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

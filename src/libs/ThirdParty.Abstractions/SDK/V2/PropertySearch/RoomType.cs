@@ -139,5 +139,13 @@
         /// </value>
         public decimal CommissionPercentage { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [on request].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [on request]; otherwise, <c>false</c>.
+        /// </value>
+        public bool OnRequest { get; set; }
+
     }
 }

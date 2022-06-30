@@ -81,7 +81,8 @@
                         PayLocalAvailable = searchResult.PayLocalAvailable,
                         MealBasisCode = await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
                         MealBasisID = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
-                        RateCode  = searchResult.TPRateCode
+                        RateCode  = searchResult.TPRateCode,
+                        OnRequest = searchResult.OnRequest
                     },
                     PriceData = new PriceData()
                     {
@@ -91,14 +92,12 @@
                         Discount = searchResult.Discount,
                         CommissionPercentage = searchResult.CommissionPercentage
                     },
-
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
                         StartDate = x.StartDate,
                         EndDate = x.EndDate,
                         Amount = x.Amount,
                     }).ToList(),
-
                     Adjustments = searchResult.Adjustments.Select(x => new iVector.Search.Property.Adjustment() 
                     {
                         AdjustmentType = Enum.GetName(typeof(AdjustmentType),x.AdjustmentType),
