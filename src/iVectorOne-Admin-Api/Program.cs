@@ -11,7 +11,7 @@ builder.RegisterServices();
 var app = builder.Build();
 app.ConfigureApp();
 
-app.MapGet("v1/users/{key}", async (IMediator mediator, string key) =>
+app.MapGet("users/{key}", async (IMediator mediator, string key) =>
 {
     var request = new UserRequest(key);
     var user = await mediator.Send(request);
@@ -19,7 +19,7 @@ app.MapGet("v1/users/{key}", async (IMediator mediator, string key) =>
     return user;
 });
 
-app.MapGet("v1/tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
+app.MapGet("tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -41,7 +41,7 @@ app.MapGet("v1/tenants/{tenantid}/subscriptions", async (IMediator mediator, Htt
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -63,7 +63,7 @@ app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMedia
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -85,7 +85,7 @@ app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", asy
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
