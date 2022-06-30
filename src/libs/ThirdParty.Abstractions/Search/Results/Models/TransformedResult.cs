@@ -211,6 +211,15 @@
         public decimal Amount { get; set; }
 
         /// <summary>
+        /// Gets or sets the gross cost.
+        /// </summary>
+        /// <value>
+        /// The gross cost.
+        /// </value>
+        [XmlAttribute("GS")]
+        public decimal GrossCost { get; set; }
+
+        /// <summary>
         /// Gets or sets the third party reference.
         /// </summary>
         /// <value>

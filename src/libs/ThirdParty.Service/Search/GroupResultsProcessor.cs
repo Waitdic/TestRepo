@@ -90,7 +90,8 @@
                         Total = searchResult.Amount.ToSafeDecimal(),
                         NonRefundableRates = searchResult.NonRefundableRates,
                         Discount = searchResult.Discount,
-                        CommissionPercentage = searchResult.CommissionPercentage
+                        CommissionPercentage = searchResult.CommissionPercentage,
+                        GrossCost = searchResult.GrossCost
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {

@@ -147,5 +147,13 @@
         /// </value>
         public bool OnRequest { get; set; }
 
+        /// <summary>
+        /// Gets or sets the gross cost.
+        /// </summary>
+        /// <value>
+        /// The gross cost.
+        /// </value>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public decimal GrossCost { get; set; }
     }
 }
