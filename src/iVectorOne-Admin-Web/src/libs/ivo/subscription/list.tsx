@@ -86,7 +86,7 @@ export const SubscriptionList: FC<Props> = memo(
                     Subscriptions
                   </h1>
                   <div className='flex gap-3'>
-                    <DropdownFilter
+                    {/* <DropdownFilter
                       align='right'
                       allItems={mappedSubscriptionList}
                       items={filteredSubscriptionList}
@@ -94,7 +94,7 @@ export const SubscriptionList: FC<Props> = memo(
                       setFilters={setFilters}
                       setFilteredItems={setFilteredSubscriptionList}
                       title='Filter'
-                    />
+                    /> */}
                     <Button text='New' isLink href='/subscriptions/create' />
                   </div>
                 </div>
