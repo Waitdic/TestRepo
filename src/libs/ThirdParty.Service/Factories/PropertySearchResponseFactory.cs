@@ -172,7 +172,7 @@
         private decimal GetGrossCost(RoomSearchResult roomResult)
         {
             return roomResult.PriceData.GrossCost == roomResult.PriceData.TotalCost
-                                        ? default(decimal) : roomResult.PriceData.GrossCost; 
+                                        ? default(decimal) : Math.Round(roomResult.PriceData.GrossCost + 0.00M, 2);
         }
     }
 }
