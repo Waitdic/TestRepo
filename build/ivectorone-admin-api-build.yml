@@ -81,6 +81,13 @@ stages:
         Contents: 'nuget.config'
 
     - task: DotNetCoreCLI@2
+      inputs:
+        command: 'restore'
+        projects: 'src/$(project)/**/*.csproj'
+        feedsToUse: 'select'
+        vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
+
+    - task: DotNetCoreCLI@2
       displayName: 'Build Project'
       inputs:
         command: 'build'
