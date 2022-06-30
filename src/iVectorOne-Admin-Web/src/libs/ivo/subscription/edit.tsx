@@ -133,7 +133,7 @@ export const SubscriptionEdit: FC<Props> = memo(
 
     return (
       <>
-        <MainLayout maxWidth='max-w-3xl' minHeight='min-h-initial'>
+        <MainLayout maxWidth='max-w-3xl'>
           <div className='flex flex-col'>
             {/* Edit Subscription */}
             {fetchedSubscriptionList.error ? (

@@ -17,7 +17,7 @@ export function useCoreFetching() {
 
   const fetch = useCallback(async (userKey: string) => {
     try {
-      const userRes = await ApiCall.get(`/user/${userKey}`);
+      const userRes = await ApiCall.get(`v1/users/${userKey}`);
       const userData = get(userRes, 'data', null);
       const user: User = {
         fullName: userData?.fullName,

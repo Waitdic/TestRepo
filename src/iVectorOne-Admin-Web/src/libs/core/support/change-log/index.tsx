@@ -7,7 +7,7 @@ type Props = {};
 
 const ChangeLog: React.FC<Props> = ({}) => {
   return (
-    <Main minHeight='min-h-initial'>
+    <Main>
       <>
         {/* Page header */}
         <div className='sm:flex sm:justify-between sm:items-center mb-8'>

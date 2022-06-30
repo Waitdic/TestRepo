@@ -15,7 +15,7 @@ const Dashboard: React.FC<Props> = ({
   children,
   bg = 'slate-100',
   padding = 'px-4 sm:px-6 lg:px-8 py-8',
-  minHeight = 'min-h-[100vh]',
+  minHeight = 'min-h-initial',
   maxWidth = 'max-w-9xl',
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
