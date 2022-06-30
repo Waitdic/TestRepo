@@ -8,13 +8,15 @@ type Props = {
   bg?: string;
   padding?: string;
   minHeight?: string;
+  maxWidth?: string;
 };
 
 const Dashboard: React.FC<Props> = ({
   children,
-  bg = 'slate-100',
+  bg = 'white',
   padding = 'px-4 sm:px-6 lg:px-8 py-8',
   minHeight = 'min-h-[100vh]',
+  maxWidth = 'max-w-9xl',
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -29,8 +31,9 @@ const Dashboard: React.FC<Props> = ({
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
         <main
-          className={classNames('w-full max-w-9xl mx-auto', {
+          className={classNames('w-full mx-auto', {
             [minHeight]: minHeight,
+            [maxWidth]: maxWidth,
             [`bg-${bg}`]: bg,
             [padding]: padding,
           })}

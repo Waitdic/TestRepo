@@ -49,6 +49,7 @@ const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Header: Right side */}
           <div className='flex items-center space-x-3'>
+            <TenantSelector />
             <DropdownMenu
               dropdownNavigation={[
                 {
@@ -59,7 +60,6 @@ const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
             >
               {user?.fullName}
             </DropdownMenu>
-            <TenantSelector />
           </div>
         </div>
       </div>

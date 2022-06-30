@@ -93,7 +93,7 @@ const FeedbackPanel: React.FC = () => {
             <button className='btn border-slate-200 hover:border-slate-300 text-slate-600'>
               Cancel
             </button>
-            <button className='btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3'>
+            <button className='btn bg-primary text-white ml-3'>
               Save Changes
             </button>
           </div>

@@ -31,15 +31,15 @@ const SidebarLinkGroup: React.FC<Props> = ({
 
   return (
     <li
-      className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${
-        activecondition || open ? 'bg-primary' : 'bg-white'
-      }`}
+      className={classNames('px-3 py-2 rounded-sm mb-0.5 last:mb-0', {
+        // activecondition || open ? 'bg-primary' : 'bg-white'
+      })}
     >
       <>
         <Link
           to={to}
-          className={classNames('block truncate', {
-            'text-white': activecondition || open,
+          className={classNames('block truncate hover:text-primary', {
+            // 'text-white': activecondition || open,
           })}
           onClick={(e) => {
             if (!links) return;
@@ -51,9 +51,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
             <div className='flex items-center'>
               {getStaticSVGIcon(
                 title.toLowerCase().replace(/ /g, '-'),
-                `fill-gray-700 text-gray-700 shrink-0 h-6 w-6 ${
-                  activecondition && '!fill-white'
-                }`
+                `fill-gray-700 text-gray-700 shrink-0 h-6 w-6`
               )}
               <span className='text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
                 {title}
@@ -85,8 +83,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
                     end
                     to={to}
                     className={({ isActive }) =>
-                      'block text-gray-700 hover:text-slate-200 transition duration-150 truncate ' +
-                      (isActive ? '!text-white' : '')
+                      'block text-gray-700 hover:text-primary transition duration-150 truncate '
                     }
                   >
                     <span className='text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>

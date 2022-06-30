@@ -12,14 +12,14 @@ const RoadMap: React.FC<Props> = ({}) => {
         {/* Left: Title */}
         <div className='mb-4 sm:mb-0'>
           <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-            Roadmap ✨
+            Roadmap
           </h1>
         </div>
 
         {/* Right: Actions */}
         <div className='grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2'>
           {/* Add board button */}
-          <button className='btn bg-indigo-500 hover:bg-indigo-600 text-white'>
+          <button className='btn bg-primary text-white'>
             <svg
               className='w-4 h-4 fill-current opacity-50 shrink-0'
               viewBox='0 0 16 16'
@@ -46,46 +46,6 @@ const RoadMap: React.FC<Props> = ({}) => {
                 <div className='grow pb-6 border-b border-slate-200'>
                   <header>
                     <div className='flex flex-nowrap items-center space-x-2 mb-6'>
-                      {/* Avatars */}
-                      <div className='flex shrink-0 -space-x-3 -ml-px'>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 05'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 08'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 09'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 06'
-                          />
-                        </a>
-                      </div>
-                      <div className='text-slate-400'>·</div>
                       <div>
                         <div className='text-xs inline-flex font-medium bg-emerald-100 text-emerald-600 rounded-full text-center px-2.5 py-1'>
                           Completed
@@ -103,7 +63,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -130,7 +90,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -157,7 +117,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -180,7 +140,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                     <li className='relative py-2'>
                       <div className='flex items-center mb-1'>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -215,37 +175,6 @@ const RoadMap: React.FC<Props> = ({}) => {
                 <div className='grow pb-6 border-b border-slate-200'>
                   <header>
                     <div className='flex flex-nowrap items-center space-x-2 mb-6'>
-                      {/* Avatars */}
-                      <div className='flex shrink-0 -space-x-3 -ml-px'>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 03'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 05'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 01'
-                          />
-                        </a>
-                      </div>
-                      <div className='text-slate-400'>·</div>
                       <div>
                         <div className='text-xs inline-flex font-medium bg-indigo-100 text-indigo-600 rounded-full text-center px-2.5 py-1'>
                           Working on
@@ -263,7 +192,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -290,7 +219,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -317,7 +246,7 @@ const RoadMap: React.FC<Props> = ({}) => {
                           aria-hidden='true'
                         ></div>
                         <div
-                          className='absolute left-0 rounded-full bg-indigo-500'
+                          className='absolute left-0 rounded-full bg-primary'
                           aria-hidden='true'
                         >
                           <svg
@@ -375,37 +304,6 @@ const RoadMap: React.FC<Props> = ({}) => {
                 <div className='grow pb-6 border-b border-slate-200'>
                   <header>
                     <div className='flex flex-nowrap items-center space-x-2 mb-6'>
-                      {/* Avatars */}
-                      <div className='flex shrink-0 -space-x-3 -ml-px'>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 03'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 05'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 01'
-                          />
-                        </a>
-                      </div>
-                      <div className='text-slate-400'>·</div>
                       <div>
                         <div className='text-xs inline-flex font-medium bg-amber-100 text-amber-600 rounded-full text-center px-2.5 py-1'>
                           Planned
@@ -481,28 +379,6 @@ const RoadMap: React.FC<Props> = ({}) => {
                 <div className='grow pb-6 border-b border-slate-200'>
                   <header>
                     <div className='flex flex-nowrap items-center space-x-2 mb-6'>
-                      {/* Avatars */}
-                      <div className='flex shrink-0 -space-x-3 -ml-px'>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 03'
-                          />
-                        </a>
-                        <a className='block' href='#0'>
-                          <img
-                            className='rounded-full border-2 border-white box-content'
-                            src='/images/user-avatar-32.png'
-                            width='28'
-                            height='28'
-                            alt='User 02'
-                          />
-                        </a>
-                      </div>
-                      <div className='text-slate-400'>·</div>
                       <div>
                         <div className='text-xs inline-flex font-medium bg-amber-100 text-amber-600 rounded-full text-center px-2.5 py-1'>
                           Planned

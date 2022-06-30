@@ -133,16 +133,16 @@ export const SubscriptionEdit: FC<Props> = memo(
 
     return (
       <>
-        <MainLayout>
+        <MainLayout maxWidth='max-w-2xl'>
           <div className='flex flex-col'>
             {/* Edit Subscription */}
             {fetchedSubscriptionList.error ? (
               <ErrorBoundary />
             ) : (
               <>
-                <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-                  Edit Subscription
-                </h2>
+                <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-5 pb-3 md:mb-8 md:pb-6'>
+                  Edit Subscriptions
+                </h1>
                 <form
                   className='w-full divide-y divide-gray-200'
                   onSubmit={handleSubmit(onSubmit)}

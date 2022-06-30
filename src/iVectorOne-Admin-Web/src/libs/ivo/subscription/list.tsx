@@ -53,7 +53,7 @@ export const SubscriptionList: FC<Props> = memo(
         id,
         name,
         isActive: false, //! TODO: this property is not available in the response
-        actions: [{ name: 'Edit', href: `/subscriptions/edit/${id}` }],
+        actions: [{ name: 'Edit', href: `/subscriptions/${id}/edit` }],
       })
     );
     const tableEmptyState = {
@@ -81,21 +81,11 @@ export const SubscriptionList: FC<Props> = memo(
               <ErrorBoundary />
             ) : (
               <>
-                <div className='flex align-start justify-end mb-6'>
+                <div className='flex align-start justify-between mb-6'>
+                  <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
+                    Subscriptions
+                  </h1>
                   <div className='flex gap-3'>
-                    <Button
-                      color={ButtonColors.OUTLINE}
-                      text='Search'
-                      onClick={() => {
-                        setModalOpen(true);
-                      }}
-                    />
-                    <ModalSearch
-                      id='subscriptionSearch'
-                      searchId='subscriptionSearch'
-                      modalOpen={modalOpen}
-                      setModalOpen={setModalOpen}
-                    />
                     <DropdownFilter
                       align='right'
                       allItems={mappedSubscriptionList}
@@ -105,19 +95,7 @@ export const SubscriptionList: FC<Props> = memo(
                       setFilteredItems={setFilteredSubscriptionList}
                       title='Filter'
                     />
-                    <Button
-                      text='New'
-                      isLink
-                      href='/subscriptions/create'
-                      icon={
-                        <svg
-                          className='w-4 h-4 fill-current opacity-50 shrink-0 mr-1'
-                          viewBox='0 0 16 16'
-                        >
-                          <path d='M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z' />
-                        </svg>
-                      }
-                    />
+                    <Button text='New' isLink href='/subscriptions/create' />
                   </div>
                 </div>
                 <CardList

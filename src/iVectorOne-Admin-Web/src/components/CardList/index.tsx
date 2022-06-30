@@ -49,54 +49,14 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
                     <header>
                       <h3 className='text-2xl'>{name}</h3>
                     </header>
-                    {/* Menu button */}
-                    <DropdownEditMenu
-                      align='right'
-                      className='relative inline-flex shrink-0'
-                    >
-                      <li>
-                        <Link
-                          className='font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3'
-                          to='#0'
-                        >
-                          Option 1
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className='font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3'
-                          to='#0'
-                        >
-                          Option 2
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          className='font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3'
-                          to='#0'
-                        >
-                          Remove
-                        </Link>
-                      </li>
-                    </DropdownEditMenu>
                   </div>
                 </div>
                 {/* Card footer */}
                 <div className='border-t border-slate-200'>
                   <div className='flex divide-x divide-slate-200r'>
-                    <div className='flex-1 flex justify-center items-center'>
-                      <span
-                        className={classNames('py-1 px-6 rounded-2xl', {
-                          'bg-green-200 text-green-500': isActive,
-                          'bg-gray-200 text-gray-500': !isActive,
-                        })}
-                      >
-                        {isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </div>
                     <Link
                       className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
-                      to={`/subscriptions/edit/${id}`}
+                      to={`/subscriptions/${id}/edit`}
                     >
                       <div className='flex items-center justify-center'>
                         <svg

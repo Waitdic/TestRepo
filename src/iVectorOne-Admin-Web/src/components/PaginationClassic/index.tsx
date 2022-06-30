@@ -20,7 +20,7 @@ const PaginationClassic: React.FC<Props> = ({}) => {
             </button>
           </li>
           <li className='ml-3 first:ml-0'>
-            <button className='btn bg-white border-slate-200 hover:border-slate-300 text-indigo-500'>
+            <button className='btn bg-white border-slate-200 hover:border-slate-300 text-primary'>
               Next -&gt;
             </button>
           </li>

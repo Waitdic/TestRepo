@@ -49,7 +49,7 @@ const Toggle: FC<Props> = forwardRef(
           type='checkbox'
           onChange={handleChange}
           onBlur={onBlur}
-          className='focus:ring-blue-700 h-4 w-4 text-primary border-gray-300 rounded'
+          className='focus:ring-blue-700 h-4 w-4 text-primary border-gray-300 rounded hidden'
           ref={ref as LegacyRef<HTMLInputElement>}
           hidden
         />

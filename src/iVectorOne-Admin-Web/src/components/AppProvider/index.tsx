@@ -183,7 +183,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           <Route
-            path='/subscriptions/edit/:slug'
+            path='/subscriptions/:slug/edit'
             element={
               <SubscriptionEdit
                 fetchedSubscriptionList={{
@@ -215,7 +215,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             element={<ProviderCreate error={null} />}
           />
           <Route
-            path='/providers/edit/:slug'
+            path='/providers/:slug/edit'
             element={<ProviderEdit error={null} />}
           />
           {/* Settings */}

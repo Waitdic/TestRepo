@@ -14,14 +14,14 @@ const ChangeLog: React.FC<Props> = ({}) => {
           {/* Left: Title */}
           <div className='mb-4 sm:mb-0'>
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Changelog ✨
+              Changelog
             </h1>
           </div>
 
           {/* Right: Actions */}
           <div className='grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2'>
             {/* Add board button */}
-            <button className='btn bg-indigo-500 hover:bg-indigo-600 text-white'>
+            <button className='btn bg-primary text-white'>
               <svg
                 className='w-4 h-4 fill-current opacity-50 shrink-0'
                 viewBox='0 0 16 16'
@@ -39,7 +39,7 @@ const ChangeLog: React.FC<Props> = ({}) => {
             <div className='xl:pl-32 xl:-translate-x-16 mb-2'>
               <ul className='flex flex-wrap -m-1'>
                 <li className='m-1'>
-                  <button className='inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-indigo-500 text-white duration-150 ease-in-out'>
+                  <button className='inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-transparent shadow-sm bg-primary text-white duration-150 ease-in-out'>
                     View All
                   </button>
                 </li>
@@ -56,11 +56,6 @@ const ChangeLog: React.FC<Props> = ({}) => {
                 <li className='m-1'>
                   <button className='inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out'>
                     Product
-                  </button>
-                </li>
-                <li className='m-1'>
-                  <button className='inline-flex items-center justify-center text-sm font-medium leading-5 rounded-full px-3 py-1 border border-slate-200 hover:border-slate-300 shadow-sm bg-white text-slate-500 duration-150 ease-in-out'>
-                    Exciting News
                   </button>
                 </li>
               </ul>
@@ -238,62 +233,6 @@ const ChangeLog: React.FC<Props> = ({}) => {
                         <li>Retail: Better lorem ipsum generator.</li>
                         <li>Services: Better lorem ipsum generator.</li>
                       </ul>
-                    </div>
-                  </div>
-                </div>
-              </article>
-              {/* Post */}
-              <article className='pt-6'>
-                <div className='xl:flex'>
-                  <div className='w-32 shrink-0'>
-                    <div className='text-xs font-semibold uppercase text-slate-400 xl:leading-8'>
-                      2 July, 2021
-                    </div>
-                  </div>
-                  <div className='grow pb-6 border-b border-slate-200'>
-                    <header>
-                      <h2 className='text-2xl text-slate-800 font-bold mb-3'>
-                        Thanks, everyone 🙌
-                      </h2>
-                      <div className='flex flex-nowrap items-center space-x-2 mb-4'>
-                        <div className='flex items-center'>
-                          <a className='block mr-2 shrink-0' href='#0'>
-                            <img
-                              className='rounded-full border-2 border-white box-content'
-                              src='/images/user-avatar-32.png'
-                              width='32'
-                              height='32'
-                              alt='User 04'
-                            />
-                          </a>
-                          <a
-                            className='block text-sm font-semibold text-slate-800'
-                            href='#0'
-                          >
-                            Danielle Cohen
-                          </a>
-                        </div>
-                        <div className='text-slate-400'>·</div>
-                        <div>
-                          <div className='text-xs inline-flex font-medium bg-sky-100 text-sky-600 rounded-full text-center px-2.5 py-1'>
-                            Exciting News
-                          </div>
-                        </div>
-                      </div>
-                    </header>
-                    <div className='space-y-3'>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                        sed do eiusmod tempor incididunt ut labore et dolore
-                        magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea
-                        commodo consequat.
-                      </p>
-                      <p>
-                        Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat nulla pariatur
-                        excepteur sint occaecat cupidatat non proident.
-                      </p>
                     </div>
                   </div>
                 </div>
