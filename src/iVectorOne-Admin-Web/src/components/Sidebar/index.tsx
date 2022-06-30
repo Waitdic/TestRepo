@@ -23,10 +23,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
-  const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
-  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(
-    storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
-  );
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(true);
 
   // close on click outside
   useEffect(() => {

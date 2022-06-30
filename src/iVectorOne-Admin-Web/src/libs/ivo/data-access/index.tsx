@@ -19,12 +19,15 @@ export function useIvoFetching() {
     try {
       const activeTenant = user?.tenants.find((tenant) => tenant.isActive);
       const tenantKey: any = activeTenant?.tenantKey;
-      const subsRes = await ApiCall.get(`v1/tenants/subscriptions`, {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenantKey,
-        },
-      });
+      const subsRes = await ApiCall.get(
+        `/tenants/${activeTenant?.tenantId}/subscriptions`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Tenantkey: tenantKey,
+          },
+        }
+      );
       const subscriptions: Subscription[] = get(
         subsRes,
         'data.subscriptions',
