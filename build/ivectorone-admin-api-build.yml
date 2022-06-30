@@ -81,6 +81,7 @@ stages:
         Contents: 'nuget.config'
 
     - task: DotNetCoreCLI@2
+      displayName: 'Restore Project'
       inputs:
         command: 'restore'
         projects: 'src/$(project)/**/*.csproj'
@@ -92,7 +93,7 @@ stages:
       inputs:
         command: 'build'
         projects: 'src/$(project)/**/*.csproj'
-        arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source'
+        arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source --no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test Project'
