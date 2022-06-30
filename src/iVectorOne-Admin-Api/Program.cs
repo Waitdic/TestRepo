@@ -16,7 +16,7 @@ app.MapGet("users/{key}", async (IMediator mediator, string key) =>
     var request = new UserRequest(key);
     var user = await mediator.Send(request);
 
-    return user;
+    return Results.Ok(user);
 });
 
 app.MapGet("tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
