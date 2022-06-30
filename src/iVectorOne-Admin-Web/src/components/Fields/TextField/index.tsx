@@ -101,7 +101,7 @@ const TextField: FC<Props> = forwardRef(
                   />
                 </div>
                 <span
-                  className='absolute top-full text-xs text-red-600'
+                  className='absolute left-0 top-full text-xs text-red-600'
                   data-testid='input-error'
                 >
                   {errorMsg}

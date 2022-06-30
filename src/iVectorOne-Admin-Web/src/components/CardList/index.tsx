@@ -54,6 +54,9 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
                 {/* Card footer */}
                 <div className='border-t border-slate-200'>
                   <div className='flex divide-x divide-slate-200r'>
+                    <span className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'>
+                      {/* placeholder */}
+                    </span>
                     <Link
                       className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
                       to={`/subscriptions/${id}/edit`}
