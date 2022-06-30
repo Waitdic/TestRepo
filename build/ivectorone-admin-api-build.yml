@@ -75,6 +75,11 @@ stages:
         projectKey: 'Intuitive_iVectorOne_Admin_Api'
         projectName: 'iVectorOne Admin Api'
 
+    - task: DeleteFiles@1
+      inputs:
+        SourceFolder: 
+        Contents: 'nuget.config'
+
     - task: DotNetCoreCLI@2
       displayName: 'Build Project'
       inputs:
