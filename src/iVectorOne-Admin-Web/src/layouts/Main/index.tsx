@@ -26,7 +26,12 @@ const Dashboard: React.FC<Props> = ({
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Content area */}
-      <div className='relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden'>
+      <div
+        className={classNames(
+          'relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden',
+          { [`bg-${bg}`]: bg }
+        )}
+      >
         {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
@@ -34,7 +39,6 @@ const Dashboard: React.FC<Props> = ({
           className={classNames('w-full mx-auto', {
             [minHeight]: minHeight,
             [maxWidth]: maxWidth,
-            [`bg-${bg}`]: bg,
             [padding]: padding,
           })}
         >
