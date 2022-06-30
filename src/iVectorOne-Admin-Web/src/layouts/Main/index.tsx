@@ -13,7 +13,7 @@ type Props = {
 
 const Dashboard: React.FC<Props> = ({
   children,
-  bg = 'white',
+  bg = 'slate-200',
   padding = 'px-4 sm:px-6 lg:px-8 py-8',
   minHeight = 'min-h-[100vh]',
   maxWidth = 'max-w-9xl',

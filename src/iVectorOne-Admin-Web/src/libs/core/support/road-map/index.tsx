@@ -6,7 +6,7 @@ type Props = {};
 
 const RoadMap: React.FC<Props> = ({}) => {
   return (
-    <Main bg='white' minHeight='min-h-initial'>
+    <Main minHeight='min-h-initial'>
       {/* Page header */}
       <div className='sm:flex sm:justify-between sm:items-center mb-8'>
         {/* Left: Title */}

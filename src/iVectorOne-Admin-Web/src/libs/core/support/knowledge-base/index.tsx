@@ -6,7 +6,7 @@ type Props = {};
 
 const KnowledgeBase: React.FC<Props> = ({}) => {
   return (
-    <Main bg='white' padding='pb-8'>
+    <Main padding='pb-8'>
       {/* Search area */}
       <div className='relative flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8 lg:py-16 bg-indigo-500 overflow-hidden'>
         {/* Glow */}
