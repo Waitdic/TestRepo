@@ -3,7 +3,9 @@ using iVectorOne_Admin_Api.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 using System.Reflection;
+using iVectorOne_Admin_Api.Config.Validation;
 
 namespace iVectorOne_Admin_Api.Services
 {
@@ -22,6 +24,8 @@ namespace iVectorOne_Admin_Api.Services
                 .AddScheme<AuthenticationSchemeOptions, TenantAuthorisationHandler>("TenantAuthorisation", null);
             builder.Services.AddAuthorization();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return builder;
         }

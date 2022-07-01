@@ -37,7 +37,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             }
             else
             {
-                warnings.Add("No matching user could be found");
+                warnings.Add(Warnings.ConfigWarnings.NoUserWarning);
             }
 
             return Task.FromResult(new UserResponse { UserName = userName, Tenants = tenantDTOs, Warnings = warnings, Success = success });

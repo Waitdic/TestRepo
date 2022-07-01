@@ -35,53 +35,61 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             if (subscription != null)
             {
                 var supplier = _context.Suppliers.FirstOrDefault(s => s.SupplierId == request.SupplierId);
-                supplierName = supplier?.SupplierName;
-                if (subscription.SupplierSubscriptionAttributes != null && subscription.SupplierSubscriptionAttributes.Count() > 0)
+                if (supplier != null)
                 {
-                    success = true;
-                    foreach (var item in subscription.SupplierSubscriptionAttributes)
+                    supplierName = supplier?.SupplierName;
+                    if (subscription.SupplierSubscriptionAttributes != null && subscription.SupplierSubscriptionAttributes.Count() > 0)
                     {
-                        var configItem = new ConfigurationDTO()
+                        success = true;
+                        foreach (var item in subscription.SupplierSubscriptionAttributes)
                         {
-                            SupplierSubscriptionAttributeID = item.SupplierSubscriptionAttributeId,
-                            Name = item.SupplierAttribute.Attribute.AttributeName,
-                            Value = item.Value,
-                            DefaultValue = item.SupplierAttribute.Attribute.DefaultValue,
-                        };                        
-                        
-                        AttributeSchema config = default!;
-                        if (item.SupplierAttribute.Attribute.Schema != null)
-                        {
-                            config = JsonSerializer.Deserialize<AttributeSchema>(
-                                item.SupplierAttribute.Attribute.Schema,
-                                new JsonSerializerOptions()
-                                {
-                                    PropertyNameCaseInsensitive = true,
-                                })!;
-                        }
-                        if (config != null)
-                        {
-                            configItem.Type = config.Type.ToSafeEnum<ConfigurationType>().Value;
-                            configItem.Key = config.Key != null ? config.Key : "";
-                            configItem.Order = config.Order.HasValue ? config.Order.Value : 999;
-                            configItem.Description = config.Description != null ? config.Description : "";
-                            configItem.Maximum = config.Maximum;
-                            configItem.MaxLength = config.MaxLength;
-                            configItem.Minimum = config.Minimum;
-                            configItem.MinLength = config.MinLength;
-                            configItem.Required = config.Required;
-                            if (config.DropDownOptions.Count() > 0)
+                            var configItem = new ConfigurationDTO()
                             {
-                                configItem.DropDownOptions = config.DropDownOptions;
+                                SupplierSubscriptionAttributeID = item.SupplierSubscriptionAttributeId,
+                                Name = item.SupplierAttribute.Attribute.AttributeName,
+                                Value = item.Value,
+                                DefaultValue = item.SupplierAttribute.Attribute.DefaultValue,
+                            };
+
+                            AttributeSchema config = default!;
+                            if (item.SupplierAttribute.Attribute.Schema != null)
+                            {
+                                config = JsonSerializer.Deserialize<AttributeSchema>(
+                                    item.SupplierAttribute.Attribute.Schema,
+                                    new JsonSerializerOptions()
+                                    {
+                                        PropertyNameCaseInsensitive = true,
+                                    })!;
                             }
+                            if (config != null)
+                            {
+                                configItem.Type = config.Type.ToSafeEnum<ConfigurationType>().Value;
+                                configItem.Key = config.Key != null ? config.Key : "";
+                                configItem.Order = config.Order.HasValue ? config.Order.Value : 999;
+                                configItem.Description = config.Description != null ? config.Description : "";
+                                configItem.Maximum = config.Maximum;
+                                configItem.MaxLength = config.MaxLength;
+                                configItem.Minimum = config.Minimum;
+                                configItem.MinLength = config.MinLength;
+                                configItem.Required = config.Required;
+                                if (config.DropDownOptions.Count() > 0)
+                                {
+                                    configItem.DropDownOptions = config.DropDownOptions;
+                                }
+                            }
+                            configurations.Add(configItem);
                         }
-                        configurations.Add(configItem);
+                    }
+                    else
+                    {
+                        success = false;
+                        warnings.Add(Warnings.ConfigWarnings.MultiNoSupplierAttributesWarning);
                     }
                 }
                 else
                 {
                     success = false;
-                    warnings.Add("No Configurations found for subscription supplier combo");
+                    warnings.Add(Warnings.ConfigWarnings.NoSupplierWarning);
                 }
             }
 

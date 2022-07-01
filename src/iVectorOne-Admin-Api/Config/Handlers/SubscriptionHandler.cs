@@ -37,12 +37,12 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 }
                 else
                 {
-                    warnings.Add("Could not find a subscription with a matching id for the specified tenant");
+                    warnings.Add(Warnings.ConfigWarnings.NoSubscriptionWarning);
                 }
             }
             else
             {
-                warnings.Add("Could not find a tenant with a matching key");
+                warnings.Add(Warnings.ConfigWarnings.NoTenantWarning);
             }
 
             return Task.FromResult(new SubscriptionResponse() { Subscription = subDTO, Warnings = warnings, Success = success });

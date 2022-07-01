@@ -37,7 +37,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             }
             else
             {
-                warnings.Add("No matching tenant could be found");
+                warnings.Add(Warnings.ConfigWarnings.NoTenantWarning);
             }
 
             return Task.FromResult(new TenantResponse
