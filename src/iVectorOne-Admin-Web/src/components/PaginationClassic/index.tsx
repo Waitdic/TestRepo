@@ -1,8 +1,28 @@
+import classNames from 'classnames';
 import React from 'react';
 
-type Props = {};
+type Props = {
+  postPerPage: number;
+  resultCount: number;
+  currentPageCount: number;
+  setCurrentPageCount: React.Dispatch<React.SetStateAction<number>>;
+};
 
-const PaginationClassic: React.FC<Props> = ({}) => {
+const PaginationClassic: React.FC<Props> = ({
+  currentPageCount,
+  postPerPage,
+  resultCount,
+  setCurrentPageCount,
+}) => {
+  const handleIncrementPageCount = () => {
+    if (currentPageCount === Math.ceil(resultCount / postPerPage) - 1) return;
+    setCurrentPageCount(currentPageCount + 1);
+  };
+
+  const handleDecrementPageCount = () => {
+    setCurrentPageCount(currentPageCount - 1);
+  };
+
   return (
     <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between'>
       <nav
@@ -13,23 +33,44 @@ const PaginationClassic: React.FC<Props> = ({}) => {
         <ul className='flex justify-center'>
           <li className='ml-3 first:ml-0'>
             <button
-              className='btn bg-white border-slate-200 text-slate-300 cursor-not-allowed'
-              disabled
+              className={classNames('btn bg-white border-slate-200', {
+                'text-slate-300 cursor-not-allowed': currentPageCount === 0,
+                'hover:border-slate-300 text-primary': currentPageCount > 0,
+              })}
+              disabled={currentPageCount === 0}
+              onClick={handleDecrementPageCount}
             >
               &lt;- Previous
             </button>
           </li>
           <li className='ml-3 first:ml-0'>
-            <button className='btn bg-white border-slate-200 hover:border-slate-300 text-primary'>
+            <button
+              className={classNames('btn bg-white border-slate-200', {
+                'text-slate-300 cursor-not-allowed':
+                  currentPageCount === Math.ceil(resultCount / postPerPage) - 1,
+                'hover:border-slate-300 text-primary':
+                  currentPageCount < Math.ceil(resultCount / postPerPage) - 1,
+              })}
+              onClick={handleIncrementPageCount}
+            >
               Next -&gt;
             </button>
           </li>
         </ul>
       </nav>
       <div className='text-sm text-slate-500 text-center sm:text-left'>
-        Showing <span className='font-medium text-slate-600'>1</span> to{' '}
-        <span className='font-medium text-slate-600'>10</span> of{' '}
-        <span className='font-medium text-slate-600'>467</span> results
+        Showing{' '}
+        <span className='font-medium text-slate-600'>
+          {currentPageCount * postPerPage === 0
+            ? 1
+            : currentPageCount * postPerPage}
+        </span>{' '}
+        to{' '}
+        <span className='font-medium text-slate-600'>
+          {currentPageCount * postPerPage + postPerPage}
+        </span>{' '}
+        of <span className='font-medium text-slate-600'>{resultCount}</span>{' '}
+        results
       </div>
     </div>
   );

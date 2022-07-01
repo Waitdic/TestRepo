@@ -1,3 +1,154 @@
 {
-  "data": [{}]
+  "data": [
+    {
+      "category": "Announcement",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Product",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Bug Fix",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Announcement",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Product",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Bug Fix",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Announcement",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Product",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Bug Fix",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Announcement",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Product",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Bug Fix",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Announcement",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Product",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    },
+    {
+      "category": "Bug Fix",
+      "date": "8 July, 2021",
+      "title": "Released version 2.0",
+      "author": "Simona Lürwer",
+      "description": [
+        "Lorem ipsum dolor sit amet.",
+        "Lorem ipsum dolor sit amet."
+      ]
+    }
+  ]
 }

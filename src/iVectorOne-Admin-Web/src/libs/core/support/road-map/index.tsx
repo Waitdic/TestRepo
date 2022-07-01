@@ -6,18 +6,8 @@ import RoadMapData from '../../../../static-json/road-map.json';
 
 type Props = {};
 
-interface StaticRoadMap {
-  title: string;
-  status: string;
-  list: {
-    title: string;
-    description: string;
-    completed: boolean;
-  }[];
-}
-
 const RoadMap: React.FC<Props> = ({}) => {
-  const roadMapData: StaticRoadMap[] = RoadMapData.data;
+  const roadMapData = RoadMapData.data;
 
   return (
     <Main>
