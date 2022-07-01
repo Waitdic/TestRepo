@@ -8,7 +8,13 @@ import {
   SelectOption,
 } from '@/types';
 import { InputTypes } from '@/constants';
-import { Toggle, TextArea, Select, TextField } from '@/components';
+import {
+  Toggle,
+  TextArea,
+  Select,
+  TextField,
+  ErrorBoundary,
+} from '@/components';
 
 export const renderConfigurationFormFields = (
   configurations: ProviderConfiguration[],
@@ -17,6 +23,9 @@ export const renderConfigurationFormFields = (
     configurations?: FormErrorMessage[];
   }
 ) => {
+  if (!configurations?.length) {
+    return <ErrorBoundary title='Not found any configuration' />;
+  }
   const configurationsSortedByOrder = sortBy(configurations, ['order']);
 
   return configurationsSortedByOrder.map(

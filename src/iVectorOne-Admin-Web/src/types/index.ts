@@ -60,10 +60,13 @@ export type Subscription = {
   logMainSearchError: boolean;
   currencyCode: string;
   environment: string;
+  providers: Provider[];
 };
 export type Provider = {
   name: string;
-  providers: { name: string; isActive: boolean }[];
+  supplierID: number;
+  supplierSubscriptionID: number;
+  configurations: ProviderConfiguration[];
 };
 export type ProviderConfiguration = {
   key: string;
@@ -86,9 +89,9 @@ export type ProviderConfiguration = {
   required?: boolean;
 };
 export type ProviderFormFields = {
-  subscription: string;
-  provider: string;
-  configurations: any[];
+  subscription: number;
+  provider: number;
+  configurations: ProviderConfiguration[];
 };
 export type FormErrorMessage = {
   [key: string]: { message: string };
@@ -121,7 +124,6 @@ export type AppState = {
   awsAmplify: { username: string | null; jwtToken: string | null | undefined };
   modules: Module[];
   subscriptions: Subscription[];
-  providers: Provider[];
   error: null | string | Error;
   signOut: () => void;
 };

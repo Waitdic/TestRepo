@@ -102,6 +102,7 @@ export const SubscriptionList: FC<Props> = memo(
                   bodyList={tableBodyList}
                   isLoading={fetchedSubscriptionList.isLoading}
                   emptyState={tableEmptyState}
+                  statusIsPlaceholder
                 />
               </>
             )}

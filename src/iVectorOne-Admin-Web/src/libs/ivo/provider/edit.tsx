@@ -1,5 +1,5 @@
-import { memo, FC, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { memo, FC, useState, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
@@ -7,7 +7,12 @@ import axios from 'axios';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
-import { ProviderConfiguration, ProviderFormFields } from '@/types';
+import {
+  Provider,
+  ProviderConfiguration,
+  ProviderFormFields,
+  Subscription,
+} from '@/types';
 import MainLayout from '@/layouts/Main';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import {
@@ -18,186 +23,36 @@ import {
   Spinner,
   Notification,
 } from '@/components';
+import ApiCall from '@/axios';
 
 type Props = {
   error: string | null;
 };
 
 export const ProviderEdit: FC<Props> = memo(({ error }) => {
-  // const {
-  //   configurations,
-  //   error: providerInfoError,
-  //   isLoading,
-  // } = useProviderInfo();
-  //! Temporary
-  const providerInfoError = null;
-  const isLoading = false;
-  const configurations: ProviderConfiguration[] = [
-    {
-      defaultValue: 'Tailormade',
-      description: '',
-      key: 'string_field',
-      maximum: 50,
-      minimum: 10,
-      name: 'Username',
-      order: 1,
-      required: true,
-      type: 'string',
-    },
-    {
-      defaultValue: 'enquiries@allinclusive.co.uk',
-      description: '',
-      key: 'email_field',
-      maxLength: 100,
-      minLength: 6,
-      name: 'Email Address',
-      order: 2,
-      required: true,
-      type: 'email',
-    },
-    {
-      defaultValue: 'Wt8GwYN39L',
-      description: '',
-      key: 'password_field',
-      maxLength: 100,
-      minLength: 8,
-      name: 'Password',
-      order: 3,
-      required: true,
-      type: 'password',
-    },
-    {
-      description: '',
-      dropdownOptions: [
-        { id: 'en', name: 'English' },
-        { id: 'de', name: 'German' },
-      ],
-      key: 'dropdown_field',
-      name: 'Language',
-      order: 4,
-      type: 'dropdown',
-    },
-    {
-      description: '',
-      dropdownOptions: [
-        { id: 'eur', name: 'EUR' },
-        { id: 'usd', name: 'USD' },
-      ],
-      key: 'dropdown_field',
-      name: 'Currency',
-      order: 5,
-      type: 'dropdown',
-    },
-    {
-      defaultValue: true,
-      description: '',
-      key: 'boolean_field',
-      name: 'Allow Cancellations',
-      order: 6,
-      type: 'boolean',
-    },
-    {
-      defaultValue: 'Sunspot_Sunhotels',
-      description: '',
-      key: 'string_field',
-      name: 'Supplier Reference',
-      order: 7,
-      required: true,
-      type: 'string',
-    },
-    {
-      defaultValue: false,
-      description: '',
-      key: 'boolean_field',
-      name: 'Use GZip',
-      order: 8,
-      type: 'boolean',
-    },
-    {
-      defaultValue:
-        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/SearchV2',
-      description: '',
-      key: 'uri_field',
-      name: 'Search URL',
-      order: 9,
-      required: true,
-      type: 'uri',
-    },
-    {
-      defaultValue:
-        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/BookV2',
-      description: '',
-      key: 'uri_field',
-      name: 'Book URL',
-      order: 10,
-      required: true,
-      type: 'uri',
-    },
-    {
-      defaultValue:
-        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/CancelBooking',
-      description: '',
-      key: 'uri_field',
-      name: 'Cancel URL',
-      order: 11,
-      required: true,
-      type: 'uri',
-    },
-    {
-      defaultValue: 0,
-      description: '',
-      key: 'number_field',
-      maximum: 30,
-      minimum: 0,
-      name: 'Offset Cancellation Days',
-      order: 12,
-      required: true,
-      type: 'number',
-    },
-    {
-      description: '',
-      dropdownOptions: [
-        { id: 'gb', name: 'GB' },
-        { id: 'us', name: 'USA' },
-      ],
-      key: 'dropdown_field',
-      name: 'Nationality',
-      order: 13,
-      type: 'dropdown',
-    },
-    {
-      defaultValue:
-        'http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/PreBookV2',
-      description: '',
-      key: 'uri_field',
-      name: 'Pre Book URL',
-      order: 14,
-      required: true,
-      type: 'uri',
-    },
-    {
-      description: '',
-      key: 'string_field',
-      name: 'Accommodation Types',
-      order: 15,
-      required: true,
-      type: 'string',
-    },
-    {
-      defaultValue: true,
-      description: '',
-      key: 'boolean_field',
-      name: 'Request Package Rates',
-      order: 16,
-      type: 'boolean',
-    },
-  ];
-
+  const { pathname } = useLocation();
+  const providerId = pathname.split('/')[2];
   const navigate = useNavigate();
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
-  const providers = useSelector((state: RootState) => state.app.providers);
+
+  const [currentProvider, setCurrentProvider] = useState(
+    null as Provider | null
+  );
+
+  const currentSubscription = useMemo(
+    () =>
+      subscriptions.find((subscription) => {
+        return subscription.providers.find((provider) => {
+          if (provider.supplierID === Number(providerId)) {
+            setCurrentProvider(provider);
+            return provider;
+          }
+        });
+      }),
+    [subscriptions, providerId]
+  );
 
   const {
     register,
@@ -244,27 +99,15 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   };
 
   useEffect(() => {
-    if (!isLoading) {
-      if (providerInfoError) {
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: 'Provider Info fetching failed.',
-        });
-        setShowNotification(true);
-
-        return;
-      }
-
-      if (configurations.length > 0) {
-        setDefaultConfigurationFormFields(configurations, setValue);
-      }
-
-      if (subscriptions.length > 0) {
-        setValue('subscription', subscriptions[0].userName);
-        setValue('provider', providers[0].name);
-      }
+    if (!!currentProvider?.configurations?.length) {
+      setDefaultConfigurationFormFields(
+        currentProvider.configurations,
+        setValue
+      );
     }
-  }, [isLoading, providerInfoError, configurations, subscriptions, setValue]);
+    setValue('subscription', currentSubscription?.subscriptionId || 0);
+    setValue('provider', currentProvider?.supplierID || 0);
+  }, [currentProvider]);
 
   return (
     <>
@@ -304,17 +147,19 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
                     )}
                   </div>
                   <div className='flex-1'>
-                    {providers.length > 0 ? (
+                    {!!currentSubscription?.providers?.length ? (
                       <Select
                         id='provider'
                         {...register('provider', {
                           required: 'This field is required.',
                         })}
                         labelText='Provider'
-                        options={providers.map((loginOption) => ({
-                          id: loginOption.name,
-                          name: loginOption.name,
-                        }))}
+                        options={currentSubscription.providers.map(
+                          (loginOption) => ({
+                            id: loginOption.supplierID,
+                            name: loginOption.name,
+                          })
+                        )}
                         disabled
                       />
                     ) : (
@@ -325,9 +170,9 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
                     <SectionTitle title='Settings' />
                     <div className='flex flex-col gap-5 mt-5'>
                       {renderConfigurationFormFields(
-                        configurations,
+                        currentProvider?.configurations || [],
                         register,
-                        errors
+                        errors as any
                       )}
                     </div>
                   </div>

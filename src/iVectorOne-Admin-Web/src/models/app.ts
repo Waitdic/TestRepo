@@ -16,7 +16,6 @@ export const app = createModel<RootModel>()({
   state: {
     modules: [],
     subscriptions: [],
-    providers: [],
     user: null,
     awsAmplify: { username: null, jwtToken: null },
     lang: window?.localStorage.getItem('lang') || navigator.language,
@@ -68,12 +67,6 @@ export const app = createModel<RootModel>()({
       return {
         ...state,
         subscriptions: payload,
-      };
-    },
-    updateProviders(state, payload: Provider[]) {
-      return {
-        ...state,
-        providers: payload,
       };
     },
     setError(state, payload: null | string | Error) {

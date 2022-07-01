@@ -21,9 +21,15 @@ type Props = {
     buttonText: string;
   };
   isLoading?: boolean;
+  statusIsPlaceholder?: boolean;
 };
 
-const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
+const CardList: FC<Props> = ({
+  bodyList,
+  emptyState,
+  isLoading = false,
+  statusIsPlaceholder = false,
+}) => {
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -54,12 +60,26 @@ const CardList: FC<Props> = ({ bodyList, emptyState, isLoading = false }) => {
                 {/* Card footer */}
                 <div className='border-t border-slate-200'>
                   <div className='flex divide-x divide-slate-200r'>
-                    <span className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'>
-                      {/* placeholder */}
-                    </span>
+                    {statusIsPlaceholder ? (
+                      <span className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'>
+                        {/* placeholder */}
+                      </span>
+                    ) : (
+                      <div className='flex-1 flex justify-center items-center'>
+                        <span
+                          className={classNames('py-1 px-6 rounded-2xl', {
+                            'bg-green-200 text-green-500': isActive,
+                            'bg-gray-200 text-gray-500': !isActive,
+                          })}
+                        >
+                          {isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                    )}
+
                     <Link
                       className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
-                      to={`/subscriptions/${id}/edit`}
+                      to={actions?.[0]?.href || ''}
                     >
                       <div className='flex items-center justify-center'>
                         <svg

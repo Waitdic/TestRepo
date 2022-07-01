@@ -1,36 +1,30 @@
-import { memo, useState, useEffect, FC } from 'react';
+import { memo, useState, useEffect, FC, useMemo } from 'react';
 //
 import { Provider } from '@/types';
-import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
   EmptyState,
-  ErrorBoundary,
-  TableList,
   Button,
   Spinner,
-  Notification,
   SearchField,
+  CardList,
 } from '@/components';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
-type Props = {
-  fetchedProviderList: {
-    providers: Provider[];
-    error: string | null;
-    isLoading: boolean;
-  };
-};
+type Props = {};
 
-export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
-  const [filteredProviderList, setFilteredProviderList] = useState<Provider[]>(
-    fetchedProviderList.providers
+export const ProviderList: FC<Props> = memo(() => {
+  const subscriptions = useSelector(
+    (state: RootState) => state.app.subscriptions
   );
-  const [showError, setShowError] = useState<boolean>(false);
+  const providers = useMemo(() => {
+    return subscriptions.flatMap((subscription) => subscription.providers);
+  }, [subscriptions]);
 
-  const tableHeaderList = [
-    { name: 'Name', align: 'left' },
-    { name: 'Actions', align: 'right' },
-  ];
+  const [filteredProviderList, setFilteredProviderList] =
+    useState<Provider[]>(providers);
+
   const tableEmptyState = {
     title: 'No providers',
     description: 'Get started by creating a new provider.',
@@ -39,94 +33,62 @@ export const ProviderList: FC<Props> = memo(({ fetchedProviderList }) => {
   };
 
   useEffect(() => {
-    if (fetchedProviderList.error) {
-      setShowError(true);
-    } else {
-      setShowError(false);
-    }
-    setFilteredProviderList(fetchedProviderList.providers);
-  }, [fetchedProviderList]);
+    setFilteredProviderList(providers);
+  }, [providers]);
+
+  if (!subscriptions?.length) {
+    return null;
+  }
 
   return (
     <>
       <MainLayout>
         <div className='flex flex-col'>
-          {/* Providers */}
-          {fetchedProviderList.error ? (
-            <ErrorBoundary />
-          ) : (
-            <>
-              <div className='flex align-start justify-end mb-6'>
-                <div className='flex'>
-                  <SearchField
-                    list={fetchedProviderList.providers}
-                    setList={setFilteredProviderList}
-                  />
-                  <Button
-                    text='New'
-                    isLink
-                    href='/providers/create'
-                    className='ml-3'
-                  />
-                </div>
+          <>
+            <div className='flex align-start justify-end mb-6'>
+              <div className='flex'>
+                {/* <SearchField
+                  list={providers}
+                  setList={setFilteredProviderList}
+                /> */}
+                <Button
+                  text='New'
+                  isLink
+                  href='/providers/create'
+                  className='ml-3'
+                />
               </div>
-              <div className='flex flex-col gap-8'>
-                {!fetchedProviderList.isLoading &&
-                filteredProviderList.length ? (
-                  filteredProviderList.map(
-                    ({ name: subscriptionName, providers }) => (
-                      <div key={subscriptionName}>
-                        <div className='flex justify-between items-center mb-3'>
-                          <h3 className='text-xl font-medium uppercase'>
-                            {subscriptionName}
-                          </h3>
-                        </div>
-                        <TableList
-                          headerList={tableHeaderList}
-                          bodyList={providers.map(({ name, isActive }) => ({
-                            id: name,
-                            name,
-                            isActive,
-                            actions: [
-                              {
-                                name: 'Edit',
-                                href: `/providers/${name}/edit`,
-                              },
-                            ],
-                          }))}
-                          emptyState={tableEmptyState}
-                        />
-                      </div>
-                    )
-                  )
-                ) : fetchedProviderList.isLoading ? (
-                  <div className='p-4 text-center'>
-                    <Spinner />
-                  </div>
-                ) : (
-                  <EmptyState
-                    title='No subscriptions'
-                    description='Get started by creating a new subscription.'
-                    href='/providers/create'
-                    buttonText='New Subscription'
-                  />
-                )}
-              </div>
-            </>
-          )}
+            </div>
+            <div className='flex flex-col gap-8'>
+              {filteredProviderList.length ? (
+                <CardList
+                  bodyList={filteredProviderList.map(
+                    ({ name, supplierID }) => ({
+                      id: supplierID,
+                      name,
+                      actions: [
+                        {
+                          name: 'Edit',
+                          href: `/providers/${supplierID}/edit`,
+                        },
+                      ],
+                    })
+                  )}
+                  emptyState={tableEmptyState}
+                  statusIsPlaceholder
+                />
+              ) : (
+                <EmptyState
+                  title='No subscriptions'
+                  description='Get started by creating a new subscription.'
+                  href='/providers/create'
+                  buttonText='New Subscription'
+                />
+              )}
+            </div>
+          </>
         </div>
       </MainLayout>
-
-      {showError && (
-        <Notification
-          title='Error'
-          description={fetchedProviderList.error as string}
-          show={showError}
-          setShow={setShowError}
-          status={NotificationStatus.ERROR}
-          autoHide={false}
-        />
-      )}
     </>
   );
 });

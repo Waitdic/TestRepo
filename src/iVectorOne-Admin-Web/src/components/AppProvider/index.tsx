@@ -29,7 +29,7 @@ import KnowledgeBase from '@/libs/core/support/knowledge-base';
 import ChangeLog from '@/libs/core/support/change-log';
 import RoadMap from '@/libs/core/support/road-map';
 //! Temp
-import { dummyModuleList, dummyProviders } from '@/temp';
+import { dummyModuleList } from '@/temp';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -55,7 +55,6 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
   //* IVO Data Fetch
   const {
     subscriptions,
-    providers,
     isLoading: ivoIsLoading,
     error: ivoError,
   } = useIvoFetching();
@@ -70,35 +69,16 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
     if (fetchedUser) {
       dispatch.app.updateUser(fetchedUser);
     }
-    // if (moduleList.length) {
-    //   dispatch.app.updateModuleList(moduleList);
-    // }
     if (tenantList.length) {
       dispatch.app.updateTenantList(tenantList);
     }
   }, [fetchedUser, moduleList, tenantList]);
 
   useEffect(() => {
-    // if (providers.length) {
-    //   dispatch.app.updateProviders(providers);
-    // }
     if (subscriptions.length) {
       dispatch.app.updateSubscriptions(subscriptions);
     }
-  }, [providers, subscriptions]);
-
-  //Temporary used waiting for the API to be ready
-  useEffect(() => {
-    if (dummyModuleList.length) {
-      dispatch.app.updateModuleList(dummyModuleList);
-    }
-  }, [dummyModuleList]);
-
-  useEffect(() => {
-    if (dummyProviders.length) {
-      dispatch.app.updateProviders(dummyProviders);
-    }
-  }, [dummyProviders]);
+  }, [subscriptions]);
 
   return (
     <>
@@ -195,21 +175,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             }
           />
           {/* Provider Routes */}
-          <Route
-            path='/providers'
-            element={
-              <ProviderList
-                fetchedProviderList={{
-                  // providers,
-                  // isLoading: ivoIsLoading,
-                  // error: ivoError,
-                  providers: dummyProviders as Provider[],
-                  isLoading: false,
-                  error: null,
-                }}
-              />
-            }
-          />
+          <Route path='/providers' element={<ProviderList />} />
           <Route
             path='/providers/create'
             element={<ProviderCreate error={null} />}
