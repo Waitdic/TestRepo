@@ -38,7 +38,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
       <>
         <Link
           to={to}
-          className={classNames('block truncate hover:text-primary', {
+          className={classNames('block truncate text-white', {
             // 'text-white': activecondition || open,
           })}
           onClick={(e) => {
@@ -48,10 +48,10 @@ const SidebarLinkGroup: React.FC<Props> = ({
           }}
         >
           <div className='flex items-center justify-between'>
-            <div className='flex items-center'>
+            <div className='group flex items-center'>
               {getStaticSVGIcon(
                 title.toLowerCase().replace(/ /g, '-'),
-                `fill-gray-700 text-gray-700 shrink-0 h-6 w-6`
+                `duration-200 fill-white group-hover:fill-primary shrink-0 h-6 w-6`
               )}
               <span className='text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
                 {title}
@@ -60,7 +60,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
             {links && (
               <div className='flex shrink-0 ml-2'>
                 <svg
-                  className={`w-3 h-3 shrink-0 ml-1 fill-current text-slate-400 ${
+                  className={`w-3 h-3 shrink-0 ml-1 fill-current text-white ${
                     open && 'transform rotate-180'
                   }`}
                   viewBox='0 0 12 12'
@@ -83,7 +83,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
                     end
                     to={to}
                     className={({ isActive }) =>
-                      'block text-gray-700 hover:text-primary transition duration-150 truncate '
+                      'block text-white hover:text-primary transition duration-150 truncate '
                     }
                   >
                     <span className='text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
