@@ -15,6 +15,8 @@ import {
   Notification,
   Button,
 } from '@/components';
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -22,14 +24,12 @@ type NotificationState = {
 };
 
 type Props = {
-  fetchedTenantList: {
-    tenantList: Tenant[];
-    error: string | null;
-    isLoading: boolean;
-  };
+  error: string | null;
+  isLoading: boolean;
 };
 
-export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
+export const TenantEdit: FC<Props> = memo(({ error, isLoading }) => {
+  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
   const navigate = useNavigate();
   const { slug } = useSlug();
 
@@ -77,10 +77,10 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
   };
 
   const loadTenant = useCallback(() => {
-    if (fetchedTenantList.isLoading) return;
+    if (isLoading) return;
 
-    if (fetchedTenantList?.tenantList.length > 0) {
-      const currentTenant = fetchedTenantList?.tenantList.filter(
+    if (!!tenants?.length) {
+      const currentTenant = tenants.filter(
         (tenant) => tenant.tenantId === Number(slug)
       )[0];
 
@@ -90,19 +90,19 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
         setValue('name', currentTenant.name);
       }
     }
-  }, [fetchedTenantList, navigate, setValue, slug]);
+  }, [tenants, slug]);
 
   useEffect(() => {
     loadTenant();
 
-    if (fetchedTenantList.error) {
+    if (error) {
       setNotification({
         status: NotificationStatus.ERROR,
-        message: fetchedTenantList.error,
+        message: error,
       });
       setShowNotification(true);
     }
-  }, [fetchedTenantList, navigate, setValue, slug, loadTenant]);
+  }, [tenants, navigate, setValue, slug, loadTenant]);
 
   return (
     <>
@@ -111,7 +111,7 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
       >
         <div className='flex flex-col'>
           {/* Edit Tenant */}
-          {fetchedTenantList.error ? (
+          {error ? (
             <ErrorBoundary />
           ) : (
             <>
@@ -124,8 +124,7 @@ export const TenantEdit: FC<Props> = memo(({ fetchedTenantList }) => {
                 autoComplete='turnedOff'
               >
                 <div className='mb-8 md:w-3/4'>
-                  {!fetchedTenantList.isLoading &&
-                  fetchedTenantList.tenantList.length > 0 ? (
+                  {!isLoading && !!tenants?.length ? (
                     <TextField
                       id='newTenant'
                       {...register('name', {

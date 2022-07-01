@@ -99,7 +99,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
           </button>
           {/* Logo */}
           <NavLink end to='/' className='block'>
-            <img src='/iVectorOne_Logo-768x207.png' />
+            <img src='/logo.png' />
           </NavLink>
         </div>
         {/* Links */}

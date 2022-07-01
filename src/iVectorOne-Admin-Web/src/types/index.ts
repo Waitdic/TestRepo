@@ -30,6 +30,7 @@ export type Tenant = {
   name: string;
   tenantId: number;
   tenantKey: string;
+  isSelected?: boolean;
 };
 export type User = {
   fullName: string;
@@ -91,7 +92,7 @@ export type ProviderConfiguration = {
 export type ProviderFormFields = {
   subscription: number;
   provider: number;
-  configurations: ProviderConfiguration[];
+  configurations: any[];
 };
 export type FormErrorMessage = {
   [key: string]: { message: string };

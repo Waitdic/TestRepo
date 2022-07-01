@@ -11,6 +11,7 @@ import {
 } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { uniqBy, uniqWith } from 'lodash';
 
 type Props = {};
 
@@ -18,12 +19,16 @@ export const ProviderList: FC<Props> = memo(() => {
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
-  const providers = useMemo(() => {
-    return subscriptions.flatMap((subscription) => subscription.providers);
+  const providers: Provider[] = useMemo(() => {
+    return uniqBy(
+      subscriptions.flatMap((subscription) => subscription.providers),
+      'supplierID'
+    );
   }, [subscriptions]);
 
-  const [filteredProviderList, setFilteredProviderList] =
-    useState<Provider[]>(providers);
+  const [filteredProviderList, setFilteredProviderList] = useState<Provider[]>(
+    []
+  );
 
   const tableEmptyState = {
     title: 'No providers',

@@ -11,19 +11,17 @@ import {
   SearchField,
   Notification,
 } from '@/components';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 type Props = {
-  fetchedTenantList: {
-    tenantList: Tenant[];
-    error: string | null;
-    isLoading: boolean;
-  };
+  error: string | null;
+  isLoading: boolean;
 };
 
-export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
-  const [filteredTenantList, setFilteredTenantList] = useState<Tenant[]>(
-    fetchedTenantList.tenantList
-  );
+export const TenantList: FC<Props> = memo(({ error, isLoading }) => {
+  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
+  const [filteredTenantList, setFilteredTenantList] = useState<Tenant[]>([]);
   const [showError, setShowError] = useState<boolean>(false);
 
   const tableHeaderList = [
@@ -43,13 +41,13 @@ export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
   };
 
   useEffect(() => {
-    if (fetchedTenantList.error) {
+    if (error) {
       setShowError(true);
     } else {
       setShowError(false);
     }
-    setFilteredTenantList(fetchedTenantList.tenantList);
-  }, [fetchedTenantList]);
+    setFilteredTenantList(tenants || []);
+  }, [tenants]);
 
   return (
     <>
@@ -59,14 +57,14 @@ export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
         <div className='flex flex-col h-full'>
           {/* Tenants */}
 
-          {fetchedTenantList.error ? (
+          {error ? (
             <ErrorBoundary />
           ) : (
             <>
               <div className='flex align-start justify-end mb-6'>
                 <div className='flex'>
                   <SearchField
-                    list={fetchedTenantList.tenantList}
+                    list={tenants || []}
                     setList={setFilteredTenantList}
                   />
                   <Button
@@ -80,7 +78,7 @@ export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
               <TableList
                 headerList={tableHeaderList}
                 bodyList={tableBodyList}
-                isLoading={fetchedTenantList.isLoading}
+                isLoading={isLoading}
                 emptyState={tableEmptyState}
               />
             </>
@@ -91,7 +89,7 @@ export const TenantList: FC<Props> = memo(({ fetchedTenantList }) => {
       {showError && (
         <Notification
           title='Error'
-          description={fetchedTenantList.error as string}
+          description={error as string}
           show={showError}
           setShow={setShowError}
           status={NotificationStatus.ERROR}

@@ -6,23 +6,21 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import NotFound from '@/layouts/NotFound';
-import Docs from '@/libs/core/docs';
 import { ModuleCreate } from '@/libs/core/module/create';
 import { ModuleEdit } from '@/libs/core/module/edit';
 import { ModuleList } from '@/libs/core/module/list';
 import { TenantCreate } from '@/libs/core/tenant/create';
 import { TenantEdit } from '@/libs/core/tenant/edit';
 import { TenantList } from '@/libs/core/tenant/list';
-import { Module, Provider } from '@/types';
-import { useCoreFetching } from '@/libs/core/data-access';
-import { useIvoFetching } from '@/libs/ivo/data-access';
-import { IvoView } from '@/libs/ivo';
-import { SubscriptionCreate } from '@/libs/ivo/subscription/create';
-import { SubscriptionList } from '@/libs/ivo/subscription/list';
-import { SubscriptionEdit } from '@/libs/ivo/subscription/edit';
-import { ProviderList } from '@/libs/ivo/provider/list';
-import { ProviderCreate } from '@/libs/ivo/provider/create';
-import { ProviderEdit } from '@/libs/ivo/provider/edit';
+import { Module } from '@/types';
+import { useCoreFetching, useIvoFetching } from '@/libs/core/data-access';
+import { Dashboard } from '@/libs/core';
+import { SubscriptionCreate } from '@/libs/core/subscription/create';
+import { SubscriptionList } from '@/libs/core/subscription/list';
+import { SubscriptionEdit } from '@/libs/core/subscription/edit';
+import { ProviderList } from '@/libs/core/provider/list';
+import { ProviderCreate } from '@/libs/core/provider/create';
+import { ProviderEdit } from '@/libs/core/provider/edit';
 import MyAccount from '@/libs/core/settings/my-account';
 import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
@@ -44,41 +42,16 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
   const username = user?.username || null;
 
   //* Core Data Fetch
-  const {
-    user: fetchedUser,
-    tenantList,
-    moduleList,
-    isLoading: coreIsLoading,
-    error: coreError,
-  } = useCoreFetching();
+  const { isLoading: coreIsLoading, error: coreError } = useCoreFetching();
 
   //* IVO Data Fetch
-  const {
-    subscriptions,
-    isLoading: ivoIsLoading,
-    error: ivoError,
-  } = useIvoFetching();
+  const { isLoading: ivoIsLoading, error: ivoError } = useIvoFetching();
 
   useEffect(() => {
     dispatch.app.setThemeColor(theme);
     dispatch.app.getUserByAwsJwtToken({ user: username });
     dispatch.app.setSignOutCallback(signOut);
   }, []);
-
-  useEffect(() => {
-    if (fetchedUser) {
-      dispatch.app.updateUser(fetchedUser);
-    }
-    if (tenantList.length) {
-      dispatch.app.updateTenantList(tenantList);
-    }
-  }, [fetchedUser, moduleList, tenantList]);
-
-  useEffect(() => {
-    if (subscriptions.length) {
-      dispatch.app.updateSubscriptions(subscriptions);
-    }
-  }, [subscriptions]);
 
   return (
     <>
@@ -91,19 +64,11 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
       >
         <Routes>
           {/* Dashboard */}
-          <Route path='/' element={<IvoView error={coreError} />} />
+          <Route path='/' element={<Dashboard error={coreError} />} />
           {/* Tenant Routes */}
           <Route
             path='/tenant/list'
-            element={
-              <TenantList
-                fetchedTenantList={{
-                  tenantList,
-                  isLoading: coreIsLoading,
-                  error: coreError,
-                }}
-              />
-            }
+            element={<TenantList isLoading={coreIsLoading} error={coreError} />}
           />
           <Route
             path='/tenant/create'
@@ -111,15 +76,7 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           />
           <Route
             path='/tenant/edit/:slug'
-            element={
-              <TenantEdit
-                fetchedTenantList={{
-                  tenantList,
-                  isLoading: coreIsLoading,
-                  error: coreError,
-                }}
-              />
-            }
+            element={<TenantEdit isLoading={coreIsLoading} error={coreError} />}
           />
           {/* Module Routes */}
           <Route
@@ -150,29 +107,10 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             path='/subscriptions/create'
             element={<SubscriptionCreate error={null} />}
           />
-          <Route
-            path='/subscriptions'
-            element={
-              <SubscriptionList
-                fetchedSubscriptionList={{
-                  subscriptions,
-                  isLoading: ivoIsLoading,
-                  error: ivoError,
-                }}
-              />
-            }
-          />
+          <Route path='/subscriptions' element={<SubscriptionList />} />
           <Route
             path='/subscriptions/:slug/edit'
-            element={
-              <SubscriptionEdit
-                fetchedSubscriptionList={{
-                  subscriptions,
-                  isLoading: ivoIsLoading,
-                  error: ivoError,
-                }}
-              />
-            }
+            element={<SubscriptionEdit />}
           />
           {/* Provider Routes */}
           <Route path='/providers' element={<ProviderList />} />
@@ -191,8 +129,6 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
           <Route path='/support/knowledge-base' element={<KnowledgeBase />} />
           <Route path='/support/change-log' element={<ChangeLog />} />
           <Route path='/support/road-map' element={<RoadMap />} />
-          {/* Docs */}
-          <Route path='/docs/:id' element={<Docs />} />
           {/* Not Found Route */}
           <Route path='*' element={<NotFound />} />
         </Routes>

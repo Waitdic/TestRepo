@@ -38,7 +38,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
       <>
         <Link
           to={to}
-          className={classNames('block truncate text-white', {
+          className={classNames('group block truncate text-white', {
             // 'text-white': activecondition || open,
           })}
           onClick={(e) => {
@@ -48,12 +48,12 @@ const SidebarLinkGroup: React.FC<Props> = ({
           }}
         >
           <div className='flex items-center justify-between'>
-            <div className='group flex items-center'>
+            <div className='flex items-center'>
               {getStaticSVGIcon(
                 title.toLowerCase().replace(/ /g, '-'),
                 `duration-200 fill-white group-hover:fill-primary shrink-0 h-6 w-6`
               )}
-              <span className='text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
+              <span className='text-sm group-hover:text-primary font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
                 {title}
               </span>
             </div>

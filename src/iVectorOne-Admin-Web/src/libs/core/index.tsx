@@ -1,13 +1,13 @@
 import { memo, FC } from 'react';
 //
 import MainLayout from '@/layouts/Main';
-import { ErrorBoundary, WelcomeBanner } from '@/components';
+import { WelcomeBanner } from '@/components';
 
 type Props = {
   error: string | null;
 };
 
-export const IvoView: FC<Props> = memo(({ error }) => {
+export const Dashboard: FC<Props> = memo(({ error }) => {
   return (
     <MainLayout>
       {error && (

@@ -17,7 +17,7 @@ type Props = {
 const TenantSelector: FC<Props> = ({ sidebarExpanded = false }) => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
-  const activeTenant = user?.tenants?.find((tenant) => tenant.isActive);
+  const activeTenant = user?.tenants?.find((tenant) => tenant.isSelected);
 
   const dispatch = useDispatch();
 
@@ -26,7 +26,7 @@ const TenantSelector: FC<Props> = ({ sidebarExpanded = false }) => {
 
     const updatedTenants: Tenant[] = user?.tenants.map((tenant) => ({
       ...tenant,
-      isActive: tenant.tenantId === tenantId ? true : false,
+      isSelected: tenant.tenantId === tenantId,
     }));
     dispatch.app.updateUser({
       ...user,
@@ -70,13 +70,13 @@ const TenantSelector: FC<Props> = ({ sidebarExpanded = false }) => {
           )}
         >
           {user?.tenants &&
-            user?.tenants.map(({ tenantId, name, isActive }) => (
+            user?.tenants.map(({ tenantId, name, isSelected }) => (
               <Menu.Item key={tenantId}>
                 {({ active }) => (
                   <span
                     className={classnames(
                       active ? 'bg-gray-100' : '',
-                      isActive ? 'bg-gray-100' : '',
+                      isSelected ? 'bg-gray-100' : '',
                       'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                     )}
                     onClick={() => handleChangeTenant(tenantId)}
