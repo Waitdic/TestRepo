@@ -40,19 +40,10 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   const [currentProvider, setCurrentProvider] = useState(
     null as Provider | null
   );
-
-  const currentSubscription = useMemo(
-    () =>
-      subscriptions.find((subscription) => {
-        return subscription.providers.find((provider) => {
-          if (provider.supplierID === Number(providerId)) {
-            setCurrentProvider(provider);
-            return provider;
-          }
-        });
-      }),
-    [subscriptions, providerId]
+  const [currentSubscription, setCurrentSubscription] = useState(
+    null as Subscription | null
   );
+  const [isReady, setIsReady] = useState(false);
 
   const {
     register,
@@ -99,15 +90,35 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   };
 
   useEffect(() => {
-    if (!!currentProvider?.configurations?.length) {
-      setDefaultConfigurationFormFields(
-        currentProvider.configurations,
-        setValue
-      );
+    if (!!subscriptions?.length) {
+      subscriptions.forEach((subscription, idx) => {
+        subscription.providers.forEach((provider) => {
+          if (provider.supplierID === Number(providerId)) {
+            setCurrentSubscription(subscriptions[idx]);
+            setCurrentProvider(provider);
+          }
+        });
+      });
+      setIsReady(true);
     }
-    setValue('subscription', currentSubscription?.subscriptionId || 0);
-    setValue('provider', currentProvider?.supplierID || 0);
-  }, [currentProvider]);
+  }, [subscriptions, providerId]);
+
+  useEffect(() => {
+    if (isReady) {
+      if (!currentProvider && !currentSubscription) {
+        navigate('/providers');
+        return;
+      }
+      setValue('subscription', currentSubscription?.subscriptionId || 0);
+      setValue('provider', currentProvider?.supplierID || 0);
+      if (!!currentProvider?.configurations?.length) {
+        setDefaultConfigurationFormFields(
+          currentProvider.configurations,
+          setValue
+        );
+      }
+    }
+  }, [currentProvider, isReady, currentSubscription]);
 
   return (
     <>

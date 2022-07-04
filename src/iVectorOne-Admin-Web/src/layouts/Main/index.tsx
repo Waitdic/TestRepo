@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import classNames from 'classnames';
 //
 import { Sidebar, Header } from '@/components';
@@ -27,6 +27,7 @@ const Dashboard: React.FC<Props> = ({
 
       {/* Content area */}
       <div
+        id='main-layout-area'
         className={classNames(
           'relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden',
           { [`bg-${bg}`]: bg }
@@ -49,5 +50,4 @@ const Dashboard: React.FC<Props> = ({
     </div>
   );
 };
-
 export default React.memo(Dashboard);

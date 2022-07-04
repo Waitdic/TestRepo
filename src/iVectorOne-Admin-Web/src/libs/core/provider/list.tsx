@@ -1,4 +1,12 @@
-import { memo, useState, useEffect, FC, useMemo } from 'react';
+import {
+  memo,
+  useState,
+  useEffect,
+  FC,
+  useMemo,
+  useRef,
+  createRef,
+} from 'react';
 //
 import { Provider, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
@@ -12,7 +20,7 @@ import {
 } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { uniqBy } from 'lodash';
+import { sortBy, uniqBy } from 'lodash';
 import classNames from 'classnames';
 
 type Props = {};
@@ -41,7 +49,11 @@ export const ProviderList: FC<Props> = memo(() => {
       (sub) => sub.subscriptionId === subId
     );
     setActiveSub(selectedSub as Subscription);
-    setProviders(selectedSub?.providers as Provider[]);
+    setProviders(sortBy(selectedSub?.providers, 'name') as Provider[]);
+    const mainLayoutArea = document.getElementById('main-layout-area');
+    if (!!mainLayoutArea?.scrollTop) {
+      mainLayoutArea.scrollTop = 0;
+    }
   };
 
   useEffect(() => {
@@ -80,29 +92,31 @@ export const ProviderList: FC<Props> = memo(() => {
                     Subscriptions
                   </div>
                   <ul className='flex flex-nowrap md:block mr-3 md:mr-0'>
-                    {subscriptions.map(({ subscriptionId, userName }) => (
-                      <li
-                        key={subscriptionId}
-                        className={classNames(
-                          'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
-                          {
-                            'bg-indigo-50':
-                              activeSub?.subscriptionId === subscriptionId,
-                          }
-                        )}
-                        onClick={() => handleSetActiveSub(subscriptionId)}
-                      >
-                        <span
-                          className={`text-sm font-medium ${
-                            activeSub?.subscriptionId === subscriptionId
-                              ? 'text-indigo-500'
-                              : 'hover:text-slate-700'
-                          }`}
+                    {sortBy(subscriptions, 'userName').map(
+                      ({ subscriptionId, userName }) => (
+                        <li
+                          key={subscriptionId}
+                          className={classNames(
+                            'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
+                            {
+                              'bg-indigo-50':
+                                activeSub?.subscriptionId === subscriptionId,
+                            }
+                          )}
+                          onClick={() => handleSetActiveSub(subscriptionId)}
                         >
-                          {userName}
-                        </span>
-                      </li>
-                    ))}
+                          <span
+                            className={`text-sm font-medium ${
+                              activeSub?.subscriptionId === subscriptionId
+                                ? 'text-indigo-500'
+                                : 'hover:text-slate-700'
+                            }`}
+                          >
+                            {userName}
+                          </span>
+                        </li>
+                      )
+                    )}
                   </ul>
                 </div>
               </div>
