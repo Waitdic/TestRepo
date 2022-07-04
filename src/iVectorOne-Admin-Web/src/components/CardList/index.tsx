@@ -2,7 +2,7 @@ import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //
-import { DropdownEditMenu, EmptyState, Spinner } from '@/components';
+import { EmptyState, Spinner } from '@/components';
 
 type Props = {
   bodyList: {
@@ -22,6 +22,7 @@ type Props = {
   };
   isLoading?: boolean;
   statusIsPlaceholder?: boolean;
+  cardClassNames?: string;
 };
 
 const CardList: FC<Props> = ({
@@ -29,6 +30,7 @@ const CardList: FC<Props> = ({
   emptyState,
   isLoading = false,
   statusIsPlaceholder = false,
+  cardClassNames = 'col-span-full md:col-span-6 xl:col-span-4',
 }) => {
   if (isLoading) {
     return (
@@ -45,7 +47,12 @@ const CardList: FC<Props> = ({
           {bodyList.map(({ id, name, isActive = undefined, actions }) => (
             <div
               key={id}
-              className='col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm border border-slate-200'
+              className={classNames(
+                'bg-white shadow-lg rounded-sm border border-slate-200',
+                {
+                  [cardClassNames]: cardClassNames,
+                }
+              )}
             >
               <div className='flex flex-col h-full'>
                 {/* Card top */}
