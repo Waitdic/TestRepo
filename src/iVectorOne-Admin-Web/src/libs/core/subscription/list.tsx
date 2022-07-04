@@ -13,6 +13,7 @@ import {
 } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { sortBy } from 'lodash';
 
 interface SubscriptionListItem {
   name: string;
@@ -54,11 +55,13 @@ export const SubscriptionList: FC<Props> = memo(({}) => {
   useEffect(() => {
     if (!!subscriptions?.length) {
       setFilteredSubscriptionList(
-        subscriptions.map(({ userName, subscriptionId }) => ({
-          name: userName,
-          id: subscriptionId,
-          isActive: false,
-        }))
+        sortBy(subscriptions, 'userName').map(
+          ({ userName, subscriptionId }) => ({
+            name: userName,
+            id: subscriptionId,
+            isActive: false,
+          })
+        )
       );
     }
   }, [subscriptions]);
