@@ -77,7 +77,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.get_URL(searchDetails) + url,
+                    EndPoint = _settings.GenericURL(searchDetails) + url,
                     Method = eRequestMethod.POST,
                     Source = Source,
                     ExtraInfo = searchDetails,
@@ -136,7 +136,7 @@
         {
             var sb = new StringBuilder();
 
-            sb.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.get_ClientLoc(searchDetails), _settings.get_UserID(searchDetails), _settings.get_Password(searchDetails));
+            sb.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.ClientLoc(searchDetails), _settings.User(searchDetails), _settings.Password(searchDetails));
 
             sb.AppendFormat("<message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode>" + "<searchtype>CITY</searchtype>");
             sb.AppendFormat("<citycode>{0}</citycode>", cityCode);

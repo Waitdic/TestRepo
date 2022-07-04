@@ -188,7 +188,7 @@
                 // get the add response 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.BaseURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
@@ -396,7 +396,7 @@
                 // get the response 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.BaseURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
@@ -478,7 +478,7 @@
                 // get the response
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.BaseURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
@@ -650,7 +650,7 @@
                 // get the add response 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.BaseURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
@@ -748,7 +748,7 @@
             }
             else
             {
-                id = _settings.ID(propertyDetails);
+                id = _settings.User(propertyDetails);
             }
 
             sbPosTag.Append("<POS>");
@@ -757,7 +757,7 @@
             sbPosTag.Append("<BookingChannel Type = \"2\"/>");
             sbPosTag.Append("</Source>");
             sbPosTag.Append("<Source>");
-            sbPosTag.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(propertyDetails), _settings.AuthenticationID(propertyDetails), _settings.MessagePassword(propertyDetails));
+            sbPosTag.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(propertyDetails), _settings.AuthenticationID(propertyDetails), _settings.Password(propertyDetails));
             sbPosTag.Append("</Source>");
             sbPosTag.Append("</POS>");
 

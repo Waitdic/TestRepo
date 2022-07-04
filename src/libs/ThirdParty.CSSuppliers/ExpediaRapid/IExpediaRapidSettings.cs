@@ -2,28 +2,27 @@
 {
     public interface IExpediaRapidSettings
     {
-        string get_ApiKey(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Secret(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Scheme(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Host(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SearchPath(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_SearchRequestBatchSize(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CountryCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SalesChannel(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SalesEnvironment(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SortType(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_RatePlanCount(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_PaymentTerms(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_PartnerPointOfSale(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_UserAgent(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_BillingTerms(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_PlatformName(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_RateOption(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_ValidateAffiliateID(IThirdPartyAttributeSearch tpAttributeSearch);
+        string APIKey(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Secret(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Scheme(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Host(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SalesChannel(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SalesEnvironment(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SortType(IThirdPartyAttributeSearch tpAttributeSearch);
+        int RatePlanCount(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PaymentTerms(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PartnerPointOfSale(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
+        string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BillingTerms(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PlatformName(IThirdPartyAttributeSearch tpAttributeSearch);
+        string RateOption(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ValidateAffiliateID(IThirdPartyAttributeSearch tpAttributeSearch);
     }
-
 }

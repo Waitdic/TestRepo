@@ -73,6 +73,11 @@ steps:
   inputs:
     nuGetServiceConnections: 'Intuitive'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages'
+  inputs:
+    nuGetServiceConnections: 'Intuitive'
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2

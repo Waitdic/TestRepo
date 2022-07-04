@@ -46,7 +46,7 @@
             {
                 try
                 {
-                    response = JsonConvert.DeserializeObject<BookingItineraryResponse>(responseString);
+                    response = JsonConvert.DeserializeObject<BookingItineraryResponse>(responseString)!;
 
                     if (response.Rooms.First() is not null && response.Rooms.First().Rate is not null)
                     {

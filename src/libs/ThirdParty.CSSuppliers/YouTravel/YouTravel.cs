@@ -43,14 +43,14 @@
         public bool SupportsRemarks => true;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_AllowCancellations(searchDetails, false);
+            => _settings.AllowCancellations(searchDetails, false);
 
         public bool SupportsBookingSearch => false;
 
         public string Source => ThirdParties.YOUTRAVEL;
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_OffsetCancellationDays(searchDetails, false);
+            => _settings.OffsetCancellationDays(searchDetails, false);
 
         public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
@@ -68,11 +68,12 @@
             {
                 // Get Errata details
                 var sb = new StringBuilder();
-                sb.AppendFormat("{0}{1}", _settings.get_PrebookURL(propertyDetails), "?");
-                sb.AppendFormat("&LangID={0}", _settings.get_LangID(propertyDetails));
+
+                sb.AppendFormat("{0}{1}", _settings.PrebookURL(propertyDetails), "?");
+                sb.AppendFormat("&LangID={0}", _settings.LanguageCode(propertyDetails));
                 sb.AppendFormat("&HID={0}", propertyDetails.TPKey);
-                sb.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
-                sb.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
+                sb.AppendFormat("&UserName={0}", _settings.User(propertyDetails));
+                sb.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
 
                 webRequest.Source = ThirdParties.YOUTRAVEL;
                 webRequest.CreateLog = true;
@@ -91,7 +92,7 @@
                 {
                     var sbCancelPolicy = new StringBuilder();
                     var cancelPolicyResponseXml = new XmlDocument();
-                    sbCancelPolicy.AppendFormat("{0}{1}", _settings.get_CancellationPolicyURL(propertyDetails), "?");
+                    sbCancelPolicy.AppendFormat("{0}{1}", _settings.CancellationPolicyURL(propertyDetails), "?");
                     sbCancelPolicy.AppendFormat("token={0}", roomDetails.ThirdPartyReference.Split('_')[2]);
 
                     var cancellationPolicyWebRequest = new Request
@@ -151,10 +152,10 @@
             {
                 // build url
                 var sbURL = new StringBuilder();
-                sbURL.AppendFormat("{0}{1}", _settings.get_BookingURL(propertyDetails), "?");
-                sbURL.AppendFormat("&LangID={0}", _settings.get_LangID(propertyDetails));
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
+                sbURL.AppendFormat("{0}{1}", _settings.BookingURL(propertyDetails), "?");
+                sbURL.AppendFormat("&LangID={0}", _settings.LanguageCode(propertyDetails));
+                sbURL.AppendFormat("&UserName={0}", _settings.User(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
                 sbURL.AppendFormat("&session_ID={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0]);
                 sbURL.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(propertyDetails.ArrivalDate));
                 sbURL.AppendFormat("&Nights={0}", propertyDetails.Duration);
@@ -275,10 +276,10 @@
             try
             {
                 // build url
-                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationURL(propertyDetails), "?");
+                sbURL.AppendFormat("{0}{1}", _settings.CancellationURL(propertyDetails), "?");
                 sbURL.AppendFormat("Booking_ref={0}", propertyDetails.SourceReference);
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
+                sbURL.AppendFormat("&UserName={0}", _settings.User(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
 
                 // Send the request
                 var webRequest = new Request
@@ -337,10 +338,10 @@
 
             try
             {
-                sbURL.AppendFormat("{0}{1}", _settings.get_CancellationFeeURL(propertyDetails), "?");
+                sbURL.AppendFormat("{0}{1}", _settings.CancellationFeeURL(propertyDetails), "?");
                 sbURL.AppendFormat("Booking_ref={0}", propertyDetails.SourceReference);
-                sbURL.AppendFormat("&UserName={0}", _settings.get_Username(propertyDetails));
-                sbURL.AppendFormat("&Password={0}", _settings.get_Password(propertyDetails));
+                sbURL.AppendFormat("&UserName={0}", _settings.User(propertyDetails));
+                sbURL.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
 
                 // Send the request
                 var webRequest = new Request

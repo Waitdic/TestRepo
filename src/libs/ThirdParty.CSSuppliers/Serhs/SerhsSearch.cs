@@ -113,7 +113,7 @@
 
             var request = new Request
             {
-                EndPoint = _settings.URL(searchDetails),
+                EndPoint = _settings.GenericURL(searchDetails),
                 Method = eRequestMethod.POST,
                 ExtraInfo = searchDetails
             };

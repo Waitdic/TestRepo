@@ -15,6 +15,6 @@
         /// <param name="prebookRequest">The pre book request.</param>
         /// <param name="user">The user.</param>
         /// <returns>a pre book response for the property</returns>
-        Task<Response> PrebookAsync(Request prebookRequest, User user);
+        Task<Response> PrebookAsync(Request prebookRequest, Subscription user);
     }
 }

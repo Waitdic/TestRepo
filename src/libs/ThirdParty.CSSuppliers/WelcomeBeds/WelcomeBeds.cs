@@ -382,25 +382,25 @@
 
                 reservationResponse = webRequest.ResponseString;
 
-                var oResponse = Envelope<OtaHotelResRs>.DeSerialize(webRequest.ResponseXML, _serializer);
+                var response = Envelope<OtaHotelResRs>.DeSerialize(webRequest.ResponseXML, _serializer);
 
                 // Check for a successful response
-                if (oResponse.Errors.Any())
+                if (response.Errors.Any())
                 {
                     throw new Exception("The request was not returned successfully");
                 }
 
                 // Check the status
-                string sResStatusCode = oResponse.HotelReservations.FirstOrDefault()?.TpaExtensions
-                    .ProviderTokens.FirstOrDefault(t => t.TokenName == "ResStatusCode")?.TokenCode;
+                string resStatusCode = response.HotelReservations.FirstOrDefault()?.TpaExtensions
+                    .ProviderTokens.FirstOrDefault(t => t.TokenName == "ResStatusCode")?.TokenCode ?? string.Empty;
 
-                if (!string.Equals(sResStatusCode, "CA") && !string.Equals(sResStatusCode, "SC"))
+                if (!string.Equals(resStatusCode, "CA") && !string.Equals(resStatusCode, "SC"))
                 {
                     throw new Exception("The booking was not confirmed");
                 }
 
                 // Get the booking reference
-                reference = oResponse.HotelReservations.FirstOrDefault()?.ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "failed";
+                reference = response.HotelReservations.FirstOrDefault()?.ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "failed";
 
             }
             catch (Exception e)

@@ -9,8 +9,8 @@ namespace ThirdParty.CSSuppliers.HotelBedsV2
 
     public class HotelBedsV2AvailabilityResponse
     {
-        public Auditdata auditData { get; set; }
-        public Hotels hotels { get; set; }
+        public Auditdata auditData { get; set; } = new();
+        public Hotels hotels { get; set; } = new();
 
         public class Auditdata
         {

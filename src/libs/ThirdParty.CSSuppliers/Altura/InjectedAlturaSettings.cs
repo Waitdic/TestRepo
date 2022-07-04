@@ -18,14 +18,14 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string DefaultCurrency(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("DefaultCurrency", tpAttributeSearch);
+            return Get_Value("Currency", tpAttributeSearch);
         }
 
-        public string DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("DefaultNationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
         public string ExternalId(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -48,14 +48,14 @@
             return Get_Value("SourceMarket", tpAttributeSearch);
         }
 
-        public bool SplitMultiRoom(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SplitMultiRoom", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("EnableMultiRoomSearch", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)

@@ -208,7 +208,7 @@
                     throw new ArgumentNullException("precancelResponse", "There was an error in the precancel response.");
                 }
 
-                if ((precancelResponse.AffiliateReferenceID ?? "") != (propertyDetails.BookingReference.Trim() ?? "") && _settings.get_ValidateAffiliateID(propertyDetails))
+                if ((precancelResponse.AffiliateReferenceID ?? "") != (propertyDetails.BookingReference.Trim() ?? "") && _settings.ValidateAffiliateID(propertyDetails))
                 {
                     throw new Exception("Unrecognised precancel response booking reference.");
                 }
@@ -304,9 +304,7 @@
             {
                 var occupancy = new ExpediaRapidOccupancy(room.Adults, room.ChildAges, room.Infants);
 
-                OccupancyRoomRate occupancyRoomRate = null;
-
-                if (!prebookResponse.OccupancyRoomRates.TryGetValue(occupancy.GetExpediaRapidOccupancy(), out occupancyRoomRate))
+                if (!prebookResponse.OccupancyRoomRates.TryGetValue(occupancy.GetExpediaRapidOccupancy(), out OccupancyRoomRate occupancyRoomRate))
                 {
                     throw new Exception("Couldn't find room in prebook response");
                 }
@@ -317,7 +315,13 @@
             }
         }
 
-        private async Task<TResponse> GetResponseAsync<TResponse>(PropertyDetails propertyDetails, string link, eRequestMethod method, string logName, bool addCustomerIPHeader, string requestBody = null) where TResponse : IExpediaRapidResponse<TResponse>, new()
+        private async Task<TResponse> GetResponseAsync<TResponse>(
+            PropertyDetails propertyDetails,
+            string link,
+            eRequestMethod method,
+            string logName,
+            bool addCustomerIPHeader,
+            string requestBody = null!) where TResponse : IExpediaRapidResponse<TResponse>, new()
         {
             string url = BuildDefaultURL(propertyDetails, link);
             var request = BuildRequest(propertyDetails, url, logName, method, addCustomerIPHeader, requestBody);
@@ -411,20 +415,17 @@
 
                 if (occupancyRoomRate.OccupancyRateFees.Any())
                 {
-                    OccupancyRateFee mandatoryFee = null;
-                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("mandatory_fee", out mandatoryFee))
+                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("mandatory_fee", out OccupancyRateFee mandatoryFee))
                     {
                         mandatoryFees.Add(mandatoryFee);
                     }
 
-                    OccupancyRateFee resortFee = null;
-                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("resort_fee", out resortFee))
+                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("resort_fee", out OccupancyRateFee resortFee))
                     {
                         resortFees.Add(resortFee);
                     }
 
-                    OccupancyRateFee mandatoryTax = null;
-                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("mandatory_tax", out mandatoryTax))
+                    if (occupancyRoomRate.OccupancyRateFees.TryGetValue("mandatory_tax", out OccupancyRateFee mandatoryTax))
                     {
                         mandatoryTaxes.Add(mandatoryTax);
                     }
@@ -538,12 +539,18 @@
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
         }
 
-        private Request BuildRequest(PropertyDetails propertyDetails, string url, string logName, eRequestMethod method, bool addCustomerIPHeader, string requestBody = null)
+        private Request BuildRequest(
+            PropertyDetails propertyDetails,
+            string url,
+            string logName,
+            eRequestMethod method,
+            bool addCustomerIPHeader,
+            string requestBody = "")
         {
-            bool useGzip = _settings.get_UseGZIP(propertyDetails);
-            string apiKey = _settings.get_ApiKey(propertyDetails);
-            string secret = _settings.get_Secret(propertyDetails);
-            string userAgent = _settings.get_UserAgent(propertyDetails);
+            bool useGzip = _settings.UseGZip(propertyDetails);
+            string apiKey = _settings.APIKey(propertyDetails);
+            string secret = _settings.Secret(propertyDetails);
+            string userAgent = _settings.UserAgent(propertyDetails);
             string customerIp = Dns.GetHostEntry(Dns.GetHostName()).AddressList[0].MapToIPv4().ToString();
             string tpRef = propertyDetails.TPRef1;
             string tpSessionID = !string.IsNullOrWhiteSpace(tpRef) ? tpRef.Split('|')[0] : Guid.NewGuid().ToString();
@@ -557,7 +564,7 @@
                 headers.AddNew(SearchHeaderKeys.CustomerIP, customerIp);
             }
 
-            var request = ExpediaRapidSearch.BuildDefaultRequest(url, method, headers, useGzip, userAgent, requestBody);
+            var request = ExpediaRapidSearch.BuildDefaultRequest(url, method, headers, useGzip, userAgent, requestBody, logName);
 
             return request;
         }
@@ -627,7 +634,7 @@
 
         private string BuildDefaultURL(PropertyDetails propertyDetails, string path)
         {
-            var uriBuilder = new UriBuilder(_settings.get_Scheme(propertyDetails), _settings.get_Host(propertyDetails), -1);
+            var uriBuilder = new UriBuilder(_settings.Scheme(propertyDetails), _settings.Host(propertyDetails), -1);
 
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentNullException("path", "No link supplied to append to URL.");
@@ -637,7 +644,7 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_AllowCancellations(searchDetails);
+            return _settings.AllowCancellations(searchDetails);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)

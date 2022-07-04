@@ -26,10 +26,10 @@
             Ensure.IsNotNull(servces, nameof(servces));
             return servces
                 .Where(x => x is ISingleSource)
-                .Select(x => ((x as ISingleSource).Source, x))
+                .Select(x => ((x as ISingleSource)!.Source, x))
                 .Concat(servces
                     .Where(x => x is IMultiSource)
-                    .SelectMany(x => (x as IMultiSource).Sources.Select(s => (s, x))))
+                    .SelectMany(x => (x as IMultiSource)!.Sources.Select(s => (s, x))))
                 .ToDictionary(x => x.Item1, x => x.Item2);
         }
 

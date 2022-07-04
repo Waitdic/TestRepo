@@ -75,52 +75,55 @@
                     response.Properties.Add(property);
                 }
 
-                var supplierContent = new Content.SupplierContent()
+                if (details is not null)
                 {
-                    PropertyName = content.Name,
-                    TPKey = details.TPKey,
-                    Address = new Content.Address()
+                    var supplierContent = new Content.SupplierContent()
                     {
-                        AddressLine1 = details.Address1!,
-                        AddressLine2 = details.Address2!,
-                        TownOrCity = details.TownCity!,
-                        CountyOrState = details.County!,
-                        PostCodeOrZip = details.Postcode!,
-                        Telephone = details.Telephone!
-                    },
-                    Geography = new Content.Geography()
+                        PropertyName = content.Name,
+                        TPKey = details.TPKey!,
+                        Address = new Content.Address()
+                        {
+                            AddressLine1 = details.Address1!,
+                            AddressLine2 = details.Address2!,
+                            TownOrCity = details.TownCity!,
+                            CountyOrState = details.County!,
+                            PostCodeOrZip = details.Postcode!,
+                            Telephone = details.Telephone!
+                        },
+                        Geography = new Content.Geography()
+                        {
+                            Country = details.Geography!.Country!,
+                            Region = details.Geography.Region!,
+                            Resort = details.Geography.Resort!,
+                            Latitude = details.Latitude!.ToSafeDecimal(),
+                            Longitude = details.Longitude!.ToSafeDecimal(),
+                        },
+                        Rating = details.Rating!,
+                        Supplier = details.Source!,
+                        Description = details.Description!,
+                        HotelPolicy = details.HotelPolicy!,
+                        ContentVariables = GetContentVariables(details)
+                    };
+
+                    if (details.Facilities.Any())
                     {
-                        Country = details.Geography!.Country!,
-                        Region = details.Geography.Region!,
-                        Resort = details.Geography.Resort!,
-                        Latitude = details.Latitude.ToSafeDecimal(),
-                        Longitude = details.Longitude.ToSafeDecimal(),
-                    },
-                    Rating = details.Rating!,
-                    Supplier = details.Source!,
-                    Description = details.Description!,
-                    HotelPolicy = details.HotelPolicy!,
-                    ContentVariables = GetContentVariables(details)
-                };
-
-                if (details.Facilities.Any())
-                {
-                    supplierContent.Facilities = details.Facilities.Select(f => f.Description).ToList();
-                }
-
-                if (details.Images.Any())
-                {
-                    supplierContent.MainImageURL = details.Images.OrderBy(i => i.Sequence).Select(i => i.URL != null ? i.URL : i.SourceURL).FirstOrDefault()!;
-
-                    if (details.Images.Count > 1)
-                    {
-                        supplierContent.Images = details.Images.Skip(1).Select(i => i.URL != null ? i.URL : i.SourceURL).ToList()!;
+                        supplierContent.Facilities = details.Facilities.Select(f => f.Description).ToList()!;
                     }
-                }
 
-                if (!property.SupplierContent.Any(sc => sc.TPKey == supplierContent.TPKey && sc.Supplier == supplierContent.Supplier))
-                {
-                    property.SupplierContent.Add(supplierContent);
+                    if (details.Images.Any())
+                    {
+                        supplierContent.MainImageURL = details.Images.OrderBy(i => i.Sequence).Select(i => i.URL != null ? i.URL : i.SourceURL).FirstOrDefault()!;
+
+                        if (details.Images.Count > 1)
+                        {
+                            supplierContent.Images = details.Images.Skip(1).Select(i => i.URL != null ? i.URL : i.SourceURL).ToList()!;
+                        }
+                    }
+
+                    if (!property.SupplierContent.Any(sc => sc.TPKey == supplierContent.TPKey && sc.Supplier == supplierContent.Supplier))
+                    {
+                        property.SupplierContent.Add(supplierContent);
+                    }
                 }
             }
 
@@ -129,14 +132,14 @@
 
         public class PropertyContentItem
         {
-            public string Name { get; set; }
-            public string TTICode { get; set; }
-            public string Source { get; set; }
-            public string PropertyDetails { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public string TTICode { get; set; } = string.Empty;
+            public string Source { get; set; } = string.Empty;
+            public string PropertyDetails { get; set; } = string.Empty;
             public int CentralPropertyID { get; set; }
-            public string Country { get; set; }
-            public string Region { get; set; }
-            public string Resort { get; set; }
+            public string Country { get; set; } = string.Empty;
+            public string Region { get; set; } = string.Empty;
+            public string Resort { get; set; } = string.Empty;
         }
 
         public async Task<PropertyContent> GetContentforPropertyAsync(int propertyID)
@@ -164,8 +167,8 @@
         {
             public int PropertyID { get; set; }
             public int CentralPropertyID { get; set; }
-            public string Source { get; set; }
-            public string TPKey { get; set; }
+            public string Source { get; set; } = string.Empty;
+            public string TPKey { get; set; } = string.Empty;
         }
 
         private List<Content.ContentVariable> GetContentVariables(PropertyDetails propertyDetails)

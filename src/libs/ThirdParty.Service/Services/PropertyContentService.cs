@@ -27,7 +27,7 @@
         /// <param name="suppliers">Filters the property ids to only those for the provided suppliers</param>
         /// <param name="user">The user making the request</param>
         /// <returns>A list of property ids</returns>
-        public async Task<PropertyList.Response> PropertyListAsync(DateTime? lastModified, string suppliers, User user)
+        public async Task<PropertyList.Response> PropertyListAsync(DateTime? lastModified, string suppliers, Subscription user)
         {
             if (!lastModified.HasValue)
             {
@@ -50,7 +50,7 @@
         /// <param name="propertyIDs">The central property identifiers for the properties the content is being requested for</param>
         /// <param name="user">The user making the request</param>
         /// <returns>A list of property ids</returns>
-        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, User user)
+        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Subscription user)
         {
             string suppliers = this.GetValidSuppliers(string.Empty, user);
 
@@ -61,7 +61,7 @@
         /// <param name="suppliers">The suppliers.</param>
         /// <param name="user">The user.</param>
         /// <returns>a list of validated suppliers</returns>
-        private string GetValidSuppliers(string suppliers, User user)
+        private string GetValidSuppliers(string suppliers, Subscription user)
         {
             var validatedSuppliers = new List<string>();
 

@@ -224,7 +224,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
                 Address = propertyDetails.LeadGuestAddress1,
                 City = propertyDetails.LeadGuestTownCity,
                 Country = propertyDetails.LeadGuestBookingCountry,
-                Nationality = _settings.DefaultNationality(propertyDetails),
+                Nationality = _settings.LeadGuestNationality(propertyDetails),
                 PassportNumber = propertyDetails.PassportNumber,
                 Email = propertyDetails.LeadGuestEmail,
                 Phone = propertyDetails.LeadGuestPhone,
@@ -233,10 +233,10 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
 
             var parameters = new BaseRequestParameters
             {
-                Username = _settings.Username(propertyDetails),
+                Username = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
-                Language = _settings.LangID(propertyDetails),
-                Endpoint = _settings.BookUrl(propertyDetails),
+                Language = _settings.LanguageCode(propertyDetails),
+                Endpoint = _settings.BookingURL(propertyDetails),
                 SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
                 CreateLogs = propertyDetails.CreateLogs
             };

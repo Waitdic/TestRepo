@@ -40,10 +40,10 @@
 
             var parameters = new BaseRequestParameters
             {
-                Username = _settings.Username(searchDetails),
+                Username = _settings.User(searchDetails),
                 Password = _settings.Password(searchDetails),
-                Language = _settings.LangID(searchDetails),
-                Endpoint = _settings.SearchUrl(searchDetails),
+                Language = _settings.LanguageCode(searchDetails),
+                Endpoint = _settings.SearchURL(searchDetails),
                 SoapPrefix = _settings.SoapActionPrefix(searchDetails)
             };
 
@@ -52,10 +52,10 @@
 
             var hotelsCodes = GetHotelCodes(searchDetails, resortSplits);
 
-            var hotelsSearchLimit = _settings.HotelSearchLimit(searchDetails);
+            var hotelsSearchLimit = _settings.HotelBatchLimit(searchDetails);
             var hotelsCodesLists = hotelsCodes.Batch(hotelsSearchLimit);
 
-            var leadGuestNationality = _settings.DefaultNationality(searchDetails);
+            var leadGuestNationality = _settings.LeadGuestNationality(searchDetails);
 
             foreach (var codes in hotelsCodesLists)
             {

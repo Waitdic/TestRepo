@@ -3,19 +3,19 @@
     using ThirdParty;
     public interface IW2MSettings
     {
-        string Username(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string SearchUrl(IThirdPartyAttributeSearch tpAttributeSearch);
-        string PreBookUrl(IThirdPartyAttributeSearch tpAttributeSearch);
-        string BookUrl(IThirdPartyAttributeSearch tpAttributeSearch);
-        string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string LangID(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch);
-        int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool SplitMultiroom(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         string SoapActionPrefix(IThirdPartyAttributeSearch tpAttributeSearch);
-        string DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

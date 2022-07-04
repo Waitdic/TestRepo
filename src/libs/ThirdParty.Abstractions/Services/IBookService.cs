@@ -13,6 +13,6 @@
         /// <returns>
         /// A book response
         /// </returns>
-        Task<Response> BookAsync(Request bookRequest, User user);
+        Task<Response> BookAsync(Request bookRequest, Subscription user);
     }
 }

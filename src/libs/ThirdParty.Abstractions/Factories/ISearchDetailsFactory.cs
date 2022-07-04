@@ -14,6 +14,6 @@
         /// <param name="user">The user</param>
         /// <param name="log">boolean that decides if we log third party requests and responses</param>
         /// <returns>A search details</returns>
-        SearchDetails Create(Request searchRequest, User user, bool log);
+        SearchDetails Create(Request searchRequest, Subscription user, bool log);
     }
 }

@@ -15,7 +15,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -33,7 +33,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -52,7 +52,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -71,7 +71,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -93,7 +93,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -117,7 +117,7 @@
             // Arrange
             var settings = new Settings() { PropertyTPRequestLimit = 52 };
             var factory = new SearchDetailsFactory();
-            var user = new User()
+            var user = new Subscription()
             {
                 TPSettings = settings,
             };
@@ -140,7 +140,7 @@
             // Arrange
             var settings = new Settings() { CurrencyCode = "GBP" };
             var factory = new SearchDetailsFactory();
-            var user = new User()
+            var user = new Subscription()
             {
                 TPSettings = settings,
             };
@@ -162,7 +162,7 @@
             // Arrange
             var configs = new List<ThirdPartyConfiguration>() { new ThirdPartyConfiguration() { Supplier = "Test Supplier" } };
             var factory = new SearchDetailsFactory();
-            var user = new User()
+            var user = new Subscription()
             {
                 Configurations = configs,
             };
@@ -183,7 +183,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -213,7 +213,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -245,7 +245,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -279,7 +279,7 @@
             var ChildAges2 = new List<int>();
 
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -310,7 +310,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -328,7 +328,7 @@
         {
             // Arrange
             var factory = new SearchDetailsFactory();
-            var user = new User();
+            var user = new Subscription();
             var request = new Request()
             {
                 ArrivalDate = new DateTime(2000, 01, 01),
@@ -347,7 +347,7 @@
             // Arrange
             var settings = new Settings() { CurrencyCode = "GBP" };
             var factory = new SearchDetailsFactory();
-            var user = new User()
+            var user = new Subscription()
             {
                 TPSettings = settings,
             };

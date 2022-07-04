@@ -3,17 +3,17 @@
 
     public interface IStubaSettings
     {
-        string get_URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_MaxHotelsPerRequest(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Organisation(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Username(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Version(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Currency(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Nationality(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_ExcludeNonRefundableRates(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_ExcludeUnknownCancellationPolicys(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Organisation(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Version(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Currency(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ExcludeUnknownCancellationPolicys(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
     }
 }

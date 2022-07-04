@@ -4,7 +4,7 @@
     {
         string CompanyCode(IThirdPartyAttributeSearch tpAttributeSearch);
         string CustomerCountryCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string CustomerNationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
         int DefaultCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch);
         bool ExcludeDOTWThirdParties(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
@@ -13,10 +13,10 @@
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
         bool SendTradeReference(IThirdPartyAttributeSearch tpAttributeSearch);
-        string ServerURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string ThreadedSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseMinimumSellingPrice(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Username(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         int Version(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

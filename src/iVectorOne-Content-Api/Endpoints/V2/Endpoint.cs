@@ -20,7 +20,7 @@
                             var request = new List.Request
                             {
                                 LastModified = lastModified,
-                                Suppliers = suppliers,
+                                Suppliers = suppliers ?? string.Empty,
                             };
 
                             return await EndpointBase.ExecuteRequest<List.Request, List.Response>(httpContext, mediator, request);

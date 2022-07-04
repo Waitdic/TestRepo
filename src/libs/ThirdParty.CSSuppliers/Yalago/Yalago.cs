@@ -99,7 +99,7 @@
 
             try
             {
-                request = BuildRequest("Cancel", cancelRequestString, propertyDetails, propertyDetails, _settings.CancelURL(propertyDetails));
+                request = BuildRequest("Cancel", cancelRequestString, propertyDetails, propertyDetails, _settings.CancellationURL(propertyDetails));
 
                 await request.Send(_httpClient, _logger);
 
@@ -163,7 +163,7 @@
 
             try
             {
-                request = BuildRequest("PreCancel", preCancelRequestString, propertyDetails, propertyDetails, _settings.PreCancelURL(propertyDetails));
+                request = BuildRequest("PreCancel", preCancelRequestString, propertyDetails, propertyDetails, _settings.PreCancellationURL(propertyDetails));
                 await request.Send(_httpClient, _logger);
 
                 var response = JsonConvert.DeserializeObject<YalagoPreCancelResponse>(request.ResponseString);
@@ -219,7 +219,7 @@
 
             request.SetRequest(requestString);
 
-            request.Headers.Add("X-Api-Key", _settings.API_Key(searchDetails));
+            request.Headers.Add("X-Api-Key", _settings.APIKey(searchDetails));
 
             return request;
         }
@@ -234,7 +234,7 @@
                 string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
-                    sourceMarket = _settings.CountryCode(propertyDetails);
+                    sourceMarket = _settings.SourceMarket(propertyDetails);
                 }
 
                 var opaqueSearch = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[4].ToSafeBoolean();
@@ -242,7 +242,7 @@
 
                 var preBookRequest = new YalagoPreBookRequest()
                 {
-                    Culture = _settings.Language(propertyDetails),
+                    Culture = _settings.LanguageCode(propertyDetails),
                     CheckInDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                     CheckOutDate = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                     LocationId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[2].ToSafeInt(),
@@ -271,7 +271,7 @@
 
                 string requestString = JsonConvert.SerializeObject(preBookRequest);
 
-                request = BuildRequest("PreBook", requestString, propertyDetails, propertyDetails, _settings.PreBookURL(propertyDetails));
+                request = BuildRequest("PreBook", requestString, propertyDetails, propertyDetails, _settings.PrebookURL(propertyDetails));
 
                 await request.Send(_httpClient, _logger);
 
@@ -424,7 +424,7 @@
                 string sourceMarket;
                 if (string.IsNullOrEmpty(await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry)))
                 {
-                    sourceMarket = _settings.CountryCode(propertyDetails);
+                    sourceMarket = _settings.SourceMarket(propertyDetails);
                 }
                 else
                 {
@@ -436,7 +436,7 @@
                     CheckInDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                     CheckOutDate = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                     EstablishmentId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[0].ToSafeInt(),
-                    Culture = _settings.Language(propertyDetails),
+                    Culture = _settings.LanguageCode(propertyDetails),
                     GetPackagePrice = getPackagePrice,
                     GetTaxBreakdown = true,
                     GetLocalCharges = true,

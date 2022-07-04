@@ -180,7 +180,7 @@
                 var sb = new StringBuilder();
 
                 sb.AppendLine("<customer>");
-                sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails)).AppendLine();
+                sb.AppendFormat("<username>{0}</username>", _settings.User(searchDetails)).AppendLine();
                 sb.AppendFormat("<password>{0}</password>", MD5Password(_settings.Password(searchDetails))).AppendLine();
                 sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails)).AppendLine();
                 sb.AppendLine("<source>1</source>");
@@ -196,7 +196,7 @@
 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     Headers = headers,

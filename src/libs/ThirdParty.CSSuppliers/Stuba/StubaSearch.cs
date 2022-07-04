@@ -70,7 +70,7 @@
             {
                 var request = new Request
                 {
-                    EndPoint = _settings.get_URL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.STUBA,
                 };
@@ -83,7 +83,7 @@
 
         private IEnumerable<string> BuildRequests(SearchDetails searchDetails, string resortCode, List<string> hotelIds)
         {
-            int maxHotels = _settings.get_MaxHotelsPerRequest(searchDetails);
+            int maxHotels = _settings.HotelBatchLimit(searchDetails);
 
             if (maxHotels <= 0)
             {
@@ -102,12 +102,12 @@
 
         private string BuildRequest(SearchDetails searchDetails, string resortCode, IEnumerable<string> hotelIds)
         {
-            string org = _settings.get_Organisation(searchDetails);
-            string user = _settings.get_Username(searchDetails);
-            string password = _settings.get_Password(searchDetails);
-            string version = _settings.get_Version(searchDetails);
-            string currencyCode = _settings.get_Currency(searchDetails);
-            string nationality = _settings.get_Nationality(searchDetails);
+            string org = _settings.Organisation(searchDetails);
+            string user = _settings.User(searchDetails);
+            string password = _settings.Password(searchDetails);
+            string version = _settings.Version(searchDetails);
+            string currencyCode = _settings.Currency(searchDetails);
+            string nationality = _settings.LeadGuestNationality(searchDetails);
 
             var request = new XElement("AvailabilitySearch",
                             new XElement("Authority",
@@ -152,20 +152,20 @@
                 .Where(o => o is not null)
                 .ToList();
 
-            bool removeNonRefundable = _settings.get_ExcludeNonRefundableRates(searchDetails);
-            bool removeUnknownCancellations = _settings.get_ExcludeUnknownCancellationPolicys(searchDetails);
+            bool removeNonRefundable = _settings.ExcludeNRF(searchDetails);
+            bool removeUnknownCancellations = _settings.ExcludeUnknownCancellationPolicys(searchDetails);
 
             if (removeNonRefundable)
             {
-                RemoveNrfResults(results);
+                RemoveNrfResults(results!);
             }
             if (removeUnknownCancellations)
             {
-                RemoveUnknownCancResults(results);
+                RemoveUnknownCancResults(results!);
             }
             if (searchDetails.Rooms > 1)
             {
-                RemoveNonCheapestRoomCombinations(results);
+                RemoveNonCheapestRoomCombinations(results!);
             }
 
             foreach (var stubaResult in results)
@@ -213,9 +213,9 @@
 
         private void RemoveResultsByCancellationPolicy(IEnumerable<StubaSearchResponse> results, string policyStatus)
         {
-            foreach (StubaSearchResponse response in results)
+            foreach (var response in results)
             {
-                foreach (HotelAvailability hotelAvail in response.HotelAvailability)
+                foreach (var hotelAvail in response.HotelAvailability)
                 {
                     hotelAvail.Result = hotelAvail.Result
                         .Where(o => o.Room.Any(r => (r.CancellationPolicyStatus.ToLower() ?? "") == (policyStatus.ToLower() ?? "")))
@@ -226,22 +226,18 @@
 
         private void RemoveNonCheapestRoomCombinations(IEnumerable<StubaSearchResponse> results)
         {
-            foreach (HotelAvailability hotelAvail in results.SelectMany(o => o.HotelAvailability.Where(r => r.Result.Count > 0)))
+            foreach (var hotelAvail in results.SelectMany(o => o.HotelAvailability.Where(r => r.Result.Count > 0)))
             {
-                var cheapestResults = new List<Result>();
-                cheapestResults.Add(hotelAvail.Result.OrderBy(o => o.Room.Sum(r => r.Price.amt)).FirstOrDefault());
+                var cheapestResults = new List<Result>
+                {
+                    hotelAvail.Result.OrderBy(o => o.Room.Sum(r => r.Price.amt)).FirstOrDefault()
+                };
                 hotelAvail.Result = cheapestResults;
             }
         }
 
-        public bool SearchRestrictions(SearchDetails searchDetails, string source)
-        {
-            return false;
-        }
+        public bool SearchRestrictions(SearchDetails searchDetails, string source) => false;
 
-        public bool ResponseHasExceptions(Request request)
-        {
-            return false;
-        }
+        public bool ResponseHasExceptions(Request request) => false;
     }
 }

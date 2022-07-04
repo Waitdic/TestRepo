@@ -11,13 +11,13 @@
 
         string Secacc(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool GuestNamesAvailable(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool CancelFirstPreBook(IThirdPartyAttributeSearch tpAttributeSearch);
 

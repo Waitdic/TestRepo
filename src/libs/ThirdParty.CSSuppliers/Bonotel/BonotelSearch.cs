@@ -65,8 +65,8 @@
                 sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 sb.Append("<availabilityRequest>");
                 sb.Append("<control>");
-                sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(searchDetails));
-                sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(searchDetails));
+                sb.AppendFormat("<userName>{0}</userName>", _settings.User(searchDetails));
+                sb.AppendFormat("<passWord>{0}</passWord>", _settings.Password(searchDetails));
                 sb.Append("</control>");
                 sb.AppendFormat("<checkIn>{0}</checkIn>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
                 sb.AppendFormat("<checkOut>{0}</checkOut>", searchDetails.PropertyDepartureDate.ToString("dd-MMM-yyyy"));
@@ -111,7 +111,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.get_URL(searchDetails) + "GetAvailability.do",
+                    EndPoint = _settings.GenericURL(searchDetails) + "GetAvailability.do",
                     ContentType = ContentTypes.Text_xml,
                     Method = eRequestMethod.POST,
                     ExtraInfo = searchDetails

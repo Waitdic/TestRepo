@@ -52,7 +52,7 @@
         /// <param name="cancelRequest">The cancel request.</param>
         /// <param name="user">The user.</param>
         /// <returns>A cancellation response</returns>
-        public async Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest, User user)
+        public async Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest, Subscription user)
         {
             Cancel.Response response = null!;
             var exceptionString = string.Empty;
@@ -98,7 +98,7 @@
         /// <param name="cancelRequest">The cancel request.</param>
         /// <param name="user">The user.</param>
         /// <returns>A cancellation response</returns>
-        public async Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest, User user)
+        public async Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest, Subscription user)
         {
             Precancel.Response response = null!;
             var exceptionString = string.Empty;

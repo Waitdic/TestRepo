@@ -106,7 +106,7 @@
             // Get the response 
             var request = new Request
             {
-                EndPoint = _settings.ServerURL(propertyDetails),
+                EndPoint = _settings.GenericURL(propertyDetails),
                 Method = eRequestMethod.POST,
                 Source = ThirdParties.DOTW,
                 Headers = headers,
@@ -178,7 +178,7 @@
             // Get the response 
             var request = new Request
             {
-                EndPoint = _settings.ServerURL(propertyDetails),
+                EndPoint = _settings.GenericURL(propertyDetails),
                 Method = eRequestMethod.POST,
                 Source = ThirdParties.DOTW,
                 Headers = oHeaders,
@@ -299,7 +299,7 @@
                 // Get the response 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     Headers = headers,
@@ -506,7 +506,7 @@
                 // todo - move this to precancel?
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Precancel",
@@ -536,7 +536,7 @@
                 // Get the response 
                 var cancellationWebRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Cancel",
@@ -667,7 +667,7 @@
                 // Get the response 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.ServerURL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Cancellation Cost",
@@ -733,7 +733,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(propertyDetails)).AppendLine();
+            sb.AppendFormat("<username>{0}</username>", _settings.User(propertyDetails)).AppendLine();
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(propertyDetails))).AppendLine();
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(propertyDetails)).AppendLine();
             sb.AppendLine("<source>1</source>");
@@ -866,7 +866,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails)).AppendLine();
+            sb.AppendFormat("<username>{0}</username>", _settings.User(searchDetails)).AppendLine();
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(searchDetails))).AppendLine();
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails)).AppendLine();
             sb.AppendLine("<source>1</source>");
@@ -887,7 +887,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails)).AppendLine();
+            sb.AppendFormat("<username>{0}</username>", _settings.User(searchDetails)).AppendLine();
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(searchDetails))).AppendLine();
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails)).AppendLine();
             sb.AppendLine("<source>1</source>");
@@ -918,7 +918,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(propertyDetails));
+            sb.AppendFormat("<username>{0}</username>", _settings.User(propertyDetails));
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(propertyDetails)));
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(propertyDetails));
             sb.AppendLine("<source>1</source>");
@@ -989,7 +989,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(propertyDetails));
+            sb.AppendFormat("<username>{0}</username>", _settings.User(propertyDetails));
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(propertyDetails)));
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(propertyDetails));
             sb.AppendLine("<source>1</source>");
@@ -1072,7 +1072,7 @@
 
             if (string.IsNullOrEmpty(nationality))
             {
-                nationality = settings.CustomerNationality(searchDetails);
+                nationality = settings.LeadGuestNationality(searchDetails);
             }
 
             return nationality;

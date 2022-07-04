@@ -87,7 +87,7 @@
 
                 int propertyRoomBookingId = 1;
 
-                int hotelRequestLimit = _settings.get_HotelRequestLimit(searchDetails);
+                int hotelRequestLimit = _settings.HotelBatchLimit(searchDetails);
 
                 foreach (var roomDetail in searchDetails.RoomDetails)
                 {
@@ -103,17 +103,17 @@
                     while (from < total)
                     {
                         string requestBody = BuildSearchRequestString(
-                            _settings.get_SearchURL(searchDetails),
-                            _settings.get_Username(searchDetails),
-                            _settings.get_Password(searchDetails),
-                            _settings.get_Language(searchDetails),
-                            _settings.get_Currency(searchDetails),
+                            _settings.SearchURL(searchDetails),
+                            _settings.User(searchDetails),
+                            _settings.Password(searchDetails),
+                            _settings.LanguageCode(searchDetails),
+                            _settings.Currency(searchDetails),
                             searchDetails,
                             roomDetail,
                             searchCode.Key.Skip(from).Take(numberToTake).ToList(),
                             searchCode.Value,
-                            _settings.get_Nationality(searchDetails),
-                            _settings.get_RequestPackageRates(searchDetails));
+                            _settings.CustomerCountryCode(searchDetails),
+                            _settings.RequestPackageRates(searchDetails));
 
                         var request = new Request
                         {
@@ -228,7 +228,7 @@
             var transformedList = new TransformedResultCollection();
 
             var responses = new List<SunhotelsSearchResponse>();
-            string currency = _settings.get_Currency(searchDetails);
+            string currency = _settings.Currency(searchDetails);
 
             // Sunhotels have a separate lookup xml for room type name("http://xml.sunhotels.net/15/PostGet/NonStaticXMLAPI.asmx/GetRoomTypes?")
             var roomTypes = GetRoomTypes();
@@ -236,7 +236,7 @@
             // order by property room booking id - stored in extra info
             foreach (var request in requests.OrderBy(o => o.ExtraInfo.ToSafeInt()))
             {
-                SunhotelsSearchResponse response = null;
+                SunhotelsSearchResponse response = null!;
 
                 try
                 {
@@ -288,7 +288,7 @@
                                     nonRefundable = true;
                                 }
 
-                                Cancellation_policy nextCancellation = null;
+                                Cancellation_policy nextCancellation = null!;
 
                                 if (index + 1 < room.cancellation_policies.Count())
                                 {

@@ -70,17 +70,17 @@
             string hotelBookRuleURL = JuniperHelper.ConstructUrl(
                 _settings.BaseURL(propertyDetails, propertyDetails.Source),
                 _settings.HotelBookingRuleURL(propertyDetails, propertyDetails.Source));
-            string sSOAPAction = _settings.HotelBookingRuleSOAPAction(propertyDetails, propertyDetails.Source);
+            string soapAction = _settings.HotelBookingRuleSOAPAction(propertyDetails, propertyDetails.Source);
             bool useGzip = _settings.UseGZip(propertyDetails, propertyDetails.Source);
 
             foreach (var room in propertyDetails.Rooms)
             {
-                Request request = null;
+                Request request = null!;
 
                 try
                 {
                     string preBookRequest = BuildPreBookRequest(propertyDetails, room.ThirdPartyReference);
-                    request = JuniperHelper.BuildWebRequest(hotelBookRuleURL, sSOAPAction, preBookRequest, Constant.PreBookLogFile, propertyDetails.Source, useGzip);
+                    request = JuniperHelper.BuildWebRequest(hotelBookRuleURL, soapAction, preBookRequest, Constant.PreBookLogFile, propertyDetails.Source, useGzip);
                     await request.Send(_httpClient, _logger);
 
                     var responseXml = _serializer.CleanXmlNamespaces(request.ResponseXML);

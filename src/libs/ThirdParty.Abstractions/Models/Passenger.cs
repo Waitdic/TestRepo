@@ -78,7 +78,7 @@
         /// <value>
         /// The nationality identifier.
         /// </value>
-        public string NationalityCode { get; set; }
+        public string NationalityCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the address.

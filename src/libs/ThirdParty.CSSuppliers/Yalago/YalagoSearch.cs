@@ -53,7 +53,7 @@
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            var apiKey = _settings.API_Key(searchDetails);
+            var apiKey = _settings.APIKey(searchDetails);
 
             foreach (var searchResortSplit in resortSplits)
             {
@@ -107,7 +107,7 @@
 
             if (string.IsNullOrEmpty(sourceMarket))
             {
-                sourceMarket = _settings.CountryCode(searchDetails);
+                sourceMarket = _settings.SourceMarket(searchDetails);
             }
             var getPackagePrice = searchDetails.OpaqueSearch && _settings.ReturnOpaqueRates(searchDetails);
             YalagoAvailabilityRequest yalagoAvailabilityRequest = new YalagoAvailabilityRequest()
@@ -117,7 +117,7 @@
                 EstablishmentIds = hotelIds.ToArray(),
                 Rooms = roomList.ToArray(),
                 SourceMarket = sourceMarket,
-                Culture = _settings.Language(searchDetails),
+                Culture = _settings.LanguageCode(searchDetails),
                 GetPackagePrice = getPackagePrice,
                 GetTaxBreakDown = true,
                 GetLocalCharges = true
@@ -218,7 +218,7 @@
                             Cancellations = cancellations
                         };
 
-                        if (_settings.ExcludeNonRefundable(searchDetails))
+                        if (_settings.ExcludeNRF(searchDetails))
                         {
                             if (transformedResult.NonRefundableRates == false)
                             {

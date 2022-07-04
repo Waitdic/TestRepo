@@ -8,57 +8,57 @@
     {
         protected override string Source => ThirdParties.JUMBO;
 
-        public string get_AgencyCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string AgencyID(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("AgencyCode", tpAttributeSearch);
+            return Get_Value("AgencyID", tpAttributeSearch);
         }
 
-        public string get_BrandCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string BrandCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("BrandCode", tpAttributeSearch);
         }
 
-        public string get_POS(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string POS(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("POS", tpAttributeSearch);
         }
 
-        public string get_CommonsURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CommonsURL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string get_HotelBookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("HotelBookingURL", tpAttributeSearch);
+            return Get_Value("BookingURL", tpAttributeSearch);
         }
 
-        public string get_BasketHandlerURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BasketHandlerURL", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
-        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string get_Language(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Language", tpAttributeSearch);
+            return Get_Value("LanguageCode", tpAttributeSearch);
         }
 
-        public bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
-        public string get_NationalityBasedCredentials(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string NationalityBasedCredentials(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("NationalityBasedCredentials", tpAttributeSearch);
         }

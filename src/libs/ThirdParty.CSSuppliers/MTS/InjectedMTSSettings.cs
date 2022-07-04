@@ -9,24 +9,24 @@
     {
         protected override string Source => ThirdParties.MTS;
 
-        public string ID(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ID", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public int Type(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return (Get_Value("Type", tpAttributeSearch)).ToSafeInt();
+            return Get_Value("Type", tpAttributeSearch).ToSafeInt();
         }
 
-        public string BaseURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BaseURL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public int Unique_ID_Type(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return (Get_Value("Unique_ID_Type", tpAttributeSearch)).ToSafeInt();
+            return Get_Value("Unique_ID_Type", tpAttributeSearch).ToSafeInt();
         }
 
         public string OverRideID(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -36,7 +36,7 @@
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return (Get_Value("AllowCancellations", tpAttributeSearch)).ToSafeBoolean();
+            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
         public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -46,22 +46,22 @@
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return (Get_Value("UseGZIP", tpAttributeSearch)).ToSafeBoolean();
+            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
         {
-            return (Get_Value("OffsetCancellationDays", tpAttributeSearch)).ToSafeInt();
+            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
         public int AuthenticationType(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return (Get_Value("AuthenticationType", tpAttributeSearch)).ToSafeInt();
+            return Get_Value("AuthenticationType", tpAttributeSearch).ToSafeInt();
         }
 
-        public string MessagePassword(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("MessagePassword", tpAttributeSearch);
+            return Get_Value("Password", tpAttributeSearch);
         }
 
         public string ID_Context(IThirdPartyAttributeSearch tpAttributeSearch)

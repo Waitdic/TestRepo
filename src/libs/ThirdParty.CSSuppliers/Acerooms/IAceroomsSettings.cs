@@ -5,11 +5,11 @@
     public interface IAceroomsSettings
     {
         string APIKey(IThirdPartyAttributeSearch tpAttributeSearch);
-        string SecretKey(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Secret(IThirdPartyAttributeSearch tpAttributeSearch);
         string Signature(IThirdPartyAttributeSearch tpAttributeSearch);
-        string BaseURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int BatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

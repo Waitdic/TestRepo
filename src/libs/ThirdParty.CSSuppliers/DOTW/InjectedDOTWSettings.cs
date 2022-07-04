@@ -19,9 +19,9 @@
             return Get_Value("CustomerCountryCode", tpAttributeSearch);
         }
 
-        public string CustomerNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CustomerNationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
         public int DefaultCurrencyID(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -51,7 +51,7 @@
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
@@ -64,9 +64,9 @@
             return Get_Value("SendTradeReference", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string ServerURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ServerURL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public string ThreadedSearch(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -79,9 +79,9 @@
             return Get_Value("UseMinimumSellingPrice", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Username", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public int Version(IThirdPartyAttributeSearch tpAttributeSearch)

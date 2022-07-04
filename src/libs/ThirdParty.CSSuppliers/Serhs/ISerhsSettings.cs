@@ -4,7 +4,7 @@
     {
         string Branch(IThirdPartyAttributeSearch tpAttributeSearch);
         string ClientCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
         string Version(IThirdPartyAttributeSearch tpAttributeSearch);

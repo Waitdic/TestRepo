@@ -14,14 +14,14 @@
             return Get_Value("APIKey", tpAttributeSearch);
         }
 
-        public string BaseURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BaseURL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string SecretKey(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Secret(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SecretKey", tpAttributeSearch);
+            return Get_Value("Secret", tpAttributeSearch);
         }
 
         public string Signature(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -39,10 +39,9 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int BatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BatchLimit", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch).ToSafeInt();
         }
     }
 }
-

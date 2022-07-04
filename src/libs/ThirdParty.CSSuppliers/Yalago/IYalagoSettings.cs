@@ -4,29 +4,29 @@
 
     public interface IYalagoSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string API_Key(IThirdPartyAttributeSearch tpAttributeSearch);
+        string APIKey(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool ReturnOpaqueRates(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Language(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string CountryCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string PreCancelURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PreCancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
     }

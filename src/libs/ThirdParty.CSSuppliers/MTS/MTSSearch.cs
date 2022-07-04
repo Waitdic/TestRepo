@@ -139,14 +139,14 @@
                 else
                 {
                     // Anything else, search with main ID; returns in Euros
-                    sbRequest.AppendFormat("<RequestorID Instance = \"{0}\" ID_Context = \"{1}\" ID = \"{2}\" Type = \"{3}\"/>", _settings.Instance(searchDetails), _settings.ID_Context(searchDetails), _settings.ID(searchDetails), _settings.Type(searchDetails));
+                    sbRequest.AppendFormat("<RequestorID Instance = \"{0}\" ID_Context = \"{1}\" ID = \"{2}\" Type = \"{3}\"/>", _settings.Instance(searchDetails), _settings.ID_Context(searchDetails), _settings.User(searchDetails), _settings.Type(searchDetails));
                 }
 
                 sbRequest.Append("<BookingChannel Type = \"2\"/>");
                 sbRequest.Append("</Source>");
 
                 sbRequest.Append("<Source>");
-                sbRequest.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(searchDetails), _settings.AuthenticationID(searchDetails), _settings.MessagePassword(searchDetails));
+                sbRequest.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(searchDetails), _settings.AuthenticationID(searchDetails), _settings.Password(searchDetails));
                 sbRequest.Append("</Source>");
 
                 sbRequest.Append("</POS>");
@@ -222,7 +222,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.BaseURL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_json
                 };

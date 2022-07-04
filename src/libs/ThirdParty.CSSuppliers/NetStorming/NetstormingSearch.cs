@@ -79,7 +79,7 @@
 
                     var request = new Request
                     {
-                        EndPoint = _settings.URL(searchDetails, source),
+                        EndPoint = _settings.GenericURL(searchDetails, source),
                         Method = eRequestMethod.POST,
                     };
                     request.SetRequest(xmlRequest);

@@ -28,9 +28,9 @@
             return Get_Value("Secacc", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -43,9 +43,9 @@
             return Get_Value("GuestNamesAvailable", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
         public bool CancelFirstPreBook(IThirdPartyAttributeSearch tpAttributeSearch)

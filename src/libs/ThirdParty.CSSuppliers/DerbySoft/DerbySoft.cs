@@ -168,7 +168,7 @@
                     await GetResponseAsync<DerbySoftBookingUsbV4PreBookRequest, DerbySoftBookingUsbV4PreBookResponse>(
                         propertyDetails,
                         prebookDeserialisedRequest,
-                        _settings.PreBookURL(propertyDetails, propertyDetails.Source),
+                        _settings.PrebookURL(propertyDetails, propertyDetails.Source),
                         "Prebook");
 
                 preBookSuccess = prebookResponse?.bookingToken != null && prebookResponse.bookingToken != "";
@@ -386,7 +386,7 @@
                         await GetResponseAsync<DerbySoftBookingUsbV4BookRequest, DerbySoftBookingUsbV4BookResponse>(
                             propertyDetails,
                             bookRequest,
-                            _settings.BookURL(propertyDetails, propertyDetails.Source),
+                            _settings.BookingURL(propertyDetails, propertyDetails.Source),
                             "Book");
 
                     var derbyResId = "";
@@ -567,7 +567,7 @@
                         await GetResponseAsync<DerbySoftBookingUsbV4CancelRequest, DerbySoftBookingUsbV4CancelResponse>(
                             propertyDetails,
                             cancelRequest,
-                            _settings.CancelURL(propertyDetails, propertyDetails.Source),
+                            _settings.CancellationURL(propertyDetails, propertyDetails.Source),
                             "Cancel");
 
                     if (response != null && !string.IsNullOrEmpty(response.cancellationId))

@@ -10,7 +10,6 @@
         bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
         string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string LocationsURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string SOAPStart(IThirdPartyAttributeSearch tpAttributeSearch);
         string SOAPAvailableHotels(IThirdPartyAttributeSearch tpAttributeSearch);
         string SOAPHotelReservation(IThirdPartyAttributeSearch tpAttributeSearch);

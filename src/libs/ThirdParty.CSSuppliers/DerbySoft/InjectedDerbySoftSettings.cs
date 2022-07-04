@@ -13,24 +13,24 @@
             return Get_Value("AllowCancellations", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string BookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("BookURL", tpAttributeSearch, source);
+            return Get_Value("BookingURL", tpAttributeSearch, source);
         }
 
-        public string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CancelURL", tpAttributeSearch, source);
+            return Get_Value("CancellationURL", tpAttributeSearch, source);
         }
 
-        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ExcludeNonRefundable", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelSearchLimit", tpAttributeSearch, source).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -43,9 +43,9 @@
             return Get_Value("Password", tpAttributeSearch, source);
         }
 
-        public string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("PreBookURL", tpAttributeSearch, source);
+            return Get_Value("PrebookURL", tpAttributeSearch, source);
         }
 
         public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -53,19 +53,19 @@
             return Get_Value("SearchURL", tpAttributeSearch, source);
         }
 
-        public int ShoppingEngineHotelsBatchSize(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int SecondaryHotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ShoppingEngineHotelsBatchSize", tpAttributeSearch, source).ToSafeInt();
+            return Get_Value("SecondaryHotelBatchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public string ShoppingEnginePassword(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryPassword(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ShoppingEnginePassword", tpAttributeSearch, source);
+            return Get_Value("SecondaryPassword", tpAttributeSearch, source);
         }
 
-        public string ShoppingEngineURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondarySearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ShoppingEngineURL", tpAttributeSearch, source);
+            return Get_Value("SecondarySearchURL", tpAttributeSearch, source);
         }
 
         public string SupplierID(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -83,9 +83,9 @@
             return Get_Value("User", tpAttributeSearch, source);
         }
 
-        public bool UseShoppingEngineForSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool EnableUtilitySearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UseShoppingEngineForSearch", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("EnableUtilitySearch", tpAttributeSearch, source).ToSafeBoolean();
         }
     }
 }

@@ -139,7 +139,7 @@
         {
             var request = new Request
             {
-                EndPoint = _settings.get_URL(propertyDetails),
+                EndPoint = _settings.GenericURL(propertyDetails),
                 Method = eRequestMethod.POST,
                 Source = ThirdParties.STUBA,
                 LogFileName = requestType,
@@ -164,11 +164,11 @@
 
         private async Task<string> BookReservationRequestAsync(PropertyDetails propertyDetails, bool confirm)
         {
-            string org = _settings.get_Organisation(propertyDetails);
-            string user = _settings.get_Username(propertyDetails);
-            string password = _settings.get_Password(propertyDetails);
-            string version = _settings.get_Version(propertyDetails);
-            string currencyCode = _settings.get_Currency(propertyDetails);
+            string org = _settings.Organisation(propertyDetails);
+            string user = _settings.User(propertyDetails);
+            string password = _settings.Password(propertyDetails);
+            string version = _settings.Version(propertyDetails);
+            string currencyCode = _settings.Currency(propertyDetails);
 
             EnsurePassengerNamesNotNull(propertyDetails);
             var request = new XElement("BookingCreate",
@@ -194,11 +194,11 @@
 
         private string CancelRequest(PropertyDetails propertyDetails, bool confirm)
         {
-            string org = _settings.get_Organisation(propertyDetails);
-            string user = _settings.get_Username(propertyDetails);
-            string password = _settings.get_Password(propertyDetails);
-            string version = _settings.get_Version(propertyDetails);
-            string currencyCode = _settings.get_Currency(propertyDetails);
+            string org = _settings.Organisation(propertyDetails);
+            string user = _settings.User(propertyDetails);
+            string password = _settings.Password(propertyDetails);
+            string version = _settings.Version(propertyDetails);
+            string currencyCode = _settings.Currency(propertyDetails);
 
             var request = new XElement("BookingCancel",
                             new XElement("Authority",
@@ -245,7 +245,7 @@
             }
             if (string.IsNullOrEmpty(nationality))
             {
-                nationality = _settings.get_Nationality(propertyDetails);
+                nationality = _settings.LeadGuestNationality(propertyDetails);
             }
             return nationality;
         }
@@ -310,7 +310,7 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_AllowCancellations(searchDetails);
+            return _settings.AllowCancellations(searchDetails);
         }
 
         #region Stuff
@@ -321,7 +321,7 @@
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
+            return _settings.OffsetCancellationDays(searchDetails, false);
         }
 
         public bool RequiresVCard(VirtualCardInfo info, string source) => false;

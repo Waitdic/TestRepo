@@ -53,7 +53,7 @@
             string uniqueCode,
             int propertyRoomBookingId) =>
             tpKeys
-                .Batch(_settings.ShoppingEngineHotelsBatchSize(searchDetails, _source))
+                .Batch(_settings.SecondaryHotelBatchLimit(searchDetails, _source))
                 .Select(batch => BuildSearchRequest(batch, searchDetails, roomDetails))
                 .Select(request => BuildWebRequest(
                     searchDetails,
@@ -117,7 +117,7 @@
         {
             var request = new Request
             {
-                EndPoint = _settings.ShoppingEngineURL(searchDetails, _source),
+                EndPoint = _settings.SecondarySearchURL(searchDetails, _source),
                 Method = eRequestMethod.POST,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",
@@ -127,7 +127,7 @@
             var serialisedRequest = JsonConvert.SerializeObject(deserialisedRequest, DerbySoftSupport.GetJsonSerializerSettings());
             request.SetRequest(serialisedRequest);
 
-            var password = _settings.ShoppingEnginePassword(searchDetails, _source);
+            var password = _settings.SecondaryPassword(searchDetails, _source);
             request.Headers.AddNew(
                 "Authorization",
                 "Bearer " + (!string.IsNullOrWhiteSpace(password) ? password : _settings.Password(searchDetails, _source)));

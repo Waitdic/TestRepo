@@ -38,7 +38,7 @@
 
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            int batchSize = _settings.get_SearchRequestBatchSize(searchDetails);
+            int batchSize = _settings.HotelBatchLimit(searchDetails);
             var tpPropertyIDs = resortSplits.SelectMany(rs => rs.Hotels).Select(h => h.TPKey).ToList();
 
             return (await Task.WhenAll(MoreLinq.Extensions.BatchExtension.Batch(tpPropertyIDs, batchSize)
@@ -49,10 +49,10 @@
         private async Task<Request> BuildSearchRequestAsync(IEnumerable<string> tpKeys, SearchDetails searchDetails)
         {
             string searchURL = await BuildSearchURLAsync(tpKeys, searchDetails);
-            bool useGzip = _settings.get_UseGZIP(searchDetails);
-            string apiKey = _settings.get_ApiKey(searchDetails);
-            string secret = _settings.get_Secret(searchDetails);
-            string userAgent = _settings.get_UserAgent(searchDetails);
+            bool useGzip = _settings.UseGZip(searchDetails);
+            string apiKey = _settings.APIKey(searchDetails);
+            string secret = _settings.Secret(searchDetails);
+            string userAgent = _settings.UserAgent(searchDetails);
 
             string tpSessionID = Guid.NewGuid().ToString();
             var headers = new RequestHeaders()
@@ -106,8 +106,9 @@
             RequestHeaders headers,
             bool useGzip,
             string userAgent,
-            string requestBody = null,
-            object extraInfo = null)
+            string requestBody = "",
+            string logFileName = "",
+            object extraInfo = null!)
         {
             var request = new Request()
             {
@@ -121,6 +122,8 @@
                 EndPoint = url,
                 SuppressExpectHeaders = true,
                 ExtraInfo = extraInfo,
+                Source = ThirdParties.EXPEDIARAPID,
+                LogFileName = logFileName
             };
 
             if (!string.IsNullOrWhiteSpace(requestBody))
@@ -133,11 +136,11 @@
 
         public static string BuildSearchURL(IEnumerable<string> tpKeys, IExpediaRapidSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, DateTime arrivalDate, DateTime departureDate, string currencyCode, IEnumerable<ExpediaRapidOccupancy> occupancies)
         {
-            var nvc = new NameValueCollection() { { SearchQueryKeys.CheckIn, arrivalDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.Currency, currencyCode }, { SearchQueryKeys.Language, settings.get_LanguageCode(tpAttributeSearch) }, { SearchQueryKeys.CountryCode, settings.get_CountryCode(tpAttributeSearch) }, { SearchQueryKeys.SalesChannel, settings.get_SalesChannel(tpAttributeSearch) }, { SearchQueryKeys.SalesEnvironment, settings.get_SalesEnvironment(tpAttributeSearch) }, { SearchQueryKeys.SortType, settings.get_SortType(tpAttributeSearch) }, { SearchQueryKeys.RatePlanCount, settings.get_RatePlanCount(tpAttributeSearch).ToString() }, { SearchQueryKeys.PaymentTerms, settings.get_PaymentTerms(tpAttributeSearch) }, { SearchQueryKeys.PartnerPointOfSale, settings.get_PartnerPointOfSale(tpAttributeSearch) }, { SearchQueryKeys.BillingTerms, settings.get_BillingTerms(tpAttributeSearch) }, { SearchQueryKeys.RateOption, settings.get_RateOption(tpAttributeSearch) } };
+            var nvc = new NameValueCollection() { { SearchQueryKeys.CheckIn, arrivalDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.Currency, currencyCode }, { SearchQueryKeys.Language, settings.LanguageCode(tpAttributeSearch) }, { SearchQueryKeys.CountryCode, settings.SourceMarket(tpAttributeSearch) }, { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) }, { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) }, { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) }, { SearchQueryKeys.RatePlanCount, settings.RatePlanCount(tpAttributeSearch).ToString() }, { SearchQueryKeys.PaymentTerms, settings.PaymentTerms(tpAttributeSearch) }, { SearchQueryKeys.PartnerPointOfSale, settings.PartnerPointOfSale(tpAttributeSearch) }, { SearchQueryKeys.BillingTerms, settings.BillingTerms(tpAttributeSearch) }, { SearchQueryKeys.RateOption, settings.RateOption(tpAttributeSearch) } };
 
-            if (!string.IsNullOrWhiteSpace(settings.get_PlatformName(tpAttributeSearch)))
+            if (!string.IsNullOrWhiteSpace(settings.PlatformName(tpAttributeSearch)))
             {
-                nvc.Add(SearchQueryKeys.PlatformName, settings.get_PlatformName(tpAttributeSearch));
+                nvc.Add(SearchQueryKeys.PlatformName, settings.PlatformName(tpAttributeSearch));
             }
 
             foreach (var occupancy in occupancies)
@@ -150,7 +153,7 @@
                 nvc.Add(SearchQueryKeys.PropertyID, tpKey);
             }
 
-            var searchUrl = new UriBuilder(settings.get_Scheme(tpAttributeSearch), settings.get_Host(tpAttributeSearch), -1, settings.get_SearchPath(tpAttributeSearch)); // to not put the port number in the URL
+            var searchUrl = new UriBuilder(settings.Scheme(tpAttributeSearch), settings.Host(tpAttributeSearch), -1, settings.SearchURL(tpAttributeSearch)); // to not put the port number in the URL
 
             return searchUrl.Uri.AbsoluteUri + AddQueryParams(nvc);
         }
@@ -169,7 +172,7 @@
         {
             var transformedResults = new TransformedResultCollection();
             var allAvailabilities = new List<PropertyAvailablility>();
-            var mealbases = (Dictionary<string, int>)requests.First().ExtraInfo;
+            var mealbases = (Dictionary<string, int>)requests.First().ExtraInfo!;
 
             string tpSessionID = requests.First().ResponseHeaders["Transaction-Id"];
 

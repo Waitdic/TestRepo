@@ -4,7 +4,7 @@
 
     public interface IiVectorConnectSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch, string source);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool UseAgentDetails(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string AgentAddress(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string AgentEmailAddress(IThirdPartyAttributeSearch tpAttributeSearch, string source);

@@ -18,27 +18,27 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>A property details object</returns>
-        Task<PropertyDetails> CreateAsync(Precancel.Request request, User user);
+        Task<PropertyDetails> CreateAsync(Precancel.Request request, Subscription user);
 
         /// <summary>
         /// Creates the specified request.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>A property details object</returns>
-        Task<PropertyDetails> CreateAsync(Cancel.Request request, User user);
+        Task<PropertyDetails> CreateAsync(Cancel.Request request, Subscription user);
 
         /// <summary>
         /// Creates the specified request.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>A property details object</returns>
-        Task<PropertyDetails> CreateAsync(Book.Request request, User user);
+        Task<PropertyDetails> CreateAsync(Book.Request request, Subscription user);
 
         /// <summary>
         /// Creates the specified request.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>A property details object</returns>
-        Task<PropertyDetails> CreateAsync(Prebook.Request request, User user);
+        Task<PropertyDetails> CreateAsync(Prebook.Request request, Subscription user);
     }
 }

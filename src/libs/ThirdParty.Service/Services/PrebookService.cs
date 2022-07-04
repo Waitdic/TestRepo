@@ -53,7 +53,7 @@
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Response> PrebookAsync(Request prebookRequest, User user)
+        public async Task<Response> PrebookAsync(Request prebookRequest, Subscription user)
         {
             Response response = null!;
             string exceptionString = string.Empty;

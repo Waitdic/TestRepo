@@ -19,9 +19,9 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int BatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BatchLimit", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch).ToSafeInt();
         }
 
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -39,9 +39,9 @@
             return Get_Value("CheckRatesURL", tpAttributeSearch);
         }
 
-        public string ContentLanguage(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ContentLanguage", tpAttributeSearch);
+            return Get_Value("LanguageCode", tpAttributeSearch);
         }
 
         public string CustomerCountryCode(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -64,21 +64,6 @@
             return Get_Value("HotelPackage", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
-        }
-
-        public int LanguageID(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("LanguageID", tpAttributeSearch).ToSafeInt();
-        }
-
-        public bool NonRefundableRates(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("NonRefundableRates", tpAttributeSearch).ToSafeBoolean();
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
@@ -99,14 +84,14 @@
             return Get_Value("SecureBookingURL", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("SearchURL", tpAttributeSearch);
         }
 
-        public bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
         public string User(IThirdPartyAttributeSearch tpAttributeSearch)

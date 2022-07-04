@@ -4,7 +4,7 @@
 
     public interface IHotelBedsV2Settings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string User(IThirdPartyAttributeSearch tpAttributeSearch);
 
@@ -12,11 +12,7 @@
 
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string ContentLanguage(IThirdPartyAttributeSearch tpAttributeSearch);
-
-        int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
-
-        bool NonRefundableRates(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
 
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
 
@@ -30,7 +26,7 @@
 
         string CheckRatesURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        int BatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string SecureBookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
@@ -42,9 +38,6 @@
 
         bool HotelPackage(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        int LanguageID(IThirdPartyAttributeSearch tpAttributeSearch);
-
-        bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
-
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

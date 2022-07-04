@@ -2,17 +2,17 @@
 {
     public interface IYouTravelSettings
     {
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
-        string get_Username(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CancellationFeeURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_LangID(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
-        bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CancellationPolicyURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationFeeURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationPolicyURL(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

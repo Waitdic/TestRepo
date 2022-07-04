@@ -28,7 +28,7 @@
         {
             var nonRefundableRates = roomRate.CancelPolicy != null && roomRate.CancelPolicy.Code == "AD100P_100P";
 
-            if (_settings.ExcludeNonRefundable(searchDetails, _source) && nonRefundableRates)
+            if (_settings.ExcludeNRF(searchDetails, _source) && nonRefundableRates)
             {
                 return null;
             }

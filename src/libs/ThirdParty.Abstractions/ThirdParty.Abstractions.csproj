@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <LangVersion>latest</LangVersion>
     <RootNamespace>ThirdParty</RootNamespace>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Intuitive.Data" Version="7.1.0" />
