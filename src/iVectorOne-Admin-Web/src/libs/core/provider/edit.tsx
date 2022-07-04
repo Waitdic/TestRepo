@@ -123,17 +123,21 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col'>
-          {/* Edit Provider */}
-          {error ? (
-            <ErrorBoundary />
-          ) : (
-            <div className='mb-6'>
-              <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-                Edit Provider
-              </h2>
+        <>
+          {/* Page header */}
+          <div className='mb-8'>
+            {/* Title */}
+            <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
+              Edit Providers
+            </h1>
+          </div>
+
+          {/* Content */}
+          <div className='bg-white shadow-lg rounded-sm mb-8'>
+            <div className='flex flex-col md:flex-row md:-mr-px'>
+              <div className='min-w-60'></div>
               <form
-                className='w-full divide-y divide-gray-200'
+                className='grow p-6 w-full divide-y divide-gray-200'
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
@@ -203,8 +207,8 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
                 </div>
               </form>
             </div>
-          )}
-        </div>
+          </div>
+        </>
       </MainLayout>
 
       {showNotification && (
