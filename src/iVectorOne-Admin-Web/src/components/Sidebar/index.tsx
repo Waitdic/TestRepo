@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-
-import { SidebarLinkGroup, TenantSelector } from '@/components';
+import { NavLink, useLocation } from 'react-router-dom';
+//
+import { SidebarLinkGroup } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import classNames from 'classnames';
-import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
 
 type Props = {
   sidebarOpen: boolean;
@@ -14,11 +12,8 @@ type Props = {
 
 const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const { pathname } = useLocation();
-  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
-  const modules = useSelector((state: RootState) => state.app.modules);
 
-  const activeModule = modules.filter((module) => module.isActive)[0];
-  const currentConsoles = activeModule?.consoles;
+  const user = useSelector((state: RootState) => state.app.user);
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -35,7 +30,6 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
         trigger.current.contains(target)
       )
         return;
-
       setSidebarOpen(false);
     };
     document.addEventListener('click', clickHandler);
@@ -105,85 +99,87 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Links */}
         <div className='space-y-8 flex flex-col h-full'>
           {/* Pages group */}
-          <div>
-            <ul className='mt-3'>
-              {/* Dashboard */}
-              <SidebarLinkGroup
-                activecondition={
-                  pathname === '/' || pathname.includes('dashboard')
-                }
-                to='/'
-                title='Dashboard'
-                sidebarExpanded={sidebarExpanded}
-                setSidebarExpanded={setSidebarExpanded}
-              />
-              {/* Subscriptions */}
-              <SidebarLinkGroup
-                activecondition={
-                  pathname === '/subscriptions' ||
-                  pathname.includes('subscriptions')
-                }
-                to='/subscriptions'
-                title='Subscriptions'
-                sidebarExpanded={sidebarExpanded}
-                setSidebarExpanded={setSidebarExpanded}
-              />
-              {/* Providers */}
-              <SidebarLinkGroup
-                activecondition={
-                  pathname === '/providers' || pathname.includes('providers')
-                }
-                to='/providers'
-                title='Providers'
-                sidebarExpanded={sidebarExpanded}
-                setSidebarExpanded={setSidebarExpanded}
-              />
-              {/* Settings */}
-              <SidebarLinkGroup
-                activecondition={
-                  pathname === '/settings' || pathname.includes('settings')
-                }
-                to='/'
-                title='Settings'
-                sidebarExpanded={sidebarExpanded}
-                setSidebarExpanded={setSidebarExpanded}
-                links={[
-                  {
-                    title: 'My account',
-                    to: '/settings/my-account',
-                  },
-                  {
-                    title: 'Feedback',
-                    to: '/settings/feedback',
-                  },
-                ]}
-              />
-              {/* Support */}
-              <SidebarLinkGroup
-                activecondition={
-                  pathname === '/support' || pathname.includes('support')
-                }
-                to='/support'
-                title='Support'
-                sidebarExpanded={sidebarExpanded}
-                setSidebarExpanded={setSidebarExpanded}
-                links={[
-                  {
-                    title: 'Knowledge base',
-                    to: '/support/knowledge-base',
-                  },
-                  {
-                    title: 'Change log',
-                    to: '/support/change-log',
-                  },
-                  {
-                    title: 'Road map',
-                    to: '/support/road-map',
-                  },
-                ]}
-              />
-            </ul>
-          </div>
+          {!!user?.fullName && (
+            <div>
+              <ul className='mt-3'>
+                {/* Dashboard */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/' || pathname.includes('dashboard')
+                  }
+                  to='/'
+                  title='Dashboard'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                />
+                {/* Subscriptions */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/subscriptions' ||
+                    pathname.includes('subscriptions')
+                  }
+                  to='/subscriptions'
+                  title='Subscriptions'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                />
+                {/* Providers */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/providers' || pathname.includes('providers')
+                  }
+                  to='/providers'
+                  title='Providers'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                />
+                {/* Settings */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/settings' || pathname.includes('settings')
+                  }
+                  to='/'
+                  title='Settings'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                  links={[
+                    {
+                      title: 'My account',
+                      to: '/settings/my-account',
+                    },
+                    {
+                      title: 'Feedback',
+                      to: '/settings/feedback',
+                    },
+                  ]}
+                />
+                {/* Support */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/support' || pathname.includes('support')
+                  }
+                  to='/support'
+                  title='Support'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                  links={[
+                    {
+                      title: 'Knowledge base',
+                      to: '/support/knowledge-base',
+                    },
+                    {
+                      title: 'Change log',
+                      to: '/support/change-log',
+                    },
+                    {
+                      title: 'Road map',
+                      to: '/support/road-map',
+                    },
+                  ]}
+                />
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
