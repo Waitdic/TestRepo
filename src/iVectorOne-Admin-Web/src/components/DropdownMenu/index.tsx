@@ -1,11 +1,12 @@
 import { Fragment, ReactNode, FC, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import classnames from 'classnames';
 //
 import { DropdownNavigationProps } from '@/types';
 import { MenuPosition } from '@/constants';
 import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
+import { Auth } from 'aws-amplify';
 
 type Props = {
   dropdownNavigation: DropdownNavigationProps[];
@@ -18,6 +19,8 @@ const DropdownMenu: FC<Props> = ({
   children,
   position = MenuPosition.RIGHT,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Menu as='div' className='ml-3 relative'>
       <div className='flex gap-1'>
@@ -67,7 +70,13 @@ const DropdownMenu: FC<Props> = ({
                             active ? 'bg-gray-100' : '',
                             'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                           )}
-                          onClick={() => action()}
+                          onClick={() => {
+                            Auth.signOut({ global: true });
+                            localStorage.clear();
+                            navigate('/');
+                            console.log('logout');
+                            window.location.reload();
+                          }}
                         >
                           {name}
                         </span>
