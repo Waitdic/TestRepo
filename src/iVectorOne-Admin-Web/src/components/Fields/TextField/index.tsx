@@ -1,7 +1,8 @@
-import { memo, Fragment, forwardRef, LegacyRef, FC } from 'react';
+import { memo, Fragment, forwardRef, LegacyRef, FC, useState } from 'react';
 import classnames from 'classnames';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import { ChangeHandler } from 'react-hook-form';
+import { BiHide, BiShow } from 'react-icons/bi';
 //
 import { InputTypes } from '@/constants';
 
@@ -48,6 +49,8 @@ const TextField: FC<Props> = forwardRef(
     },
     ref
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
+
     return (
       <Fragment>
         {hasLabel && (
@@ -79,7 +82,13 @@ const TextField: FC<Props> = forwardRef(
             <input
               id={id}
               name={name}
-              type={type}
+              type={
+                type === InputTypes.PASSWORD
+                  ? showPassword
+                    ? 'text'
+                    : 'password'
+                  : type
+              }
               value={value}
               defaultValue={defaultValue}
               onChange={onChange}
@@ -88,12 +97,27 @@ const TextField: FC<Props> = forwardRef(
                 'border-red-500 bg-red-100': isDirty,
                 'border-r-0 rounded-r-none': prefix && prefixPos === 'right',
                 'border-l-0 rounded-l-none': prefix && prefixPos === 'left',
+                '!pl-10': type === 'password',
                 [className]: className !== '',
               })}
               ref={ref as LegacyRef<HTMLInputElement>}
               placeholder={placeholder}
               autoComplete='turnedOff'
             />
+            {type === 'password' && (
+              <div className='absolute inset-y-0 left-3 flex items-center'>
+                <div
+                  className='cursor-pointer'
+                  onClick={() => setShowPassword((prevState) => !prevState)}
+                >
+                  {!showPassword ? (
+                    <BiShow className='h-6 w-6 text-gray-500' />
+                  ) : (
+                    <BiHide className='h-6 w-6 text-gray-500' />
+                  )}
+                </div>
+              </div>
+            )}
             {isDirty && errorMsg && (
               <Fragment>
                 <div className='absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none'>
