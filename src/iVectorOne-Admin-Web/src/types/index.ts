@@ -74,6 +74,7 @@ export type ProviderConfiguration = {
   name: string;
   order: number;
   type: string;
+  value?: number | string | boolean;
   defaultValue?: number | string | boolean;
   description?: string;
   minimum?: number;

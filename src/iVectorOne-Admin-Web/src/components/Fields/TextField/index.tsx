@@ -32,6 +32,7 @@ const TextField: FC<Props> = forwardRef(
       name,
       labelText,
       type = InputTypes.TEXT,
+      defaultValue,
       value,
       onChange,
       onBlur,
@@ -80,6 +81,7 @@ const TextField: FC<Props> = forwardRef(
               name={name}
               type={type}
               value={value}
+              defaultValue={defaultValue}
               onChange={onChange}
               onBlur={onBlur}
               className={classnames('form-input w-full', {

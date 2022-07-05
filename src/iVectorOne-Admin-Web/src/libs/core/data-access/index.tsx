@@ -107,7 +107,7 @@ export function useIvoFetching() {
         );
         providers.forEach(async (provider) => {
           const { data } = await ApiCall.get(
-            `/tenants/${activeTenant?.tenantId}/subscriptions/${provider?.supplierSubscriptionID}/suppliers/${provider?.supplierID}`,
+            `/tenants/${activeTenant?.tenantId}/subscriptions/${subscription.subscriptionId}/suppliers/${provider?.supplierID}`,
             {
               headers: {
                 Accept: 'application/json',

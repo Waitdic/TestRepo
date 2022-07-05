@@ -1,5 +1,13 @@
 import { Switch } from '@headlessui/react';
-import { FC, memo, forwardRef, LegacyRef, FormEvent, useState } from 'react';
+import {
+  FC,
+  memo,
+  forwardRef,
+  LegacyRef,
+  FormEvent,
+  useState,
+  useEffect,
+} from 'react';
 import { ChangeHandler } from 'react-hook-form';
 import classnames from 'classnames';
 
@@ -40,6 +48,10 @@ const Toggle: FC<Props> = forwardRef(
       setIsChecked(e.currentTarget.checked);
     };
 
+    useEffect(() => {
+      setIsChecked(defaultValue);
+    }, [defaultValue]);
+
     return (
       <div className='relative flex justify-between items-center'>
         <input
@@ -63,9 +75,7 @@ const Toggle: FC<Props> = forwardRef(
           </div>
           <Switch
             checked={isChecked}
-            onChange={() => {
-              // foo
-            }}
+            onChange={() => void 0}
             className={classnames(
               isChecked ? 'bg-primary' : 'bg-gray-200',
               'pointer-events-none relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'

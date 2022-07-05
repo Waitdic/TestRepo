@@ -38,6 +38,7 @@ export const renderConfigurationFormFields = (
         editPresentation,
         dropdownOptions,
         defaultValue,
+        value,
         minimum,
         maximum,
         maxLength,
@@ -57,7 +58,7 @@ export const renderConfigurationFormFields = (
 
       return (
         <div key={idx}>
-          {type === 'boolean' ? (
+          {type === 'Boolean' ? (
             <Toggle
               id={`configurations.${idx}.${key}`}
               {...register(`configurations.${idx}.${key}`, {
@@ -69,11 +70,11 @@ export const renderConfigurationFormFields = (
               labelText={name}
               description={description}
               required={required}
-              defaultValue={defaultValue as boolean}
+              defaultValue={Boolean(value)}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
             />
-          ) : type === 'dropdown' && dropdownOptions ? (
+          ) : type === 'Dropdown' && dropdownOptions ? (
             <Select
               id={`configurations.${idx}.${key}`}
               {...register(`configurations.${idx}.${key}`)}
@@ -82,9 +83,9 @@ export const renderConfigurationFormFields = (
               maxItems={maxItems}
               minItems={minItems}
               options={dropdownOptions}
-              defaultValue={defaultValue as unknown as SelectOption}
+              defaultValue={value as unknown as SelectOption}
             />
-          ) : type === 'string' && editPresentation === 'multilineText' ? (
+          ) : type === 'String' && editPresentation === 'multilineText' ? (
             <TextArea
               id={`configurations.${idx}.${key}`}
               {...register(`configurations.${idx}.${key}`, {
@@ -101,13 +102,14 @@ export const renderConfigurationFormFields = (
                   message: `Maximum length ${maxLength} characters.`,
                 },
               })}
+              defaultValue={value as string}
               labelText={name}
               description={description}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
               required={required}
             />
-          ) : type === 'number' ? (
+          ) : type === 'Number' ? (
             <TextField
               id={`configurations.${idx}.${key}`}
               type={InputTypes.NUMBER}
@@ -125,13 +127,14 @@ export const renderConfigurationFormFields = (
                   message: `Maximum value ${maximum}.`,
                 },
               })}
+              defaultValue={value as string}
               labelText={name}
               description={description}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
               required={required}
             />
-          ) : type === 'uri' ? (
+          ) : type === 'Uri' ? (
             <TextField
               id={`configurations.${idx}.${key}`}
               {...register(`configurations.${idx}.${key}`, {
@@ -152,11 +155,12 @@ export const renderConfigurationFormFields = (
               })}
               labelText={name}
               description={description}
+              defaultValue={value as string}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
               required={required}
             />
-          ) : type === 'email' ? (
+          ) : type === 'Email' ? (
             <TextField
               id={`configurations.${idx}.${key}`}
               type={InputTypes.EMAIL}
@@ -174,13 +178,14 @@ export const renderConfigurationFormFields = (
                     'This is not a valid email address.',
                 },
               })}
+              defaultValue={value as string}
               labelText={name}
               description={description}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
               required={required}
             />
-          ) : type === 'password' ? (
+          ) : type === 'Password' ? (
             <TextField
               id={`configurations.${idx}.${key}`}
               type={InputTypes.PASSWORD}
@@ -200,6 +205,7 @@ export const renderConfigurationFormFields = (
               })}
               labelText={name}
               description={description}
+              defaultValue={(defaultValue as string) || (value as string)}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}
               required={required}
@@ -222,6 +228,7 @@ export const renderConfigurationFormFields = (
                 },
               })}
               labelText={name}
+              defaultValue={value as string}
               description={description}
               isDirty={errorMsg as boolean}
               errorMsg={errorMsg as string}

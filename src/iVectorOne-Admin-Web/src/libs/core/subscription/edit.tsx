@@ -44,6 +44,9 @@ export const SubscriptionEdit: FC<Props> = memo(({}) => {
     (state: RootState) => state.app.subscriptions
   );
 
+  const [currentSubscription, setCurrentSubscription] = useState(
+    null as Subscription | null
+  );
   const [notification, setNotification] = useState<NotificationState>({
     status: NotificationStatus.SUCCESS,
     message: 'Subscription edited successfully.',
@@ -89,14 +92,15 @@ export const SubscriptionEdit: FC<Props> = memo(({}) => {
 
   const loadSubscription = useCallback(() => {
     if (subscriptions.length > 0) {
-      const currentSubscription = subscriptions.filter(
+      const currentSubscription = subscriptions.find(
         (sub) => sub.subscriptionId === Number(slug)
-      )[0];
+      );
 
       if (!currentSubscription) {
         navigate('/subscriptions');
       } else {
-        //! TODO setValue('name', currentSubscription.name);
+        setCurrentSubscription(currentSubscription);
+
         setValue('userName', currentSubscription.userName);
         setValue(
           'propertyTprequestLimit',
@@ -115,6 +119,23 @@ export const SubscriptionEdit: FC<Props> = memo(({}) => {
   useEffect(() => {
     loadSubscription();
   }, [subscriptions, navigate, setValue, slug, loadSubscription]);
+
+  useEffect(() => {
+    if (currentSubscription !== null) {
+      setValue('userName', currentSubscription.userName);
+      setValue('password', currentSubscription.password);
+      setValue(
+        'propertyTprequestLimit',
+        currentSubscription.propertyTprequestLimit
+      );
+      setValue(
+        'searchTimeoutSeconds',
+        currentSubscription.searchTimeoutSeconds
+      );
+      setValue('logMainSearchError', currentSubscription.logMainSearchError);
+      setValue('currencyCode', currentSubscription.currencyCode);
+    }
+  }, [currentSubscription]);
 
   return (
     <>
@@ -143,18 +164,6 @@ export const SubscriptionEdit: FC<Props> = memo(({}) => {
                   </div>
                   {subscriptions.length > 0 ? (
                     <>
-                      <div className='flex-1 md:w-3/4'>
-                        {/* //! TODO */}
-                        {/* <TextField
-                            id='name'
-                            {...register('name', {
-                              required: 'This field is required.',
-                            })}
-                            labelText='Name'
-                            isDirty={errors.name ? true : false}
-                            errorMsg={errors.name?.message}
-                          /> */}
-                      </div>
                       <div className='flex-1 md:w-1/2'>
                         <TextField
                           id='userName'
@@ -240,6 +249,9 @@ export const SubscriptionEdit: FC<Props> = memo(({}) => {
                           labelText='Log Main Search Error'
                           isDirty={errors.logMainSearchError ? true : false}
                           errorMsg={errors.logMainSearchError?.message}
+                          defaultValue={
+                            currentSubscription?.logMainSearchError as boolean
+                          }
                         />
                       </div>
                     </>
