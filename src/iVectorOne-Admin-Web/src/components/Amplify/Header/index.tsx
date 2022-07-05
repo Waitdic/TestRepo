@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <Image
       alt='logo'
-      src='/logo.png'
+      src='/logo-black.png'
       padding={tokens.space.medium}
       style={{ maxWidth: '340px', margin: '0 auto 30px', display: 'block' }}
     />
