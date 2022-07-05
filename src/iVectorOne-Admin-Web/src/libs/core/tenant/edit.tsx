@@ -25,13 +25,14 @@ type NotificationState = {
 
 type Props = {
   error: string | null;
-  isLoading: boolean;
 };
 
-export const TenantEdit: FC<Props> = memo(({ error, isLoading }) => {
-  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
+export const TenantEdit: FC<Props> = memo(({ error }) => {
   const navigate = useNavigate();
   const { slug } = useSlug();
+
+  const tenants = useSelector((state: RootState) => state.app.user?.tenants);
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [notification, setNotification] = useState<NotificationState>({
     status: NotificationStatus.SUCCESS,

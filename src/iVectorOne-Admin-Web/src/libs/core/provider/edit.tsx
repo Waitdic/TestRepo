@@ -25,17 +25,16 @@ import {
 } from '@/components';
 import ApiCall from '@/axios';
 
-type Props = {
-  error: string | null;
-};
+type Props = {};
 
-export const ProviderEdit: FC<Props> = memo(({ error }) => {
+export const ProviderEdit: FC<Props> = memo(({}) => {
   const { pathname } = useLocation();
   const providerId = pathname.split('/')[2];
   const navigate = useNavigate();
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [currentProvider, setCurrentProvider] = useState(
     null as Provider | null
@@ -118,7 +117,10 @@ export const ProviderEdit: FC<Props> = memo(({ error }) => {
         );
       }
     }
-  }, [currentProvider, isReady, currentSubscription]);
+    if (!isLoading && !subscriptions.length) {
+      navigate('/');
+    }
+  }, [currentProvider, isReady, currentSubscription, isLoading, subscriptions]);
 
   return (
     <>

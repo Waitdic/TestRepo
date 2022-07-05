@@ -5,7 +5,7 @@ import { FeedbackPanel, SettingsSidebar } from '@/components';
 
 const Feedback: React.FC = () => {
   return (
-    <Main>
+    <Main authGuard>
       <>
         {/* Page header */}
         <div className='mb-8'>

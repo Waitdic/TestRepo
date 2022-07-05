@@ -5,7 +5,7 @@ import { AccountPanel, SettingsSidebar } from '@/components';
 
 const MyAccount: React.FC = () => {
   return (
-    <Main>
+    <Main authGuard>
       <>
         {/* Page header */}
         <div className='mb-8'>

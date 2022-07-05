@@ -10,7 +10,7 @@ const RoadMap: React.FC<Props> = ({}) => {
   const roadMapData = RoadMapData.data;
 
   return (
-    <Main>
+    <Main authGuard>
       {/* Page header */}
       <div className='sm:flex sm:justify-between sm:items-center mb-8'>
         {/* Left: Title */}

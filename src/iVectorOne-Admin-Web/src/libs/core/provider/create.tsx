@@ -19,20 +19,11 @@ import {
   Notification,
 } from '@/components';
 
-type Props = {
-  error: string | null;
-};
+type Props = {};
 
-export const ProviderCreate: FC<Props> = memo(({ error }) => {
-  // const {
-  //   configurations,
-  //   error: providerInfoError,
-  //   isLoading,
-  // } = useProviderInfo();
-
+export const ProviderCreate: FC<Props> = memo(({}) => {
   //! Temporary
   const providerInfoError = null;
-  const isLoading = false;
   const configurations: ProviderConfiguration[] = [
     {
       defaultValue: '',
@@ -186,9 +177,11 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
   ];
 
   const navigate = useNavigate();
+
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const providers = useMemo(
     () => subscriptions.flatMap((subscription) => subscription.providers),
@@ -240,13 +233,16 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
 
   useEffect(() => {
     if (!isLoading) {
+      if (!subscriptions?.length) {
+        navigate('/');
+        return;
+      }
       if (providerInfoError) {
         setNotification({
           status: NotificationStatus.ERROR,
           message: 'Provider Info fetching failed.',
         });
         setShowNotification(true);
-
         return;
       }
 
@@ -265,81 +261,77 @@ export const ProviderCreate: FC<Props> = memo(({ error }) => {
       <MainLayout>
         <div className='flex flex-col'>
           {/* Create Provider */}
-          {error ? (
-            <ErrorBoundary />
-          ) : (
-            <div className='mb-6'>
-              <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-                New Provider
-              </h2>
-              <form
-                className='w-full divide-y divide-gray-200'
-                onSubmit={handleSubmit(onSubmit)}
-              >
-                <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
-                  <div className='flex-1'>
-                    {subscriptions.length > 0 ? (
-                      <Select
-                        id='subscription'
-                        {...register('subscription', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Subscription'
-                        options={subscriptions.map(
-                          ({ subscriptionId, userName }) => ({
-                            id: subscriptionId,
-                            name: userName,
-                          })
-                        )}
-                      />
-                    ) : (
-                      <Spinner />
-                    )}
-                  </div>
-                  <div className='flex-1'>
-                    {providers.length > 0 ? (
-                      <Select
-                        id='provider'
-                        {...register('provider', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Provider'
-                        options={providers.map((loginOption) => ({
-                          id: loginOption.name,
-                          name: loginOption.name,
-                        }))}
-                      />
-                    ) : (
-                      <Spinner />
-                    )}
-                  </div>
-                  <div className='border-t border-gray-200 mt-2 pt-5'>
-                    <SectionTitle title='Settings' />
-                    <div className='flex flex-col gap-5 mt-5'>
-                      {renderConfigurationFormFields(
-                        configurations,
-                        register,
-                        errors
+          <div className='mb-6'>
+            <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
+              New Provider
+            </h2>
+            <form
+              className='w-full divide-y divide-gray-200'
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
+                <div className='flex-1'>
+                  {subscriptions.length > 0 ? (
+                    <Select
+                      id='subscription'
+                      {...register('subscription', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Subscription'
+                      options={subscriptions.map(
+                        ({ subscriptionId, userName }) => ({
+                          id: subscriptionId,
+                          name: userName,
+                        })
                       )}
-                    </div>
+                    />
+                  ) : (
+                    <Spinner />
+                  )}
+                </div>
+                <div className='flex-1'>
+                  {providers.length > 0 ? (
+                    <Select
+                      id='provider'
+                      {...register('provider', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Provider'
+                      options={providers.map((loginOption) => ({
+                        id: loginOption.name,
+                        name: loginOption.name,
+                      }))}
+                    />
+                  ) : (
+                    <Spinner />
+                  )}
+                </div>
+                <div className='border-t border-gray-200 mt-2 pt-5'>
+                  <SectionTitle title='Settings' />
+                  <div className='flex flex-col gap-5 mt-5'>
+                    {renderConfigurationFormFields(
+                      configurations,
+                      register,
+                      errors
+                    )}
                   </div>
                 </div>
-                <div className='flex justify-end mt-5 pt-5'>
-                  <Button
-                    text='Cancel'
-                    color={ButtonColors.OUTLINE}
-                    className='ml-4'
-                    onClick={() => navigate(-1)}
-                  />
-                  <Button
-                    type={ButtonVariants.SUBMIT}
-                    text='Save'
-                    className='ml-4'
-                  />
-                </div>
-              </form>
-            </div>
-          )}
+              </div>
+              <div className='flex justify-end mt-5 pt-5'>
+                <Button
+                  text='Cancel'
+                  color={ButtonColors.OUTLINE}
+                  className='ml-4'
+                  onClick={() => navigate(-1)}
+                />
+                <Button
+                  type={ButtonVariants.SUBMIT}
+                  text='Save'
+                  className='ml-4'
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </MainLayout>
 

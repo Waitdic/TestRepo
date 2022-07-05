@@ -41,10 +41,10 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
   const username = user?.username || null;
 
   //* Core Data Fetch
-  const { isLoading: coreIsLoading, error: coreError } = useCoreFetching();
+  const { error: coreError } = useCoreFetching();
 
   //* IVO Data Fetch
-  const { isLoading: ivoIsLoading, error: ivoError } = useIvoFetching();
+  const { error: ivoError } = useIvoFetching();
 
   useEffect(() => {
     dispatch.app.setThemeColor(theme);
@@ -66,7 +66,7 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           {/* Tenant Routes */}
           <Route
             path='/tenant/list'
-            element={<TenantList isLoading={coreIsLoading} error={coreError} />}
+            element={<TenantList error={coreError} />}
           />
           <Route
             path='/tenant/create'
@@ -74,7 +74,7 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           />
           <Route
             path='/tenant/edit/:slug'
-            element={<TenantEdit isLoading={coreIsLoading} error={coreError} />}
+            element={<TenantEdit error={coreError} />}
           />
           {/* Module Routes */}
           <Route
@@ -103,29 +103,17 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           {/* Subscription Routes */}
           <Route
             path='/subscriptions/create'
-            element={<SubscriptionCreate error={null} />}
+            element={<SubscriptionCreate />}
           />
-          <Route
-            path='/subscriptions'
-            element={<SubscriptionList isLoading={ivoIsLoading} />}
-          />
+          <Route path='/subscriptions' element={<SubscriptionList />} />
           <Route
             path='/subscriptions/:slug/edit'
             element={<SubscriptionEdit />}
           />
           {/* Provider Routes */}
-          <Route
-            path='/providers'
-            element={<ProviderList isLoading={ivoIsLoading} />}
-          />
-          <Route
-            path='/providers/create'
-            element={<ProviderCreate error={null} />}
-          />
-          <Route
-            path='/providers/:slug/edit'
-            element={<ProviderEdit error={null} />}
-          />
+          <Route path='/providers' element={<ProviderList />} />
+          <Route path='/providers/create' element={<ProviderCreate />} />
+          <Route path='/providers/:slug/edit' element={<ProviderEdit />} />
           {/* Settings */}
           <Route path='/settings/my-account' element={<MyAccount />} />
           <Route path='/settings/feedback' element={<Feedback />} />

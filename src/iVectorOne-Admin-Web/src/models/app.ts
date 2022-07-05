@@ -1,15 +1,8 @@
 import { createModel } from '@rematch/core';
+import { isEmpty } from 'lodash';
 //
 import { RootModel } from '.';
-import {
-  AppState,
-  Module,
-  Provider,
-  Subscription,
-  Tenant,
-  User,
-} from '@/types';
-import { isEmpty } from 'lodash';
+import { AppState, Module, Subscription, Tenant, User } from '@/types';
 import { getAwsJwtToken } from '@/utils/getAwsJwtToken';
 
 export const app = createModel<RootModel>()({
@@ -25,6 +18,7 @@ export const app = createModel<RootModel>()({
         ? 'dark'
         : 'light',
     error: null,
+    isLoading: false,
   } as AppState,
   reducers: {
     updateLang(state, payload: string) {
@@ -66,6 +60,12 @@ export const app = createModel<RootModel>()({
       return {
         ...state,
         subscriptions: payload,
+      };
+    },
+    setIsLoading(state, payload: boolean) {
+      return {
+        ...state,
+        isLoading: payload,
       };
     },
     setError(state, payload: null | string | Error) {

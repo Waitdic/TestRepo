@@ -13,7 +13,6 @@ export function useCoreFetching() {
   const [user, setUser] = useState<User>(null);
   const [moduleList, setModuleList] = useState<Module[]>([]);
   const [tenantList, setTenantList] = useState<Tenant[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async (userKey: string) => {
@@ -40,7 +39,7 @@ export function useCoreFetching() {
         setError('Contact support to complete the setup of your account');
       }
 
-      setIsLoading(false);
+      dispatch.app.setIsLoading(false);
     } catch (error) {
       if (typeof error === 'string') {
         console.error(error.toUpperCase());
@@ -49,7 +48,7 @@ export function useCoreFetching() {
         console.error(error.message);
         setError(error.message);
       }
-      setIsLoading(false);
+      dispatch.app.setIsLoading(false);
     }
   }, []);
 
@@ -59,7 +58,7 @@ export function useCoreFetching() {
     }
   }, [fetch, username]);
 
-  return { user, moduleList, tenantList, isLoading, error };
+  return { user, moduleList, tenantList, error };
 }
 
 export function useIvoFetching() {
@@ -68,7 +67,6 @@ export function useIvoFetching() {
   const user = useSelector((state: RootState) => state.app.user);
 
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async (user: User) => {
@@ -136,7 +134,7 @@ export function useIvoFetching() {
         });
       });
       setError(null);
-      setIsLoading(false);
+      dispatch.app.setIsLoading(false);
     } catch (error) {
       if (typeof error === 'string') {
         console.error(error.toUpperCase());
@@ -145,7 +143,7 @@ export function useIvoFetching() {
         console.error(error.message);
         setError(error.message);
       }
-      setIsLoading(false);
+      dispatch.app.setIsLoading(false);
     }
   }, []);
 
@@ -155,7 +153,7 @@ export function useIvoFetching() {
       fetch(user);
     } else {
       setSubscriptions([]);
-      setIsLoading(false);
+      dispatch.app.setIsLoading(false);
     }
   }, [fetch, user]);
 
@@ -163,5 +161,5 @@ export function useIvoFetching() {
     dispatch.app.updateSubscriptions(subscriptions);
   }, [subscriptions]);
 
-  return { isLoading, error };
+  return { error };
 }

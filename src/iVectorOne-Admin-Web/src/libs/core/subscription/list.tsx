@@ -23,14 +23,15 @@ interface SubscriptionListItem {
   actions?: { name: string; href: string }[];
 }
 
-type Props = { isLoading: boolean };
+type Props = {};
 
-export const SubscriptionList: FC<Props> = memo(({ isLoading }) => {
+export const SubscriptionList: FC<Props> = memo(({}) => {
   const navigate = useNavigate();
 
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
     SubscriptionListItem[]

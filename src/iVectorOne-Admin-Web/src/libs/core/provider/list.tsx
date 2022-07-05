@@ -9,16 +9,15 @@ import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList } from '@/components';
 import { RootState } from '@/store';
 
-type Props = {
-  isLoading: boolean;
-};
+type Props = {};
 
-export const ProviderList: FC<Props> = memo(({ isLoading }) => {
+export const ProviderList: FC<Props> = memo(({}) => {
   const navigate = useNavigate();
 
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [providers, setProviders] = useState<Provider[]>([]);
   const [filteredProviderList, setFilteredProviderList] = useState<Provider[]>(

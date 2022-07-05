@@ -126,5 +126,6 @@ export type AppState = {
   awsAmplify: { username: string | null; jwtToken: string | null | undefined };
   modules: Module[];
   subscriptions: Subscription[];
+  isLoading: boolean;
   error: null | string | Error;
 };

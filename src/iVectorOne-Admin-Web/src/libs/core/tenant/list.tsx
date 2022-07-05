@@ -16,11 +16,12 @@ import { RootState } from '@/store';
 
 type Props = {
   error: string | null;
-  isLoading: boolean;
 };
 
-export const TenantList: FC<Props> = memo(({ error, isLoading }) => {
+export const TenantList: FC<Props> = memo(({ error }) => {
   const tenants = useSelector((state: RootState) => state.app.user?.tenants);
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
+
   const [filteredTenantList, setFilteredTenantList] = useState<Tenant[]>([]);
   const [showError, setShowError] = useState<boolean>(false);
 
