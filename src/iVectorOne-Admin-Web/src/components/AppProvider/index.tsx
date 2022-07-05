@@ -28,6 +28,7 @@ import ChangeLog from '@/libs/core/support/change-log';
 import RoadMap from '@/libs/core/support/road-map';
 //! Temp
 import { dummyModuleList } from '@/temp';
+import { SubscriptionView } from '@/libs/core/subscription/view';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -110,6 +111,7 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
             path='/subscriptions/:slug/edit'
             element={<SubscriptionEdit />}
           />
+          <Route path='/subscriptions/:slug' element={<SubscriptionView />} />
           {/* Provider Routes */}
           <Route path='/providers' element={<ProviderList />} />
           <Route path='/providers/create' element={<ProviderCreate />} />

@@ -47,7 +47,10 @@ export const SubscriptionList: FC<Props> = memo(({}) => {
     id,
     name,
     isActive: false, //! TODO: this property is not available in the response
-    actions: [{ name: 'Edit', href: `/subscriptions/${id}/edit` }],
+    actions: [
+      { name: 'View', href: `/subscriptions/${id}` },
+      { name: 'Edit', href: `/subscriptions/${id}/edit` },
+    ],
   }));
   const tableEmptyState = {
     title: 'No subscriptions',
@@ -85,15 +88,6 @@ export const SubscriptionList: FC<Props> = memo(({}) => {
               Subscriptions
             </h1>
             <div className='flex gap-3'>
-              {/* <DropdownFilter
-                      align='right'
-                      allItems={mappedSubscriptionList}
-                      items={filteredSubscriptionList}
-                      filters={filters}
-                      setFilters={setFilters}
-                      setFilteredItems={setFilteredSubscriptionList}
-                      title='Filter'
-                    /> */}
               <Button text='New' isLink href='/subscriptions/create' />
             </div>
           </div>
