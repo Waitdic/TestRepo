@@ -25,7 +25,6 @@ export const app = createModel<RootModel>()({
         ? 'dark'
         : 'light',
     error: null,
-    signOut: () => void 0,
   } as AppState,
   reducers: {
     updateLang(state, payload: string) {
@@ -72,9 +71,6 @@ export const app = createModel<RootModel>()({
     setError(state, payload: null | string | Error) {
       return { ...state, error: payload };
     },
-    assignSignOut(state, payload: () => void) {
-      return { ...state, signOut: payload };
-    },
   },
   effects: (dispatch) => ({
     async getUserByAwsJwtToken(payload: { user: string | null }) {
@@ -92,9 +88,6 @@ export const app = createModel<RootModel>()({
           dispatch.app.setError(error.message);
         }
       }
-    },
-    setSignOutCallback(payload: () => void) {
-      dispatch.app.assignSignOut(payload);
     },
     setThemeColor(payload: string) {
       const root = window?.document?.documentElement;

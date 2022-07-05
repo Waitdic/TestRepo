@@ -15,7 +15,9 @@ export const Dashboard: FC<Props> = memo(({ error }) => {
           <h1 className='text-4xl font-semibold text-red-500 mb-2'>
             Incomplete Setup
           </h1>
-          <p className='text-lg text-center'>{error}</p>
+          <p className='text-lg text-center'>
+            Contact support to complete the setup of your account.
+          </p>
         </div>
       )}
       <WelcomeBanner />

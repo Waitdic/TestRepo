@@ -1,31 +1,21 @@
-import {
-  memo,
-  useState,
-  useEffect,
-  FC,
-  useMemo,
-  useRef,
-  createRef,
-} from 'react';
+import { memo, useState, useEffect, FC } from 'react';
+import { sortBy } from 'lodash';
+import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 //
 import { Provider, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
-import {
-  EmptyState,
-  Button,
-  Spinner,
-  SearchField,
-  CardList,
-  SettingsSidebar,
-} from '@/components';
-import { useSelector } from 'react-redux';
+import { EmptyState, CardList } from '@/components';
 import { RootState } from '@/store';
-import { sortBy, uniqBy } from 'lodash';
-import classNames from 'classnames';
 
-type Props = {};
+type Props = {
+  isLoading: boolean;
+};
 
-export const ProviderList: FC<Props> = memo(() => {
+export const ProviderList: FC<Props> = memo(({ isLoading }) => {
+  const navigate = useNavigate();
+
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
@@ -66,6 +56,12 @@ export const ProviderList: FC<Props> = memo(() => {
   useEffect(() => {
     setFilteredProviderList(providers);
   }, [providers]);
+
+  useEffect(() => {
+    if (!isLoading && !subscriptions?.length) {
+      navigate('/');
+    }
+  }, [isLoading, subscriptions]);
 
   if (!subscriptions?.length) {
     return null;

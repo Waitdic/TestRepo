@@ -127,5 +127,4 @@ export type AppState = {
   modules: Module[];
   subscriptions: Subscription[];
   error: null | string | Error;
-  signOut: () => void;
 };

@@ -10,6 +10,7 @@ import {
 } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import { Auth } from 'aws-amplify';
 
 type Props = {
   sidebarOpen: boolean;
@@ -18,7 +19,6 @@ type Props = {
 
 const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
-  const signOut = useSelector((state: RootState) => state.app.signOut);
   const user = useSelector((state: RootState) => state.app.user);
 
   return (
@@ -50,16 +50,18 @@ const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
           {/* Header: Right side */}
           <div className='flex items-center space-x-3'>
             <TenantSelector />
-            <DropdownMenu
-              dropdownNavigation={[
-                {
-                  name: 'Logout',
-                  action: signOut,
-                },
-              ]}
-            >
-              {user?.fullName}
-            </DropdownMenu>
+            {!!user?.fullName && (
+              <DropdownMenu
+                dropdownNavigation={[
+                  {
+                    name: 'Logout',
+                    action: Auth.signOut,
+                  },
+                ]}
+              >
+                {user?.fullName}
+              </DropdownMenu>
+            )}
           </div>
         </div>
       </div>

@@ -16,7 +16,6 @@ export { default as Spinner } from './Spinner';
 export { default as TableList } from './TableList';
 export { default as TenantSelector } from './TenantSelector';
 export { default as ToggleThemeColor } from './ToggleThemeColor';
-export { default as UserDropdown } from './UserDropdown';
 export { default as DropdownFilter } from './DropdownFilter';
 export { default as Datepicker } from './Datepicker';
 export { default as DropdownHelp } from './DropdownHelp';

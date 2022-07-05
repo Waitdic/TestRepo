@@ -14,6 +14,7 @@ import {
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { sortBy } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 
 interface SubscriptionListItem {
   name: string;
@@ -22,9 +23,11 @@ interface SubscriptionListItem {
   actions?: { name: string; href: string }[];
 }
 
-type Props = {};
+type Props = { isLoading: boolean };
 
-export const SubscriptionList: FC<Props> = memo(({}) => {
+export const SubscriptionList: FC<Props> = memo(({ isLoading }) => {
+  const navigate = useNavigate();
+
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
@@ -65,6 +68,12 @@ export const SubscriptionList: FC<Props> = memo(({}) => {
       );
     }
   }, [subscriptions]);
+
+  useEffect(() => {
+    if (!isLoading && !subscriptions?.length) {
+      navigate('/');
+    }
+  }, [isLoading, subscriptions]);
 
   return (
     <>

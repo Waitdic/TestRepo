@@ -21,12 +21,11 @@ const mapState = (state: RootState) => ({
 type StateProps = ReturnType<typeof mapState>;
 type AmplifyProps = {
   user: any;
-  signOut: () => void;
 };
 type Props = StateProps & AmplifyProps;
 
-const App: FC<Props> = ({ user, signOut, app }) => {
-  return <AppProvider app={app} user={user} signOut={signOut} />;
+const App: FC<Props> = ({ user, app }) => {
+  return <AppProvider app={app} user={user} />;
 };
 
 export default connect(mapState)(

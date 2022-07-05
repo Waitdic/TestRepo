@@ -153,6 +153,9 @@ export function useIvoFetching() {
     if (!!user?.tenants?.length) {
       setSubscriptions([]);
       fetch(user);
+    } else {
+      setSubscriptions([]);
+      setIsLoading(false);
     }
   }, [fetch, user]);
 

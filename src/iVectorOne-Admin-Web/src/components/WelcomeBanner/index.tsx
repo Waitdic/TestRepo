@@ -75,10 +75,18 @@ const WelcomeBanner: React.FC<Props> = ({}) => {
 
       {/* Content */}
       <div className='relative'>
-        <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
-          Good afternoon, {user?.fullName}. 👋
-        </h1>
-        <p>Here is what’s happening with your iVectorOne today:</p>
+        {!!user?.fullName ? (
+          <>
+            <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
+              Good afternoon, {user?.fullName}. 👋
+            </h1>
+            <p>Here is what’s happening with your iVectorOne today:</p>
+          </>
+        ) : (
+          <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
+            Here is what’s happening with your iVectorOne today
+          </h1>
+        )}
       </div>
     </div>
   );

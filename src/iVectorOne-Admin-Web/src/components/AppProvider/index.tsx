@@ -32,10 +32,9 @@ import { dummyModuleList } from '@/temp';
 type Props = {
   app: { theme: string; lang: string };
   user: { username?: string | undefined };
-  signOut: () => void;
 };
 
-const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
+const AppProvider: React.FC<Props> = ({ app, user }) => {
   const dispatch = useDispatch();
 
   const { theme, lang } = app;
@@ -50,7 +49,6 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
   useEffect(() => {
     dispatch.app.setThemeColor(theme);
     dispatch.app.getUserByAwsJwtToken({ user: username });
-    dispatch.app.setSignOutCallback(signOut);
   }, []);
 
   return (
@@ -107,13 +105,19 @@ const AppProvider: React.FC<Props> = ({ app, user, signOut }) => {
             path='/subscriptions/create'
             element={<SubscriptionCreate error={null} />}
           />
-          <Route path='/subscriptions' element={<SubscriptionList />} />
+          <Route
+            path='/subscriptions'
+            element={<SubscriptionList isLoading={ivoIsLoading} />}
+          />
           <Route
             path='/subscriptions/:slug/edit'
             element={<SubscriptionEdit />}
           />
           {/* Provider Routes */}
-          <Route path='/providers' element={<ProviderList />} />
+          <Route
+            path='/providers'
+            element={<ProviderList isLoading={ivoIsLoading} />}
+          />
           <Route
             path='/providers/create'
             element={<ProviderCreate error={null} />}
