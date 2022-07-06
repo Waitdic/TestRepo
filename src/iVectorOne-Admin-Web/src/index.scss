@@ -13,6 +13,13 @@
   --primary-color: #125c13; //? This CSS variable could be changed later for the custom theme color
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
 body {
   overflow-x: hidden;
 }
@@ -85,4 +92,8 @@ body {
 }
 .form-input-with-icon-left {
   padding-left: 32px;
+}
+
+.amplify-tabs-item {
+  display: none !important;
 }

@@ -1,6 +1,6 @@
-import { memo, FC } from 'react';
+import { FC } from 'react';
 import { Amplify } from 'aws-amplify';
-import { withAuthenticator } from '@aws-amplify/ui-react';
+import { Authenticator } from '@aws-amplify/ui-react';
 import { connect } from 'react-redux';
 //
 import '@aws-amplify/ui-react/styles.css';
@@ -19,24 +19,26 @@ const mapState = (state: RootState) => ({
 });
 
 type StateProps = ReturnType<typeof mapState>;
-type AmplifyProps = {
-  user: any;
-};
-type Props = StateProps & AmplifyProps;
+type Props = StateProps;
 
-const App: FC<Props> = ({ user, app }) => {
-  return <AppProvider app={app} user={user} />;
+const App: FC<Props> = ({ app }) => {
+  return (
+    <Authenticator
+      hideSignUp
+      components={{
+        Header,
+        SignIn: {
+          Header: SignInHeader,
+          Footer: SignInFooter,
+        },
+        Footer,
+      }}
+    >
+      {({ user }: { user: { username: string } }) => (
+        <AppProvider app={app} user={user} />
+      )}
+    </Authenticator>
+  );
 };
 
-export default connect(mapState)(
-  withAuthenticator(memo(App), {
-    components: {
-      Header,
-      SignIn: {
-        Header: SignInHeader,
-        Footer: SignInFooter,
-      },
-      Footer,
-    },
-  })
-);
+export default connect(mapState)(App);
