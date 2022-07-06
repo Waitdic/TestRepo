@@ -26,7 +26,7 @@ import { RootState } from '@/store';
 
 type Props = {};
 
-export const SubscriptionCreate: FC<Props> = memo(({}) => {
+export const SubscriptionCreate: FC<Props> = memo(() => {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.app.user);

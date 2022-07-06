@@ -36,7 +36,7 @@ interface SubscriptionFields extends Subscription {
   confirmPassword: string;
 }
 
-export const SubscriptionEdit: FC<Props> = memo(({}) => {
+export const SubscriptionEdit: FC<Props> = memo(() => {
   const navigate = useNavigate();
   const { slug } = useSlug();
 

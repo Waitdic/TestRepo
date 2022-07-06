@@ -11,7 +11,7 @@ import { RootState } from '@/store';
 
 type Props = {};
 
-export const SubscriptionView: FC<Props> = memo(({}) => {
+export const SubscriptionView: FC<Props> = memo(() => {
   const navigate = useNavigate();
   const { slug } = useSlug();
 

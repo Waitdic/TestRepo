@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 type Props = {};
 
-const SettingsSidebar: React.FC<Props> = ({}) => {
+const SettingsSidebar: React.FC<Props> = () => {
   const location = useLocation();
   const { pathname } = location;
 

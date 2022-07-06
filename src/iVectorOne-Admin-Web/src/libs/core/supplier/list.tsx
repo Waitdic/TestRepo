@@ -11,7 +11,7 @@ import { RootState } from '@/store';
 
 type Props = {};
 
-export const SupplierList: FC<Props> = memo(({}) => {
+export const SupplierList: FC<Props> = memo(() => {
   const navigate = useNavigate();
 
   const subscriptions = useSelector(

@@ -20,7 +20,7 @@ import {
 
 type Props = {};
 
-export const SupplierCreate: FC<Props> = memo(({}) => {
+export const SupplierCreate: FC<Props> = memo(() => {
   //! Temporary
   const supplierInfoError = null;
   const configurations: SupplierConfiguration[] = [

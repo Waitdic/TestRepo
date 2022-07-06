@@ -6,7 +6,7 @@ import { YesOrNo } from '@/components';
 
 type Props = {};
 
-const AccountPanel: React.FC<Props> = ({}) => {
+const AccountPanel: React.FC<Props> = () => {
   const user = useSelector((state: RootState) => state.app.user);
 
   const activeTenant = useMemo(

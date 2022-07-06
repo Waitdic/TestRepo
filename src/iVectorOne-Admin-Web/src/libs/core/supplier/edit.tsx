@@ -27,7 +27,7 @@ import ApiCall from '@/axios';
 
 type Props = {};
 
-export const SupplierEdit: FC<Props> = memo(({}) => {
+export const SupplierEdit: FC<Props> = memo(() => {
   const { pathname } = useLocation();
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();

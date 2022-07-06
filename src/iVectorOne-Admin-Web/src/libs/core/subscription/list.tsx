@@ -25,7 +25,7 @@ interface SubscriptionListItem {
 
 type Props = {};
 
-export const SubscriptionList: FC<Props> = memo(({}) => {
+export const SubscriptionList: FC<Props> = memo(() => {
   const navigate = useNavigate();
 
   const subscriptions = useSelector(

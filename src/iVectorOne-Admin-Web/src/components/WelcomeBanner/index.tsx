@@ -2,7 +2,7 @@ import React from 'react';
 
 type Props = {};
 
-const WelcomeBanner: React.FC<Props> = ({}) => {
+const WelcomeBanner: React.FC<Props> = () => {
   return (
     <div className='relative bg-indigo-200 p-4 sm:p-6 rounded-sm overflow-hidden mb-8'>
       {/* Background illustration */}

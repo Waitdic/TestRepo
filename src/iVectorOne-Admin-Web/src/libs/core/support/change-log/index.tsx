@@ -9,7 +9,7 @@ type Props = {};
 
 const POST_PER_PAGE = 3;
 
-const ChangeLog: React.FC<Props> = ({}) => {
+const ChangeLog: React.FC<Props> = () => {
   const changeLogData = ChangeLogData.data;
 
   const [filteredChangeLogData, setFilteredChangeLogData] =

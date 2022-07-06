@@ -6,7 +6,7 @@ import RoadMapData from '../../../../static-json/road-map.json';
 
 type Props = {};
 
-const RoadMap: React.FC<Props> = ({}) => {
+const RoadMap: React.FC<Props> = () => {
   const roadMapData = RoadMapData.data;
 
   return (

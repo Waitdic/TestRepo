@@ -4,7 +4,7 @@ import Main from '@/layouts/Main';
 
 type Props = {};
 
-const KnowledgeBase: React.FC<Props> = ({}) => {
+const KnowledgeBase: React.FC<Props> = () => {
   return (
     <Main padding='pb-8'>
       {/* Search area */}
