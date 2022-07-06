@@ -4,7 +4,7 @@ type Props = {
   className?: string;
 };
 
-const Provider: React.FC<Props> = ({ className }) => {
+const Tenant: React.FC<Props> = ({ className }) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -20,4 +20,4 @@ const Provider: React.FC<Props> = ({ className }) => {
   );
 };
 
-export default React.memo(Provider);
+export default React.memo(Tenant);

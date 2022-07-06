@@ -1,10 +1,10 @@
 import { UseFormSetValue } from 'react-hook-form';
 //
-import { ProviderConfiguration, ProviderFormFields } from '@/types';
+import { SupplierConfiguration, SupplierFormFields } from '@/types';
 
 export const setDefaultConfigurationFormFields = (
-  configurations: ProviderConfiguration[],
-  setValue: UseFormSetValue<ProviderFormFields>
+  configurations: SupplierConfiguration[],
+  setValue: UseFormSetValue<SupplierFormFields>
 ) => {
   for (let idx = 0; idx < configurations.length; idx++) {
     const currentConfigField = configurations[idx];

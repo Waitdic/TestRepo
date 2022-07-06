@@ -61,15 +61,15 @@ export type Subscription = {
   logMainSearchError: boolean;
   currencyCode: string;
   environment: string;
-  providers: Provider[];
+  suppliers: Supplier[];
 };
-export type Provider = {
+export type Supplier = {
   name: string;
   supplierID: number;
   supplierSubscriptionID: number;
-  configurations: ProviderConfiguration[];
+  configurations: SupplierConfiguration[];
 };
-export type ProviderConfiguration = {
+export type SupplierConfiguration = {
   key: string;
   name: string;
   order: number;
@@ -90,9 +90,9 @@ export type ProviderConfiguration = {
   format?: Date | NetworkInterfaceInfoIPv4;
   required?: boolean;
 };
-export type ProviderFormFields = {
+export type SupplierFormFields = {
   subscription: number;
-  provider: number;
+  supplier: number;
   configurations: any[];
 };
 export type FormErrorMessage = {

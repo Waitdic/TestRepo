@@ -7,11 +7,10 @@ import axios from 'axios';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
-import { ProviderConfiguration, ProviderFormFields } from '@/types';
+import { SupplierConfiguration, SupplierFormFields } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
-  ErrorBoundary,
   SectionTitle,
   Select,
   Button,
@@ -21,10 +20,10 @@ import {
 
 type Props = {};
 
-export const ProviderCreate: FC<Props> = memo(({}) => {
+export const SupplierCreate: FC<Props> = memo(({}) => {
   //! Temporary
-  const providerInfoError = null;
-  const configurations: ProviderConfiguration[] = [
+  const supplierInfoError = null;
+  const configurations: SupplierConfiguration[] = [
     {
       defaultValue: '',
       description: '',
@@ -183,8 +182,8 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const providers = useMemo(
-    () => subscriptions.flatMap((subscription) => subscription.providers),
+  const suppliers = useMemo(
+    () => subscriptions.flatMap((subscription) => subscription.suppliers),
     [subscriptions]
   );
 
@@ -193,24 +192,24 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<ProviderFormFields>();
+  } = useForm<SupplierFormFields>();
 
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
-    message: 'New Provider created successfully.',
+    message: 'New Supplier created successfully.',
   });
 
-  const onSubmit: SubmitHandler<ProviderFormFields> = async (data) => {
+  const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
     try {
-      const newProvider = await axios.post(
-        'http://localhost:3001/provider.create',
+      const newSupplier = await axios.post(
+        'http://localhost:3001/supplier.create',
         data
       );
 
       setNotification({
         status: NotificationStatus.SUCCESS,
-        message: 'New Provider created successfully.',
+        message: 'New supplier created successfully.',
       });
       setShowNotification(true);
     } catch (error) {
@@ -237,10 +236,10 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
         navigate('/');
         return;
       }
-      if (providerInfoError) {
+      if (supplierInfoError) {
         setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Provider Info fetching failed.',
+          message: 'Supplier Info fetching failed.',
         });
         setShowNotification(true);
         return;
@@ -254,16 +253,16 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
         setValue('subscription', subscriptions[0].subscriptionId);
       }
     }
-  }, [isLoading, providerInfoError, configurations, subscriptions, setValue]);
+  }, [isLoading, supplierInfoError, configurations, subscriptions, setValue]);
 
   return (
     <>
       <MainLayout>
         <div className='flex flex-col'>
-          {/* Create Provider */}
+          {/* Create Supplier */}
           <div className='mb-6'>
             <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-              New Provider
+              New Supplier
             </h2>
             <form
               className='w-full divide-y divide-gray-200'
@@ -290,14 +289,14 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
                   )}
                 </div>
                 <div className='flex-1'>
-                  {providers.length > 0 ? (
+                  {suppliers.length > 0 ? (
                     <Select
-                      id='provider'
-                      {...register('provider', {
+                      id='supplier'
+                      {...register('supplier', {
                         required: 'This field is required.',
                       })}
-                      labelText='Provider'
-                      options={providers.map((loginOption) => ({
+                      labelText='Supplier'
+                      options={suppliers.map((loginOption) => ({
                         id: loginOption.name,
                         name: loginOption.name,
                       }))}
@@ -340,7 +339,7 @@ export const ProviderCreate: FC<Props> = memo(({}) => {
           title={
             notification.status === NotificationStatus.ERROR
               ? 'Error'
-              : 'Create New Provider'
+              : 'Create New Supplier'
           }
           description={notification.message}
           status={notification.status}

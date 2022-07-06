@@ -1,32 +1,46 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+//
+import { RootState } from '@/store';
 
 type Props = {};
 
 const AccountPanel: React.FC<Props> = ({}) => {
-  const [formFields, setFormFields] = useState({
-    name: '',
-    businessId: '',
-    location: '',
-    email: '',
-    sync: false,
-  });
+  const user = useSelector((state: RootState) => state.app.user);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    if (e.target.type === 'checkbox') {
-      setFormFields({
-        ...formFields,
-        [name]: e.target.checked,
-      });
-      return;
-    }
-    setFormFields({ ...formFields, [name]: value });
-  };
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((tenant) => tenant.isSelected),
+    [user]
+  );
 
   return (
     <div className='grow'>
       {/* Panel body */}
-      <div className='p-6 space-y-6'>{/* placeholder */}</div>
+      <div className='p-6 space-y-6'>
+        <section>
+          <h2 className='text-xl leading-snug text-slate-800 font-bold mb-1'>
+            Tenant Profile
+          </h2>
+          <div className='sm:flex sm:flex-col space-y-4 mt-5'>
+            <div>
+              <h4 className='block text-sm font-medium mb-1'>Name</h4>
+              <p className='text-sm'>{activeTenant?.name}</p>
+            </div>
+            <div>
+              <h4 className='block text-sm font-medium mb-1'>Contact Name</h4>
+              <p className='text-sm'>{activeTenant?.contactName}</p>
+            </div>
+            <div>
+              <h4 className='block text-sm font-medium mb-1'>Contact Email</h4>
+              <p className='text-sm'>{activeTenant?.contactEmail}</p>
+            </div>
+            <div>
+              <h4 className='block text-sm font-medium mb-1'>Active</h4>
+              <p className='text-sm'>{activeTenant?.isActive ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+        </section>
+      </div>
       {/* Panel footer */}
       {/* <footer>
         <div className='flex flex-col px-6 py-5 border-t border-slate-200'>

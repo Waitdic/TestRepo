@@ -74,7 +74,6 @@ const DropdownMenu: FC<Props> = ({
                             Auth.signOut({ global: true });
                             localStorage.clear();
                             navigate('/');
-                            console.log('logout');
                             window.location.reload();
                           }}
                         >

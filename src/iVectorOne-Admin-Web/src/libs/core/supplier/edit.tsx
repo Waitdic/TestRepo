@@ -8,9 +8,9 @@ import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
 import {
-  Provider,
-  ProviderConfiguration,
-  ProviderFormFields,
+  Supplier,
+  SupplierConfiguration,
+  SupplierFormFields,
   Subscription,
 } from '@/types';
 import MainLayout from '@/layouts/Main';
@@ -27,17 +27,17 @@ import ApiCall from '@/axios';
 
 type Props = {};
 
-export const ProviderEdit: FC<Props> = memo(({}) => {
+export const SupplierEdit: FC<Props> = memo(({}) => {
   const { pathname } = useLocation();
-  const providerId = pathname.split('/')[2];
+  const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [currentProvider, setCurrentProvider] = useState(
-    null as Provider | null
+  const [currentSupplier, setCurrentSupplier] = useState(
+    null as Supplier | null
   );
   const [currentSubscription, setCurrentSubscription] = useState(
     null as Subscription | null
@@ -49,25 +49,25 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<ProviderFormFields>();
+  } = useForm<SupplierFormFields>();
 
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
-    message: 'Provider edited successfully.',
+    message: 'Supplier edited successfully.',
   });
 
-  const onSubmit: SubmitHandler<ProviderFormFields> = async (data) => {
+  const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
     try {
-      const updatedProvider = await axios.patch(
-        'http://localhost:3001/Provider.create',
+      const updatedSupplier = await axios.patch(
+        'http://localhost:3001/Supplier.create',
         data
       );
 
-      console.error(updatedProvider);
+      console.error(updatedSupplier);
       setNotification({
         status: NotificationStatus.SUCCESS,
-        message: 'Provider edited successfully.',
+        message: 'Supplier edited successfully.',
       });
       setShowNotification(true);
     } catch (error) {
@@ -91,28 +91,28 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
   useEffect(() => {
     if (!!subscriptions?.length) {
       subscriptions.forEach((subscription, idx) => {
-        subscription.providers.forEach((provider) => {
-          if (provider.supplierID === Number(providerId)) {
+        subscription.suppliers.forEach((supplier) => {
+          if (supplier.supplierID === Number(supplierId)) {
             setCurrentSubscription(subscriptions[idx]);
-            setCurrentProvider(provider);
+            setCurrentSupplier(supplier);
           }
         });
       });
       setIsReady(true);
     }
-  }, [subscriptions, providerId]);
+  }, [subscriptions, supplierId]);
 
   useEffect(() => {
     if (isReady) {
-      if (!currentProvider && !currentSubscription) {
-        navigate('/providers');
+      if (!currentSupplier && !currentSubscription) {
+        navigate('/suppliers');
         return;
       }
       setValue('subscription', currentSubscription?.subscriptionId || 0);
-      setValue('provider', currentProvider?.supplierID || 0);
-      if (!!currentProvider?.configurations?.length) {
+      setValue('supplier', currentSupplier?.supplierID || 0);
+      if (!!currentSupplier?.configurations?.length) {
         setDefaultConfigurationFormFields(
-          currentProvider.configurations,
+          currentSupplier.configurations,
           setValue
         );
       }
@@ -120,7 +120,7 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
     if (!isLoading && !subscriptions.length) {
       navigate('/');
     }
-  }, [currentProvider, isReady, currentSubscription, isLoading, subscriptions]);
+  }, [currentSupplier, isReady, currentSubscription, isLoading, subscriptions]);
 
   return (
     <>
@@ -130,7 +130,7 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Edit Providers
+              Edit Suppliers
             </h1>
           </div>
 
@@ -164,14 +164,14 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
                     )}
                   </div>
                   <div className='flex-1'>
-                    {!!currentSubscription?.providers?.length ? (
+                    {!!currentSubscription?.suppliers?.length ? (
                       <Select
-                        id='provider'
-                        {...register('provider', {
+                        id='supplier'
+                        {...register('supplier', {
                           required: 'This field is required.',
                         })}
-                        labelText='Provider'
-                        options={currentSubscription.providers.map(
+                        labelText='Supplier'
+                        options={currentSubscription.suppliers.map(
                           (loginOption) => ({
                             id: loginOption.supplierID,
                             name: loginOption.name,
@@ -187,7 +187,7 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
                     <SectionTitle title='Settings' />
                     <div className='flex flex-col gap-5 mt-5'>
                       {renderConfigurationFormFields(
-                        currentProvider?.configurations || [],
+                        currentSupplier?.configurations || [],
                         register,
                         errors
                       )}
@@ -218,7 +218,7 @@ export const ProviderEdit: FC<Props> = memo(({}) => {
           title={
             notification.status === NotificationStatus.ERROR
               ? 'Error'
-              : 'Edit Provider'
+              : 'Edit Supplier'
           }
           description={notification.message}
           status={notification.status}

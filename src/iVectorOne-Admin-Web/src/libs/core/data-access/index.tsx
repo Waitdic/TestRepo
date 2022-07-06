@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import ApiCall from '@/axios';
-import { User, Tenant, Module, Provider, Subscription } from '@/types';
+import { User, Tenant, Module, Supplier, Subscription } from '@/types';
 
 export function useCoreFetching() {
   const dispatch = useDispatch();
@@ -89,7 +89,7 @@ export function useIvoFetching() {
       );
       subscriptions.forEach(async (subscription) => {
         const { subscriptionId } = subscription;
-        const providerRes = await ApiCall.get(
+        const supplierRes = await ApiCall.get(
           `/tenants/${activeTenant?.tenantId}/subscriptions/${subscriptionId}/suppliers`,
           {
             headers: {
@@ -98,14 +98,14 @@ export function useIvoFetching() {
             },
           }
         );
-        const providers: Provider[] = get(
-          providerRes,
+        const suppliers: Supplier[] = get(
+          supplierRes,
           'data.supplierSubscriptions',
           []
         );
-        providers.forEach(async (provider) => {
+        suppliers.forEach(async (supplier) => {
           const { data } = await ApiCall.get(
-            `/tenants/${activeTenant?.tenantId}/subscriptions/${subscription.subscriptionId}/suppliers/${provider?.supplierID}`,
+            `/tenants/${activeTenant?.tenantId}/subscriptions/${subscription.subscriptionId}/suppliers/${supplier?.supplierID}`,
             {
               headers: {
                 Accept: 'application/json',
@@ -119,9 +119,9 @@ export function useIvoFetching() {
                 ...prevState,
                 {
                   ...subscription,
-                  providers: uniqBy(
-                    providers.map((provider) => ({
-                      ...provider,
+                  suppliers: uniqBy(
+                    suppliers.map((supplier) => ({
+                      ...supplier,
                       configurations: data.configurations,
                     })),
                     'supplierID'

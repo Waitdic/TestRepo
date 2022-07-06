@@ -1,13 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-//
-import { RootState } from '@/store';
 
 type Props = {};
 
 const WelcomeBanner: React.FC<Props> = ({}) => {
-  const user = useSelector((state: RootState) => state.app.user);
-
   return (
     <div className='relative bg-indigo-200 p-4 sm:p-6 rounded-sm overflow-hidden mb-8'>
       {/* Background illustration */}
@@ -75,18 +70,9 @@ const WelcomeBanner: React.FC<Props> = ({}) => {
 
       {/* Content */}
       <div className='relative'>
-        {!!user?.fullName ? (
-          <>
-            <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
-              Good afternoon, {user?.fullName}. 👋
-            </h1>
-            <p>Here is what’s happening with your iVectorOne today:</p>
-          </>
-        ) : (
-          <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
-            Here is what’s happening with your iVectorOne today
-          </h1>
-        )}
+        <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
+          Here is what’s happening with your iVectorOne today
+        </h1>
       </div>
     </div>
   );

@@ -18,9 +18,9 @@ import { Dashboard } from '@/libs/core';
 import { SubscriptionCreate } from '@/libs/core/subscription/create';
 import { SubscriptionList } from '@/libs/core/subscription/list';
 import { SubscriptionEdit } from '@/libs/core/subscription/edit';
-import { ProviderList } from '@/libs/core/provider/list';
-import { ProviderCreate } from '@/libs/core/provider/create';
-import { ProviderEdit } from '@/libs/core/provider/edit';
+import { SupplierList } from '@/libs/core/supplier/list';
+import { SupplierCreate } from '@/libs/core/supplier/create';
+import { SupplierEdit } from '@/libs/core/supplier/edit';
 import MyAccount from '@/libs/core/settings/my-account';
 import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
@@ -112,10 +112,10 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
             element={<SubscriptionEdit />}
           />
           <Route path='/subscriptions/:slug' element={<SubscriptionView />} />
-          {/* Provider Routes */}
-          <Route path='/providers' element={<ProviderList />} />
-          <Route path='/providers/create' element={<ProviderCreate />} />
-          <Route path='/providers/:slug/edit' element={<ProviderEdit />} />
+          {/* Supplier Routes */}
+          <Route path='/suppliers' element={<SupplierList />} />
+          <Route path='/suppliers/create' element={<SupplierCreate />} />
+          <Route path='/suppliers/:slug/edit' element={<SupplierEdit />} />
           {/* Settings */}
           <Route path='/settings/my-account' element={<MyAccount />} />
           <Route path='/settings/feedback' element={<Feedback />} />

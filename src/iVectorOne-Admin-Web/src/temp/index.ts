@@ -63,9 +63,9 @@ export const dummyModuleList = [
         roles: [{ name: 'subscription-administrator' }],
       },
       {
-        name: 'Provider',
-        uri: '/ivo/provider/list',
-        roles: [{ name: 'provider-administrator' }],
+        name: 'Supplier',
+        uri: '/ivo/supplier/list',
+        roles: [{ name: 'supplier-administrator' }],
       },
     ],
     isActive: true,
@@ -97,26 +97,5 @@ export const dummySubscriptions = [
     name: 'Alihoco Test',
     password: '',
     userName: '',
-  },
-];
-
-export const dummyProviders = [
-  {
-    id: 'test_id',
-    name: 'Alihoco Production',
-    providers: [
-      { name: 'YouTravel', isActive: true },
-      { name: 'Stuba', isActive: false },
-      { name: 'Acerooms', isActive: true },
-    ],
-  },
-  {
-    id: 'test_prod_id',
-    name: 'Alihoco Test',
-    providers: [
-      { name: 'YouTravel Prod', isActive: true },
-      { name: 'Stuba', isActive: true },
-      { name: 'Acerooms', isActive: true },
-    ],
   },
 ];

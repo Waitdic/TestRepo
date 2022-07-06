@@ -4,7 +4,7 @@ type Props = {
   className: string;
 };
 
-const Provider: React.FC<Props> = ({ className }) => {
+const Supplier: React.FC<Props> = ({ className }) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -14,7 +14,7 @@ const Provider: React.FC<Props> = ({ className }) => {
       className={className}
     >
       <path
-        id='provider'
+        id='supplier'
         d='M35.75,30V27H40.5A1.454,1.454,0,0,1,42,28.5a1.481,1.481,0,0,1-.425,1.05A1.415,1.415,0,0,1,40.5,30Zm0,8V35H40.5A1.454,1.454,0,0,1,42,36.5a1.481,1.481,0,0,1-.425,1.05A1.415,1.415,0,0,1,40.5,38ZM28,40a3.172,3.172,0,0,1-2.475-1.175A4.152,4.152,0,0,1,24.5,36H19.75V29H24.5a4.152,4.152,0,0,1,1.025-2.825A3.172,3.172,0,0,1,28,25h6.25V40ZM13.75,34A7.485,7.485,0,0,1,6,26.25a7.485,7.485,0,0,1,7.75-7.75H17a3.6,3.6,0,0,0,3.75-3.75A3.6,3.6,0,0,0,17,11H9.5A1.538,1.538,0,0,1,8,9.5a1.415,1.415,0,0,1,.45-1.075A1.481,1.481,0,0,1,9.5,8H17a6.58,6.58,0,0,1,6.75,6.75A6.58,6.58,0,0,1,17,21.5H13.75a4.683,4.683,0,0,0-3.425,1.3A4.615,4.615,0,0,0,9,26.25a4.615,4.615,0,0,0,1.325,3.45A4.683,4.683,0,0,0,13.75,31h4.5v3Z'
         transform='translate(-6 -8)'
       />
@@ -22,4 +22,4 @@ const Provider: React.FC<Props> = ({ className }) => {
   );
 };
 
-export default React.memo(Provider);
+export default React.memo(Supplier);

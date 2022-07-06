@@ -4,14 +4,14 @@ import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 //
-import { Provider, Subscription } from '@/types';
+import { Supplier, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList } from '@/components';
 import { RootState } from '@/store';
 
 type Props = {};
 
-export const ProviderList: FC<Props> = memo(({}) => {
+export const SupplierList: FC<Props> = memo(({}) => {
   const navigate = useNavigate();
 
   const subscriptions = useSelector(
@@ -19,17 +19,17 @@ export const ProviderList: FC<Props> = memo(({}) => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [providers, setProviders] = useState<Provider[]>([]);
-  const [filteredProviderList, setFilteredProviderList] = useState<Provider[]>(
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [filteredSupplierList, setFilteredSupplierList] = useState<Supplier[]>(
     []
   );
   const [activeSub, setActiveSub] = useState<Subscription | null>(null);
 
   const tableEmptyState = {
-    title: 'No providers',
-    description: 'Get started by creating a new provider.',
-    href: '/providers/create',
-    buttonText: 'New Provider',
+    title: 'No suppliers',
+    description: 'Get started by creating a new Supplier.',
+    href: '/suppliers/create',
+    buttonText: 'New Supplier',
   };
 
   const handleSetActiveSub = (subId: number) => {
@@ -38,7 +38,7 @@ export const ProviderList: FC<Props> = memo(({}) => {
       (sub) => sub.subscriptionId === subId
     );
     setActiveSub(selectedSub as Subscription);
-    setProviders(sortBy(selectedSub?.providers, 'name') as Provider[]);
+    setSuppliers(sortBy(selectedSub?.suppliers, 'name') as Supplier[]);
     const mainLayoutArea = document.getElementById('main-layout-area');
     if (!!mainLayoutArea?.scrollTop) {
       mainLayoutArea.scrollTop = 0;
@@ -47,14 +47,15 @@ export const ProviderList: FC<Props> = memo(({}) => {
 
   useEffect(() => {
     if (!!subscriptions?.length) {
-      setActiveSub(subscriptions[0]);
-      setProviders(subscriptions[0].providers);
+      const sortedSubscriptions = sortBy(subscriptions, 'userName');
+      setActiveSub(sortedSubscriptions[0]);
+      setSuppliers(sortedSubscriptions[0].suppliers);
     }
   }, [subscriptions]);
 
   useEffect(() => {
-    setFilteredProviderList(providers);
-  }, [providers]);
+    setFilteredSupplierList(suppliers);
+  }, [suppliers]);
 
   useEffect(() => {
     if (!isLoading && !subscriptions?.length) {
@@ -74,7 +75,7 @@ export const ProviderList: FC<Props> = memo(({}) => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Providers
+              Suppliers
             </h1>
           </div>
 
@@ -116,16 +117,16 @@ export const ProviderList: FC<Props> = memo(({}) => {
                 </div>
               </div>
               <div className='py-6 pr-6 w-full'>
-                {filteredProviderList.length ? (
+                {filteredSupplierList.length ? (
                   <CardList
-                    bodyList={filteredProviderList.map(
+                    bodyList={filteredSupplierList.map(
                       ({ name, supplierID }) => ({
                         id: supplierID,
                         name,
                         actions: [
                           {
                             name: 'Edit',
-                            href: `/providers/${supplierID}/edit`,
+                            href: `/suppliers/${supplierID}/edit`,
                           },
                         ],
                       })
@@ -137,7 +138,7 @@ export const ProviderList: FC<Props> = memo(({}) => {
                   <EmptyState
                     title='No subscriptions'
                     description='Get started by creating a new subscription.'
-                    href='/providers/create'
+                    href='/suppliers/create'
                     buttonText='New Subscription'
                   />
                 )}

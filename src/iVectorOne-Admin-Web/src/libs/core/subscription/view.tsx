@@ -72,7 +72,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              View Subscriptions
+              View Subscription
             </h1>
           </div>
 
@@ -89,9 +89,9 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                     <>
                       <div className='flex-1 md:w-1/2'>
                         <h4 className='block text-sm font-medium mb-1'>
-                          Username
+                          Authentication
                         </h4>
-                        <p className='form-input'>
+                        <p className='text-sm'>
                           {currentSubscription?.userName}
                         </p>
                       </div>
@@ -99,7 +99,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                         <h4 className='block text-sm font-medium mb-1'>
                           Password
                         </h4>
-                        <p className='form-input break-words'>
+                        <p className='text-sm break-words'>
                           {currentSubscription?.password}
                         </p>
                       </div>
@@ -110,7 +110,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                         <h4 className='block text-sm font-medium mb-1'>
                           Property TP Request Limit
                         </h4>
-                        <p className='form-input'>
+                        <p className='text-sm'>
                           {currentSubscription?.propertyTprequestLimit}
                         </p>
                       </div>
@@ -118,7 +118,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                         <h4 className='block text-sm font-medium mb-1'>
                           Search Timeout Seconds
                         </h4>
-                        <p className='form-input'>
+                        <p className='text-sm'>
                           {currentSubscription?.searchTimeoutSeconds}
                         </p>
                       </div>
@@ -126,7 +126,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                         <h4 className='block text-sm font-medium mb-1'>
                           Currency Code
                         </h4>
-                        <p className='form-input'>
+                        <p className='text-sm'>
                           {currentSubscription?.currencyCode}
                         </p>
                       </div>
@@ -147,7 +147,6 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                               'pointer-events-none relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                             )}
                           >
-                            <span className='sr-only'>Use setting</span>
                             <span
                               aria-hidden='true'
                               className={classnames(
@@ -167,7 +166,7 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                 </div>
                 <div className='flex justify-end mt-5 pt-5'>
                   <Button
-                    text='Cancel'
+                    text='Close'
                     color={ButtonColors.OUTLINE}
                     className='ml-4'
                     onClick={() => navigate(-1)}

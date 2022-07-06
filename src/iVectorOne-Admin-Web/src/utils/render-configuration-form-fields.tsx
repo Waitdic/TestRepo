@@ -3,8 +3,8 @@ import { sortBy } from 'lodash';
 //
 import {
   FormErrorMessage,
-  ProviderConfiguration,
-  ProviderFormFields,
+  SupplierConfiguration,
+  SupplierFormFields,
   SelectOption,
 } from '@/types';
 import { InputTypes } from '@/constants';
@@ -17,8 +17,8 @@ import {
 } from '@/components';
 
 export const renderConfigurationFormFields = (
-  configurations: ProviderConfiguration[],
-  register: UseFormRegister<ProviderFormFields>,
+  configurations: SupplierConfiguration[],
+  register: UseFormRegister<SupplierFormFields>,
   errors: {
     configurations?: FormErrorMessage[];
   }

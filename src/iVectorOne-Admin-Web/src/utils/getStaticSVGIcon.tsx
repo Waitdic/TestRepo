@@ -1,5 +1,5 @@
 import TenantIcon from '../icons/Tenant';
-import ProvidersIcon from '../icons/Providers';
+import SupplierIcon from '../icons/Suppliers';
 import SubscriptionsIcon from '../icons/Subscriptions';
 import ChevronDownIcon from '../icons/ChevronDown';
 import DashboardIcon from '../icons/Dashboard';
@@ -10,8 +10,8 @@ const getStaticSVGIcon = (name: string, className: string) => {
   switch (name) {
     case 'tenant':
       return <TenantIcon className={className} />;
-    case 'providers':
-      return <ProvidersIcon className={className} />;
+    case 'suppliers':
+      return <SupplierIcon className={className} />;
     case 'subscriptions':
       return <SubscriptionsIcon className={className} />;
     case 'chevronDown':

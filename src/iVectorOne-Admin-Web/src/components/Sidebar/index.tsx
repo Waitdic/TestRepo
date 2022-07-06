@@ -123,13 +123,13 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                   sidebarExpanded={sidebarExpanded}
                   setSidebarExpanded={setSidebarExpanded}
                 />
-                {/* Providers */}
+                {/* Suppliers */}
                 <SidebarLinkGroup
                   activecondition={
-                    pathname === '/providers' || pathname.includes('providers')
+                    pathname === '/suppliers' || pathname.includes('suppliers')
                   }
-                  to='/providers'
-                  title='Providers'
+                  to='/suppliers'
+                  title='Suppliers'
                   sidebarExpanded={sidebarExpanded}
                   setSidebarExpanded={setSidebarExpanded}
                 />
