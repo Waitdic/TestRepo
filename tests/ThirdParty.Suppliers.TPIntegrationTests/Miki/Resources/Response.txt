@@ -1,0 +1,484 @@
+﻿<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+ <soap:Header/>
+ <soap:Body>
+  <hotelSearchResponse versionNumber="7.0">
+   <responseAuditInfo>
+    <agentCode>XXX</agentCode>
+    <responseID>505589839</responseID>
+    <responseDateTime>2016-06-15T11:26:33.850+01:00</responseDateTime>
+    <transactionID>8f3ed181-68aa-4a45-9f4d-7ba7a6db54c3</transactionID>
+    <!--Audit ID : 8f3ed181-68aa-4a45-9f4d-7ba7a6db54c3-->
+    <!--WS : MSI-->
+   </responseAuditInfo>
+   <availabilitySummary>
+    <totalAvailable>36</totalAvailable>
+    <totalOnRequest>0</totalOnRequest>
+   </availabilitySummary>
+   <hotels>
+     <hotel>
+     <productCode>CAH984400</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="true" packageRate="false" roomTypeCode="00003">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhvuVAhao-7BUqK299JyHHxlfFRX9lAOyyqJ68vpud4127Z57DHLUoPcVKuhKrFpVSkGX7iR3KFDm0hO01-X1ADZ1vRWPMNKg0hYxNGnn4WGZaWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Triple with extra bed (3-12 years) Sea View</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>992.25</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>992.25</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO">
+          <includedMeals>
+           <includedMeal>
+            <mealID>33</mealID>
+            <mealType>1</mealType>
+            <description>No breakfast service</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <hotel>
+     <productCode>CAL729800</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="false" packageRate="false" roomTypeCode="00003">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhvgC4hcbBwX-3D6rbWe6kP2U8DKOQheQOMJ68vpud4124xG3Ze-oKoTghF1cwi6JSpGX7iR3KFDm0W0b5ikP-xCWe1t0MH-7krrPcPq5R_u7eWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Standard Triple</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>551.25</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>551.25</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO">
+          <includedMeals>
+           <includedMeal>
+            <mealID>33</mealID>
+            <mealType>1</mealType>
+            <description>No breakfast service</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <hotel>
+     <productCode>CAG698500</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="0" extraBed="false" packageRate="false" roomTypeCode="00003">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhvTn-e6u1Z5vl_GoEZZ6teSl0v2n6x4sDuJ68vpud41259GKmtRwCgtpLfyqhfZZKtGX7iR3KFDm0W0b5ikP-xCcjsfY2HG8dz4V2jAN1jZrU4hKIydvslHlReqK6f0sjy-uOK_08RJHf0v4NOlofyRZngHIF1aIhj8Bml6_IcJcdldod2V6ksWc4ij5diI7ikyTfnM52MRJ-lvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Standard Triple</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>48.89</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>48.89</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="AI">
+          <includedMeals>
+           <includedMeal>
+            <mealID>261</mealID>
+            <mealType>1</mealType>
+            <description>All Inclusive</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-03T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>25.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+        <cancellationPolicy>
+         <appliesFrom>2016-11-08T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+        <cancellationPolicy>
+         <appliesFrom>2016-11-13T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>95.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <specialOffers offersPresent="true"/>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="AI" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>261</mealID>
+          <mealType>1</mealType>
+          <description>All Inclusive</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <hotel>
+     <productCode>CAL727300</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="true" packageRate="false" roomTypeCode="00001">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhvuVAhao-7BUqcrFAr-kNAbP92SrV0AXosJ68vpud4124xG3Ze-oKoTqGgovdTxzE1km7SKmEsDCYhO01-X1ADZ1vRWPMNKg0hYxNGnn4WGZaWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Twin With Extra Bed With Cot</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>992.25</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>992.25</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO">
+          <includedMeals>
+           <includedMeal>
+            <mealID>33</mealID>
+            <mealType>1</mealType>
+            <description>No breakfast service</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <hotel>
+     <productCode>CAF562300</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="false" packageRate="false" roomTypeCode="01001">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhv9z91iyUInJryanf9f4OJJ--Yo978eTlFJ68vpud4124W8wf_2ASt_BljaaKRWpplmJ_TZAtgeawW0b5ikP-xCRujEAQA7fRQ_EgCalMozIiWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Standard Double (2AD)</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>330.75</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>330.75</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO"/>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="false" packageRate="false" roomTypeCode="01001">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhv9z91iyUInJryanf9f4OJJ3jxdk3btBkMu3mhvfXvJKYzlGfa1CbC5GJU7mf1uda9loSWOtL8BkfC5Qo-LWmQ_M64Ciga-k1aZGlT5IrOc8Je31dNC_ESa3ZqqHwdkTN1-4i9RrTY71MKcu50coVvRrG82lXfboznBmo0RtjBlcVb1op7ySSaTe23ifjrehqiX8ZvNaUCzuGqf2_M83L7iE2TWhPF81K8EJquvAylCV0</rateIdentifier>
+       <roomDescription>Standard Double (2AD)</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>352.80</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>352.80</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RB">
+          <includedMeals>
+           <includedMeal>
+            <mealID>5</mealID>
+            <mealType>1</mealType>
+            <description>Continental breakfast at hotel</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RB" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>5</mealID>
+          <mealType>1</mealType>
+          <description>Continental breakfast at hotel</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="false" packageRate="false" roomTypeCode="00003">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhv9z91iyUInJryanf9f4OJJ-9v__CKG06mJ68vpud4124W8wf_2ASt_BljaaKRWpplGX7iR3KFDm0W0b5ikP-xCWe1t0MH-7krrPcPq5R_u7eWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>Standard Triple</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>551.25</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>551.25</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO"/>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="false" packageRate="false" roomTypeCode="00003">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhv9z91iyUInJryanf9f4OJJyZ2vyfgOtJUu3mhvfXvJKYzlGfa1CbC5GJU7mf1uda9loSWOtL8Bkdk0lbxM2O3cc64Ciga-k1aUFqQAiAi4E1e31dNC_ESa3ZqqHwdkTN1-4i9RrTY71MKcu50coVvRrG82lXfboznBmo0RtjBlcVb1op7ySSaTe23ifjrehqiX8ZvNaUCzuGqf2_M83L7iE2TWhPF81K8EJquvAylCV0</rateIdentifier>
+       <roomDescription>Standard Triple</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>573.30</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>573.30</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RB">
+          <includedMeals>
+           <includedMeal>
+            <mealID>5</mealID>
+            <mealType>1</mealType>
+            <description>Continental breakfast at hotel</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RB" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>5</mealID>
+          <mealType>1</mealType>
+          <description>Continental breakfast at hotel</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <hotel>
+     <productCode>CAH984700</productCode>
+     <currencyCode>EUR</currencyCode>
+     <roomOptions>
+      <roomOption B2Csellable="true" allowModifications="2" extraBed="true" packageRate="false" roomTypeCode="00004">
+       <rateIdentifier>6ht6hbdpTeNBpElHnshsLHOe-nNJqSzEXt6HpSJ-Qkek5HUb9rzQ5kPnji0ICQhv9z91iyUInJqK299JyHHxlck3BM4JavAJJ68vpud4127Z57DHLUoPcWGCdFR5-Mt7vbynFqOpPFkhO01-X1ADZ1vRWPMNKg0hYxNGnn4WGZaWra8cIWo_9vXz1BlF7mff1hWMa_IX0POn2umxnw3-nhWFCYEDnZv-gTWRjqRJb0jZnc1_IHNsro2bGoA5-j2FskYKqwlYp3ClvguXbnY3XQRxt1GXzcSmeKl6JsgkNMM</rateIdentifier>
+       <roomDescription>TSU With Cot</roomDescription>
+       <roomTotalPrice priceType="1">
+        <price>992.25</price>
+       </roomTotalPrice>
+       <availabilityStatus>1</availabilityStatus>
+       <dates>
+        <date serviceDate="2016-11-18">
+         <dailyAvailabilityStatus>1</dailyAvailabilityStatus>
+         <dailyPrice priceType="1">
+          <price>992.25</price>
+         </dailyPrice>
+         <mealBasis mealBasisCode="RO">
+          <includedMeals>
+           <includedMeal>
+            <mealID>33</mealID>
+            <mealType>1</mealType>
+            <description>No breakfast service</description>
+           </includedMeal>
+          </includedMeals>
+         </mealBasis>
+        </date>
+       </dates>
+       <cancellationPolicies refundable="2">
+        <cancellationPolicy>
+         <appliesFrom>2016-11-16T00:00:00.000Z</appliesFrom>
+         <fullStay>true</fullStay>
+         <cancellationCharge>
+          <percentage>50.0</percentage>
+         </cancellationCharge>
+        </cancellationPolicy>
+       </cancellationPolicies>
+       <supplierName>Miki 2</supplierName>
+       <mealBasis mealBasisCode="RO" multipleMealBasis="false">
+        <includedMeals>
+         <includedMeal>
+          <mealID>33</mealID>
+          <mealType>1</mealType>
+          <description>No breakfast service</description>
+         </includedMeal>
+        </includedMeals>
+       </mealBasis>
+       <roomNumbers>
+        <roomNumber>1</roomNumber>
+       </roomNumbers>
+      </roomOption>
+     </roomOptions>
+    </hotel>
+    <stayPeriod>
+     <checkinDate>2016-11-18</checkinDate>
+     <checkoutDate>2016-11-19</checkoutDate>
+     <numberOfNights>1</numberOfNights>
+    </stayPeriod>
+   </hotels>
+  </hotelSearchResponse>
+ </soap:Body>
+</soap:Envelope>

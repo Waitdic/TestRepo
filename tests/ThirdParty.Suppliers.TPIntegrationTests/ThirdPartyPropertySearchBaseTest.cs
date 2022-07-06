@@ -3,7 +3,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;

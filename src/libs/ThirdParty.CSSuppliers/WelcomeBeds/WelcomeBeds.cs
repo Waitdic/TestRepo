@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -74,6 +74,7 @@
         {
             string reservationRequest = string.Empty;
             string reservationResponse = string.Empty;
+            var webRequest = new Request();
 
             try
             {
@@ -133,7 +134,7 @@
                     }
                 };
 
-                string[] sResort = (await _support.TPResortCodeByGeographyIdLookupAsync(Source, propertyDetails.GeographyLevel3ID)).Split('|');
+                string[] resort = propertyDetails.ResortCode.Split('|');
 
                 var reservationTpaExtensions = new TpaExtensions
                 {
@@ -145,9 +146,9 @@
                             Credentials = WelcomeBedsSearch.BuildCredentials(propertyDetails, _settings),
                             ProviderAreas = new List<Area>
                             {
-                                new Area { TypeCode = "Country", AreaCode=sResort[0] },
-                                new Area { TypeCode = "Province", AreaCode=sResort[1] },
-                                new Area { TypeCode = "Town", AreaCode=sResort[2] },
+                                new Area { TypeCode = "Country", AreaCode=resort[0] },
+                                new Area { TypeCode = "Province", AreaCode=resort[1] },
+                                new Area { TypeCode = "Town", AreaCode=resort[2] },
                             }
                         }
                     },
@@ -171,11 +172,11 @@
                 var xmlReservationRequest = Envelope<OtaHotelResRq>.Serialize(preBookRequest, _serializer);
                 reservationRequest = xmlReservationRequest.ToString();
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelRes",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = "text/xml",
                     LogFileName = "Prebook",
                     CreateLog = true,
@@ -186,12 +187,12 @@
                 await webRequest.Send(_httpClient, _logger);
 
                 var soapEnvelopeXml = webRequest.ResponseXML;
-                var oResponse = Envelope<OtaHotelResRs>.DeSerialize(soapEnvelopeXml, _serializer);
+                var response = Envelope<OtaHotelResRs>.DeSerialize(soapEnvelopeXml, _serializer);
 
                 // Check to see if there were any errors
-                if (oResponse.Errors.Any()) return false;
+                if (response.Errors.Any()) return false;
 
-                decimal totalCost = oResponse.HotelReservations.First().RoomStays.First().Total.AmountAfterTax.ToSafeDecimal();
+                decimal totalCost = response.HotelReservations.First().RoomStays.First().Total.AmountAfterTax.ToSafeDecimal();
 
                 // Check for price changes
                 if (propertyDetails.LocalCost != totalCost)
@@ -206,16 +207,15 @@
                 }
 
                 // Get the booking reference out
-                string reference = oResponse.HotelReservations?.FirstOrDefault().ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "";
+                string reference = response.HotelReservations?.FirstOrDefault().ResGlobalInfo?.HotelReservationIds.FirstOrDefault()?.ResIdValue ?? "";
                 if (!string.IsNullOrEmpty(reference))
                 {
                     propertyDetails.TPRef1 = reference;
                 }
 
-
                 var cancellations = new Cancellations();
                 // Set up the cancellation charges
-                cancellations.AddRange(oResponse.HotelReservations.First().RoomStays.First().RoomRates.First().Rates.First().CancelPolicies
+                cancellations.AddRange(response.HotelReservations.First().RoomStays.First().RoomRates.First().Rates.First().CancelPolicies
                     .Select(cp =>
                     {
                         var startDt = cp.Start.ToSafeDate();
@@ -239,7 +239,7 @@
                 propertyDetails.Cancellations = cancellations;
 
                 // Picking up the errata            
-                propertyDetails.Errata.AddRange(oResponse.HotelReservations.First().RoomStays.First()
+                propertyDetails.Errata.AddRange(response.HotelReservations.First().RoomStays.First()
                     .RoomRates.First().Descriptions.Select(d => new Erratum
                     {
                         Title = "Room Rate Description",
@@ -254,15 +254,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(reservationRequest))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Request", reservationRequest);
-                }
-
-                if (!string.IsNullOrEmpty(reservationResponse))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds PreBook Response", reservationResponse);
-                }
+                propertyDetails.AddLog("PreBook", webRequest);
             }
 
             return true;
@@ -279,6 +271,7 @@
             string reference = string.Empty;
             string reservationRequest = string.Empty;
             string reservationResponse = string.Empty;
+            var webRequest = new Request();
 
             try
             {
@@ -364,11 +357,11 @@
                 var xmlReservationRequest = Envelope<OtaHotelResRq>.Serialize(bookRequest, _serializer);
                 reservationRequest = xmlReservationRequest.ToString();
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelRes",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = "text/xml",
                     CreateLog = true,
                     LogFileName = "Book",
@@ -410,15 +403,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(reservationRequest))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Request", reservationRequest);
-                }
-
-                if (!string.IsNullOrEmpty(reservationResponse))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Book Response", reservationResponse);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -432,8 +417,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             ThirdPartyCancellationResponse tpCancellationResponse = new();
-            string cancellationRequest = string.Empty;
-            string cancellationResponse = string.Empty;
+            var webRequest = new Request();
 
             try
             {
@@ -465,11 +449,11 @@
 
                 var xmlCancelationRequest = Envelope<OtaCancelRq>.Serialize(cancelationRequest, _serializer);
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.URL(propertyDetails),
                     SoapAction = "HotelCancel",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = "text/xml",
                     LogFileName = "Cancel",
                     CreateLog = true,
@@ -478,7 +462,6 @@
                 webRequest.SetRequest(xmlCancelationRequest);
                 await webRequest.Send(_httpClient, _logger);
 
-                cancellationResponse = webRequest.ResponseString;
                 var cancelResponse = Envelope<OtaCancelRs>.DeSerialize(webRequest.ResponseXML, _serializer);
 
                 if (!cancelResponse.IsSuccess)
@@ -504,16 +487,9 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(cancellationRequest))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Request", cancellationRequest);
+                propertyDetails.AddLog("Cancellation", webRequest);
                 }
 
-                if (!string.IsNullOrEmpty(cancellationResponse))
-                {
-                    propertyDetails.Logs.AddNew(Source, "WelcomeBeds Cancellation Response", cancellationResponse);
-                }
-            }
             return tpCancellationResponse;
         }
 

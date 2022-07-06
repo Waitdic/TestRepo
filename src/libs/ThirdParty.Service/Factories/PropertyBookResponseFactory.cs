@@ -13,21 +13,14 @@
     /// <seealso cref="ThirdParty.Service.Factories.IPropertyBookResponseFactory" />
     public class PropertyBookResponseFactory : IPropertyBookResponseFactory
     {
-        /// <summary>Repository for looking up Currency information.</summary>
-        private readonly ICurrencyLookupRepository currencyRepository;
-
         /// <summary>The token service</summary>
-        private ITokenService tokenService;
+        private readonly ITokenService _tokenService;
 
         /// <summary>Initializes a new instance of the <see cref="PropertyBookResponseFactory" /> class.</summary>
         /// <param name="tokenService">The token service, that encodes and decodes response and request tokens.</param>
-        /// <param name="currencyRepository">Repository for looking up Currency information.</param>
-        public PropertyBookResponseFactory(
-            ITokenService tokenService, 
-            ICurrencyLookupRepository currencyRepository)
+        public PropertyBookResponseFactory(ITokenService tokenService)
         {
-            this.tokenService = tokenService;
-            this.currencyRepository = currencyRepository;
+            _tokenService = tokenService;
         }
 
         /// <summary>
@@ -39,13 +32,13 @@
         {
             var token = new BookToken()
             {
-                PropertyID = propertyDetails.TPPropertyID
+                PropertyID = propertyDetails.PropertyID
             };
 
             var response = new Response()
             {
                 SupplierBookingReference = propertyDetails.SupplierSourceReference,
-                BookToken = this.tokenService.EncodeBookToken(token),
+                BookToken = _tokenService.EncodeBookToken(token),
                 SupplierReference1 = this.GetSupplierReference1(propertyDetails),
                 SupplierReference2 = this.GetSupplierReference2(propertyDetails)
             };

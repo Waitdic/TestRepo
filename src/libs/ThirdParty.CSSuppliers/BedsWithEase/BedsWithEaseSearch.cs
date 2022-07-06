@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Common;
@@ -51,7 +51,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.URL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     SoapAction = _settings.SOAPAvailableHotels(searchDetails),
                     SOAP = true,
                 };
@@ -78,8 +78,8 @@
                     {
                         StayDateRange =
                         {
-                            Start = $"{searchDetails.PropertyArrivalDate:yyyy-MM-dd}",
-                            End = $"{searchDetails.PropertyDepartureDate:yyyy-MM-dd}"
+                            Start = $"{searchDetails.ArrivalDate:yyyy-MM-dd}",
+                            End = $"{searchDetails.DepartureDate:yyyy-MM-dd}"
                         },
                         SessionId = sessionId,
                         HotelSearchCriterion =

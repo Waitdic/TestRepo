@@ -10,7 +10,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Travelgate.Models;
     using ThirdParty.Interfaces;
@@ -187,7 +187,7 @@
                 {
                     EndPoint = _settings.GenericURL(searchDetails, source),
                     SoapAction = _settings.SearchURL(searchDetails, source),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ExtraInfo = searchDetails,
                     SuppressExpectHeaders = true,
                     UseGZip = _settings.UseGZip(searchDetails, source)

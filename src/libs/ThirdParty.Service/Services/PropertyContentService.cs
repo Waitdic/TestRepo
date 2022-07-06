@@ -22,11 +22,7 @@
             _contentRepo = contentRepo;
         }
 
-        /// <summary>Gets a list of all central property ids filtering by the past in last modified and suppliers</summary>
-        /// <param name="lastModified">The last modified date is used to return only properties that have been imported after that date</param>
-        /// <param name="suppliers">Filters the property ids to only those for the provided suppliers</param>
-        /// <param name="user">The user making the request</param>
-        /// <returns>A list of property ids</returns>
+        /// <inheritdoc/>
         public async Task<PropertyList.Response> PropertyListAsync(DateTime? lastModified, string suppliers, Subscription user)
         {
             if (!lastModified.HasValue)
@@ -36,7 +32,7 @@
 
             suppliers = this.GetValidSuppliers(suppliers, user);
 
-            var propertyIDs = await _contentRepo.GetPropertyIDsAsync(lastModified.Value, suppliers);
+            var propertyIDs = await _contentRepo.GetPropertyIDsAsync(lastModified.Value, suppliers, user);
 
             var response = new PropertyList.Response()
             {
@@ -46,15 +42,12 @@
             return response;
         }
 
-        /// <summary>Returns the property content for each of the property ids passed in</summary>
-        /// <param name="propertyIDs">The central property identifiers for the properties the content is being requested for</param>
-        /// <param name="user">The user making the request</param>
-        /// <returns>A list of property ids</returns>
+        /// <inheritdoc/>
         public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Subscription user)
         {
             string suppliers = this.GetValidSuppliers(string.Empty, user);
 
-            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers);
+            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers, user);
         }
 
         /// <summary>Validate suppliers, only returning suppliers that are configured</summary>

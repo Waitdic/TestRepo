@@ -1,7 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
 {
-    using Intuitive.Net.WebRequests;
     using System.Threading.Tasks;
+    using Intuitive.Helpers.Net;
     using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
     using ThirdParty.Models.Property.Booking;
 

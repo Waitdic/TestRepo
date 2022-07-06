@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Models.WelcomeBeds;
@@ -61,8 +61,8 @@
                 //'Dates
                 availRequestSegment.StayDateRange = new StayDateRange
                 {
-                    Start = searchDetails.PropertyArrivalDate.ToString(Constant.DateFormat),
-                    End = searchDetails.PropertyDepartureDate.ToString(Constant.DateFormat)
+                    Start = searchDetails.ArrivalDate.ToString(Constant.DateFormat),
+                    End = searchDetails.DepartureDate.ToString(Constant.DateFormat)
                 };
 
                 //'Add Guests to the Room
@@ -124,7 +124,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.URL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     UseGZip = true,
                     SoapAction = "HotelAvail"
                 };

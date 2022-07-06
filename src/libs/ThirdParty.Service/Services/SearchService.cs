@@ -52,19 +52,23 @@
             _searchRunner = Ensure.IsNotNull(searchRunner, nameof(searchRunner));
         }
 
-        public async Task<Response> SearchAsync(Request searchRequest, Subscription user, bool log, IRequestTracker requestTracker)
+        /// <inheritdoc />
+        public async Task<Response> SearchAsync(Request searchRequest, bool log, IRequestTracker requestTracker)
         {
             // 1.Convert Request to Search details object
-            var searchDetails = _searchDetailsFactory.Create(searchRequest, user, log);
+            var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.User, log);
 
             // 2.Check which suppliers to search
-            var suppliers = user.Configurations
+            var suppliers = searchRequest.User.Configurations
                 .Select(c => c.Supplier)
                 .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
                 .ToList();
 
             // 3.Call db to get resort splits from central propery ids
-            var resortSplits = await _searchRepository.GetResortSplitsAsync(string.Join(",", searchDetails.PropertyReferenceIDs), string.Join(",", suppliers));
+            var resortSplits = await _searchRepository.GetResortSplitsAsync(
+                string.Join(",", searchRequest.Properties),
+                string.Join(",", suppliers),
+                searchRequest.User);
 
             // 4.Run TP search
             await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);

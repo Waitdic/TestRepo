@@ -16,12 +16,11 @@
             var tokenServiceMock = new Mock<ITokenService>();
             tokenServiceMock.Setup(ts => ts.EncodeBookToken(It.IsAny<BookToken>())).Returns("TestToken");
 
-            var currencyRepoMock = new Mock<ICurrencyLookupRepository>();
-            var factory = new PropertyBookResponseFactory(tokenServiceMock.Object, currencyRepoMock.Object);
+            var factory = new PropertyBookResponseFactory(tokenServiceMock.Object);
 
             var details = new PropertyDetails() {
                 CurrencyID = 5,
-                TPPropertyID = 5,
+                PropertyID = 5,
                 SupplierSourceReference = "testREf",
                 SourceSecondaryReference = "TestsecondaryRef",
                 TPRef1 = "testTpREf1"

@@ -5,7 +5,7 @@
     using Helpers;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.CSSuppliers.Restel;
     using ThirdParty.Search.Models;
     using ThirdParty.Tests.Restel;
@@ -43,7 +43,7 @@
                 var request = new Request
                 {
                     EndPoint = urls[i],
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     Source = Supplier,
                     Param = "xml",

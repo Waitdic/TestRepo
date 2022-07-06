@@ -6,7 +6,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.TeamAmerica.Models;
@@ -57,7 +57,7 @@
                 {
                     EndPoint = _settings.URL(serchDetails),
                     SoapAction = $"{_settings.URL(serchDetails)}/{Constant.SoapActionPreBook}",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Text_Xml_charset_utf_8,
                 };
                 request.SetRequest(requestXml);
@@ -159,8 +159,8 @@
                 ProductCode = "",
                 RequestType = Constant.SearchTypeHotel,
                 Occupancy = "",
-                ArrivalDate = serchDetails.PropertyArrivalDate.ToString(Constant.DateTimeFormat),
-                NumberOfNights = serchDetails.PropertyDuration,
+                ArrivalDate = serchDetails.ArrivalDate.ToString(Constant.DateTimeFormat),
+                NumberOfNights = serchDetails.Duration,
                 NumberOfRooms = serchDetails.Rooms,
                 DisplayClosedOut = Constant.TokenNo,
                 DisplayOnRequest = Constant.TokenNo,

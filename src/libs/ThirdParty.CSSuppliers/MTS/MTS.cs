@@ -9,7 +9,7 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -92,6 +92,7 @@
 
             var sbVerifyCart = new StringBuilder();
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -186,14 +187,14 @@
                 sbVerifyCart.Append("</OTA_HotelResRQ>");
 
                 // get the add response 
-                var webRequest = new Request
+                webRequest = new Request()
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     LogFileName = "PreBook",
-                    CreateLog = true
+                    CreateLog = true,
                 };
                 webRequest.SetRequest(sbVerifyCart.ToString());
                 await webRequest.Send(_httpClient, _logger);
@@ -203,7 +204,7 @@
                 // get the costs from the response
                 var costs = response.SelectNodes("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/Total/@AmountAfterTax");
 
-                if (costs[0].InnerText.ToSafeMoney() != propertyDetails.TotalCost.ToSafeMoney())
+                if (costs[0].InnerText.ToSafeMoney() != propertyDetails.LocalCost.ToSafeMoney())
                 {
                     // Only returns total cost so divide by number of rooms
                     decimal cost = costs[0].InnerText.ToSafeMoney() / propertyDetails.Rooms.Count;
@@ -236,16 +237,7 @@
             }
             finally
             {
-                // store the request and response xml on the property pre-booking
-                if (!string.IsNullOrEmpty(sbVerifyCart.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Pre-Book Request", sbVerifyCart.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Pre-Book Response", response);
-                }
+                propertyDetails.AddLog("Pre-Book", webRequest);
             }
 
             return success;
@@ -261,6 +253,7 @@
             var response = new XmlDocument();
             string reference = "";
             var overrideCountries = GetOverrideCountries(propertyDetails);
+            var webRequest = new Request();
 
             try
             {
@@ -394,14 +387,14 @@
                 sbRequest.Append("</OTA_HotelResRQ>");
 
                 // get the response 
-                var webRequest = new Request
+                webRequest = new Request()
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     LogFileName = "Book",
-                    CreateLog = true
+                    CreateLog = true,
                 };
                 webRequest.SetRequest(sbRequest.ToString());
                 await webRequest.Send(_httpClient, _logger);
@@ -427,16 +420,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sbRequest.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Book Request", sbRequest.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Book Response", response);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -452,6 +436,7 @@
             var cancellationRequest = new XmlDocument();
             var cancellationResponse = new XmlDocument();
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            var webRequest = new Request();
 
             string sourceReference;
             if (propertyDetails.SourceReference is not null)
@@ -476,14 +461,14 @@
                 cancellationRequest.LoadXml(sbRequest.ToString());
 
                 // get the response
-                var webRequest = new Request
+                webRequest = new Request()
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     LogFileName = "Cancel",
-                    CreateLog = true
+                    CreateLog = true,
                 };
                 webRequest.SetRequest(cancellationRequest);
                 await webRequest.Send(_httpClient, _logger);
@@ -515,16 +500,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sbRequest.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Cancellation Request", sbRequest.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(cancellationResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Cancellation Response", cancellationResponse);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;
@@ -622,6 +598,7 @@
             var result = new ThirdPartyCancellationFeeResult();
             var cancelCostRequest = new XmlDocument();
             var cancelCostResponse = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -648,14 +625,14 @@
                 cancelCostRequest.LoadXml(sbGetFees.ToString());
 
                 // get the add response 
-                var webRequest = new Request
+                webRequest = new Request()
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.MTS,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     LogFileName = "Cancellation Costs",
-                    CreateLog = true
+                    CreateLog = true,
                 };
                 webRequest.SetRequest(cancelCostRequest);
                 await webRequest.Send(_httpClient, _logger);
@@ -678,15 +655,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(cancelCostRequest.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Pre-Cancel Request", cancelCostRequest);
-                }
-
-                if (!string.IsNullOrEmpty(cancelCostResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.MTS, "MTS Pre-Cancel Response", cancelCostResponse);
-                }
+                propertyDetails.AddLog("Pre-Cancel", webRequest);
             }
 
             return result;

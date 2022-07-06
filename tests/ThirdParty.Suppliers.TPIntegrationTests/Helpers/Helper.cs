@@ -6,7 +6,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
     using System.Xml;
     using System.Text.RegularExpressions;
     using iVector.Search.Property;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
@@ -47,17 +47,12 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
             {
                 ArrivalDate = new DateTime(2021, 9, 1),
                 DepartureDate = new DateTime(2021, 9, 6),
-                AllowMultisectorFlights = true,
                 BookingDate = DateTime.Now,
-                DateFlexibility = 3,
                 Duration = 5,
-                IgnorePropertyLanguage = true,
-                Rooms = roomDetails.Count,
                 RoomDetails = roomDetails,
                 ThirdPartyConfigurations = new List<ThirdPartyConfiguration> { CreateThirdPartyConfiguration(supplier) },
                 DedupeResults = true,
                 LoggingType = "All",
-                PropertyReferenceIDs = propertyReferenceIds,
                 CurrencyCode = "GBP"
             };
 
@@ -149,7 +144,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
             var request = new Request
             {
                 EndPoint = URL,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = thirdparty,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",

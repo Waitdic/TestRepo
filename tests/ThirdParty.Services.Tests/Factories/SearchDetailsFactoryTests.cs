@@ -67,28 +67,6 @@
         }
 
         [Fact]
-        public void Create_Should_SetPropertyReferenceIDs_When_ThereArePropertyIDsOnTheRequest()
-        {
-            // Arrange
-            var factory = new SearchDetailsFactory();
-            var user = new Subscription();
-            var request = new Request()
-            {
-                ArrivalDate = new DateTime(2000, 01, 01),
-                Properties = new List<int>()
-                {
-                    1, 3, 5,
-                },
-            };
-
-            // Act
-            var details = factory.Create(request, user, false);
-
-            // Assert
-            Assert.Equal(new List<int>() { 1, 3, 5 }, details.PropertyReferenceIDs);
-        }
-
-        [Fact]
         public void Create_Should_SetRoomsToCorrectCount_When_ThereAreRoomRequestsOnTheRequest()
         {
             // Arrange

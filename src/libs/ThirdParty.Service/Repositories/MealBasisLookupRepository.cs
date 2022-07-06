@@ -7,8 +7,10 @@
     using Intuitive.Data;
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
+    using ThirdParty.Constants;
     using ThirdParty.Models;
 
+    // todo - merge this file with the tp support wrapper
     /// <summary>
     /// A repository that looks up Meal Basis
     /// </summary>
@@ -26,74 +28,93 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-        /// <summary>
-        /// Gets the mealbasis code from third party currency code.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="thirdPartyMealBasis">The third party mealbasis code.</param>
-        /// <returns>a mealbasis code as string, for the specified source  third party mealbasis code</returns>
-        public async Task<string> GetMealBasisfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis)
+        /// <inheritdoc />
+        public async Task<string> GetMealBasisfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int subscriptionId)
         {
-            var mealbasis = string.Empty;
-
-            var mealBases = await GetMealBasisAsync();
-
-            MealBasis mealBasis;
-
-            mealBases.TryGetValue((source, thirdPartyMealBasis), out mealBasis);
-
-            if (mealBasis != null)
+            if (IsSingleTenant(source))
             {
-                mealbasis = mealBasis.MealBasisName;
+                return (await SubscriptionMealBasisLookupAsync(subscriptionId, thirdPartyMealBasis))?.MealBasis ?? string.Empty;
             }
-
-            return mealbasis;
+            else
+            {
+                return (await GetMealBasisFromCodeAsync(source, thirdPartyMealBasis))?.MealBasisName ?? string.Empty;
+            }
         }
 
-        /// <summary>
-        /// Gets the currency mealbasisID from third party mealbasis code.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="thirdPartyMealBasis">The third party mealbasis code.</param>
-        /// <returns>a mealbasisID code as integer, for the specified source  third party mealbasis code</returns>
-        public async Task<int> GetMealBasisIDfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis)
+        /// <inheritdoc />
+        public async Task<int> GetMealBasisIDfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int subscriptionId)
         {
-            var mealbasis = 0;
-
-            var mealBases = await GetMealBasisAsync();
-
-            MealBasis mealBasis;
-
-            mealBases.TryGetValue((source, thirdPartyMealBasis), out mealBasis);
-
-            if (mealBasis != null)
+            if (IsSingleTenant(source))
             {
-                mealbasis = mealBasis.MealBasisID;
+                return (await SubscriptionMealBasisLookupAsync(subscriptionId, thirdPartyMealBasis))?.SubscriptionMealBasisID ?? 0;
             }
-
-            return mealbasis;
+            else
+            {
+                return (await GetMealBasisFromCodeAsync(source, thirdPartyMealBasis))?.MealBasisID ?? 0;
+            }
         }
 
-        /// <summary>
-        /// Gets the currency mealbasisCode from third party mealbasisID.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="thirdPartyMealBasis">The third party mealbasis code.</param>
-        /// <returns>a mealbasisID code as integer, for the specified source  third party mealbasis code</returns>
-        public async Task<string> GetMealBasisCodefromTPMealbasisIDAsync(string source, int thirdPartyMealBasis)
+        /// <inheritdoc />
+        public async Task<string> GetMealBasisCodefromTPMealbasisIDAsync(string source, int MealBasisID, int subscriptionId)
         {
-            var mealbasis = string.Empty;
-
-            var mealBases = await GetMealBasisAsync();
-
-            var mealBasis = mealBases.FirstOrDefault(c => (c.Value.Source == source) && (c.Value.MealBasisID == thirdPartyMealBasis)).Value;
-
-            if (mealBasis != null)
+            if (IsSingleTenant(source))
             {
-                mealbasis = mealBasis.MealBasisCode;
+                var mealBasis = (await SubscriptionMealBasisAsync())
+                    .FirstOrDefault(x => x.Value.SubscriptionID == subscriptionId &&
+                        x.Value.SubscriptionMealBasisID == MealBasisID).Value;
+
+                return mealBasis?.MealBasisCode ?? string.Empty;
+            }
+            else
+            {
+                var mealBasis = (await GetMealBasisAsync())
+                    .FirstOrDefault(c => c.Value.Source == source &&
+                        c.Value.MealBasisID == MealBasisID).Value;
+
+                return mealBasis?.MealBasisCode ?? string.Empty;
+            }
+        }
+
+        private async Task<SubscriptionMealBasis> SubscriptionMealBasisLookupAsync(int subscriptionId, string mealBasisCode)
+        {
+            var cache = await SubscriptionMealBasisAsync();
+            cache.TryGetValue((subscriptionId, mealBasisCode), out var subscriptionMealBasis);
+
+            return subscriptionMealBasis;
+        }
+
+        private async Task<Dictionary<(int, string), SubscriptionMealBasis>> SubscriptionMealBasisAsync()
+        {
+            string cacheKey = "SubscriptionMealBasisLookup";
+
+            async Task<Dictionary<(int, string), SubscriptionMealBasis>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select SubscriptionID, MealBasisCode, MealBasis, SubscriptionMealBasisID from SubscriptionMealBasis",
+                    async r => (await r.ReadAllAsync<SubscriptionMealBasis>())
+                        .ToDictionary(x => (x.SubscriptionID, x.MealBasisCode), x => x));
             }
 
-            return mealbasis;
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+
+            return cache;
+        }
+
+        private class SubscriptionMealBasis
+        {
+            public int SubscriptionID { get; set; }
+            public string MealBasisCode { get; set; }
+            public string MealBasis { get; set; }
+            public int SubscriptionMealBasisID { get; set; }
+        }
+
+        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
+
+        private async Task<MealBasis> GetMealBasisFromCodeAsync(string source, string thirdPartyMealBasis)
+        {
+            (await GetMealBasisAsync()).TryGetValue((source, thirdPartyMealBasis), out var mealBasis);
+
+            return mealBasis;
         }
 
         /// <summary>
@@ -104,18 +125,18 @@
         /// </returns>
         private async Task<Dictionary<(string, string), MealBasis>> GetMealBasisAsync()
         {
-
             async Task<Dictionary<(string, string), MealBasis>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
                     "Get_TPMealBasisCache",
-                    async r => (await r.ReadAllAsync<MealBasisResult>()).ToDictionary(x => (x.Source, x.MealBasisCode), x => x.ToMealBasis()));
+                    async r => (await r.ReadAllAsync<MealBasisResult>())
+                        .ToDictionary(x => (x.Source, x.MealBasisCode), x => x.ToMealBasis()));
             }
 
             return await _cache.GetOrCreateAsync(CacheKey, cacheBuilder, 60);
         }
 
-        public class MealBasisResult
+        private class MealBasisResult
         {
             public int MealBasisID { get; set; }
 

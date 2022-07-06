@@ -1,16 +1,17 @@
-﻿using System.Xml;
-
-namespace ThirdParty.CSSuppliers.BedsWithEase
+﻿namespace ThirdParty.CSSuppliers.BedsWithEase
 {
+    using Intuitive.Helpers.Net;
+    using System.Xml;
+
     public class Result
     {
-        public Result(XmlDocument request, XmlDocument response)
+        public Result(Request request, XmlDocument response)
         {
             Request = request;
             Response = response;
         }
 
-        public XmlDocument? Request { get; }
-        public XmlDocument? Response { get; }
+        public Request Request { get; } = new();
+        public XmlDocument Response { get; } = new();
     }
 }

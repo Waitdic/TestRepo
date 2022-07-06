@@ -1,0 +1,319 @@
+﻿URL: https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS
+
+**HEADERS**
+
+action: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+SOAPAction: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+Accept-Encoding: gzip
+Content-Type: text/xml
+Timeout: 300
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+    <ses:Session TransactionStatusCode="Start" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" />
+    <add:MessageID xmlns:add="http://www.w3.org/2005/08/addressing">
+    </add:MessageID>
+    <add:Action xmlns:add="http://www.w3.org/2005/08/addressing">http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0</add:Action>
+    <add:To xmlns:add="http://www.w3.org/2005/08/addressing">https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS</add:To>
+    <link:TransactionFlowLink xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1">
+      <link:Consumer>
+        <link:UniqueID>
+        </link:UniqueID>
+      </link:Consumer>
+    </link:TransactionFlowLink>
+    <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <oas:UsernameToken xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" oas1:Id="UsernameToken-1">
+        <oas:Username>WSINSIVR</oas:Username>
+        <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+        </oas:Nonce>
+        <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+        </oas:Password>
+        <oas1:Created>
+        </oas1:Created>
+      </oas:UsernameToken>
+    </oas:Security>
+    <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+      <UserID POS_Type="1" PseudoCityCode="LONU128IL" AgentSign="SU" RequestorType="U" />
+    </AMA_SecurityHostedUser>
+  </soap:Header>
+  <soap:Body>
+    <OTA_HotelAvailRQ RateRangeOnly="true" RateDetailsInd="true" Version="4" EchoToken="MultiSingle" AvailRatesOnly="true" SummaryOnly="true" SortOrder="PA" SearchCacheLevel="Live">
+      <AvailRequestSegments xmlns="http://www.opentravel.org/OTA/2003/05">
+        <AvailRequestSegment InfoSource="Distribution">
+          <HotelSearchCriteria AvailableOnlyIndicator="true">
+            <Criterion ExactMatch="true">
+              <HotelRef HotelCode="102245" HotelCityCode="MAD_12" />
+              <StayDateRange End="2021-09-06" Start="2021-09-01" />
+              <RoomStayCandidates>
+                <RoomStayCandidate RoomID="1" Quantity="1">
+                  <GuestCounts>
+                    <GuestCount AgeQualifyingCode="10" Count="1" />
+                  </GuestCounts>
+                </RoomStayCandidate>
+              </RoomStayCandidates>
+            </Criterion>
+          </HotelSearchCriteria>
+        </AvailRequestSegment>
+      </AvailRequestSegments>
+    </OTA_HotelAvailRQ>
+  </soap:Body>
+</soap:Envelope>
+
+URL: https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS
+
+**HEADERS**
+
+action: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+SOAPAction: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+Accept-Encoding: gzip
+Content-Type: text/xml
+Timeout: 300
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+    <ses:Session TransactionStatusCode="Start" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" />
+    <add:MessageID xmlns:add="http://www.w3.org/2005/08/addressing">
+    </add:MessageID>
+    <add:Action xmlns:add="http://www.w3.org/2005/08/addressing">http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0</add:Action>
+    <add:To xmlns:add="http://www.w3.org/2005/08/addressing">https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS</add:To>
+    <link:TransactionFlowLink xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1">
+      <link:Consumer>
+        <link:UniqueID>
+        </link:UniqueID>
+      </link:Consumer>
+    </link:TransactionFlowLink>
+    <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <oas:UsernameToken xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" oas1:Id="UsernameToken-1">
+        <oas:Username>WSINSIVR</oas:Username>
+        <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+        </oas:Nonce>
+        <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+        </oas:Password>
+        <oas1:Created>
+        </oas1:Created>
+      </oas:UsernameToken>
+    </oas:Security>
+    <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+      <UserID POS_Type="1" PseudoCityCode="LONU128IL" AgentSign="SU" RequestorType="U" />
+    </AMA_SecurityHostedUser>
+  </soap:Header>
+  <soap:Body>
+    <OTA_HotelAvailRQ RateRangeOnly="true" RateDetailsInd="true" Version="4" EchoToken="MultiSingle" AvailRatesOnly="true" SummaryOnly="true" SortOrder="PA" SearchCacheLevel="Live">
+      <AvailRequestSegments xmlns="http://www.opentravel.org/OTA/2003/05">
+        <AvailRequestSegment InfoSource="Distribution">
+          <HotelSearchCriteria AvailableOnlyIndicator="true">
+            <Criterion ExactMatch="true">
+              <HotelRef HotelCode="102245" HotelCityCode="MAD_12" />
+              <StayDateRange End="2021-09-06" Start="2021-09-01" />
+              <RoomStayCandidates>
+                <RoomStayCandidate RoomID="1" Quantity="1">
+                  <GuestCounts>
+                    <GuestCount AgeQualifyingCode="10" Count="2" />
+                  </GuestCounts>
+                </RoomStayCandidate>
+              </RoomStayCandidates>
+            </Criterion>
+          </HotelSearchCriteria>
+        </AvailRequestSegment>
+      </AvailRequestSegments>
+    </OTA_HotelAvailRQ>
+  </soap:Body>
+</soap:Envelope>
+
+URL: https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS
+
+**HEADERS**
+
+action: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+SOAPAction: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+Accept-Encoding: gzip
+Content-Type: text/xml
+Timeout: 300
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+    <ses:Session TransactionStatusCode="Start" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" />
+    <add:MessageID xmlns:add="http://www.w3.org/2005/08/addressing">
+    </add:MessageID>
+    <add:Action xmlns:add="http://www.w3.org/2005/08/addressing">http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0</add:Action>
+    <add:To xmlns:add="http://www.w3.org/2005/08/addressing">https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS</add:To>
+    <link:TransactionFlowLink xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1">
+      <link:Consumer>
+        <link:UniqueID>
+        </link:UniqueID>
+      </link:Consumer>
+    </link:TransactionFlowLink>
+    <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <oas:UsernameToken xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" oas1:Id="UsernameToken-1">
+        <oas:Username>WSINSIVR</oas:Username>
+        <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+        </oas:Nonce>
+        <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+        </oas:Password>
+        <oas1:Created>
+        </oas1:Created>
+      </oas:UsernameToken>
+    </oas:Security>
+    <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+      <UserID POS_Type="1" PseudoCityCode="LONU128IL" AgentSign="SU" RequestorType="U" />
+    </AMA_SecurityHostedUser>
+  </soap:Header>
+  <soap:Body>
+    <OTA_HotelAvailRQ RateRangeOnly="true" RateDetailsInd="true" Version="4" EchoToken="MultiSingle" AvailRatesOnly="true" SummaryOnly="true" SortOrder="PA" SearchCacheLevel="Live">
+      <AvailRequestSegments xmlns="http://www.opentravel.org/OTA/2003/05">
+        <AvailRequestSegment InfoSource="Distribution">
+          <HotelSearchCriteria AvailableOnlyIndicator="true">
+            <Criterion ExactMatch="true">
+              <HotelRef HotelCode="102245" HotelCityCode="MAD_12" />
+              <StayDateRange End="2021-09-06" Start="2021-09-01" />
+              <RoomStayCandidates>
+                <RoomStayCandidate RoomID="1" Quantity="1">
+                  <GuestCounts>
+                    <GuestCount AgeQualifyingCode="10" Count="2" />
+                  </GuestCounts>
+                </RoomStayCandidate>
+              </RoomStayCandidates>
+            </Criterion>
+          </HotelSearchCriteria>
+        </AvailRequestSegment>
+      </AvailRequestSegments>
+    </OTA_HotelAvailRQ>
+  </soap:Body>
+</soap:Envelope>
+
+URL: https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS
+
+**HEADERS**
+
+action: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+SOAPAction: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+Accept-Encoding: gzip
+Content-Type: text/xml
+Timeout: 300
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+    <ses:Session TransactionStatusCode="Start" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" />
+    <add:MessageID xmlns:add="http://www.w3.org/2005/08/addressing">
+    </add:MessageID>
+    <add:Action xmlns:add="http://www.w3.org/2005/08/addressing">http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0</add:Action>
+    <add:To xmlns:add="http://www.w3.org/2005/08/addressing">https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS</add:To>
+    <link:TransactionFlowLink xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1">
+      <link:Consumer>
+        <link:UniqueID>
+        </link:UniqueID>
+      </link:Consumer>
+    </link:TransactionFlowLink>
+    <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <oas:UsernameToken xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" oas1:Id="UsernameToken-1">
+        <oas:Username>WSINSIVR</oas:Username>
+        <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+        </oas:Nonce>
+        <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+        </oas:Password>
+        <oas1:Created>
+        </oas1:Created>
+      </oas:UsernameToken>
+    </oas:Security>
+    <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+      <UserID POS_Type="1" PseudoCityCode="LONU128IL" AgentSign="SU" RequestorType="U" />
+    </AMA_SecurityHostedUser>
+  </soap:Header>
+  <soap:Body>
+    <OTA_HotelAvailRQ RateRangeOnly="true" RateDetailsInd="true" Version="4" EchoToken="MultiSingle" AvailRatesOnly="true" SummaryOnly="true" SortOrder="PA" SearchCacheLevel="Live">
+      <AvailRequestSegments xmlns="http://www.opentravel.org/OTA/2003/05">
+        <AvailRequestSegment InfoSource="Distribution">
+          <HotelSearchCriteria AvailableOnlyIndicator="true">
+            <Criterion ExactMatch="true">
+              <HotelRef HotelCode="102245" HotelCityCode="MAD_12" />
+              <StayDateRange End="2021-09-06" Start="2021-09-01" />
+              <RoomStayCandidates>
+                <RoomStayCandidate RoomID="1" Quantity="1">
+                  <GuestCounts>
+                    <GuestCount AgeQualifyingCode="10" Count="1" />
+                  </GuestCounts>
+                </RoomStayCandidate>
+              </RoomStayCandidates>
+            </Criterion>
+          </HotelSearchCriteria>
+        </AvailRequestSegment>
+      </AvailRequestSegments>
+    </OTA_HotelAvailRQ>
+  </soap:Body>
+</soap:Envelope>
+
+URL: https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS
+
+**HEADERS**
+
+action: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+SOAPAction: http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0
+Accept-Encoding: gzip
+Content-Type: text/xml
+Timeout: 300
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3">
+    <ses:Session TransactionStatusCode="Start" xmlns:ses="http://xml.amadeus.com/2010/06/Session_v3" />
+    <add:MessageID xmlns:add="http://www.w3.org/2005/08/addressing">
+    </add:MessageID>
+    <add:Action xmlns:add="http://www.w3.org/2005/08/addressing">http://webservices.amadeus.com/Hotel_MultiSingleAvailability_10.0</add:Action>
+    <add:To xmlns:add="http://www.w3.org/2005/08/addressing">https://nodeD1.test.webservices.amadeus.com/1ASIWIVRINS</add:To>
+    <link:TransactionFlowLink xmlns:link="http://wsdl.amadeus.com/2010/06/ws/Link_v1">
+      <link:Consumer>
+        <link:UniqueID>
+        </link:UniqueID>
+      </link:Consumer>
+    </link:TransactionFlowLink>
+    <oas:Security xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <oas:UsernameToken xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" oas1:Id="UsernameToken-1">
+        <oas:Username>WSINSIVR</oas:Username>
+        <oas:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">
+        </oas:Nonce>
+        <oas:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest">
+        </oas:Password>
+        <oas1:Created>
+        </oas1:Created>
+      </oas:UsernameToken>
+    </oas:Security>
+    <AMA_SecurityHostedUser xmlns="http://xml.amadeus.com/2010/06/Security_v1">
+      <UserID POS_Type="1" PseudoCityCode="LONU128IL" AgentSign="SU" RequestorType="U" />
+    </AMA_SecurityHostedUser>
+  </soap:Header>
+  <soap:Body>
+    <OTA_HotelAvailRQ RateRangeOnly="true" RateDetailsInd="true" Version="4" EchoToken="MultiSingle" AvailRatesOnly="true" SummaryOnly="true" SortOrder="PA" SearchCacheLevel="Live">
+      <AvailRequestSegments xmlns="http://www.opentravel.org/OTA/2003/05">
+        <AvailRequestSegment InfoSource="Distribution">
+          <HotelSearchCriteria AvailableOnlyIndicator="true">
+            <Criterion ExactMatch="true">
+              <HotelRef HotelCode="102245" HotelCityCode="MAD_12" />
+              <StayDateRange End="2021-09-06" Start="2021-09-01" />
+              <RoomStayCandidates>
+                <RoomStayCandidate RoomID="1" Quantity="1">
+                  <GuestCounts>
+                    <GuestCount AgeQualifyingCode="10" Count="2" />
+                  </GuestCounts>
+                </RoomStayCandidate>
+              </RoomStayCandidates>
+            </Criterion>
+          </HotelSearchCriteria>
+        </AvailRequestSegment>
+      </AvailRequestSegments>
+    </OTA_HotelAvailRQ>
+  </soap:Body>
+</soap:Envelope>

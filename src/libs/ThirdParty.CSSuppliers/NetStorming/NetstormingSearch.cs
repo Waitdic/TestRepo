@@ -8,7 +8,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using ThirdParty;
     using ThirdParty.CSSuppliers.Netstorming.Models;
@@ -73,14 +73,14 @@
                 {
                     string nationality = await _support.TPNationalityLookupAsync(source, searchDetails.NationalityCode);
                     var xmlRequest = BuildRequest(searchDetails, roomCombinationRequest, resortCode,
-                        searchDetails.PropertyArrivalDate, searchDetails.PropertyDepartureDate,
+                        searchDetails.ArrivalDate, searchDetails.DepartureDate,
                         _settings.Actor(searchDetails, source), _settings.User(searchDetails, source),
                         _settings.Password(searchDetails, source), _settings.Version(searchDetails, source), nationality);
 
                     var request = new Request
                     {
                         EndPoint = _settings.GenericURL(searchDetails, source),
-                        Method = eRequestMethod.POST,
+                        Method = RequestMethod.POST,
                     };
                     request.SetRequest(xmlRequest);
                     requests.Add(request);

@@ -5,19 +5,18 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text;
-    using System.Xml;
+    using System.Threading.Tasks;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Lookups;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.CSSuppliers.iVectorConnect.Models.Common;
     using ThirdParty.CSSuppliers.iVectorConnect.Models;
+    using ThirdParty.CSSuppliers.iVectorConnect.Models.Common;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Constants;
-    using System.Threading.Tasks;
 
     public class iVectorConnect : IThirdParty, IMultiSource
     {
@@ -49,64 +48,46 @@
 
         public bool SupportsBookingSearch => false;
 
-        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-        {
-            return true;
-        }
+        public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source) => true;
 
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
-        {
-            return 0;
-        }
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source) => 0;
 
-        public bool RequiresVCard(VirtualCardInfo info, string source)
-        {
-            return false;
-        }
+        public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            Request? webRequest = null;
+            var webRequest = new Request();
             bool success = false;
 
             try
             {
-                // 1. Build the XML
-                var requestXml = BuildPreBookXml(propertyDetails);
+                var request = BuildPreBookRequest(propertyDetails);
 
-                // 2.Send The Request
                 webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                    Method = eRequestMethod.POST,
-                    ContentType = ContentTypes.Application_x_www_form_urlencoded,
+                    Method = RequestMethod.POST,
+                    ContentType = ContentTypes.Application_xml,
                     CreateLog = true,
                     Source = propertyDetails.Source,
                     LogFileName = "Pre-Book"
                 };
 
-                webRequest.SetRequest(requestXml);
+                webRequest.SetRequest(_serializer.Serialize(request));
                 await webRequest.Send(_httpClient, _logger);
 
-                var responseXml = webRequest.ResponseXML;
-                var response = _serializer.DeSerialize<PropertyPreBookResponse>(responseXml);
+                var response = _serializer.DeSerialize<PropertyPreBookResponse>(webRequest.ResponseXML);
 
-                // Add Warnings If Any
                 ThrowWhenHasExceptions(response.ReturnStatus.Exceptions);
 
-                // 2b. Check the Response Was OK
                 if (response.ReturnStatus.Success)
                 {
-                    // 3.ProcessResults
-
-                    // 3a. Properties
                     success = true;
 
-                    // booking token
                     propertyDetails.TPRef1 = response.BookingToken;
 
-                    decimal localCost = response.TotalPrice;
-                    decimal roomCost = localCost / propertyDetails.Rooms.Count;
+                    propertyDetails.LocalCost = response.TotalPrice;
+                    decimal roomCost = propertyDetails.LocalCost / propertyDetails.Rooms.Count;
 
                     foreach (var roomDetails in propertyDetails.Rooms.Where(o => roomCost != o.LocalCost))
                     {
@@ -131,16 +112,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (webRequest?.RequestXML != null && !string.IsNullOrEmpty(webRequest.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Prebook Request", webRequest.RequestXML);
-                }
-
-                if (webRequest?.ResponseXML != null && !string.IsNullOrEmpty(webRequest.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Prebook Response", webRequest.ResponseXML);
-                }
+                propertyDetails.AddLog("Prebook", webRequest);
             }
 
             return success;
@@ -149,29 +121,28 @@
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference = "failed";
-            Request? request = null;
+            var webRequest = new Request();
 
             try
             {
-                var bookRequestXml = await BuildBookXmlAsync(propertyDetails);
+                var request = await BuildBookRequestAsync(propertyDetails);
 
-                request = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     Source = propertyDetails.Source,
                     LogFileName = "Book",
                     CreateLog = true
                 };
 
-                request.SetRequest(bookRequestXml);
-                await request.Send(_httpClient, _logger);
+                webRequest.SetRequest(_serializer.Serialize(request));
+                await webRequest.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<BasketBookResponse>(request.ResponseXML);
+                var response = _serializer.DeSerialize<BasketBookResponse>(webRequest.ResponseXML);
                 var returnStatus = response.PropertyBookings.PropertyBookResponse.ReturnStatus;
 
-                // Add Warnings If Any
                 ThrowWhenHasExceptions(returnStatus.Exceptions);
 
                 if (returnStatus.Success)
@@ -185,15 +156,7 @@
             }
             finally
             {
-                if (request?.RequestXML != null && !string.IsNullOrEmpty(request.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Book Request", request.RequestXML);
-                }
-
-                if (request?.ResponseXML != null && !string.IsNullOrEmpty(request.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Book Response", request.ResponseXML);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -201,9 +164,14 @@
 
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            Request? request = null;
-            Request? preCancelRequest = null;
-            var response = new ThirdPartyCancellationResponse { Success = true };
+            var request = new Request();
+            var preCancelRequest = new Request();
+            var response = new ThirdPartyCancellationResponse
+            {
+                Success = true,
+                TPCancellationReference = propertyDetails.SourceReference,
+                Amount = propertyDetails.LocalCost,
+            };
 
             try
             {
@@ -218,14 +186,14 @@
                 preCancelRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
                     Source = propertyDetails.Source,
                     LogFileName = "Pre-Cancel",
                 };
 
-                preCancelRequest.SetRequest(preCancelWebRequest.ToString());
+                preCancelRequest.SetRequest(_serializer.Serialize(preCancelWebRequest));
                 await preCancelRequest.Send(_httpClient, _logger);
 
                 // 3b. Process the Response
@@ -245,14 +213,14 @@
                 request = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
                     Source = propertyDetails.Source,
                     LogFileName = "Cancellation",
                 };
 
-                request.SetRequest(cancelRequest.ToString());
+                request.SetRequest(_serializer.Serialize(cancelRequest));
                 await request.Send(_httpClient, _logger);
 
                 // 3. Process Response
@@ -273,25 +241,8 @@
             }
             finally
             {
-                if (preCancelRequest?.RequestXML != null && !string.IsNullOrEmpty(preCancelRequest.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC 2nd PreCancel Request2", preCancelRequest.RequestXML);
-                }
-
-                if (preCancelRequest?.ResponseXML != null && !string.IsNullOrEmpty(preCancelRequest.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC 2nd PreCancel Response", preCancelRequest.ResponseXML);
-                }
-
-                if (request?.RequestXML != null && !string.IsNullOrEmpty(request.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Cancel Request", request.RequestXML);
-                }
-
-                if (request?.ResponseXML != null && !string.IsNullOrEmpty(request.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC Cancel Response", request.ResponseXML);
-                }
+                propertyDetails.AddLog("PreCancel", preCancelRequest);
+                propertyDetails.AddLog("Cancel", request);
             }
 
             return response;
@@ -300,7 +251,7 @@
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationFeeResult = new ThirdPartyCancellationFeeResult();
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -317,7 +268,7 @@
                 webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
                     Source = propertyDetails.Source,
@@ -351,16 +302,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (webRequest?.RequestXML != null && !string.IsNullOrEmpty(webRequest.RequestXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC 1st PreCancel Request2", webRequest.RequestXML);
-                }
-
-                if (webRequest?.ResponseXML != null && !string.IsNullOrEmpty(webRequest.ResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "IVC 1st PreCancel Response", webRequest.ResponseXML);
-                }
+                propertyDetails.AddLog("PreCancel", webRequest);
             }
 
             return thirdPartyCancellationFeeResult;
@@ -392,15 +334,15 @@
                 return;
 
             var sbWarning = new StringBuilder();
-            foreach (string sWarning in exceptions)
+            foreach (string warning in exceptions)
             {
-                sbWarning.AppendLine(Helper.RemoveLoginDetailsFromWarnings(sWarning));
+                sbWarning.AppendLine(Helper.RemoveLoginDetailsFromWarnings(warning));
             }
 
             throw new Exception(sbWarning.ToString());
         }
 
-        private XmlDocument BuildPreBookXml(PropertyDetails propertyDetails)
+        private PropertyPreBookRequest BuildPreBookRequest(PropertyDetails propertyDetails)
         {
             string[] thirdPartyReference = propertyDetails.Rooms[0].ThirdPartyReference.Split('|');
 
@@ -420,13 +362,13 @@
                              Infants = oRoom.Infants,
                              ChildAges = oRoom.ChildAges.ToArray()
                          }
-                     }).ToArray()
+                     }).ToList(),
             };
 
-            return _serializer.Serialize(request);
+            return request;
         }
 
-        private async Task<XmlDocument> BuildBookXmlAsync(PropertyDetails propertyDetails)
+        private async Task<BasketBookRequest> BuildBookRequestAsync(PropertyDetails propertyDetails)
         {
             var bookRequest = new BasketBookRequest
             {
@@ -456,7 +398,11 @@
 
             if (_settings.UseAgentDetails(propertyDetails, propertyDetails.Source))
             {
-                var address = await new Address().SetupAddressAsync(_settings.AgentAddress(propertyDetails, propertyDetails.Source), propertyDetails.Source, _support);
+                var address = await Address.SetupAddressAsync(
+                    _settings.AgentAddress(propertyDetails, propertyDetails.Source),
+                    propertyDetails.Source,
+                    propertyDetails.SubscriptionID,
+                    _support);
                 bookRequest.LeadCustomer.CustomerAddress1 = address.Line1;
                 bookRequest.LeadCustomer.CustomerAddress2 = address.Line2;
                 bookRequest.LeadCustomer.CustomerTownCity = address.City;
@@ -472,14 +418,17 @@
                 bookRequest.LeadCustomer.CustomerTownCity = propertyDetails.LeadGuestTownCity;
                 bookRequest.LeadCustomer.CustomerCounty = propertyDetails.LeadGuestCounty;
                 bookRequest.LeadCustomer.CustomerPostcode = propertyDetails.LeadGuestPostcode;
-                bookRequest.LeadCustomer.CustomerBookingCountryID = propertyDetails.LeadGuestBookingCountryID;
+                bookRequest.LeadCustomer.CustomerBookingCountryID = (await _support.TPCountryCodeLookupAsync(
+                    propertyDetails.Source,
+                    propertyDetails.LeadGuestCountryCode,
+                    propertyDetails.SubscriptionID)).ToSafeInt();
                 bookRequest.LeadCustomer.CustomerEmail = propertyDetails.LeadGuestEmail;
             }
 
-            return _serializer.Serialize(bookRequest);
+            return bookRequest;
         }
 
-        private static GuestDetail[] AddGuestDetailsToRequest(PropertyDetails propertyDetails)
+        private static List<GuestDetail> AddGuestDetailsToRequest(PropertyDetails propertyDetails)
         {
             var guestDetails = new List<GuestDetail>();
             int guestId = 1;
@@ -500,7 +449,7 @@
                 guestId++;
             }
 
-            return guestDetails.ToArray();
+            return guestDetails;
         }
 
         private static RoomBooking[] AddRoomBookingsToRequest(PropertyDetails propertyDetails)
@@ -545,18 +494,19 @@
 
             public int BookingCountryID { get; set; }
 
-            public async Task<Address> SetupAddressAsync(string config, string source, ITPSupport support)
+            public static async Task<Address> SetupAddressAsync(string config, string source, int subscriptionId, ITPSupport support)
             {
                 string[] items = config.Split('|');
 
-                Line1 = items[0];
-                Line2 = items[1];
-                City = items[2];
-                County = items[3];
-                PostCode = items[4];
-                BookingCountryID = await support.TPBookingCountryCodeLookupAsync(source, items[5]);
-
-                return this;
+                return new Address()
+                {
+                    Line1 = items[0],
+                    Line2 = items[1],
+                    City = items[2],
+                    County = items[3],
+                    PostCode = items[4],
+                    BookingCountryID = (await support.TPCountryCodeLookupAsync(source, items[5], subscriptionId)).ToSafeInt(),
+                };
             }
         }
 

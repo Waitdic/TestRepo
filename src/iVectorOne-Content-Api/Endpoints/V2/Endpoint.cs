@@ -13,7 +13,7 @@
         {
             _ = endpoints
                 .MapGet(
-                    "/content/property/list",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/list",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromQuery] DateTime? lastModified, [FromQuery] string? suppliers)
                         =>
                         {
@@ -33,7 +33,7 @@
 
             _ = endpoints
                 .MapGet(
-                    "/content/property",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromQuery] string propertyids)
                         =>
                         {

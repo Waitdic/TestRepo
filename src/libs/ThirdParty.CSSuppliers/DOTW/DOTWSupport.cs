@@ -11,7 +11,7 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
@@ -197,7 +197,7 @@
                 var webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     Headers = headers,
                     LogFileName = "GetCurrencyCache",

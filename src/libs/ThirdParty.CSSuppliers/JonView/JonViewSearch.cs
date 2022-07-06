@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
@@ -78,7 +78,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails) + url,
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = Source,
                     ExtraInfo = searchDetails,
                     UseGZip = true
@@ -140,8 +140,8 @@
 
             sb.AppendFormat("<message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode>" + "<searchtype>CITY</searchtype>");
             sb.AppendFormat("<citycode>{0}</citycode>", cityCode);
-            sb.AppendFormat("<startdate>{0}</startdate>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
-            sb.AppendFormat("<duration>{0}</duration>", searchDetails.PropertyDuration);
+            sb.AppendFormat("<startdate>{0}</startdate>", searchDetails.ArrivalDate.ToString("dd-MMM-yyyy"));
+            sb.AppendFormat("<duration>{0}</duration>", searchDetails.Duration);
             sb.AppendFormat("<status>AVAILABLE</status>");
             sb.AppendFormat("<displayname>Y</displayname>");
             sb.AppendFormat("<displaynamedetails>Y</displaynamedetails>");

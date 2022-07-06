@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Xml.Serialization;
     using Common;
 
@@ -15,7 +16,7 @@
 
         [XmlArray("GuestDetails")]
         [XmlArrayItem("GuestDetail")]
-        public GuestDetail[] GuestDetails { get; set; } = Array.Empty<GuestDetail>();
+        public List<GuestDetail> GuestDetails { get; set; } = new();
 
         [XmlElement("PropertyBookings")]
         public PropertyBookings PropertyBookings { get; set; } = new();

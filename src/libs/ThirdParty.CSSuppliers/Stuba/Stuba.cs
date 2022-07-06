@@ -8,7 +8,7 @@
     using System.Xml.Linq;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -140,23 +140,21 @@
             var request = new Request
             {
                 EndPoint = _settings.GenericURL(propertyDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = ThirdParties.STUBA,
                 LogFileName = requestType,
                 CreateLog = true,
                 UseGZip = true
             };
             request.SetRequest(xml);
-            await request.Send(_httpClient, _logger);
 
-            if (!string.IsNullOrEmpty(request.RequestLog))
+            try
             {
-                propertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + requestType + " Request", request.RequestLog);
+                await request.Send(_httpClient, _logger);
             }
-
-            if (!string.IsNullOrEmpty(request.ResponseLog))
+            finally
             {
-                propertyDetails.Logs.AddNew(ThirdParties.STUBA, "Stuba " + requestType + " Response", request.ResponseLog);
+                propertyDetails.AddLog(requestType, request);
             }
 
             return request.ResponseXML;

@@ -8,7 +8,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -107,7 +107,7 @@
             var request = new Request
             {
                 EndPoint = _settings.GenericURL(propertyDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = ThirdParties.DOTW,
                 Headers = headers,
                 LogFileName = "Prebook Room",
@@ -160,8 +160,7 @@
             }
 
             // store the request and response xml on the property booking
-            propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Availability Request", requestString);
-            propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Availability Response", response);
+            propertyDetails.AddLog("Availability", request);
         }
 
         private async Task BlockRoomsAsync(PropertyDetails propertyDetails)
@@ -179,7 +178,7 @@
             var request = new Request
             {
                 EndPoint = _settings.GenericURL(propertyDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = ThirdParties.DOTW,
                 Headers = oHeaders,
                 LogFileName = "Prebook Block Room",
@@ -269,8 +268,7 @@
             propertyDetails.Cancellations.AddRange(GetCancellationPolicy(propertyDetails, response));
 
             // store the request and response xml on the property booking
-            propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Pre-Book Request", requestString);
-            propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Pre-Book Response", response);
+            propertyDetails.AddLog("Pre-Book", request);
         }
 
         #endregion
@@ -284,6 +282,7 @@
             string returnReference = string.Empty;
             var response = new XmlDocument();
             var request = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -297,10 +296,10 @@
                 }
 
                 // Get the response 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     Headers = headers,
                     LogFileName = "Book",
@@ -363,16 +362,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(request.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Book Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Book Response", response);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return returnReference;
@@ -495,6 +485,8 @@
             var response = new XmlDocument();
             string canxRequest = string.Empty;
             var canxResponse = new XmlDocument();
+            var preCancelWebRequest = new Request();
+            var cancellationWebRequest = new Request();
 
             try
             {
@@ -504,19 +496,19 @@
 
                 // Get the response
                 // todo - move this to precancel?
-                var webRequest = new Request
+                preCancelWebRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Precancel",
                     ContentType = ContentTypes.Text_xml,
                     CreateLog = true
                 };
-                webRequest.SetRequest(request);
-                await webRequest.Send(_httpClient, _logger);
+                preCancelWebRequest.SetRequest(request);
+                await preCancelWebRequest.Send(_httpClient, _logger);
 
-                response = webRequest.ResponseXML;
+                response = preCancelWebRequest.ResponseXML;
 
                 // check according to documentation that there is a success node with the value TRUE in it
                 var successNode = response.SelectSingleNode("result/successful");
@@ -534,10 +526,10 @@
                 canxRequest = this.BuildCancellationRequest(propertyDetails.SourceSecondaryReference, propertyDetails, cancellationDetails);
 
                 // Get the response 
-                var cancellationWebRequest = new Request
+                cancellationWebRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Cancel",
                     ContentType = ContentTypes.Text_xml,
@@ -576,26 +568,8 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(request))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW PreCancellation Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW PreCancellation Response", response);
-                }
-
-                if (!string.IsNullOrEmpty(canxRequest))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Cancellation Request", canxRequest);
-                }
-
-                if (!string.IsNullOrEmpty(canxResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "DOTW Cancellation Response", canxResponse);
-                }
+                propertyDetails.AddLog("PreCancellation", preCancelWebRequest);
+                propertyDetails.AddLog("Cancellation", cancellationWebRequest);
             }
 
             return thirdPartyCancellationResponse;
@@ -656,6 +630,7 @@
             var result = new ThirdPartyCancellationFeeResult();
             var request = new XmlDocument();
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -665,10 +640,10 @@
                 request.LoadXml(requestString);
 
                 // Get the response 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.DOTW,
                     LogFileName = "Cancellation Cost",
                     ContentType = ContentTypes.Text_xml,
@@ -710,15 +685,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(request.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "Get Cancellation Cost Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.DOTW, "Get Cancellation Cost Response", response);
-                }
+                propertyDetails.AddLog("Cancellation Cost", webRequest);
             }
 
             return result;

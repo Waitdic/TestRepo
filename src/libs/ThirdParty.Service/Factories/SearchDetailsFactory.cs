@@ -21,9 +21,8 @@
             var searchDetails = new SearchDetails()
             {
                 Duration = searchRequest.Duration,
-                PropertyReferenceIDs = searchRequest.Properties,
-                Rooms = searchRequest.RoomRequests.Count,
-                NationalityCode = searchRequest.NaionalityID,
+                NationalityCode = searchRequest.NationalityID,
+                SubscriptionID = user.SubscriptionID,
                 Settings = user.TPSettings,
                 ThirdPartyConfigurations = user.Configurations,
                 LoggingType = log ? "All" : "None",

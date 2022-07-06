@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Newtonsoft.Json;
     using ThirdParty.Search.Models;
@@ -104,7 +104,7 @@
                 var request = new Request()
                 {
                     EndPoint = _settings.SearchURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.HOTELBEDSV2,
                     ContentType = ContentTypes.Application_json,
                     Accept = "application/json",
@@ -149,10 +149,10 @@
 
         private List<TransformedResult> GetResultFromResponse(SearchDetails searchDetails, HotelBedsV2AvailabilityResponse response)
         {
-            List<TransformedResult> transformedResults = new List<TransformedResult>();
+            var transformedResults = new List<TransformedResult>();
             bool multiRoom = searchDetails.Rooms > 1;
 
-            Dictionary<int, string> occupancyDictionary = new Dictionary<int, string>();
+            var occupancyDictionary = new Dictionary<int, string>();
             int i = 1;
             foreach (var RoomDetail in searchDetails.RoomDetails)
             {
@@ -207,7 +207,7 @@
                                 }
                             }
 
-                            TransformedResult transformedResult = new TransformedResult()
+                            var transformedResult = new TransformedResult()
                             {
                                 RoomTypeCode = room.code,
                                 MealBasisCode = rate.boardCode,
@@ -270,11 +270,6 @@
             var occupancies = new List<HotelBedsV2AvailabilityRequest.Occupancy>();
 
             string countryCode = "";
-
-            if (searchDetails.LeadGuestBookingCountryID > 0)
-            {
-                countryCode = await _support.TPBookingCountryLookupAsync(Source, searchDetails.LeadGuestBookingCountryID);
-            }
 
             if (string.IsNullOrWhiteSpace(countryCode))
             {
@@ -348,15 +343,14 @@
                 }; ;
             }
 
-            var UseDestination = (!hotelIDList.Any()) && searchDetails.Radius <= 0;
-
             var boards = new HotelBedsV2AvailabilityRequest.Boards();
             if (searchDetails.MealBasisID > 0)
             {
                 boards.included = true;
-                List<string> mealBasisList = new List<string>();
-
-                mealBasisList.Add(await _support.TPMealBasisLookupAsync(Source, searchDetails.MealBasisID));
+                var mealBasisList = new List<string>
+                {
+                    await _support.TPMealBasisLookupAsync(Source, searchDetails.MealBasisID)
+                };
                 boards.board = mealBasisList.ToArray();
             }
 

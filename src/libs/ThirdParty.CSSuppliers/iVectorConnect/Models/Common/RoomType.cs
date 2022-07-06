@@ -1,5 +1,6 @@
 ﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models.Common
 {
+    using System.Collections.Generic;
     using System.Xml.Serialization;
 
     public class RoomType
@@ -21,5 +22,8 @@
         public decimal PayLocalTotal { get; set; }
         public bool NonRefundable { get; set; }
         public string SpecialOffer { get; set; } = string.Empty;
+        public SupplierDetails SupplierDetails { get; set; } = new();
+        public List<Adjustment> Adjustments { get; set; } = new();
+        public List<Cancellation> SupplierCancellations { get; set; } = new();
     }
 }

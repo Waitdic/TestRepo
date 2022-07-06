@@ -48,18 +48,15 @@
             this.referenceValidator = referenceValidator;
         }
 
-        /// <summary>Cancels the specified property booking</summary>
-        /// <param name="cancelRequest">The cancel request.</param>
-        /// <param name="user">The user.</param>
-        /// <returns>A cancellation response</returns>
-        public async Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest, Subscription user)
+        /// <inheritdoc/>
+        public async Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest)
         {
             Cancel.Response response = null!;
             var exceptionString = string.Empty;
 
             try
             {
-                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest, user);
+                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
                 this.referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
@@ -73,7 +70,7 @@
                 {
                     IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
                     propertyDetails.Source,
-                    user.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                    cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -88,24 +85,21 @@
             }
             finally
             {
-                await this.logRepository.LogCancelAsync(cancelRequest, response!, user, exceptionString);
+                await this.logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.User, exceptionString);
             }
 
             return response!;
         }
 
-        /// <summary>Cancels the specified property booking</summary>
-        /// <param name="cancelRequest">The cancel request.</param>
-        /// <param name="user">The user.</param>
-        /// <returns>A cancellation response</returns>
-        public async Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest, Subscription user)
+        /// <inheritdoc/>
+        public async Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest)
         {
             Precancel.Response response = null!;
             var exceptionString = string.Empty;
 
             try
             {
-                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest, user);
+                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
                 this.referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
@@ -119,7 +113,7 @@
                 {
                     IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
                     propertyDetails.Source,
-                    user.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                    cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {

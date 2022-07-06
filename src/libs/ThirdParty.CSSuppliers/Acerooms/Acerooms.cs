@@ -7,7 +7,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using Intuitive;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
@@ -17,7 +17,6 @@
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
 
     public class Acerooms : IThirdParty, ISingleSource
     {
@@ -80,7 +79,7 @@
                 AceroomsPrebookRequest aceroomsPrebookRequest = CreatePrebookRequest(propertyDetails);
                 string requestString = JsonConvert.SerializeObject(aceroomsPrebookRequest);
 
-                request = CreateWebRequest(ref propertyDetails, "PreBookRoom", "Prebook", eRequestMethod.POST, requestString);
+                request = CreateWebRequest(ref propertyDetails, "PreBookRoom", "Prebook", RequestMethod.POST, requestString);
                 await request.Send(_httpClient, _logger);
 
                 string responseString = request.ResponseString;
@@ -102,15 +101,7 @@
             }
             finally
             {
-                if (request.RequestString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms PreBook Request", request.RequestString);
-                }
-
-                if (request.ResponseString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms PreBook Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("PreBook", request);
             }
 
             return prebookSuccess;
@@ -130,7 +121,7 @@
                 var aceroomsBookRequest = CreateBookRequest(propertyDetails);
                 string requestString = JsonConvert.SerializeObject(aceroomsBookRequest);
 
-                webRequest = CreateWebRequest(ref propertyDetails, "ConfirmRoom", "Book", eRequestMethod.POST, requestString);
+                webRequest = CreateWebRequest(ref propertyDetails, "ConfirmRoom", "Book", RequestMethod.POST, requestString);
                 await webRequest.Send(_httpClient, _logger);
 
                 var response = JsonConvert.DeserializeObject<AceroomsBookResponse>(webRequest.ResponseString);
@@ -147,15 +138,7 @@
             }
             finally
             {
-                if (webRequest.RequestString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms Book Request", webRequest.RequestString);
-                }
-
-                if (!string.IsNullOrEmpty(webRequest.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms Book Response", webRequest.ResponseString);
-                }
+                propertyDetails.AddLog("PreBook", webRequest);
             }
 
             return reference;
@@ -190,6 +173,7 @@
             {
                 Success = true
             };
+            var webRequest = new Request();
 
             try
             {
@@ -198,7 +182,7 @@
                 // sent a cancel request for each room
                 foreach (var roomBookingID in roomBookingIDs)
                 {
-                    var webRequest = CreateWebRequest(ref propertyDetails, "CancelRoom/", "Cancel", eRequestMethod.GET);
+                    webRequest = CreateWebRequest(ref propertyDetails, "CancelRoom/", "Cancel", RequestMethod.GET);
                     var responseSucess = await CancelRoomBookingAsync(roomBookingID, cancellationResponse, webRequest, cancelReferences, propertyDetails);
 
                     if (!responseSucess)
@@ -222,6 +206,10 @@
                 cancellationResponse.TPCancellationReference = "failed";
 
                 propertyDetails.Warnings.AddNew("Cancellation Exception", exception.ToString());
+            }
+            finally
+            {
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return cancellationResponse;
@@ -405,11 +393,6 @@
             webRequest.EndPoint += roomBookingID;
             await webRequest.Send(_httpClient, _logger);
 
-            if (webRequest.ResponseString != "")
-            {
-                propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms Cancellation Response ", $"The room with Id:{roomBookingID} wasn't cancelled \n" + webRequest.ResponseString);
-            }
-
             var response = JsonConvert.DeserializeObject<AceroomsCancellationResponse>(webRequest.ResponseString)!;
             cancellationResponse.Amount += response.Booking.CancellationAmount;
             cancelReferences.Add(response.AuditData.CancelRef);
@@ -429,29 +412,24 @@
             ref PropertyDetails propertyDetails,
             string url,
             string logFileName,
-            eRequestMethod method,
+            RequestMethod method,
             string requestString = "")
         {
-            IThirdPartyAttributeSearch searchDetails = new SearchDetails
-            {
-                ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
-            };
-
             var webRequest = new Request
             {
                 Source = ThirdParties.ACEROOMS,
                 Method = method,
                 UseGZip = true,
                 ContentType = ContentTypes.Application_json,
-                CreateLog = propertyDetails.CreateLogs,
+                CreateLog = true,
                 LogFileName = logFileName,
                 Accept = "application/json",
-                EndPoint = _settings.GenericURL(searchDetails) + url
+                EndPoint = _settings.GenericURL(propertyDetails) + url
             };
 
             webRequest.SetRequest(requestString);
-            webRequest.Headers.AddNew("APIKey", _settings.APIKey(searchDetails));
-            webRequest.Headers.AddNew("Signature", _settings.Signature(searchDetails));
+            webRequest.Headers.AddNew("APIKey", _settings.APIKey(propertyDetails));
+            webRequest.Headers.AddNew("Signature", _settings.Signature(propertyDetails));
 
             return webRequest;
         }

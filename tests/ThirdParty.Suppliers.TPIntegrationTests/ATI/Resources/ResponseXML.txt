@@ -1,0 +1,161 @@
+﻿ <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://www.opentravel.org/OTA/2003/05">
+    <soap:Header/>
+    <soap:Body>
+        <ns1:OTA_HotelAvailRS>
+            <ns1:RoomStays>
+                <ns1:RoomStay>
+                    <ns1:BasicPropertyInfo HotelCode="12" />
+                    <ns1:RoomTypes>
+                        <ns1:RoomType RoomTypeCode="12-14">
+                            <ns1:RoomDescription>
+                                <ns1:Text>Room Description 1</ns1:Text>
+                            </ns1:RoomDescription>
+                            <ns1:RoomTypeDescription>
+                                <ns1:Text>Room Type Description 1</ns1:Text>
+                            </ns1:RoomTypeDescription>
+                            <ns1:PropertyRoomBookings>
+                                <ns1:PropertyRoomBooking ID="1">
+                                </ns1:PropertyRoomBooking>
+                            </ns1:PropertyRoomBookings>
+                        </ns1:RoomType>
+                    </ns1:RoomTypes>
+                    <ns1:GuestCounts>
+                        <ns1:GuestCount ResGuestRPH="1" />
+                    </ns1:GuestCounts>
+                    <ns1:RoomRates>
+                        <ns1:RoomRate RatePlanCode="Available">
+                            <ns1:Rates>
+                                <ns1:Rate EffectiveDate="4">
+                                    <ns1:Base AmountAfterTax="300" />
+                                    <ns1:Discount Discount="2">
+                                        <ns1:Description>Discount Description 1</ns1:Description>
+                                    </ns1:Discount>
+                                </ns1:Rate>
+                            </ns1:Rates>
+                        </ns1:RoomRate>
+                    </ns1:RoomRates>
+                    <ns1:CancelPenalties>
+                        <ns1:CancelPenalty>
+                            <ns1:Deadline AbsoluteDeadline="This reservation can be cancelled." />
+                        </ns1:CancelPenalty>
+                    </ns1:CancelPenalties>
+                    <ns1:Total CurrencyCode="GBP" />
+                </ns1:RoomStay>
+                <ns1:RoomStay>
+                    <ns1:BasicPropertyInfo HotelCode="12" />
+                    <ns1:RoomTypes>
+                        <ns1:RoomType RoomTypeCode="12-14">
+                            <ns1:RoomDescription>
+                                <ns1:Text>Room Description 2</ns1:Text>
+                            </ns1:RoomDescription>
+                            <ns1:RoomTypeDescription>
+                                <ns1:Text>Room Type Description 2</ns1:Text>
+                            </ns1:RoomTypeDescription>
+                            <ns1:PropertyRoomBookings>
+                                <ns1:PropertyRoomBooking ID="1">
+                                </ns1:PropertyRoomBooking>
+                            </ns1:PropertyRoomBookings>
+                        </ns1:RoomType>
+                    </ns1:RoomTypes>
+                    <ns1:GuestCounts>
+                        <ns1:GuestCount ResGuestRPH="1" />
+                    </ns1:GuestCounts>
+                    <ns1:RoomRates>
+                        <ns1:RoomRate RatePlanCode="Available">
+                            <ns1:Rates>
+                                <ns1:Rate EffectiveDate="5">
+                                    <ns1:Base AmountAfterTax="200" />
+                                    <ns1:Discount Discount="6">
+                                        <ns1:Description>Discount Description 2</ns1:Description>
+                                    </ns1:Discount>
+                                </ns1:Rate>
+                            </ns1:Rates>
+                        </ns1:RoomRate>
+                    </ns1:RoomRates>
+                    <ns1:CancelPenalties>
+                        <ns1:CancelPenalty>
+                            <ns1:Deadline AbsoluteDeadline="This reservation can be cancelled." />
+                        </ns1:CancelPenalty>
+                    </ns1:CancelPenalties>
+                    <ns1:Total CurrencyCode="GBP" />
+                </ns1:RoomStay>
+                <ns1:RoomStay>
+                    <ns1:BasicPropertyInfo HotelCode="13" />
+                    <ns1:RoomTypes>
+                        <ns1:RoomType RoomTypeCode="13-15">
+                            <ns1:RoomDescription>
+                                <ns1:Text>Room Description 3</ns1:Text>
+                            </ns1:RoomDescription>
+                            <ns1:RoomTypeDescription>
+                                <ns1:Text>Room Type Description 3</ns1:Text>
+                            </ns1:RoomTypeDescription>
+                            <ns1:PropertyRoomBookings>
+                                <ns1:PropertyRoomBooking ID="1">
+                                </ns1:PropertyRoomBooking>
+                            </ns1:PropertyRoomBookings>
+                        </ns1:RoomType>
+                    </ns1:RoomTypes>
+                    <ns1:GuestCounts>
+                        <ns1:GuestCount ResGuestRPH="1" />
+                    </ns1:GuestCounts>
+                    <ns1:RoomRates>
+                        <ns1:RoomRate RatePlanCode="Available">
+                            <ns1:Rates>
+                                <ns1:Rate EffectiveDate="5">
+                                    <ns1:Base AmountAfterTax="200" />
+                                    <ns1:Discount Discount="6">
+                                        <ns1:Description>Discount Description 3</ns1:Description>
+                                    </ns1:Discount>
+                                </ns1:Rate>
+                            </ns1:Rates>
+                        </ns1:RoomRate>
+                    </ns1:RoomRates>
+                    <ns1:CancelPenalties>
+                        <ns1:CancelPenalty>
+                            <ns1:Deadline AbsoluteDeadline="This reservation cannot be cancelled." />
+                        </ns1:CancelPenalty>
+                    </ns1:CancelPenalties>
+                    <ns1:Total CurrencyCode="GBP" />
+                </ns1:RoomStay>
+                <ns1:RoomStay>
+                    <ns1:BasicPropertyInfo HotelCode="14" />
+                    <ns1:RoomTypes>
+                        <ns1:RoomType RoomTypeCode="14-16">
+                            <ns1:RoomDescription>
+                                <ns1:Text>Room Description 4</ns1:Text>
+                            </ns1:RoomDescription>
+                            <ns1:RoomTypeDescription>
+                                <ns1:Text>Room Type Description 4</ns1:Text>
+                            </ns1:RoomTypeDescription>
+                            <ns1:PropertyRoomBookings>
+                                <ns1:PropertyRoomBooking ID="1">
+                                </ns1:PropertyRoomBooking>
+                            </ns1:PropertyRoomBookings>
+                        </ns1:RoomType>
+                    </ns1:RoomTypes>
+                    <ns1:GuestCounts>
+                        <ns1:GuestCount ResGuestRPH="1" />
+                    </ns1:GuestCounts>
+                    <ns1:RoomRates>
+                        <ns1:RoomRate RatePlanCode="Available">
+                            <ns1:Rates>
+                                <ns1:Rate EffectiveDate="5">
+                                    <ns1:Base AmountAfterTax="800" />
+                                    <ns1:Discount Discount="3">
+                                        <ns1:Description>Discount Description 4</ns1:Description>
+                                    </ns1:Discount>
+                                </ns1:Rate>
+                            </ns1:Rates>
+                        </ns1:RoomRate>
+                    </ns1:RoomRates>
+                    <ns1:CancelPenalties>
+                        <ns1:CancelPenalty>
+                            <ns1:Deadline AbsoluteDeadline="This reservation cannot be cancelled." />
+                        </ns1:CancelPenalty>
+                    </ns1:CancelPenalties>
+                    <ns1:Total CurrencyCode="GBP" />
+                </ns1:RoomStay>
+            </ns1:RoomStays>
+        </ns1:OTA_HotelAvailRS>
+    </soap:Body>
+</soap:Envelope>

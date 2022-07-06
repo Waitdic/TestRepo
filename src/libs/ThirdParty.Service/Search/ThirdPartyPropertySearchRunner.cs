@@ -11,8 +11,9 @@
     using Intuitive;
     using Intuitive.Helpers.Email;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Search;
     using ThirdParty.Search.Models;
@@ -59,6 +60,7 @@
         /// <summary>Gets or sets the request tracker.</summary>
         public IRequestTracker RequestTracker { get; set; } = null!;
 
+        /// <inheritdoc />
         public async Task SearchAsync(
             SearchDetails searchDetails,
             SupplierResortSplit supplierResortSplit,
@@ -69,9 +71,16 @@
             {
                 // todo - request tracker, use mini profiler?
                 StartTime = DateTime.Now; // needed for timeouts
+
                 var taskList = new List<Task>();
                 string source = supplierResortSplit.Supplier;
                 var resortSplits = supplierResortSplit.ResortSplits;
+
+                var pagedSearch = thirdPartySearch as IPagedResultSearch;
+                if (pagedSearch is not null && searchDetails.PagingTokenCollector is null)
+                {
+                    searchDetails.PagingTokenCollector = new PagingTokenCollector(pagedSearch.MaxPages(searchDetails));
+                }
 
                 var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, resortSplits);
 
@@ -98,7 +107,18 @@
                         }
                     }
 
+                    if (searchDetails.PagingTokenCollector is not null)
+                    {
+                        searchDetails.PagingTokenCollector.NextPage();
+                    }
+
                     var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
+
+                    if (searchDetails.PagingTokenCollector is not null &&
+                        searchDetails.PagingTokenCollector.CurrentPage < searchDetails.PagingTokenCollector.MaxPages)
+                    {
+                        await SearchAsync(searchDetails, supplierResortSplit, thirdPartySearch, cancellationTokenSource);
+                    }
 
                     await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails, resortSplits);
                 }
@@ -143,9 +163,7 @@
 
         /// <summary>A boolean to decide if we want to compress the request</summary>
         /// <param name="searchDetails">The search details.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
+        /// <returns>The value of the use gzip setting</returns>
         private bool UseGZip(SearchDetails searchDetails, string source)
         {
             var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == source);

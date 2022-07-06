@@ -8,7 +8,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Jumbo.Models;
     using ThirdParty.Interfaces;
@@ -77,8 +77,8 @@
             sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "AgencyCode", _settings));
             sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "BrandCode", _settings));
             sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "POS", _settings));
-            sb.AppendFormat("<checkin>{0}</checkin>", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
-            sb.AppendFormat("<checkout>{0}</checkout>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
+            sb.AppendFormat("<checkin>{0}</checkin>", searchDetails.ArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
+            sb.AppendFormat("<checkout>{0}</checkout>", searchDetails.DepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<fromPrice>{0}</fromPrice>", "0");
             sb.AppendFormat("<fromRow>{0}</fromRow>", "0");
             sb.AppendFormat("<includeEstablishmentData>{0}</includeEstablishmentData>", "false");
@@ -139,7 +139,7 @@
             var request = new Request
             {
                 EndPoint = url,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 ExtraInfo = searchDetails
             };
 

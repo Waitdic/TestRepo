@@ -9,6 +9,7 @@
     using Intuitive.Data;
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
+    using ThirdParty.Constants;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -25,7 +26,9 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-       /// <inheritdoc />
+        #region Lookups
+
+        /// <inheritdoc />
         public string CurrencyLookup(int currencyId)
         {
             // todo - implement or remove
@@ -33,43 +36,25 @@
         }
 
         /// <inheritdoc />
-        public async Task<int> TPBookingCountryCodeLookupAsync(string source, string bookingCountryCode)
+        public async Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int subscriptionId)
         {
-            return (await this.TPBookingCountryCodeAsync(source)).FirstOrDefault(c => c.Key == bookingCountryCode).Value;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> TPBookingCountryLookupAsync(string source, int bookingCountryId)
-        {
-            return (await this.TPBookingCountryCodeAsync(source)).FirstOrDefault(c => c.Value == bookingCountryId).Key;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> TPCountryCodeLookupAsync(string source, string countryCode)
-        {
-            return (await this.TPCountryCodeAsync(source)).FirstOrDefault(c => c.Key == countryCode).Value;
+            string countryCode;
+            if (IsSingleTenant(source))
+            {
+                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out countryCode);
+            }
+            else
+            {
+                (await this.TPCountryCodeAsync(source)).TryGetValue(isoCode, out countryCode);
+            }
+            return countryCode;
         }
 
         /// <inheritdoc />
         public async Task<string> TPCurrencyLookupAsync(string source, string currencyCode)
         {
-            return (await this.TPCurrencyAsync(source)).FirstOrDefault(c => c.Key == currencyCode).Value;
-        }
-
-        /// <inheritdoc />
-        public async Task<Dictionary<string, int>> TPMealBasesAsync(string source)
-        {
-            string cacheKey = "TPMealBasisLookup_" + source;
-
-            async Task<Dictionary<string, int>> cacheBuilder()
-            {
-                return await _sql.ReadSingleMappedAsync(
-                    "select MealBasisCode, MealBasisID from Mealbasis where Source = @source",
-                    async r => (await r.ReadAllAsync<MealBasis>()).ToDictionary(x => x.MealBasisCode, x => x.MealBasisID),
-                    new CommandSettings().WithParameters(new { source }));
-            }
-
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            (await this.TPCurrencyAsync(source)).TryGetValue(currencyCode, out string isoCode);
+            return isoCode;
         }
 
         /// <inheritdoc />
@@ -90,14 +75,54 @@
         public async Task<string> TPNationalityLookupAsync(string source, string nationality)
         {
             nationality = Regex.Replace(nationality, @"\s+", string.Empty); // remove all line breaks and whitespaces 
-            return (await this.TPNationalityAsync(source)).FirstOrDefault(c => c.Key == nationality).Value;
+            (await this.TPNationalityAsync(source)).TryGetValue(nationality, out string isoCode);
+            return isoCode;
+        }
+
+        /// <inheritdoc />
+        public async Task<int> ISOCurrencyIDLookupAsync(string currencyCode)
+        {
+            return (await ISOCurrencyAsync()).FirstOrDefault(x => x.Value == currencyCode).Key;
+        }
+
+        /// <inheritdoc />
+        public async Task<string> ISOCurrencyCodeLookupAsync(int currencyId)
+        {
+            (await ISOCurrencyAsync()).TryGetValue(currencyId, out string currencyCode);
+            return currencyCode;
+        }
+
+        public string TPCreditCardLookup(string source, int creditCardTypeId)
+        {
+            // todo - implement or remove
+            throw new NotImplementedException();
+        }
+
+        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
+
+        #endregion
+
+        #region Cache Builders
+
+        /// <inheritdoc />
+        public async Task<Dictionary<string, int>> TPMealBasesAsync(string source)
+        {
+            string cacheKey = "TPMealBasisLookup_" + source;
+
+            async Task<Dictionary<string, int>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select MealBasisCode, MealBasisID from Mealbasis where Source = @source",
+                    async r => (await r.ReadAllAsync<MealBasis>()).ToDictionary(x => x.MealBasisCode, x => x.MealBasisID),
+                    new CommandSettings().WithParameters(new { source }));
+            }
+
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
         /// <summary>Third party currency lookup.</summary>
         /// <param name="source">The source.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
+        /// <returns>The currency cache</returns>
         private async Task<Dictionary<string, string>> TPCurrencyAsync(string source)
         {
             string cacheKey = "TPCurrencyLookup_" + source;
@@ -111,42 +136,6 @@
             }
 
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
-        }
-
-        private class Currency
-        {
-            public string ThirdPartyCurrencyCode { get; set; } = string.Empty;
-            public string CurrencyCode { get; set; } = string.Empty;
-        }
-
-        private class MealBasis
-        {
-            public string MealBasisCode { get; set; } = string.Empty;
-            public int MealBasisID { get; set; }
-        }
-
-        /// <summary>Booking country lookup</summary>
-        /// <param name="source">The source.</param>
-        /// <returns>a dictionary of third party booking country and booking country identifier</returns>
-        private async Task<Dictionary<string, int>> TPBookingCountryCodeAsync(string source)
-        {
-            string cacheKey = "TPBookingCountryCodeLookup_" + source;
-
-            async Task<Dictionary<string, int>> cacheBuilder()
-            {
-                return await _sql.ReadSingleMappedAsync(
-                    "select TPBookingCountryCode, BookingCountryLookupID from BookingCountryLookup where Source = @source",
-                    async r => (await r.ReadAllAsync<BookingCountry>()).ToDictionary(x => x.TPBookingCountryCode, x => x.BookingCountryLookupID),
-                    new CommandSettings().WithParameters(new { source }));
-            }
-
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
-        }
-
-        private class BookingCountry
-        {
-            public string TPBookingCountryCode { get; set; } = string.Empty;
-            public int BookingCountryLookupID { get; set; }
         }
 
         /// <summary>Nationality lookup</summary>
@@ -167,28 +156,19 @@
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
-        private class Nationality
+        /// <summary>ISO currency code lookup</summary>
+        /// <returns>A dictionary of ISO currency codes</returns>
+        private async Task<Dictionary<int, string>> ISOCurrencyAsync()
         {
-            public string NationalityCode { get; set; } = string.Empty;
-            public string ISOCode { get; set; } = string.Empty;
-        }
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select ISOCurrencyID, CurrencyCode from ISOCurrency",
+                    async r => (await r.ReadAllAsync<ISOCurrency>()).ToDictionary(x => x.ISOCurrencyID, x => x.CurrencyCode),
+                    new CommandSettings());
+            }
 
-        /// <inheritdoc />
-        public async Task<int> TPCurrencyIDLookupAsync(string currencyCode)
-        {
-            // todo - caching
-            return await _sql.ReadScalarAsync<int>(
-                "select ISOCurrencyID from ISOCurrency where CurrencyCode = @currencyCode",
-                new CommandSettings().WithParameters(new { currencyCode }));
-        }
-
-        /// <inheritdoc />
-        public async Task<string> TPCurrencyCodeLookupAsync(int currencyId)
-        {
-            // todo - caching
-            return await _sql.ReadScalarAsync<string>(
-                "select CurrencyCode from ISOCurrency where ISOCurrencyID = @currencyID",
-                new CommandSettings().WithParameters(new { currencyId }));
+            return await _cache.GetOrCreateAsync("ISOCurrencyCache", cacheBuilder, 60);
         }
 
         /// <summary>Country code lookup</summary>
@@ -209,74 +189,70 @@
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
         }
 
+        private async Task<Dictionary<(int, string), string>> SubscriptionCountryAsync()
+        {
+            string cacheKey = "SubscriptionCountryLookup";
+
+            async Task<Dictionary<(int, string), string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select SubscriptionID, CountryCode, ISOCountryCode from SubscriptionCountry",
+                    async r => (await r.ReadAllAsync<SubscriptionCountry>())
+                        .ToDictionary(x => (x.SubscriptionID, x.ISOCountryCode), x => x.CountryCode));
+            }
+
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+
+            return cache;
+        }
+
+        #endregion
+
+        #region DTO classes
+
+        private class Currency
+        {
+            public string ThirdPartyCurrencyCode { get; set; } = string.Empty;
+            public string CurrencyCode { get; set; } = string.Empty;
+        }
+
+        private class MealBasis
+        {
+            public string MealBasisCode { get; set; } = string.Empty;
+            public int MealBasisID { get; set; }
+        }
+
+        private class BookingCountry
+        {
+            public string TPBookingCountryCode { get; set; } = string.Empty;
+            public string BookingCountryCode { get; set; } = string.Empty;
+        }
+
+        private class Nationality
+        {
+            public string NationalityCode { get; set; } = string.Empty;
+            public string ISOCode { get; set; } = string.Empty;
+        }
+
+        private class ISOCurrency
+        {
+            public int ISOCurrencyID { get; set; }
+            public string CurrencyCode { get; set; } = string.Empty;
+        }
+
         private class Country
         {
             public string ISOCode { get; set; } = string.Empty;
             public string TPCountryCode { get; set; } = string.Empty;
         }
 
-        /// <inheritdoc />
-        public async Task<string> TPResortCodeByPropertyIdLookupAsync(string source, int propertyId)
+        private class SubscriptionCountry
         {
-            return (await TPResortCodeByPropertyIdLookupAsync(source))
-                .TryGetValue(propertyId, out string resortCode) ? resortCode : string.Empty;
+            public int SubscriptionID { get; set; }
+            public string CountryCode { get; set; } = string.Empty;
+            public string ISOCountryCode { get; set; } = string.Empty;
         }
 
-        private async Task<Dictionary<int, string>> TPResortCodeByPropertyIdLookupAsync(string source)
-        {
-            string cacheKey = "TPResortCodeByPropertyIdLookup_" + source;
-
-            async Task<Dictionary<int, string>> cacheBuilder()
-            {
-                return await _sql.ReadSingleMappedAsync(
-                    @"select distinct Property.PropertyID, Geography.Code from Property
-                        inner join Geography on Property.GeographyID = Geography.GeographyID
-                        where Property.Source = @source",
-                    async r => (await r.ReadAllAsync<Property>()).ToDictionary(x => x.PropertyID, x => x.Code),
-                    new CommandSettings().WithParameters(new { source }));
-            }
-
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
-        }
-
-        private class Property
-        {
-            public int PropertyID { get; set; }
-            public string Code { get; set; } = string.Empty;
-        }
-
-        /// <inheritdoc />
-        public async Task<string> TPResortCodeByGeographyIdLookupAsync(string source, int geographyId)
-        {
-            return (await TPResortCodeByGeographyIdLookupAsync(source))
-                .TryGetValue(geographyId, out string resortCode) ? resortCode : string.Empty;
-        }
-
-        private async Task<Dictionary<int, string>> TPResortCodeByGeographyIdLookupAsync(string source)
-        {
-            string cacheKey = "TPResortCodeByGeographyIdLookup_" + source;
-
-            async Task<Dictionary<int, string>> cacheBuilder()
-            {
-                return await _sql.ReadSingleMappedAsync(
-                    "select GeographyID, Code from Geography where Source = @source",
-                    async r => (await r.ReadAllAsync<Geography>()).ToDictionary(x => x.GeographyID, x => x.Code),
-                    new CommandSettings().WithParameters(new { source }));
-            }
-
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
-        }
-
-        private class Geography
-        {
-            public int GeographyID { get; set; }
-            public string Code { get; set; } = string.Empty;
-        }
-
-        public string TPCreditCardLookup(string source, int creditCardTypeId)
-        {
-            // todo - implement or remove
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }

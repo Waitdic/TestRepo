@@ -30,14 +30,8 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-        /// <summary>
-        /// Takes in a comma separated list of central property identifiers and suppliers, 
-        /// calls the database and returns a list of resort splits
-        /// </summary>
-        /// <param name="properties">The properties.</param>
-        /// <param name="suppliers">The suppliers.</param>
-        /// <returns>a list or resort splits</returns>
-        public async Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers)
+        /// <inheritdoc/>
+        public async Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers, Subscription user)
         {
             var results = await _sql.ReadAllAsync<CentralProperty>(
                 "Search_GetThirdPartyData",
@@ -46,7 +40,8 @@
                     .WithParameters(new
                     {
                         sCentralPropertyIDs = properties,
-                        sSources = suppliers
+                        sSources = suppliers,
+                        subscriptionId = user.SubscriptionID,
                     }));
 
             var resortSplits = _resortSplitFactory.Create(results.ToList());

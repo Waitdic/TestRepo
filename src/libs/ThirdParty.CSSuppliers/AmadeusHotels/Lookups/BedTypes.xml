@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<BedTypes>
+  <BedType Code="S" LanguageCode = "en"  BedType="Single bed"/>
+  <BedType Code="S" LanguageCode = "ar"  BedType="سرير فردي"/>
+  <BedType Code="S" LanguageCode = "ko"  BedType="싱글베드"/>
+  <BedType Code="S" LanguageCode = "pt"  BedType="Cama de solteiro"/>
+  <BedType Code="S" LanguageCode = "es"  BedType="Cama sencilla"/>
+  <BedType Code="S" LanguageCode = "fr"  BedType="Lit simple"/>
+  <BedType Code="S" LanguageCode = "ja"  BedType="シングルベッド"/>
+  <BedType Code="S" LanguageCode = "ru"  BedType="Односпальная кровать"/>
+  <BedType Code="S" LanguageCode = "cn"  BedType="单人床"/>
+  <BedType Code="S" LanguageCode = "zh"  BedType="單人床"/>
+  <BedType Code="T" LanguageCode = "en"  BedType="Twin bed"/>
+  <BedType Code="T" LanguageCode = "ar"  BedType="سريران مفردان"/>
+  <BedType Code="T" LanguageCode = "ko"  BedType="트윈베드 "/>
+  <BedType Code="T" LanguageCode = "pt"  BedType="Duas camas de solteiro"/>
+  <BedType Code="T" LanguageCode = "es"  BedType="Dos camas"/>
+  <BedType Code="T" LanguageCode = "fr"  BedType="Lits jumeaux"/>
+  <BedType Code="T" LanguageCode = "ja"  BedType="ツインベッド"/>
+  <BedType Code="T" LanguageCode = "ru"  BedType="Две односпальные кровати"/>
+  <BedType Code="T" LanguageCode = "cn"  BedType="两张单人床"/>
+  <BedType Code="T" LanguageCode = "zh"  BedType="兩張單人床"/>
+  <BedType Code="D" LanguageCode = "en"  BedType="Double bed"/>
+  <BedType Code="D" LanguageCode = "ar"  BedType="سرير مزدوج"/>
+  <BedType Code="D" LanguageCode = "ko"  BedType="더블베드"/>
+  <BedType Code="D" LanguageCode = "pt"  BedType="Cama de casal"/>
+  <BedType Code="D" LanguageCode = "es"  BedType="Cama matrimonial"/>
+  <BedType Code="D" LanguageCode = "fr"  BedType="Lit double"/>
+  <BedType Code="D" LanguageCode = "ja"  BedType="ダブルベッド"/>
+  <BedType Code="D" LanguageCode = "ru"  BedType="Двуспальная кровать"/>
+  <BedType Code="D" LanguageCode = "cn"  BedType="加床"/>
+  <BedType Code="D" LanguageCode = "zh"  BedType="標準雙人床"/>
+  <BedType Code="Q" LanguageCode = "en"  BedType="Queen size"/>
+  <BedType Code="Q" LanguageCode = "ar"  BedType="سرير مزدوج ملكي"/>
+  <BedType Code="Q" LanguageCode = "ko"  BedType="퀸사이즈"/>
+  <BedType Code="Q" LanguageCode = "pt"  BedType="Queen size"/>
+  <BedType Code="Q" LanguageCode = "es"  BedType="Cama queen size"/>
+  <BedType Code="Q" LanguageCode = "fr"  BedType="Grand lit"/>
+  <BedType Code="Q" LanguageCode = "ja"  BedType="クイーンサイズベッド"/>
+  <BedType Code="Q" LanguageCode = "ru"  BedType="Большая двуспальная кровать "/>
+  <BedType Code="Q" LanguageCode = "cn"  BedType="大床"/>
+  <BedType Code="Q" LanguageCode = "zh"  BedType="加大雙人床"/>
+  <BedType Code="K" LanguageCode = "en"  BedType="King size    "/>
+  <BedType Code="K" LanguageCode = "ar"  BedType="سرير مزدوج ملكي كبير جدًا"/>
+  <BedType Code="K" LanguageCode = "ko"  BedType="킹사이즈"/>
+  <BedType Code="K" LanguageCode = "pt"  BedType="King size"/>
+  <BedType Code="K" LanguageCode = "es"  BedType="Cama king size"/>
+  <BedType Code="K" LanguageCode = "fr"  BedType="Très grand lit"/>
+  <BedType Code="K" LanguageCode = "ja"  BedType="キングサイズベッド"/>
+  <BedType Code="K" LanguageCode = "ru"  BedType="Очень большая двуспальная кровать "/>
+  <BedType Code="K" LanguageCode = "cn"  BedType="特大床"/>
+  <BedType Code="K" LanguageCode = "zh"  BedType="特大雙人床"/>
+  <BedType Code="W" LanguageCode = "en"  BedType="Water bed"/>
+  <BedType Code="W" LanguageCode = "ar"  BedType="سرير مائي"/>
+  <BedType Code="W" LanguageCode = "ko"  BedType="워터베드"/>
+  <BedType Code="W" LanguageCode = "pt"  BedType="Colchão de água"/>
+  <BedType Code="W" LanguageCode = "es"  BedType="Cama de agua"/>
+  <BedType Code="W" LanguageCode = "fr"  BedType="Lit d’eau"/>
+  <BedType Code="W" LanguageCode = "ja"  BedType="ウォーターベッド"/>
+  <BedType Code="W" LanguageCode = "ru"  BedType="Водяная кровать"/>
+  <BedType Code="W" LanguageCode = "cn"  BedType="水床"/>
+  <BedType Code="W" LanguageCode = "zh"  BedType="水床"/>
+  <BedType Code="P" LanguageCode = "en"  BedType="Pull-out"/>
+  <BedType Code="P" LanguageCode = "ar"  BedType="سرير قابل للتمدد"/>
+  <BedType Code="P" LanguageCode = "ko"  BedType="소파베드"/>
+  <BedType Code="P" LanguageCode = "pt"  BedType="Bicama"/>
+  <BedType Code="P" LanguageCode = "es"  BedType="Sofá cama"/>
+  <BedType Code="P" LanguageCode = "fr"  BedType="Canapé-lit"/>
+  <BedType Code="P" LanguageCode = "ja"  BedType="簡易/ソファベッド"/>
+  <BedType Code="P" LanguageCode = "ru"  BedType="Выдвижная кровать"/>
+  <BedType Code="P" LanguageCode = "cn"  BedType="双人床"/>
+  <BedType Code="P" LanguageCode = "zh"  BedType="加床"/>
+  <BedType Code="*" LanguageCode = "en"  BedType="Bed type can vary"/>
+  <BedType Code="*" LanguageCode = "ar"  BedType="نوع السرير يمكن أن يختلف"/>
+  <BedType Code="*" LanguageCode = "ko"  BedType="객실 유형"/>
+  <BedType Code="*" LanguageCode = "pt"  BedType="O tipt de cama ptde variar"/>
+  <BedType Code="*" LanguageCode = "es"  BedType="El tipt de cama puede variar"/>
+  <BedType Code="*" LanguageCode = "fr"  BedType="Le type de lit peut varier"/>
+  <BedType Code="*" LanguageCode = "ja"  BedType="別途タイプは異なる場合があります"/>
+  <BedType Code="*" LanguageCode = "ru"  BedType="Тип кровати может варьироваться"/>
+  <BedType Code="*" LanguageCode = "cn"  BedType="睡床类别或有所更变"/>
+  <BedType Code="*" LanguageCode = "zh"  BedType="睡床類別或有所更變"/>
+</BedTypes>

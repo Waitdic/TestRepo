@@ -3,6 +3,7 @@
     using System.Linq;
     using iVector.Search.Property;
     using ThirdParty.Models.Property.Booking;
+    using ThirdParty.Search.Models;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 
     public class OceanBedsPropertyDetails
@@ -16,7 +17,7 @@
         public string DepartureDate { get; set; }
         public RoomDetails RoomDetails { get; set; }
 
-        public OceanBedsPropertyDetails(ISearchDetails searchDetails, string resortCode)
+        public OceanBedsPropertyDetails(SearchDetails searchDetails, string resortCode)
         {
             string[] codes = resortCode.Split('|');
             PropertyType = codes[0];

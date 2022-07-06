@@ -41,9 +41,9 @@
                     if (roomsplit.Count > 1)
                     {
                         var childages = roomsplit[1].Split(',')
-                       .Where(m => int.TryParse(m, out _))
-                       .Select(m => int.Parse(m))
-                       .ToList();
+                           .Where(m => int.TryParse(m, out _))
+                           .Select(m => int.Parse(m))
+                           .ToList();
 
                         room.ChildAges.AddRange(childages);
                     }

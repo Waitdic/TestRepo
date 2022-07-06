@@ -9,7 +9,7 @@
     public class RoomDetails
     {
         /// <summary> Gets or sets The passengers</summary>
-        public Passengers Passengers { get; set; } = new Passengers();
+        public Passengers Passengers { get; set; } = new();
 
         /// <summary> Gets or sets The third party reference</summary>
         public string ThirdPartyReference { get; set; } = string.Empty;
@@ -47,7 +47,7 @@
         /// <summary>
         ///  Gets or sets The booking questions
         /// </summary>
-        public List<BookingQuestion> BookingQuestions { get; set; } = new List<BookingQuestion>();
+        public List<BookingQuestion> BookingQuestions { get; set; } = new();
 
         /// <summary>
         ///  Gets or sets a value indicating whether The room is on request
@@ -57,64 +57,27 @@
         /// <summary>
         ///  Gets or sets The optional supplements
         /// </summary>
-        public List<OptionalSupplement> OptionalSupplements { get; set; } = new List<OptionalSupplement>();
+        public List<OptionalSupplement> OptionalSupplements { get; set; } = new();
 
         /// <summary>
         /// Gets the adults.
         /// </summary>
-        /// <value>
-        /// The adults.
-        /// </value>
-        public int Adults
-        {
-            get
-            {
-                return Passengers.TotalAdults;
-            }
-        }
+        public int Adults => Passengers.TotalAdults;
 
         /// <summary>
         /// Gets the children.
         /// </summary>
-        /// <value>
-        /// The children.
-        /// </value>
-        public int Children
-        {
-            get
-            {
-                return Passengers.TotalChildren;
-            }
-        }
+        public int Children => Passengers.TotalChildren;
 
         /// <summary>
         /// Gets the infants.
         /// </summary>
-        /// <value>
-        /// The infants.
-        /// </value>
-        public int Infants
-        {
-            get
-            {
-                return Passengers.TotalInfants;
-            }
-        }
+        public int Infants => Passengers.TotalInfants;
 
         /// <summary>
         /// Gets the number of passengers.
         /// </summary>
-        /// <value>
-        /// The adults.
-        /// </value>
-        public int TotalPassengers
-        {
-            get
-            {
-                return Passengers.TotalAdults + Passengers.TotalChildren + Passengers.TotalInfants;
-            }
-        }
-
+        public int TotalPassengers => Passengers.TotalAdults + Passengers.TotalChildren + Passengers.TotalInfants;
 
         /// <summary>
         ///  Gets or sets The local cost
@@ -139,23 +102,11 @@
         /// <summary>
         /// Gets the child ages.
         /// </summary>
-        /// <value>
-        /// The child ages.
-        /// </value>
-        public List<int> ChildAges
-        {
-            get
-            {
-                return Passengers.Where(o => o.PassengerType == PassengerType.Child).Select(o => o.Age).ToList();
-            }
-        }
+        public List<int> ChildAges => Passengers.ChildAges;
 
         /// <summary>
         /// Gets the child and infant ages.
         /// </summary>
-        /// <value>
-        /// The child and infant ages.
-        /// </value>
         public List<int> ChildAndInfantAges
         {
             get

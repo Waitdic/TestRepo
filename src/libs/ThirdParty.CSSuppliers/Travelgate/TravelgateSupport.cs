@@ -22,7 +22,7 @@
             ThirdParties.TRAVELGATEDINGUSTHB,
             ThirdParties.TRAVELGATEDOTWV3,
             ThirdParties.TRAVELGATEEETGLOBAL,
-            ThirdParties.TRAVELGATEUROPLAYAS,
+            ThirdParties.TRAVELGATEEUROPLAYAS,
             ThirdParties.TRAVELGATEGEKKO,
             ThirdParties.TRAVELGATEHOTELTRADER,
             ThirdParties.TRAVELGATEIXPIRA,

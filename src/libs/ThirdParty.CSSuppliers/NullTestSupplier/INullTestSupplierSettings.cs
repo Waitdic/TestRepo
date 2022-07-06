@@ -1,5 +1,4 @@
-﻿using ThirdParty;
-namespace ThirdParty.CSSuppliers
+﻿namespace ThirdParty.CSSuppliers
 {
     public interface INullTestSupplierSettings
     {

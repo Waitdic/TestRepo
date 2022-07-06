@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Helpers;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using Moq;
     using ThirdParty.CSSuppliers.Altura;
@@ -34,7 +34,7 @@
         private static Mock<ITPSupport> SetupTPSupportMock()
         {
             var mockSupport = new Mock<ITPSupport>();
-            mockSupport.Setup(x => x.TPCountryCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GB"));
+            mockSupport.Setup(x => x.TPCountryCodeLookupAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>())).Returns(Task.FromResult("GB"));
             mockSupport.Setup(x => x.TPCurrencyLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("EUR"));
             mockSupport.Setup(x => x.TPNationalityLookupAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(Task.FromResult("GB"));
             return mockSupport;
@@ -56,7 +56,7 @@
                 var request = new Request
                 {
                     EndPoint = urls[i],
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     Source = Supplier,
                     Param = "xml",

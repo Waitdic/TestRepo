@@ -10,7 +10,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -79,6 +79,7 @@
             var request = new XmlDocument();
             var response = new XmlDocument();
             string reference = "";
+            var webRequest = new Request();
 
             propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
 
@@ -161,10 +162,10 @@
 
                 request.LoadXml(sb.ToString());
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails) + "GetReservation.do",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.BONOTEL,
                     TimeoutInSeconds = _settings.BookTimeout(propertyDetails)
@@ -205,16 +206,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (request is not null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Book Request", request);
-                }
-
-                if (response is not null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Book Response", response);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -229,6 +221,7 @@
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             var request = new XmlDocument();
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -239,13 +232,13 @@
                 request.LoadXml(requestBody);
 
                 // Send the request
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails) + "GetCancellation.do",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.BONOTEL,
-                    CreateLog = propertyDetails.CreateLogs,
+                    CreateLog = true,
                     LogFileName = "Cancellation"
                 };
                 webRequest.SetRequest(request);
@@ -269,16 +262,7 @@
             }
             finally
             {
-                // Store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(request.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Cancellation Request", request);
-                }
-
-                if (response is not null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Cancellation Response", response);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;
@@ -371,18 +355,19 @@
             bool success = true;
             var request = new XmlDocument();
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
                 request.LoadXml(GetAvailabilityRequest(propertyDetails));
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails) + "GetAvailability.do",
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.BONOTEL,
                     LogFileName = "CancellationCharges",
-                    CreateLog = propertyDetails.CreateLogs,
+                    CreateLog = true,
                     ContentType = ContentTypes.Text_xml
                 };
                 webRequest.SetRequest(request);
@@ -534,15 +519,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(request.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Cancellation Cost Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BONOTEL, "Cancellation Cost Response", response);
-                }
+                propertyDetails.AddLog("Cancellation Cost", webRequest);
             }
 
             return success;

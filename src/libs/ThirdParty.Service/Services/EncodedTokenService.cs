@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Models;
     using ThirdParty.Models.Tokens;
     using ThirdParty.Models.Tokens.Constants;
     using ThirdParty.Repositories;
@@ -109,7 +110,7 @@
             return bits;
         }
 
-        public async Task<BookToken> DecodeBookTokenAsync(string tokenString)
+        public async Task<BookToken> DecodeBookTokenAsync(string tokenString, Subscription user)
         {
             BookToken token = null!;
             try
@@ -124,7 +125,7 @@
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                 };
 
-                await PopulateBookTokenFieldsAsync(token);
+                await PopulateBookTokenFieldsAsync(token, user);
             }
             catch (Exception ex)
             {
@@ -134,7 +135,7 @@
             return token;
         }
 
-        public async Task<PropertyToken> DecodePropertyTokenAsync(string tokenString)
+        public async Task<PropertyToken> DecodePropertyTokenAsync(string tokenString, Subscription user)
         {
             PropertyToken token = null!;
 
@@ -162,7 +163,7 @@
                 int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
                 token.ArrivalDate = new DateTime(year, _tokenValues.GetValue(TokenValueType.Month), _tokenValues.GetValue(TokenValueType.Day));
 
-                await PopulatePropertyTokenFieldsAsync(token);
+                await PopulatePropertyTokenFieldsAsync(token, user);
             }
             catch (Exception ex)
             {
@@ -216,7 +217,7 @@
 
                 GetTokenValues(new string(tokenString.Substring(14, 4).ToArray()));
 
-                token.MealBasis = GetMealBasisFromTokenValues();
+                token.MealBasisID = GetMealBasisFromTokenValues();
 
                 _tokenValues.Clear();
 
@@ -235,21 +236,23 @@
             return token;
         }
 
-        private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken)
+        private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Subscription user)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, user);
 
             if (propertyContent != null)
             {
                 propertyToken.Source = propertyContent.Source;
                 propertyToken.TPKey = propertyContent.TPKey;
+                propertyToken.PropertyName = propertyContent.PropertyName;
                 propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
+                propertyToken.GeographyCode = propertyContent.GeographyCode;
             }
         }
 
-        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken)
+        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Subscription user)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, user);
 
             if (propertyContent != null)
             {
@@ -305,23 +308,23 @@
             _tokenValues.Clear();
             int[] mealBases = new int[3];
 
-            if (roomtoken.MealBasis.Count < 3)
+            if (roomtoken.MealBasisID.Count < 3)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    if (i < 3 - roomtoken.MealBasis.Count)
+                    if (i < 3 - roomtoken.MealBasisID.Count)
                     {
                         mealBases[i] = 0;
                     }
                     else
                     {
-                        mealBases[i] = roomtoken.MealBasis[i - 3 + roomtoken.MealBasis.Count];
+                        mealBases[i] = roomtoken.MealBasisID[i - 3 + roomtoken.MealBasisID.Count];
                     }
                 }
             }
             else
             {
-                mealBases = roomtoken.MealBasis.ToArray();
+                mealBases = roomtoken.MealBasisID.ToArray();
             }
 
             for (int i = 3; i > 0; --i)

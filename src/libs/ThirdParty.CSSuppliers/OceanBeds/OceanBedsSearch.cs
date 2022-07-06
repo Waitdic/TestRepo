@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.OceanBeds.Models;
@@ -72,7 +72,7 @@
             try
             {
                 searchWebRequest.EndPoint = _settings.SearchEndPoint(searchDetails);
-                searchWebRequest.Method = eRequestMethod.POST;
+                searchWebRequest.Method = RequestMethod.POST;
                 searchWebRequest.ExtraInfo = searchDetails;
                 searchWebRequest.SetRequest(_serializer.Serialize(request));
                 searchWebRequest.SOAP = false;

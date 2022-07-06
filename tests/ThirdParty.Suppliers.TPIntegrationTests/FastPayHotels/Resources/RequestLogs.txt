@@ -1,0 +1,59 @@
+﻿URL: https://avail.fastpayhotels.net/api/booking/availability
+
+**HEADERS**
+
+Content-Type: text/xml
+Timeout: 100
+
+
+**REQUEST**
+
+{"messageID":"Test1234","currency":"GBP","checkIn":"2021-09-01","checkOut":"2021-09-06","occupancies":[{"adults":1,"children":0,"childrenAges":[]}],"hotelCodes":["102245"],"parameters":{"countryOfResidence":"GB","nationality":"GB"}}
+
+URL: https://avail.fastpayhotels.net/api/booking/availability
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+{"messageID":"Test1234","currency":"GBP","checkIn":"2021-09-01","checkOut":"2021-09-06","occupancies":[{"adults":2,"children":0,"childrenAges":[]}],"hotelCodes":["102245"],"parameters":{"countryOfResidence":"GB","nationality":"GB"}}
+
+URL: https://avail.fastpayhotels.net/api/booking/availability
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+{"messageID":"Test1234","currency":"GBP","checkIn":"2021-09-01","checkOut":"2021-09-06","occupancies":[{"adults":1,"children":1,"childrenAges":[8]}],"hotelCodes":["102245"],"parameters":{"countryOfResidence":"GB","nationality":"GB"}}
+
+URL: https://avail.fastpayhotels.net/api/booking/availability
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+{"messageID":"Test1234","currency":"GBP","checkIn":"2021-09-01","checkOut":"2021-09-06","occupancies":[{"adults":1,"children":0,"childrenAges":[]}],"hotelCodes":["102245"],"parameters":{"countryOfResidence":"GB","nationality":"GB"}}
+
+URL: https://avail.fastpayhotels.net/api/booking/availability
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+{"messageID":"Test1234","currency":"GBP","checkIn":"2021-09-01","checkOut":"2021-09-06","occupancies":[{"adults":1,"children":1,"childrenAges":[8]}],"hotelCodes":["102245"],"parameters":{"countryOfResidence":"GB","nationality":"GB"}}
+
+
+
+

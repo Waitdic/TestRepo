@@ -1,6 +1,5 @@
 ﻿namespace ThirdParty.CSSuppliers.Models.W2M
 {
-#pragma warning disable CS8618
     public class BaseRequestParameters
     {
         public string Username { get; set; }

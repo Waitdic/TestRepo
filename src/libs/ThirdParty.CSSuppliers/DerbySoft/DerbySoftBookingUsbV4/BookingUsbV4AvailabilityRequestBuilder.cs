@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
     using ThirdParty.CSSuppliers.DerbySoft.Models;
@@ -55,7 +55,7 @@
                     var request = new Request
                     {
                         EndPoint = _settings.SearchURL(searchDetails, _source),
-                        Method = eRequestMethod.POST,
+                        Method = RequestMethod.POST,
                         Source = _source,
                         ContentType = ContentTypes.Application_json,
                         Accept = "application/json",

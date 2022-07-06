@@ -15,7 +15,7 @@
         {
             _ = endpoints
                 .MapPost(
-                    "/property/prebook",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/prebook",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Prebook.Request request)
                         => await EndpointBase.ExecuteRequest<Prebook.Request, Prebook.Response>(httpContext, mediator, request))
                 .RequireAuthorization()
@@ -25,7 +25,7 @@
 
             _ = endpoints
                 .MapPost(
-                    "/property/book",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/book",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Book.Request request)
                         => await EndpointBase.ExecuteRequest<Book.Request, Book.Response>(httpContext, mediator, request))
                 .RequireAuthorization()
@@ -35,7 +35,7 @@
 
             _ = endpoints
                 .MapPost(
-                    "/property/cancelfee",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/cancelfee",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Precancel.Request request)
                         => await EndpointBase.ExecuteRequest<Precancel.Request, Precancel.Response>(httpContext, mediator, request))
                 .RequireAuthorization()
@@ -45,7 +45,7 @@
 
             _ = endpoints
                 .MapPost(
-                    "/property/cancel",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/cancel",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Cancel.Request request)
                         => await EndpointBase.ExecuteRequest<Cancel.Request, Cancel.Response>(httpContext, mediator, request))
                 .RequireAuthorization()

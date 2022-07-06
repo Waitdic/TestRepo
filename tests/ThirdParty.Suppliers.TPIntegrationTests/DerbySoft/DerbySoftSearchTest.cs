@@ -6,7 +6,7 @@
     using System.Text;
     using System.Xml;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;

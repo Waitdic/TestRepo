@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using Models;
     using Models.Common;
@@ -43,8 +43,8 @@
             {
                 Period =
                 {
-                    Start = $"{searchDetails.PropertyArrivalDate:yyyyMMdd}",
-                    End = $"{searchDetails.PropertyDepartureDate:yyyyMMdd}"
+                    Start = $"{searchDetails.ArrivalDate:yyyyMMdd}",
+                    End = $"{searchDetails.DepartureDate:yyyyMMdd}"
                 }
             };
 
@@ -114,7 +114,7 @@
             var request = new Request
             {
                 EndPoint = _settings.GenericURL(searchDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 ExtraInfo = searchDetails
             };
 

@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:awsse="http://xml.amadeus.com/2010/06/Session_v3" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <soapenv:Header>
+        <wsa:To>http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
+        <wsa:From>
+            <wsa:Address>https://nodeD1.test.webservices.amadeus.com/1ASIWXXXYYY</wsa:Address>
+        </wsa:From>
+        <wsa:Action>http://webservices.amadeus.com/AAABBB_01_2_IA</wsa:Action>
+        <wsa:MessageID>urn:uuid:cd10252f-fa15-eb94-a14d-0b1e69b69509</wsa:MessageID>
+        <wsa:RelatesTo RelationshipType="http://www.w3.org/2005/08/addressing/reply">60608faa647a-4494-be0c-96c417bc7bc3</wsa:RelatesTo>
+        <awsse:Session TransactionStatusCode="InSeries">
+        <awsse:SessionId>01VWJYKFTY</awsse:SessionId>
+        <awsse:SequenceNumber>1</awsse:SequenceNumber>
+        <awsse:SecurityToken>2TOAMQEYRSZJL29UWKMJ4E79ZC</awsse:SecurityToken>
+        </awsse:Session>
+    </soapenv:Header>
+    <soapenv:Body>
+        <OTA_HotelAvailRS EchoToken="MultiSingle" PrimaryLangID="EN" Version="6.001" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05 OTA_HotelAvailRS.xsd">
+            <Success/>
+            <Warnings>
+                <Warning Status="PRV.1" Tag="OK" Type="3"/>
+            </Warnings>
+            <HotelStays>
+                <HotelStay RoomStayRPH="0 1">
+                    <BasicPropertyInfo AreaID="4" BrandCode="LD" ChainCode="GU" ChainName="GTS" HotelCityCode="BER" HotelCode="GUBERADV" HotelCodeContext="1A" HotelName="LEONARDO ROYAL HOTEL BERLIN AL" HotelSegmentCategoryCode="7" SupplierIntegrationLevel="3">
+                        <Address>
+                            <AddressLine>OTTO-BRAUN-STRASSE 90</AddressLine>
+                            <CityName>BERLIN</CityName>
+                            <PostalCode>10249</PostalCode>
+                            <CountryName Code="DE"/>
+                        </Address>
+                        <RelativePosition>
+                            <Transportations>
+                                <Transportation TransportationCode="20"/>
+                            </Transportations>
+                        </RelativePosition>
+                    </BasicPropertyInfo>
+                </HotelStay>
+            </HotelStays>
+            <RoomStays>
+            <RoomStay AvailabilityStatus="AvailableForSale" InfoSource="GU" RPH="0" SourceOfBusiness="One Step.PricingOptional.PriceNotGuaranted.InvNotGuaranted">
+                    <RatePlans>
+                        <RatePlan AvailabilityStatus="AvailableForSale" PrepaidIndicator="1" RateIndicator="AvailableForSale" RatePlanCode="RAC" RatePlanName="PublicRate">
+                            <Guarantee GuaranteeCode="8" GuaranteeType="Deposit"/>
+                            <Commission Percent="10.00" StatusType="Commissionable"/>
+                            <MealsIncluded Breakfast="1" MealPlanCodes="3" MealPlanIndicator="1"/>
+                        </RatePlan>
+                    </RatePlans>
+                    <RoomRates>
+                        <RoomRate AvailabilityStatus="AvailableForSale" BookingCode="00000001" NumberOfUnits="1" RatePlanCode="RAC" RoomTypeCode="A2S">
+                            <Rates>
+                                <Rate EffectiveDate="2016-02-23" ExpireDate="2016-02-28" NumberOfUnits="1" RateTimeUnit="Day">
+                                    <Base AmountAfterTax="180.50" CurrencyCode="EUR"/>
+                                    <PaymentPolicies>
+                                        <GuaranteePayment GuaranteeType="Deposit" PaymentCode="8">
+                                            <AcceptedPayments>
+                                                <AcceptedPayment>
+                                                    <PaymentCard Remark="CreditLine"/>
+                                                </AcceptedPayment>
+                                            </AcceptedPayments>
+                                        </GuaranteePayment>
+                                    </PaymentPolicies>
+                                </Rate>
+                            </Rates>
+                            <RoomRateDescription CreatorID="1" Name="Room A2S">
+                                <Text Formatted="1">Standard Twin</Text>
+                            </RoomRateDescription>
+                            <Total AmountAfterTax="902.50" CurrencyCode="EUR"/>
+                            <GuestCounts>
+                                <GuestCount AgeQualifyingCode="10" Count="2"/>
+                            </GuestCounts>
+                        </RoomRate>
+                    </RoomRates>
+                    <TimeSpan End="2016-02-28" Start="2016-02-23">
+                        <StartDateWindow DOW="Sun"/>
+                        <EndDateWindow DOW="Fri"/>
+                    </TimeSpan>
+                    <Total AmountAfterTax="902.50" CurrencyCode="EUR"/>
+                    <ServiceRPHs>
+                        <ServiceRPH RPH="0"/>
+                    </ServiceRPHs>
+                </RoomStay>
+                <RoomStay AvailabilityStatus="AvailableForSale" InfoSource="GU" RPH="1" SourceOfBusiness="One Step.PricingOptional.PriceNotGuaranted.InvNotGuaranted">
+                    <RatePlans>
+                        <RatePlan AvailabilityStatus="AvailableForSale" PrepaidIndicator="1" RateIndicator="AvailableForSale" RatePlanCode="RAC" RatePlanName="PublicRate">
+                            <Guarantee GuaranteeCode="8" GuaranteeType="Deposit"/>
+                            <Commission Percent="10.00" StatusType="Commissionable"/>
+                            <MealsIncluded Breakfast="1" MealPlanCodes="3" MealPlanIndicator="1"/>
+                        </RatePlan>
+                    </RatePlans>
+                    <RoomRates>
+                        <RoomRate AvailabilityStatus="AvailableForSale" BookingCode="00000002" NumberOfUnits="1" RatePlanCode="RAC" RoomTypeCode="A2S">
+                            <Rates>
+                                <Rate EffectiveDate="2016-02-23" ExpireDate="2016-02-28" NumberOfUnits="1" RateTimeUnit="Day">
+                                    <Base AmountAfterTax="221.00" CurrencyCode="EUR"/>
+                                    <PaymentPolicies>
+                                        <GuaranteePayment GuaranteeType="Deposit" PaymentCode="8">
+                                            <AcceptedPayments>
+                                                <AcceptedPayment>
+                                                    <PaymentCard Remark="CreditLine"/>
+                                                </AcceptedPayment>
+                                            </AcceptedPayments>
+                                        </GuaranteePayment>
+                                    </PaymentPolicies>
+                                </Rate>
+                            </Rates>
+                            <RoomRateDescription CreatorID="1" Name="Room A2S">
+                                <Text Formatted="1">Standard Triple</Text>
+                            </RoomRateDescription>
+                            <Total AmountAfterTax="1105.00" CurrencyCode="EUR"/>
+                            <GuestCounts>
+                                <GuestCount AgeQualifyingCode="10" Count="2"/></GuestCounts>
+                        </RoomRate>
+                    </RoomRates>
+                    <TimeSpan End="2016-02-28" Start="2016-02-23">
+                        <StartDateWindow DOW="Sun"/>
+                        <EndDateWindow DOW="Fri"/>
+                    </TimeSpan>
+                    <Total AmountAfterTax="1105.00" CurrencyCode="EUR"/>
+                    <ServiceRPHs>
+                        <ServiceRPH RPH="0"/>
+                    </ServiceRPHs>
+                </RoomStay>
+            </RoomStays>
+            <Services>
+                <Service ID="-" Inclusive="1" ServiceInventoryCode="3.MPT" ServicePricingType="Per stay" ServiceRPH="0" Type="10"/>
+            </Services>
+        </OTA_HotelAvailRS>
+    </soapenv:Body>
+</soapenv:Envelope>
+

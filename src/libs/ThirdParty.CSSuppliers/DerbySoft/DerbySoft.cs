@@ -6,7 +6,7 @@
     using System.Linq;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
@@ -634,11 +634,11 @@
             var request = new Request
             {
                 EndPoint = endPoint,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = propertyDetails.Source,
                 ContentType = ContentTypes.Application_json,
                 UseGZip = _settings.UseGZip(propertyDetails, propertyDetails.Source),
-                CreateLog = propertyDetails.CreateLogs,
+                CreateLog = true,
                 LogFileName = logFileName,
                 Accept = "application/json"
             };
@@ -649,22 +649,7 @@
 
             await request.Send(_httpClient, _logger);
 
-            if (!string.IsNullOrWhiteSpace(request.RequestString) && !string.IsNullOrWhiteSpace(request.ResponseString))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} {logFileName}", request.RequestString, request.ResponseString);
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} {logFileName} Request", request.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} {logFileName} Response", request.ResponseString);
-                }
-            }
+            propertyDetails.AddLog(logFileName, request);
 
             return JsonConvert.DeserializeObject<TResponse>(request.ResponseString);
         }
@@ -684,7 +669,7 @@
             {
                 firstName = propertyDetails.LeadGuestFirstName,
                 lastName = propertyDetails.LeadGuestLastName,
-                age = propertyDetails.DateOfBirth.GetAgeFromDateOfBirth(),
+                age = propertyDetails.LeadGuestDateOfBirth.GetAgeFromDateOfBirth(),
                 type = "Adult",
                 index = GetLeadPassengerIndex(passengers).ToSafeString()
             };

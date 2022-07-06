@@ -1,0 +1,182 @@
+﻿URL: https://xmldev-xml.centriumres.com/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>Kenwood</Login>
+    <Password>D_6bxJvsR9zt</Password>
+    <Version>6.0</Version>
+  </LoginDetails>
+  <SearchDetails>
+    <ArrivalDate>2021-09-01</ArrivalDate>
+    <Duration>5</Duration>
+    <PropertyID>102245</PropertyID>
+    <MealBasisID>0</MealBasisID>
+    <MinStarRating>0</MinStarRating>
+    <MinimumPrice>0</MinimumPrice>
+    <MaximumPrice>0</MaximumPrice>
+    <RoomRequests>
+      <RoomRequest>
+        <Adults>1</Adults>
+        <Children>0</Children>
+        <Infants>0</Infants>
+        <ChildAges />
+      </RoomRequest>
+    </RoomRequests>
+  </SearchDetails>
+</SearchRequest>
+
+URL: https://xmldev-xml.centriumres.com/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>Kenwood</Login>
+    <Password>D_6bxJvsR9zt</Password>
+    <Version>6.0</Version>
+  </LoginDetails>
+  <SearchDetails>
+    <ArrivalDate>2021-09-01</ArrivalDate>
+    <Duration>5</Duration>
+    <PropertyID>102245</PropertyID>
+    <MealBasisID>0</MealBasisID>
+    <MinStarRating>0</MinStarRating>
+    <MinimumPrice>0</MinimumPrice>
+    <MaximumPrice>0</MaximumPrice>
+    <RoomRequests>
+      <RoomRequest>
+        <Adults>2</Adults>
+        <Children>0</Children>
+        <Infants>0</Infants>
+        <ChildAges />
+      </RoomRequest>
+    </RoomRequests>
+  </SearchDetails>
+</SearchRequest>
+
+URL: https://xmldev-xml.centriumres.com/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>Kenwood</Login>
+    <Password>D_6bxJvsR9zt</Password>
+    <Version>6.0</Version>
+  </LoginDetails>
+  <SearchDetails>
+    <ArrivalDate>2021-09-01</ArrivalDate>
+    <Duration>5</Duration>
+    <PropertyID>102245</PropertyID>
+    <MealBasisID>0</MealBasisID>
+    <MinStarRating>0</MinStarRating>
+    <MinimumPrice>0</MinimumPrice>
+    <MaximumPrice>0</MaximumPrice>
+    <RoomRequests>
+      <RoomRequest>
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <Infants>0</Infants>
+        <ChildAges>
+          <ChildAge>
+            <Age>8</Age>
+          </ChildAge>
+        </ChildAges>
+      </RoomRequest>
+    </RoomRequests>
+  </SearchDetails>
+</SearchRequest>
+
+URL: https://xmldev-xml.centriumres.com/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>Kenwood</Login>
+    <Password>D_6bxJvsR9zt</Password>
+    <Version>6.0</Version>
+  </LoginDetails>
+  <SearchDetails>
+    <ArrivalDate>2021-09-01</ArrivalDate>
+    <Duration>5</Duration>
+    <PropertyID>102245</PropertyID>
+    <MealBasisID>0</MealBasisID>
+    <MinStarRating>0</MinStarRating>
+    <MinimumPrice>0</MinimumPrice>
+    <MaximumPrice>0</MaximumPrice>
+    <RoomRequests>
+      <RoomRequest>
+        <Adults>1</Adults>
+        <Children>0</Children>
+        <Infants>1</Infants>
+        <ChildAges />
+      </RoomRequest>
+    </RoomRequests>
+  </SearchDetails>
+</SearchRequest>
+
+URL: https://xmldev-xml.centriumres.com/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<?xml version="1.0"?>
+<SearchRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDetails>
+    <Login>Kenwood</Login>
+    <Password>D_6bxJvsR9zt</Password>
+    <Version>6.0</Version>
+  </LoginDetails>
+  <SearchDetails>
+    <ArrivalDate>2021-09-01</ArrivalDate>
+    <Duration>5</Duration>
+    <PropertyID>102245</PropertyID>
+    <MealBasisID>0</MealBasisID>
+    <MinStarRating>0</MinStarRating>
+    <MinimumPrice>0</MinimumPrice>
+    <MaximumPrice>0</MaximumPrice>
+    <RoomRequests>
+      <RoomRequest>
+        <Adults>1</Adults>
+        <Children>1</Children>
+        <Infants>1</Infants>
+        <ChildAges>
+          <ChildAge>
+            <Age>8</Age>
+          </ChildAge>
+        </ChildAges>
+      </RoomRequest>
+    </RoomRequests>
+  </SearchDetails>
+</SearchRequest>

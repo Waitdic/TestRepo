@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.CSSuppliers.Netstorming.Models;
@@ -65,6 +65,8 @@
             XmlDocument? xmlResponse = null;
             XmlDocument? xmlCancellationCostRequest = null;
             XmlDocument? xmlCancellationCostResponse = null;
+            var availabilityRequest = new Request();
+            var cancellationRequest = new Request();
 
             try
             {
@@ -101,7 +103,7 @@
                     propertyDetails.Rooms,
                     firstRoomDetailsSplit[14],
                     agreementId,
-                    propertyDetails.TotalPrice,
+                    propertyDetails.LocalCost,
                     cityCode,
                     propertyDetails.ArrivalDate,
                     propertyDetails.DepartureDate,
@@ -113,7 +115,7 @@
                     hotelCode);
 
                 // send the request 
-                var availabilityRequest = new Request
+                availabilityRequest = new Request
                 {
                     Source = propertyDetails.Source,
                     CreateLog = true,
@@ -192,7 +194,7 @@
 
                 // build and log and send the request
                 xmlCancellationCostRequest = NetstormingSupport.Serialize(cancellationCostRequest, _serializer);
-                var cancellationRequest = new Request
+                cancellationRequest = new Request
                 {
                     Source = propertyDetails.Source,
                     CreateLog = true,
@@ -259,26 +261,8 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (xmlRequest != null && !string.IsNullOrEmpty(xmlRequest.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Prebook Request", xmlRequest);
-                }
-
-                if (xmlResponse != null && !string.IsNullOrEmpty(xmlResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Prebook Response", xmlResponse);
-                }
-
-                if (xmlCancellationCostRequest != null && !string.IsNullOrEmpty(xmlCancellationCostRequest.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Cancellation Cost Request", xmlCancellationCostRequest);
-                }
-
-                if (xmlCancellationCostResponse != null && !string.IsNullOrEmpty(xmlCancellationCostResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Cancellation Cost Response", xmlCancellationCostResponse);
-                }
+                propertyDetails.AddLog("Prebook", availabilityRequest);
+                propertyDetails.AddLog("Cancellation Cost", cancellationRequest);
             }
 
             return true;
@@ -366,6 +350,7 @@
             XmlDocument? xmlRequest = null;
             XmlDocument? xmlResponse = null;
             string reference;
+            var webRequest = new Request();
 
             try
             {
@@ -389,7 +374,7 @@
                     _settings.ContactEmail(propertyDetails, propertyDetails.Source),
                     propertyDetails.Rooms);
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     Source = propertyDetails.Source,
                     EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
@@ -418,16 +403,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (xmlRequest != null && !string.IsNullOrEmpty(xmlRequest.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Book Request", xmlRequest);
-                }
-
-                if (xmlResponse != null && !string.IsNullOrEmpty(xmlResponse.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Book Response", xmlResponse);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;

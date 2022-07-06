@@ -2,7 +2,7 @@
 {
     using System;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
 
     /// <summary>
     /// A class to track the third party request time

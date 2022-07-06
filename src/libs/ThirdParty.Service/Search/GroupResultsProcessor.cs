@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
+    using ThirdParty.Constants;
     using ThirdParty.Repositories;
     using ThirdParty.SDK.V2.PropertySearch;
     using ThirdParty.Search.Models;
@@ -79,9 +80,9 @@
                         NonRefundable = searchResult.NonRefundableRates ?? false,
                         PayLocalRequired = searchResult.PayLocalRequired,
                         PayLocalAvailable = searchResult.PayLocalAvailable,
-                        MealBasisCode = await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
-                        MealBasisID = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode),
-                        RateCode  = searchResult.TPRateCode,
+                        MealBasisCode = await GetMealBasis(source, searchResult, searchDetails),
+                        MealBasisID = await GetMealBasisID(source, searchResult, searchDetails),
+                        RateCode = searchResult.TPRateCode,
                         OnRequest = searchResult.OnRequest
                     },
                     PriceData = new PriceData()
@@ -91,7 +92,8 @@
                         NonRefundableRates = searchResult.NonRefundableRates,
                         Discount = searchResult.Discount,
                         CommissionPercentage = searchResult.CommissionPercentage,
-                        GrossCost = searchResult.GrossCost
+                        GrossCost = searchResult.GrossCost,
+                        CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails)
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
@@ -108,8 +110,6 @@
                     }).ToList()
                 };
 
-                await SetCurrencyID(roomResult, result.PropertyData, searchResult);
-
                 if (roomResult.RoomData.MealBasisCode != string.Empty && roomResult.RoomData.PropertyRoomBookingID != 0)
                 {
                     result.RoomResults.Add(roomResult);
@@ -121,17 +121,36 @@
             return results;
         }
 
-        private async Task SetCurrencyID(RoomSearchResult roomResult, PropertyData propertyData, TransformedResult searchResult)
+        private async Task<string> GetMealBasis(string source, TransformedResult searchResult, SearchDetails searchDetails)
+        {
+            return await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.SubscriptionID);
+        }
+
+        private async Task<int> GetMealBasisID(string source, TransformedResult searchResult, SearchDetails searchDetails)
+        {
+            return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.SubscriptionID);
+        }
+
+        private async Task<int> GetISOCurrencyID(PropertyData propertyData, TransformedResult searchResult, SearchDetails searchDetails)
         {
             int currencyId = searchResult.CurrencyID;
 
             if (!string.IsNullOrWhiteSpace(searchResult.CurrencyCode))
             {
+                if (IsSingleTenant(propertyData.Source))
+                {
+                    currencyId = await _currencyRepository.SubscriptionCurrencyLookupAsync(searchDetails.SubscriptionID, searchResult.CurrencyCode);
+                }
+                else
+                {
                 currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(propertyData.Source, searchResult.CurrencyCode);
             }
+            }
 
-            roomResult.PriceData.CurrencyID = currencyId;
+            return currencyId;
         }
+
+        private bool IsSingleTenant(string source) => source == ThirdParties.OWNSTOCK;
 
         /// <summary>Gets the property room booking identifier.</summary>
         /// <param name="searchResult">The search result.</param>

@@ -1529,6 +1529,7 @@
         ]
     },
     {
+        "SubscriptionID": 12,
         "Login": "AlihocoTest_hotel",
         "Password": "_AlihocoTest",
         "DummyResponses": "false",
@@ -1539,6 +1540,18 @@
             "CurrencyCode": "GBP"
         },
         "Configurations": [
+            {
+                "Supplier": "Own",
+                "Configurations": {
+                    "SearchURL": "https://travelifysearchtest.ivectorrooms.co.uk/search/property",
+                    "URL": "https://travelifytest.ivectorconnect.co.uk/iVectorConnect.ashx",
+                    "Login": "Travelify",
+                    "Password": "Travelify",
+                    "UseGZip": "true",
+                    "OffsetCancellationDays": "0",
+                    "Allow Cancellations": "true"
+                }
+            },
             {
                 "Supplier": "ExpediaRapid",
                 "Configurations": {

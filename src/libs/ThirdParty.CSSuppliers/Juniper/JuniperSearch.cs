@@ -6,7 +6,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using ThirdParty;
     using ThirdParty.CSSuppliers.Juniper.Model;

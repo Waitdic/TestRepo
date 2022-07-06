@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using MoreLinq;
     using Newtonsoft.Json;
     using ThirdParty.Constants;
@@ -89,7 +89,7 @@
             {
                 var firstRoom = propertyDetails.Rooms.First();
 
-                var prebookResponse = await GetResponseAsync<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], eRequestMethod.GET, "Prebook PriceCheck ", false);
+                var prebookResponse = await GetResponseAsync<PrebookResponse>(propertyDetails, firstRoom.ThirdPartyReference.Split('|')[1], RequestMethod.GET, "Prebook PriceCheck ", false);
 
                 if (prebookResponse is null)
                 {
@@ -118,7 +118,7 @@
                 var firstRoom = propertyDetails.Rooms.First();
                 string bookRequestBody = await BuildBookRequestBodyAsync(propertyDetails);
 
-                var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, eRequestMethod.POST, "Book ", true, bookRequestBody);
+                var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, RequestMethod.POST, "Book ", true, bookRequestBody);
 
                 if (bookResponse is null)
                 {
@@ -144,7 +144,7 @@
 
             try
             {
-                var bookingItineraryResponse1 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
+                var bookingItineraryResponse1 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, RequestMethod.GET, "Booking Itinerary - Before Cancel ", true);
 
                 if (bookingItineraryResponse1 is null)
                 {
@@ -158,7 +158,7 @@
                     throw new Exception("Unable to cancel a room.");
                 }
 
-                var bookingItineraryResponse2 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary - After Cancel ", true);
+                var bookingItineraryResponse2 = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, RequestMethod.GET, "Booking Itinerary - After Cancel ", true);
 
                 if (bookingItineraryResponse2 is null)
                 {
@@ -201,7 +201,7 @@
 
             try
             {
-                var precancelResponse = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, eRequestMethod.GET, "Booking Itinerary ", true);
+                var precancelResponse = await GetResponseAsync<BookingItineraryResponse>(propertyDetails, propertyDetails.SourceSecondaryReference, RequestMethod.GET, "Booking Itinerary ", true);
 
                 if (precancelResponse is null)
                 {
@@ -262,7 +262,7 @@
                     string cancelLink = room.Links["cancel"].HRef;
 
                     string url = BuildDefaultURL(propertyDetails, cancelLink);
-                    var request = BuildRequest(propertyDetails, url, "Cancel", eRequestMethod.DELETE, true);
+                    var request = BuildRequest(propertyDetails, url, "Cancel", RequestMethod.DELETE, true);
 
                     string cancelResponseString = await _api.GetResponseAsync(propertyDetails, request);
                     int statusCode = (int)request.ResponseStatusCode;
@@ -318,7 +318,7 @@
         private async Task<TResponse> GetResponseAsync<TResponse>(
             PropertyDetails propertyDetails,
             string link,
-            eRequestMethod method,
+            RequestMethod method,
             string logName,
             bool addCustomerIPHeader,
             string requestBody = null!) where TResponse : IExpediaRapidResponse<TResponse>, new()
@@ -332,7 +332,7 @@
         private async Task<SearchResponse> GetPrebookSearchRedoResponseAsync(PropertyDetails propertyDetails)
         {
             string searchURL = await BuildPrebookSearchURLAsync(propertyDetails);
-            var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", eRequestMethod.GET, false);
+            var searchRequest = BuildRequest(propertyDetails, searchURL, "Prebook - Redo Search", RequestMethod.GET, false);
             var searchResponse = await _api.GetDeserializedResponseAsync<SearchResponse>(propertyDetails, searchRequest);
             return searchResponse;
         }
@@ -543,7 +543,7 @@
             PropertyDetails propertyDetails,
             string url,
             string logName,
-            eRequestMethod method,
+            RequestMethod method,
             bool addCustomerIPHeader,
             string requestBody = "")
         {
@@ -594,7 +594,7 @@
                                 City = propertyDetails.LeadGuestTownCity,
                                 StateProvinceCode = propertyDetails.LeadGuestCounty,
                                 PostalCode = propertyDetails.LeadGuestPostcode,
-                                CountryCode = await _support.TPBookingCountryLookupAsync(Source, propertyDetails.LeadGuestBookingCountryID)
+                                CountryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.LeadGuestCountryCode, propertyDetails.SubscriptionID)
                             }
                         }
                     }

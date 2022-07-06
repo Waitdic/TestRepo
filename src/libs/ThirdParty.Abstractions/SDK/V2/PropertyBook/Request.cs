@@ -24,12 +24,12 @@
         /// <summary>
         /// Gets or sets the room bookings.
         /// </summary>
-        public List<RoomBooking> RoomBookings { get; set; } = new List<RoomBooking>();
+        public List<RoomBooking> RoomBookings { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the lead customer.
         /// </summary>
-        public LeadCustomer LeadCustomer { get; set; } = new LeadCustomer();
+        public LeadCustomer LeadCustomer { get; set; } = new();
 
         /// <summary>
         /// Get or sets the unique nationality identifier 
