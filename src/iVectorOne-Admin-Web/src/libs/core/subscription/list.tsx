@@ -1,16 +1,8 @@
-import { memo, useState, useEffect, FC, useMemo } from 'react';
+import { memo, useState, useEffect, FC } from 'react';
 //
-import { DropdownFilterProps, Subscription } from '@/types';
-import { ButtonColors, NotificationStatus } from '@/constants';
+import { DropdownFilterProps } from '@/types';
 import MainLayout from '@/layouts/Main';
-import {
-  ErrorBoundary,
-  Button,
-  Notification,
-  CardList,
-  DropdownFilter,
-  ModalSearch,
-} from '@/components';
+import { Button, CardList } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { sortBy } from 'lodash';

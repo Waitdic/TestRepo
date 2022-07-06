@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
+import { memo, FC, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -7,23 +7,16 @@ import axios from 'axios';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
-import {
-  Supplier,
-  SupplierConfiguration,
-  SupplierFormFields,
-  Subscription,
-} from '@/types';
+import { Supplier, SupplierFormFields, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import {
-  ErrorBoundary,
   SectionTitle,
   Select,
   Button,
   Spinner,
   Notification,
 } from '@/components';
-import ApiCall from '@/axios';
 
 type Props = {};
 
@@ -224,9 +217,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
           status={notification.status}
           show={showNotification}
           setShow={setShowNotification}
-          autoHide={
-            notification.status === NotificationStatus.ERROR ? false : true
-          }
+          autoHide={notification.status === NotificationStatus.ERROR}
         />
       )}
     </>

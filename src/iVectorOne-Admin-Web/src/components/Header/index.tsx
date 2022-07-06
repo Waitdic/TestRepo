@@ -1,16 +1,9 @@
-import React, { useState } from 'react';
-
-import {
-  ModalSearch,
-  DropdownNotifications,
-  DropdownHelp,
-  DropdownProfile,
-  DropdownMenu,
-  TenantSelector,
-} from '@/components';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
 import { Auth } from 'aws-amplify';
+//
+import { RootState } from '@/store';
+import { DropdownMenu, TenantSelector } from '@/components';
 
 type Props = {
   sidebarOpen: boolean;
@@ -18,7 +11,6 @@ type Props = {
 };
 
 const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
-  const [searchModalOpen, setSearchModalOpen] = useState(false);
   const user = useSelector((state: RootState) => state.app.user);
 
   return (

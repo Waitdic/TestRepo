@@ -2,6 +2,7 @@ import { memo, useEffect, useState, FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 //
 import { Subscription } from '@/types';
 import { useSlug } from '@/utils/use-slug';
@@ -13,7 +14,6 @@ import {
 } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
-  ErrorBoundary,
   SectionTitle,
   Toggle,
   Notification,
@@ -23,7 +23,6 @@ import {
   Spinner,
 } from '@/components';
 import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -66,7 +65,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
         `http://localhost:3001/subscription/edit/${slug}`,
         data
       );
-
+      console.log(updatedSubscription);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'Subscription edited successfully.',
@@ -92,27 +91,27 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
 
   const loadSubscription = useCallback(() => {
     if (subscriptions.length > 0) {
-      const currentSubscription = subscriptions.find(
+      const selectedSubscription = subscriptions.find(
         (sub) => sub.subscriptionId === Number(slug)
       );
 
-      if (!currentSubscription) {
+      if (!selectedSubscription) {
         navigate('/subscriptions');
-      } else {
-        setCurrentSubscription(currentSubscription);
-
-        setValue('userName', currentSubscription.userName);
-        setValue(
-          'propertyTprequestLimit',
-          currentSubscription.propertyTprequestLimit
-        );
-        setValue(
-          'searchTimeoutSeconds',
-          currentSubscription.searchTimeoutSeconds
-        );
-        setValue('logMainSearchError', currentSubscription.logMainSearchError);
-        setValue('currencyCode', currentSubscription.currencyCode);
+        return;
       }
+      setCurrentSubscription(selectedSubscription);
+
+      setValue('userName', selectedSubscription.userName);
+      setValue(
+        'propertyTprequestLimit',
+        selectedSubscription.propertyTprequestLimit
+      );
+      setValue(
+        'searchTimeoutSeconds',
+        selectedSubscription.searchTimeoutSeconds
+      );
+      setValue('logMainSearchError', selectedSubscription.logMainSearchError);
+      setValue('currencyCode', selectedSubscription.currencyCode);
     }
   }, [subscriptions, navigate, setValue, slug]);
 
@@ -171,7 +170,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                             required: 'This field is required.',
                           })}
                           labelText='Username'
-                          isDirty={errors.userName ? true : false}
+                          isDirty={!!errors.userName}
                           errorMsg={errors.userName?.message}
                         />
                       </div>
@@ -188,7 +187,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                             },
                           })}
                           labelText='Password'
-                          isDirty={errors.password ? true : false}
+                          isDirty={!!errors.password}
                           errorMsg={errors.password?.message}
                         />
                       </div>
@@ -203,7 +202,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                             required: 'This field is required.',
                           })}
                           labelText='Property TP Request Limit'
-                          isDirty={errors.propertyTprequestLimit ? true : false}
+                          isDirty={!!errors.propertyTprequestLimit}
                           errorMsg={errors.propertyTprequestLimit?.message}
                         />
                       </div>
@@ -215,7 +214,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                             required: 'This field is required.',
                           })}
                           labelText='Search Timeout Seconds'
-                          isDirty={errors.searchTimeoutSeconds ? true : false}
+                          isDirty={!!errors.searchTimeoutSeconds}
                           errorMsg={errors.searchTimeoutSeconds?.message}
                         />
                       </div>
@@ -247,7 +246,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                           id='logMainSearchError'
                           {...register('logMainSearchError')}
                           labelText='Log Main Search Error'
-                          isDirty={errors.logMainSearchError ? true : false}
+                          isDirty={!!errors.logMainSearchError}
                           errorMsg={errors.logMainSearchError?.message}
                           defaultValue={
                             currentSubscription?.logMainSearchError as boolean

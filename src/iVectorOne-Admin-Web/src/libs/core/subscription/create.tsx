@@ -13,7 +13,6 @@ import {
 } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
-  ErrorBoundary,
   SectionTitle,
   Button,
   TextField,
@@ -54,13 +53,12 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
       'LogMainSearchError',
       'CurrencyCode',
     ]);
-
     try {
       const newSubscription = await axios.post(
         'http://localhost:3001/subsciption.create',
         subscriptionData
       );
-
+      console.log(newSubscription);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Subscription created successfully.',
@@ -109,18 +107,6 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                   <div className='flex-1'>
                     <SectionTitle title='Subscription' />
                   </div>
-                  {/* TODO */}
-                  {/* <div className='flex-1 md:w-3/4'>
-                      <TextField
-                        id='name'
-                        {...register('name', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Name'
-                        isDirty={errors.name ? true : false}
-                        errorMsg={errors.name?.message}
-                      />
-                    </div> */}
                   <div className='flex-1 md:w-1/2'>
                     <TextField
                       id='userName'
@@ -128,7 +114,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                         required: 'This field is required.',
                       })}
                       labelText='Username'
-                      isDirty={errors.userName ? true : false}
+                      isDirty={!!errors.userName}
                       errorMsg={errors.userName?.message}
                     />
                   </div>
@@ -144,7 +130,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                         },
                       })}
                       labelText='Password'
-                      isDirty={errors.password ? true : false}
+                      isDirty={!!errors.password}
                       errorMsg={errors.password?.message}
                     />
                   </div>
@@ -159,7 +145,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                         required: 'This field is required.',
                       })}
                       labelText='Property TP Request Limit'
-                      isDirty={errors.propertyTprequestLimit ? true : false}
+                      isDirty={!!errors.propertyTprequestLimit}
                       errorMsg={errors.propertyTprequestLimit?.message}
                     />
                   </div>
@@ -171,7 +157,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                         required: 'This field is required.',
                       })}
                       labelText='Search Timeout Seconds'
-                      isDirty={errors.searchTimeoutSeconds ? true : false}
+                      isDirty={!!errors.searchTimeoutSeconds}
                       errorMsg={errors.searchTimeoutSeconds?.message}
                     />
                   </div>
@@ -203,7 +189,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
                       id='logMainSearchError'
                       {...register('logMainSearchError')}
                       labelText='Log Main Search Error'
-                      isDirty={errors.logMainSearchError ? true : false}
+                      isDirty={!!errors.logMainSearchError}
                       errorMsg={errors.logMainSearchError?.message}
                     />
                   </div>

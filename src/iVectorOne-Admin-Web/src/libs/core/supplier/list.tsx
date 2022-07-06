@@ -38,7 +38,7 @@ export const SupplierList: FC<Props> = memo(() => {
       (sub) => sub.subscriptionId === subId
     );
     setActiveSub(selectedSub as Subscription);
-    setSuppliers(sortBy(selectedSub?.suppliers, 'name') as Supplier[]);
+    setSuppliers(sortBy(selectedSub?.suppliers, 'name'));
     const mainLayoutArea = document.getElementById('main-layout-area');
     if (!!mainLayoutArea?.scrollTop) {
       mainLayoutArea.scrollTop = 0;
