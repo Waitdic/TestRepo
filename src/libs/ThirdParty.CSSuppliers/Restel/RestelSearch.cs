@@ -9,7 +9,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Security;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Models;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -46,7 +46,7 @@
             {
                 var xmlRequest = CreateAvailabilityRequestXml(
                     resortSplit.ResortCode,
-                    searchDetails.PropertyDuration,
+                    searchDetails.Duration,
                     searchDetails.ArrivalDate,
                     searchDetails.DepartureDate,
                     codusu,
@@ -139,12 +139,12 @@
             }
 
             // no more than 15 nights
-            if (searchDetails.PropertyDuration > 15)
+            if (searchDetails.Duration > 15)
             {
                 return true;
             }
 
-            if (searchDetails.PropertyArrivalDate < DateTime.Now.AddDays(2d))
+            if (searchDetails.ArrivalDate < DateTime.Now.AddDays(2d))
             {
                 return true;
             }

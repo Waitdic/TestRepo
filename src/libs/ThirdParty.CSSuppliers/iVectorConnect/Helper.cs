@@ -11,6 +11,7 @@
         {
             ThirdParties.BOOKABED,
             ThirdParties.IMPERATORE,
+            ThirdParties.OWNSTOCK,
         };
 
         public static LoginDetails GetLoginDetails(IThirdPartyAttributeSearch searchDetails, IiVectorConnectSettings settings, string source)

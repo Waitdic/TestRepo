@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -501,7 +501,7 @@
             var webRequest = new Request
             {
                 EndPoint = _settings.GenericURL(propertyDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = Source,
                 CreateLog = true,
                 LogFileName = logFilename,
@@ -512,16 +512,13 @@
 
             webRequest.SetRequest(xmlRequest);
 
-            await webRequest.Send(_httpClient, _logger);
-
-            //'save the xml for the front end
-            if (!string.IsNullOrEmpty(xmlRequest.OuterXml))
+            try
             {
-                propertyDetails.Logs.AddNew(Source, $"{Source} {logFilename} Request", xmlRequest.OuterXml);
+                await webRequest.Send(_httpClient, _logger);
             }
-            if (!string.IsNullOrEmpty(webRequest.ResponseLog))
+            finally
             {
-                propertyDetails.Logs.AddNew(Source, $"{Source} {logFilename} Response", webRequest.ResponseLog);
+                propertyDetails.AddLog(logFilename, webRequest);
             }
 
             return webRequest.ResponseXML;

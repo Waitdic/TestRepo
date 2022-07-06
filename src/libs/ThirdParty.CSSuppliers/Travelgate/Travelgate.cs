@@ -13,7 +13,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -203,17 +203,6 @@
                 success = false;
             }
 
-            // Lastly, add any logs
-            if (!string.IsNullOrEmpty(requestXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} PreBook Request", propertyDetails.Source), requestXml);
-            }
-
-            if (!string.IsNullOrEmpty(responseXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} PreBook Response", propertyDetails.Source), responseXml);
-            }
-
             return success;
         }
 
@@ -253,17 +242,6 @@
             {
                 propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
                 reference = "Failed";
-            }
-
-            // Lastly, add any logs
-            if (!string.IsNullOrEmpty(requestXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Book Request", propertyDetails.Source), requestXml);
-            }
-
-            if (!string.IsNullOrEmpty(responseXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Book Response", propertyDetails.Source), responseXml);
             }
 
             return reference;
@@ -311,17 +289,6 @@
             {
                 propertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
                 cancellationResponse.Success = false;
-            }
-
-            // Lastly, add any logs
-            if (!string.IsNullOrEmpty(requestXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Cancellation Request", propertyDetails.Source), requestXml);
-            }
-
-            if (!string.IsNullOrEmpty(responseXml.InnerXml))
-            {
-                propertyDetails.Logs.AddNew(propertyDetails.Source, string.Format("{0} Cancellation Response", propertyDetails.Source), responseXml);
             }
 
             return cancellationResponse;
@@ -380,7 +347,7 @@
             var webRequest = new Request
             {
                 EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = propertyDetails.Source,
                 LogFileName = requestType,
                 CreateLog = true,
@@ -388,7 +355,15 @@
                 SoapAction = soapAction
             };
             webRequest.SetRequest(requestString);
+
+            try
+            {
             await webRequest.Send(_httpClient, _logger);
+            }
+            finally
+            {
+                propertyDetails.AddLog(requestType, webRequest);
+            }
 
             var responseXML = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
 

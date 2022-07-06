@@ -8,6 +8,7 @@
     /// </summary>
     public class Subscription
     {
+        /// <summary>Gets or sets the subscription identifier.</summary>
         public int SubscriptionID { get; set; }
 
         /// <summary>Gets or sets the login.</summary>

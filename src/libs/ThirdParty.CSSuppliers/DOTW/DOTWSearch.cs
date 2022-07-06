@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Search.Models;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -94,7 +94,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ExtraInfo = searchDetails,
                     UseGZip = true
                 };
@@ -156,8 +156,8 @@
             sb.AppendLine("<product>hotel</product>");
             sb.AppendLine("<request command=\"searchhotels\" debug=\"0\">");
             sb.AppendLine("<bookingDetails>");
-            sb.AppendFormat("<fromDate>{0}</fromDate>", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("<toDate>{0}</toDate>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-dd"));
+            sb.AppendFormat("<fromDate>{0}</fromDate>", searchDetails.ArrivalDate.ToString("yyyy-MM-dd"));
+            sb.AppendFormat("<toDate>{0}</toDate>", searchDetails.DepartureDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("<currency>{0}</currency>", _dotwSupport.GetCurrencyID(searchDetails));
 
             sb.AppendFormat("<rooms no = \"{0}\">", searchDetails.Rooms);

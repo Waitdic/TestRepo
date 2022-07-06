@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -68,6 +68,7 @@
             // build the search url
             var sbPrebookURL = new StringBuilder();
             var prebookResponseXml = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -102,10 +103,10 @@
                 sbPrebookURL.Append("&blockSuperDeal=0");
 
                 // send the request to SunHotels
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = sbPrebookURL.ToString(),
-                    Method = eRequestMethod.GET,
+                    Method = RequestMethod.GET,
                     Source = ThirdParties.SUNHOTELS,
                     ContentType = ContentTypes.Text_xml,
                     LogFileName = "Prebook",
@@ -189,7 +190,6 @@
                     propertyDetails.Rooms[0].LocalCost = price;
                     propertyDetails.GrossCost = price;
                     propertyDetails.LocalCost = price;
-                    propertyDetails.AddLog(ThirdParties.SUNHOTELS, "Third Party / Prebook Price Changed");
                 }
 
                 return true;
@@ -201,16 +201,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sbPrebookURL.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels PreBook Request", sbPrebookURL.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(prebookResponseXml.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Prebook Response", prebookResponseXml);
-                }
+                propertyDetails.AddLog("PreBook", webRequest);
             }
         }
 
@@ -224,6 +215,7 @@
             string requestURL = "";
             var response = new XmlDocument();
             string bookingReference = "";
+            var webRequest = new Request();
 
             try
             {
@@ -329,11 +321,11 @@
 
                 requestURL = sbBookingRequestURL.ToString();
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     Source = ThirdParties.SUNHOTELS,
                     EndPoint = requestURL,
-                    Method = eRequestMethod.GET,
+                    Method = RequestMethod.GET,
                     ContentType = ContentTypes.Text_xml,
                     LogFileName = "Prebook",
                     CreateLog = true,
@@ -359,16 +351,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(requestURL))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Request", requestURL);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Book Response", response);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return bookingReference;
@@ -384,6 +367,7 @@
 
             var sbCancellationRequestURL = new StringBuilder();
             var cancellationResponseXML = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -395,10 +379,10 @@
                 sbCancellationRequestURL.AppendFormat("&language={0}", _settings.LanguageCode(propertyDetails));
 
                 // Send the request
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = sbCancellationRequestURL.ToString(),
-                    Method = eRequestMethod.GET,
+                    Method = RequestMethod.GET,
                     Source = ThirdParties.SUNHOTELS,
                     ContentType = ContentTypes.Text_xml,
                     LogFileName = "Cancel",
@@ -427,16 +411,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sbCancellationRequestURL.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Request", sbCancellationRequestURL.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(cancellationResponseXML.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SUNHOTELS, "SunHotels Cancellation Response", cancellationResponseXML);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;

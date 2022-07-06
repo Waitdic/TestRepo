@@ -21,11 +21,8 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-        /// <summary>Gets a list of all central property ids filtering by the past in last modified and suppliers</summary>
-        /// <param name="lastModified">The last modified date is used to return only properties that have been imported after that date</param>
-        /// <param name="suppliers">Filters the property ids to only those for the provided suppliers</param>
-        /// <returns>A list of property ids</returns>
-        public async Task<List<int>> GetPropertyIDsAsync(DateTime lastModified, string suppliers)
+        /// <inheritdoc/>
+        public async Task<List<int>> GetPropertyIDsAsync(DateTime lastModified, string suppliers, Subscription user)
         {
             return (await _sql.ReadAllAsync<int>(
                     "Property_List",
@@ -33,17 +30,15 @@
                         .IsStoredProcedure()
                         .WithParameters(new
                         {
-                            LastModified = lastModified,
-                            Suppliers = suppliers,
+                            lastModified = lastModified,
+                            suppliers = suppliers,
+                            subscriptionId = user.SubscriptionID
                         })))
                 .ToList();
         }
 
-        /// <summary>Returns the property content for each of the property ids passed in</summary>
-        /// <param name="propertyIDs">The central property identifiers for the properties the content is being requested for</param>
-        /// <param name="suppliers">Filters the property ids to only those for the provided suppliers</param>
-        /// <returns>A property content response.</returns>
-        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers)
+        /// <inheritdoc/>
+        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Subscription user)
         {
             var centralPropertyIDs = new List<int>();
 
@@ -53,8 +48,9 @@
                         .IsStoredProcedure()
                         .WithParameters(new
                         {
-                            sCentralPropertyIDs = string.Join(",", propertyIDs),
-                            Suppliers = suppliers
+                            centralPropertyIDs = string.Join(",", propertyIDs),
+                            suppliers = suppliers,
+                            subscriptionId = user.SubscriptionID
                         }));
 
             var response = new Content.Response();
@@ -142,33 +138,18 @@
             public string Resort { get; set; } = string.Empty;
         }
 
-        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyID)
+        /// <inheritdoc/>
+        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Subscription user)
         {
-            var content = new PropertyContent();
-
-            var property = await _sql.ReadSingleAsync<SingleProperty>(
+            return await _sql.ReadSingleAsync<PropertyContent>(
                     "Property_SingleProperty",
                     new CommandSettings()
                         .IsStoredProcedure()
                         .WithParameters(new
                         {
-                            PropertyID = propertyID
+                            propertyId = propertyId,
+                            subscriptionId = user.SubscriptionID
                         }));
-
-            content.CentralPropertyID = property.CentralPropertyID;
-            content.PropertyID = property.PropertyID;
-            content.TPKey = property.TPKey;
-            content.Source = property.Source;
-
-            return content;
-        }
-
-        public class SingleProperty
-        {
-            public int PropertyID { get; set; }
-            public int CentralPropertyID { get; set; }
-            public string Source { get; set; } = string.Empty;
-            public string TPKey { get; set; } = string.Empty;
         }
 
         private List<Content.ContentVariable> GetContentVariables(PropertyDetails propertyDetails)
@@ -177,17 +158,19 @@
 
             foreach (var contentVariable in propertyDetails.ContentVariables)
             {
+                var cv = new Content.ContentVariable(
+                    (Content.ContentVariableEnum)contentVariable.ParentGroupKey,
+                    (Content.ContentVariableEnum)contentVariable.Group,
+                    !string.IsNullOrEmpty(contentVariable.SubGroup) ? contentVariable.SubGroup : "",
+                    contentVariable.Key!,
+                    contentVariable.Value!);
 
-#pragma warning disable CS8604 // Possible null reference argument.
-                var cv = new Content.ContentVariable((Content.ContentVariableEnum)contentVariable.ParentGroupKey, (Content.ContentVariableEnum)contentVariable.Group,
-                    !string.IsNullOrEmpty(contentVariable.SubGroup) ? contentVariable.SubGroup : "", contentVariable.Key, contentVariable.Value);
-#pragma warning restore CS8604 // Possible null reference argument.
                 if (contentVariable.Units != 0)
                 {
                     cv.Units = (Content.ContentVariableEnum)contentVariable.Units;
                 }
-                contentVariables.Add(cv);
 
+                contentVariables.Add(cv);
             }
 
             return contentVariables;

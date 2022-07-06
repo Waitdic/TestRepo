@@ -1,0 +1,276 @@
+<SearchResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <RequestInfo>
+        <Timestamp>1650658518</Timestamp>
+        <TimestampISO>2022-04-22T20:15:18+00:00</TimestampISO>
+        <Host>xmldev-xml.centriumres.com</Host>
+        <HostIP>172.31.11.218</HostIP>
+        <ReqID>62630cd63e3182.08315929</ReqID>
+    </RequestInfo>
+    <ReturnStatus>
+        <Success>True</Success>
+        <Exception/>
+    </ReturnStatus>
+    <PropertyResults>
+        <TotalProperties>1</TotalProperties>
+        <PropertyResult>
+            <PropertyID>17</PropertyID>
+            <RoomTypes>
+                <RoomType>
+                    <RoomID>436430006</RoomID>
+                    <MealBasisID>1</MealBasisID>
+                    <Name>Palm View Garden View</Name>
+                    <Adults>2</Adults>
+                    <Children>0</Children>
+                    <Infants>0</Infants>
+                    <OnRequest>False</OnRequest>
+                    <SubTotal>5986</SubTotal>
+                    <Total>5986</Total>
+                    <RoomsAppliesTo>
+                        <RoomRequest>1</RoomRequest>
+                    </RoomsAppliesTo>
+                    <Supplements>
+                        <Supplement>
+                            <Name>PALM ISLAND FLIGHTS ANY DURATION</Name>
+                            <Duration>Per Holiday</Duration>
+                            <Multiplier>Per Person</Multiplier>
+                            <PaxType>All</PaxType>
+                            <Total>1198</Total>
+                        </Supplement>
+                    </Supplements>
+                    <SpecialOffers/>
+                    <Taxes>
+                        <Tax>
+                            <TaxName>Government Tax</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>780.78</Total>
+                        </Tax>
+                        <Tax>
+                            <TaxName>Service Charge</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>544.18</Total>
+                        </Tax>
+                    </Taxes>
+                    <CancellationPolicies>
+                        <CancellationPolicy>
+                            <CancelBy>2022-05-05</CancelBy>
+                            <Penalty>5986</Penalty>
+                        </CancellationPolicy>
+                    </CancellationPolicies>
+                </RoomType>
+                <RoomType>
+                    <RoomID>436440006</RoomID>
+                    <MealBasisID>1</MealBasisID>
+                    <Name>Beach Front Beachfront</Name>
+                    <Adults>2</Adults>
+                    <Children>0</Children>
+                    <Infants>0</Infants>
+                    <OnRequest>False</OnRequest>
+                    <SubTotal>6742</SubTotal>
+                    <Total>6742</Total>
+                    <RoomsAppliesTo>
+                        <RoomRequest>1</RoomRequest>
+                    </RoomsAppliesTo>
+                    <Supplements>
+                        <Supplement>
+                            <Name>PALM ISLAND FLIGHTS ANY DURATION</Name>
+                            <Duration>Per Holiday</Duration>
+                            <Multiplier>Per Person</Multiplier>
+                            <PaxType>All</PaxType>
+                            <Total>1198</Total>
+                        </Supplement>
+                    </Supplements>
+                    <SpecialOffers/>
+                    <Taxes>
+                        <Tax>
+                            <TaxName>Government Tax</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>879.39</Total>
+                        </Tax>
+                        <Tax>
+                            <TaxName>Service Charge</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>612.91</Total>
+                        </Tax>
+                    </Taxes>
+                    <CancellationPolicies>
+                        <CancellationPolicy>
+                            <CancelBy>2022-05-05</CancelBy>
+                            <Penalty>6742</Penalty>
+                        </CancellationPolicy>
+                    </CancellationPolicies>
+                </RoomType>
+                <RoomType>
+                    <RoomID>436450006</RoomID>
+                    <MealBasisID>1</MealBasisID>
+                    <Name>Superior Beachfront Beachfront</Name>
+                    <Adults>2</Adults>
+                    <Children>0</Children>
+                    <Infants>0</Infants>
+                    <OnRequest>False</OnRequest>
+                    <SubTotal>7246</SubTotal>
+                    <Total>7246</Total>
+                    <RoomsAppliesTo>
+                        <RoomRequest>1</RoomRequest>
+                    </RoomsAppliesTo>
+                    <Supplements>
+                        <Supplement>
+                            <Name>PALM ISLAND FLIGHTS ANY DURATION</Name>
+                            <Duration>Per Holiday</Duration>
+                            <Multiplier>Per Person</Multiplier>
+                            <PaxType>All</PaxType>
+                            <Total>1198</Total>
+                        </Supplement>
+                    </Supplements>
+                    <SpecialOffers/>
+                    <Taxes>
+                        <Tax>
+                            <TaxName>Government Tax</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>945.13</Total>
+                        </Tax>
+                        <Tax>
+                            <TaxName>Service Charge</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>658.73</Total>
+                        </Tax>
+                    </Taxes>
+                    <CancellationPolicies>
+                        <CancellationPolicy>
+                            <CancelBy>2022-05-05</CancelBy>
+                            <Penalty>7246</Penalty>
+                        </CancellationPolicy>
+                    </CancellationPolicies>
+                </RoomType>
+                <RoomType>
+                    <RoomID>436480006</RoomID>
+                    <MealBasisID>1</MealBasisID>
+                    <Name>SeaFeather Villa (3Bed) Beachfront</Name>
+                    <Adults>2</Adults>
+                    <Children>0</Children>
+                    <Infants>0</Infants>
+                    <OnRequest>True</OnRequest>
+                    <SubTotal>9262</SubTotal>
+                    <Total>9262</Total>
+                    <RoomsAppliesTo>
+                        <RoomRequest>1</RoomRequest>
+                    </RoomsAppliesTo>
+                    <Supplements>
+                        <Supplement>
+                            <Name>PALM ISLAND FLIGHTS ANY DURATION</Name>
+                            <Duration>Per Holiday</Duration>
+                            <Multiplier>Per Person</Multiplier>
+                            <PaxType>All</PaxType>
+                            <Total>1198</Total>
+                        </Supplement>
+                    </Supplements>
+                    <SpecialOffers/>
+                    <Taxes>
+                        <Tax>
+                            <TaxName>Government Tax</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>1208.09</Total>
+                        </Tax>
+                        <Tax>
+                            <TaxName>Service Charge</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>842</Total>
+                        </Tax>
+                    </Taxes>
+                    <CancellationPolicies>
+                        <CancellationPolicy>
+                            <CancelBy>2022-05-05</CancelBy>
+                            <Penalty>9262</Penalty>
+                        </CancellationPolicy>
+                    </CancellationPolicies>
+                </RoomType>
+                <RoomType>
+                    <RoomID>436490006</RoomID>
+                    <MealBasisID>1</MealBasisID>
+                    <Name>Southern Cross Villa (2Bed) Ocean View</Name>
+                    <Adults>2</Adults>
+                    <Children>0</Children>
+                    <Infants>0</Infants>
+                    <OnRequest>True</OnRequest>
+                    <SubTotal>9710</SubTotal>
+                    <Total>9710</Total>
+                    <RoomsAppliesTo>
+                        <RoomRequest>1</RoomRequest>
+                    </RoomsAppliesTo>
+                    <Supplements>
+                        <Supplement>
+                            <Name>PALM ISLAND FLIGHTS ANY DURATION</Name>
+                            <Duration>Per Holiday</Duration>
+                            <Multiplier>Per Person</Multiplier>
+                            <PaxType>All</PaxType>
+                            <Total>1198</Total>
+                        </Supplement>
+                    </Supplements>
+                    <SpecialOffers/>
+                    <Taxes>
+                        <Tax>
+                            <TaxName>Government Tax</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>1266.52</Total>
+                        </Tax>
+                        <Tax>
+                            <TaxName>Service Charge</TaxName>
+                            <Inclusive>True</Inclusive>
+                            <Total>882.73</Total>
+                        </Tax>
+                    </Taxes>
+                    <CancellationPolicies>
+                        <CancellationPolicy>
+                            <CancelBy>2022-05-05</CancelBy>
+                            <Penalty>9710</Penalty>
+                        </CancellationPolicy>
+                    </CancellationPolicies>
+                </RoomType>
+            </RoomTypes>
+            <PropertyName>Palm Island Resort</PropertyName>
+            <GIATAID>48033</GIATAID>
+            <Currency>USD</Currency>
+            <Rating>4.5</Rating>
+            <GeographyLevel1ID>41</GeographyLevel1ID>
+            <GeographyLevel2ID>14</GeographyLevel2ID>
+            <GeographyLevel3ID>14</GeographyLevel3ID>
+            <Country>Saint Vincent and the Grenadines</Country>
+            <Area>Palm Island</Area>
+            <Region>Palm Island</Region>
+            <Strapline>Intimate, exotic and all-inclusive,</Strapline>
+            <Description>Palm Island Resort is an eco-friendly, Green Globe certified island with a dash of sophistication.  The luxury, all-inclusive, 135-acre resort offers a range of amenities, activities, dining options and accommodations. &#xD; &#xD; Palm Island is located near the southern tip of St. Vincent and the Grenadines, a chain of 32 islands and cays known for natural beauty and clear, tranquil waters. The area&#x2019;s abundant sea life, coral reefs and unique shipwrecks attract recreational sailors and divers from around the world. &#xD; &#xD; Palm Island does not accept bookings that include children younger than 12 years old.&#xD; &#xD; GETTING THERE&#xD; Flights from Barbados to Union Island, plus onward travel by boat to Palm Island, are included within your accommodation price. Currently flights run daily from BGI. &#xD; &#xD; WHAT&#x2019;S NEW	&#xD; Recently, Palm Island Resort was named the number four resort in the Caribbean in the Cond&#xE9; Nast Traveler Readers&#x2019; Choice Awards.    &#xD; Over the past year, all aspects of the resort&#x2019;s culinary experience have been upgraded, including menu offerings, presentation and service.  The resort&#x2019;s menu changes based on season and availability, incorporating locally grown herbs and produce, some of which are from the on-property greenhouse.  These ingredients are also used in new flavour-infused waters and cocktails.  This chilled, naturally flavoured water as well as frozen fruit popsicles are served during peak hours each day at the beach and along pool areas.  &#xD; &#xD; Another new local food and beverage initiative is the resort&#x2019;s coconut program.  With more than 2,000 coconut-bearing trees spread across the 135-acre island, Palm Island naturally provides a seemingly endless supply of coconuts.  This local, naturally beneficial product is now harvested and incorporated into the daily rotating menu.  Sample breakfast items include coconut-flavored bread, waffles and pancakes.  Lunch and dinner items include coconut rice and peas, coconut shrimp, coconut layer cake, coconut macaroons and more, all made with local Palm Island coconuts.&#xD; &#xD; New offerings have also been added to the daily activity program and excursions, including volleyball and cricket matches, a presentation on the history of the island and weekly receptions.  For action-seeking guests, the thrill of kitesurfing and the beauty of stand-up paddle boarding are also available. &#xD; &#xD; The resort has also added an informal weekly sunset photo contest.  Guests gather each evening at the Sunset Bar to watch the western sky as the sun dips below the horizon.  Photos taken by guests&#x2019; cameras are submitted for a friendly competition, and a winner is selected each week.&#xD; &#xD; ACCOMMODATION&#xD; Ideal for romantic escapes, girlfriend getaways, mother-daughter retreats as well as solo travelers, this intimate hideaway has only 41 guestrooms and two private villas. More than half of the 43 are set directly on the beach while the rest are located just a few steps away.  	&#xD; &#xD; All accommodations provide the following in-room amenities:  air conditioning; soft bathrobes; daily housekeeping service; nightly turndown service; personal safe; hair dryer; coffee maker; alarm clock; iron; and ironing board.  In addition, all beachfront rooms are now outfitted with glass shutters.  &#xD; &#xD; A TV, computer and Internet lounge is available for guests, who may also bring their own laptops and take advantage of WiFi access.&#xD; &#xD; Palm View rooms have sitting areas, furnished terraces, two queen-sized beds or a king-sized bed (some with canopies) and master baths (some with deep-soaking tubs).&#xD; &#xD; Beach Front rooms have king-sized beds, furnished terraces with views of the Caribbean Sea and Union Island, small sitting areas and bathrooms with showers.  These 20 rooms are perfect for romance and are situated in ten single-story buildings set side-by-side along the beach. &#xD; &#xD; Island Lofts are located in charming, wooden cottages and feature two queen-sized beds or one king-sized bed, private terraces with ocean views toward the Tobago Cays or gardens, deep soaking tubs and separate single showers. These five airy lofts provide an abundance of charm and privacy.  The island lofts are perched above the ground on stilts, set back from the beach amid lush gardens. &#xD; &#xD; Four beach front Seagrape Suites offer king-sized beds and bathrooms with double showers for two as well as large soaking bathtubs.  Suites feature pull-out couches in sitting areas as well as over-sized master baths.  Of all the accommodations, these suites offer the best view of sunset as they face directly westward.&#xD; &#xD; Southern Cross Villa, which sleeps up to four adults, is the ultimate escape for couples. The oceanfront villa is designed with honey-toned woods, comfortable rattans and stone finishes blending into the natural environment, a panoramic bluff.  The villa includes its own 10-by-10-foot infinity pool, a tiled dining terrace, an arbor patio and two master bedrooms, each with a king-sized bed, flat screen televisions, a marble bathroom and a step-in, ocean-view shower, where a large door opens to the sea. The villa&#x2019;s state-of-the-art marble kitchen is stocked with pantry staples including cereal, fruit, snacks, coffee and tea. For refreshment, soft drinks, beer and complimentary bottles of champagne, red wine and white wine are provided upon arrival. A complimentary golf cart is also provided for the villa.&#xD; &#xD; Seafeather Villa is the resort&#x2019;s newest villa and is situated on the northern shore on the longest of the island&#x2019;s five beaches. The villa has three bedrooms with a king-sized bed, a queen-sized bed and a twin-sized bed, a living room and a covered deck adjacent to the ocean&#x2019;s edge. Refreshments are stocked upon arrival, and a complimentary golf cart is provided.  The villa features televisions in all rooms, Internet, a full kitchen and a washer and dryer. &#xD; &#xD; DINING	&#xD; Palm Island Resort offers daily afternoon tea, premium alcoholic beverages and three meals per day. A wonderful, acclaimed Chef is the culinary artist behind both restaurants.&#xD; &#xD; Sunset Grill is a casual beachfront restaurant, offering an extensive lunch and dinner menu.  Seating is available inside the restaurant or directly on the sand.  Highlights include the fresh catch of the day, a mouth-watering Palm Island pizza and a local specialty dish, which changes daily. &#xD; &#xD; Royal Palm Restaurant sits on the island&#x2019;s white-sand beach and offers a more formal dining experience.  The menu highlights include croissants, eggs Benedict and cinnamon French toast with Vicentian rum butter for breakfast, salad, pizzas and pastas for lunch and an a la carte menu with a variety of international and local dishes for dinner.  A wide array of coconut delicacies are also presented to guests at breakfast, lunch and dinner via the coconut treasure chest.  &#xD; &#xD; DRESS CODE 	&#xD; During the day, the restaurant dress code permits covered and dry bathing suits.  After 6:30 p.m. men are requested to wear long trousers or tailored (Bermuda) shorts, a collared shirt and dress shoes. Ladies are requested to wear long trousers including premium denim, dresses, skirts, dress shorts and dress sandals.  Flip flops, tennis shoes, t-shirts and tank top/sleeveless shirts are not permitted in the evening.&#xD; &#xD; SPA 	&#xD; Palm Island Spa offers a diverse menu of treatments for individuals and couples, from traditional Swedish and Shiatsu treatments to reflexology techniques.  All treatments incorporate natural oils and creams, including tea tree, ylang ylang and peppermint.  The spa offers face, hand, foot and full-body massages as well as a detox seaweed wrap and pedicure. &#xD; &#xD; ACTIVITIES	&#xD; Guests can enjoy a scenic tour via bicycle or explore the ocean&#x2019;s wildlife during a snorkelling excursion.  In addition, the resort features a lagoon-style swimming pool, complimentary tennis, croquet, table tennis, beanbag toss and horseshoe game pit, cycling, shuffleboard and water activities such as kayaking, hobie cats and paddle boarding.  Volleyball is scheduled for 4:00 p.m. daily, and a friendly cricket match takes place every Sunday, bringing together both resort guests and staff.  Guests can choose to sunbathe, stroll along one of the white-sand beaches or enjoy nighttime entertainment on most evenings.  Guests can enjoy a weekly presentation on Palm Island&#x2019;s history in the art gallery.  Three hiking trails, a tennis court, a full fitness center and a cozy library are also available.  The resort offers a chef&#x2019;s demo and full botanical stroll each week, along with various local crafting classes throughout the week.&#xD; &#xD; EXCURSIONS 	&#xD; For guests seeking a memorable off-island experience, daily excursions depart from Palm Island and can be arranged by the tour desk for an additional fee.  Guests can explore the Tobago Cays and Mayreau on-board the Yannis catamaran; take in the area&#x2019;s natural beauty above and below water on the resort&#x2019;s signature Pink Lady schooner; reel in the catch of a lifetime on a deep sea fishing trip; or explore mainland St. Vincent and nearby Union Island.  Sunset and starlight cruises can be arranged on a luxury yacht as well as overnight island-hopping to other islands such as Bequia.  Kitesurfing lessons and stand-up paddle boarding are also available.</Description>
+            <CMSBaseURL>https://www.rmidirect.co.uk/custom/content/</CMSBaseURL>
+            <MainImage>CMSImage_539.jpg</MainImage>
+            <MainImageThumbnail>CMSImageThumb_539.jpg</MainImageThumbnail>
+            <Images>
+                <Image>
+                    <FullSize>CMSImage_299.jpg</FullSize>
+                    <Thumbnail>CMSImageThumb_299.jpg</Thumbnail>
+                </Image>
+                <Image>
+                    <FullSize>CMSImage_384.jpg</FullSize>
+                    <Thumbnail>CMSImageThumb_384.jpg</Thumbnail>
+                </Image>
+                <Image>
+                    <FullSize>CMSImage_385.jpg</FullSize>
+                    <Thumbnail>CMSImageThumb_385.jpg</Thumbnail>
+                </Image>
+                <Image>
+                    <FullSize>CMSImage_541.jpg</FullSize>
+                    <Thumbnail>CMSImageThumb_541.jpg</Thumbnail>
+                </Image>
+                <Image>
+                    <FullSize>CMSImage_601.jpg</FullSize>
+                    <Thumbnail>CMSImageThumb_601.jpg</Thumbnail>
+                </Image>
+            </Images>
+            <Errata>
+                <Erratum>
+                    <StartDate>2022-05-26</StartDate>
+                    <EndDate>2022-06-02</EndDate>
+                    <Description>Please note that effective 1st September 2021, all arriving guests age 16 and up must provide proof of Covid-19 vaccination upon check-in at all hotels within the Elite Island Resorts portfolio.&#xD; Proof of vaccination means a proper, professionally recognized document like a CDC vaccine card in the US, or an NHS vaccine status report, pass, or certificate in the UK, or similar.</Description>
+                </Erratum>
+            </Errata>
+        </PropertyResult>
+    </PropertyResults>
+</SearchResponse>     

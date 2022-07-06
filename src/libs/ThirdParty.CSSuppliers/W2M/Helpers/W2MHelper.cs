@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
-using Intuitive;
-using Intuitive.Helpers.Serialization;
-using ThirdParty.Constants;
-using ThirdParty.Models;
-using ThirdParty.Models.Property.Booking;
-using ThirdParty.CSSuppliers.Models.W2M;
-using ThirdParty.CSSuppliers.Xml.W2M;
-using Log = ThirdParty.Models.Log;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-
-namespace ThirdParty.CSSuppliers.Helpers.W2M
+﻿namespace ThirdParty.CSSuppliers.Helpers.W2M
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Intuitive.Helpers.Serialization;
+    using Microsoft.Extensions.Logging;
+    using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.Models.W2M;
+    using ThirdParty.CSSuppliers.Xml.W2M;
+    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
+    using Log = ThirdParty.Models.Log;
+
     public class W2MHelper
     {
         private readonly SearchRequestBuilder _searchRequestBuilder;
@@ -223,7 +222,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
             {
                 Address = propertyDetails.LeadGuestAddress1,
                 City = propertyDetails.LeadGuestTownCity,
-                Country = propertyDetails.LeadGuestBookingCountry,
+                Country = propertyDetails.LeadGuestCountryCode, // todo - should use TP lookup here but data not in DB yet
                 Nationality = _settings.LeadGuestNationality(propertyDetails),
                 PassportNumber = propertyDetails.PassportNumber,
                 Email = propertyDetails.LeadGuestEmail,
@@ -238,7 +237,7 @@ namespace ThirdParty.CSSuppliers.Helpers.W2M
                 Language = _settings.LanguageCode(propertyDetails),
                 Endpoint = _settings.BookingURL(propertyDetails),
                 SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
-                CreateLogs = propertyDetails.CreateLogs
+                CreateLogs = true
             };
 
             var hotelRequest = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any() ?

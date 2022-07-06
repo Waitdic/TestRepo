@@ -8,7 +8,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.Models.W2M;
@@ -47,8 +47,8 @@
                 SoapPrefix = _settings.SoapActionPrefix(searchDetails)
             };
 
-            var startDate = searchDetails.PropertyArrivalDate.ToString(Constants.DateTimeFormat);
-            var endDate = searchDetails.PropertyDepartureDate.ToString(Constants.DateTimeFormat);
+            var startDate = searchDetails.ArrivalDate.ToString(Constants.DateTimeFormat);
+            var endDate = searchDetails.DepartureDate.ToString(Constants.DateTimeFormat);
 
             var hotelsCodes = GetHotelCodes(searchDetails, resortSplits);
 
@@ -88,7 +88,7 @@
                 EndPoint = parameters.Endpoint,
                 SOAP = true,
                 SoapAction = $"{parameters.SoapPrefix}{soapAction}",
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_Xml_charset_utf_8,
                 LogFileName = requestName,
                 UseGZip = true,

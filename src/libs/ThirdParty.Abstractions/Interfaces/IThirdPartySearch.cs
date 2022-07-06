@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Results.Models;

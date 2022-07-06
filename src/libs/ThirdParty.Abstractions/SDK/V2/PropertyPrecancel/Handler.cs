@@ -16,7 +16,7 @@
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _cancelService.GetCancellationFeesAsync(request, request.User);
+            return await _cancelService.GetCancellationFeesAsync(request);
         }
     }
 }

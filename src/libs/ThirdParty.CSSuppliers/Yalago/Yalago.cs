@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
@@ -17,7 +17,6 @@
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
 
     public class Yalago : IThirdParty, ISingleSource
     {
@@ -127,15 +126,7 @@
             }
             finally
             {
-                if (request.EndPoint != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago Cancellation Request", request.RequestString);
-                }
-
-                if (request.ResponseString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago Cancellation Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("Cancellation", request);
             }
 
             return cancellationResponse;
@@ -187,15 +178,7 @@
             }
             finally
             {
-                if (request.EndPoint != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago GetCancellationCost Request", request.RequestString);
-                }
-
-                if (request.ResponseString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago GetCancellationCost Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("GetCancellationCost", request);
             }
 
             return cancellationCostResponse;
@@ -206,11 +189,11 @@
             var request = new Request
             {
                 Source = ThirdParties.YALAGO,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 EndPoint = url,
                 ContentType = "application/json",
                 UseGZip = _settings.UseGZip(searchDetails),
-                CreateLog = propertyDetails.CreateLogs,
+                CreateLog = true,
                 LogFileName = requestType,
                 Accept = "application/gzip",
                 TimeoutInSeconds = 100,
@@ -231,7 +214,7 @@
             var request = new Request();
             try
             {
-                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry);
+                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.SubscriptionID);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
                     sourceMarket = _settings.SourceMarket(propertyDetails);
@@ -342,15 +325,7 @@
             }
             finally
             {
-                if (request.RequestString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago PreBook Request", request.RequestString);
-                }
-
-                if (request.ResponseString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago PreBook Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("PreBook", request);
             }
 
             return prebookSuccess;
@@ -421,15 +396,12 @@
                     PostCode = propertyDetails.LeadGuestPostcode
                 };
 
-                string sourceMarket;
-                if (string.IsNullOrEmpty(await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry)))
+                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.SubscriptionID);
+                if (string.IsNullOrEmpty(sourceMarket))
                 {
                     sourceMarket = _settings.SourceMarket(propertyDetails);
                 }
-                else
-                {
-                    sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry);
-                }
+
                 var request = new YalagoCreateBookingRequest()
                 {
                     AffiliateRef = propertyDetails.BookingReference,
@@ -472,15 +444,7 @@
             }
             finally
             {
-                if (bookingRequest.RequestString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago Book Request", bookingRequest.RequestString);
-                }
-
-                if (bookingRequest.ResponseString != "")
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YALAGO, "Yalago Book Response", bookingRequest.ResponseString);
-                }
+                propertyDetails.AddLog("Book", bookingRequest);
             }
 
             return reference;

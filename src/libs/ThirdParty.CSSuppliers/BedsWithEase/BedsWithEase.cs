@@ -58,6 +58,8 @@
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             bool success = true;
+            Result? reserveResult = null;
+
             try
             {
                 // SessionID has been passed into the room tp reference field via XSL 
@@ -68,7 +70,7 @@
                 // Send reservation requests and store returned errata and reservation book codes
                 foreach (var xmlRequest in BuildReservationRequests(propertyDetails))
                 {
-                    var reserveResult = await BedsWithEaseHelper.SendRequestAsync(propertyDetails, xmlRequest, _settings.SOAPHotelReservation(propertyDetails), _settings, _httpClient, _logger);
+                    reserveResult = await BedsWithEaseHelper.SendRequestAsync(propertyDetails, xmlRequest, _settings.SOAPHotelReservation(propertyDetails), _settings, _httpClient, _logger);
 
                     var response = _serializer.DeSerialize<Envelope<HotelReservationResponse>>(reserveResult.Response).Body.Content;
 
@@ -80,16 +82,6 @@
 
                     // Send CancellationInfoRequest - one per reservation request
                     await GetPrebookCancellationDetailsAsync(propertyDetails, bookCode);
-
-                    if (reserveResult.Request != null)
-                    {
-                        propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "BedsWithEase Pre-Book Request", reserveResult.Request);
-                    }
-
-                    if (reserveResult.Response != null)
-                    {
-                        propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "BedsWithEase Pre-Book Response", reserveResult.Response);
-                    }
                 }
 
                 // Store reserved book codes in TPRef2 Property of property details for use in buildreservationconfirmation
@@ -104,6 +96,10 @@
             {
                 propertyDetails.Warnings.AddNew("PreBookExceptionRS", ex.ToString());
                 success = false;
+            }
+            finally
+            {
+                propertyDetails.AddLog("Pre-Book", reserveResult.Request);
             }
 
             return success;
@@ -134,16 +130,9 @@
             {
                 propertyDetails.Warnings.AddNew("CancellationCost Exception", ex.ToString());
             }
-
-            // Add the xml to the booking
-            if (result?.Request != null)
+            finally
             {
-                propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Prebook CancellationInfo Request", result.Request);
-            }
-
-            if (result?.Response != null)
-            {
-                propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Prebook CancellationInfo Response", result.Response);
+                propertyDetails.AddLog("Prebook CancellationInfo", result.Request);
             }
         }
 
@@ -227,12 +216,12 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            string sReference = string.Empty;
-            Result? oResult = null;
+            string reference = string.Empty;
+            Result? result = null;
 
             try
             {
-                oResult = await BedsWithEaseHelper.SendRequestAsync(
+                result = await BedsWithEaseHelper.SendRequestAsync(
                     propertyDetails,
                     BuildReservationConfirmation(propertyDetails),
                     _settings.SOAPReservationConfirmation(propertyDetails),
@@ -240,11 +229,11 @@
                     _httpClient,
                     _logger);
 
-                var confirmationResponse = _serializer.DeSerialize<Envelope<ConfirmationResponse>>(oResult.Response).Body.Content;
+                var confirmationResponse = _serializer.DeSerialize<Envelope<ConfirmationResponse>>(result.Response).Body.Content;
 
                 if (confirmationResponse.Errors.Any())
                 {
-                    sReference = "failed";
+                    reference = "failed";
                 }
                 else
                 {
@@ -252,35 +241,29 @@
                     {
                         if (!string.IsNullOrEmpty(confirmation.Failed))
                         {
-                            sReference = "failed";
+                            reference = "failed";
                             break;
                         }
 
-                        sReference += $"{confirmation.Confirmed.BookingReference}|";
+                        reference += $"{confirmation.Confirmed.BookingReference}|";
                     }
                 }
             }
             catch (Exception ex)
             {
                 propertyDetails.Warnings.AddNew("BookException", ex.ToString());
-                sReference = "failed";
+                reference = "failed";
             }
-
-            sReference = sReference.TrimEnd('|');
-
-            if (oResult?.Request != null)
+            finally
             {
-                propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Book Request", oResult.Request);
+                propertyDetails.AddLog("Book", result.Request);
             }
 
-            if (oResult?.Response != null)
-            {
-                propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Book Response", oResult.Response);
-            }
+            reference = reference.TrimEnd('|');
 
             await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
 
-            return sReference;
+            return reference;
         }
 
         private XmlDocument BuildReservationConfirmation(PropertyDetails propertyDetails)
@@ -406,15 +389,7 @@
             }
             finally
             {
-                if (result?.Request != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Cancel Booking Request", result.Request);
-                }
-
-                if (result?.Response != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "Cancel Booking Response", result.Response);
-                }
+                propertyDetails.AddLog("Cancel", result.Request);
 
                 await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
             }
@@ -477,16 +452,7 @@
             }
             finally
             {
-                // Add the xml to the booking
-                if (result?.Request != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "CancellationInfo Request", result.Request);
-                }
-
-                if (result?.Response != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.BEDSWITHEASE, "CancellationInfo Response", result.Response);
-                }
+                propertyDetails.AddLog("CancellationInfo", result.Request);
 
                 await BedsWithEaseHelper.EndSessionAsync(propertyDetails, _settings, _serializer, _httpClient, _logger);
             }

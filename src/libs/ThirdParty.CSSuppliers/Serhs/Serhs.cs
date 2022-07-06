@@ -6,7 +6,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
@@ -127,11 +127,11 @@
                 xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.EndPoint = _settings.GenericURL(propertyDetails);
-                request.Method = eRequestMethod.POST;
+                request.Method = RequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_xml;
                 request.LogFileName = "PreBook";
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
                 request.SetRequest(xmlRequest);
                 await request.Send(_httpClient, _logger);
 
@@ -237,15 +237,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS PreBook Request", request.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS PreBook Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("PreBook", request);
             }
 
             return preBookSuccess;
@@ -348,7 +340,7 @@
 
                 request.Source = ThirdParties.SERHS;
                 request.EndPoint = _settings.GenericURL(propertyDetails);
-                request.Method = eRequestMethod.POST;
+                request.Method = RequestMethod.POST;
                 request.ContentType = ContentTypes.Text_xml;
 
                 request.SetRequest(xmlRequest);
@@ -373,15 +365,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS Book Request", request.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS Book Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("Book", request);
             }
 
             return reference;
@@ -395,11 +379,11 @@
             try
             {
                 request.EndPoint = _settings.GenericURL(propertyDetails);
-                request.Method = eRequestMethod.POST;
+                request.Method = RequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_html;
                 request.LogFileName = "Cancel";
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
 
                 var cancellationRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "1");
 
@@ -426,15 +410,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.EndPoint))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS Cancellation Request", request.EndPoint);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS Cancellation Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("Cancellation", request);
             }
 
             return cancellationResponse;
@@ -448,11 +424,11 @@
             try
             {
                 request.EndPoint = _settings.GenericURL(propertyDetails);
-                request.Method = eRequestMethod.POST;
+                request.Method = RequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_html;
                 request.LogFileName = "Cancellation Costs";
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
 
                 var getCancellationCostRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "0");
 
@@ -478,15 +454,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS GetCancellationCost Request", request.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.SERHS, "SERHS GetCancellationCost Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("GetCancellationCost", request);
             }
 
             return cancellationCostResponse;

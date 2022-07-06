@@ -5,7 +5,7 @@
     using CSSuppliers.Netstorming;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Moq;
     using ThirdParty.Lookups;
     using ThirdParty.Search.Models;

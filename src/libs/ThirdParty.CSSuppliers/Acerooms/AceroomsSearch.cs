@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -172,7 +172,7 @@
             var request = new Request()
             {
                 EndPoint = _settings.GenericURL(searchDetails) + "Search",
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = Source,
                 ContentType = ContentTypes.Application_json,
                 ExtraInfo = searchDetails,

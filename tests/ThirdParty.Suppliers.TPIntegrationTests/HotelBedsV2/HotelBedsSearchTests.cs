@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Security;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Moq;
     using ThirdParty.Lookups;
     using ThirdParty.Search.Models;

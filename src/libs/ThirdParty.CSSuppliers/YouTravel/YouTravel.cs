@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -79,7 +79,7 @@
                 webRequest.CreateLog = true;
                 webRequest.LogFileName = "Prebook";
                 webRequest.EndPoint = sb.ToString();
-                webRequest.Method = eRequestMethod.GET;
+                webRequest.Method = RequestMethod.GET;
                 await webRequest.Send(_httpClient, _logger);
 
                 response = _serializer.CleanXmlNamespaces(webRequest.ResponseXML);
@@ -101,9 +101,17 @@
                         CreateLog = true,
                         LogFileName = "Cancellation Cost",
                         EndPoint = sbCancelPolicy.ToString(),
-                        Method = eRequestMethod.GET
+                        Method = RequestMethod.GET
                     };
+
+                    try
+                    {
                     await cancellationPolicyWebRequest.Send(_httpClient, _logger);
+                    }
+                    finally
+                    {
+                        propertyDetails.AddLog("CancellationPolicy", cancellationPolicyWebRequest);
+                    }
 
                     cancelPolicyResponseXml = _serializer.CleanXmlNamespaces(cancellationPolicyWebRequest.ResponseXML);
                     
@@ -114,9 +122,6 @@
                         decimal cancellationCost = cancellationNode.SelectSingleNode("Fees").InnerText.ToSafeDecimal();
                         propertyDetails.Cancellations.AddNew(fromDate, toDate, cancellationCost);
                     }
-
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Request " + roomDetails.PropertyRoomBookingID, cancellationPolicyWebRequest.RequestLog);
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel CancellationPolicy Response " + roomDetails.PropertyRoomBookingID, cancellationPolicyWebRequest.ResponseLog);
                 }
 
                 propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
@@ -128,9 +133,7 @@
             }
             finally
             {
-                // save the xml for the front end
-                propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Request", webRequest.RequestLog);
-                propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Prebook Response", webRequest.ResponseLog);
+                propertyDetails.AddLog("Prebook", webRequest);
             }
 
             propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
@@ -147,6 +150,7 @@
             var response = new XmlDocument();
             string requestURL = "";
             string reference = "";
+            var webRequest = new Request();
 
             try
             {
@@ -218,13 +222,13 @@
 
                 requestURL = sbURL.ToString();
 
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     Source = ThirdParties.YOUTRAVEL,
                     CreateLog = true,
                     LogFileName = "Book",
                     EndPoint = requestURL,
-                    Method = eRequestMethod.GET
+                    Method = RequestMethod.GET
                 };
                 await webRequest.Send(_httpClient, _logger);
 
@@ -248,16 +252,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(requestURL))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Request", requestURL);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Book Response", response);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -272,6 +267,7 @@
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             var sbURL = new StringBuilder();
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -282,13 +278,13 @@
                 sbURL.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
 
                 // Send the request
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     Source = ThirdParties.YOUTRAVEL,
                     CreateLog = true,
                     LogFileName = "Cancel",
                     EndPoint = sbURL.ToString(),
-                    Method = eRequestMethod.GET
+                    Method = RequestMethod.GET
                 };
                 await webRequest.Send(_httpClient, _logger);
 
@@ -315,16 +311,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(sbURL.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Request", sbURL.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Response", response);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;
@@ -333,28 +320,28 @@
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             var result = new ThirdPartyCancellationFeeResult();
-            var sbURL = new StringBuilder();
-            var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
+                var sbURL = new StringBuilder();
                 sbURL.AppendFormat("{0}{1}", _settings.CancellationFeeURL(propertyDetails), "?");
                 sbURL.AppendFormat("Booking_ref={0}", propertyDetails.SourceReference);
                 sbURL.AppendFormat("&UserName={0}", _settings.User(propertyDetails));
                 sbURL.AppendFormat("&Password={0}", _settings.Password(propertyDetails));
 
                 // Send the request
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     Source = ThirdParties.YOUTRAVEL,
                     CreateLog = true,
                     LogFileName = "Cancellation Cost",
                     EndPoint = sbURL.ToString(),
-                    Method = eRequestMethod.GET
+                    Method = RequestMethod.GET
                 };
                 await webRequest.Send(_httpClient, _logger);
 
-                response = webRequest.ResponseXML;
+                var response = webRequest.ResponseXML;
 
                 // return a fees result if found
                 var node = response.SelectSingleNode("/HtSearchRq/Success");
@@ -376,15 +363,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(sbURL.ToString()))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Request", sbURL.ToString());
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.YOUTRAVEL, "YouTravel Cancellation Cost Response", response);
-                }
+                propertyDetails.AddLog("Cancellation Cost", webRequest);
             }
 
             return result;

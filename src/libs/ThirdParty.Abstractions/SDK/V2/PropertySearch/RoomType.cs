@@ -104,7 +104,7 @@
         /// <value>
         /// The third party rate code.
         /// </value>
-        public string TPRateCode { get; set; } = string.Empty;
+        public string RateCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether [non refundable].

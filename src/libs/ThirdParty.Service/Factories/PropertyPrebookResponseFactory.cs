@@ -56,8 +56,8 @@
             var errata = new List<string>();
             var cancellationTerms = new List<Search.CancellationTerm>();
             var roomBookings = new List<RoomBooking>();
-            int currencyID = !string.IsNullOrEmpty(propertyDetails.CurrencyCode) ?
-                await _support.TPCurrencyIDLookupAsync(propertyDetails.CurrencyCode) :
+            int currencyId = !string.IsNullOrEmpty(propertyDetails.CurrencyCode) ?
+                await _support.ISOCurrencyIDLookupAsync(propertyDetails.CurrencyCode) :
                 0;
 
             foreach (var erratum in propertyDetails.Errata)
@@ -78,7 +78,10 @@
 
             foreach (var room in propertyDetails.Rooms)
             {
-                var mealbasisiD = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(propertyDetails.Source, room.MealBasisCode);
+                int mealbasisId = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(
+                    propertyDetails.Source,
+                    room.MealBasisCode,
+                    propertyDetails.SubscriptionID);
 
                 var roomToken = new RoomToken()
                 {
@@ -87,8 +90,8 @@
                     Infants = room.Infants,
                     ChildAges = room.ChildAges,
                     PropertyRoomBookingID = room.PropertyRoomBookingID,
-                    LocalCost = PropertyFactoryHelper.splitNumberToNDigitList((int)(room.LocalCost * 100), 7),
-                    MealBasis = PropertyFactoryHelper.splitNumberToNDigitList(mealbasisiD, 2),
+                    LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(room.LocalCost * 100), 7),
+                    MealBasisID = PropertyFactoryHelper.SplitNumberToNDigitList(mealbasisId, 2),
                 };
 
                 var roomBooking = new RoomBooking()
@@ -105,11 +108,11 @@
             var bookingToken = new PropertyToken()
             {
                 ArrivalDate = propertyDetails.ArrivalDate,
-                CentralPropertyID = propertyDetails.PropertyID,
+                CentralPropertyID = propertyDetails.CentralPropertyID,
                 Duration = propertyDetails.Duration,
-                PropertyID = propertyDetails.TPPropertyID,
+                PropertyID = propertyDetails.PropertyID,
                 Rooms = propertyDetails.Rooms.Count,
-                CurrencyID = currencyID,
+                CurrencyID = currencyId,
             };
 
             var response = new Response()

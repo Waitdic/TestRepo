@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using System.Xml;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Common;
@@ -26,7 +26,7 @@
             var webRequest = new Request
             {
                 EndPoint = settings.URL(searchDetails),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 SOAP = true,
                 SoapAction = soapAction,
                 Source = ThirdParties.BEDSWITHEASE,
@@ -36,7 +36,7 @@
             webRequest.SetRequest(xmlRequest);
             await webRequest.Send(httpClient, logger);
 
-            return new Result(xmlRequest, webRequest.ResponseXML);
+            return new Result(webRequest, webRequest.ResponseXML);
         }
 
         public static async Task EndSessionAsync(

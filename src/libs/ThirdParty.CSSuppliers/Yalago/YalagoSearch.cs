@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -70,7 +70,7 @@
                 {
                     Accept = "application/gzip",
                     EndPoint = _settings.SearchURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     TimeoutInSeconds = 100,
                     UseGZip = _settings.UseGZip(searchDetails),
                     ContentType = "application/json",
@@ -100,10 +100,9 @@
                 };
 
                 roomList.Add(room);
-
             }
 
-            string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, searchDetails.SellingCountry);
+            string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, searchDetails.SellingCountry, searchDetails.SubscriptionID);
 
             if (string.IsNullOrEmpty(sourceMarket))
             {

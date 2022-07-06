@@ -1,6 +1,6 @@
 ﻿namespace ThirdParty.CSSuppliers.Juniper
 {
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using ThirdParty.CSSuppliers.Juniper.Model;
 
@@ -21,7 +21,7 @@
                 EndPoint = url,
                 SOAP = true,
                 SoapAction = soapAction,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = source,
                 LogFileName = logFileName,
                 UseGZip = useGZip,

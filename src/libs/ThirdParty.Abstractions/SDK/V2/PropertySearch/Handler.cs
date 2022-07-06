@@ -21,7 +21,7 @@
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _searchService.SearchAsync(request, request.User, false, _requestTracker);
+            return await _searchService.SearchAsync(request, false, _requestTracker);
         }
     }
 }

@@ -13,7 +13,7 @@
         {
             _ = endpoints
                 .MapGet(
-                    "/v2/property/search",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/search",
                     async (
                         HttpContext httpContext,
                         [FromServices] IMediator mediator,
@@ -40,7 +40,7 @@
                                 .Select(m => int.Parse(m))
                                 .ToList(),
                             CurrencyCode = currencycode ?? string.Empty,
-                            NaionalityID = nationalityid ?? string.Empty,
+                            NationalityID = nationalityid ?? string.Empty,
                             OpaqueRates = opaquerates.GetValueOrDefault(),
                             RoomRequests = roomRequestsFactory.Create(rooms),
                             SellingCountry = sellingcountry ?? string.Empty,
@@ -57,7 +57,7 @@
 
             _ = endpoints
                 .MapPost(
-                    "/property/search",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/search",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Request request)
                         => await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request))
                 .RequireAuthorization()

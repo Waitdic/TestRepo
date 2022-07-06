@@ -9,7 +9,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -73,7 +73,7 @@
             string codusu = _settings.Codusu(propertyDetails);
 
             bool preBookSuccess = false;
-            Request? request = null;
+            var request = new Request();
 
             bool nameSupplied = _settings.GuestNamesAvailable(propertyDetails);
 
@@ -110,9 +110,7 @@
                 }
                 else // if We don't have guest names, All we can do is do the search again.
                 {
-                    string resortCode = propertyDetails.GeographyLevel3ID == 0
-                        ? await _support.TPResortCodeByPropertyIdLookupAsync(ThirdParties.RESTEL, propertyDetails.PropertyID)
-                        : await _support.TPResortCodeByGeographyIdLookupAsync(ThirdParties.RESTEL, propertyDetails.GeographyLevel3ID);
+                    string resortCode = propertyDetails.ResortCode;
 
                     var xmlAvailabilityRequest = CreateAvailabilityRequestXml(
                         resortCode,
@@ -207,15 +205,7 @@
                     ? "Restel Pre-Book"
                     : "Restel Availability Check";
 
-                if (request != null && !string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, $"{logTitle} Request", request.RequestString);
-                }
-
-                if (request != null && !string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, $"{logTitle} Response", request.ResponseString);
-                }
+                propertyDetails.AddLog(logTitle, request);
             }
 
             return preBookSuccess;
@@ -223,9 +213,8 @@
 
         private async Task GetCancellationsAsync(PropertyDetails propertyDetails)
         {
-            string requestLog = string.Empty;
-            string responseLog = string.Empty;
             var cancellations = new Cancellations();
+
             try
             {
                 // We seem to have to do this call once per Room Booking
@@ -267,15 +256,18 @@
                         rates.Add(dRate);
                     }
 
-
                     // Send the Request
                     var webRequest = CreateRequest(_settings, propertyDetails, $"Cancellation Costs Room {roomNumber}");
                     webRequest.SetRequest(_serializer.Serialize(request));
-                    await webRequest.Send(_httpClient, _logger);
 
-                    // Grab the Logs to add to the booking later.
-                    requestLog += $"{Environment.NewLine}Room {roomNumber}{Environment.NewLine}{webRequest.RequestLog}";
-                    responseLog += $"{Environment.NewLine}Room {roomNumber}{Environment.NewLine}{webRequest.ResponseLog}";
+                    try
+                    {
+                        await webRequest.Send(_httpClient, _logger);
+                    }
+                    finally
+                    {
+                        propertyDetails.AddLog($"Cancellation Costs {roomNumber}", webRequest);
+                    }
 
                     // Grab the Response
                     var response = _serializer.DeSerialize<RestelGetCancellationsResponse>(webRequest.ResponseXML);
@@ -324,19 +316,13 @@
             {
                 propertyDetails.Warnings.AddNew("Prebook Cancellation Exception", ex.ToString());
             }
-            finally
-            {
-                // add logs to booking
-                propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Costs Request", requestLog);
-                propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Costs Response", responseLog);
-            }
 
             propertyDetails.Cancellations = cancellations;
         }
 
         private async Task GetErrataAsync(PropertyDetails propertyDetails)
         {
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -374,16 +360,13 @@
             }
             finally
             {
-                if (webRequest != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Errata", webRequest.RequestLog, webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Errata", webRequest);
             }
         }
 
         private async Task GetAddedValuesAsync(PropertyDetails propertyDetails)
         {
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -423,10 +406,7 @@
             }
             finally
             {
-                if (webRequest != null)
-                {
-                    propertyDetails.Logs.AddNew("Value Add", webRequest.RequestLog, webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Value Add", webRequest);
             }
         }
 
@@ -468,6 +448,8 @@
             string bookResponseLog = string.Empty;
 
             bool nameSupplied = _settings.GuestNamesAvailable(propertyDetails);
+            var prebookWebRequest = new Request();
+            var bookWebRequest = new Request();
 
             try
             {
@@ -475,7 +457,7 @@
                 {
                     var prebookRequest = Reservation(propertyDetails);
 
-                    var prebookWebRequest = CreateRequest(_settings, propertyDetails, "PreBook");
+                    prebookWebRequest = CreateRequest(_settings, propertyDetails, "PreBook");
                     prebookWebRequest.SetRequest(prebookRequest);
                     await prebookWebRequest.Send(_httpClient, _logger);
 
@@ -507,7 +489,7 @@
                 };
 
                 // Send the request
-                var bookWebRequest = CreateRequest(_settings, propertyDetails, "Book");
+                bookWebRequest = CreateRequest(_settings, propertyDetails, "Book");
                 bookWebRequest.CreateErrorLog = true;
                 bookWebRequest.SetRequest(_serializer.Serialize(bookRequest));
                 await bookWebRequest.Send(_httpClient, _logger);
@@ -541,14 +523,10 @@
             {
                 if (!nameSupplied)
                 {
-                    // Store the Pre-Book Logs
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel PreBook Request", preBookRequestLog);
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel PreBook Response", preBookResponseLog);
+                    propertyDetails.AddLog("PreBook", prebookWebRequest);
                 }
 
-                // Store the Book Logs
-                propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Book Request", bookRequestLog);
-                propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Book Response", bookResponseLog);
+                propertyDetails.AddLog("Book", bookWebRequest);
             }
 
             return reference;
@@ -557,7 +535,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -600,12 +578,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (webRequest != null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Request", webRequest.RequestLog);
-                    propertyDetails.Logs.AddNew(ThirdParties.RESTEL, "Restel Cancellation Response", webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;
@@ -614,7 +587,7 @@
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             string codusu = _settings.Codusu(propertyDetails);
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -705,10 +678,7 @@
             }
             finally
             {
-                if (webRequest != null)
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "Cancellation Costs", webRequest.RequestLog, webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Cancellation Costs", webRequest);
             }
         }
 

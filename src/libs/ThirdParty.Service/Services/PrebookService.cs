@@ -44,16 +44,8 @@
             this.responseFactory = responseFactory;
         }
 
-        /// <summary>
-        ///   <para>
-        /// Takes in a pre book Request, talks to the third parties and returns a response</para>
-        /// </summary>
-        /// <param name="prebookRequest">The pre book request.</param>
-        /// <param name="user">The user.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
-        public async Task<Response> PrebookAsync(Request prebookRequest, Subscription user)
+        /// <inheritdoc/>
+        public async Task<Response> PrebookAsync(Request prebookRequest)
         {
             Response response = null!;
             string exceptionString = string.Empty;
@@ -62,7 +54,7 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(prebookRequest, user);
+                propertyDetails = await this.propertyDetailsFactory.CreateAsync(prebookRequest);
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -75,7 +67,7 @@
                 {
                     IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
-                        user.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                        prebookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -99,7 +91,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await this.logRepository.LogPrebookAsync(prebookRequest, response!, user, exceptionString);
+                await this.logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.User, exceptionString);
             }
 
             return response;

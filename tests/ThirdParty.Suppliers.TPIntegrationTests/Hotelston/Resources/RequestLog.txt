@@ -1,0 +1,141 @@
+﻿URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://request.ws.hotelston.com/xsd" xmlns:xsd1="http://types.ws.hotelston.com/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:SearchHotelsRequest>
+      <xsd:locale>en</xsd:locale>
+      <xsd:loginDetails xsd1:email="booking@imperatours.com" xsd1:password="ImperaTours2017" />
+      <xsd:currency>EUR</xsd:currency>
+      <xsd:netRates>true</xsd:netRates>
+      <xsd:criteria>
+        <xsd:checkIn>2021-09-01</xsd:checkIn>
+        <xsd:checkOut>2021-09-06</xsd:checkOut>
+        <xsd:hotelId>102245</xsd:hotelId>
+        <xsd:room xsd:adults="1" xsd:children="0" />
+      </xsd:criteria>
+    </xsd:SearchHotelsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://request.ws.hotelston.com/xsd" xmlns:xsd1="http://types.ws.hotelston.com/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:SearchHotelsRequest>
+      <xsd:locale>en</xsd:locale>
+      <xsd:loginDetails xsd1:email="booking@imperatours.com" xsd1:password="ImperaTours2017" />
+      <xsd:currency>EUR</xsd:currency>
+      <xsd:netRates>true</xsd:netRates>
+      <xsd:criteria>
+        <xsd:checkIn>2021-09-01</xsd:checkIn>
+        <xsd:checkOut>2021-09-06</xsd:checkOut>
+        <xsd:hotelId>102245</xsd:hotelId>
+        <xsd:room xsd:adults="2" xsd:children="0" />
+      </xsd:criteria>
+    </xsd:SearchHotelsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://request.ws.hotelston.com/xsd" xmlns:xsd1="http://types.ws.hotelston.com/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:SearchHotelsRequest>
+      <xsd:locale>en</xsd:locale>
+      <xsd:loginDetails xsd1:email="booking@imperatours.com" xsd1:password="ImperaTours2017" />
+      <xsd:currency>EUR</xsd:currency>
+      <xsd:netRates>true</xsd:netRates>
+      <xsd:criteria>
+        <xsd:checkIn>2021-09-01</xsd:checkIn>
+        <xsd:checkOut>2021-09-06</xsd:checkOut>
+        <xsd:hotelId>102245</xsd:hotelId>
+        <xsd:room xsd:adults="1" xsd:children="1">
+          <xsd:childAge>8</xsd:childAge>
+        </xsd:room>
+      </xsd:criteria>
+    </xsd:SearchHotelsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://request.ws.hotelston.com/xsd" xmlns:xsd1="http://types.ws.hotelston.com/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:SearchHotelsRequest>
+      <xsd:locale>en</xsd:locale>
+      <xsd:loginDetails xsd1:email="booking@imperatours.com" xsd1:password="ImperaTours2017" />
+      <xsd:currency>EUR</xsd:currency>
+      <xsd:netRates>true</xsd:netRates>
+      <xsd:criteria>
+        <xsd:checkIn>2021-09-01</xsd:checkIn>
+        <xsd:checkOut>2021-09-06</xsd:checkOut>
+        <xsd:hotelId>102245</xsd:hotelId>
+        <xsd:room xsd:adults="1" xsd:children="1">
+          <xsd:childAge>1</xsd:childAge>
+        </xsd:room>
+      </xsd:criteria>
+    </xsd:SearchHotelsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
+
+URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soapenv:Envelope xmlns:xsd="http://request.ws.hotelston.com/xsd" xmlns:xsd1="http://types.ws.hotelston.com/xsd" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header />
+  <soapenv:Body>
+    <xsd:SearchHotelsRequest>
+      <xsd:locale>en</xsd:locale>
+      <xsd:loginDetails xsd1:email="booking@imperatours.com" xsd1:password="ImperaTours2017" />
+      <xsd:currency>EUR</xsd:currency>
+      <xsd:netRates>true</xsd:netRates>
+      <xsd:criteria>
+        <xsd:checkIn>2021-09-01</xsd:checkIn>
+        <xsd:checkOut>2021-09-06</xsd:checkOut>
+        <xsd:hotelId>102245</xsd:hotelId>
+        <xsd:room xsd:adults="1" xsd:children="2">
+          <xsd:childAge>8</xsd:childAge>
+          <xsd:childAge>1</xsd:childAge>
+        </xsd:room>
+      </xsd:criteria>
+    </xsd:SearchHotelsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>

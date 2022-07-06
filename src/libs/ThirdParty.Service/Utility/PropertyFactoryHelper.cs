@@ -6,14 +6,13 @@
 
     public class PropertyFactoryHelper
     {
-
         /// <summary>
         /// Split the given integer into a list with elements of given digits
         /// </summary>
-        /// <param name="number">A number which is jgoing to be split</param>
+        /// <param name="number">A number which is going to be split</param>
         /// <param name="digit">A number of digits per element in the list</param>
-        /// <returns>A list with number as an element of given lenght</returns>
-        public static List<int> splitNumberToNDigitList(int number, int digit)
+        /// <returns>A list with number as an element of given length</returns>
+        public static List<int> SplitNumberToNDigitList(int number, int digit)
         {
             var list = new List<int>();
             var upperBound = Math.Pow(10, digit) - 1; // a max number which given n digit number can be i.e. if 2 digits then upperBound is 99
@@ -21,21 +20,20 @@
 
             if (number > upperBound)
             {
-                var sNumber = number.ToString();
-                for (int i = 0; list.Count() < Math.Ceiling(((decimal)numOfDigits / digit));)
+                var numberString = number.ToString();
+                for (int i = 0; list.Count() < Math.Ceiling((decimal)numOfDigits / digit);)
                 {
                     if (i == 0 && numOfDigits % digit != 0)
                     {
-                        list.Add(int.Parse(sNumber.Substring(i, 1)));
+                        list.Add(int.Parse(numberString.Substring(i, 1)));
                         ++i;
                     }
                     else
                     {
-                        list.Add(int.Parse(sNumber.Substring(i, digit)));
+                        list.Add(int.Parse(numberString.Substring(i, digit)));
                         i += digit;
                     }
                 }
-
             }
             else
             {
@@ -45,6 +43,7 @@
             return list;
         }
 
+        // todo - make this part of the token logic
         /// <summary>
         /// Get a combination of all numbers stored in the list as like string concatination 
         /// Pads a number with zeros if given number is less then specified num of digits

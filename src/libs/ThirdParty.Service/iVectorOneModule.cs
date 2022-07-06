@@ -9,43 +9,52 @@
     using Microsoft.Extensions.DependencyInjection;
     using ThirdParty;
     using ThirdParty.CSSuppliers;
+    using ThirdParty.CSSuppliers.AbreuV2;
     using ThirdParty.CSSuppliers.Acerooms;
     using ThirdParty.CSSuppliers.Altura;
+    using ThirdParty.CSSuppliers.AmadeusHotels;
+    using ThirdParty.CSSuppliers.ATI;
     using ThirdParty.CSSuppliers.BedsWithEase;
     using ThirdParty.CSSuppliers.Bonotel;
     using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.CSSuppliers.DOTW;
     using ThirdParty.CSSuppliers.ExpediaRapid;
+    using ThirdParty.CSSuppliers.FastPayHotels;
     using ThirdParty.CSSuppliers.HotelBedsV2;
+    using ThirdParty.CSSuppliers.HotelsProV2;
+    using ThirdParty.CSSuppliers.Hotelston;
     using ThirdParty.CSSuppliers.iVectorConnect;
     using ThirdParty.CSSuppliers.JonView;
     using ThirdParty.CSSuppliers.Jumbo;
     using ThirdParty.CSSuppliers.Juniper;
     using ThirdParty.CSSuppliers.MTS;
+    using ThirdParty.CSSuppliers.Miki;
     using ThirdParty.CSSuppliers.Netstorming;
     using ThirdParty.CSSuppliers.OceanBeds;
     using ThirdParty.CSSuppliers.Restel;
+    using ThirdParty.CSSuppliers.RMI;
     using ThirdParty.CSSuppliers.Serhs;
     using ThirdParty.CSSuppliers.Stuba;
     using ThirdParty.CSSuppliers.SunHotels;
+    using ThirdParty.CSSuppliers.TBOHolidays;
     using ThirdParty.CSSuppliers.TeamAmerica;
     using ThirdParty.CSSuppliers.Travelgate;
     using ThirdParty.CSSuppliers.YouTravel;
     using ThirdParty.Lookups;
     using ThirdParty.Factories;
-    using ThirdParty.Repositories;
     using ThirdParty.Models.Tokens;
+    using ThirdParty.Repositories;
+    using ThirdParty.Search;
     using ThirdParty.Search.Models;
     using ThirdParty.Services;
     using ThirdParty.Utility;
-    using List = SDK.V2.PropertyList;
-    using Content = SDK.V2.PropertyContent;
-    using Search = SDK.V2.PropertySearch;
-    using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
-    using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
-    using ThirdParty.Search;
+    using Content = SDK.V2.PropertyContent;
+    using List = SDK.V2.PropertyList;
+    using Prebook = SDK.V2.PropertyPrebook;
+    using Precancel = SDK.V2.PropertyPrecancel;
+    using Search = SDK.V2.PropertySearch;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -127,26 +136,35 @@
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
         {
+            services.AddSingleton<IAbreuV2Settings, InjectedAbreuV2Settings>();
             services.AddSingleton<IAceroomsSettings, InjectedAceroomsSettings>();
             services.AddSingleton<IAlturaSettings, InjectedAlturaSettings>();
+            services.AddSingleton<IATISettings, InjectedATISettings>();
+            services.AddSingleton<IAmadeusHotelsSettings, InjectedAmadeusHotelsSettings>();
             services.AddSingleton<IBedsWithEaseSettings, InjectedBedsWithEaseSettings>();
             services.AddSingleton<IBonotelSettings, InjectedBonotelSettings>();
             services.AddSingleton<IDerbySoftSettings, InjectedDerbySoftSettings>();
             services.AddSingleton<IDOTWSettings, InjectedDOTWSettings>();
             services.AddSingleton<IExpediaRapidSettings, InjectedExpediaRapidSettings>();
+            services.AddSingleton<IFastPayHotelsSettings, InjectedFastPayHotelsSettings>();
             services.AddSingleton<IHotelBedsV2Settings, InjectedHotelBedsV2Settings>();
+            services.AddSingleton<IHotelsProV2Settings, InjectedHotelsProV2Settings>();
+            services.AddSingleton<IHotelstonSettings, InjectedHotelstonSettings>();
             services.AddSingleton<IiVectorConnectSettings, InjectediVectorConnectSettings>();
             services.AddSingleton<IJonViewSettings, InjectedJonViewSettings>();
             services.AddSingleton<IJumboSettings, InjectedJumboSettings>();
             services.AddSingleton<IJuniperSettings, InjectedJuniperSettings>();
             services.AddSingleton<INetstormingSettings, InjectedNetstormingSettings>();
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
+            services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
             services.AddSingleton<IRestelSettings, InjectedRestelSettings>();
+            services.AddSingleton<IRMISettings, InjectedRMISettings>();
             services.AddSingleton<ISerhsSettings, InjectedSerhsSettings>();
             services.AddSingleton<IStubaSettings, InjectedStubaSettings>();
             services.AddSingleton<ISunHotelsSettings, InjectedSunHotelsSettings>();
+            services.AddSingleton<ITBOHolidaysSettings, InjectedTBOHolidaysSettings>();
             services.AddSingleton<ITeamAmericaSettings, InjectedTeamAmericaSettings>();
             services.AddSingleton<ITravelgateSettings, InjectedTravelgateSettings>();
             services.AddSingleton<IW2MSettings, InjectedW2MSettings>();
@@ -157,26 +175,35 @@
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)
         {
+            services.AddSingleton<IThirdPartySearch, AbreuV2Search>();
             services.AddSingleton<IThirdPartySearch, AceroomsSearch>();
             services.AddSingleton<IThirdPartySearch, AlturaSearch>();
+            services.AddSingleton<IThirdPartySearch, AmadeusHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, ATISearch>();
             services.AddSingleton<IThirdPartySearch, BedsWithEaseSearch>();
             services.AddSingleton<IThirdPartySearch, BonotelSearch>();
             services.AddSingleton<IThirdPartySearch, DerbySoftSearch>();
             services.AddSingleton<IThirdPartySearch, DOTWSearch>();
             services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
+            services.AddSingleton<IThirdPartySearch, FastPayHotelsSearch>();
             services.AddSingleton<IThirdPartySearch, HotelBedsV2Search>();
+            services.AddSingleton<IThirdPartySearch, HotelsProV2Search>();
+            services.AddSingleton<IThirdPartySearch, HotelstonSearch>();
             services.AddSingleton<IThirdPartySearch, iVectorConnectSearch>();
             services.AddSingleton<IThirdPartySearch, JonViewSearch>();
             services.AddSingleton<IThirdPartySearch, JumboSearch>();
             services.AddSingleton<IThirdPartySearch, JuniperSearch>();
-            services.AddSingleton<IThirdPartySearch, NullTestSupplier>();
+            services.AddSingleton<IThirdPartySearch, NullTestSupplierSearch>();
             services.AddSingleton<IThirdPartySearch, NetstormingSearch>();
+            services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
             services.AddSingleton<IThirdPartySearch, OceanBedsSearch>();
             services.AddSingleton<IThirdPartySearch, RestelSearch>();
+            services.AddSingleton<IThirdPartySearch, RMISearch>();
             services.AddSingleton<IThirdPartySearch, SerhsSearch>();
             services.AddSingleton<IThirdPartySearch, StubaSearch>();
             services.AddSingleton<IThirdPartySearch, SunHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, TBOHolidaysSearch>();
             services.AddSingleton<IThirdPartySearch, TeamAmericaSearch>();
             services.AddSingleton<IThirdPartySearch, TravelgateSearch>();
             services.AddSingleton<IThirdPartySearch, W2MSearch>();
@@ -187,25 +214,34 @@
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
         {
+            services.AddSingleton<IThirdParty, AbreuV2>();
             services.AddSingleton<IThirdParty, Acerooms>();
             services.AddSingleton<IThirdParty, Altura>();
+            services.AddSingleton<IThirdParty, AmadeusHotels>();
+            services.AddSingleton<IThirdParty, ATI>();
             services.AddSingleton<IThirdParty, BedsWithEase>();
             services.AddSingleton<IThirdParty, Bonotel>();
             services.AddSingleton<IThirdParty, DerbySoft>();
             services.AddSingleton<IThirdParty, DOTW>();
             services.AddSingleton<IThirdParty, ExpediaRapid>();
+            services.AddSingleton<IThirdParty, FastPayHotels>();
             services.AddSingleton<IThirdParty, HotelBedsV2>();
+            services.AddSingleton<IThirdParty, HotelsProV2>();
+            services.AddSingleton<IThirdParty, Hotelston>();
             services.AddSingleton<IThirdParty, iVectorConnect>();
             services.AddSingleton<IThirdParty, JonView>();
             services.AddSingleton<IThirdParty, Jumbo>();
             services.AddSingleton<IThirdParty, Juniper>();
+            services.AddSingleton<IThirdParty, Miki>();
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
             services.AddSingleton<IThirdParty, OceanBeds>();
             services.AddSingleton<IThirdParty, Restel>();
+            services.AddSingleton<IThirdParty, RMI>();
             services.AddSingleton<IThirdParty, Serhs>();
             services.AddSingleton<IThirdParty, Stuba>();
             services.AddSingleton<IThirdParty, SunHotels>();
+            services.AddSingleton<IThirdParty, TBOHolidays>();
             services.AddSingleton<IThirdParty, TeamAmerica>();
             services.AddSingleton<IThirdParty, Travelgate>();
             services.AddSingleton<IThirdParty, W2M>();

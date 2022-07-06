@@ -5,7 +5,7 @@
     using System.Linq;
     using iVector.Search.Property;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
@@ -92,7 +92,7 @@
                 ChildAges = roomDetails.ChildAges.ToArray()
             };
 
-        private static StayRange BuildStayRange(ISearchDetails searchDetails)
+        private static StayRange BuildStayRange(SearchDetails searchDetails)
         {
             return new StayRange
             {
@@ -118,7 +118,7 @@
             var request = new Request
             {
                 EndPoint = _settings.SecondarySearchURL(searchDetails, _source),
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 ContentType = ContentTypes.Application_json,
                 Accept = "application/json",
                 ExtraInfo = propertyRoomBookingId,

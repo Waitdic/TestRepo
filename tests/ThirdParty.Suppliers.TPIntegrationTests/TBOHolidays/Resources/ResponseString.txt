@@ -1,0 +1,171 @@
+﻿<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+ <soap:Body>
+<hot:HotelSearchWithRoomsResponse>
+ <hot:Status>
+ <hot:StatusCode>01</hot:StatusCode>
+ <hot:Description>Successful: HotelSearchWithRooms Successful</hot:Description>
+ </hot:Status>
+ <hot:ResponseTime>21/05/2014 16:52:29</hot:ResponseTime>
+ <hot:SessionId>959cd204-6d00-44f4-9aa6-55a886701f69</hot:SessionId>
+ <hot:NoOfRoomsRequested>2</hot:NoOfRoomsRequested>
+ <hot:CityId>25921</hot:CityId>
+ <hot:CheckInDate>29/07/2014 00:00:00</hot:CheckInDate>
+ <hot:CheckOutDate>30/07/2014 00:00:00</hot:CheckOutDate>
+ <hot:RoomGuests>
+ <hot:RoomGuest AdultCount="1" ChildCount="0"/>
+ <hot:RoomGuest AdultCount="1" ChildCount="0"/>
+ </hot:RoomGuests>
+ <hot:HotelResultList>
+ <hot:HotelResult>
+ <hot:ResultIndex>1</hot:ResultIndex>
+ <hot:HotelInfo>
+ <hot:HotelCode>CHA1</hot:HotelCode>
+ <hot:HotelName>Champs Elysees</hot:HotelName>
+ <hot:HotelPicture>http://apiintegration.tboholidays.com//imageresource.aspx?
+img=hpRBSdtPJNrQuwRo5I/exPbdtjJGoRI2R1Qo2/mGLJnD3Labs864bu1awghNJAAvgh3D8l0ws5FdXtlVD+7v8w==
+</hot:HotelPicture>
+ <hot:HotelDescription>The hotel is located right in heart of downtown Deira in the Riqqa Street Area. Only 4 kilometres from
+Dubai International Airport, the hotel is located very close the main Shopping Areas and Restaurants.The rooms are medium in
+size and are basic in design and fittings. All rooms have central air-conditioning, flat screen television, satellite channels, direct
+dial telephone and all have a balcony facing the main street.There is 1 main restuarant in the hotel as well as coffee shop in
+the lobby.The building is modern in design and in keeping with buildings in the area.The lobby is of medium size with a good
+sized seating area.Overall this is a budget hotel but with great a location and easy access to all parts of the city. The property
+has limited facilities on site, but if you are looking for a comfortable base to explore the city then this a good choice (SD
+06/08)</hot:HotelDescription>
+ <hot:Latitude xsi:nil="true"/>
+ <hot:Longitude xsi:nil="true"/>
+ <hot:HotelAddress>PO BOX 2565DUBAIUNITED ARAB EMIRATES</hot:HotelAddress>
+ <hot:Rating>TwoStar</hot:Rating>
+ <hot:HotelPromotion/>
+ </hot:HotelInfo>
+ <hot:MinHotelPrice TotalPrice="111.13" Currency="USD" B2CRates="false"/>
+ <hot:HotelRooms>
+ <hot:HotelRoom>
+ <hot:RoomIndex>1</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Standard Single</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0||001:CHA1:8712:S8513:9537:39591|1</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA1:8712:S8513:9537:39591|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="2.65" RoomTax="0" RoomFare="55.57" Currency="USD"
+TotalFare="55.57">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="55.57"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ <hot:HotelRoom>
+ <hot:RoomIndex>2</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Standard Single</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0|4|001:CHA1:8712:S8513:9537:39591|2</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA1:8712:S8513:9537:39591|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="2.65" RoomTax="0" RoomFare="55.57" Currency="USD"
+TotalFare="55.57">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="55.57"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ <hot:HotelRoom>
+ <hot:RoomIndex>3</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Standard Twin</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0||001:CHA1:8712:S8513:9537:39595|3</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA1:8712:S8513:9537:39595|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="3.12" RoomTax="0" RoomFare="65.49" Currency="USD"
+TotalFare="65.49">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="65.49"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ <hot:HotelRoom>
+ <hot:RoomIndex>4</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Standard Twin</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0|4|001:CHA1:8712:S8513:9537:39595|4</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA1:8712:S8513:9537:39595|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="3.12" RoomTax="0" RoomFare="65.49" Currency="USD"
+TotalFare="65.49">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="65.49"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ <hot:HotelRoom>
+ <hot:RoomIndex>5</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Deluxe Single</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0||001:CHA2:8712:S8513:9537:39569|5</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA2:8712:S8513:9537:39569|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="3.59" RoomTax="0" RoomFare="75.41" Currency="USD"
+TotalFare="75.41">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="75.41"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ <hot:HotelRoom>
+ <hot:RoomIndex>6</hot:RoomIndex>
+ <hot:RoomTypeName>Single Room Deluxe Single</hot:RoomTypeName>
+ <hot:Inclusion>None</hot:Inclusion>
+ <hot:RoomTypeCode>SB|0|0|4|001:CHA2:8712:S8513:9537:39569|6</hot:RoomTypeCode>
+ <hot:RatePlanCode>001:CHA2:8712:S8513:9537:39569|CHA1|SB</hot:RatePlanCode>
+ <hot:RoomRate B2CRates="false" AgentMarkUp="3.59" RoomTax="0" RoomFare="75.41" Currency="USD"
+TotalFare="75.41">
+ <hot:DayRates>
+ <hot:DayRate Date="2014-07-29T00:00:00+05:30" BaseFare="75.41"/>
+ </hot:DayRates>
+ <hot:ExtraGuestCharges>0</hot:ExtraGuestCharges>
+ <hot:ChildCharges>0</hot:ChildCharges>
+ <hot:Discount>0</hot:Discount>
+ <hot:OtherCharges>0</hot:OtherCharges>
+ <hot:ServiceTax>0</hot:ServiceTax>
+ </hot:RoomRate>
+ </hot:HotelRoom>
+ </hot:HotelRooms>
+ <hot:OptionsForBooking>
+ <hot:FixedFormat>true</hot:FixedFormat>
+ <hot:RoomCombination>
+ <hot:RoomIndex>1</hot:RoomIndex>
+ <hot:RoomIndex>2</hot:RoomIndex>
+ </hot:RoomCombination>
+ <hot:RoomCombination>
+ <hot:RoomIndex>3</hot:RoomIndex>
+ <hot:RoomIndex>4</hot:RoomIndex>
+ </hot:RoomCombination>
+ <hot:RoomCombination>
+ <hot:RoomIndex>5</hot:RoomIndex>
+ <hot:RoomIndex>6</hot:RoomIndex>
+ </hot:RoomCombination>
+ </hot:OptionsForBooking>
+ </hot:HotelResult>
+ </hot:HotelResultList>
+</hot:HotelSearchWithRoomsResponse>
+</soap:Body>
+</soap:Envelope>

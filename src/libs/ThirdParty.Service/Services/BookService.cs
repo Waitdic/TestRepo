@@ -48,13 +48,8 @@
             this.referenceValidator = referenceValidator;
         }
 
-        /// <summary>Books the specified book request.</summary>
-        /// <param name="bookRequest">The book request.</param>
-        /// <param name="user">The user.</param>
-        /// <returns>
-        /// A book response
-        /// </returns>
-        public async Task<Response> BookAsync(Request bookRequest, Subscription user)
+        /// <inheritdoc/>
+        public async Task<Response> BookAsync(Request bookRequest)
         {
             Response response = null!;
             var exceptionString = string.Empty;
@@ -63,7 +58,7 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(bookRequest, user);
+                propertyDetails = await this.propertyDetailsFactory.CreateAsync(bookRequest);
                 this.referenceValidator.ValidateBook(propertyDetails, bookRequest);
 
                 if (propertyDetails.Warnings.Any())
@@ -77,7 +72,7 @@
                 {
                     var thirdParty = this.thirdPartyFactory.CreateFromSource(
                                         propertyDetails.Source,
-                                        user.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                                        bookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -103,7 +98,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await this.logRepository.LogBookAsync(bookRequest, response!, user, exceptionString);
+                await this.logRepository.LogBookAsync(bookRequest, response!, bookRequest.User, exceptionString);
             }
 
             return response!;

@@ -14,7 +14,7 @@
         public static List<string> DerbysoftSources => new()
         {
             ThirdParties.DERBYSOFTCLUBMED,
-            ThirdParties.DERBYSOFTSMARRIOTT,
+            ThirdParties.DERBYSOFTMARRIOTT,
             ThirdParties.DERBYSOFTSYNXIS,
         };
     }

@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Security;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using ThirdParty;
@@ -101,11 +101,11 @@
                 checkRatesRequest.rooms = rooms.ToArray();
 
                 request.EndPoint = _settings.CheckRatesURL(propertyDetails);
-                request.Method = eRequestMethod.POST;
+                request.Method = RequestMethod.POST;
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
                 request.UseGZip = _settings.UseGZip(propertyDetails);
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
                 request.LogFileName = "Prebook";
                 request.Accept = "application/json";
 
@@ -186,15 +186,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 PreBook Request", request.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 PreBook Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("PreBook", request);
             }
 
             return prebookSuccess;
@@ -270,7 +262,7 @@
                 }
 
                 webRequest.Source = ThirdParties.HOTELBEDSV2;
-                webRequest.Method = eRequestMethod.POST;
+                webRequest.Method = RequestMethod.POST;
                 webRequest.EndPoint = _settings.BookingURL(propertyDetails);
 
                 if (RequiresVCard)
@@ -297,7 +289,7 @@
 
                 webRequest.ContentType = ContentTypes.Application_json;
                 webRequest.UseGZip = _settings.UseGZip(propertyDetails);
-                webRequest.CreateLog = propertyDetails.CreateLogs;
+                webRequest.CreateLog = true;
                 webRequest.LogFileName = "Book";
                 webRequest.Accept = "application/json";
 
@@ -335,15 +327,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(webRequest.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 Book Request", webRequest.RequestString);
-                }
-
-                if (!string.IsNullOrWhiteSpace(webRequest.RequestString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 Book Response", webRequest.ResponseString);
-                }
+                propertyDetails.AddLog("Book", webRequest);
             }
 
             return reference;
@@ -365,12 +349,12 @@
                     ThirdPartyConfigurations = propertyDetails.ThirdPartyConfigurations,
                 };
 
-                request.Method = eRequestMethod.DELETE;
+                request.Method = RequestMethod.DELETE;
                 request.EndPoint = _settings.CancellationURL(searchDetails);
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
                 request.UseGZip = _settings.UseGZip(searchDetails);
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
                 request.LogFileName = "Cancel";
                 request.Accept = "application/json";
 
@@ -398,15 +382,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.EndPoint))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 Cancellation Request", request.EndPoint);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 Cancellation Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("Cancellation", request);
             }
 
             return cancellationResponse;
@@ -423,12 +399,12 @@
 
             try
             {
-                request.Method = eRequestMethod.DELETE;
+                request.Method = RequestMethod.DELETE;
                 request.EndPoint = _settings.CancellationURL(propertyDetails);
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
                 request.UseGZip = _settings.UseGZip(propertyDetails);
-                request.CreateLog = propertyDetails.CreateLogs;
+                request.CreateLog = true;
                 request.LogFileName = "Cancel";
                 request.Accept = "application/json";
 
@@ -455,15 +431,7 @@
             }
             finally
             {
-                if (!string.IsNullOrWhiteSpace(request.EndPoint))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 GetCancellationCost Request", request.EndPoint);
-                }
-
-                if (!string.IsNullOrWhiteSpace(request.ResponseString))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.HOTELBEDSV2, "HotelBedsV2 GetCancellationCost Response", request.ResponseString);
-                }
+                propertyDetails.AddLog("GetCancellationCost", request);
             }
 
             return cancellationCostResponse;

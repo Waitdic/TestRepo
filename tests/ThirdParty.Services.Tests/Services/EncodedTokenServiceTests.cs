@@ -21,11 +21,12 @@
             {
                 PropertyID = 5526100,
             };
+            var user = new Subscription();
 
             // Act
             var encoded = tokenService.EncodeBookToken(bookToken);
 
-            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded);
+            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user);
 
             //Assert
             Assert.Equal(bookToken.PropertyID, decodedToken.PropertyID);
@@ -44,11 +45,12 @@
                 Rooms = 3,
                 CurrencyID = 52
             };
+            var user = new Subscription();
 
             // Act
             var encoded = tokenService.EncodePropertyToken(propertyToken);
 
-            var decodedToken = await tokenService.DecodePropertyTokenAsync(encoded);
+            var decodedToken = await tokenService.DecodePropertyTokenAsync(encoded, user);
 
             //Assert
             Assert.Equal(propertyToken.ArrivalDate, decodedToken.ArrivalDate);
@@ -71,10 +73,11 @@
                 Duration = 40,
                 PropertyID = 5526246
             };
+            var user = new Subscription();
 
             // Act
             var encoded = tokenService.EncodePropertyToken(propertyToken);
-            var decodedToken = await tokenService.DecodePropertyTokenAsync(encoded);
+            var decodedToken = await tokenService.DecodePropertyTokenAsync(encoded, user);
 
             //Assert
             Assert.Equal(propertyToken.ArrivalDate, decodedToken.ArrivalDate);
@@ -91,7 +94,7 @@
                 Children = 8,
                 Infants = 4,
                 ChildAges = new List<int>() { 3, 4, 4, 4, 4, 9, 7, 16 },
-                MealBasis = new List<int>() { 89, 34, 56 }
+                MealBasisID = new List<int>() { 89, 34, 56 }
             };
 
             // Act
@@ -113,9 +116,9 @@
             Assert.Equal(7, decodedToken.ChildAges[6]);
             Assert.Equal(16, decodedToken.ChildAges[7]);
 
-            Assert.Equal(89, decodedToken.MealBasis[0]);
-            Assert.Equal(34, decodedToken.MealBasis[1]);
-            Assert.Equal(56, decodedToken.MealBasis[2]);
+            Assert.Equal(89, decodedToken.MealBasisID[0]);
+            Assert.Equal(34, decodedToken.MealBasisID[1]);
+            Assert.Equal(56, decodedToken.MealBasisID[2]);
         }
 
         [Fact]
@@ -177,9 +180,10 @@
             mockValues.SetupGet(r => r.Values).Returns(new List<TokenValue>());
             mockValues.Setup(r => r.GetValue(It.IsAny<TokenValueType>())).Returns(1);
             var tokenService = SetupTokenService(mockValues.Object, 36434, "153535", "ExpediaRapid");
+            var user = new Subscription();
 
             // Act
-            var decodedToken = await tokenService.DecodePropertyTokenAsync("0Pc]I0!");
+            var decodedToken = await tokenService.DecodePropertyTokenAsync("0Pc]I0!", user);
 
             //Assert
             Assert.Equal(36434, decodedToken.CentralPropertyID);
@@ -195,9 +199,10 @@
             mockValues.SetupGet(r => r.Values).Returns(new List<TokenValue>());
             mockValues.Setup(r => r.GetValue(It.IsAny<TokenValueType>())).Returns(1);
             var tokenService = SetupTokenService(mockValues.Object, 36434, "153535", "ExpediaRapid");
+            var user = new Subscription();
 
             // Act
-            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!");
+            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user);
 
             //Assert
             Assert.Equal("ExpediaRapid", decodedToken.Source);
@@ -224,7 +229,7 @@
                 Children = 4,
                 Infants = 7,
                 ChildAges = new List<int>(),
-                MealBasis = mealBases,
+                MealBasisID = mealBases,
             };
 
             // Act
@@ -236,7 +241,7 @@
             Assert.Equal(roomToken.Adults, decodedToken.Adults);
             Assert.Equal(roomToken.Children, decodedToken.Children);
             Assert.Equal(roomToken.Infants, decodedToken.Infants);
-            Assert.Equal(mealBases, decodedToken.MealBasis);
+            Assert.Equal(mealBases, decodedToken.MealBasisID);
         }
 
         private EncodedTokenService SetupTokenService(
@@ -249,7 +254,7 @@
 
             if (centralPropertyId > 0)
             {
-                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>()))
+                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Subscription>()))
                 .Returns(Task.FromResult(new PropertyContent()
                 {
                     CentralPropertyID = centralPropertyId,

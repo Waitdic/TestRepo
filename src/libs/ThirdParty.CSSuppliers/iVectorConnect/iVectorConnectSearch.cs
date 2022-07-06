@@ -8,9 +8,10 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
+    using booking = ThirdParty.Models.Property.Booking;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Results.Models;
 
@@ -29,20 +30,17 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            //1. set up some start values
             string source = resortSplits.First().ThirdPartySupplier;
             var requests = new List<Request>();
-            string url = _settings.GenericURL(searchDetails, source);
+            string url = _settings.SearchURL(searchDetails, source);
 
-            //2. build the xml
-            var searchRequest = BuildSearchXml(searchDetails, resortSplits, source);
+            var searchRequest = BuildSearchRequest(searchDetails, resortSplits, source);
 
-            //3. set up the request 
             var request = new Request
             {
                 EndPoint = url,
-                Method = eRequestMethod.POST,
-                ContentType = ContentTypes.Application_x_www_form_urlencoded,
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Application_xml,
                 ExtraInfo = searchDetails,
             };
 
@@ -53,63 +51,19 @@
             return Task.FromResult(requests);
         }
 
-        public PropertySearchRequest BuildSearchXml(SearchDetails searchDetails, List<ResortSplit> resortSplits, string source)
+        public PropertySearchRequest BuildSearchRequest(SearchDetails searchDetails, List<ResortSplit> resortSplits, string source)
         {
-            bool validSearch = false;
-
-            //Get login details
-            var searchRequest = new PropertySearchRequest(Helper.GetLoginDetails(searchDetails, _settings, source));
-
-            //Single property
-            if (resortSplits.Count == 1 && resortSplits[0].Hotels.Count == 1)
+            var searchRequest = new PropertySearchRequest()
             {
-                validSearch = true;
-                int propertyId = resortSplits[0].Hotels[0].TPKey.ToSafeInt();
+                LoginDetails = Helper.GetLoginDetails(searchDetails, _settings, source),
+            };
 
-                searchRequest.PropertyReferenceID = propertyId;
-            }
+            searchRequest.PropertyReferenceIDs = resortSplits
+                .SelectMany(r => r.Hotels)
+                .Select(h => h.TPKey.ToSafeInt())
+                .ToList();
 
-            //Multiple properties
-            if (searchDetails.PropertyReferenceIDs.Count > 0)
-            {
-                validSearch = true;
-                int propertyReferenceIdIndex = 0;
-                int[] propertyReferenceIDs = new int[GetPropertyReferenceIDsCount(resortSplits)];
-
-                foreach (var resort in resortSplits)
-                {
-                    foreach (var hotel in resort.Hotels)
-                    {
-                        propertyReferenceIDs[propertyReferenceIdIndex] = hotel.TPKey.ToSafeInt();
-                        propertyReferenceIdIndex++;
-                    }
-                }
-
-                searchRequest.PropertyReferenceIDs = propertyReferenceIDs;
-            }
-
-            //Geography Search
-            //Region
-            if (searchDetails.GeographyLevel2ID != 0)
-            {
-                searchRequest.RegionID = resortSplits[0].ResortCode.Split('_')[1];
-            }
-
-            //Resort Search
-            if (!validSearch)
-            {
-                int[] resorts = new int[resortSplits.Count];
-
-                for (int i = 0; i < resortSplits.Count; i++)
-                {
-                    resorts[i] = resortSplits[i].ResortCode.Split('_')[0].ToSafeInt();
-                }
-                validSearch = true;
-
-                searchRequest.Resorts = resorts;
-            }
-
-            searchRequest.ArrivalDate = searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd");
+            searchRequest.ArrivalDate = searchDetails.ArrivalDate.ToString("yyyy-MM-dd");
             searchRequest.Duration = searchDetails.Duration;
 
             foreach (var room in searchDetails.RoomDetails)
@@ -136,7 +90,6 @@
                 searchRequest.RoomRequests.Add(new RoomRequest { GuestConfiguration = guestConfiguration });
             }
 
-            //Room Details
             searchRequest.MealBasisID = searchDetails.MealBasisID;
 
             if (!string.IsNullOrEmpty(searchDetails.StarRating))
@@ -144,23 +97,12 @@
                 searchRequest.MinStarRating = searchDetails.StarRating;
             }
 
-            //Product Attributes
             if (searchDetails.ProductAttributeIDs.Count > 0)
             {
-                int[] productAttributes = new int[searchDetails.ProductAttributeIDs.Count];
-                for (int i = 0; i < searchDetails.ProductAttributeIDs.Count; i++)
-                {
-                    productAttributes[i] = searchDetails.ProductAttributeIDs[i];
-                }
-                searchRequest.ProductAttributes = productAttributes;
+                searchRequest.ProductAttributes = searchDetails.ProductAttributeIDs;
             }
 
             return searchRequest;
-        }
-
-        private static int GetPropertyReferenceIDsCount(IEnumerable<ResortSplit> resortSplits)
-        {
-            return resortSplits.Sum(resortSplit => resortSplit.Hotels.Count);
         }
 
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -182,7 +124,6 @@
         public List<TransformedResult> GetResultFromResponse(PropertySearchResponse response, SearchDetails searchDetails, string source)
         {
             var transformedResult = new List<TransformedResult>();
-            int currency = _settings.SellingCurrencyID(searchDetails, source);
 
             foreach (var propertyResult in response.PropertyResults)
             {
@@ -191,13 +132,19 @@
                     transformedResult.Add(new TransformedResult
                     {
                         TPKey = propertyResult.PropertyReferenceID.ToString(),
-                        CurrencyCode = currency.ToSafeString(),
+                        CurrencyCode = roomType.SupplierDetails.CurrencyID.ToString(),
                         PropertyRoomBookingID = roomType.Seq,
                         RoomType = roomType.RoomTypeProperty,
                         MealBasisCode = roomType.MealBasisID.ToString(),
-                        Amount = roomType.SubTotal,
+                        Amount = roomType.Total,
                         TPReference = $"{propertyResult.BookingToken}|{roomType.RoomBookingToken}",
-                        SpecialOffer = roomType.SpecialOffer
+                        SpecialOffer = roomType.SpecialOffer,
+                        TPRateCode = roomType.SupplierDetails.RateCode,
+                        NonRefundableRates = roomType.NonRefundable,
+                        Discount = roomType.Adjustments.Where(a => a.AdjustmentType == "Offer").Sum(a => -a.Total),
+                        Cancellations = roomType.SupplierCancellations
+                            .Select(c => new booking.Cancellation(c.StartDate, c.EndDate, c.Amount))
+                            .ToList(),
                     });
                 }
             }

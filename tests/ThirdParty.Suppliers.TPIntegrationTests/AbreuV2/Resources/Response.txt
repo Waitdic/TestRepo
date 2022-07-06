@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<OTA_HotelAvailRS xmlns="http://parsec.es/hotelapi/OTA2014Compact" TimeStamp="2015-03-27T12:21:57Z" PrimaryLangID="en-GB" Id="101,483699182,8840">
+    <Hotels HotelCount="3">
+        <DateRange Start="2015-09-25" End="2015-09-29" />
+        <RoomCandidates>
+            <RoomCandidate RPH="1">
+                <Guests>
+                    <Guest AgeCode="A" Count="2" />
+                </Guests>
+            </RoomCandidate>
+        </RoomCandidates>
+        <Hotel>
+            <Info HotelCode="92860" HotelName="Hotel Malaposta:" HotelCityCode="12" Rating="2*" MasterCode="2610" Recommended="0">
+            </Info>
+            <BestPrice Amount="186.00" Currency="EUR" />
+            <Rooms>
+                <Room RPH="1" Best="1" Status="AV">
+                    <RoomType Code="177783" Name="Standard room">
+                    </RoomType>
+                    <RoomRates>
+                        <RoomRate MealPlan="BB" BookingCode="UKXR7U0mkHIdzKvU1aAVRCM1XRd2NFVEUXUZYsSgf3ncSnQaeCLPvcNiCS/q60hwey9NRmo20tRe4k9nkkEEwQ==">
+                            <Total Amount="186.00" Commission="0.00" MinPrice="204.60" Currency="EUR" />
+                        </RoomRate>
+                    </RoomRates>
+                </Room>
+            </Rooms>
+        </Hotel>
+        <Hotel>
+            <Info HotelCode="2242" HotelName="Hotel Belver Beta Porto Hotel" HotelCityCode="12" Rating="4*" MasterCode="2242" Recommended="0">
+            </Info>
+            <BestPrice Amount="246.00" Currency="EUR" />
+            <Rooms>
+                <Room RPH="1" Best="1" Status="AV">
+                    <RoomType Code="4655" Name="Standard room">
+                    </RoomType>
+                    <RoomRates>
+                        <RoomRate MealPlan="BB" BookingCode="A6daSajEfa0j8BzeRRL5NPJ2qJukc4XSb6MnB4ICrxwvmj2PbmHWKXVIrsHarNe2">
+                            <Total Amount="246.00" Commission="0.00" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="HB" BookingCode="2ISuk2S83adRZ4JI21rESPJ2qJukc4XSb6MnB4ICrxysIASHXN3o++GFrxLZYEx0">
+                            <Total Amount="366.00" Commission="0.00" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="FB" BookingCode="rUkbMzLLHIHBRJmBX0FUePJ2qJukc4XSb6MnB4ICrxy5RpaeAnH3WQbAyRXp3QK4">
+                            <Total Amount="462.00" Commission="0.00" Currency="EUR" />
+                        </RoomRate>
+                    </RoomRates>
+                </Room>
+            </Rooms>
+        </Hotel>
+        <Hotel>
+            <Info HotelCode="3892" HotelName="Sheraton Porto Hotel &amp;amp; Spa" HotelCityCode="12" Rating="5*" MasterCode="3892" Recommended="0">
+            </Info>
+            <BestPrice Amount="575.00" Currency="EUR" />
+            <Rooms>
+                <Room RPH="1" Best="1" Status="AV">
+                    <RoomType Code="7703" Name="Deluxe Rooms. For 1, 2 or 3 paxes. Discount for 1 child max.">
+                    </RoomType>
+                    <RoomRates>
+                        <RoomRate MealPlan="BB" BookingCode="7piaQgXLwYcXuSem1GhsP/J2qJukc4XSb6MnB4ICrxyKcvf/Jn3YZnIJk6T+4ref">
+                            <Total Amount="575.00" Commission="40.25" MinPrice="690.00" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="HB" BookingCode="a7rHdQefKhqeGCmKJtMdnvJ2qJukc4XSb6MnB4ICrxyMcLigB+4p9PzJNXJJd44q">
+                            <Total Amount="855.00" Commission="59.85" MinPrice="1026.00" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="FB" BookingCode="N0VZXduD2Id1xAY3oHsWfCM1XRd2NFVEUXUZYsSgf3kanFjK/3xMpCIASy+QDS+Q">
+                            <Total Amount="1055.00" Commission="73.85" MinPrice="1266.00" Currency="EUR" />
+                        </RoomRate>
+                    </RoomRates>
+                </Room>
+                <Room RPH="1" Status="AV">
+                    <RoomType Code="89702" Name="Club Rooms. For 1, 2 or 3 paxes. Discount for 1 child max.">
+                    </RoomType>
+                    <RoomRates>
+                        <RoomRate MealPlan="BB" BookingCode="HRMZkuUKcn/CZrcMkb8LevJ2qJukc4XSb6MnB4ICrxzftAyhmR54RUO5AnIQM09T">
+                            <Total Amount="799.00" Commission="55.93" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="HB" BookingCode="J1s8zB0032Krlwcaad3GVCM1XRd2NFVEUXUZYsSgf3m2VJJq9AbkpPvbCZzd+JBI">
+                            <Total Amount="1079.00" Commission="75.53" Currency="EUR" />
+                        </RoomRate>
+                        <RoomRate MealPlan="FB" BookingCode="XTdhlEV7ZoNiYOfrSvnEKSM1XRd2NFVEUXUZYsSgf3lH3O3/mv/TI79vOIZk/A1p">
+                            <Total Amount="1279.00" Commission="89.53" Currency="EUR" />
+                        </RoomRate>
+                    </RoomRates>
+                </Room>
+            </Rooms>
+        </Hotel>
+    </Hotels>
+</OTA_HotelAvailRS>

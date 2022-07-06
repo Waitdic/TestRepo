@@ -2,11 +2,12 @@
 {
     using System;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -17,7 +18,6 @@
     using ThirdParty.CSSuppliers.OceanBeds.Models.Common;
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
-    using System.Threading.Tasks;
 
     public class OceanBeds : IThirdParty, ISingleSource
     {
@@ -54,7 +54,7 @@
             const string requestType = "GetPropertyAvailability";
             string endpoint = _settings.SearchEndPoint(propertyDetails);
             bool success = false;
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -74,11 +74,7 @@
             }
             finally
             {
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.RequestLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "OceanBeds Prebook Request", webRequest.RequestLog);
-
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.ResponseLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "OceanBeds Prebook Response", webRequest.ResponseLog);
+                propertyDetails.AddLog("Prebook", webRequest);
             }
 
             return success;
@@ -87,7 +83,7 @@
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
-            Request? bookWebRequest = null;
+            var bookWebRequest = new Request();
 
             try
             {
@@ -107,16 +103,12 @@
             }
             catch (Exception ex)
             {
-                propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Book Exception", ex.Message);
+                propertyDetails.Warnings.AddNew("Book Exception", ex.Message);
                 reference = "failed";
             }
             finally
             {
-                if (bookWebRequest != null && !string.IsNullOrEmpty(bookWebRequest.RequestLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Book Request", bookWebRequest.RequestLog);
-
-                if (bookWebRequest != null && !string.IsNullOrEmpty(bookWebRequest.ResponseLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Book Response", bookWebRequest.ResponseLog);
+                propertyDetails.AddLog("Book", bookWebRequest);
             }
 
             return reference;
@@ -128,7 +120,7 @@
         {
             const string requestType = "ConfirmCancellation";
             var cancellationResponse = new ThirdPartyCancellationResponse();
-            Request? webRequest = null;
+            var webRequest = new Request();
 
             try
             {
@@ -159,11 +151,7 @@
             }
             finally
             {
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.RequestLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Cancel Booking Request", webRequest.RequestLog);
-
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.ResponseLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Cancel Booking Response", webRequest.ResponseLog);
+                propertyDetails.AddLog("Cancel Booking", webRequest);
             }
 
             return cancellationResponse;
@@ -174,7 +162,7 @@
 
         private async Task<ThirdPartyCancellationFeeResult> CancellationCostsAsync(PropertyDetails propertyDetails)
         {
-            Request? webRequest = null;
+            var webRequest = new Request();
             var cancellationFeeResult = new ThirdPartyCancellationFeeResult();
             const string requestType = "GetBookingCancellation";
 
@@ -202,11 +190,7 @@
             }
             finally
             {
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.RequestLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Cancellation Cost Request", webRequest.RequestLog);
-
-                if (webRequest != null && !string.IsNullOrEmpty(webRequest.ResponseLog))
-                    propertyDetails.Logs.AddNew(ThirdParties.OCEANBEDS, "Cancellation Cost Response", webRequest.ResponseLog);
+                propertyDetails.AddLog("Cancellation Cost", webRequest);
             }
 
             return cancellationFeeResult;
@@ -274,7 +258,7 @@
             var webRequest = new Request
             {
                 EndPoint = endpoint,
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = ThirdParties.OCEANBEDS,
                 LogFileName = requestType,
                 CreateLog = true,

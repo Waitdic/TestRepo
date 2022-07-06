@@ -14,7 +14,7 @@
 
         public List<RoomRequest> RoomRequests { get; set; } = new();
 
-        public string NaionalityID { get; set; } = "";
+        public string NationalityID { get; set; } = "";
 
         public string CurrencyCode { get; set; } = "";
 

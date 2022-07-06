@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RoomCategories>
+  <RoomCategory Code="H" LanguageCode = "en"  Category="Accessible room"/>
+  <RoomCategory Code="H" LanguageCode = "ar"  Category="غرفة ملائمة لذوي الاحتياجات الخاصة"/>
+  <RoomCategory Code="H" LanguageCode = "ko"  Category="액세서블룸"/>
+  <RoomCategory Code="H" LanguageCode = "pt"  Category="Quarto acessível"/>
+  <RoomCategory Code="H" LanguageCode = "es"  Category="Habitación accesible"/>
+  <RoomCategory Code="H" LanguageCode = "fr"  Category="Chambre accessible "/>
+  <RoomCategory Code="H" LanguageCode = "ja"  Category="バリアフリー/車椅子対応ルーム"/>
+  <RoomCategory Code="H" LanguageCode = "ru"  Category="Номер для людей с ограниченными возможностями"/>
+  <RoomCategory Code="H" LanguageCode = "cn"  Category="无障碍客房"/>
+  <RoomCategory Code="H" LanguageCode = "zh"  Category="無障礙客房"/>
+  <RoomCategory Code="I" LanguageCode = "en"  Category="Budget room"/>
+  <RoomCategory Code="I" LanguageCode = "ar"  Category="غرفة اقتصادية"/>
+  <RoomCategory Code="I" LanguageCode = "ko"  Category="버짓룸"/>
+  <RoomCategory Code="I" LanguageCode = "pt"  Category="Quarto econômico"/>
+  <RoomCategory Code="I" LanguageCode = "es"  Category="Habitación económica"/>
+  <RoomCategory Code="I" LanguageCode = "fr"  Category="Chambre à bas prix"/>
+  <RoomCategory Code="I" LanguageCode = "ja"  Category="バジェットルーム"/>
+  <RoomCategory Code="I" LanguageCode = "ru"  Category="Бюджетный номер"/>
+  <RoomCategory Code="I" LanguageCode = "cn"  Category="经济客房"/>
+  <RoomCategory Code="I" LanguageCode = "zh"  Category="經濟客房"/>
+  <RoomCategory Code="B" LanguageCode = "en"  Category="Business room"/>
+  <RoomCategory Code="B" LanguageCode = "ar"  Category="غرفة رجال الأعمال"/>
+  <RoomCategory Code="B" LanguageCode = "ko"  Category="비즈니스룸"/>
+  <RoomCategory Code="B" LanguageCode = "pt"  Category="Quarto corptrativo"/>
+  <RoomCategory Code="B" LanguageCode = "es"  Category="Sala de negocios"/>
+  <RoomCategory Code="B" LanguageCode = "fr"  Category="Chambre classe affaires"/>
+  <RoomCategory Code="B" LanguageCode = "ja"  Category="ビジネスルーム"/>
+  <RoomCategory Code="B" LanguageCode = "ru"  Category="Номер бизнес-класса"/>
+  <RoomCategory Code="B" LanguageCode = "cn"  Category="商务客房"/>
+  <RoomCategory Code="B" LanguageCode = "zh"  Category="商務客房"/>
+  <RoomCategory Code="G" LanguageCode = "en"  Category="Comfortable room"/>
+  <RoomCategory Code="G" LanguageCode = "ar"  Category="غرفة مريحة"/>
+  <RoomCategory Code="G" LanguageCode = "ko"  Category="컴포터블룸"/>
+  <RoomCategory Code="G" LanguageCode = "pt"  Category="Quarto confortável"/>
+  <RoomCategory Code="G" LanguageCode = "es"  Category="Habitación cómoda"/>
+  <RoomCategory Code="G" LanguageCode = "fr"  Category="Chambre confortable"/>
+  <RoomCategory Code="G" LanguageCode = "ja"  Category="コンフォータブルルーム"/>
+  <RoomCategory Code="G" LanguageCode = "ru"  Category="Номер категории &quot;Комфорт&quot;"/>
+  <RoomCategory Code="G" LanguageCode = "cn"  Category="舒适客房"/>
+  <RoomCategory Code="G" LanguageCode = "zh"  Category="舒適客房"/>
+  <RoomCategory Code="D" LanguageCode = "en"  Category="Deluxe Room"/>
+  <RoomCategory Code="D" LanguageCode = "ar"  Category="غرفة ديلوكس"/>
+  <RoomCategory Code="D" LanguageCode = "ko"  Category="디럭스룸"/>
+  <RoomCategory Code="D" LanguageCode = "pt"  Category="Quarto deluxe"/>
+  <RoomCategory Code="D" LanguageCode = "es"  Category="Habitación de lujo"/>
+  <RoomCategory Code="D" LanguageCode = "fr"  Category="Chambre deluxe"/>
+  <RoomCategory Code="D" LanguageCode = "ja"  Category="デラックスルーム"/>
+  <RoomCategory Code="D" LanguageCode = "ru"  Category="Номер категории &quot;Делюкс&quot; (повышенной комфортности)"/>
+  <RoomCategory Code="D" LanguageCode = "cn"  Category="豪华客房"/>
+  <RoomCategory Code="D" LanguageCode = "zh"  Category="豪華客房"/>
+  <RoomCategory Code="X" LanguageCode = "en"  Category="Duplex"/>
+  <RoomCategory Code="X" LanguageCode = "ar"  Category="دوبلكس"/>
+  <RoomCategory Code="X" LanguageCode = "ko"  Category="듀플렉스룸"/>
+  <RoomCategory Code="X" LanguageCode = "pt"  Category="Duplex"/>
+  <RoomCategory Code="X" LanguageCode = "es"  Category="Duplex"/>
+  <RoomCategory Code="X" LanguageCode = "fr"  Category="Duplex"/>
+  <RoomCategory Code="X" LanguageCode = "ja"  Category="デュープレックス"/>
+  <RoomCategory Code="X" LanguageCode = "ru"  Category="Номер категории &quot;Дуплекс&quot; (двухуровневый номер) "/>
+  <RoomCategory Code="X" LanguageCode = "cn"  Category="复式客房"/>
+  <RoomCategory Code="X" LanguageCode = "zh"  Category="複式客房"/>
+  <RoomCategory Code="E" LanguageCode = "en"  Category="Executive room"/>
+  <RoomCategory Code="E" LanguageCode = "ar"  Category="غرفة اكزكيتيف"/>
+  <RoomCategory Code="E" LanguageCode = "ko"  Category="이그제큐티브룸"/>
+  <RoomCategory Code="E" LanguageCode = "pt"  Category="Quarto executivo"/>
+  <RoomCategory Code="E" LanguageCode = "es"  Category="Habitación ejecutiva"/>
+  <RoomCategory Code="E" LanguageCode = "fr"  Category="Chambre exécutive"/>
+  <RoomCategory Code="E" LanguageCode = "ja"  Category="エグゼクティブルーム"/>
+  <RoomCategory Code="E" LanguageCode = "ru"  Category="Представительский номер (повышенной комфортности)"/>
+  <RoomCategory Code="E" LanguageCode = "cn"  Category="行政客房"/>
+  <RoomCategory Code="E" LanguageCode = "zh"  Category="行政客房"/>
+  <RoomCategory Code="C" LanguageCode = "en"  Category="Concierge/Executive Suite"/>
+  <RoomCategory Code="C" LanguageCode = "ar"  Category="جناح اكزكيتيف/ كونسيرج"/>
+  <RoomCategory Code="C" LanguageCode = "ko"  Category="컨시어지/이그제큐티브 스위트룸"/>
+  <RoomCategory Code="C" LanguageCode = "pt"  Category="Concierge/suíte executiva"/>
+  <RoomCategory Code="C" LanguageCode = "es"  Category="Concierge / Suite Ejecutiva"/>
+  <RoomCategory Code="C" LanguageCode = "fr"  Category="Suite Concierge/Exécutive"/>
+  <RoomCategory Code="C" LanguageCode = "ja"  Category="コンシェルジュ/エグゼクティブスイート"/>
+  <RoomCategory Code="C" LanguageCode = "ru"  Category="Представительский номер категории &quot;Люкс&quot;"/>
+  <RoomCategory Code="C" LanguageCode = "cn"  Category="礼宾/行政套房"/>
+  <RoomCategory Code="C" LanguageCode = "zh"  Category="禮賓/行政套房"/>
+  <RoomCategory Code="F" LanguageCode = "en"  Category="Family Room"/>
+  <RoomCategory Code="F" LanguageCode = "ar"  Category="غرفة عائلية"/>
+  <RoomCategory Code="F" LanguageCode = "ko"  Category="패밀리룸"/>
+  <RoomCategory Code="F" LanguageCode = "pt"  Category="Quarto familiar"/>
+  <RoomCategory Code="F" LanguageCode = "es"  Category="Habitación familiar"/>
+  <RoomCategory Code="F" LanguageCode = "fr"  Category="Chambre familiale"/>
+  <RoomCategory Code="F" LanguageCode = "ja"  Category="ファミリーふーむ"/>
+  <RoomCategory Code="F" LanguageCode = "ru"  Category="Семейный номер"/>
+  <RoomCategory Code="F" LanguageCode = "cn"  Category="家庭客房"/>
+  <RoomCategory Code="F" LanguageCode = "zh"  Category="家庭客房"/>
+  <RoomCategory Code="S" LanguageCode = "en"  Category="Junior Suite/Mini Suite"/>
+  <RoomCategory Code="S" LanguageCode = "ar"  Category="جناح جونيور / جناح صغير"/>
+  <RoomCategory Code="S" LanguageCode = "ko"  Category="주니어 스위트룸/미니 스위트룸"/>
+  <RoomCategory Code="S" LanguageCode = "pt"  Category="Suíte junior/minissuíte"/>
+  <RoomCategory Code="S" LanguageCode = "es"  Category="Suite Junior / Mini Suite"/>
+  <RoomCategory Code="S" LanguageCode = "fr"  Category="Suite Junior/Mini"/>
+  <RoomCategory Code="S" LanguageCode = "ja"  Category="ジュニアスイート/ミニスイート"/>
+  <RoomCategory Code="S" LanguageCode = "ru"  Category="Двухместный номер категории &quot;Полулюкс&quot;"/>
+  <RoomCategory Code="S" LanguageCode = "cn"  Category="小型套房/迷你套房"/>
+  <RoomCategory Code="S" LanguageCode = "zh"  Category="小型套房/迷你套房"/>
+  <RoomCategory Code="P" LanguageCode = "en"  Category="Penthouse"/>
+  <RoomCategory Code="P" LanguageCode = "ar"  Category="بنتهاوس"/>
+  <RoomCategory Code="P" LanguageCode = "ko"  Category="펜트하우스"/>
+  <RoomCategory Code="P" LanguageCode = "pt"  Category="Cobertura"/>
+  <RoomCategory Code="P" LanguageCode = "es"  Category="Penthouse"/>
+  <RoomCategory Code="P" LanguageCode = "fr"  Category="Penthouse"/>
+  <RoomCategory Code="P" LanguageCode = "ja"  Category="ペントハウス"/>
+  <RoomCategory Code="P" LanguageCode = "ru"  Category="Номер категории &quot;Пентхаус&quot;"/>
+  <RoomCategory Code="P" LanguageCode = "cn"  Category="顶层套房"/>
+  <RoomCategory Code="P" LanguageCode = "zh"  Category="頂層套房"/>
+  <RoomCategory Code="R" LanguageCode = "en"  Category="Residential apartment"/>
+  <RoomCategory Code="R" LanguageCode = "ar"  Category="شقة سكنية"/>
+  <RoomCategory Code="R" LanguageCode = "ko"  Category="레지덴셜 아파트"/>
+  <RoomCategory Code="R" LanguageCode = "pt"  Category="Apartamento residencial"/>
+  <RoomCategory Code="R" LanguageCode = "es"  Category="Apartamento residencial"/>
+  <RoomCategory Code="R" LanguageCode = "fr"  Category="Appartement résidentiel"/>
+  <RoomCategory Code="R" LanguageCode = "ja"  Category="レジデンシャルアパート"/>
+  <RoomCategory Code="R" LanguageCode = "ru"  Category="Апартаменты"/>
+  <RoomCategory Code="R" LanguageCode = "cn"  Category="住宅公寓"/>
+  <RoomCategory Code="R" LanguageCode = "zh"  Category="住宅公寓"/>
+  <RoomCategory Code="M" LanguageCode = "en"  Category="Standard"/>
+  <RoomCategory Code="M" LanguageCode = "ar"  Category="غرفة عادية"/>
+  <RoomCategory Code="M" LanguageCode = "ko"  Category="스탠다드룸"/>
+  <RoomCategory Code="M" LanguageCode = "pt"  Category="Padrão"/>
+  <RoomCategory Code="M" LanguageCode = "es"  Category="Estándar"/>
+  <RoomCategory Code="M" LanguageCode = "fr"  Category="Standard"/>
+  <RoomCategory Code="M" LanguageCode = "ja"  Category="スタンダード"/>
+  <RoomCategory Code="M" LanguageCode = "ru"  Category="Стандартный номер"/>
+  <RoomCategory Code="M" LanguageCode = "cn"  Category="标准客房"/>
+  <RoomCategory Code="M" LanguageCode = "zh"  Category="標準客房"/>
+  <RoomCategory Code="L" LanguageCode = "en"  Category="Studio"/>
+  <RoomCategory Code="L" LanguageCode = "ar"  Category="ستوديو"/>
+  <RoomCategory Code="L" LanguageCode = "ko"  Category="스튜디오"/>
+  <RoomCategory Code="L" LanguageCode = "pt"  Category="Estúdio"/>
+  <RoomCategory Code="L" LanguageCode = "es"  Category="Estudio"/>
+  <RoomCategory Code="L" LanguageCode = "fr"  Category="Studio"/>
+  <RoomCategory Code="L" LanguageCode = "ja"  Category="スタジオタイプ"/>
+  <RoomCategory Code="L" LanguageCode = "ru"  Category="Студия"/>
+  <RoomCategory Code="L" LanguageCode = "cn"  Category="工作室"/>
+  <RoomCategory Code="L" LanguageCode = "zh"  Category="工作室"/>
+  <RoomCategory Code="A" LanguageCode = "en"  Category="Superior Room"/>
+  <RoomCategory Code="A" LanguageCode = "ar"  Category="غرفة سوبيريور"/>
+  <RoomCategory Code="A" LanguageCode = "ko"  Category="슈페리어룸"/>
+  <RoomCategory Code="A" LanguageCode = "pt"  Category="Quarto superior"/>
+  <RoomCategory Code="A" LanguageCode = "es"  Category="Habitación superior"/>
+  <RoomCategory Code="A" LanguageCode = "fr"  Category="Chambre supérieure"/>
+  <RoomCategory Code="A" LanguageCode = "ja"  Category="スーペリアルーム"/>
+  <RoomCategory Code="A" LanguageCode = "ru"  Category="Номер категории &quot;Супериор&quot; (улучшенный)"/>
+  <RoomCategory Code="A" LanguageCode = "cn"  Category="高级客房"/>
+  <RoomCategory Code="A" LanguageCode = "zh"  Category="高級客房"/>
+  <RoomCategory Code="V" LanguageCode = "en"  Category="Villa"/>
+  <RoomCategory Code="V" LanguageCode = "ar"  Category="فيلا"/>
+  <RoomCategory Code="V" LanguageCode = "ko"  Category="빌라"/>
+  <RoomCategory Code="V" LanguageCode = "pt"  Category="Vila"/>
+  <RoomCategory Code="V" LanguageCode = "es"  Category="Villa"/>
+  <RoomCategory Code="V" LanguageCode = "fr"  Category="Villa"/>
+  <RoomCategory Code="V" LanguageCode = "ja"  Category="ヴィラ"/>
+  <RoomCategory Code="V" LanguageCode = "ru"  Category="Вилла"/>
+  <RoomCategory Code="V" LanguageCode = "cn"  Category="别墅"/>
+  <RoomCategory Code="V" LanguageCode = "zh"  Category="別墅"/>
+  <RoomCategory Code="*" LanguageCode = "en"  Category="Unknown"/>
+  <RoomCategory Code="*" LanguageCode = "ar"  Category="نوع الغرفة غير معروف"/>
+  <RoomCategory Code="*" LanguageCode = "ko"  Category="알 수 없는 객실 유형"/>
+  <RoomCategory Code="*" LanguageCode = "pt"  Category="Tipt de quarto desconhecido"/>
+  <RoomCategory Code="*" LanguageCode = "es"  Category="Categoría de habitación desconocida"/>
+  <RoomCategory Code="*" LanguageCode = "fr"  Category="Catégorie de chambre inconnue"/>
+  <RoomCategory Code="*" LanguageCode = "ja"  Category="ルームタイプ該当なし"/>
+  <RoomCategory Code="*" LanguageCode = "ru"  Category="Тип комнаты неизвестен"/>
+  <RoomCategory Code="*" LanguageCode = "cn"  Category="未知房型"/>
+  <RoomCategory Code="*" LanguageCode = "zh"  Category="未知房型"/>
+</RoomCategories>

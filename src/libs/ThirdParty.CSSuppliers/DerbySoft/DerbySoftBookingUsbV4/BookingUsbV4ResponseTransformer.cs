@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
     using ThirdParty.Search.Models;

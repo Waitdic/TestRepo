@@ -84,5 +84,10 @@
     <Build Include="dbo\Tables\Tenant.sql" />
     <Build Include="dbo\Tables\User.sql" />
     <Build Include="dbo\Tables\UserTenant.sql" />
+    <Build Include="dbo\Tables\SubscriptionCurrency.sql" />
+    <Build Include="dbo\Tables\SubscriptionMealBasis.sql" />
+    <Build Include="dbo\Tables\SubscriptionProperty.sql" />
+    <Build Include="dbo\Tables\SubscriptionCountry.sql" />
+    <Build Include="dbo\Stored Procedures\Customer_GetSupplierSpecificCustomer.sql" />
   </ItemGroup>
 </Project>

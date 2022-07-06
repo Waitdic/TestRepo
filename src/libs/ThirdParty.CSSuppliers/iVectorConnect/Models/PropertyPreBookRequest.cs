@@ -1,6 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Xml.Serialization;
     using Common;
 
@@ -17,6 +18,6 @@
 
         [XmlArray("RoomBookings")]
         [XmlArrayItem("RoomBooking")]
-        public RoomBooking[] RoomBookings { get; set; } = Array.Empty<RoomBooking>();
+        public List<RoomBooking> RoomBookings { get; set; } = new();
     }
 }

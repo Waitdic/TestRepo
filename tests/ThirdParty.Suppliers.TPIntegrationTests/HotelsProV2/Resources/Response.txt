@@ -1,0 +1,329 @@
+﻿{
+  "count": 1,
+  "code": "20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+  "next_page_code": null,
+  "max_wait": "7.0",
+  "response_time": "0.05",
+  "results": [
+    {
+      "hotel_code": "1040e5",
+      "checkin": "2022-05-04",
+      "checkout": "2022-05-07",
+      "destination_code": "15080",
+      "products": [
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking",
+              "nightly_prices": {
+                "2022-05-04": "157.71",
+                "2022-05-05": "157.71",
+                "2022-05-06": "135.87"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "15.55",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "15.55",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "13.72",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_530543250_2_108-45_2_2_0_1_530543266_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "451.29",
+          "currency": "EUR",
+          "meal_type": "RO",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "469.67",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        },
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking, Balcony",
+              "nightly_prices": {
+                "2022-05-04": "166.77",
+                "2022-05-05": "166.77",
+                "2022-05-06": "144.92"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "16.45",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "16.45",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "14.62",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_924880123_2_108-45_2_2_0_1_924880075_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "478.46",
+          "currency": "EUR",
+          "meal_type": "RO",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "497.89",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        },
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking",
+              "nightly_prices": {
+                "2022-05-04": "170.51",
+                "2022-05-05": "170.51",
+                "2022-05-06": "148.66"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "16.8",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "16.8",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "14.97",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_530543250_2_108-45_2_2_1_1_530543266_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "489.68",
+          "currency": "EUR",
+          "meal_type": "BC",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "513.39",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        },
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking, Balcony",
+              "nightly_prices": {
+                "2022-05-04": "179.52",
+                "2022-05-05": "179.52",
+                "2022-05-06": "157.67"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "17.7",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "17.7",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "15.87",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_924880123_2_108-45_2_2_1_1_924880075_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "516.71",
+          "currency": "EUR",
+          "meal_type": "BC",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "541.21",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        },
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking",
+              "nightly_prices": {
+                "2022-05-04": "186.61",
+                "2022-05-05": "186.61",
+                "2022-05-06": "164.78"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "17.33",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "17.33",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "15.5",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_530543250_2_108-44_2_2_0_1_530543266_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "538.00",
+          "currency": "EUR",
+          "meal_type": "RO",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "551.87",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        },
+        {
+          "rooms": [
+            {
+              "pax": { "adult_quantity": 2, "children_ages": [5, 6] },
+              "room_type": "QB",
+              "room_category": "Standard Room",
+              "room_description": "Room, 2 Double Beds, Non Smoking, Balcony",
+              "nightly_prices": {
+                "2022-05-04": "196.43",
+                "2022-05-05": "196.43",
+                "2022-05-06": "174.59"
+              }
+            }
+          ],
+          "fees": [],
+          "taxes": [
+            {
+              "type": "others",
+              "amount": "18.25",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "18.25",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            },
+            {
+              "type": "others",
+              "amount": "16.42",
+              "currency": "EUR",
+              "inclusive": true,
+              "detail": "tax_and_service_fee"
+            }
+          ],
+          "code": "1040e5_924880123_2_108-44_2_2_0_1_924880075_0_4-6-0_2-31_232_2.20220504_3_2-5-6_1_232_zen11209deec4f64037b23f0650f2fa723d_1647966918",
+          "price": "567.45",
+          "currency": "EUR",
+          "meal_type": "RO",
+          "nonrefundable": false,
+          "hotel_currency": null,
+          "hotel_price": null,
+          "minimum_selling_price": "582.11",
+          "policies": [{ "ratio": "0.31", "days_remaining": 2 }],
+          "offer": false,
+          "pay_at_hotel": false,
+          "supports_cancellation": true,
+          "view": false
+        }
+      ]
+    }
+  ]
+}

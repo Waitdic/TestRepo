@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Xml;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using Models;
 
@@ -53,7 +53,7 @@
             return new Request
             {
                 EndPoint = $"{URL}?codusu={codusu}&codigousu={codigousu}&clausu={clausu}&afiliacio=RS&secacc={secacc}",
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = ThirdParties.RESTEL,
                 ContentType = ContentTypes.Application_x_www_form_urlencoded,
                 Param = "xml",

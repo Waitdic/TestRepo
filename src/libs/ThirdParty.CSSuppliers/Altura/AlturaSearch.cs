@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using ThirdParty;
     using ThirdParty.Constants;
@@ -68,7 +68,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Param = "xml",
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     ExtraInfo = room.PropertyRoomBookingID,
@@ -123,7 +123,7 @@
 
         private async Task<XmlDocument> GetSearchRequestXmlAsync(SearchDetails searchDetails, string hotelList, RoomDetail room)
         {
-            var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry);
+            var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.SubscriptionID);
             var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
             var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
@@ -145,8 +145,8 @@
                         DestinationType = Constant.DestinationTypeHotel,
                         Content = hotelList
                     },
-                    Arrival = searchDetails.PropertyArrivalDate.ToString(Constant.ApiDateFormat),
-                    Departure = searchDetails.PropertyDepartureDate.ToString(Constant.ApiDateFormat),
+                    Arrival = searchDetails.ArrivalDate.ToString(Constant.ApiDateFormat),
+                    Departure = searchDetails.DepartureDate.ToString(Constant.ApiDateFormat),
                     NumberOfRooms = 1,
                     RoomOccupancy =
                     {

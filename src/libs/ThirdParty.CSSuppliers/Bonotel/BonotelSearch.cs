@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
@@ -68,10 +68,10 @@
                 sb.AppendFormat("<userName>{0}</userName>", _settings.User(searchDetails));
                 sb.AppendFormat("<passWord>{0}</passWord>", _settings.Password(searchDetails));
                 sb.Append("</control>");
-                sb.AppendFormat("<checkIn>{0}</checkIn>", searchDetails.PropertyArrivalDate.ToString("dd-MMM-yyyy"));
-                sb.AppendFormat("<checkOut>{0}</checkOut>", searchDetails.PropertyDepartureDate.ToString("dd-MMM-yyyy"));
+                sb.AppendFormat("<checkIn>{0}</checkIn>", searchDetails.ArrivalDate.ToString("dd-MMM-yyyy"));
+                sb.AppendFormat("<checkOut>{0}</checkOut>", searchDetails.DepartureDate.ToString("dd-MMM-yyyy"));
                 sb.AppendFormat("<noOfRooms>{0}</noOfRooms>", searchDetails.Rooms);
-                sb.AppendFormat("<noOfNights>{0}</noOfNights>", searchDetails.PropertyDuration);
+                sb.AppendFormat("<noOfNights>{0}</noOfNights>", searchDetails.Duration);
                 sb.AppendFormat("<city>{0}</city>", resortSplit.ResortCode);
                 sb.AppendFormat("<hotelCodes>");
                 if (resortSplit.Hotels.Count == 1)
@@ -113,7 +113,7 @@
                 {
                     EndPoint = _settings.GenericURL(searchDetails) + "GetAvailability.do",
                     ContentType = ContentTypes.Text_xml,
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ExtraInfo = searchDetails
                 };
 

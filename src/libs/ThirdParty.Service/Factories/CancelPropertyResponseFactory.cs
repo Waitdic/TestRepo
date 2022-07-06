@@ -19,7 +19,7 @@
 
         public CancelPropertyResponseFactory(ICurrencyLookupRepository currencyRepository)
         {
-            this._currencyRepository = currencyRepository;
+            _currencyRepository = currencyRepository;
         }
 
         /// <summary>

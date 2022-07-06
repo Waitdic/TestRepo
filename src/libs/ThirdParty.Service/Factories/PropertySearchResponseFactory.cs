@@ -7,6 +7,7 @@
     using Intuitive;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
+    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Tokens;
     using ThirdParty.Repositories;
@@ -20,28 +21,26 @@
     /// </summary>
     public class PropertySearchResponseFactory : IPropertySearchResponseFactory
     {
-        /// <summary>The currency repository</summary>
-        private readonly ICurrencyLookupRepository currencyRepository;
+        /// <summary>The token service</summary>
+        private readonly ITPSupport _support;
 
         /// <summary>The token service</summary>
-        private ITokenService tokenService;
+        private readonly ITokenService _tokenService;
 
         /// <summary>The log writer</summary>
         private readonly ILogger<PropertySearchResponseFactory> _logger;
 
         /// <summary>Initializes a new instance of the <see cref="PropertySearchResponseFactory" /> class.</summary>
-        /// <param name="currencyRepository">The currency repository.</param>
-        /// <param name="tokenService">
-        ///   <para>The token service, that encodes and decodes response and request tokens</para>
-        /// </param>
+        /// <param name="support">The third party support</param>
+        /// <param name="tokenService">The token service, that encodes and decodes response and request tokens</param>
         /// <param name="logger">The log writer</param>
         public PropertySearchResponseFactory(
-            ICurrencyLookupRepository currencyRepository,
+            ITPSupport support,
             ITokenService tokenService,
             ILogger<PropertySearchResponseFactory> logger)
         {
-            this.currencyRepository = currencyRepository;
-            this.tokenService = tokenService;
+            _support = Ensure.IsNotNull(support, nameof(support));
+            _tokenService = Ensure.IsNotNull(tokenService, nameof(tokenService));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
@@ -64,24 +63,24 @@
 
                 var supplierSplit = supplierSplits.FirstOrDefault(ss => ss.Supplier == propertyData.Source);
 
-                var propertyID = supplierSplit.AllHotels.FirstOrDefault(h => h.TPKey == propertyData.TPKey).PropertyID;
+                var propertyId = supplierSplit.AllHotels.FirstOrDefault(h => h.TPKey == propertyData.TPKey).PropertyID;
 
-                var currenyID = !string.IsNullOrEmpty(searchDetails.CurrencyCode) ?
-                    (await currencyRepository.GetISOCurrencyIDFromISOCurrencyCodeAsync(searchDetails.CurrencyCode)) :
+                var currencyId = !string.IsNullOrEmpty(searchDetails.CurrencyCode) ?
+                    (await _support.ISOCurrencyIDLookupAsync(searchDetails.CurrencyCode)) :
                     0;
 
                 var propertyToken = new PropertyToken()
                 {
                     ArrivalDate = searchDetails.ArrivalDate,
                     Duration = searchDetails.Duration,
-                    PropertyID = propertyID,
+                    PropertyID = propertyId,
                     Rooms = searchDetails.Rooms,
-                    CurrencyID = currenyID
+                    CurrencyID = currencyId
                 };
 
                 var propertyResult = new PropertyResult()
                 {
-                    BookingToken = this.tokenService.EncodePropertyToken(propertyToken),
+                    BookingToken = _tokenService.EncodePropertyToken(propertyToken),
                     PropertyID = propertyData.PropertyReferenceID
                 };
 
@@ -96,14 +95,14 @@
                             Infants = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].Infants,
                             ChildAges = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].ChildAges,
                             PropertyRoomBookingID = roomResult.RoomData.PropertyRoomBookingID,
-                            LocalCost = PropertyFactoryHelper.splitNumberToNDigitList((int)(roomResult.PriceData.TotalCost * 100), 7),
-                            MealBasis = PropertyFactoryHelper.splitNumberToNDigitList(roomResult.RoomData.MealBasisID, 2)
+                            LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(roomResult.PriceData.TotalCost * 100), 7),
+                            MealBasisID = PropertyFactoryHelper.SplitNumberToNDigitList(roomResult.RoomData.MealBasisID, 2)
                         };
 
                         var roomType = new RoomType()
                         {
                             RoomID = roomResult.RoomData.PropertyRoomBookingID,
-                            RoomBookingToken = this.tokenService.EncodeRoomToken(roomToken),
+                            RoomBookingToken = _tokenService.EncodeRoomToken(roomToken),
                             Supplier = roomResult.RoomData.Source,
                             MealBasisCode = roomResult.RoomData.MealBasisCode,
                             SupplierRoomType = roomResult.RoomData.RoomType,
@@ -111,12 +110,12 @@
                             SupplierReference2 = roomResult.RoomData.RoomTypeCode,
                             Name = roomResult.RoomData.RoomType,
                             Code = roomResult.RoomData.RoomTypeCode,
-                            CurrencyCode = await this.currencyRepository.GetCurrencyCodeFromISOCurrencyIDAsync(roomResult.RoomData.Source, roomResult.PriceData.CurrencyID),
+                            CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(roomResult.PriceData.CurrencyID),
                             TotalCost = Math.Round(roomResult.PriceData.TotalCost + 0.00M, 2),
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
                             CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
                             Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
-                            TPRateCode = roomResult.RoomData.RateCode,
+                            RateCode = roomResult.RoomData.RateCode,
                             Adjustments = GetAdjustments(roomResult.Adjustments),
                             CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2),
                             OnRequest = roomResult.RoomData.OnRequest,
@@ -127,7 +126,7 @@
                     }
                     catch (Exception e)
                     {
-                        this._logger.LogError(e, "BuildResultsError");
+                        _logger.LogError(e, "BuildResultsError");
                     }
                 }
 

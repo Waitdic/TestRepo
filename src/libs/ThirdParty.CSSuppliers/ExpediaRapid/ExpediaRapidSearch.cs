@@ -5,12 +5,11 @@
     using System.Collections.Specialized;
     using System.Linq;
     using System.Security.Cryptography;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using MoreLinq;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
@@ -63,7 +62,7 @@
 
             var request = BuildDefaultRequest(
                 searchURL,
-                eRequestMethod.GET,
+                RequestMethod.GET,
                 headers,
                 useGzip,
                 userAgent,
@@ -88,7 +87,7 @@
         {
             double timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            var data = Encoding.UTF8.GetBytes($"{apiKey}{secret}{timeStamp}");
+            var data = System.Text.Encoding.UTF8.GetBytes($"{apiKey}{secret}{timeStamp}");
 
             string hashString;
 
@@ -102,7 +101,7 @@
 
         public static Request BuildDefaultRequest(
             string url,
-            eRequestMethod requestMethod,
+            RequestMethod requestMethod,
             RequestHeaders headers,
             bool useGzip,
             string userAgent,
@@ -115,7 +114,7 @@
                 Accept = "application/json",
                 ContentType = "application/json",
                 UseGZip = useGzip,
-                AuthenticationMode = eAuthenticationMode.None,
+                AuthenticationMode = AuthenticationMode.None,
                 Method = requestMethod,
                 Headers = headers,
                 UserAgent = userAgent,

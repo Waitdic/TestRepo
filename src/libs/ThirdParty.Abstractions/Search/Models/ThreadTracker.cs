@@ -4,7 +4,7 @@
     using System.Threading;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
 
     /// <summary>
     /// A thread tracker

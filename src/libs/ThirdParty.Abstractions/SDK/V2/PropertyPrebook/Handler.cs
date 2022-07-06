@@ -16,7 +16,7 @@
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _prebookService.PrebookAsync(request, request.User);
+            return await _prebookService.PrebookAsync(request);
         }
     }
 }

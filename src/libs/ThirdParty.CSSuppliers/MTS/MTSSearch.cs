@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty;
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.MTS.Models;
@@ -153,7 +153,7 @@
 
                 sbRequest.Append("<AvailRequestSegments>");
                 sbRequest.Append("<AvailRequestSegment InfoSource='1*2*4*5*'>");
-                sbRequest.AppendFormat("<StayDateRange End=\"{0}\" Start=\"{1}\"></StayDateRange>", searchDetails.PropertyDepartureDate.ToString("yyyy-MM-dd"), searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd"));
+                sbRequest.AppendFormat("<StayDateRange End=\"{0}\" Start=\"{1}\"></StayDateRange>", searchDetails.DepartureDate.ToString("yyyy-MM-dd"), searchDetails.ArrivalDate.ToString("yyyy-MM-dd"));
                 sbRequest.Append("<RoomStayCandidates>");
 
                 // loop through the rooms
@@ -223,7 +223,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_json
                 };
 

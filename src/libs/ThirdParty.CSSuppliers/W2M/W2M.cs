@@ -74,20 +74,12 @@
 
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            List<string> referencesForCancellation;
-
-            if (propertyDetails.SourceReference == Constants.FailedReference)
-            {
-                referencesForCancellation = propertyDetails.SourceSecondaryReference
+            var referencesForCancellation = (propertyDetails.SourceReference == Constants.FailedReference ?
+                    propertyDetails.SourceSecondaryReference :
+                    propertyDetails.SourceReference)
                     .Split(Constants.BookingCodesSeparator)
-                    .Where(x => x != Constants.FailedReference).ToList();
-            }
-            else
-            {
-                referencesForCancellation = propertyDetails.SourceReference
-                    .Split(Constants.BookingCodesSeparator)
-                    .Where(x => x != Constants.FailedReference).ToList();
-            }
+                .Where(x => x != Constants.FailedReference)
+                .ToList();
 
             var baseParams = new BaseRequestParameters
             {
@@ -96,7 +88,7 @@
                 Language = _settings.LanguageCode(propertyDetails),
                 Endpoint = _settings.CancellationURL(propertyDetails),
                 SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
-                CreateLogs = propertyDetails.CreateLogs
+                CreateLogs = true
             };
 
             var cancellationResponse = await _w2mHelper.CancelBookingAsync(baseParams, referencesForCancellation);
@@ -145,7 +137,7 @@
                     Language = _settings.LanguageCode(propertyDetails),
                     Endpoint = _settings.PrebookURL(propertyDetails),
                     SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
-                    CreateLogs = propertyDetails.CreateLogs
+                    CreateLogs = true
                 };
 
                 var parameters = new PreBookRequestParameters(baseParameters,
@@ -153,7 +145,7 @@
                     propertyDetails.Duration,
                     propertyDetails.TPKey,
                     propertyDetails.Source,
-                    propertyDetails.LeadGuestBookingCountry);
+                    propertyDetails.LeadGuestCountryCode);
 
                 var preBookResult = await _w2mHelper.PreBookAsync(parameters, propertyDetails.Rooms);
                 foreach (var log in preBookResult.Logs)

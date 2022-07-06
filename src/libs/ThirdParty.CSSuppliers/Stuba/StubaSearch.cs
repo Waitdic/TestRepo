@@ -8,7 +8,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
@@ -71,7 +71,7 @@
                 var request = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.STUBA,
                 };
                 request.SetRequest(requestBody);
@@ -121,8 +121,8 @@
                             new XElement("Hotels", from id in hotelIds
                                                    select new XElement("Id", id)),
                             new XElement("HotelStayDetails",
-                            new XElement("ArrivalDate", searchDetails.PropertyArrivalDate.ToString("yyyy-MM-dd")),
-                            new XElement("Nights", searchDetails.PropertyDuration),
+                            new XElement("ArrivalDate", searchDetails.ArrivalDate.ToString("yyyy-MM-dd")),
+                            new XElement("Nights", searchDetails.Duration),
                             new XElement("Nationality", nationality), from oRoom in searchDetails.RoomDetails
                                                                        select new XElement("Room",
                                                                                   new XElement("Guests", from adult in Enumerable.Range(0, oRoom.Adults)

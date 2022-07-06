@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -68,12 +68,15 @@
                 string request = BuildPreBookRequest(propertyDetails);
 
                 // get the response
-                webRequest.EndPoint = _settings.BookingURL(propertyDetails);
-                webRequest.Method = eRequestMethod.POST;
-                webRequest.Source = ThirdParties.JUMBO;
-                webRequest.ContentType = ContentTypes.Text_xml;
-                webRequest.LogFileName = "PreBook";
-                webRequest.CreateLog = true;
+                webRequest = new Request()
+                {
+                    EndPoint = _settings.BookingURL(propertyDetails),
+                    Method = RequestMethod.POST,
+                    Source = ThirdParties.JUMBO,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "PreBook",
+                    CreateLog = true,
+                };
                 webRequest.SetRequest(request);
                 await webRequest.Send(_httpClient, _logger);
 
@@ -120,15 +123,7 @@
             }
             finally
             {
-                if (!string.IsNullOrEmpty(webRequest.RequestLog))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Prebook Request", webRequest.RequestLog);
-                }
-
-                if (!string.IsNullOrEmpty(webRequest.ResponseLog))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Prebook Response", webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Prebook", webRequest);
             }
 
             return success;
@@ -150,11 +145,14 @@
                     string sRequest = BuildBookRequest(propertyDetails);
 
                     // send the request
-                    webRequest.EndPoint = _settings.BookingURL(propertyDetails);
-                    webRequest.Source = ThirdParties.JUMBO;
-                    webRequest.SOAP = true;
-                    webRequest.LogFileName = "Book";
-                    webRequest.CreateLog = true;
+                    webRequest = new Request()
+                    {
+                        EndPoint = _settings.BookingURL(propertyDetails),
+                        Source = ThirdParties.JUMBO,
+                        SOAP = true,
+                        LogFileName = "Book",
+                        CreateLog = true,
+                    };
                     webRequest.SetRequest(sRequest);
                     await webRequest.Send(_httpClient, _logger);
 
@@ -182,16 +180,7 @@
                 }
                 finally
                 {
-                    // store the request and response xml on the property booking
-                    if (!string.IsNullOrEmpty(webRequest.RequestLog))
-                    {
-                        propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Book Request", webRequest.RequestLog);
-                    }
-
-                    if (!string.IsNullOrEmpty(webRequest.ResponseLog))
-                    {
-                        propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Book Response", webRequest.ResponseLog);
-                    }
+                    propertyDetails.AddLog("Book", webRequest);
                 }
             }
             else
@@ -213,12 +202,15 @@
                 string request = BuildPreBookRequest(propertyDetails);
 
                 // get the response
-                webRequest.EndPoint = _settings.BookingURL(propertyDetails);
-                webRequest.Method = eRequestMethod.POST;
-                webRequest.Source = ThirdParties.JUMBO;
-                webRequest.ContentType = ContentTypes.Text_xml;
-                webRequest.LogFileName = "BookAvailability";
-                webRequest.CreateLog = true;
+                webRequest = new Request()
+                {
+                    EndPoint = _settings.BookingURL(propertyDetails),
+                    Method = RequestMethod.POST,
+                    Source = ThirdParties.JUMBO,
+                    ContentType = ContentTypes.Text_xml,
+                    LogFileName = "BookAvailability",
+                    CreateLog = true,
+                };
                 webRequest.SetRequest(request);
                 await webRequest.Send(_httpClient, _logger);
 
@@ -245,19 +237,10 @@
             {
                 available = false;
                 propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
-                propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Book Exception", ex.ToString());
             }
             finally
             {
-                if (!string.IsNullOrEmpty(webRequest.RequestLog))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Book Availability Request", webRequest.RequestLog);
-                }
-
-                if (!string.IsNullOrEmpty(webRequest.ResponseLog))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Book Availability Response", webRequest.ResponseLog);
-                }
+                propertyDetails.AddLog("Book Availability", webRequest);
             }
 
             return available;
@@ -272,6 +255,7 @@
             var requestXml = new XmlDocument();
             var responseXml = new XmlDocument();
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            var webRequest = new Request();
 
             try
             {
@@ -300,14 +284,14 @@
                 requestXml.LoadXml(sbCancellationRequest.ToString());
 
                 // get the response
-                var webRequest = new Request
+                webRequest = new Request()
                 {
                     EndPoint = _settings.CancellationURL(propertyDetails),
-                    Method = eRequestMethod.POST,
+                    Method = RequestMethod.POST,
                     Source = ThirdParties.JUMBO,
                     ContentType = ContentTypes.Text_xml,
                     LogFileName = "Cancellation",
-                    CreateLog = true
+                    CreateLog = true,
                 };
                 webRequest.SetRequest(sbCancellationRequest.ToString());
                 await webRequest.Send(_httpClient, _logger);
@@ -332,16 +316,7 @@
             }
             finally
             {
-                // save the xml request and response to the propertybooking
-                if (!string.IsNullOrEmpty(requestXml.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Cancellation Request", requestXml);
-                }
-
-                if (!string.IsNullOrEmpty(responseXml.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JUMBO, "Jumbo Cancellation Response", responseXml);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;

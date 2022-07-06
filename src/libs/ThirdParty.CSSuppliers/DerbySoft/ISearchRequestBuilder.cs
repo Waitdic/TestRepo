@@ -1,7 +1,7 @@
 ﻿namespace ThirdParty.CSSuppliers.DerbySoft
 {
     using System.Collections.Generic;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
 

@@ -1,35 +1,56 @@
 ﻿CREATE PROCEDURE [dbo].[Property_GetPropertyContent]
-    @sCentralPropertyIDs varchar(max),
-    @Suppliers varchar(max)
-AS
+	@centralPropertyIds varchar(max),
+	@suppliers varchar(max),
+	@subscriptionId int = 0
+as
 
-SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED 
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 set nocount on
 
 create table #centralproperty (CentralPropertyID int)
 
 insert into #centralproperty
-	exec CSVToTable @sCentralPropertyIDs
+	exec CSVToTable @centralPropertyIds
 
 create table #Suppliers (Supplier varchar(30))
 
 insert into #Suppliers
-	exec CSVToTableString @Suppliers, ','
+	exec CSVToTableString @suppliers, ','
 
-
-select Name, TTICode, Source, PropertyDetails, CentralPropertyID, Country, Region, Resort
-	from (select Property.Name, Property.TTICode,  Property.Source, Property.PropertyDetails, #centralproperty.CentralPropertyID, Geography.Country, Geography.Region, Geography.Resort,
-				row_number() over(partition by property.Source, PropertyDedupe.CentralPropertyID order by Property.LastImportID desc, Property.HasImages desc) Seq
-			from Property
-				inner join PropertyDedupe
-					on PropertyDedupe.PropertyID = Property.PropertyID
-				inner join #centralproperty
-					on #centralproperty.CentralPropertyID = PropertyDedupe.CentralPropertyID
-				inner join  #Suppliers
-					on #Suppliers.Supplier = Property.Source
-				inner join Geography
-					on Property.GeographyID = Geography.GeographyID) deduped
-	where deduped.Seq = 1
+select Property.Name,
+		Property.TTICode,
+		Property.Source,
+		Property.PropertyDetails,
+		#centralproperty.CentralPropertyID,
+		Geography.Country,
+		Geography.Region,
+		Geography.Resort
+	from Property
+		inner join PropertyDedupe
+			on PropertyDedupe.PropertyID = Property.PropertyID
+		inner join #centralproperty
+			on #centralproperty.CentralPropertyID = PropertyDedupe.CentralPropertyID
+		inner join #Suppliers
+			on #Suppliers.Supplier = Property.Source
+		inner join Geography
+			on Property.GeographyID = Geography.GeographyID
+union all
+select Property.Name,
+		Property.TTICode,
+		Property.Source,
+		Property.PropertyDetails,
+		#centralproperty.CentralPropertyID,
+		'' Country,
+		'' Region,
+		'' Resort
+	from Property
+		inner join SubscriptionProperty
+			on SubscriptionProperty.PropertyID = Property.PropertyID
+				and SubscriptionProperty.SubscriptionID = @subscriptionId
+		inner join #centralproperty
+			on #centralproperty.CentralPropertyID = SubscriptionProperty.CentralPropertyID
+		inner join #Suppliers
+			on #Suppliers.Supplier = Property.Source
 
 drop table #centralproperty
 drop table #Suppliers

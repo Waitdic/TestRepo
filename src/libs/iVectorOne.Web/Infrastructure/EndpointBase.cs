@@ -1,21 +1,25 @@
 ﻿namespace iVectorOne.Web.Infrastructure
 {
     using System.Linq;
+    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using FluentValidation;
-    using iVectorOne.Web.Infrastructure.Security;
     using iVectorOne.Web.Adaptors.Authentication;
+    using iVectorOne.Web.Infrastructure.Security;
     using MediatR;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using ThirdParty.SDK.V2;
-    using Microsoft.Extensions.Configuration;
 
     public static class EndpointBase
     {
+        public const string Version = "v2";
+        public const string Domain = "property";
+
         public static IServiceCollection RegisterWebServices(this IServiceCollection services, ConfigurationManager config)
         {
             var userLoginMethod = config.GetValue<string>("UserLoginMethod");
@@ -40,6 +44,7 @@
                 options.SerializerOptions.PropertyNameCaseInsensitive = false;
                 options.SerializerOptions.PropertyNamingPolicy = null;
                 options.SerializerOptions.WriteIndented = true;
+                options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services.Configure<KestrelServerOptions>(options =>

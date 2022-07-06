@@ -1,0 +1,258 @@
+﻿URL: http://xml-uat.bookingengine.es/webservice
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/soap+xml;charset=UTF-8;action="hotelSearch"
+Timeout: 1
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header />
+  <soap:Body>
+    <hotelSearchRequest versionNumber="7.0">
+      <requestAuditInfo>
+        <agentCode>XXX</agentCode>
+        <requestPassword />
+        <requestID></requestID>
+        <requestDateTime></requestDateTime>
+      </requestAuditInfo>
+      <hotelSearchCriteria currencyCode="GBP" paxNationality="GB" languageCode="en">
+        <destination>
+          <hotelRefs>
+            <productCodes>
+              <productCode>102245</productCode>
+            </productCodes>
+          </hotelRefs>
+        </destination>
+        <stayPeriod>
+          <checkinDate>2021-09-01</checkinDate>
+          <numberOfNights>5</numberOfNights>
+        </stayPeriod>
+        <rooms>
+          <room>
+            <roomNo>1</roomNo>
+            <guests>
+              <guest>
+                <type>ADT</type>
+              </guest>
+            </guests>
+          </room>
+        </rooms>
+      </hotelSearchCriteria>
+    </hotelSearchRequest>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/soap+xml;charset=UTF-8;action="hotelSearch"
+Timeout: 1
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header />
+  <soap:Body>
+    <hotelSearchRequest versionNumber="7.0">
+      <requestAuditInfo>
+        <agentCode>XXX</agentCode>
+        <requestPassword />
+        <requestID></requestID>
+        <requestDateTime></requestDateTime>
+      </requestAuditInfo>
+      <hotelSearchCriteria currencyCode="GBP" paxNationality="GB" languageCode="en">
+        <destination>
+          <hotelRefs>
+            <productCodes>
+              <productCode>102245</productCode>
+            </productCodes>
+          </hotelRefs>
+        </destination>
+        <stayPeriod>
+          <checkinDate>2021-09-01</checkinDate>
+          <numberOfNights>5</numberOfNights>
+        </stayPeriod>
+        <rooms>
+          <room>
+            <roomNo>1</roomNo>
+            <guests>
+              <guest>
+                <type>ADT</type>
+              </guest>
+              <guest>
+                <type>ADT</type>
+              </guest>
+            </guests>
+          </room>
+        </rooms>
+      </hotelSearchCriteria>
+    </hotelSearchRequest>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/soap+xml;charset=UTF-8;action="hotelSearch"
+Timeout: 1
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header />
+  <soap:Body>
+    <hotelSearchRequest versionNumber="7.0">
+      <requestAuditInfo>
+        <agentCode>XXX</agentCode>
+        <requestPassword />
+        <requestID></requestID>
+        <requestDateTime></requestDateTime>
+      </requestAuditInfo>
+      <hotelSearchCriteria currencyCode="GBP" paxNationality="GB" languageCode="en">
+        <destination>
+          <hotelRefs>
+            <productCodes>
+              <productCode>102245</productCode>
+            </productCodes>
+          </hotelRefs>
+        </destination>
+        <stayPeriod>
+          <checkinDate>2021-09-01</checkinDate>
+          <numberOfNights>5</numberOfNights>
+        </stayPeriod>
+        <rooms>
+          <room>
+            <roomNo>1</roomNo>
+            <guests>
+              <guest>
+                <type>ADT</type>
+              </guest>
+              <guest>
+                <type>CHD</type>
+                <age>8</age>
+              </guest>
+            </guests>
+          </room>
+        </rooms>
+      </hotelSearchCriteria>
+    </hotelSearchRequest>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/soap+xml;charset=UTF-8;action="hotelSearch"
+Timeout: 1
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header />
+  <soap:Body>
+    <hotelSearchRequest versionNumber="7.0">
+      <requestAuditInfo>
+        <agentCode>XXX</agentCode>
+        <requestPassword />
+        <requestID></requestID>
+        <requestDateTime></requestDateTime>
+      </requestAuditInfo>
+      <hotelSearchCriteria currencyCode="GBP" paxNationality="GB" languageCode="en">
+        <destination>
+          <hotelRefs>
+            <productCodes>
+              <productCode>102245</productCode>
+            </productCodes>
+          </hotelRefs>
+        </destination>
+        <stayPeriod>
+          <checkinDate>2021-09-01</checkinDate>
+          <numberOfNights>5</numberOfNights>
+        </stayPeriod>
+        <rooms>
+          <room>
+            <roomNo>1</roomNo>
+            <guests>
+              <guest>
+                <type>ADT</type>
+              </guest>
+              <guest>
+                <type>CHD</type>
+                <age>3</age>
+              </guest>
+            </guests>
+          </room>
+        </rooms>
+      </hotelSearchCriteria>
+    </hotelSearchRequest>
+  </soap:Body>
+</soap:Envelope>
+
+URL: http://xml-uat.bookingengine.es/webservice
+
+**HEADERS**
+
+Accept-Encoding: gzip
+Content-Type: application/soap+xml;charset=UTF-8;action="hotelSearch"
+Timeout: 1
+
+
+**REQUEST**
+
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header />
+  <soap:Body>
+    <hotelSearchRequest versionNumber="7.0">
+      <requestAuditInfo>
+        <agentCode>XXX</agentCode>
+        <requestPassword />
+        <requestID></requestID>
+        <requestDateTime></requestDateTime>
+      </requestAuditInfo>
+      <hotelSearchCriteria currencyCode="GBP" paxNationality="GB" languageCode="en">
+        <destination>
+          <hotelRefs>
+            <productCodes>
+              <productCode>102245</productCode>
+            </productCodes>
+          </hotelRefs>
+        </destination>
+        <stayPeriod>
+          <checkinDate>2021-09-01</checkinDate>
+          <numberOfNights>5</numberOfNights>
+        </stayPeriod>
+        <rooms>
+          <room>
+            <roomNo>1</roomNo>
+            <guests>
+              <guest>
+                <type>ADT</type>
+              </guest>
+              <guest>
+                <type>CHD</type>
+                <age>8</age>
+              </guest>
+              <guest>
+                <type>CHD</type>
+                <age>3</age>
+              </guest>
+            </guests>
+          </room>
+        </rooms>
+      </hotelSearchCriteria>
+    </hotelSearchRequest>
+  </soap:Body>
+</soap:Envelope>

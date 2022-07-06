@@ -5,18 +5,18 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
+    using ThirdParty.CSSuppliers.Juniper.Model;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.Juniper.Model;
-    using System.Threading.Tasks;
 
     public class Juniper : IThirdParty, IMultiSource
     {
@@ -75,7 +75,7 @@
 
             foreach (var room in propertyDetails.Rooms)
             {
-                Request request = null!;
+                var request = new Request();
 
                 try
                 {
@@ -120,18 +120,7 @@
                 }
                 finally
                 {
-                    if (request is not null)
-                    {
-                        if (!string.IsNullOrEmpty(request.RequestLog))
-                        {
-                            propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Prebook Request", request.RequestLog);
-                        }
-
-                        if (!string.IsNullOrEmpty(request.ResponseLog))
-                        {
-                            propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Prebook Response", request.ResponseLog);
-                        }
-                    }
+                    propertyDetails.AddLog("Prebook", request);
                 }
             }
 
@@ -202,18 +191,20 @@
 
             foreach (var room in propertyDetails.Rooms)
             {
+                var request = new Request();
+
                 try
                 {
                     bookRequest = BuildBookRequest(propertyDetails, room);
 
-                    var request = new Request
+                    request = new Request
                     {
                         EndPoint = JuniperHelper.ConstructUrl(
                             _settings.BaseURL(propertyDetails, propertyDetails.Source),
                             _settings.HotelBookURL(propertyDetails, propertyDetails.Source)),
                         SOAP = true,
                         SoapAction = _settings.HotelBookSOAPAction(propertyDetails, propertyDetails.Source),
-                        Method = eRequestMethod.POST,
+                        Method = RequestMethod.POST,
                         Source = propertyDetails.Source,
                         LogFileName = Constant.BookLogFile,
                         CreateLog = true,
@@ -263,14 +254,7 @@
                 }
                 finally
                 {
-                    if (!string.IsNullOrEmpty(bookRequest))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Book Request", bookRequest);
-                    }
-                    if (!string.IsNullOrEmpty(responseXml.InnerXml))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Book Response", responseXml.InnerXml);
-                    }
+                    propertyDetails.AddLog("Book", request);
                 }
             }
 
@@ -387,7 +371,7 @@
                                                         PostalCode = propertyDetails.LeadGuestPostcode,
                                                         CityName = propertyDetails.LeadGuestTownCity,
                                                         StateProv = propertyDetails.LeadGuestCounty,
-                                                        CountryName = propertyDetails.LeadGuestBookingCountry
+                                                        CountryName = propertyDetails.LeadGuestCountryCode // todo - should use TP lookup here but data not in DB yet
                                                     }
                                                 }
                                             },
@@ -465,14 +449,7 @@
                 }
                 finally
                 {
-                    if (!string.IsNullOrEmpty(request.RequestLog))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Cancel Request", request.RequestLog);
-                    }
-                    if (!string.IsNullOrEmpty(request.ResponseLog))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, $"{propertyDetails.Source} Cancel Response", request.ResponseLog);
-                    }
+                    propertyDetails.AddLog("Cancel", request);
                 }
             }
 

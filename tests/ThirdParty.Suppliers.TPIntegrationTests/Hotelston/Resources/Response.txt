@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <xsd:SearchHotelsResponse xmlns:xsd="http://request.ws.hotelston.com/xsd">
+      <xsd:success xsd1:trackingId="4241477944478376:2101347183" xmlns:xsd1="http://types.ws.hotelston.com/xsd">true</xsd:success>
+      <xsd:searchId>3770913640</xsd:searchId>
+      <xsd:hotel xsd:id="52700741" xsd:name="Micon Lofts" xsd:lastUpdated="2021-06-19T03:38:42.586+03:00">
+        <xsd:room xsd:seqNo="0" xsd:id="20744729856" xsd:specialOffer="false" xsd:price="299.52" xsd:visaSupport="false">
+          <xsd:boardType xsd:groupId="30309844" xsd:groupName="Room Only" xsd1:id="2359299" xsd1:name="Room Only" xsd1:nameEn="Room Only" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+          <xsd:roomType xsd1:id="3089463496" xsd:hotelstonName="Loft" xsd1:name="Loft Suite" xsd1:nameEn="Loft Suite" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+        </xsd:room>
+        <xsd:room xsd:seqNo="0" xsd:id="20744729854" xsd:specialOffer="false" xsd:price="332.80" xsd:visaSupport="false">
+          <xsd:boardType xsd:groupId="30309844" xsd:groupName="Room Only" xsd1:id="2359299" xsd1:name="Room Only" xsd1:nameEn="Room Only" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+          <xsd:roomType xsd1:id="3089463496" xsd:hotelstonName="Loft" xsd1:name="Loft Suite" xsd1:nameEn="Loft Suite" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+        </xsd:room>
+        <xsd:room xsd:seqNo="0" xsd:id="20744729857" xsd:specialOffer="false" xsd:price="597.60" xsd:visaSupport="false">
+          <xsd:boardType xsd:groupId="30309844" xsd:groupName="Room Only" xsd1:id="2359299" xsd1:name="Room Only" xsd1:nameEn="Room Only" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+          <xsd:roomType xsd1:id="3089463497" xsd:hotelstonName="Family - Terrace" xsd1:name="Family Maisonette with Acropolis View &amp; Terrace" xsd1:nameEn="Family Maisonette with Acropolis View &amp; Terrace" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+        </xsd:room>
+        <xsd:room xsd:seqNo="0" xsd:id="20744729855" xsd:specialOffer="false" xsd:price="664.00" xsd:visaSupport="false">
+          <xsd:boardType xsd:groupId="30309844" xsd:groupName="Room Only" xsd1:id="2359299" xsd1:name="Room Only" xsd1:nameEn="Room Only" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+          <xsd:roomType xsd1:id="3089463497" xsd:hotelstonName="Family - Terrace" xsd1:name="Family Maisonette with Acropolis View &amp; Terrace" xsd1:nameEn="Family Maisonette with Acropolis View &amp; Terrace" xmlns:xsd1="http://types.ws.hotelston.com/xsd" />
+        </xsd:room>
+      </xsd:hotel>
+    </xsd:SearchHotelsResponse>
+  </soapenv:Body>
+</soapenv:Envelope>

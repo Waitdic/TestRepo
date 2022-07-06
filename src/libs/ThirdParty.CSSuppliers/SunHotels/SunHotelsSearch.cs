@@ -9,7 +9,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Microsoft.Extensions.Caching.Memory;
     using ThirdParty.Constants;
@@ -118,7 +118,7 @@
                         var request = new Request
                         {
                             EndPoint = requestBody.ToString(),
-                            Method = eRequestMethod.GET,
+                            Method = RequestMethod.GET,
                             ExtraInfo = propertyRoomBookingId
                         };
 
@@ -157,8 +157,8 @@
             sb.AppendFormat("&password={0}", password);
             sb.AppendFormat("&language={0}", language);
             sb.AppendFormat("&currencies={0}", currency);
-            sb.AppendFormat("&checkInDate={0}", SunHotels.GetSunHotelsDate(searchDetails.PropertyArrivalDate));
-            sb.AppendFormat("&checkOutDate={0}", SunHotels.GetSunHotelsDate(searchDetails.PropertyDepartureDate));
+            sb.AppendFormat("&checkInDate={0}", SunHotels.GetSunHotelsDate(searchDetails.ArrivalDate));
+            sb.AppendFormat("&checkOutDate={0}", SunHotels.GetSunHotelsDate(searchDetails.DepartureDate));
             sb.AppendFormat("&numberOfRooms={0}", "1");
             sb.Append("&destination=");
 
@@ -280,7 +280,7 @@
                                 }
                                 else
                                 {
-                                    startDate = searchDetails.PropertyArrivalDate.Subtract(hours);
+                                    startDate = searchDetails.ArrivalDate.Subtract(hours);
                                 }
 
                                 if (!nonRefundable && percentage == 100m && nullDeadline)
@@ -302,7 +302,7 @@
                                     int deadline = nextCancellation.deadline.ToSafeInt();
                                     var endHours = new TimeSpan(SunHotels.RoundHoursUpToTheNearest24Hours(deadline), 0, 0);
 
-                                    endDate = searchDetails.PropertyArrivalDate.Subtract(endHours);
+                                    endDate = searchDetails.ArrivalDate.Subtract(endHours);
                                     endDate = endDate.AddDays(-1);
                                 }
                                 else

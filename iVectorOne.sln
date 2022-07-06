@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Services.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Suppliers.TPIntegrationTests", "tests\ThirdParty.Suppliers.TPIntegrationTests\ThirdParty.Suppliers.TPIntegrationTests.csproj", "{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iVectorOne-Importer", "src\iVectorOne-Importer\iVectorOne-Importer.csproj", "{835B039D-CFD7-4E47-8103-F7D28D995D7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{835B039D-CFD7-4E47-8103-F7D28D995D7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{835B039D-CFD7-4E47-8103-F7D28D995D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{835B039D-CFD7-4E47-8103-F7D28D995D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{835B039D-CFD7-4E47-8103-F7D28D995D7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +143,7 @@ Global
 		{249B9BDC-473D-4E5E-8630-DBDE473402CD} = {E8DCDF11-7AFC-476A-8966-D4EAD0B51CB1}
 		{F79C0757-5647-4678-8AED-268845860680} = {E8DCDF11-7AFC-476A-8966-D4EAD0B51CB1}
 		{077CDE79-49BE-4338-8B2F-5AF0C59C96A2} = {E8DCDF11-7AFC-476A-8966-D4EAD0B51CB1}
+		{835B039D-CFD7-4E47-8103-F7D28D995D7A} = {BA85A50D-1C2E-44CD-A0E6-D551B8BF5893}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E09F98E5-5FF9-47FE-B902-E112B0484012}

@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;

@@ -7,7 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
     using ThirdParty.Models;
@@ -90,8 +90,8 @@
             sb.AppendFormat("&LangID={0}", _settings.LanguageCode(searchDetails));
             sb.AppendFormat("&Username={0}", _settings.User(searchDetails));
             sb.AppendFormat("&Password={0}", _settings.Password(searchDetails));
-            sb.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(searchDetails.PropertyArrivalDate));
-            sb.AppendFormat("&Nights={0}", searchDetails.PropertyDuration);
+            sb.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(searchDetails.ArrivalDate));
+            sb.AppendFormat("&Nights={0}", searchDetails.Duration);
             sb.AppendFormat("&Rooms={0}", searchDetails.Rooms);
 
             // adults and children
@@ -127,7 +127,7 @@
                 var request = new Request
                 {
                     EndPoint = url.URL + sb.ToString(),
-                    Method = eRequestMethod.GET,
+                    Method = RequestMethod.GET,
                 };
 
                 requests.Add(request);

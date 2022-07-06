@@ -14,7 +14,8 @@
         /// </summary>
         /// <param name="properties">The properties.</param>
         /// <param name="suppliers">The suppliers.</param>
+        /// <param name="user">The API Login</param>
         /// <returns>A list of resort splits</returns>
-        Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers);
+        Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers, Subscription user);
     }
 }

@@ -4,19 +4,19 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
+    using ThirdParty.CSSuppliers.TeamAmerica.Models;
     using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.TeamAmerica.Models;
-    using System.Threading.Tasks;
 
     public class TeamAmerica : IThirdParty, ISingleSource
     {
@@ -70,7 +70,7 @@
                 {
                     //'Build/send search
                     var request = BuildSearchXml(propertyDetails, roomDetails);
-                    var searchRequest = await SendRequestAsync(Constant.SoapActionPreBook, request, propertyDetails, Constant.SoapActionPreBook, propertyDetails.CreateLogs);
+                    var searchRequest = await SendRequestAsync(Constant.SoapActionPreBook, request, propertyDetails, Constant.SoapActionPreBook);
                     var hotelOffer = Envelope<PriceSearchResponse>.DeSerialize(searchRequest.ResponseXML, _serializer).HotelSearchResponse.Offers.First();
 
                     // 'check availability
@@ -122,14 +122,7 @@
                 //'Add the xml to the booking
                 foreach (var searchRequest in searchRequests)
                 {
-                    if (!string.IsNullOrEmpty(searchRequest.RequestLog))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Price Check Request", searchRequest.RequestLog);
-                    }
-                    if (!string.IsNullOrEmpty(searchRequest.ResponseLog))
-                    {
-                        propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Price Check Response", searchRequest.ResponseLog);
-                    }
+                    propertyDetails.AddLog("Price Check", searchRequest);
                 }
             }
 
@@ -149,7 +142,7 @@
             {
                 //'Build/send Confirmation
                 string requestBody = await BuildBookXmlAsync(propertyDetails);
-                request = await SendRequestAsync(Constant.SoapActionBook, requestBody, propertyDetails, "Book", propertyDetails.CreateLogs);
+                request = await SendRequestAsync(Constant.SoapActionBook, requestBody, propertyDetails, "Book");
                 var response = Envelope<NewMultiItemReservationResponse>.DeSerialize(request.ResponseXML, _serializer).ReservationResponse;
                 string responseBody = request.ResponseString;
 
@@ -171,15 +164,7 @@
             }
             finally
             {
-                //'Attach the logs to the booking
-                if (!string.IsNullOrEmpty(request.RequestLog))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Book Request", request.RequestLog);
-                }
-                if (!string.IsNullOrEmpty(request.ResponseLog))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Book Response", request.ResponseLog);
-                }
+                propertyDetails.AddLog("Book", request);
             }
 
             return reference;
@@ -201,7 +186,7 @@
             try
             {
                 var requestBody = BuildCancelXml(propertyDetails);
-                request = await SendRequestAsync(Constant.SoapActionCancel, requestBody, propertyDetails, Constant.SoapActionCancel, propertyDetails.CreateLogs);
+                request = await SendRequestAsync(Constant.SoapActionCancel, requestBody, propertyDetails, Constant.SoapActionCancel);
 
                 var response = Envelope<CancelReservationResponse>.DeSerialize(request.ResponseXML, _serializer).CancelResponse;
 
@@ -222,15 +207,7 @@
             }
             finally
             {
-                //'Attach the logs to the booking
-                if (!string.IsNullOrEmpty(request.RequestLog))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Cancellation Request", request.RequestLog);
-                }
-                if (!string.IsNullOrEmpty(request.ResponseLog))
-                {
-                    propertyDetails.Logs.AddNew(propertyDetails.Source, "TeamAmerica Cancellation Response", request.ResponseLog);
-                }
+                propertyDetails.AddLog("Cancellation", request);
             }
 
             return cancelResponse;
@@ -287,17 +264,17 @@
             return hotelOffer.NightlyInfos.All(night => string.Equals(night.Status, Constant.Available));
         }
 
-        public async Task<Request> SendRequestAsync(string soapAction, string xml, IThirdPartyAttributeSearch searchDetails, string logFile, bool log)
+        public async Task<Request> SendRequestAsync(string soapAction, string xml, IThirdPartyAttributeSearch searchDetails, string logFile)
         {
             var request = new Request
             {
                 EndPoint = _settings.URL(searchDetails),
                 SoapAction = $"{_settings.URL(searchDetails)}/{soapAction}",
-                Method = eRequestMethod.POST,
+                Method = RequestMethod.POST,
                 Source = Source,
                 ContentType = ContentTypes.Text_Xml_charset_utf_8,
                 LogFileName = logFile,
-                CreateLog = log
+                CreateLog = true
             };
             request.SetRequest(xml);
             await request.Send(_httpClient, _logger);

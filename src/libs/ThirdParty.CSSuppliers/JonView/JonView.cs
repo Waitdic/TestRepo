@@ -10,7 +10,7 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Net.WebRequests;
+    using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
@@ -91,6 +91,7 @@
             var response = new XmlDocument();
             string request = string.Empty;
             string bookingReference = "";
+            var bookingRequest = new Request();
 
             try
             {
@@ -98,7 +99,7 @@
                 request = BuildBookingURL(propertyDetails);
 
                 // send the request
-                var bookingRequest = new Request
+                bookingRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
                     Source = ThirdParties.JONVIEW,
@@ -130,16 +131,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(request))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Book Response", response);
-                }
+                propertyDetails.AddLog("Book", bookingRequest);
             }
 
             return bookingReference;
@@ -309,16 +301,7 @@
                 // increment the loop counter 
                 loop++;
 
-                // Add the Logs to the booking
-                if (!string.IsNullOrEmpty(cancellationURL))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Request", cancellationURL);
-                }
-
-                if (cancellationURL is not null)
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "JonView Cancellation Costs Response", cancellationURL);
-                }
+                propertyDetails.AddLog("Cancellation Costs", webRequest);
             }
 
             // merge the policies and add it to the booking
@@ -334,6 +317,7 @@
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             string request = "";
             var response = new XmlDocument();
+            var webRequest = new Request();
 
             try
             {
@@ -341,7 +325,7 @@
                 request = BuildReservationCancellationURL(propertyDetails.SourceReference);
 
                 // Send the request
-                var webRequest = new Request
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
                     ContentType = ContentTypes.Text_xml,
@@ -367,16 +351,7 @@
             }
             finally
             {
-                // store the request and response xml on the property booking
-                if (!string.IsNullOrEmpty(request))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Request", request);
-                }
-
-                if (!string.IsNullOrEmpty(response.InnerXml))
-                {
-                    propertyDetails.Logs.AddNew(ThirdParties.JONVIEW, "Cancellation Response", response);
-                }
+                propertyDetails.AddLog("Cancellation", webRequest);
             }
 
             return thirdPartyCancellationResponse;

@@ -13,7 +13,6 @@
         /// </summary>
         public const string PropertiesOverLimit = "A maximum of 500 properties can be provided";
 
-
         /// <summary>
         /// An Arrival Date must be specified
         /// </summary>

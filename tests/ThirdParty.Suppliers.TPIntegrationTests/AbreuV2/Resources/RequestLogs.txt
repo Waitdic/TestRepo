@@ -1,0 +1,178 @@
+﻿URL: http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Username>17468</wsse:Username>
+      <wsse:Password>bookabedxml</wsse:Password>
+      <Context>abreu_tr</Context>
+    </wsse:Security>
+  </soap-env:Header>
+  <soap-env:Body>
+    <OTA_HotelAvailRQ xmlns="http://parsec.es/hotelapi/OTA2014Compact">
+      <HotelSearch>
+        <Currency Code="EUR" />
+        <HotelRef HotelCode="102245" />
+        <DateRange Start="2021-09-01" End="2021-09-06" />
+        <RoomCandidates>
+          <RoomCandidate RPH="1">
+            <Guests>
+              <Guest AgeCode="A" Count="1" />
+            </Guests>
+          </RoomCandidate>
+        </RoomCandidates>
+      </HotelSearch>
+    </OTA_HotelAvailRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+
+URL: http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Username>17468</wsse:Username>
+      <wsse:Password>bookabedxml</wsse:Password>
+      <Context>abreu_tr</Context>
+    </wsse:Security>
+  </soap-env:Header>
+  <soap-env:Body>
+    <OTA_HotelAvailRQ xmlns="http://parsec.es/hotelapi/OTA2014Compact">
+      <HotelSearch>
+        <Currency Code="EUR" />
+        <HotelRef HotelCode="102245" />
+        <DateRange Start="2021-09-01" End="2021-09-06" />
+        <RoomCandidates>
+          <RoomCandidate RPH="1">
+            <Guests>
+              <Guest AgeCode="A" Count="2" />
+            </Guests>
+          </RoomCandidate>
+        </RoomCandidates>
+      </HotelSearch>
+    </OTA_HotelAvailRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+
+URL: http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Username>17468</wsse:Username>
+      <wsse:Password>bookabedxml</wsse:Password>
+      <Context>abreu_tr</Context>
+    </wsse:Security>
+  </soap-env:Header>
+  <soap-env:Body>
+    <OTA_HotelAvailRQ xmlns="http://parsec.es/hotelapi/OTA2014Compact">
+      <HotelSearch>
+        <Currency Code="EUR" />
+        <HotelRef HotelCode="102245" />
+        <DateRange Start="2021-09-01" End="2021-09-06" />
+        <RoomCandidates>
+          <RoomCandidate RPH="1">
+            <Guests>
+              <Guest AgeCode="A" Count="1" />
+              <Guest AgeCode="C" Count="1" Age="8" />
+            </Guests>
+          </RoomCandidate>
+        </RoomCandidates>
+      </HotelSearch>
+    </OTA_HotelAvailRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+
+URL: http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Username>17468</wsse:Username>
+      <wsse:Password>bookabedxml</wsse:Password>
+      <Context>abreu_tr</Context>
+    </wsse:Security>
+  </soap-env:Header>
+  <soap-env:Body>
+    <OTA_HotelAvailRQ xmlns="http://parsec.es/hotelapi/OTA2014Compact">
+      <HotelSearch>
+        <Currency Code="EUR" />
+        <HotelRef HotelCode="102245" />
+        <DateRange Start="2021-09-01" End="2021-09-06" />
+        <RoomCandidates>
+          <RoomCandidate RPH="1">
+            <Guests>
+              <Guest AgeCode="A" Count="1" />
+              <Guest AgeCode="C" Count="1" Age="1" />
+            </Guests>
+          </RoomCandidate>
+        </RoomCandidates>
+      </HotelSearch>
+    </OTA_HotelAvailRQ>
+  </soap-env:Body>
+</soap-env:Envelope>
+
+URL: http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact
+
+**HEADERS**
+
+Timeout: 1
+
+
+**REQUEST**
+
+<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap-env:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsse:Username>17468</wsse:Username>
+      <wsse:Password>bookabedxml</wsse:Password>
+      <Context>abreu_tr</Context>
+    </wsse:Security>
+  </soap-env:Header>
+  <soap-env:Body>
+    <OTA_HotelAvailRQ xmlns="http://parsec.es/hotelapi/OTA2014Compact">
+      <HotelSearch>
+        <Currency Code="EUR" />
+        <HotelRef HotelCode="102245" />
+        <DateRange Start="2021-09-01" End="2021-09-06" />
+        <RoomCandidates>
+          <RoomCandidate RPH="1">
+            <Guests>
+              <Guest AgeCode="A" Count="1" />
+              <Guest AgeCode="C" Count="1" Age="8" />
+              <Guest AgeCode="C" Count="1" Age="1" />
+            </Guests>
+          </RoomCandidate>
+        </RoomCandidates>
+      </HotelSearch>
+    </OTA_HotelAvailRQ>
+  </soap-env:Body>
+</soap-env:Envelope>

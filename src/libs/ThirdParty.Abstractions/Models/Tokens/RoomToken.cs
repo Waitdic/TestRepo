@@ -41,6 +41,6 @@
         /// <summary>Gets or sets the mealbasis</summary>
         /// <value>The meal basis</value>
         [JsonPropertyName("MBC")]
-        public List<int> MealBasis { get; set; } = new List<int>();
+        public List<int> MealBasisID { get; set; } = new List<int>();
     }
 }
