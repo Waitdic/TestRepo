@@ -1,36 +1,13 @@
 import { memo, useEffect, useState, FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
 //
 import { Subscription } from '@/types';
 import { useSlug } from '@/utils/use-slug';
-import {
-  NotificationStatus,
-  InputTypes,
-  ButtonColors,
-  ButtonVariants,
-} from '@/constants';
+import { ButtonColors } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import {
-  ErrorBoundary,
-  SectionTitle,
-  Toggle,
-  Notification,
-  Select,
-  Button,
-  TextField,
-  Spinner,
-} from '@/components';
+import { SectionTitle, Button, Spinner, YesOrNo } from '@/components';
 import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
-import { Switch } from '@headlessui/react';
-import classnames from 'classnames';
-
-type NotificationState = {
-  status: NotificationStatus;
-  message: string;
-};
 
 type Props = {};
 
@@ -135,28 +112,9 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
                           <h4 className='block text-sm font-medium mb-1'>
                             Log Main Search Error
                           </h4>
-                          <Switch
-                            checked={
-                              currentSubscription?.logMainSearchError as boolean
-                            }
-                            onChange={() => void 0}
-                            className={classnames(
-                              currentSubscription?.logMainSearchError
-                                ? 'bg-primary'
-                                : 'bg-gray-200',
-                              'pointer-events-none relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                            )}
-                          >
-                            <span
-                              aria-hidden='true'
-                              className={classnames(
-                                currentSubscription?.logMainSearchError
-                                  ? 'translate-x-5'
-                                  : 'translate-x-0',
-                                'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200'
-                              )}
-                            />
-                          </Switch>
+                          <YesOrNo
+                            isActive={!!currentSubscription?.logMainSearchError}
+                          />
                         </div>
                       </div>
                     </>

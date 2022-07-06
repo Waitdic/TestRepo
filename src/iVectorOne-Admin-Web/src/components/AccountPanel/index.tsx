@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
+import { YesOrNo } from '@/components';
 
 type Props = {};
 
@@ -35,8 +36,14 @@ const AccountPanel: React.FC<Props> = ({}) => {
               <p className='text-sm'>{activeTenant?.contactEmail}</p>
             </div>
             <div>
+              <h4 className='block text-sm font-medium mb-1'>
+                Contact Telephone
+              </h4>
+              <p className='text-sm'>{activeTenant?.contactTelephone}</p>
+            </div>
+            <div>
               <h4 className='block text-sm font-medium mb-1'>Active</h4>
-              <p className='text-sm'>{activeTenant?.isActive ? 'Yes' : 'No'}</p>
+              <YesOrNo isActive={!!activeTenant?.isActive} />
             </div>
           </div>
         </section>

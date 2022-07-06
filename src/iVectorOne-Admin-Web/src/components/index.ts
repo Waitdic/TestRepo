@@ -31,6 +31,7 @@ export { default as AccountPanel } from './AccountPanel';
 export { default as FeedbackPanel } from './FeedbackPanel';
 export { default as PaginationClassic } from './PaginationClassic';
 export { default as WelcomeBanner } from './WelcomeBanner';
+export { default as YesOrNo } from './YesOrNo';
 
 //* Form Fields
 export * from './Fields';
