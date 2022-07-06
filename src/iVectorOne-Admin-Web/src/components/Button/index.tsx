@@ -15,6 +15,7 @@ type Props = {
   href?: string;
   className?: string | null;
   icon?: ReactNode | JSX.Element;
+  disabled?: boolean;
 };
 
 const Button: FC<Props> = ({
@@ -28,6 +29,7 @@ const Button: FC<Props> = ({
   href = '',
   className = null,
   icon = null,
+  disabled = false,
 }) => {
   const primaryClassNames =
     'bg-primary hover:bg-primaryHover focus:ring-blue-500 text-white border-transparent';
@@ -42,17 +44,18 @@ const Button: FC<Props> = ({
   const outlineClassNames =
     'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-blue-500';
   const fullWidthClassName = 'w-full';
+  const disabledClassName = 'cursor-not-allowed opacity-50';
 
   const handleOnClick = (e: SyntheticEvent) => {
-    if (!onClick) return;
+    if (!onClick || disabled) return;
 
     e.preventDefault();
     onClick();
   };
 
   if (isLink && !externalLink) {
-    return (
-      <Link to={href}>
+    if (disabled) {
+      return (
         <button
           type={ButtonVariants.BUTTON}
           className={classnames(
@@ -65,6 +68,7 @@ const Button: FC<Props> = ({
               [createClassNames]: color === ButtonColors.CREATE,
               [outlineClassNames]: color === ButtonColors.OUTLINE,
               [fullWidthClassName]: fullWidth,
+              [disabledClassName]: disabled,
               [className as string]: className,
             }
           )}
@@ -72,8 +76,32 @@ const Button: FC<Props> = ({
           {icon}
           {text}
         </button>
-      </Link>
-    );
+      );
+    } else {
+      return (
+        <Link to={href}>
+          <button
+            type={ButtonVariants.BUTTON}
+            className={classnames(
+              'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+              {
+                [primaryClassNames]: color === ButtonColors.PRIMARY,
+                [dangerClassNames]: color === ButtonColors.DANGER,
+                [warningClassNames]: color === ButtonColors.WARNING,
+                [infoClassNames]: color === ButtonColors.INFO,
+                [createClassNames]: color === ButtonColors.CREATE,
+                [outlineClassNames]: color === ButtonColors.OUTLINE,
+                [fullWidthClassName]: fullWidth,
+                [className as string]: className,
+              }
+            )}
+          >
+            {icon}
+            {text}
+          </button>
+        </Link>
+      );
+    }
   } else if (isLink && externalLink) {
     return (
       <a href={href} target='_blank' rel='noreferrer'>

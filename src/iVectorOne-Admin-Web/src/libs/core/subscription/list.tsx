@@ -88,7 +88,7 @@ export const SubscriptionList: FC<Props> = memo(({}) => {
               Subscriptions
             </h1>
             <div className='flex gap-3'>
-              <Button text='New' isLink href='/subscriptions/create' />
+              <Button text='New' isLink href='/subscriptions/create' disabled />
             </div>
           </div>
           <CardList
