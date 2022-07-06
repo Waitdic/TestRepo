@@ -1,15 +1,15 @@
-﻿namespace IVectorOne.Web.Infrastructure.Security
+﻿namespace iVectorOne.Web.Infrastructure.Security
 {
     using System.Security.Principal;
     using ThirdParty.Models;
 
     public class AuthenticationIdentity : GenericIdentity
     {
-        public AuthenticationIdentity(User user) : base(user.Login, "Basic")
+        public AuthenticationIdentity(Subscription user) : base(user.Login, "Basic")
         {
             User = user;
         }
 
-        public User User { get; set; }
+        public Subscription User { get; set; }
     }
 }

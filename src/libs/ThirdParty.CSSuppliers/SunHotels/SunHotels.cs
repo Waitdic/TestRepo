@@ -10,7 +10,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
-    using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
     using ThirdParty.Constants;
     using ThirdParty.Interfaces;
@@ -50,12 +49,12 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_AllowCancellations(searchDetails);
+            return _settings.AllowCancellations(searchDetails);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
+            return _settings.OffsetCancellationDays(searchDetails, false);
         }
 
         public bool RequiresVCard(VirtualCardInfo info, string source) => false;
@@ -72,11 +71,11 @@
 
             try
             {
-                sbPrebookURL.Append(_settings.get_PreBookURL(propertyDetails));
-                sbPrebookURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
-                sbPrebookURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
-                sbPrebookURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
-                sbPrebookURL.AppendFormat("&currency={0}", _settings.get_Currency(propertyDetails));
+                sbPrebookURL.Append(_settings.PrebookURL(propertyDetails));
+                sbPrebookURL.AppendFormat("userName={0}", _settings.User(propertyDetails));
+                sbPrebookURL.AppendFormat("&password={0}", _settings.Password(propertyDetails));
+                sbPrebookURL.AppendFormat("&language={0}", _settings.LanguageCode(propertyDetails));
+                sbPrebookURL.AppendFormat("&currency={0}", _settings.Currency(propertyDetails));
                 sbPrebookURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(propertyDetails.ArrivalDate));
                 sbPrebookURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(propertyDetails.DepartureDate));
                 sbPrebookURL.AppendFormat("&roomId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[0]);
@@ -93,9 +92,9 @@
                     sbPrebookURL.AppendFormat("&childrenAges=");
                 }
 
-                sbPrebookURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(propertyDetails.Rooms[0]));
+                sbPrebookURL.AppendFormat("&infant={0}", IsInfantIncluded(propertyDetails.Rooms[0]));
                 sbPrebookURL.AppendFormat("&mealId={0}", propertyDetails.Rooms[0].ThirdPartyReference.Split('_')[1]);
-                sbPrebookURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(propertyDetails));
+                sbPrebookURL.AppendFormat("&customerCountry={0}", _settings.CustomerCountryCode(propertyDetails));
                 sbPrebookURL.Append("&B2C=");
                 sbPrebookURL.Append("&searchPrice=");
                 sbPrebookURL.AppendFormat("&showPriceBreakdown=0");
@@ -235,7 +234,7 @@
                 string iVectorReference = "";
                 if (string.IsNullOrEmpty(propertyDetails.BookingReference))
                 {
-                    iVectorReference = _settings.get_SupplierReference(propertyDetails);
+                    iVectorReference = _settings.SupplierReference(propertyDetails);
                 }
                 else
                 {
@@ -245,19 +244,19 @@
                 // build the book request url
                 var sbBookingRequestURL = new StringBuilder();
 
-                sbBookingRequestURL.Append(_settings.get_BookURL(propertyDetails));
-                sbBookingRequestURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
-                sbBookingRequestURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
-                sbBookingRequestURL.AppendFormat("&currency={0}", _settings.get_Currency(propertyDetails));
-                sbBookingRequestURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
-                sbBookingRequestURL.AppendFormat("&email={0}", _settings.get_EmailAddress(propertyDetails));
+                sbBookingRequestURL.Append(_settings.BookingURL(propertyDetails));
+                sbBookingRequestURL.AppendFormat("userName={0}", _settings.User(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&password={0}", _settings.Password(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&currency={0}", _settings.Currency(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&language={0}", _settings.LanguageCode(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&email={0}", _settings.ContactEmail(propertyDetails));
                 sbBookingRequestURL.AppendFormat("&checkInDate={0}", GetSunHotelsDate(propertyDetails.ArrivalDate));
                 sbBookingRequestURL.AppendFormat("&checkOutDate={0}", GetSunHotelsDate(propertyDetails.DepartureDate));
                 sbBookingRequestURL.AppendFormat("&roomId={0}", roomId);
                 sbBookingRequestURL.AppendFormat("&rooms={0}", propertyDetails.Rooms.Count);
                 sbBookingRequestURL.AppendFormat("&adults={0}", propertyDetails.Adults);
                 sbBookingRequestURL.AppendFormat("&children={0}", propertyDetails.Children);
-                sbBookingRequestURL.AppendFormat("&infant={0}", (object)IsInfantIncluded(propertyDetails.Rooms[0]));
+                sbBookingRequestURL.AppendFormat("&infant={0}", IsInfantIncluded(propertyDetails.Rooms[0]));
                 sbBookingRequestURL.AppendFormat("&yourRef={0}", iVectorReference);
 
                 if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
@@ -323,7 +322,7 @@
                 sbBookingRequestURL.Append("&customerEmail=");
                 sbBookingRequestURL.Append("&invoiceRef=");
                 sbBookingRequestURL.Append("&commissionAmountInHotelCurrency=");
-                sbBookingRequestURL.AppendFormat("&customerCountry={0}", _settings.get_Nationality(propertyDetails));
+                sbBookingRequestURL.AppendFormat("&customerCountry={0}", _settings.CustomerCountryCode(propertyDetails));
                 sbBookingRequestURL.Append("&B2C=");
 
                 sbBookingRequestURL.AppendFormat("&PreBookCode={0}", propertyDetails.TPRef1);
@@ -389,11 +388,11 @@
             try
             {
                 // build the cancellation url
-                sbCancellationRequestURL.Append(_settings.get_CancelURL(propertyDetails));
-                sbCancellationRequestURL.AppendFormat("userName={0}", _settings.get_Username(propertyDetails));
-                sbCancellationRequestURL.AppendFormat("&password={0}", _settings.get_Password(propertyDetails));
+                sbCancellationRequestURL.Append(_settings.CancellationURL(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("userName={0}", _settings.User(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("&password={0}", _settings.Password(propertyDetails));
                 sbCancellationRequestURL.AppendFormat("&bookingID={0}", propertyDetails.SourceReference.ToString());
-                sbCancellationRequestURL.AppendFormat("&language={0}", _settings.get_Language(propertyDetails));
+                sbCancellationRequestURL.AppendFormat("&language={0}", _settings.LanguageCode(propertyDetails));
 
                 // Send the request
                 var webRequest = new Request

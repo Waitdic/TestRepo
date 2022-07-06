@@ -56,7 +56,7 @@
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
-            int batchLimit = _settings.BatchLimit(searchDetails);
+            int batchLimit = _settings.HotelBatchLimit(searchDetails);
 
             foreach (var searchResortSplit in resortSplits)
             {
@@ -68,7 +68,7 @@
                     }
                 }
             }
-            int limitPerBatch = _settings.BatchLimit(searchDetails);
+            int limitPerBatch = _settings.HotelBatchLimit(searchDetails);
             int totalHotels = hotelIDList.Count;
             int batchNumber = 1;
             var batches = new Dictionary<int, List<int>>();
@@ -103,7 +103,7 @@
 
                 var request = new Request()
                 {
-                    EndPoint = _settings.URL(searchDetails),
+                    EndPoint = _settings.SearchURL(searchDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.HOTELBEDSV2,
                     ContentType = ContentTypes.Application_json,
@@ -141,7 +141,7 @@
             }
 
             transformedResults.TransformedResults
-                .AddRange(allResponses.Where(o => o.hotels.total > 0)
+                .AddRange(allResponses.Where(o => o?.hotels?.total > 0)
                 .SelectMany(r => GetResultFromResponse(searchDetails, r)));
 
             return transformedResults;
@@ -348,7 +348,7 @@
                 }; ;
             }
 
-            var UseDestination = (!hotelIDList.Any()) && !(searchDetails.Radius > 0);
+            var UseDestination = (!hotelIDList.Any()) && searchDetails.Radius <= 0;
 
             var boards = new HotelBedsV2AvailabilityRequest.Boards();
             if (searchDetails.MealBasisID > 0)
@@ -414,16 +414,15 @@
             var utcDate = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var assemble = user + password + utcDate.ToString();
             var hashStringBuilder = new System.Text.StringBuilder();
-            using (var sha256 = new System.Security.Cryptography.SHA256Managed())
+
+            using var sha256 = new System.Security.Cryptography.SHA256Managed();
+
+            var hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(assemble)).ToList();
+            foreach (var b in hashedBytes)
             {
-
-                var hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(assemble)).ToList();
-                foreach (var b in hashedBytes)
-                {
-                    hashStringBuilder.Append(b.ToString("x2"));
-
-                }
+                hashStringBuilder.Append(b.ToString("x2"));
             }
+
             return hashStringBuilder.ToString();
         }
     }

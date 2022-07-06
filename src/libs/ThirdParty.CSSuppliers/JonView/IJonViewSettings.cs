@@ -2,11 +2,11 @@
 {
     public interface IJonViewSettings
     {
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
-        string get_URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_UserID(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_ClientLoc(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string ClientLoc(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

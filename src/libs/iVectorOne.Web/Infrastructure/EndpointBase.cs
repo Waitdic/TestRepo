@@ -1,23 +1,33 @@
 ﻿namespace iVectorOne.Web.Infrastructure
 {
-    using FluentValidation;
-    using MediatR;
-    using ThirdParty.SDK.V2;
-    using IVectorOne.Web.Infrastructure.Security;
-    using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Http;
     using System.Linq;
-    using Microsoft.Extensions.DependencyInjection;
-    using IVectorOne.Web.Adaptors.Authentication;
+    using System.Threading.Tasks;
+    using FluentValidation;
+    using iVectorOne.Web.Infrastructure.Security;
+    using iVectorOne.Web.Adaptors.Authentication;
+    using MediatR;
     using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
+    using Microsoft.Extensions.DependencyInjection;
+    using ThirdParty.SDK.V2;
+    using Microsoft.Extensions.Configuration;
 
     public static class EndpointBase
     {
-        public static IServiceCollection RegisterWebServices(this IServiceCollection services)
+        public static IServiceCollection RegisterWebServices(this IServiceCollection services, ConfigurationManager config)
         {
-            services.AddSingleton<IAuthenticationProvider, FileAuthenticationProvider>();
+            var userLoginMethod = config.GetValue<string>("UserLoginMethod");
+
+            if (userLoginMethod == "SQL")
+            {
+                services.AddSingleton<IAuthenticationProvider, SqlAuthenticationProvider>();
+            }
+            else
+            {
+                services.AddSingleton<IAuthenticationProvider, FileAuthenticationProvider>();
+            }
 
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);

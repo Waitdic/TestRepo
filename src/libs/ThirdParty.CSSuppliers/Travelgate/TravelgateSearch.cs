@@ -63,9 +63,9 @@
             // Needs to be done here since
             var filteredSuppliers = new List<string>();
 
-            int maximumRoomNumber = _settings.get_MaximumRoomNumber(searchDetails, source);
-            int maximumRoomGuestNumber = _settings.get_MaximumRoomGuestNumber(searchDetails, source);
-            int minimumStay = _settings.get_MinimumStay(searchDetails, source);
+            int maximumRoomNumber = _settings.RoomSearchLimit(searchDetails, source);
+            int maximumRoomGuestNumber = _settings.MaximumRoomGuestNumber(searchDetails, source);
+            int minimumStay = _settings.MinimumStay(searchDetails, source);
 
             bool searchExceedsGuestCount = false;
 
@@ -92,8 +92,8 @@
                 sbSearchRequest.Append("<soapenv:Header>");
                 sbSearchRequest.Append("<wsse:Security>");
                 sbSearchRequest.Append("<wsse:UsernameToken>");
-                sbSearchRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(searchDetails, source));
-                sbSearchRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(searchDetails, source));
+                sbSearchRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.User(searchDetails, source));
+                sbSearchRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.Password(searchDetails, source));
                 sbSearchRequest.Append("</wsse:UsernameToken>");
                 sbSearchRequest.Append("</wsse:Security>");
                 sbSearchRequest.Append("</soapenv:Header>");
@@ -105,15 +105,15 @@
                 sbSearchRequest.Append("<ns:providerRQs>");
 
                 // Some third parties don't support searches by TPKey, so use these to check what kind of search we want to be doing
-                int maximumHotelSearchNumber = _settings.get_MaximumHotelSearchNumber(searchDetails, source);
-                int maximumCitySearchNumber = _settings.get_MaximumCitySearchNumber(searchDetails, source);
+                int maximumHotelSearchNumber = _settings.HotelBatchLimit(searchDetails, source);
+                int maximumCitySearchNumber = _settings.CityBatchLimit(searchDetails, source);
 
                 // We generally prefer hotel based searches, but if a third party has a small maximum number of hotels per search
                 // we leave it up to the discretion of the user to determine if they would rather perform city based searches (where allowed)
-                bool allowHotelSearch = _settings.get_AllowHotelSearch(searchDetails, source);
+                bool allowHotelSearch = _settings.EnableHotelSearch(searchDetails, source);
 
                 // Whether to try to search for a zone (region) instead of individual resorts (cities)
-                bool useZoneSearch = resortSplits.Count > 1 && _settings.get_UseZoneSearch(searchDetails, source);
+                bool useZoneSearch = resortSplits.Count > 1 && _settings.UseZoneSearch(searchDetails, source);
 
                 var searchBatchDetails = new SearchBatchDetails
                 {
@@ -185,14 +185,14 @@
                 // Build Request Object
                 var request = new Request
                 {
-                    EndPoint = _settings.get_URL(searchDetails, source),
-                    SoapAction = _settings.get_SearchSOAPAction(searchDetails, source),
+                    EndPoint = _settings.GenericURL(searchDetails, source),
+                    SoapAction = _settings.SearchURL(searchDetails, source),
                     Method = eRequestMethod.POST,
                     ExtraInfo = searchDetails,
                     SuppressExpectHeaders = true,
-                    UseGZip = _settings.get_UseGZip(searchDetails, source)
+                    UseGZip = _settings.UseGZip(searchDetails, source)
                 };
-                request.Headers.AddNew("SOAPAction", _settings.get_SearchSOAPAction(searchDetails, source));
+                request.Headers.AddNew("SOAPAction", _settings.SearchURL(searchDetails, source));
                 request.SetRequest(sbSearchRequest.ToString());
 
                 requests.Add(request);
@@ -214,22 +214,22 @@
             for (int batchNumber = 1; batchNumber <= searchBatchDetails.BatchCount; batchNumber++)
             {
                 searchRequest.Append("<ns:ProviderRQ>");
-                searchRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.ProviderCode(searchDetails, searchBatchDetails.Source));
                 searchRequest.AppendFormat("<ns:id>{0}</ns:id>", requestCount);
                 searchRequest.Append("<ns:rqXML>");
                 searchRequest.Append("<AvailRQ>");
-                searchRequest.AppendFormat("<timeoutMilliseconds>{0}</timeoutMilliseconds>", _settings.get_SearchRequestTimeout(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<timeoutMilliseconds>{0}</timeoutMilliseconds>", _settings.SearchRequestTimeout(searchDetails, searchBatchDetails.Source));
                 searchRequest.Append("<source>");
-                searchRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.LanguageCode(searchDetails, searchBatchDetails.Source));
                 searchRequest.Append("</source>");
                 searchRequest.Append("<filterAuditData>");
                 searchRequest.Append("<registerTransactions>false</registerTransactions>");
                 searchRequest.Append("</filterAuditData>");
                 searchRequest.Append("<Configuration>");
-                searchRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(searchDetails, searchBatchDetails.Source));
-                searchRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<User>{0}</User>", _settings.SecondaryUsername(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<Password>{0}</Password>", _settings.SecondaryPassword(searchDetails, searchBatchDetails.Source));
                 searchRequest.Append(AppendURLs(searchDetails, searchBatchDetails.Source));
-                searchRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(searchDetails, searchBatchDetails.Source)));
+                searchRequest.Append(HttpUtility.HtmlDecode(_settings.Parameters(searchDetails, searchBatchDetails.Source)));
 
                 searchRequest.Append("</Configuration>");
                 searchRequest.Append("<OnRequest>false</OnRequest>");
@@ -269,12 +269,12 @@
 
                 searchRequest.AppendFormat("<StartDate>{0}</StartDate>", searchDetails.ArrivalDate.ToString("dd/MM/yyyy"));
                 searchRequest.AppendFormat("<EndDate>{0}</EndDate>", searchDetails.DepartureDate.ToString("dd/MM/yyyy"));
-                searchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.get_CurrencyCode(searchDetails, searchBatchDetails.Source));
+                searchRequest.AppendFormat("<Currency>{0}</Currency>", _settings.Currency(searchDetails, searchBatchDetails.Source));
 
                 string nationality = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, searchDetails.NationalityCode);
                 if (string.IsNullOrEmpty(nationality))
                 {
-                    nationality = _settings.get_DefaultNationality(searchDetails, searchBatchDetails.Source);
+                    nationality = _settings.LeadGuestNationality(searchDetails, searchBatchDetails.Source);
                 }
 
                 if (!string.IsNullOrEmpty(nationality))
@@ -284,14 +284,14 @@
                 }
                 else
                 {
-                    string sDefaultNationality = _settings.get_DefaultNationality(searchDetails, searchBatchDetails.Source);
+                    string sDefaultNationality = _settings.LeadGuestNationality(searchDetails, searchBatchDetails.Source);
                     if (!string.IsNullOrEmpty(sDefaultNationality))
                     {
                         searchRequest.AppendFormat("<Markets><Market>{0}</Market></Markets>", sDefaultNationality);
                     }
                 }
 
-                string markets = _settings.get_Markets(searchDetails, searchBatchDetails.Source);
+                string markets = _settings.SourceMarket(searchDetails, searchBatchDetails.Source);
                 if (markets.Length > 0)
                 {
                     searchRequest.Append("<Markets>");
@@ -458,10 +458,10 @@
         {
             var sbURLXML = new StringBuilder();
 
-            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(searchDetails, source));
-            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(searchDetails, source));
-            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(searchDetails, source));
-            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(searchDetails, source));
+            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.SecondaryBookURL(searchDetails, source));
+            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.SecondaryGenericURL(searchDetails, source));
+            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.SecondarySearchURL(searchDetails, source));
+            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.SecondaryPrebookURL(searchDetails, source));
 
             return sbURLXML.ToString();
         }

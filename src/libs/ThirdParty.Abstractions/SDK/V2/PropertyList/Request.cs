@@ -7,6 +7,6 @@
     {
         public DateTime? LastModified { get; set; }
 
-        public string Suppliers { get; set; }
+        public string Suppliers { get; set; } = string.Empty;
     }
 }

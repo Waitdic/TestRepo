@@ -47,10 +47,10 @@
         public bool SupportsBookingSearch => false;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_AllowCancellations(searchDetails);
+            => _settings.AllowCancellations(searchDetails);
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_OffsetCancellationDays(searchDetails, false);
+            => _settings.OffsetCancellationDays(searchDetails, false);
 
         public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
@@ -68,7 +68,7 @@
                 string request = BuildPreBookRequest(propertyDetails);
 
                 // get the response
-                webRequest.EndPoint = _settings.get_HotelBookingURL(propertyDetails);
+                webRequest.EndPoint = _settings.BookingURL(propertyDetails);
                 webRequest.Method = eRequestMethod.POST;
                 webRequest.Source = ThirdParties.JUMBO;
                 webRequest.ContentType = ContentTypes.Text_xml;
@@ -150,7 +150,7 @@
                     string sRequest = BuildBookRequest(propertyDetails);
 
                     // send the request
-                    webRequest.EndPoint = _settings.get_HotelBookingURL(propertyDetails);
+                    webRequest.EndPoint = _settings.BookingURL(propertyDetails);
                     webRequest.Source = ThirdParties.JUMBO;
                     webRequest.SOAP = true;
                     webRequest.LogFileName = "Book";
@@ -213,7 +213,7 @@
                 string request = BuildPreBookRequest(propertyDetails);
 
                 // get the response
-                webRequest.EndPoint = _settings.get_HotelBookingURL(propertyDetails);
+                webRequest.EndPoint = _settings.BookingURL(propertyDetails);
                 webRequest.Method = eRequestMethod.POST;
                 webRequest.Source = ThirdParties.JUMBO;
                 webRequest.ContentType = ContentTypes.Text_xml;
@@ -302,7 +302,7 @@
                 // get the response
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_BasketHandlerURL(propertyDetails),
+                    EndPoint = _settings.CancellationURL(propertyDetails),
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.JUMBO,
                     ContentType = ContentTypes.Text_xml,
@@ -610,11 +610,11 @@
         public static string GetCredentials(IThirdPartyAttributeSearch searchDetails, string nationalityCode, string type, IJumboSettings settings)
         {
             // credentials
-            string agencyCode = settings.get_AgencyCode(searchDetails);
-            string brandCode = settings.get_BrandCode(searchDetails);
-            string pos = settings.get_POS(searchDetails);
+            string agencyCode = settings.AgencyID(searchDetails);
+            string brandCode = settings.BrandCode(searchDetails);
+            string pos = settings.POS(searchDetails);
 
-            string nationalityBasedCredentials = settings.get_NationalityBasedCredentials(searchDetails);
+            string nationalityBasedCredentials = settings.NationalityBasedCredentials(searchDetails);
             if (!string.IsNullOrEmpty(nationalityBasedCredentials) && nationalityBasedCredentials.Split('#').Count() > 0)
             {
                 // find the credentials with the correct nationality

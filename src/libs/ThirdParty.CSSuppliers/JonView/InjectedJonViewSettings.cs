@@ -9,32 +9,32 @@
     {
         protected override string Source => ThirdParties.JONVIEW;
 
-        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
-        public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string get_UserID(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UserID", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
-        public string get_ClientLoc(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ClientLoc(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("ClientLoc", tpAttributeSearch);
         }

@@ -70,14 +70,7 @@
                         MinimumPrice = 0,
                         Adjustments = new List<TransformedResultAdjustment>()
                         {
-                            new TransformedResultAdjustment() {
-                                AdjustmentID = 0,
-                                AdjustmentType = "T",
-                                AdjustmentName = "Tax And Service Fee",
-                                AdjustmentAmount = (decimal)112.69,
-                                PayLocal = true,
-                                AdjustmentDescription = ""
-                            }
+                            new TransformedResultAdjustment(SDK.V2.PropertySearch.AdjustmentType.Tax, "Tax And Service Fee", "", (decimal)112.69)
                         }
                     }
                 });

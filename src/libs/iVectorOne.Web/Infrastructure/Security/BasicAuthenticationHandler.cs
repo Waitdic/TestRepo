@@ -1,4 +1,4 @@
-﻿namespace IVectorOne.Web.Infrastructure.Security
+﻿namespace iVectorOne.Web.Infrastructure.Security
 {
     using System;
     using System.Security.Claims;
@@ -6,7 +6,7 @@
     using System.Text.Encodings.Web;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using IVectorOne.Web.Adaptors.Authentication;
+    using iVectorOne.Web.Adaptors.Authentication;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.Extensions.Logging;

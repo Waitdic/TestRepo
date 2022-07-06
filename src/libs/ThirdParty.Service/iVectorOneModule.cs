@@ -110,10 +110,8 @@
             services.AddSingleton<IThirdPartyPropertySearchRunner, ThirdPartyPropertySearchRunner>();
 
             services.AddSingleton((s)
-                => s.GetService<ISecretKeeperFactory>()
+                => s.GetService<ISecretKeeperFactory>()!
                     .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
-
-            //services.AddHttpClient<Request>().ConfigurePrimaryHttpMessageHandler();
         }
 
         private static void RegisterMediators(IServiceCollection services)

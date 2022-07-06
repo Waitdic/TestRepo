@@ -2,6 +2,7 @@ CREATE TABLE [dbo].[Attribute](
 	[AttributeID] [int] IDENTITY(1,1) NOT NULL,
 	[AttributeName] [varchar](200) NOT NULL,
 	[DefaultValue] [varchar](50) NULL,
+	[Schema] [nvarchar](max) NULL,
  CONSTRAINT [PK_Attribute] PRIMARY KEY NONCLUSTERED 
 (
 	[AttributeID] ASC

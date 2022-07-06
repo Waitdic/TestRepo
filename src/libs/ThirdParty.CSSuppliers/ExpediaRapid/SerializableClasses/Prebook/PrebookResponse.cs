@@ -18,7 +18,7 @@
             {
                 try
                 {
-                    response = JsonConvert.DeserializeObject<PrebookResponse>(responseString);
+                    response = JsonConvert.DeserializeObject<PrebookResponse>(responseString)!;
                     valid = true;
                 }
                 catch

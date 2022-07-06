@@ -34,7 +34,7 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_AllowCancellations(searchDetails);
+            return _settings.AllowCancellations(searchDetails);
         }
 
         public bool SupportsBookingSearch => false;
@@ -43,7 +43,7 @@
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.get_OffsetCancellationDays(searchDetails, false);
+            return _settings.OffsetCancellationDays(searchDetails, false);
         }
 
         public bool RequiresVCard(VirtualCardInfo info, string source)
@@ -100,7 +100,7 @@
                 // send the request
                 var bookingRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
+                    EndPoint = _settings.GenericURL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
                     Source = ThirdParties.JONVIEW,
                     ContentType = ContentTypes.Text_xml,
                     LogFileName = "Book",
@@ -169,7 +169,7 @@
 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + cancellationURL,
+                    EndPoint = _settings.GenericURL(propertyDetails) + GetRequestHeader(propertyDetails) + cancellationURL,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.JONVIEW,
                     LogFileName = "CancellationPolicy",
@@ -343,7 +343,7 @@
                 // Send the request
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
+                    EndPoint = _settings.GenericURL(propertyDetails) + GetRequestHeader(propertyDetails) + request,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.JONVIEW,
                     LogFileName = "Cancel",
@@ -593,7 +593,7 @@
         private string GetRequestHeader(IThirdPartyAttributeSearch searchDetails)
         {
             var header = new StringBuilder();
-            header.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.get_ClientLoc(searchDetails), _settings.get_UserID(searchDetails), _settings.get_Password(searchDetails));
+            header.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.ClientLoc(searchDetails), _settings.User(searchDetails), _settings.Password(searchDetails));
 
             return header.ToSafeString();
         }

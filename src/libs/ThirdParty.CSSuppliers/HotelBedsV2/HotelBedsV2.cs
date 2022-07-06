@@ -84,7 +84,7 @@
             {
                 var checkRatesRequest = new HotelBedsV2CheckRatesRequest()
                 {
-                    language = _settings.ContentLanguage(propertyDetails),
+                    language = _settings.LanguageCode(propertyDetails),
                 };
 
                 var rooms = new List<HotelBedsV2CheckRatesRequest.Room>();
@@ -104,7 +104,7 @@
                 request.Method = eRequestMethod.POST;
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
-                request.UseGZip = _settings.UseGZIP(propertyDetails);
+                request.UseGZip = _settings.UseGZip(propertyDetails);
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.LogFileName = "Prebook";
                 request.Accept = "application/json";
@@ -296,7 +296,7 @@
                 }
 
                 webRequest.ContentType = ContentTypes.Application_json;
-                webRequest.UseGZip = _settings.UseGZIP(propertyDetails);
+                webRequest.UseGZip = _settings.UseGZip(propertyDetails);
                 webRequest.CreateLog = propertyDetails.CreateLogs;
                 webRequest.LogFileName = "Book";
                 webRequest.Accept = "application/json";
@@ -369,7 +369,7 @@
                 request.EndPoint = _settings.CancellationURL(searchDetails);
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
-                request.UseGZip = _settings.UseGZIP(searchDetails);
+                request.UseGZip = _settings.UseGZip(searchDetails);
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.LogFileName = "Cancel";
                 request.Accept = "application/json";
@@ -427,7 +427,7 @@
                 request.EndPoint = _settings.CancellationURL(propertyDetails);
                 request.Source = ThirdParties.HOTELBEDSV2;
                 request.ContentType = ContentTypes.Application_json;
-                request.UseGZip = _settings.UseGZIP(propertyDetails);
+                request.UseGZip = _settings.UseGZip(propertyDetails);
                 request.CreateLog = propertyDetails.CreateLogs;
                 request.LogFileName = "Cancel";
                 request.Accept = "application/json";

@@ -45,7 +45,7 @@
                             RoomRequests = roomRequestsFactory.Create(rooms),
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
-                            EmailLogsToAddress = emailLogsTo
+                            EmailLogsToAddress = emailLogsTo ?? string.Empty,
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);

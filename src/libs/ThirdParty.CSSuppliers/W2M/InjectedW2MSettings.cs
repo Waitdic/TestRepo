@@ -14,34 +14,34 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string BookUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BookUrl", tpAttributeSearch);
+            return Get_Value("BookingURL", tpAttributeSearch);
         }
 
-        public string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CancelURL", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
-        public string DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("DefaultNationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
-        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ExcludeNonRefundable", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch).ToSafeInt();
         }
 
-        public string LangID(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("LangID", tpAttributeSearch).ToLower();
+            return Get_Value("LanguageCode", tpAttributeSearch).ToLower();
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -49,14 +49,14 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string PreBookUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("PreBookUrl", tpAttributeSearch);
+            return Get_Value("PrebookURL", tpAttributeSearch);
         }
 
-        public string SearchUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SearchUrl", tpAttributeSearch);
+            return Get_Value("SearchURL", tpAttributeSearch);
         }
 
         public string SoapActionPrefix(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -64,9 +64,9 @@
             return Get_Value("SoapActionPrefix", tpAttributeSearch);
         }
 
-        public bool SplitMultiroom(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SplitMultiroom", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("EnableMultiRoomSearch", tpAttributeSearch).ToSafeBoolean();
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -74,9 +74,9 @@
             return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Username", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
     }
 }

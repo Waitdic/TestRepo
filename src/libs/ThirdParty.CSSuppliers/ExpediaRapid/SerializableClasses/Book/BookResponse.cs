@@ -20,7 +20,7 @@
             {
                 try
                 {
-                    bookResponse = JsonConvert.DeserializeObject<BookResponse>(responseString);
+                    bookResponse = JsonConvert.DeserializeObject<BookResponse>(responseString)!;
 
                     if (!string.IsNullOrWhiteSpace(bookResponse.ItineraryID) && bookResponse.Links.ContainsKey("retrieve"))
                     {

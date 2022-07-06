@@ -2,12 +2,9 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
-    using System.Xml;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Net.WebRequests;
     using iVector.Search.Property;
-    using Moq;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
     using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
@@ -55,7 +52,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
 
             SearchDetailsList.Clear();
 
-            for (int i = 0; i < Helper.Rooms.Count(); ++i)
+            for (int i = 0; i < Helper.Rooms.Count; ++i)
             {
                 SearchDetailsList.Add(Helper.CreateSearchDetails(Supplier, Helper.Rooms[i]));
 
@@ -75,11 +72,15 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             var builtRequests = new List<Request>();
 
             // Act
-            for (int i = 0; i < SearchDetailsList.Count(); ++i)
+            for (int i = 0; i < SearchDetailsList.Count; ++i)
             {
                 builtRequests.Add((await SearchClass.BuildSearchRequestsAsync(SearchDetailsList[i], ResortSplits))[0]);
             }
-            var resStr = builtRequests.Aggregate("", (all, item) => $"{all}{item.RequestLog}\n");
+
+            foreach (var request in builtRequests)
+            {
+                request.Source = Supplier;
+            }
 
             // Assert
             return Helper.AreSameWebRequests(mockRequests, builtRequests);
@@ -124,7 +125,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests
             return Helper.IsValidResponse(mockResponse, serializer.Serialize(transformedResponse).InnerXml);
         }
 
-        public Request CreateResponseWebRequest(string responseString, object searchDetails, object extraInfo)
+        public static Request CreateResponseWebRequest(string responseString, object searchDetails, object extraInfo)
         {
             var request = new Request
             {

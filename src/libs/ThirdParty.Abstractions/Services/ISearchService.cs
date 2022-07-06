@@ -18,6 +18,6 @@
         /// <param name="log">boolean that decides if we log third party requests and responses</param>
         /// <param name="requestTracker"></param>
         /// <returns>A property search response</returns>
-        Task<PropertySearch.Response> SearchAsync(PropertySearch.Request searchRequest, User user, bool log, IRequestTracker requestTracker);
+        Task<PropertySearch.Response> SearchAsync(PropertySearch.Request searchRequest, Subscription user, bool log, IRequestTracker requestTracker);
     }
 }

@@ -71,7 +71,7 @@
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             //'Check if prebook multirooms is allowed
-            if (propertyDetails.Rooms.Count > 1 && !_settings.SplitMultiRoom(propertyDetails))
+            if (propertyDetails.Rooms.Count > 1 && !_settings.EnableMultiRoomSearch(propertyDetails))
             {
                 propertyDetails.Warnings.AddNew("Altura Exception", "Cannot proceed with Prebook as Multiroom is turned off.");
                 return false;
@@ -500,7 +500,7 @@
 
             var webRequest = new Request
             {
-                EndPoint = _settings.URL(propertyDetails),
+                EndPoint = _settings.GenericURL(propertyDetails),
                 Method = eRequestMethod.POST,
                 Source = Source,
                 CreateLog = true,

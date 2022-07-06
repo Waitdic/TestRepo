@@ -85,7 +85,7 @@
 
                 string responseString = request.ResponseString;
                 AceroomsPrebookResponse response = responseString is not null and not ""
-                           ? JsonConvert.DeserializeObject<AceroomsPrebookResponse>(responseString)
+                           ? JsonConvert.DeserializeObject<AceroomsPrebookResponse>(responseString)!
                            : throw new Exception("Third Party Error, Response was Invalid", new Exception("Third Party Error, Response was Invalid"));
 
                 propertyDetails.Errata = GetErrataForAllRooms(response.Hotels); // store errata for all rooms
@@ -247,8 +247,8 @@
         /// <returns>a AceroomsPrebookRequest object</returns>
         private AceroomsPrebookRequest CreatePrebookRequest(PropertyDetails propertyDetails)
         {
-            List<AceroomsPrebookRequest.Room> thirdpartyRooms = new List<AceroomsPrebookRequest.Room>();
-            AceroomsPrebookRequest aceroomsPrebookRequest = new AceroomsPrebookRequest();
+            var thirdpartyRooms = new List<AceroomsPrebookRequest.Room>();
+            var aceroomsPrebookRequest = new AceroomsPrebookRequest();
 
             foreach (var room in propertyDetails.Rooms)
             {
@@ -273,7 +273,7 @@
         /// <returns>a list of erratum</returns>
         public Errata GetErrataForAllRooms(List<AceroomsPrebookResponse.HotelDetails> hotels)
         {
-            Errata errata = new Errata();
+            var errata = new Errata();
 
             foreach (var hotel in hotels)
             {
@@ -294,7 +294,7 @@
         /// <returns>a lsit of cancellations</returns>
         public Cancellations GetCancellationTermsForAllRooms(PropertyDetails propertyDetails, List<AceroomsPrebookResponse.HotelDetails> hotels)
         {
-            Cancellations cancellations = new Cancellations();
+            var cancellations = new Cancellations();
 
             foreach (var hotel in hotels)
             {
@@ -317,8 +317,8 @@
         /// <returns>A Aceroom book request</returns>
         private AceroomsBookRequest CreateBookRequest(PropertyDetails propertyDetails)
         {
-            AceroomsBookRequest aceroomRequest = new AceroomsBookRequest();
-            List<AceroomsBookRequest.RoomDetails> roomList = new List<AceroomsBookRequest.RoomDetails>();
+            var aceroomRequest = new AceroomsBookRequest();
+            var roomList = new List<AceroomsBookRequest.RoomDetails>();
 
             foreach (var room in propertyDetails.Rooms)
             {
@@ -329,7 +329,7 @@
                     SpecialRequest = room.SpecialRequest
                 });
 
-                List<AceroomsBookRequest.Guest> guests = new List<AceroomsBookRequest.Guest>();
+                var guests = new List<AceroomsBookRequest.Guest>();
 
                 foreach (var passenger in room.Passengers)
                 {
@@ -376,7 +376,7 @@
         /// <returns>A string with booking ids</returns>
         private string GetRoomBookingIDs(AceroomsBookResponse response)
         {
-            StringBuilder bookingIDs = new StringBuilder();
+            var bookingIDs = new StringBuilder();
 
             foreach (var room in response.Booking.Rooms)
             {
@@ -410,7 +410,7 @@
                 propertyDetails.Logs.AddNew(ThirdParties.ACEROOMS, "Acerooms Cancellation Response ", $"The room with Id:{roomBookingID} wasn't cancelled \n" + webRequest.ResponseString);
             }
 
-            AceroomsCancellationResponse response = JsonConvert.DeserializeObject<AceroomsCancellationResponse>(webRequest.ResponseString);
+            var response = JsonConvert.DeserializeObject<AceroomsCancellationResponse>(webRequest.ResponseString)!;
             cancellationResponse.Amount += response.Booking.CancellationAmount;
             cancelReferences.Add(response.AuditData.CancelRef);
 
@@ -446,7 +446,7 @@
                 CreateLog = propertyDetails.CreateLogs,
                 LogFileName = logFileName,
                 Accept = "application/json",
-                EndPoint = _settings.BaseURL(searchDetails) + url
+                EndPoint = _settings.GenericURL(searchDetails) + url
             };
 
             webRequest.SetRequest(requestString);

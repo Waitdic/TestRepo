@@ -116,7 +116,11 @@
                             NonRefundable = roomResult.PriceData.NonRefundableRates!.Value,
                             CancellationTerms = GetCancellationTerms(roomResult.Cancellations),
                             Discount = Math.Round(roomResult.PriceData.Discount + 0.00M, 2),
-                            TPRateCode = roomResult.RoomData.RateCode
+                            TPRateCode = roomResult.RoomData.RateCode,
+                            Adjustments = GetAdjustments(roomResult.Adjustments),
+                            CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2),
+                            OnRequest = roomResult.RoomData.OnRequest,
+                            GrossCost = GetGrossCost(roomResult)
                         };
 
                         propertyResult.RoomTypes.Add(roomType);
@@ -146,11 +150,29 @@
                 {
                     StartDate = cancellation.StartDate,
                     EndDate = cancellation.EndDate,
-                    Amount = cancellation.Amount
+                    Amount = Math.Round(cancellation.Amount + 0.00M, 2)
                 });
             }
 
             return cancellationTerms;
+        }
+
+        private List<SDK.V2.PropertySearch.Adjustment> GetAdjustments(List<iVector.Search.Property.Adjustment> adjustments)
+        {
+            return adjustments.Select(x => new SDK.V2.PropertySearch.Adjustment(Enum.Parse<AdjustmentType>(x.AdjustmentType), x.AdjustmentName,
+                x.CustomerNotes, x.TotalCost)).ToList();
+        }
+
+        /// <summary>
+        /// Gets the gross cost. If equal to total cost then default is returned. 
+        /// Default values are ignored and not displayed in the response
+        /// </summary>
+        /// <param name="roomResult">The room search result</param>
+        /// <returns>The gross cost</returns>
+        private decimal GetGrossCost(RoomSearchResult roomResult)
+        {
+            return roomResult.PriceData.GrossCost == roomResult.PriceData.TotalCost
+                                        ? default(decimal) : Math.Round(roomResult.PriceData.GrossCost + 0.00M, 2);
         }
     }
 }

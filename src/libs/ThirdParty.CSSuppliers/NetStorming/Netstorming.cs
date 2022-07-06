@@ -118,7 +118,7 @@
                     Source = propertyDetails.Source,
                     CreateLog = true,
                     LogFileName = "Prebook",
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Param = string.Empty
                 };
                 availabilityRequest.SetRequest(xmlRequest);
@@ -197,7 +197,7 @@
                     Source = propertyDetails.Source,
                     CreateLog = true,
                     LogFileName = "Prebook Cancellation Cost",
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Param = string.Empty
                 };
                 cancellationRequest.SetRequest(xmlCancellationCostRequest);
@@ -386,13 +386,13 @@
                     ref2Split[2],
                     propertyDetails.TPRef1,
                     bookingRef,
-                    _settings.ReportingEmail(propertyDetails, propertyDetails.Source),
+                    _settings.ContactEmail(propertyDetails, propertyDetails.Source),
                     propertyDetails.Rooms);
 
                 var webRequest = new Request
                 {
                     Source = propertyDetails.Source,
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     ContentType = ContentTypes.Application_x_www_form_urlencoded
                 };
                 webRequest.SetRequest(xmlRequest);

@@ -16,7 +16,7 @@
         /// <param name="user">The user, used for retrieving configuration and settings</param>
         /// /// <param name="log">boolean that decides if we log third party requests and responses</param>
         /// <returns>A search details</returns>
-        public SearchDetails Create(Request searchRequest, User user, bool log)
+        public SearchDetails Create(Request searchRequest, Subscription user, bool log)
         {
             var searchDetails = new SearchDetails()
             {

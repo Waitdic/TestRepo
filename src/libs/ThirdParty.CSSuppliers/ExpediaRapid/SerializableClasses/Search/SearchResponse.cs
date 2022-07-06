@@ -12,7 +12,7 @@
             {
                 try
                 {
-                    response = JsonConvert.DeserializeObject<SearchResponse>(responseString);
+                    response = JsonConvert.DeserializeObject<SearchResponse>(responseString)!;
                     valid = true;
                 }
                 catch

@@ -115,13 +115,13 @@
 
         private class Currency
         {
-            public string ThirdPartyCurrencyCode { get; set; }
-            public string CurrencyCode { get; set; }
+            public string ThirdPartyCurrencyCode { get; set; } = string.Empty;
+            public string CurrencyCode { get; set; } = string.Empty;
         }
 
         private class MealBasis
         {
-            public string MealBasisCode { get; set; }
+            public string MealBasisCode { get; set; } = string.Empty;
             public int MealBasisID { get; set; }
         }
 
@@ -145,7 +145,7 @@
 
         private class BookingCountry
         {
-            public string TPBookingCountryCode { get; set; }
+            public string TPBookingCountryCode { get; set; } = string.Empty;
             public int BookingCountryLookupID { get; set; }
         }
 
@@ -169,8 +169,8 @@
 
         private class Nationality
         {
-            public string NationalityCode { get; set; }
-            public string ISOCode { get; set; }
+            public string NationalityCode { get; set; } = string.Empty;
+            public string ISOCode { get; set; } = string.Empty;
         }
 
         /// <inheritdoc />
@@ -211,8 +211,8 @@
 
         private class Country
         {
-            public string ISOCode { get; set; }
-            public string TPCountryCode { get; set; }
+            public string ISOCode { get; set; } = string.Empty;
+            public string TPCountryCode { get; set; } = string.Empty;
         }
 
         /// <inheritdoc />
@@ -242,7 +242,7 @@
         private class Property
         {
             public int PropertyID { get; set; }
-            public string Code { get; set; }
+            public string Code { get; set; } = string.Empty;
         }
 
         /// <inheritdoc />
@@ -270,7 +270,7 @@
         private class Geography
         {
             public int GeographyID { get; set; }
-            public string Code { get; set; }
+            public string Code { get; set; } = string.Empty;
         }
 
         public string TPCreditCardLookup(string source, int creditCardTypeId)

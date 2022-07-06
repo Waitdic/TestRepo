@@ -1,10 +1,10 @@
-﻿namespace IVectorOne.Web.Adaptors.Authentication
+﻿namespace iVectorOne.Web.Adaptors.Authentication
 {
     using System.Threading.Tasks;
     using ThirdParty.Models;
 
     public interface IAuthenticationProvider
     {
-        Task<User> Authenticate(string username, string password);
+        Task<Subscription> Authenticate(string username, string password);
     }
 }

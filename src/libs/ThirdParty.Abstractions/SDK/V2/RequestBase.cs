@@ -4,6 +4,6 @@
 
     public record RequestBase
     {
-        public User User { get; set; }
+        public Subscription User { get; set; } = new();
     }
 }

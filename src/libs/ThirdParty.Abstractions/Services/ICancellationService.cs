@@ -12,12 +12,12 @@
         /// <param name="cancelRequest">The cancel request.</param>
         /// <param name="user">The user.</param>
         /// <returns>The cancellation response</returns>
-        Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest, User user);
+        Task<Cancel.Response> CancelAsync(Cancel.Request cancelRequest, Subscription user);
 
         /// <summary>Processes the cancellation request and attempts to cancel with the third party</summary>
         /// <param name="cancelRequest">The cancel request.</param>
         /// <param name="user">The user.</param>
         /// <returns>The cancellation response</returns>
-        Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest, User user);
+        Task<Precancel.Response> GetCancellationFeesAsync(Precancel.Request cancelRequest, Subscription user);
     }
 }

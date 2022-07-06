@@ -29,7 +29,7 @@
         public IEnumerable<Request> BuildSearchRequests(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Request>();
-            int hotelSearchLimit = _settings.HotelSearchLimit(searchDetails, _source);
+            int hotelSearchLimit = _settings.HotelBatchLimit(searchDetails, _source);
 
             var hotelKeys = resortSplits
                 .SelectMany(rs => rs.Hotels)

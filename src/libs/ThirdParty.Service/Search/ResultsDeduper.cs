@@ -52,7 +52,7 @@
                     {
                         // any unique key will do but the first split "_" needs to be property reference id
                         int keyCount = searchDetails.ConcurrentResults.Keys.Count;
-                        string checkHashCode = string.Format("{0}_{1}_{2}_{3}", checkCentralPropertyID, checkMealBasisID, (checkNonRefundable ? 1 : 0).ToString(), keyCount);
+                        string checkHashCode = $"{checkCentralPropertyID}_{checkMealBasisID}_{(checkNonRefundable ? 1 : 0)}_{keyCount}";
 
                         // todo - loop until this is added
                         searchDetails.ConcurrentResults.TryAdd(checkHashCode, dedupeResult);

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Config.Models
 {
     public partial class SupplierAttribute
     {
@@ -15,10 +12,7 @@ namespace iVectorOne_Admin_Api.Config.Models
         public int AttributeId { get; set; }
 
         public virtual Attribute Attribute { get; set; } = null!;
-        
-        [JsonIgnore]
         public virtual Supplier Supplier { get; set; } = null!;
-
         public virtual ICollection<SupplierSubscriptionAttribute> SupplierSubscriptionAttributes { get; set; }
     }
 }

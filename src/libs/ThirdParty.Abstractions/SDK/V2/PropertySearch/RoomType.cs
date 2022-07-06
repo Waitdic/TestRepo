@@ -121,5 +121,39 @@
         /// The cancellation terms.
         /// </value>
         public List<CancellationTerm> CancellationTerms { get; set; } = new List<CancellationTerm>();
+
+        /// <summary>
+        /// Gets or sets the adjustments.
+        /// </summary>
+        /// <value>
+        /// The adjustments.
+        /// </value>
+        public List<Adjustment> Adjustments { get; set; } = new List<Adjustment>();
+
+
+        /// <summary>
+        /// Gets or sets the commission percentage.
+        /// </summary>
+        /// <value>
+        /// The commission percentage.
+        /// </value>
+        public decimal CommissionPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [on request].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [on request]; otherwise, <c>false</c>.
+        /// </value>
+        public bool OnRequest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the gross cost.
+        /// </summary>
+        /// <value>
+        /// The gross cost.
+        /// </value>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public decimal GrossCost { get; set; }
     }
 }

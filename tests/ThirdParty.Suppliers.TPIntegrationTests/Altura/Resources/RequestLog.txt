@@ -7,7 +7,6 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <AlturaDS_requests>
   <Request type="Availability" version="v2.8.3" currency="EUR">
     <Session>
@@ -42,7 +41,6 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <AlturaDS_requests>
   <Request type="Availability" version="v2.8.3" currency="EUR">
     <Session>
@@ -77,7 +75,6 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <AlturaDS_requests>
   <Request type="Availability" version="v2.8.3" currency="EUR">
     <Session>
@@ -114,7 +111,6 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <AlturaDS_requests>
   <Request type="Availability" version="v2.8.3" currency="EUR">
     <Session>
@@ -149,7 +145,6 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="ISO-8859-1"?>
 <AlturaDS_requests>
   <Request type="Availability" version="v2.8.3" currency="EUR">
     <Session>

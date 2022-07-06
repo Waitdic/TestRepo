@@ -67,12 +67,12 @@
                 if (resortSplits[0].Hotels.Count == 1)
                 {
                     string hotelCode = resortSplits[0].Hotels[0].TPKey;
-                    string hotelURL = _settings.get_SearchURL(searchDetails) + string.Format("?HID={0}", hotelCode);
+                    string hotelURL = _settings.SearchURL(searchDetails) + string.Format("?HID={0}", hotelCode);
                     urls.Add(hotelURL, "HID", hotelCode);
                 }
 
                 string resortCode = resortSplits[0].ResortCode.Split('_')[1];
-                string resortURL = _settings.get_SearchURL(searchDetails) + string.Format("?RSRT={0}", resortCode);
+                string resortURL = _settings.SearchURL(searchDetails) + string.Format("?RSRT={0}", resortCode);
                 urls.Add(resortURL, "RSRT", resortCode);
             }
             else
@@ -80,16 +80,16 @@
                 var destinations = YouTravelSupport.GetDistinctDestinations(resortSplits);
                 foreach (string destination in destinations)
                 {
-                    string destinationURL = _settings.get_SearchURL(searchDetails) + string.Format("?DSTN={0}", destination);
+                    string destinationURL = _settings.SearchURL(searchDetails) + string.Format("?DSTN={0}", destination);
                     urls.Add(destinationURL, "DSTN", destination);
                 }
             }
 
             // build string with addition critera (dates, passengers)
             var sb = new StringBuilder();
-            sb.AppendFormat("&LangID={0}", _settings.get_LangID(searchDetails));
-            sb.AppendFormat("&Username={0}", _settings.get_Username(searchDetails));
-            sb.AppendFormat("&Password={0}", _settings.get_Password(searchDetails));
+            sb.AppendFormat("&LangID={0}", _settings.LanguageCode(searchDetails));
+            sb.AppendFormat("&Username={0}", _settings.User(searchDetails));
+            sb.AppendFormat("&Password={0}", _settings.Password(searchDetails));
             sb.AppendFormat("&Checkin_Date={0}", YouTravelSupport.FormatDate(searchDetails.PropertyArrivalDate));
             sb.AppendFormat("&Nights={0}", searchDetails.PropertyDuration);
             sb.AppendFormat("&Rooms={0}", searchDetails.Rooms);

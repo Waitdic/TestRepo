@@ -64,7 +64,7 @@
             var requests = new List<Request>();
 
             string hotelId;
-            string url = _settings.get_HotelBookingURL(searchDetails);
+            string url = _settings.BookingURL(searchDetails);
             var sb = new StringBuilder();
 
             sb.Append("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:typ=\"http://xtravelsystem.com/v1_0rc1/hotel/types\">");
@@ -82,7 +82,7 @@
             sb.AppendFormat("<fromPrice>{0}</fromPrice>", "0");
             sb.AppendFormat("<fromRow>{0}</fromRow>", "0");
             sb.AppendFormat("<includeEstablishmentData>{0}</includeEstablishmentData>", "false");
-            sb.AppendFormat("<language>{0}</language>", _settings.get_Language(searchDetails));
+            sb.AppendFormat("<language>{0}</language>", _settings.LanguageCode(searchDetails));
             sb.AppendFormat("<maxRoomCombinationsPerEstablishment>{0}</maxRoomCombinationsPerEstablishment>", "10");
             sb.AppendFormat("<numRows>{0}</numRows>", "1000");
 

@@ -77,7 +77,7 @@
                 // 2.Send The Request
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
@@ -157,7 +157,7 @@
 
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     Source = propertyDetails.Source,
@@ -217,7 +217,7 @@
                 //2.Send Request
                 preCancelRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
@@ -244,7 +244,7 @@
                 // 2. Send the Request
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,
@@ -316,7 +316,7 @@
                 // 2. Send Request
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails, propertyDetails.Source),
+                    EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
                     CreateLog = true,

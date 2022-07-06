@@ -1,4 +1,4 @@
-﻿namespace IVectorOne.Web.Adaptors.Authentication
+﻿namespace iVectorOne.Web.Adaptors.Authentication
 {
     using System;
     using System.Collections.Generic;
@@ -9,11 +9,10 @@
     using Newtonsoft.Json;
     using ThirdParty.Models;
 
-    // todo - port sql config code
     public class FileAuthenticationProvider : IAuthenticationProvider
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private List<User> _users = new();
+        private List<Subscription> _users = new();
         private bool _initialised = false;
 
         public FileAuthenticationProvider(IWebHostEnvironment webHostEnvironment)
@@ -21,7 +20,7 @@
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<User> Authenticate(string username, string password)
+        public async Task<Subscription> Authenticate(string username, string password)
         {
             if (!_initialised)
             {
@@ -35,7 +34,7 @@
                     await SourceStream.ReadAsync(result.AsMemory(0, (int)SourceStream.Length));
                 }
 
-                var users = JsonConvert.DeserializeObject<List<User>>(System.Text.Encoding.ASCII.GetString(result));
+                var users = JsonConvert.DeserializeObject<List<Subscription>>(System.Text.Encoding.ASCII.GetString(result));
                 if (users != null)
                 {
                     _users = users;

@@ -2,11 +2,11 @@
 {
     public interface IBonotelSettings
     {
-        string get_URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Username(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
-        int get_BookTimeout(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory);
+        int BookTimeout(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

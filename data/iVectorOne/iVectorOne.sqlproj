@@ -82,5 +82,7 @@
     <Build Include="dbo\Tables\SupplierSubscription.sql" />
     <Build Include="dbo\Tables\ExchangeRates.sql" />
     <Build Include="dbo\Tables\Tenant.sql" />
+    <Build Include="dbo\Tables\User.sql" />
+    <Build Include="dbo\Tables\UserTenant.sql" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@
         /// <returns>
         /// A book response
         /// </returns>
-        public async Task<Response> BookAsync(Request bookRequest, User user)
+        public async Task<Response> BookAsync(Request bookRequest, Subscription user)
         {
             Response response = null!;
             var exceptionString = string.Empty;

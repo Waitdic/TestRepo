@@ -2,72 +2,70 @@
 {
     using Intuitive.Helpers.Extensions;
     using ThirdParty.Constants;
-    using ThirdParty.Search.Settings;
     using ThirdParty.Support;
 
     public class InjectedStubaSettings : SettingsBase, IStubaSettings
     {
         protected override string Source => ThirdParties.STUBA;
 
-        public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public int get_MaxHotelsPerRequest(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("MaxHotelsPerRequest", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch).ToSafeInt();
         }
 
-        public string get_Organisation(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Organisation(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Organisation", tpAttributeSearch);
         }
 
-        public string get_Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Username", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
-        public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string get_Version(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Version(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Version", tpAttributeSearch);
         }
 
-        public string get_Currency(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Currency", tpAttributeSearch);
         }
 
-        public string get_Nationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Nationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
-        public bool get_ExcludeNonRefundableRates(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ExcludeNonRefundableRates", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public bool get_ExcludeUnknownCancellationPolicys(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool ExcludeUnknownCancellationPolicys(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("ExcludeUnknownCancellationPolicys", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool IsMandatory)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
-
     }
 }

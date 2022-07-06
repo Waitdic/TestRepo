@@ -91,10 +91,10 @@
 
             var baseParams = new BaseRequestParameters
             {
-                Username = _settings.Username(propertyDetails),
+                Username = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
-                Language = _settings.LangID(propertyDetails),
-                Endpoint = _settings.CancelURL(propertyDetails),
+                Language = _settings.LanguageCode(propertyDetails),
+                Endpoint = _settings.CancellationURL(propertyDetails),
                 SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
                 CreateLogs = propertyDetails.CreateLogs
             };
@@ -140,10 +140,10 @@
             {
                 var baseParameters = new BaseRequestParameters
                 {
-                    Username = _settings.Username(propertyDetails),
+                    Username = _settings.User(propertyDetails),
                     Password = _settings.Password(propertyDetails),
-                    Language = _settings.LangID(propertyDetails),
-                    Endpoint = _settings.PreBookUrl(propertyDetails),
+                    Language = _settings.LanguageCode(propertyDetails),
+                    Endpoint = _settings.PrebookURL(propertyDetails),
                     SoapPrefix = _settings.SoapActionPrefix(propertyDetails),
                     CreateLogs = propertyDetails.CreateLogs
                 };

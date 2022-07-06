@@ -22,6 +22,8 @@ namespace iVectorOne_Admin_Api.Config.Context
         public virtual DbSet<SupplierSubscription> SupplierSubscriptions { get; set; } = null!;
         public virtual DbSet<SupplierSubscriptionAttribute> SupplierSubscriptionAttributes { get; set; } = null!;
         public virtual DbSet<Tenant> Tenants { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UserTenant> UserTenants { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +46,9 @@ namespace iVectorOne_Admin_Api.Config.Context
                 entity.Property(e => e.DefaultValue)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Schema)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Subscription>(entity =>
@@ -55,6 +60,8 @@ namespace iVectorOne_Admin_Api.Config.Context
 
                 entity.HasIndex(e => e.Login, "CK_Unique_SubscriptionLogin")
                     .IsUnique();
+
+                entity.HasIndex(e => e.TenantId, "IX_Subscription_TenantID");
 
                 entity.Property(e => e.SubscriptionId).HasColumnName("SubscriptionID");
 
@@ -76,7 +83,9 @@ namespace iVectorOne_Admin_Api.Config.Context
 
                 entity.Property(e => e.PropertyTprequestLimit).HasColumnName("PropertyTPRequestLimit");
 
-                entity.Property(e => e.TenantId).HasColumnName("TenantID");
+                entity.Property(e => e.TenantId)
+                    .HasColumnName("TenantID")
+                    .HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Tenant)
                     .WithMany(p => p.Subscriptions)
@@ -107,6 +116,13 @@ namespace iVectorOne_Admin_Api.Config.Context
 
                 entity.ToTable("SupplierAttribute");
 
+                entity.HasIndex(e => e.AttributeId, "IX_SupplierAttribute_AttributeID");
+
+                entity.HasIndex(e => e.SupplierId, "IX_SupplierAttribute_SupplierID");
+
+                entity.HasIndex(e => new { e.SupplierId, e.AttributeId }, "UN_SupplierIDAttributeID")
+                    .IsUnique();
+
                 entity.Property(e => e.SupplierAttributeId).HasColumnName("SupplierAttributeID");
 
                 entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
@@ -132,6 +148,13 @@ namespace iVectorOne_Admin_Api.Config.Context
 
                 entity.ToTable("SupplierSubscription");
 
+                entity.HasIndex(e => e.SubscriptionId, "IX_SupplierSubscription_SubscriptionID");
+
+                entity.HasIndex(e => e.SupplierId, "IX_SupplierSubscription_SupplierID");
+
+                entity.HasIndex(e => new { e.SupplierId, e.SubscriptionId }, "UN_SupplierIDSubscriptionID")
+                    .IsUnique();
+
                 entity.Property(e => e.SupplierSubscriptionId).HasColumnName("SupplierSubscriptionID");
 
                 entity.Property(e => e.SubscriptionId).HasColumnName("SubscriptionID");
@@ -155,6 +178,13 @@ namespace iVectorOne_Admin_Api.Config.Context
                     .IsClustered(false);
 
                 entity.ToTable("SupplierSubscriptionAttribute");
+
+                entity.HasIndex(e => e.SubscriptionId, "IX_SupplierSubscriptionAttribute_SubscriptionID");
+
+                entity.HasIndex(e => e.SupplierAttributeId, "IX_SupplierSubscriptionAttribute_SupplierAttributeID");
+
+                entity.HasIndex(e => new { e.SubscriptionId, e.SupplierAttributeId }, "UN_SubscriptionIDSupplierAttributeID")
+                    .IsUnique();
 
                 entity.Property(e => e.SupplierSubscriptionAttributeId).HasColumnName("SupplierSubscriptionAttributeID");
 
@@ -192,6 +222,32 @@ namespace iVectorOne_Admin_Api.Config.Context
                 entity.Property(e => e.Status)
                     .HasMaxLength(8)
                     .IsUnicode(false);
+
+                entity.Property(e => e.TenantKey).HasDefaultValueSql("(newid())");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("User");
+
+                entity.Property(e => e.Key).HasMaxLength(100);
+
+                entity.Property(e => e.UserName).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<UserTenant>(entity =>
+            {
+                entity.ToTable("UserTenant");
+
+                entity.HasOne(d => d.Tenant)
+                    .WithMany(p => p.UserTenants)
+                    .HasForeignKey(d => d.TenantId)
+                    .HasConstraintName("FK_UserTenant_Tenant");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserTenants)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_UserTenant_User");
             });
 
             OnModelCreatingPartial(modelBuilder);

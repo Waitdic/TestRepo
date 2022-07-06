@@ -39,7 +39,7 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return _settings.SplitMultiroom(searchDetails) && searchDetails.Rooms > 1;
+            return _settings.EnableMultiRoomSearch(searchDetails) && searchDetails.Rooms > 1;
         }
 
         #endregion

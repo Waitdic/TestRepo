@@ -126,7 +126,7 @@
                 var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
                 xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
-                request.EndPoint = _settings.URL(propertyDetails);
+                request.EndPoint = _settings.GenericURL(propertyDetails);
                 request.Method = eRequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_xml;
@@ -347,7 +347,7 @@
                 xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.Source = ThirdParties.SERHS;
-                request.EndPoint = _settings.URL(propertyDetails);
+                request.EndPoint = _settings.GenericURL(propertyDetails);
                 request.Method = eRequestMethod.POST;
                 request.ContentType = ContentTypes.Text_xml;
 
@@ -394,7 +394,7 @@
 
             try
             {
-                request.EndPoint = _settings.URL(propertyDetails);
+                request.EndPoint = _settings.GenericURL(propertyDetails);
                 request.Method = eRequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_html;
@@ -447,7 +447,7 @@
 
             try
             {
-                request.EndPoint = _settings.URL(propertyDetails);
+                request.EndPoint = _settings.GenericURL(propertyDetails);
                 request.Method = eRequestMethod.POST;
                 request.Source = ThirdParties.SERHS;
                 request.ContentType = ContentTypes.Text_html;

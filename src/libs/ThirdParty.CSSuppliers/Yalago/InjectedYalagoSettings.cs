@@ -13,9 +13,9 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string API_Key(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string APIKey(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("API_Key", tpAttributeSearch);
+            return Get_Value("APIKey", tpAttributeSearch);
         }
 
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -23,34 +23,34 @@
             return Get_Value("BookingURL", tpAttributeSearch);
         }
 
-        public string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CancelURL", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
-        public string CountryCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CountryCode", tpAttributeSearch);
+            return Get_Value("SourceMarket", tpAttributeSearch);
         }
 
-        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ExcludeNonRefundable", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string Language(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Language", tpAttributeSearch);
+            return Get_Value("LanguageCode", tpAttributeSearch);
         }
 
-        public string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("PreBookURL", tpAttributeSearch);
+            return Get_Value("PrebookURL", tpAttributeSearch);
         }
 
-        public string PreCancelURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string PreCancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("PreCancelURL", tpAttributeSearch);
+            return Get_Value("PreCancellationURL", tpAttributeSearch);
         }
 
         public bool ReturnOpaqueRates(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -63,9 +63,9 @@
             return Get_Value("SearchURL", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)

@@ -109,9 +109,11 @@
             /// <param name="regex">The regex.</param>
             public void Add(string xPath, string regex)
             {
-                var dataMaskLookup = new DataMaskLookup();
-                dataMaskLookup.XPath = xPath;
-                dataMaskLookup.Regex = regex;
+                var dataMaskLookup = new DataMaskLookup
+                {
+                    XPath = xPath,
+                    Regex = regex
+                };
                 this.Add(dataMaskLookup);
             }
         }

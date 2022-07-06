@@ -48,7 +48,7 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return searchDetails.Rooms > 1 && !_settings.SplitMultiRoom(searchDetails);
+            return searchDetails.Rooms > 1 && !_settings.EnableMultiRoomSearch(searchDetails);
         }
 
         #endregion
@@ -67,7 +67,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.URL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = eRequestMethod.POST,
                     Param = "xml",
                     ContentType = ContentTypes.Application_x_www_form_urlencoded,
@@ -127,7 +127,7 @@
             var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
             var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
-            var leadGuestNationality = !string.IsNullOrEmpty(nationalityLookupValue) ? nationalityLookupValue : _settings.DefaultNationality(searchDetails);
+            var leadGuestNationality = !string.IsNullOrEmpty(nationalityLookupValue) ? nationalityLookupValue : _settings.LeadGuestNationality(searchDetails);
 
             var childAges = room.ChildAges ?? new List<int>()
                 .Concat(Enumerable.Range(0, room.Infants).Select(_ => 1))
@@ -138,7 +138,7 @@
                 Request = {
                     RequestType = Constant.RequestTypeSearch,
                     Version = Constant.ApiVersion,
-                    Currency = _settings.DefaultCurrency(searchDetails),
+                    Currency = _settings.Currency(searchDetails),
                     Session = GetSession(_settings, searchDetails),
                     Destination =
                     {
@@ -156,7 +156,6 @@
                             Adults = room.Adults,
                             Children = room.Children + room.Infants,
                             ChildrenAges = childAges,
-
                         }
                     },
                     Market =
@@ -167,7 +166,7 @@
                 }
             };
 
-            var xmlRequest = _serializer.Serialize(request);
+            var xmlRequest = _serializer.CleanXmlNamespaces(_serializer.Serialize(request));
             return xmlRequest;
         }
 

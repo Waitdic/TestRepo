@@ -2,16 +2,16 @@
 {
     public interface IJumboSettings
     {
-        string get_AgencyCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_BrandCode(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_POS(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CommonsURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_HotelBookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_BasketHandlerURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Language(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
-        string get_NationalityBasedCredentials(IThirdPartyAttributeSearch tpAttributeSearch);
+        string AgencyID(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BrandCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        string POS(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
+        string NationalityBasedCredentials(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

@@ -56,7 +56,7 @@
         {
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
-            var batchLimit = _settings.BatchLimit(searchDetails);
+            var batchLimit = _settings.HotelBatchLimit(searchDetails);
 
             // Build request for each city
             foreach (var searchResortSplit in resortSplits)
@@ -127,7 +127,7 @@
 
         public List<TransformedResult> GetResultFromResponse(AceroomsAvailabilityResponse response, SearchDetails searchDetails)
         {
-            List<TransformedResult> transformedResults = new List<TransformedResult>();
+            var transformedResults = new List<TransformedResult>();
 
             foreach (var hotel in response.Hotels)
             {
@@ -136,7 +136,7 @@
                     foreach (var rate in room.Rates)
                     {
                         var isNonRefundable = rate.CancelPolicy?.Description == "Non Refundable";
-                        TransformedResult transformedResult = new TransformedResult()
+                        var transformedResult = new TransformedResult()
                         {
                             MealBasisCode = rate.BoardID.ToString(),
                             RoomType = rate.Room,
@@ -171,7 +171,7 @@
 
             var request = new Request()
             {
-                EndPoint = _settings.BaseURL(searchDetails) + "Search",
+                EndPoint = _settings.GenericURL(searchDetails) + "Search",
                 Method = eRequestMethod.POST,
                 Source = Source,
                 ContentType = ContentTypes.Application_json,
@@ -199,7 +199,7 @@
         /// <returns></returns>
         private async Task<AceroomsAvailabilityRequest> CreateSearchRequestAsync(int resortCode, SearchDetails searchDetails, List<int> hotelIDs)
         {
-            AceroomsAvailabilityRequest aceroomsAvailabilityRequest = new AceroomsAvailabilityRequest
+            var aceroomsAvailabilityRequest = new AceroomsAvailabilityRequest
             {
                 CityID = resortCode,
                 Hotels = hotelIDs,

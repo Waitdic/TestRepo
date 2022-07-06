@@ -7,9 +7,9 @@
     {
         protected override string Source => string.Empty;
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("URL", tpAttributeSearch, source);
+            return Get_Value("GenericURL", tpAttributeSearch, source);
         }
 
         public bool UseAgentDetails(IThirdPartyAttributeSearch tpAttributeSearch, string source)

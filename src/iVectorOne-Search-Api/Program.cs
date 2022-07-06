@@ -24,7 +24,7 @@ try
         .ReadFrom.Configuration(ctx.Configuration));
 
         // Add services to the container.
-    builder.Services.RegisterWebServices();
+    builder.Services.RegisterWebServices(builder.Configuration);
     builder.Host.UseDiscoveredModules();
 
     var app = builder.Build();

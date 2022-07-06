@@ -19,10 +19,16 @@ variables:
   value: 'Any CPU'
 - name: buildConfiguration
   value: 'Release'
-# - name:  majorVersion
-#   value: '2'
 - name:  appVersion
   value : ''
+- name:  iisFolder
+  value : 'D:\Websites\V1\iVectorOne_Admin'
+- name:  iisAppPool
+  value : 'Admin'
+- name:  codeDeployAppName
+  value : 'IVOSearch'
+- name:  codeDeployGroupName
+  value : 'Admin'
 
 stages:
 - stage: build
@@ -75,12 +81,25 @@ stages:
         projectKey: 'Intuitive_iVectorOne_Admin_Api'
         projectName: 'iVectorOne Admin Api'
 
+    - task: DeleteFiles@1
+      inputs:
+        SourceFolder: 
+        Contents: 'nuget.config'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore Project'
+      inputs:
+        command: 'restore'
+        projects: 'src/$(project)/**/*.csproj'
+        feedsToUse: 'select'
+        vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
+
     - task: DotNetCoreCLI@2
       displayName: 'Build Project'
       inputs:
         command: 'build'
         projects: 'src/$(project)/**/*.csproj'
-        arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source'
+        arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source --no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test Project'
@@ -95,7 +114,14 @@ stages:
     - task: SonarCloudPublish@1
       inputs:
         pollingTimeoutSec: '300'
-    
+
+    - task: PowerShell@2
+      displayName: 'Save version info for later stages'
+      inputs:
+        targetType: 'inline'
+        script: |
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $(appVersion)
+
     - task: PublishPipelineArtifact@1
       displayName: 'Publish pipeline artifact'
       inputs:
@@ -124,26 +150,49 @@ stages:
         script: |
           $appSpecContent = "{0}: 0.0 `n" -f "version"
           $appSpecContent += "{0}: windows `n" -f "os"
-          $appSpecContent += "{0} `n" -f "files"
-          $appSpecContent += "  - {0}: \source `n" -f "source"
-          $appSpecContent += "  - {0}: c`:\www\source `n" -f "destination"
+          $appSpecContent += "{0}: `n" -f "files"
+          $appSpecContent += "  - {0}: \source\ `n" -f "source"
+          $appSpecContent += "    {0}: D`:\builds\$(project) `n" -f "destination"
+          $appSpecContent += "{0}: `n" -f "hooks"
+          $appSpecContent += "  {0}: `n" -f "AfterInstall"
+          $appSpecContent += "    - {0}: scripts\DeployUpdate.bat`n" -f "location"
+          $appSpecContent += "      {0}: 180`n" -f "timeout"
 
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
           New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
-          New-Item -Path $(Build.artifactStagingDirectory)/code-deploy/scripts' -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
-          
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+
     - task: CopyFiles@2
       inputs:
         SourceFolder: $(Build.Repository.LocalPath)/build/scripts
         Contents: '**'
         TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
 
+    - task: PowerShell@2
+      displayName: 'Update deploy script paths'
+      inputs:
+        targetType: 'inline'
+        script: |
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{source}', 'D:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', '$(iisFolder)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{apppool}', '$(iisAppPool)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+
+    - task: PowerShell@2
+      displayName: 'Get version from build stage'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $VersionString = Get-Content $(Build.artifactStagingDirectory)/code-deploy/version.txt
+          $VersionString = $VersionString.replace(".", "-")
+          Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+
     - task: ArchiveFiles@2
+      displayName: 'Create code deploy zip'
       inputs:
         rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         replaceExistingArchive: true
 
 #     # - task: S3Upload@1
@@ -154,8 +203,19 @@ stages:
 #     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
 #     #     globExpressions: '*.zip'
 
+    - task: CodeDeployDeployApplication@1
+      displayName: 'Push Artifact to AWS'
+      inputs:
+        awsCredentials: 'AWS S3 Bucket for Code Deploy'
+        regionName: 'eu-west-1'
+        applicationName: $(codeDeployAppName)
+        deploymentGroupName: $(codeDeployGroupName)
+        deploymentRevisionSource: 'workspace'
+        revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+        bucketName: 'ivectorone-codedeploy'
+
     - task: PublishPipelineArtifact@1
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         publishLocation: 'pipeline'
-        artifactName: '$(project)_$(appVersion)'
+        artifactName: '$(project)-$(appVersion)'

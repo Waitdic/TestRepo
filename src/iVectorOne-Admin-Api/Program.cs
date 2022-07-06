@@ -1,47 +1,150 @@
-using AutoMapper;
-using iVectorOne_Admin_Api.Config.Context;
+using FluentValidation;
 using iVectorOne_Admin_Api.Config.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
+using iVectorOne_Admin_Api.Config.Requests;
+using iVectorOne_Admin_Api.Config.Responses;
+using iVectorOne_Admin_Api.Security;
+using iVectorOne_Admin_Api.Services;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<ConfigContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConfigConnection")));
-builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.RegisterServices();
 
 var app = builder.Build();
-app.UseHttpsRedirection();
+app.ConfigureApp();
 
-app.MapGet("/tenants/{tenantid}/subscriptions", (ConfigContext context, IMapper mapper, int tenantid) =>
+app.MapGet("users/{key}", async (IMediator mediator, string key) =>
 {
-    var subscriptions = context.Subscriptions.Where(t => t.TenantId == tenantid).ToList();
-    List<SubscriptionDTO> subList = mapper.Map<List<SubscriptionDTO>>(subscriptions);
+    var request = new UserRequest(key);
+    var user = await mediator.Send(request);
 
-    return subList;
+    return Results.Ok(user);
 });
 
-app.MapGet("/tenants/{tenantid}/subscriptions/{subscriptionid}", (ConfigContext context, IMapper mapper, int tenantid, int subscriptionid) =>
+app.MapGet("tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
 {
-    var subscription = context.Subscriptions.Where(s=>s.SubscriptionId == subscriptionid && s.TenantId == tenantid).FirstOrDefault();
-    SubscriptionDTO sub = mapper.Map<SubscriptionDTO>(subscription);
+    if (httpContext.User.Identity is not TenantIdentity identity)
+    {
+        return Results.Challenge();
+    }
 
-    return sub;
-});
+    TenantResponse response = default;
 
-app.MapGet("/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", (ConfigContext context, IMapper mapper, int tenantid, int subscriptionid) =>
+    try
+    {
+        var request = new TenantRequest(tenantid);
+        response = await mediator.Send(request);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.ToString());
+    }
+
+    return Results.Ok(response);
+}).RequireAuthorization();
+
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
-    var subscription = context.Subscriptions.Where(s => s.SubscriptionId == subscriptionid && s.TenantId == tenantid)
-                                            .Include("SupplierSubscriptions")
-                                            .Include("SupplierSubscriptions.Supplier").FirstOrDefault();
-    SupplierSubscriptionDTO suppliers = mapper.Map<SupplierSubscriptionDTO>(subscription);
+    if (httpContext.User.Identity is not TenantIdentity identity)
+    {
+        return Results.Challenge();
+    }
 
-    return suppliers;
-});
+    SubscriptionResponse response = default;
 
-if (app.Environment.IsDevelopment())
+    try
+    {
+        var request = new SubscriptionRequest(tenantid) { SubscriptionId = subscriptionid };
+        response = await mediator.Send(request);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.ToString());
+    }
+
+    return Results.Ok(response);
+}).RequireAuthorization();
+
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    if (httpContext.User.Identity is not TenantIdentity identity)
+    {
+        return Results.Challenge();
+    }
+
+    SupplierSubscriptionResponse response = default;
+
+    try
+    {
+        var request = new SupplierSubscriptionRequest(tenantid) { SubscriptionId = subscriptionid };
+        response = await mediator.Send(request);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.ToString());
+    }
+
+    return Results.Ok(response);
+}).RequireAuthorization();
+
+app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
+{
+    if (httpContext.User.Identity is not TenantIdentity identity)
+    {
+        return Results.Challenge();
+    }
+
+    SupplierResponse response = default;
+
+    try
+    {
+        var request = new SupplierRequest(tenantid) { SubscriptionId = subscriptionid, SupplierId = supplierid };
+        response = await mediator.Send(request);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(e.ToString());
+    }
+
+    return Results.Ok(response);
+}).RequireAuthorization();
+
+app.MapPut(
+        "tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattribute/{suppliersubscriptionattributeid}",
+        async (IMediator mediator,
+        HttpContext httpContext,
+        [FromHeader(Name = "TenantKey")] Guid tenantKey,
+        int tenantid,
+        int subscriptionid,
+        int supplierid,
+        int suppliersubscriptionattributeid,
+        [FromBody] SupplierAttributeUpdateDTO updateRequest) =>
+    {
+        if (httpContext.User.Identity is not TenantIdentity identity)
+        {
+            return Results.Challenge();
+        }
+
+        SupplierAttributeUpdateResponse response = default;
+
+        try
+        {
+            var request = new SupplierAttributeUpdateRequest(tenantid)
+            {
+                SubscriptionId = subscriptionid,
+                SupplierId = supplierid,
+                SupplierSubscriptionAttributeId = suppliersubscriptionattributeid,
+                UpdatedValue = updateRequest.value
+            };
+            response = await mediator.Send(request);
+        }
+        catch (ValidationException ex)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x=>x.ErrorMessage).ToArray() } });
+        }
+        return Results.Ok(response);
+    }).RequireAuthorization();
+
+app.ConfigureSwagger();
+
 app.Run();

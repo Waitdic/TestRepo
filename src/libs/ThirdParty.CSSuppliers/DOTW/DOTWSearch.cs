@@ -93,7 +93,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.ServerURL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = eRequestMethod.POST,
                     ExtraInfo = searchDetails,
                     UseGZip = true
@@ -149,7 +149,7 @@
             var sb = new StringBuilder();
 
             sb.AppendLine("<customer>");
-            sb.AppendFormat("<username>{0}</username>", _settings.Username(searchDetails));
+            sb.AppendFormat("<username>{0}</username>", _settings.User(searchDetails));
             sb.AppendFormat("<password>{0}</password>", _dotwSupport.MD5Password(_settings.Password(searchDetails)));
             sb.AppendFormat("<id>{0}</id>", _settings.CompanyCode(searchDetails));
             sb.AppendLine("<source>1</source>");

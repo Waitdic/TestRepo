@@ -42,7 +42,7 @@
         #region Properties
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_AllowCancellations(searchDetails, false);
+            => _settings.AllowCancellations(searchDetails, false);
 
         public bool SupportsRemarks => true;
 
@@ -51,7 +51,7 @@
         public string Source => ThirdParties.BONOTEL;
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_OffsetCancellationDays(searchDetails, false);
+            => _settings.OffsetCancellationDays(searchDetails, false);
 
         public bool RequiresVCard(VirtualCardInfo info, string source) => false;
 
@@ -91,8 +91,8 @@
                 sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 sb.Append("<reservationRequest returnCompeleteBookingDetails=\"Y\">");
                 sb.Append("<control>");
-                sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(propertyDetails));
-                sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(propertyDetails));
+                sb.AppendFormat("<userName>{0}</userName>", _settings.User(propertyDetails));
+                sb.AppendFormat("<passWord>{0}</passWord>", _settings.Password(propertyDetails));
                 sb.Append("</control>");
 
                 sb.AppendFormat("<reservationDetails timeStamp=\"{0}\">", DateTime.Now.ToString("yyyymmddThh:mm:ss"));
@@ -163,11 +163,11 @@
 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + "GetReservation.do",
+                    EndPoint = _settings.GenericURL(propertyDetails) + "GetReservation.do",
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.BONOTEL,
-                    TimeoutInSeconds = _settings.get_BookTimeout(propertyDetails)
+                    TimeoutInSeconds = _settings.BookTimeout(propertyDetails)
                 };
                 webRequest.SetRequest(request);
                 await webRequest.Send(_httpclient, _logger);
@@ -241,7 +241,7 @@
                 // Send the request
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + "GetCancellation.do",
+                    EndPoint = _settings.GenericURL(propertyDetails) + "GetCancellation.do",
                     Method = eRequestMethod.POST,
                     ContentType = ContentTypes.Text_xml,
                     Source = ThirdParties.BONOTEL,
@@ -297,8 +297,8 @@
             sb.Append("<?xml version=\"1.0\" encoding=\"utf-8\" ?>");
             sb.Append("<cancellationRequest>");
             sb.Append("<control>");
-            sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(SearchDetails));
-            sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(SearchDetails));
+            sb.AppendFormat("<userName>{0}</userName>", _settings.User(SearchDetails));
+            sb.AppendFormat("<passWord>{0}</passWord>", _settings.Password(SearchDetails));
             sb.Append("</control>");
             sb.AppendFormat("<supplierReferenceNo>{0}</supplierReferenceNo>", BookingReference);
             sb.Append("<cancellationReason/>");
@@ -378,7 +378,7 @@
 
                 var webRequest = new Request
                 {
-                    EndPoint = _settings.get_URL(propertyDetails) + "GetAvailability.do",
+                    EndPoint = _settings.GenericURL(propertyDetails) + "GetAvailability.do",
                     Method = eRequestMethod.POST,
                     Source = ThirdParties.BONOTEL,
                     LogFileName = "CancellationCharges",
@@ -556,8 +556,8 @@
             sb.Append("<availabilityRequest cancelpolicy=\"Y\" hotelfees=\"Y\">");
 
             sb.Append("<control>");
-            sb.AppendFormat("<userName>{0}</userName>", _settings.get_Username(propertyDetails));
-            sb.AppendFormat("<passWord>{0}</passWord>", _settings.get_Password(propertyDetails));
+            sb.AppendFormat("<userName>{0}</userName>", _settings.User(propertyDetails));
+            sb.AppendFormat("<passWord>{0}</passWord>", _settings.Password(propertyDetails));
             sb.Append("</control>");
 
             sb.AppendFormat("<checkIn>{0}</checkIn>", propertyDetails.ArrivalDate.ToString("dd-MMM-yyyy"));

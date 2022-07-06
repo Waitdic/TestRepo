@@ -1,12 +1,20 @@
 ﻿namespace ThirdParty.Search.Results.Models
 {
     using System.Xml.Serialization;
+    using ThirdParty.SDK.V2.PropertySearch;
 
     /// <summary>
     /// The transformed result adjustment
     /// </summary>
     public class TransformedResultAdjustment
     {
+        public TransformedResultAdjustment(AdjustmentType type, string name, string description, decimal amount = 0)
+        {
+            AdjustmentType = type;
+            AdjustmentName = name;
+            AdjustmentDescription = description;
+            AdjustmentAmount = amount;
+        }
         /// <summary>
         /// Gets or sets the adjustment identifier.
         /// </summary>
@@ -23,7 +31,7 @@
         /// The type of the adjustment.
         /// </value>
         [XmlAttribute("AT")]
-        public string AdjustmentType { get; set; } = string.Empty;
+        public AdjustmentType AdjustmentType { get; set; } 
 
         /// <summary>
         /// Gets or sets the name of the adjustment.

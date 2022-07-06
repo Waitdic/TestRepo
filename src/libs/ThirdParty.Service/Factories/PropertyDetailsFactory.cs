@@ -55,7 +55,7 @@
         /// <returns>
         /// A property details object
         /// </returns>
-        public async Task<PropertyDetails> CreateAsync(Prebook.Request request, User user)
+        public async Task<PropertyDetails> CreateAsync(Prebook.Request request, Subscription user)
         {
             var propertyDetails = new PropertyDetails();
 
@@ -185,7 +185,7 @@
         /// <returns>
         /// A property details object
         /// </returns>
-        public async Task<PropertyDetails> CreateAsync(Book.Request request, User user)
+        public async Task<PropertyDetails> CreateAsync(Book.Request request, Subscription user)
         {
             var propertyDetails = new PropertyDetails();
 
@@ -312,7 +312,7 @@
         /// <returns>
         /// A property details object
         /// </returns>
-        public async Task<PropertyDetails> CreateAsync(Precancel.Request request, User user)
+        public async Task<PropertyDetails> CreateAsync(Precancel.Request request, Subscription user)
         {
             var propertyDetails = new PropertyDetails();
 
@@ -349,7 +349,7 @@
         /// <returns>
         /// A property details object
         /// </returns>
-        public async Task<PropertyDetails> CreateAsync(Cancel.Request request, User user)
+        public async Task<PropertyDetails> CreateAsync(Cancel.Request request, Subscription user)
         {
             var propertyDetails = new PropertyDetails();
 

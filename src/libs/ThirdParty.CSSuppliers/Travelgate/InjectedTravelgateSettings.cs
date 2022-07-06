@@ -7,182 +7,182 @@
     {
         protected override string Source => string.Empty;
 
-        public string get_Username(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Username", tpAttributeSearch, source);
+            return Get_Value("User", tpAttributeSearch, source);
         }
 
-        public string get_Password(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("Password", tpAttributeSearch, source);
         }
 
-        public string get_URL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("URL", tpAttributeSearch, source);
+            return Get_Value("GenericURL", tpAttributeSearch, source);
         }
 
-        public string get_SearchSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("SearchSOAPAction", tpAttributeSearch, source);
+            return Get_Value("SearchURL", tpAttributeSearch, source);
         }
 
-        public string get_PrebookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("PrebookSOAPAction", tpAttributeSearch, source);
+            return Get_Value("PrebookURL", tpAttributeSearch, source);
         }
 
-        public string get_BookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("BookSOAPAction", tpAttributeSearch, source);
+            return Get_Value("BookingURL", tpAttributeSearch, source);
         }
 
-        public bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string get_CancelSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CancelSOAPAction", tpAttributeSearch, source);
+            return Get_Value("CancellationURL", tpAttributeSearch, source);
         }
 
-        public bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("UseGZIP", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public bool get_RequiresVCard(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool RequiresVCard(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("RequiresVCard", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string get_ReferenceDelimiter(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string ReferenceDelimiter(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("ReferenceDelimiter", tpAttributeSearch, source);
         }
 
-        public string get_DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("DefaultNationality", tpAttributeSearch, source);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch, source);
         }
 
-        public string get_CardHolderName(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string CardHolderName(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("CardHolderName", tpAttributeSearch, source);
         }
 
-        public string get_EncryptedCardDetails(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string EncryptedCardDetails(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("EncryptedCardDetails", tpAttributeSearch, source);
         }
 
-        public string get_Markets(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("Markets", tpAttributeSearch, source);
+            return Get_Value("SourceMarket", tpAttributeSearch, source);
         }
 
-        public string get_ProviderUsername(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryUsername(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ProviderUsername", tpAttributeSearch, source);
+            return Get_Value("SecondaryUsername", tpAttributeSearch, source);
         }
 
-        public string get_ProviderPassword(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryPassword(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ProviderPassword", tpAttributeSearch, source);
+            return Get_Value("SecondaryPassword", tpAttributeSearch, source);
         }
 
-        public string get_ProviderCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string ProviderCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("ProviderCode", tpAttributeSearch, source);
         }
 
-        public string get_UrlReservation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryBookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("UrlReservation", tpAttributeSearch, source);
         }
 
-        public string get_UrlGeneric(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryGenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlGeneric", tpAttributeSearch, source);
+            return Get_Value("SecondaryGenericURL", tpAttributeSearch, source);
         }
 
-        public string get_UrlValuation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondaryPrebookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlValuation", tpAttributeSearch, source);
+            return Get_Value("SecondaryPrebookURL", tpAttributeSearch, source);
         }
 
-        public string get_UrlAvail(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string SecondarySearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UrlAvail", tpAttributeSearch, source);
+            return Get_Value("SecondarySearchURL", tpAttributeSearch, source);
         }
 
-        public string get_LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("LanguageCode", tpAttributeSearch, source);
         }
 
-        public string get_Parameters(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string Parameters(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("Parameters", tpAttributeSearch, source);
         }
 
-        public string get_CurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("CurrencyCode", tpAttributeSearch, source);
         }
 
-        public int get_MaximumHotelSearchNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumHotelSearchNumber", tpAttributeSearch, source).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumCitySearchNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int CityBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumCitySearchNumber", tpAttributeSearch, source).ToSafeInt();
+            return Get_Value("CityBatchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumRoomNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int RoomSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("MaximumRoomNumber", tpAttributeSearch, source).ToSafeInt();
+            return Get_Value("RoomSearchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("MaximumRoomGuestNumber", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public int get_MinimumStay(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int MinimumStay(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("MinimumStay", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public bool get_AllowHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool EnableHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("AllowHotelSearch", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("EnableHotelSearch", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public bool get_UseZoneSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool UseZoneSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("UseZoneSearch", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public int get_SearchRequestTimeout(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int SearchRequestTimeout(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("SearchRequestTimeout", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public string get_RatePlanCodes(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string RatePlanCodes(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("RatePlanCodes", tpAttributeSearch, source);
         }
 
-        public bool get_SendGUIDReference(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool SendGUIDReference(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("SendGUIDReference", tpAttributeSearch, source).ToSafeBoolean();
         }

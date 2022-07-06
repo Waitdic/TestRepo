@@ -32,7 +32,7 @@
         public ISearchRequestBuilder GetSearchRequestBuilder(
             IThirdPartyAttributeSearch thirdPartyAttributeSearch)
         {
-            return _settings.UseShoppingEngineForSearch(thirdPartyAttributeSearch, _source)
+            return _settings.EnableUtilitySearch(thirdPartyAttributeSearch, _source)
                 ? _shoppingEngineRequestBuilder
                 : _bookingUsbRequestBuilder;
         }
@@ -40,7 +40,7 @@
         public ISearchResponseTransformer GetSearchResponseTransformer(
             IThirdPartyAttributeSearch thirdPartyAttributeSearch)
         {
-            return _settings.UseShoppingEngineForSearch(thirdPartyAttributeSearch, _source)
+            return _settings.EnableUtilitySearch(thirdPartyAttributeSearch, _source)
                 ? _shoppingEngineResponseTransformer
                 : _bookingUsbResponseTransformer;
         }

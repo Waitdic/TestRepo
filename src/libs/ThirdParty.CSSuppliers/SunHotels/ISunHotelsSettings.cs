@@ -2,22 +2,22 @@
 {
     public interface ISunHotelsSettings
     {
-        string get_Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Username(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_EmailAddress(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Language(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_Currency(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SupplierReference(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_BookURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_CancelURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandotory);
-        string get_Nationality(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string get_AccommodationTypes(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool get_RequestPackageRates(IThirdPartyAttributeSearch tpAttributeSearch);
-        int get_HotelRequestLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string ContactEmail(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Currency(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SupplierReference(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandotory);
+        string CustomerCountryCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string AccommodationTypes(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool RequestPackageRates(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

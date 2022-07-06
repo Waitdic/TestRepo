@@ -60,21 +60,21 @@
         public List<string> Sources => TravelgateSupport.TravelgateSources;
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_OffsetCancellationDays(searchDetails, source);
+            => _settings.OffsetCancellationDays(searchDetails, source);
 
         public bool SupportsBookingSearch => false;
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
-            => _settings.get_AllowCancellations(searchDetails, source);
+            => _settings.AllowCancellations(searchDetails, source);
 
         public bool SupportsRemarks => false;
 
         public bool RequiresVCard(VirtualCardInfo info, string source)
-            => _settings.get_RequiresVCard(info, source);
+            => _settings.RequiresVCard(info, source);
 
-        private char get_ReferenceDelimiter(IThirdPartyAttributeSearch searchDetails, string source)
+        private char ReferenceDelimiter(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            string referenceDelimiter = _settings.get_ReferenceDelimiter(searchDetails, source);
+            string referenceDelimiter = _settings.ReferenceDelimiter(searchDetails, source);
             if (string.IsNullOrEmpty(referenceDelimiter))
             {
                 referenceDelimiter = "~";
@@ -362,24 +362,24 @@
             {
                 case "prebook":
                     {
-                        soapAction = _settings.get_PrebookSOAPAction(propertyDetails, propertyDetails.Source);
+                        soapAction = _settings.PrebookURL(propertyDetails, propertyDetails.Source);
                         break;
                     }
                 case "book":
                     {
-                        soapAction = _settings.get_BookSOAPAction(propertyDetails, propertyDetails.Source);
+                        soapAction = _settings.BookingURL(propertyDetails, propertyDetails.Source);
                         break;
                     }
                 case "cancellation":
                     {
-                        soapAction = _settings.get_CancelSOAPAction(propertyDetails, propertyDetails.Source);
+                        soapAction = _settings.CancellationURL(propertyDetails, propertyDetails.Source);
                         break;
                     }
             }
 
             var webRequest = new Request
             {
-                EndPoint = _settings.get_URL(propertyDetails, propertyDetails.Source),
+                EndPoint = _settings.GenericURL(propertyDetails, propertyDetails.Source),
                 Method = eRequestMethod.POST,
                 Source = propertyDetails.Source,
                 LogFileName = requestType,
@@ -415,7 +415,7 @@
             sbPrebookRequest.Append("<ns:version>1</ns:version>");
 
             sbPrebookRequest.Append("<ns:providerRQ>");
-            sbPrebookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails, propertyDetails.Source));
+            sbPrebookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.ProviderCode(propertyDetails, propertyDetails.Source));
             sbPrebookRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbPrebookRequest.Append("<ns:rqXML>");
 
@@ -423,17 +423,17 @@
 
             sbPrebookRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbPrebookRequest.Append("<source>");
-            sbPrebookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails, propertyDetails.Source));
+            sbPrebookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.LanguageCode(propertyDetails, propertyDetails.Source));
             sbPrebookRequest.Append("</source>");
             sbPrebookRequest.Append("<filterAuditData>");
             sbPrebookRequest.Append("<registerTransactions>true</registerTransactions>");
             sbPrebookRequest.Append("</filterAuditData>");
 
             sbPrebookRequest.Append("<Configuration>");
-            sbPrebookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails, propertyDetails.Source));
-            sbPrebookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails, propertyDetails.Source));
+            sbPrebookRequest.AppendFormat("<User>{0}</User>", _settings.SecondaryUsername(propertyDetails, propertyDetails.Source));
+            sbPrebookRequest.AppendFormat("<Password>{0}</Password>", _settings.SecondaryPassword(propertyDetails, propertyDetails.Source));
             sbPrebookRequest.Append(AppendURLs(propertyDetails));
-            sbPrebookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails, propertyDetails.Source)));
+            sbPrebookRequest.Append(HttpUtility.HtmlDecode(_settings.Parameters(propertyDetails, propertyDetails.Source)));
             sbPrebookRequest.Append("</Configuration>");
 
             sbPrebookRequest.AppendFormat("<StartDate>{0}</StartDate>", propertyDetails.ArrivalDate.ToString("dd/MM/yyyy"));
@@ -442,7 +442,7 @@
             // Add hotel option parameters
             // Check if we have any first before we add the parameters node
             // Don't do multiroom bookings for rooms across different options, so can just pluck out the first room's parameters
-            string referenceDelimiter = _settings.get_ReferenceDelimiter(propertyDetails, propertyDetails.Source);
+            string referenceDelimiter = _settings.ReferenceDelimiter(propertyDetails, propertyDetails.Source);
 
             if (string.IsNullOrEmpty(referenceDelimiter))
             {
@@ -465,7 +465,7 @@
 
             string nationality = "";
             string nationalityLookupValue = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, propertyDetails.NationalityCode);
-            string defaultNationality = _settings.get_DefaultNationality(propertyDetails, propertyDetails.Source);
+            string defaultNationality = _settings.LeadGuestNationality(propertyDetails, propertyDetails.Source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
             {
@@ -556,7 +556,7 @@
         {
             string source = propertyDetails.Source;
 
-            char delimiter = get_ReferenceDelimiter(propertyDetails, source);
+            char delimiter = ReferenceDelimiter(propertyDetails, source);
 
             var sbBookRequest = new StringBuilder();
 
@@ -568,7 +568,7 @@
             sbBookRequest.Append("<ns:version>1</ns:version>");
 
             sbBookRequest.Append("<ns:providerRQ>");
-            sbBookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails, source));
+            sbBookRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.ProviderCode(propertyDetails, source));
             sbBookRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbBookRequest.Append("<ns:rqXML>");
 
@@ -576,20 +576,20 @@
 
             sbBookRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbBookRequest.Append("<source>");
-            sbBookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails, source));
+            sbBookRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.LanguageCode(propertyDetails, source));
             sbBookRequest.Append("</source>");
             sbBookRequest.Append("<filterAuditData>");
             sbBookRequest.Append("<registerTransactions>true</registerTransactions>");
             sbBookRequest.Append("</filterAuditData>");
 
             sbBookRequest.Append("<Configuration>");
-            sbBookRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails, source));
-            sbBookRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails, source));
+            sbBookRequest.AppendFormat("<User>{0}</User>", _settings.SecondaryUsername(propertyDetails, source));
+            sbBookRequest.AppendFormat("<Password>{0}</Password>", _settings.SecondaryPassword(propertyDetails, source));
             sbBookRequest.Append(AppendURLs(propertyDetails));
-            sbBookRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails, source)));
+            sbBookRequest.Append(HttpUtility.HtmlDecode(_settings.Parameters(propertyDetails, source)));
             sbBookRequest.Append("</Configuration>");
 
-            if (_settings.get_SendGUIDReference(propertyDetails, source))
+            if (_settings.SendGUIDReference(propertyDetails, source))
             {
                 sbBookRequest.AppendFormat("<ClientLocator>{0}</ClientLocator>", propertyDetails.BookingReference.TrimEnd() + Guid.NewGuid().ToString());
             }
@@ -620,7 +620,7 @@
 
             string nationality = "";
             string nationalityLookupValue = await _support.TPNationalityLookupAsync(source, propertyDetails.NationalityCode);
-            string defaultNationality = _settings.get_DefaultNationality(propertyDetails, source);
+            string defaultNationality = _settings.LeadGuestNationality(propertyDetails, source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
             {
@@ -749,7 +749,7 @@
             sbCancellationRequest.Append("<ns:version>1</ns:version>");
 
             sbCancellationRequest.Append("<ns:providerRQ>");
-            sbCancellationRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.get_ProviderCode(propertyDetails, propertyDetails.Source));
+            sbCancellationRequest.AppendFormat("<ns:code>{0}</ns:code>", _settings.ProviderCode(propertyDetails, propertyDetails.Source));
             sbCancellationRequest.AppendFormat("<ns:id>{0}</ns:id>", 1);
             sbCancellationRequest.Append("<ns:rqXML>");
 
@@ -757,17 +757,17 @@
 
             sbCancellationRequest.Append("<timeoutMilliseconds>179700</timeoutMilliseconds>"); // has to be lower than general timeout
             sbCancellationRequest.Append("<source>");
-            sbCancellationRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.get_LanguageCode(propertyDetails, propertyDetails.Source));
+            sbCancellationRequest.AppendFormat("<languageCode>{0}</languageCode>", _settings.LanguageCode(propertyDetails, propertyDetails.Source));
             sbCancellationRequest.Append("</source>");
             sbCancellationRequest.Append("<filterAuditData>");
             sbCancellationRequest.Append("<registerTransactions>true</registerTransactions>");
             sbCancellationRequest.Append("</filterAuditData>");
 
             sbCancellationRequest.Append("<Configuration>");
-            sbCancellationRequest.AppendFormat("<User>{0}</User>", _settings.get_ProviderUsername(propertyDetails, propertyDetails.Source));
-            sbCancellationRequest.AppendFormat("<Password>{0}</Password>", _settings.get_ProviderPassword(propertyDetails, propertyDetails.Source));
+            sbCancellationRequest.AppendFormat("<User>{0}</User>", _settings.SecondaryUsername(propertyDetails, propertyDetails.Source));
+            sbCancellationRequest.AppendFormat("<Password>{0}</Password>", _settings.SecondaryPassword(propertyDetails, propertyDetails.Source));
             sbCancellationRequest.Append(AppendURLs(propertyDetails));
-            sbCancellationRequest.Append(HttpUtility.HtmlDecode(_settings.get_Parameters(propertyDetails, propertyDetails.Source)));
+            sbCancellationRequest.Append(HttpUtility.HtmlDecode(_settings.Parameters(propertyDetails, propertyDetails.Source)));
             sbCancellationRequest.Append("</Configuration>");
 
             sbCancellationRequest.Append("<Locators>");
@@ -796,8 +796,8 @@
             sbRequest.Append("<soapenv:Header>");
             sbRequest.Append("<wsse:Security>");
             sbRequest.Append("<wsse:UsernameToken>");
-            sbRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.get_Username(propertyDetails, propertyDetails.Source));
-            sbRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.get_Password(propertyDetails, propertyDetails.Source));
+            sbRequest.AppendFormat("<wsse:Username>{0}</wsse:Username>", _settings.User(propertyDetails, propertyDetails.Source));
+            sbRequest.AppendFormat("<wsse:Password>{0}</wsse:Password>", _settings.Password(propertyDetails, propertyDetails.Source));
             sbRequest.Append("</wsse:UsernameToken>");
             sbRequest.Append("</wsse:Security>");
             sbRequest.Append("</soapenv:Header>");
@@ -813,10 +813,10 @@
         {
             string source = propertyDetails.Source;
 
-            char delimiter = get_ReferenceDelimiter(propertyDetails, source);
+            char delimiter = ReferenceDelimiter(propertyDetails, source);
 
             string paymentType = propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[3];
-            bool requiresVCard = _settings.get_RequiresVCard(propertyDetails, source);
+            bool requiresVCard = _settings.RequiresVCard(propertyDetails, source);
 
             var sb = new StringBuilder();
 
@@ -826,7 +826,7 @@
 
                 if (string.IsNullOrEmpty(cardHolderName))
                 {
-                    cardHolderName = _settings.get_CardHolderName(propertyDetails, source);
+                    cardHolderName = _settings.CardHolderName(propertyDetails, source);
                 }
 
                 sb.AppendLine("<CardInfo>");
@@ -842,7 +842,7 @@
             }
             else if (!requiresVCard)
             {
-                string encrytedCardDetails = _settings.get_EncryptedCardDetails(propertyDetails, source);
+                string encrytedCardDetails = _settings.EncryptedCardDetails(propertyDetails, source);
                 if (string.IsNullOrWhiteSpace(encrytedCardDetails))
                 {
                     return string.Empty;
@@ -880,10 +880,10 @@
         {
             var sbURLXML = new StringBuilder();
 
-            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.get_UrlReservation(propertyDetails, propertyDetails.Source));
-            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.get_UrlGeneric(propertyDetails, propertyDetails.Source));
-            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.get_UrlAvail(propertyDetails, propertyDetails.Source));
-            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.get_UrlValuation(propertyDetails, propertyDetails.Source));
+            sbURLXML.AppendFormat("<UrlReservation>{0}</UrlReservation>", _settings.SecondaryBookURL(propertyDetails, propertyDetails.Source));
+            sbURLXML.AppendFormat("<UrlGeneric>{0}</UrlGeneric>", _settings.SecondaryGenericURL(propertyDetails, propertyDetails.Source));
+            sbURLXML.AppendFormat("<UrlAvail>{0}</UrlAvail>", _settings.SecondarySearchURL(propertyDetails, propertyDetails.Source));
+            sbURLXML.AppendFormat("<UrlValuation>{0}</UrlValuation>", _settings.SecondaryPrebookURL(propertyDetails, propertyDetails.Source));
 
             return sbURLXML.ToString();
         }

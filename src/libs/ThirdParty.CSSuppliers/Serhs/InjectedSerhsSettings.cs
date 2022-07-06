@@ -18,9 +18,9 @@
             return Get_Value("ClientCode", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)

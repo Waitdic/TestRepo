@@ -48,7 +48,7 @@
             string codigousu = settings.Codigousu(propertyDetails);
             string clausu = settings.Clausu(propertyDetails);
             string secacc = settings.Secacc(propertyDetails);
-            string URL = settings.URL(propertyDetails);
+            string URL = settings.GenericURL(propertyDetails);
 
             return new Request
             {

@@ -370,9 +370,6 @@
         /// <summary>
         /// Gets or sets the profile XML.
         /// </summary>
-        /// <value>
-        /// The profile XML.
-        /// </value>
         public string ProfileXML { get; set; } = string.Empty;
 
         /// <summary>
@@ -388,83 +385,38 @@
         /// <summary>
         /// Get or sets the unique nationality code 
         /// </summary>
-        /// <value>
-        ///  The nationality code
-        /// </value>
         public string NationalityCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the boolean to decide whether opaque rates are supported.
         /// </summary>
-        /// <value>
-        /// The SupportOpaqueRates boolean.
-        /// </value>
         public bool OpaqueRates { get; set; }
 
         /// <summary>
         /// Gets the duration.
         /// </summary>
-        /// <value>
-        /// The duration.
-        /// </value>
-        public int Duration
-        {
-            get
-            {
-                return (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
-            }
-        }
+        public int Duration => (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
 
         /// <summary>
         /// Gets the adults.
         /// </summary>
-        /// <value>
-        /// The adults.
-        /// </value>
-        public int Adults
-        {
-            get
-            {
-                return this.Rooms.Sum(o => o.Adults);
-            }
-        }
+        public int Adults => this.Rooms.Sum(o => o.Adults);
 
         /// <summary>
         /// Gets the children.
         /// </summary>
-        /// <value>
-        /// The children.
-        /// </value>
-        public int Children
-        {
-            get
-            {
-                return this.Rooms.Sum(o => o.Children);
-            }
-        }
+        public int Children => this.Rooms.Sum(o => o.Children);
 
         /// <summary>
         /// Gets the infants.
         /// </summary>
-        /// <value>
-        /// The infants.
-        /// </value>
-        public int Infants
-        {
-            get
-            {
-                return this.Rooms.Sum(o => o.Infants);
-            }
-        }
+        public int Infants => this.Rooms.Sum(o => o.Infants);
 
         //// TODO when you plug this into ivector you'll need to look this up from TP data
         //// Might be easier to not add a depenency in here, and set it based on tp when you new up the property details
         /// <summary>
         /// Gets a value indicating whether [create logs].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [create logs]; otherwise, <c>false</c>.
-        /// </value>
         public bool CreateLogs { get; set; } = false; 
 
         ////public List<TPInstallment> Installments { get; set; } = new List<TPInstallment>();
@@ -472,18 +424,18 @@
         /// <summary>
         /// Gets or sets the selling country.
         /// </summary>
-        /// <value>
-        /// The ISO 3166-2 country code.
-        /// </value>
         public string SellingCountry { get; set; } = string.Empty;
 
-        public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; }
+        /// <summary>
+        /// Gets or sets the 
+        /// </summary>
+        public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
 
         /// <summary>
         /// Adds the log.
         /// </summary>
-        /// <param name="title">The s title.</param>
-        /// <param name="text">The s text.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="text">The text.</param>
         public void AddLog(string title, string text)
         {
             Logs.AddNew(this.Source, title, text);

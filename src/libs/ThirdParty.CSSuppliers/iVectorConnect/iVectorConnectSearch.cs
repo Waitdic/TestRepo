@@ -32,7 +32,7 @@
             //1. set up some start values
             string source = resortSplits.First().ThirdPartySupplier;
             var requests = new List<Request>();
-            string url = _settings.URL(searchDetails, source);
+            string url = _settings.GenericURL(searchDetails, source);
 
             //2. build the xml
             var searchRequest = BuildSearchXml(searchDetails, resortSplits, source);

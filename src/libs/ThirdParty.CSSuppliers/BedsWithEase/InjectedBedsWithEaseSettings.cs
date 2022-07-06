@@ -39,11 +39,6 @@
             return Get_Value("LanguageCode", tpAttributeSearch);
         }
 
-        public string LocationsURL(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("LocationsURL", tpAttributeSearch);
-        }
-
         public string SOAPStart(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("SOAPStart", tpAttributeSearch);
