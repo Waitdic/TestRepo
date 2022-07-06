@@ -60,13 +60,13 @@ export const SubscriptionView: FC<Props> = memo(({}) => {
               <div className='grow p-6 space-y-6 w-full divide-y divide-gray-200'>
                 <div className='flex flex-col gap-5 mb-8'>
                   <div className='flex-1'>
-                    <SectionTitle title='Subscription' />
+                    <SectionTitle title='Authentication' />
                   </div>
                   {subscriptions.length > 0 ? (
                     <>
                       <div className='flex-1 md:w-1/2'>
                         <h4 className='block text-sm font-medium mb-1'>
-                          Authentication
+                          Username
                         </h4>
                         <p className='text-sm'>
                           {currentSubscription?.userName}
