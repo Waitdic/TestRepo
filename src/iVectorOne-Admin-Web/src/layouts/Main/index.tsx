@@ -37,7 +37,7 @@ const Dashboard: React.FC<Props> = ({
   }, [isLoading, user]);
 
   return (
-    <div className='flex h-screen overflow-hidden'>
+    <div className='flex h-screen overflow-hidden w-full'>
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 

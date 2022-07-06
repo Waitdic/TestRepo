@@ -23,11 +23,11 @@ const DropdownMenu: FC<Props> = ({
 
   return (
     <Menu as='div' className='ml-3 relative'>
-      <div className='flex gap-1'>
-        <Menu.Button className='max-w-xs flex items-center text-sm focus:outline-none'>
+      <div className='flex'>
+        <Menu.Button className='max-w-xs flex gap-1 items-center text-sm focus:outline-none'>
           {children}
+          {getStaticSVGIcon('chevronDown', 'w-5 h-5')}
         </Menu.Button>
-        {getStaticSVGIcon('chevronDown', 'w-5 h-5')}
       </div>
       <Transition
         as={Fragment}

@@ -13,11 +13,10 @@
   --primary-color: #125c13; //? This CSS variable could be changed later for the custom theme color
 }
 
-#root {
+#amplify-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
+  width: 100%;
 }
 
 body {

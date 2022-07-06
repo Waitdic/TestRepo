@@ -23,21 +23,24 @@ type Props = StateProps;
 
 const App: FC<Props> = ({ app }) => {
   return (
-    <Authenticator
-      hideSignUp
-      components={{
-        Header,
-        SignIn: {
-          Header: SignInHeader,
-          Footer: SignInFooter,
-        },
-        Footer,
-      }}
-    >
-      {({ user }: { user: { username: string } }) => (
-        <AppProvider app={app} user={user} />
-      )}
-    </Authenticator>
+    <div id='amplify-container'>
+      <Authenticator
+        className='mx-auto'
+        hideSignUp
+        components={{
+          Header,
+          SignIn: {
+            Header: SignInHeader,
+            Footer: SignInFooter,
+          },
+          Footer,
+        }}
+      >
+        {({ user }: { user: { username: string } }) => (
+          <AppProvider app={app} user={user} />
+        )}
+      </Authenticator>
+    </div>
   );
 };
 
