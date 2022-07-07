@@ -64,6 +64,7 @@
             {
                 var subscription = new Subscription()
                 {
+                    SubscriptionID = sqlSubscription.SubscriptionID,
                     Login = sqlSubscription.Login!,
                     Password = sqlSubscription.Password!,
                     Environment = sqlSubscription.Environment!,

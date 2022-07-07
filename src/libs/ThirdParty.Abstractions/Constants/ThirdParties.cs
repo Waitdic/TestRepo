@@ -96,7 +96,7 @@
         public const string HOTELSTON = "Hotelston";
 
         /// <summary>
-        /// The third party BookABed
+        /// The third party Imperatore
         /// </summary>
         public const string IMPERATORE = "Imperatore";
 
@@ -286,7 +286,7 @@
         public const string TRAVELGATEIXPIRA = "TravelgateIxpira";
 
         /// <summary>
-        /// The third party TravelgateViajesOlympia
+        /// The third party TravelgateMethabook
         /// </summary>
         public const string TRAVELGATEMETHABOOK = "TravelgateMethabook";
 

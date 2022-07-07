@@ -170,6 +170,6 @@
         /// <summary>
         /// Gets or sets the paging token collector
         /// </summary>
-        public IPagingTokenCollector PagingTokenCollector { get; set; }
+        public IPagingTokenCollector? PagingTokenCollector { get; set; }
     }
 }

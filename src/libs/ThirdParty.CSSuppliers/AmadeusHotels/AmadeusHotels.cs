@@ -307,7 +307,7 @@
                 ContentType = ContentTypes.Text_xml,
                 SOAP = true,
                 SoapAction = soapAction,
-                DataMasking = dataMasking?.ToList()
+                DataMasking = dataMasking?.ToList() ?? new()
             };
             webRequest.SetRequest(sRequest);
             await webRequest.Send(_httpClient, _logger);

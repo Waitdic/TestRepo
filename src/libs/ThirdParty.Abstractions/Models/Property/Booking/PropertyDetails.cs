@@ -214,7 +214,7 @@
         /// <summary>
         /// Gets or sets The lead guest booking country identifier
         /// </summary>
-        public string LeadGuestCountryCode { get; set; }
+        public string LeadGuestCountryCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The lead guest phone

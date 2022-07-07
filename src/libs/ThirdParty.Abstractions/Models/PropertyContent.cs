@@ -17,7 +17,7 @@
         public string Source { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the property name.</summary>
-        public string PropertyName { get; set; }
+        public string PropertyName { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the geography code.</summary>
         public string GeographyCode { get; set; } = string.Empty;
