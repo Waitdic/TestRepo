@@ -10,8 +10,8 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 {
     public class SupplierSubscriptionHandler : IRequestHandler<SupplierSubscriptionRequest, SupplierSubscriptionResponse>
     {
-        private ConfigContext _context;
-        private IMapper _mapper;
+        private readonly ConfigContext _context;
+        private readonly IMapper _mapper;
 
         public SupplierSubscriptionHandler(ConfigContext context, IMapper mapper)
         {

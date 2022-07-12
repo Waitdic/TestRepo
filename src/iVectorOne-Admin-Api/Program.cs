@@ -110,14 +110,13 @@ app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplie
 }).RequireAuthorization();
 
 app.MapPut(
-        "tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattribute/{suppliersubscriptionattributeid}",
+        "tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattributes",
         async (IMediator mediator,
         HttpContext httpContext,
         [FromHeader(Name = "TenantKey")] Guid tenantKey,
         int tenantid,
         int subscriptionid,
         int supplierid,
-        int suppliersubscriptionattributeid,
         [FromBody] SupplierAttributeUpdateDTO updateRequest) =>
     {
         if (httpContext.User.Identity is not TenantIdentity identity)
@@ -133,8 +132,16 @@ app.MapPut(
             {
                 SubscriptionId = subscriptionid,
                 SupplierId = supplierid,
-                SupplierSubscriptionAttributeId = suppliersubscriptionattributeid,
-                UpdatedValue = updateRequest.value
+                Attributes = updateRequest
+            };
+            response = await mediator.Send(request);
+        }
+        catch (ValidationException ex)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x => x.ErrorMessage).ToArray() } });
+        }
+        return Results.Ok(response);
+    }).RequireAuthorization();
             };
             response = await mediator.Send(request);
         }

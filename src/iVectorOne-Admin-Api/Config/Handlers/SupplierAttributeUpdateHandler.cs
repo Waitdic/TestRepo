@@ -9,13 +9,11 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 {
     public class SupplierAttributeUpdateHandler : IRequestHandler<SupplierAttributeUpdateRequest, SupplierAttributeUpdateResponse>
     {
-        private ConfigContext _context;
-        private IMapper _mapper;
+        private readonly ConfigContext _context;
 
         public SupplierAttributeUpdateHandler(ConfigContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         async Task<SupplierAttributeUpdateResponse> IRequestHandler<SupplierAttributeUpdateRequest, SupplierAttributeUpdateResponse>.Handle(SupplierAttributeUpdateRequest request, CancellationToken cancellationToken)
@@ -25,9 +23,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId)
                                             .Include(t => t.Subscriptions.Where(s => s.SubscriptionId == request.SubscriptionId))
                                             .ThenInclude(s => s.SupplierSubscriptionAttributes
-                                                            .Where(ssa =>
-                                                                    ssa.SupplierSubscriptionAttributeId == request.SupplierSubscriptionAttributeId
-                                                                    && ssa.SupplierAttribute.SupplierId == request.SupplierId))
+                                                            .Where(ssa => ssa.SupplierAttribute.SupplierId == request.SupplierId))
                                             .FirstOrDefault();
 
             if (tenant is null)
@@ -47,16 +43,23 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 
             if (!warnings.Any())
             {
-                try
+                foreach (var attribute in request.Attributes)
                 {
-                    var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault()!;
-                    supplierSubAttribute.Value = request.UpdatedValue;
-                    await _context.SaveChangesAsync();
-                    success = true;
+                    try
+                    {
+                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x=> x.SupplierSubscriptionAttributeId == attribute.ID)!;
+                        supplierSubAttribute.Value = attribute.Value;                        
+                        success = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        success = false;
+                        warnings.Add(ex.Message.ToString());
+                    }
                 }
-                catch (Exception ex)
+                if (_context.ChangeTracker.HasChanges())
                 {
-                    warnings.Add(ex.Message.ToString());
+                    await _context.SaveChangesAsync();
                 }
             }
 
