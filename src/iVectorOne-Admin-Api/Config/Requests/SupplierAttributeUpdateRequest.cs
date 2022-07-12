@@ -14,6 +14,6 @@ namespace iVectorOne_Admin_Api.Config.Requests
         public int TenantId { get; set; }
         public int SubscriptionId { get; set; }
         public int SupplierId { get; set; }
-        public List<SupplierAttributeItem> Attributes { get; set; } = new List<SupplierAttributeItem>();
+        public List<SupplierSubscriptionAttributeItem> Attributes { get; set; } = new List<SupplierSubscriptionAttributeItem>();
     }
 }

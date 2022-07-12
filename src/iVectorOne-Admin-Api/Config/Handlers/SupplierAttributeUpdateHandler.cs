@@ -47,14 +47,14 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 {
                     try
                     {
-                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x=> x.SupplierSubscriptionAttributeId == attribute.ID)!;
+                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x=> x.SupplierSubscriptionAttributeId == attribute.SupplierSubscriptionAttributeID)!;
                         supplierSubAttribute.Value = attribute.Value;                        
                         success = true;
                     }
                     catch (Exception ex)
                     {
                         success = false;
-                        warnings.Add(ex.Message.ToString());
+                        warnings.Add($"Could not update value for attribute {attribute.SupplierSubscriptionAttributeID}");
                     }
                 }
                 if (_context.ChangeTracker.HasChanges())
