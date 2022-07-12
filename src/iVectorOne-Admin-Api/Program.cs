@@ -142,12 +142,37 @@ app.MapPut(
         }
         return Results.Ok(response);
     }).RequireAuthorization();
+
+app.MapPut("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}",
+    async (IMediator mediator,
+            HttpContext httpContext,
+            [FromHeader(Name = "TenantKey")] Guid tenantKey,
+            int tenantid,
+            int subscriptionid,
+            int supplierid,
+            [FromBody] SupplierSubscriptionUpdateDTO updateRequest) =>
+    {
+        if (httpContext.User.Identity is not TenantIdentity identity)
+        {
+            return Results.Challenge();
+        }
+
+        SupplierSubscriptionUpdateResponse response = default;
+
+        try
+        {
+            var request = new SupplierSubscriptionUpdateRequest(tenantid)
+            {
+                TenantId = tenantid,
+                SubscriptionId = subscriptionid,
+                SupplierId = supplierid,
+                Enabled = updateRequest.Enabled
             };
             response = await mediator.Send(request);
         }
         catch (ValidationException ex)
         {
-            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x=>x.ErrorMessage).ToArray() } });
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x => x.ErrorMessage).ToArray() } });
         }
         return Results.Ok(response);
     }).RequireAuthorization();

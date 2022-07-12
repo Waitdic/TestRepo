@@ -2,7 +2,8 @@
 	[SupplierSubscriptionID] [int] IDENTITY(1,1) NOT NULL,
 	[SupplierID] [smallint] NOT NULL,
 	[SubscriptionID] [int] NOT NULL,
- CONSTRAINT [PK_SupplierSubscription_1] PRIMARY KEY NONCLUSTERED 
+	[Enabled] BIT NOT NULL DEFAULT 0, 
+    CONSTRAINT [PK_SupplierSubscription_1] PRIMARY KEY NONCLUSTERED 
 (
 	[SupplierSubscriptionID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
