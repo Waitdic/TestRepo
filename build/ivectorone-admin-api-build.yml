@@ -34,7 +34,7 @@ stages:
 - stage: build
 
   jobs:
-  - job:
+  - job: build
     displayName: 'Build the application'
     steps:
 
@@ -42,6 +42,7 @@ stages:
       displayName: 'Set Version Number'
       inputs:
         targetType: 'inline'
+        name: setVersionNumber
         script: |
           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
           $minorVersion =  (Get-Date).ToString("dd")
@@ -149,7 +150,7 @@ stages:
   dependsOn:
   - build
   jobs:
-  - job:
+  - job: deploy
     displayName: 'Deploy to test'
     steps:
 
