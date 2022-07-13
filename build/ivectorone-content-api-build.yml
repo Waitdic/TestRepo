@@ -24,7 +24,7 @@ variables:
 - name:  codeDeployAppName
   value : 'IVOSearch'
 - name:  codeDeployGroupName
-  value : 'IVOSearch'
+  value : 'Content'
 
 stages:
 - stage: build

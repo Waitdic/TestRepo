@@ -9,6 +9,7 @@
     using Newtonsoft.Json;
     using TPImport.Local.Properties;
 
+    [ScheduledJob("Own Stock Import", trigger: TriggerType.Once)]
     public class OwnStockPropertyImportJob : IScheduledJob
     {
         private readonly ISql _sql;

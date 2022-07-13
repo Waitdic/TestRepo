@@ -41,8 +41,6 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
                 roomDetails = RoomWithOneAdult;
             }
 
-            var propertyReferenceIds = new List<int>() { 49886 };
-
             var searchDetails = new SearchDetails
             {
                 ArrivalDate = new DateTime(2021, 9, 1),
