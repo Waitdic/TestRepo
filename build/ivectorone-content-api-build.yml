@@ -139,9 +139,11 @@ stages:
     steps:
 
     - task: DownloadPipelineArtifact@2
+      variables:
+        buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']
       inputs:
         buildType: 'current'
-        artifactName: '$(project)_$[stageDependencies.build.build.outputs['setVersionNumber.appVersion']'
+        artifactName: '$(project)_$(buildAppVersion)'
         targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
 
     - task: PowerShell@2
