@@ -1,4 +1,4 @@
-import { NotificationStatus } from '@/constants';
+import { ConfigurationFormFieldTypes, NotificationStatus } from '@/constants';
 import { NetworkInterfaceInfoIPv4 } from 'os';
 import { ComponentProps } from 'react';
 
@@ -73,7 +73,7 @@ export type SupplierConfiguration = {
   key: string;
   name: string;
   order: number;
-  type: string;
+  type: ConfigurationFormFieldTypes;
   value?: number | string | boolean;
   defaultValue?: number | string | boolean;
   description?: string;

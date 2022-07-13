@@ -32,7 +32,7 @@ import { SubscriptionView } from '@/libs/core/subscription/view';
 
 type Props = {
   app: { theme: string; lang: string };
-  user: { username?: string | undefined };
+  user: { username: string | undefined };
 };
 
 const AppProvider: React.FC<Props> = ({ app, user }) => {

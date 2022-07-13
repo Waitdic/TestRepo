@@ -41,19 +41,17 @@ const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
 
           {/* Header: Right side */}
           <div className='flex items-center space-x-3'>
-            <TenantSelector />
-            {!!user?.fullName && (
-              <DropdownMenu
-                dropdownNavigation={[
-                  {
-                    name: 'Logout',
-                    action: Auth.signOut,
-                  },
-                ]}
-              >
-                {user?.fullName}
-              </DropdownMenu>
-            )}
+            {!!user?.tenants?.length && <TenantSelector />}
+            <DropdownMenu
+              dropdownNavigation={[
+                {
+                  name: 'Logout',
+                  action: Auth.signOut,
+                },
+              ]}
+            >
+              {user?.fullName}
+            </DropdownMenu>
           </div>
         </div>
       </div>

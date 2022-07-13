@@ -22,7 +22,7 @@ $daysWidth: $daySize * 7;
   width: $daysWidth + $calendarPadding * 2;
 }
 
-@screen lg {
+@media (min-width: 1200px) {
   .flatpickr-calendar {
     @apply left-0 right-auto;
     margin-left: 0;

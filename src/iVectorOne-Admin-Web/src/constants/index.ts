@@ -24,3 +24,12 @@ export enum NotificationStatus {
   SUCCESS = 'success',
   ERROR = 'error',
 }
+export enum ConfigurationFormFieldTypes {
+  BOOLEAN = 'Boolean',
+  DROPDOWN = 'Dropdown',
+  STRING = 'String',
+  NUMBER = 'Number',
+  URI = 'Uri',
+  EMAIL = 'Email',
+  PASSWORD = 'Password',
+}

@@ -8,7 +8,12 @@ import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
 import { SupplierConfiguration, SupplierFormFields } from '@/types';
-import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
+import {
+  ButtonColors,
+  ButtonVariants,
+  ConfigurationFormFieldTypes,
+  NotificationStatus,
+} from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
   SectionTitle,
@@ -33,7 +38,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Username',
       order: 1,
       required: true,
-      type: 'string',
+      type: ConfigurationFormFieldTypes.STRING,
     },
     {
       defaultValue: '',
@@ -44,7 +49,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Email Address',
       order: 2,
       required: true,
-      type: 'email',
+      type: ConfigurationFormFieldTypes.EMAIL,
     },
     {
       defaultValue: '',
@@ -55,7 +60,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Password',
       order: 3,
       required: true,
-      type: 'password',
+      type: ConfigurationFormFieldTypes.PASSWORD,
     },
     {
       description: '',
@@ -66,7 +71,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'dropdown_field',
       name: 'Language',
       order: 4,
-      type: 'dropdown',
+      type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
       description: '',
@@ -77,7 +82,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'dropdown_field',
       name: 'Currency',
       order: 5,
-      type: 'dropdown',
+      type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
       defaultValue: false,
@@ -85,7 +90,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'boolean_field',
       name: 'Allow Cancellations',
       order: 6,
-      type: 'boolean',
+      type: ConfigurationFormFieldTypes.BOOLEAN,
     },
     {
       description: '',
@@ -93,7 +98,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Supplier Reference',
       order: 7,
       required: true,
-      type: 'string',
+      type: ConfigurationFormFieldTypes.STRING,
     },
     {
       defaultValue: false,
@@ -101,7 +106,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'boolean_field',
       name: 'Use GZip',
       order: 8,
-      type: 'boolean',
+      type: ConfigurationFormFieldTypes.BOOLEAN,
     },
     {
       description: '',
@@ -109,7 +114,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Search URL',
       order: 9,
       required: true,
-      type: 'uri',
+      type: ConfigurationFormFieldTypes.URI,
     },
     {
       description: '',
@@ -117,7 +122,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Book URL',
       order: 10,
       required: true,
-      type: 'uri',
+      type: ConfigurationFormFieldTypes.URI,
     },
     {
       description: '',
@@ -125,7 +130,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Cancel URL',
       order: 11,
       required: true,
-      type: 'uri',
+      type: ConfigurationFormFieldTypes.URI,
     },
     {
       defaultValue: 0,
@@ -136,7 +141,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Offset Cancellation Days',
       order: 12,
       required: true,
-      type: 'number',
+      type: ConfigurationFormFieldTypes.NUMBER,
     },
     {
       description: '',
@@ -147,7 +152,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'dropdown_field',
       name: 'Nationality',
       order: 13,
-      type: 'dropdown',
+      type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
       description: '',
@@ -155,7 +160,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Pre Book URL',
       order: 14,
       required: true,
-      type: 'uri',
+      type: ConfigurationFormFieldTypes.URI,
     },
     {
       description: '',
@@ -163,7 +168,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       name: 'Accommodation Types',
       order: 15,
       required: true,
-      type: 'string',
+      type: ConfigurationFormFieldTypes.STRING,
     },
     {
       defaultValue: false,
@@ -171,7 +176,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       key: 'boolean_field',
       name: 'Request Package Rates',
       order: 16,
-      type: 'boolean',
+      type: ConfigurationFormFieldTypes.BOOLEAN,
     },
   ];
 

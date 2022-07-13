@@ -7,7 +7,7 @@ import {
   SupplierFormFields,
   SelectOption,
 } from '@/types';
-import { InputTypes } from '@/constants';
+import { ConfigurationFormFieldTypes, InputTypes } from '@/constants';
 import {
   Toggle,
   TextArea,
@@ -28,6 +28,246 @@ export const renderConfigurationFormFields = (
   }
   const configurationsSortedByOrder = sortBy(configurations, ['order']);
 
+  const renderConfigurationFormField = (
+    type: ConfigurationFormFieldTypes,
+    fieldConfig: {
+      idx: number;
+      key: string;
+      labelText: string;
+      description?: string;
+      required?: boolean;
+      value?: boolean | string | number;
+      errorMsg?: string;
+      minLength?: number;
+      maxLength?: number;
+      minNumberValue?: number;
+      maxNumberValue?: number;
+      dropdownOptions?: SelectOption[];
+      minItems?: number;
+      maxItems?: number;
+      editPresentation?: 'multilineText' | 'singlelineText';
+      pattern?: RegExp;
+      patternErrorMessage?: string;
+      defaultValue?: string | boolean | number;
+    }
+  ) => {
+    const {
+      idx,
+      key,
+      labelText,
+      description,
+      required,
+      value,
+      errorMsg,
+      minLength = 1,
+      maxLength = 999,
+      minNumberValue = Number.MIN_VALUE,
+      maxNumberValue = Number.MAX_VALUE,
+      dropdownOptions = [],
+      minItems = 1,
+      maxItems = 999,
+      editPresentation,
+      pattern,
+      patternErrorMessage,
+      defaultValue,
+    } = fieldConfig;
+    switch (type) {
+      case ConfigurationFormFieldTypes.BOOLEAN:
+        return (
+          <Toggle
+            id={`configurations.${idx}.${key}`}
+            {...register(`configurations.${idx}.${key}`, {
+              required: {
+                value: !!required,
+                message: 'This field is required.',
+              },
+            })}
+            labelText={labelText}
+            description={description}
+            required={required}
+            defaultValue={Boolean(value)}
+            isDirty={!!errorMsg}
+            errorMsg={errorMsg}
+          />
+        );
+      case ConfigurationFormFieldTypes.DROPDOWN:
+        return (
+          <Select
+            id={`configurations.${idx}.${key}`}
+            {...register(`configurations.${idx}.${key}`)}
+            labelText={labelText}
+            description={description}
+            maxItems={maxItems}
+            minItems={minItems}
+            options={dropdownOptions}
+            defaultValue={value as unknown as SelectOption}
+          />
+        );
+      case ConfigurationFormFieldTypes.NUMBER:
+        return (
+          <TextField
+            id={`configurations.${idx}.${key}`}
+            type={InputTypes.NUMBER}
+            {...register(`configurations.${idx}.${key}`, {
+              required: {
+                value: !!required,
+                message: 'This field is required.',
+              },
+              min: {
+                value: minNumberValue,
+                message: `Minimum value ${minNumberValue}.`,
+              },
+              max: {
+                value: maxNumberValue,
+                message: `Maximum value ${maxNumberValue}.`,
+              },
+            })}
+            defaultValue={value as string}
+            labelText={labelText}
+            description={description}
+            isDirty={!!errorMsg}
+            errorMsg={errorMsg}
+            required={required}
+          />
+        );
+      case ConfigurationFormFieldTypes.STRING:
+        return (
+          <>
+            {editPresentation === 'multilineText' ? (
+              <TextArea
+                id={`configurations.${idx}.${key}`}
+                {...register(`configurations.${idx}.${key}`, {
+                  required: {
+                    value: !!required,
+                    message: 'This field is required.',
+                  },
+                  minLength: {
+                    value: minLength,
+                    message: `Minimum length ${minLength} characters.`,
+                  },
+                  maxLength: {
+                    value: maxLength,
+                    message: `Maximum length ${maxLength} characters.`,
+                  },
+                })}
+                defaultValue={value as string}
+                labelText={labelText}
+                description={description}
+                isDirty={!!errorMsg}
+                errorMsg={errorMsg}
+                required={required}
+              />
+            ) : (
+              <TextField
+                id={`configurations.${idx}.${key}`}
+                {...register(`configurations.${idx}.${key}`, {
+                  required: {
+                    value: !!required,
+                    message: 'This field is required.',
+                  },
+                  minLength: {
+                    value: minLength,
+                    message: `Minimum length ${minLength} characters.`,
+                  },
+                  maxLength: {
+                    value: maxLength,
+                    message: `Maximum length ${maxLength} characters.`,
+                  },
+                })}
+                labelText={labelText}
+                defaultValue={value as string}
+                description={description}
+                isDirty={!!errorMsg}
+                errorMsg={errorMsg}
+                required={required}
+              />
+            )}
+          </>
+        );
+      case ConfigurationFormFieldTypes.URI:
+        return (
+          <TextField
+            id={`configurations.${idx}.${key}`}
+            {...register(`configurations.${idx}.${key}`, {
+              required: {
+                value: !!required,
+                message: 'This field is required.',
+              },
+              pattern: {
+                value:
+                  pattern ||
+                  new RegExp(
+                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+                  ),
+                message:
+                  patternErrorMessage || 'This is not a valid url pattern.',
+              },
+            })}
+            labelText={labelText}
+            description={description}
+            defaultValue={value as string}
+            isDirty={!!errorMsg}
+            errorMsg={errorMsg}
+            required={required}
+          />
+        );
+      case ConfigurationFormFieldTypes.EMAIL:
+        return (
+          <TextField
+            id={`configurations.${idx}.${key}`}
+            type={InputTypes.EMAIL}
+            {...register(`configurations.${idx}.${key}`, {
+              required: {
+                value: !!required,
+                message: 'This field is required.',
+              },
+              pattern: {
+                value:
+                  pattern || new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i),
+                message:
+                  patternErrorMessage || 'This is not a valid email address.',
+              },
+            })}
+            defaultValue={value as string}
+            labelText={labelText}
+            description={description}
+            isDirty={!errorMsg}
+            errorMsg={errorMsg}
+            required={required}
+          />
+        );
+      case ConfigurationFormFieldTypes.PASSWORD:
+        return (
+          <TextField
+            id={`configurations.${idx}.${key}`}
+            type={InputTypes.PASSWORD}
+            {...register(`configurations.${idx}.${key}`, {
+              required: {
+                value: !!required,
+                message: 'This field is required.',
+              },
+              minLength: {
+                value: minLength,
+                message: `Minimum length ${minLength} characters.`,
+              },
+              maxLength: {
+                value: maxLength,
+                message: `Maximum length ${maxLength} characters.`,
+              },
+            })}
+            labelText={labelText}
+            description={description}
+            defaultValue={(defaultValue as string) || (value as string)}
+            isDirty={!!errorMsg}
+            errorMsg={errorMsg}
+            required={required}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return configurationsSortedByOrder.map(
     (
       {
@@ -47,7 +287,7 @@ export const renderConfigurationFormFields = (
         maxItems,
         pattern,
         patternErrorMessage,
-        format,
+        format: _format,
         required,
       },
       idx
@@ -58,183 +298,26 @@ export const renderConfigurationFormFields = (
 
       return (
         <div key={idx}>
-          {type === 'Boolean' ? (
-            <Toggle
-              id={`configurations.${idx}.${key}`}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-              })}
-              labelText={name}
-              description={description}
-              required={required}
-              defaultValue={Boolean(value)}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-            />
-          ) : type === 'Dropdown' && dropdownOptions ? (
-            <Select
-              id={`configurations.${idx}.${key}`}
-              {...register(`configurations.${idx}.${key}`)}
-              labelText={name}
-              description={description}
-              maxItems={maxItems}
-              minItems={minItems}
-              options={dropdownOptions}
-              defaultValue={value as unknown as SelectOption}
-            />
-          ) : type === 'String' && editPresentation === 'multilineText' ? (
-            <TextArea
-              id={`configurations.${idx}.${key}`}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                minLength: {
-                  value: minLength as number,
-                  message: `Minimum length ${minLength} characters.`,
-                },
-                maxLength: {
-                  value: maxLength as number,
-                  message: `Maximum length ${maxLength} characters.`,
-                },
-              })}
-              defaultValue={value as string}
-              labelText={name}
-              description={description}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          ) : type === 'Number' ? (
-            <TextField
-              id={`configurations.${idx}.${key}`}
-              type={InputTypes.NUMBER}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                min: {
-                  value: minimum as number,
-                  message: `Minimum value ${minimum}.`,
-                },
-                max: {
-                  value: maximum as number,
-                  message: `Maximum value ${maximum}.`,
-                },
-              })}
-              defaultValue={value as string}
-              labelText={name}
-              description={description}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          ) : type === 'Uri' ? (
-            <TextField
-              id={`configurations.${idx}.${key}`}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                pattern: {
-                  value:
-                    (pattern as unknown as RegExp) ||
-                    new RegExp(
-                      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                    ),
-                  message:
-                    (patternErrorMessage as string) ||
-                    'This is not a valid url pattern.',
-                },
-              })}
-              labelText={name}
-              description={description}
-              defaultValue={value as string}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          ) : type === 'Email' ? (
-            <TextField
-              id={`configurations.${idx}.${key}`}
-              type={InputTypes.EMAIL}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                pattern: {
-                  value:
-                    (pattern as unknown as RegExp) ||
-                    new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i),
-                  message:
-                    (patternErrorMessage as string) ||
-                    'This is not a valid email address.',
-                },
-              })}
-              defaultValue={value as string}
-              labelText={name}
-              description={description}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          ) : type === 'Password' ? (
-            <TextField
-              id={`configurations.${idx}.${key}`}
-              type={InputTypes.PASSWORD}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                minLength: {
-                  value: minLength as number,
-                  message: `Minimum length ${minLength} characters.`,
-                },
-                maxLength: {
-                  value: maxLength as number,
-                  message: `Maximum length ${maxLength} characters.`,
-                },
-              })}
-              labelText={name}
-              description={description}
-              defaultValue={(defaultValue as string) || (value as string)}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          ) : (
-            <TextField
-              id={`configurations.${idx}.${key}`}
-              {...register(`configurations.${idx}.${key}`, {
-                required: {
-                  value: required as boolean,
-                  message: 'This field is required.',
-                },
-                minLength: {
-                  value: minLength as number,
-                  message: `Minimum length ${minLength} characters.`,
-                },
-                maxLength: {
-                  value: maxLength as number,
-                  message: `Maximum length ${maxLength} characters.`,
-                },
-              })}
-              labelText={name}
-              defaultValue={value as string}
-              description={description}
-              isDirty={errorMsg as boolean}
-              errorMsg={errorMsg as string}
-              required={required}
-            />
-          )}
+          {renderConfigurationFormField(type, {
+            idx,
+            key,
+            labelText: name,
+            description,
+            required,
+            value,
+            errorMsg: errorMsg as string,
+            minLength,
+            maxLength,
+            minNumberValue: minimum,
+            maxNumberValue: maximum,
+            dropdownOptions,
+            minItems,
+            maxItems,
+            editPresentation,
+            pattern: pattern as unknown as RegExp,
+            patternErrorMessage,
+            defaultValue,
+          })}
         </div>
       );
     }
