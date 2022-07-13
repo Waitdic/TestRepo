@@ -21,14 +21,14 @@ variables:
   value: 'Release'
 - name:  appVersion
   value : ''
-- name:  iisFolder
-  value : 'D:\Websites\V1\iVectorOne_Admin'
-- name:  iisAppPool
-  value : 'Admin'
+- name: iisFolder
+  value : 'D:\Websites\iVectorOne'
+- name: iisAppPool
+  value : 'api.ivectorone.com'
 - name:  codeDeployAppName
-  value : 'IVOSearch'
-- name:  codeDeployGroupName
   value : 'Admin'
+- name:  codeDeployGroupName
+  value : 'IVOSearch'
 
 stages:
 - stage: build

@@ -33,7 +33,7 @@
             IMikiSettings settings,
             ITPSupport support,
             ISerializer serializer,
-            MemoryCache cache,
+            IMemoryCache cache,
             HttpClient httpClient,
             ILogger<Miki> logger)
         {

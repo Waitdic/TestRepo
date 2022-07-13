@@ -12,13 +12,11 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 {
     public class SupplierHandler : IRequestHandler<SupplierRequest, SupplierResponse>
     {
-        private ConfigContext _context;
-        private IMapper _mapper;
+        private readonly ConfigContext _context;
 
-        public SupplierHandler(ConfigContext context, IMapper mapper)
+        public SupplierHandler(ConfigContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         Task<SupplierResponse> IRequestHandler<SupplierRequest, SupplierResponse>.Handle(SupplierRequest request, CancellationToken cancellationToken)
@@ -38,7 +36,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 if (supplier != null)
                 {
                     supplierName = supplier?.SupplierName;
-                    if (subscription.SupplierSubscriptionAttributes != null && subscription.SupplierSubscriptionAttributes.Count() > 0)
+                    if (subscription.SupplierSubscriptionAttributes != null && subscription.SupplierSubscriptionAttributes.Any())
                     {
                         success = true;
                         foreach (var item in subscription.SupplierSubscriptionAttributes)

@@ -40,7 +40,7 @@
 
         /// <summary>Gets or sets the property name.</summary>
         [JsonPropertyName("PN")]
-        public string PropertyName { get; set; }
+        public string PropertyName { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the geography code</summary>
         [JsonPropertyName("GC")]

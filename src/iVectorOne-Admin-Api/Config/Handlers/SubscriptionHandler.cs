@@ -10,8 +10,8 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 {
     public class SubscriptionHandler : IRequestHandler<SubscriptionRequest, SubscriptionResponse>
     {
-        private ConfigContext _context;
-        private IMapper _mapper;
+        private readonly ConfigContext _context;
+        private readonly IMapper _mapper;
 
         public SubscriptionHandler(ConfigContext context, IMapper mapper)
         {
@@ -29,7 +29,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 
             if (tenant != null)
             {
-                subscription = tenant.Subscriptions.Where(s => s.SubscriptionId == request.SubscriptionId).FirstOrDefault();
+                subscription = tenant.Subscriptions.FirstOrDefault(s => s.SubscriptionId == request.SubscriptionId);
                 if (subscription != null)
                 {
                     subDTO = _mapper.Map<SubscriptionDTO>(subscription);

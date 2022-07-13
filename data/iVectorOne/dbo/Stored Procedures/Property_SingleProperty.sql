@@ -19,4 +19,3 @@ select Property.PropertyID, SubscriptionProperty.CentralPropertyID, Property.Sou
 		inner join SubscriptionProperty
 			on SubscriptionProperty.PropertyID = Property.PropertyID
 				and SubscriptionProperty.SubscriptionID = @subscriptionId
-

@@ -5,7 +5,7 @@
 
     public class SqlSubscription
     {
-        public int SubscriptionId { get; set; }
+        public int SubscriptionID { get; set; }
         public string? Login { get; set; }
         public string? Password { get; set; }
         public string? Environment { get; set; }

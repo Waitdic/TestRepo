@@ -161,6 +161,8 @@ namespace iVectorOne_Admin_Api.Config.Context
 
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
+                entity.Property(e => e.Enabled).HasDefaultValue(false);
+
                 entity.HasOne(d => d.Subscription)
                     .WithMany(p => p.SupplierSubscriptions)
                     .HasForeignKey(d => d.SubscriptionId)
@@ -249,10 +251,6 @@ namespace iVectorOne_Admin_Api.Config.Context
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_UserTenant_User");
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

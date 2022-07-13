@@ -13,7 +13,7 @@ builder.RegisterServices();
 var app = builder.Build();
 app.ConfigureApp();
 
-app.MapGet("users/{key}", async (IMediator mediator, string key) =>
+app.MapGet("v1/users/{key}", async (IMediator mediator, string key) =>
 {
     var request = new UserRequest(key);
     var user = await mediator.Send(request);
@@ -21,7 +21,7 @@ app.MapGet("users/{key}", async (IMediator mediator, string key) =>
     return Results.Ok(user);
 });
 
-app.MapGet("tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -43,7 +43,7 @@ app.MapGet("tenants/{tenantid}/subscriptions", async (IMediator mediator, HttpCo
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -65,7 +65,7 @@ app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -87,7 +87,7 @@ app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers", async 
     return Results.Ok(response);
 }).RequireAuthorization();
 
-app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
+app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
 {
     if (httpContext.User.Identity is not TenantIdentity identity)
     {
@@ -110,14 +110,13 @@ app.MapGet("tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplie
 }).RequireAuthorization();
 
 app.MapPut(
-        "tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattribute/{suppliersubscriptionattributeid}",
+        "v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattributes",
         async (IMediator mediator,
         HttpContext httpContext,
         [FromHeader(Name = "TenantKey")] Guid tenantKey,
         int tenantid,
         int subscriptionid,
         int supplierid,
-        int suppliersubscriptionattributeid,
         [FromBody] SupplierAttributeUpdateDTO updateRequest) =>
     {
         if (httpContext.User.Identity is not TenantIdentity identity)
@@ -133,14 +132,47 @@ app.MapPut(
             {
                 SubscriptionId = subscriptionid,
                 SupplierId = supplierid,
-                SupplierSubscriptionAttributeId = suppliersubscriptionattributeid,
-                UpdatedValue = updateRequest.value
+                Attributes = updateRequest
             };
             response = await mediator.Send(request);
         }
         catch (ValidationException ex)
         {
-            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x=>x.ErrorMessage).ToArray() } });
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x => x.ErrorMessage).ToArray() } });
+        }
+        return Results.Ok(response);
+    }).RequireAuthorization();
+
+app.MapPut("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}",
+    async (IMediator mediator,
+            HttpContext httpContext,
+            [FromHeader(Name = "TenantKey")] Guid tenantKey,
+            int tenantid,
+            int subscriptionid,
+            int supplierid,
+            [FromBody] SupplierSubscriptionUpdateDTO updateRequest) =>
+    {
+        if (httpContext.User.Identity is not TenantIdentity identity)
+        {
+            return Results.Challenge();
+        }
+
+        SupplierSubscriptionUpdateResponse response = default;
+
+        try
+        {
+            var request = new SupplierSubscriptionUpdateRequest(tenantid)
+            {
+                TenantId = tenantid,
+                SubscriptionId = subscriptionid,
+                SupplierId = supplierid,
+                Enabled = updateRequest.Enabled
+            };
+            response = await mediator.Send(request);
+        }
+        catch (ValidationException ex)
+        {
+            return Results.ValidationProblem(new Dictionary<string, string[]> { { "Validation Error", ex.Errors.Select(x => x.ErrorMessage).ToArray() } });
         }
         return Results.Ok(response);
     }).RequireAuthorization();

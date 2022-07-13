@@ -6,6 +6,8 @@
         public short SupplierId { get; set; }
         public int SubscriptionId { get; set; }
 
+        public bool Enabled { get; set; }
+
         public virtual Subscription Subscription { get; set; } = null!;
         public virtual Supplier Supplier { get; set; } = null!;
     }

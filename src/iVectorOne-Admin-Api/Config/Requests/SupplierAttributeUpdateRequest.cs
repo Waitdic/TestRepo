@@ -1,4 +1,5 @@
-﻿using iVectorOne_Admin_Api.Config.Responses;
+﻿using iVectorOne_Admin_Api.Config.Models;
+using iVectorOne_Admin_Api.Config.Responses;
 using MediatR;
 
 namespace iVectorOne_Admin_Api.Config.Requests
@@ -13,7 +14,6 @@ namespace iVectorOne_Admin_Api.Config.Requests
         public int TenantId { get; set; }
         public int SubscriptionId { get; set; }
         public int SupplierId { get; set; }
-        public int SupplierSubscriptionAttributeId { get; set; }
-        public string UpdatedValue { get; set; } = string.Empty;
+        public List<SupplierSubscriptionAttributeItem> Attributes { get; set; } = new List<SupplierSubscriptionAttributeItem>();
     }
 }

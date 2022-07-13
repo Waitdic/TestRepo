@@ -1,7 +1,6 @@
 ﻿namespace iVectorOne_Admin_Api.Config.Models
 {
-    public class SupplierAttributeUpdateDTO
+    public class SupplierAttributeUpdateDTO : List<SupplierSubscriptionAttributeItem>
     {
-        public string value { get; set; } = string.Empty;
     }
 }

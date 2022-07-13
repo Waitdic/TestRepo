@@ -10,8 +10,8 @@ namespace iVectorOne_Admin_Api.Config.Handlers
 {
     public class TenantHandler : IRequestHandler<TenantRequest, TenantResponse>
     {
-        private ConfigContext _context;
-        private IMapper _mapper;
+        private readonly ConfigContext _context;
+        private readonly IMapper _mapper;
 
         public TenantHandler(ConfigContext context, IMapper mapper)
         {

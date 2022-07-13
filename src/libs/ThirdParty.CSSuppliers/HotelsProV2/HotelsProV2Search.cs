@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Xml;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
@@ -11,7 +10,6 @@
     using ThirdParty.Constants;
     using ThirdParty.CSSuppliers.HotelsProV2.Models;
     using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
     using ThirdParty.Models;
     using ThirdParty.Search.Models;
     using ThirdParty.Search.Results.Models;
