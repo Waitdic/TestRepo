@@ -36,9 +36,9 @@ stages:
 
     - task: PowerShell@2
       displayName: 'Set Version Number'
+      name: setVersionNumber
       inputs:
         targetType: 'inline'
-        name: setVersionNumber
         script: |
           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
           $minorVersion =  (Get-Date).ToString("dd")

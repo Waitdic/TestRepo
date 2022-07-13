@@ -36,9 +36,9 @@ stages:
 
     - task: PowerShell@2
       displayName: 'Set Version Number'
+      name: setVersionNumber
       inputs:
         targetType: 'inline'
-        name: setVersionNumber
         script: |
           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
           $minorVersion =  (Get-Date).ToString("dd")
@@ -70,19 +70,20 @@ stages:
         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
         AddBuildTag: 'v$(appVersion)'
 
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'intuitive-systems'
-        scannerMode: 'MSBuild'
-        projectKey: 'Intuitive_iVectorOne_Content_Api'
-        projectName: 'iVectorOne Content Api'
+    #- task: SonarCloudPrepare@1
+    #  inputs:
+    #    SonarCloud: 'SonarCloud'
+    #    organization: 'intuitive-systems'
+    #    scannerMode: 'MSBuild'
+    #    projectKey: 'Intuitive_iVectorOne_Content_Api'
+    #    projectName: 'iVectorOne Content Api'
 
     - task: NuGetAuthenticate@1
       inputs:
         nuGetServiceConnections: 'Intuitive'
 
     - task: NuGetToolInstaller@1
+
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
@@ -108,10 +109,11 @@ stages:
         arguments: '-c $(buildConfiguration) --no-restore'
         testRunTitle: 'Unit Tests'
 
-    - task: SonarCloudAnalyze@1
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+    #- task: SonarCloudAnalyze@1
+
+    #- task: SonarCloudPublish@1
+    #  inputs:
+    #    pollingTimeoutSec: '300'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish Project'
