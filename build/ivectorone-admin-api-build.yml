@@ -26,9 +26,9 @@ variables:
 - name: iisAppPool
   value : 'api.ivectorone.com'
 - name:  codeDeployAppName
-  value : 'Admin'
-- name:  codeDeployGroupName
   value : 'IVOSearch'
+- name:  codeDeployGroupName
+  value : 'Admin'
 
 stages:
 - stage: build
