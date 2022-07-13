@@ -137,7 +137,7 @@ stages:
   - job: deploy
     displayName: 'Deploy to test'
     variables:
-      buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']
+      buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']]
     steps:
 
     - task: DownloadPipelineArtifact@2

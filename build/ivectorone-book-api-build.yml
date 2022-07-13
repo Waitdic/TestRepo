@@ -8,9 +8,9 @@ pool:
 
 variables:
 - name : project
-  value: 'iVectorOne-Search-Api'
+  value: 'iVectorOne-Book-Api'
 - name : testProject
-  value: 'iVectorOne-Search-Api-BuildTests'
+  value: 'iVectorOne-Book-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
@@ -58,8 +58,8 @@ stages:
         FailOnWarning: false
         DisableTelemetry: false
         Company: 'Intuitive Systems'
-        Product: 'iVectorOne Search Api'
-        Description: 'iVectorOne Search Api'
+        Product: 'iVectorOne Book Api'
+        Description: 'iVectorOne Book Api'
         Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
         Culture: 'en-GB'
         VersionNumber: '$(appVersion)'
@@ -75,8 +75,8 @@ stages:
         SonarCloud: 'SonarCloud'
         organization: 'intuitive-systems'
         scannerMode: 'MSBuild'
-        projectKey: 'Intuitive_iVectorOne_Search_Api'
-        projectName: 'iVectorOne Search Api'
+        projectKey: 'Intuitive_iVectorOne_Book_Api'
+        projectName: 'iVectorOne Book Api'
 
     - task: NuGetAuthenticate@1
       inputs:
@@ -137,7 +137,7 @@ stages:
   - job: deploy
     displayName: 'Deploy to test'
     variables:
-      buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']
+      buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']]
     steps:
 
     - task: DownloadPipelineArtifact@2
