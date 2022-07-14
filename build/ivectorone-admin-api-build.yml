@@ -220,6 +220,12 @@ stages:
 #     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
 #     #     globExpressions: '*.zip'
 
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+        publishLocation: 'pipeline'
+        artifactName: '$(project)-$(appVersion)'
+        
     - task: CodeDeployDeployApplication@1
       displayName: 'Push Artifact to AWS'
       inputs:
@@ -231,8 +237,3 @@ stages:
         revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         bucketName: 'ivectorone-codedeploy'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
-        publishLocation: 'pipeline'
-        artifactName: '$(project)-$(appVersion)'
