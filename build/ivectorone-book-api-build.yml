@@ -146,12 +146,12 @@ stages:
         artifact: 'drop'
         publishLocation: 'pipeline'
 
-- stage: deploy_test
+- stage: deploy_prod
   dependsOn:
   - build
   jobs:
   - job: deploy
-    displayName: 'Deploy to test'
+    displayName: 'Deploy to production'
     steps:
 
     - task: DownloadPipelineArtifact@2
