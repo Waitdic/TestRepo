@@ -2,6 +2,10 @@ trigger:
   branches:
     include:
     - main
+  paths:
+    include:
+    - src/iVectorOne-Content-Api
+    - tests/iVectorOne-Content-Api-BuildTests
 
 pool:
   vmImage: 'windows-latest'
@@ -17,9 +21,9 @@ variables:
   value: 'Release'
 - name:  appVersion
   value : ''
-- name:  iisFolder
+- name: iisFolder
   value : 'D:\Websites\iVectorOne'
-- name:  iisAppPool
+- name: iisAppPool
   value : 'api.ivectorone.com'
 - name:  codeDeployAppName
   value : 'IVOSearch'
@@ -36,9 +40,9 @@ stages:
 
     - task: PowerShell@2
       displayName: 'Set Version Number'
-      name: setVersionNumber
       inputs:
         targetType: 'inline'
+        name: setVersionNumber
         script: |
           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
           $minorVersion =  (Get-Date).ToString("dd")
@@ -57,10 +61,10 @@ stages:
         LogLevel: 'verbose'
         FailOnWarning: false
         DisableTelemetry: false
-        Company: 'Intuitive Systems'
+        Company: 'Intuitive'
         Product: 'iVectorOne Content Api'
         Description: 'iVectorOne Content Api'
-        Copyright: 'Copyright © $(date:YYYY) Intuitive Systems'
+        Copyright: 'Copyright © $(date:YYYY) Intuitive'
         Culture: 'en-GB'
         VersionNumber: '$(appVersion)'
         FileVersionNumber: '$(appVersion)'
@@ -70,13 +74,13 @@ stages:
         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
         AddBuildTag: 'v$(appVersion)'
 
-    #- task: SonarCloudPrepare@1
-    #  inputs:
-    #    SonarCloud: 'SonarCloud'
-    #    organization: 'intuitive-systems'
-    #    scannerMode: 'MSBuild'
-    #    projectKey: 'Intuitive_iVectorOne_Content_Api'
-    #    projectName: 'iVectorOne Content Api'
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'SonarCloud'
+        organization: 'intuitive-systems'
+        scannerMode: 'MSBuild'
+        projectKey: 'Intuitive_iVectorOne_Content_Api'
+        projectName: 'iVectorOne Content Api'
 
     - task: NuGetAuthenticate@1
       inputs:
@@ -94,43 +98,53 @@ stages:
         noCache: true
       continueOnError: true
 
+    # - task: DeleteFiles@1
+    #   inputs:
+    #     SourceFolder: 
+    #     Contents: 'nuget.config'
+
+    # - task: DotNetCoreCLI@2
+    #   displayName: 'Restore Project'
+    #   inputs:
+    #     command: 'restore'
+    #     projects: 'src/$(project)/**/*.csproj'
+    #     feedsToUse: 'select'
+    #     vstsFeed: '1e64d9c8-fa76-490a-9737-b3af093b191d/a6711c0f-6b61-449d-86e6-62d2f464d85d'
+
     - task: DotNetCoreCLI@2
       displayName: 'Build Project'
       inputs:
         command: 'build'
         projects: 'src/$(project)/**/*.csproj'
-        arguments: '-c $(buildConfiguration) -o $(build.artifactStagingDirectory) --no-restore'
+        arguments: '-c $(buildConfiguration) -o $(Build.artifactStagingDirectory)/code-deploy/source --no-restore'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test Project'
       inputs:
         command: 'test'
         projects: 'tests/$(testProject)**/*.csproj'
-        arguments: '-c $(buildConfiguration) --no-restore'
+        arguments: '-c $(buildConfiguration)'
         testRunTitle: 'Unit Tests'
 
-    #- task: SonarCloudAnalyze@1
+    - task: SonarCloudAnalyze@1
 
-    #- task: SonarCloudPublish@1
-    #  inputs:
-    #    pollingTimeoutSec: '300'
-
-    - task: DotNetCoreCLI@2
-      displayName: 'Publish Project'
+    - task: SonarCloudPublish@1
       inputs:
-        command: 'publish'
-        publishWebProjects: false
-        projects: 'src/$(project)/**/*.csproj'
-        arguments: '--no-restore -c $(buildConfiguration) -o $(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-        zipAfterPublish: True
-        modifyOutputPath: false
+        pollingTimeoutSec: '300'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Build Artifacts'
+    - task: PowerShell@2
+      displayName: 'Save version info for later stages'
       inputs:
-        PathtoPublish: '$(build.artifactStagingDirectory)/$(project)_$(appVersion)'
-        ArtifactName: '$(project)_$(appVersion)'
-        publishLocation: 'Container'
+        targetType: 'inline'
+        script: |
+          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "version.txt" -ItemType "file" -Value $(appVersion)
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish pipeline artifact'
+      inputs:
+        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
+        artifact: 'drop'
+        publishLocation: 'pipeline'
 
 - stage: deploy_test
   dependsOn:
@@ -138,14 +152,12 @@ stages:
   jobs:
   - job: deploy
     displayName: 'Deploy to test'
-    variables:
-      buildAppVersion: $[stageDependencies.build.build.outputs['setVersionNumber.appVersion']]
     steps:
 
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
-        artifactName: '$(project)_$(buildAppVersion)'
+        artifactName: 'drop'
         targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
 
     - task: PowerShell@2
@@ -200,6 +212,20 @@ stages:
         archiveFile: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         replaceExistingArchive: true
 
+#     # - task: S3Upload@1
+#     #   inputs:
+#     #     awsCredentials: 'AWS S3 Bucket for Code Deploy'
+#     #     regionName: 'eu-west-1'
+#     #     bucketName: 'ivectorone-codedeploy'
+#     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
+#     #     globExpressions: '*.zip'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+        publishLocation: 'pipeline'
+        artifactName: '$(project)-$(appVersion)'
+        
     - task: CodeDeployDeployApplication@1
       displayName: 'Push Artifact to AWS'
       inputs:
@@ -211,8 +237,3 @@ stages:
         revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
         bucketName: 'ivectorone-codedeploy'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
-        publishLocation: 'pipeline'
-        artifactName: '$(project)-$(appVersion)'
