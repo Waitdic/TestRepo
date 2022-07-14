@@ -30,6 +30,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
   const supplierInfoError = null;
   const configurations: SupplierConfiguration[] = [
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: '',
       description: '',
       key: 'string_field',
@@ -41,6 +44,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.STRING,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: '',
       description: '',
       key: 'email_field',
@@ -52,6 +58,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.EMAIL,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: '',
       description: '',
       key: 'password_field',
@@ -63,6 +72,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.PASSWORD,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       dropdownOptions: [
         { id: 'en', name: 'English' },
@@ -74,6 +86,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       dropdownOptions: [
         { id: 'eur', name: 'EUR' },
@@ -85,6 +100,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: false,
       description: '',
       key: 'boolean_field',
@@ -93,6 +111,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.BOOLEAN,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'string_field',
       name: 'Supplier Reference',
@@ -101,6 +122,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.STRING,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: false,
       description: '',
       key: 'boolean_field',
@@ -109,6 +133,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.BOOLEAN,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'uri_field',
       name: 'Search URL',
@@ -117,6 +144,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.URI,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'uri_field',
       name: 'Book URL',
@@ -125,6 +155,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.URI,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'uri_field',
       name: 'Cancel URL',
@@ -133,6 +166,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.URI,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: 0,
       description: '',
       key: 'number_field',
@@ -144,6 +180,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.NUMBER,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       dropdownOptions: [
         { id: 'gb', name: 'GB' },
@@ -155,6 +194,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.DROPDOWN,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'uri_field',
       name: 'Pre Book URL',
@@ -163,6 +205,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.URI,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       description: '',
       key: 'string_field',
       name: 'Accommodation Types',
@@ -171,6 +216,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
       type: ConfigurationFormFieldTypes.STRING,
     },
     {
+      supplierSubscriptionAttributeID: Number(
+        Math.round(Math.random() * 100).toFixed(0)
+      ),
       defaultValue: false,
       description: '',
       key: 'boolean_field',
