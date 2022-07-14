@@ -10,6 +10,12 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+parameters:
+- name: deploy
+  displayName: Deploy to Production?
+  type: boolean
+  default: false
+
 variables:
 - name : project
   value: 'iVectorOne-Admin-Api'
@@ -26,15 +32,15 @@ variables:
 - name: iisAppPool
   value : 'api.ivectorone.com'
 - name:  codeDeployAppName
-  value : 'Admin'
-- name:  codeDeployGroupName
   value : 'IVOSearch'
+- name:  codeDeployGroupName
+  value : 'Admin'
 
 stages:
 - stage: build
 
   jobs:
-  - job:
+  - job: build
     displayName: 'Build the application'
     steps:
 
@@ -42,6 +48,7 @@ stages:
       displayName: 'Set Version Number'
       inputs:
         targetType: 'inline'
+        name: setVersionNumber
         script: |
           $majorVersion = (Get-Date).ToString("yy") + (Get-Date).ToString("MM")
           $minorVersion =  (Get-Date).ToString("dd")
@@ -145,93 +152,95 @@ stages:
         artifact: 'drop'
         publishLocation: 'pipeline'
 
-- stage: deploy_test
-  dependsOn:
-  - build
-  jobs:
-  - job:
-    displayName: 'Deploy to test'
-    steps:
+- ${{ if eq(parameters.deploy, true) }}:
+  - stage: deploy_prd
+    dependsOn:
+    - build
+    jobs:
+    - job: deploy
+      displayName: 'Deploy to production'
+      steps:
 
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        buildType: 'current'
-        artifactName: 'drop'
-        targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'drop'
+          targetPath: '$(Build.artifactStagingDirectory)/code-deploy/'
 
-    - task: PowerShell@2
-      displayName: 'Create appspec.yml'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $appSpecContent = "{0}: 0.0 `n" -f "version"
-          $appSpecContent += "{0}: windows `n" -f "os"
-          $appSpecContent += "{0}: `n" -f "files"
-          $appSpecContent += "  - {0}: \source\ `n" -f "source"
-          $appSpecContent += "    {0}: D`:\builds\$(project) `n" -f "destination"
-          $appSpecContent += "{0}: `n" -f "hooks"
-          $appSpecContent += "  {0}: `n" -f "AfterInstall"
-          $appSpecContent += "    - {0}: scripts\DeployUpdate.bat`n" -f "location"
-          $appSpecContent += "      {0}: 180`n" -f "timeout"
+      - task: PowerShell@2
+        displayName: 'Create appspec.yml'
+        inputs:
+          targetType: 'inline'
+          script: |
+            $appSpecContent = "{0}: 0.0 `n" -f "version"
+            $appSpecContent += "{0}: windows `n" -f "os"
+            $appSpecContent += "{0}: `n" -f "files"
+            $appSpecContent += "  - {0}: \source\ `n" -f "source"
+            $appSpecContent += "    {0}: D`:\builds\$(project) `n" -f "destination"
+            $appSpecContent += "{0}: `n" -f "hooks"
+            $appSpecContent += "  {0}: `n" -f "AfterInstall"
+            $appSpecContent += "    - {0}: scripts\DeployUpdate.bat`n" -f "location"
+            $appSpecContent += "      {0}: 180`n" -f "timeout"
 
-          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
-          New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
-          New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
+            New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy" -ItemType "directory"
+            New-Item -Path $(Build.artifactStagingDirectory) -Force -Name "code-deploy/scripts" -ItemType "directory"
+            New-Item -Path "$(Build.artifactStagingDirectory)/code-deploy" -Name "appspec.yml" -ItemType "file" -Value $appSpecContent
 
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: $(Build.Repository.LocalPath)/build/scripts
-        Contents: '**'
-        TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: $(Build.Repository.LocalPath)/build/scripts
+          Contents: '**'
+          TargetFolder: $(Build.artifactStagingDirectory)/code-deploy/scripts
 
-    - task: PowerShell@2
-      displayName: 'Update deploy script paths'
-      inputs:
-        targetType: 'inline'
-        script: |
-          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{source}', 'D:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
-          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', '$(iisFolder)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
-          (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{apppool}', '$(iisAppPool)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+      - task: PowerShell@2
+        displayName: 'Update deploy script paths'
+        inputs:
+          targetType: 'inline'
+          script: |
+            (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{source}', 'D:\builds\$(project)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+            (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{destination}', '$(iisFolder)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
+            (Get-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat) -Replace '{apppool}', '$(iisAppPool)' | Set-Content $(Build.artifactStagingDirectory)/code-deploy/scripts/DeployUpdate.bat
 
-    - task: PowerShell@2
-      displayName: 'Get version from build stage'
-      inputs:
-        targetType: 'inline'
-        script: |
-          $VersionString = Get-Content $(Build.artifactStagingDirectory)/code-deploy/version.txt
-          $VersionString = $VersionString.replace(".", "-")
-          Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
+      - task: PowerShell@2
+        displayName: 'Get version from build stage'
+        inputs:
+          targetType: 'inline'
+          script: |
+            $VersionString = Get-Content $(Build.artifactStagingDirectory)/code-deploy/version.txt
+            $VersionString = $VersionString.replace(".", "-")
+            Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
-    - task: ArchiveFiles@2
-      displayName: 'Create code deploy zip'
-      inputs:
-        rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
-        includeRootFolder: false
-        archiveType: 'zip'
-        archiveFile: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
-        replaceExistingArchive: true
+      - task: ArchiveFiles@2
+        displayName: 'Create code deploy zip'
+        inputs:
+          rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/code-deploy'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+          replaceExistingArchive: true
 
-#     # - task: S3Upload@1
-#     #   inputs:
-#     #     awsCredentials: 'AWS S3 Bucket for Code Deploy'
-#     #     regionName: 'eu-west-1'
-#     #     bucketName: 'ivectorone-codedeploy'
-#     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
-#     #     globExpressions: '*.zip'
+  #     # - task: S3Upload@1
+  #     #   inputs:
+  #     #     awsCredentials: 'AWS S3 Bucket for Code Deploy'
+  #     #     regionName: 'eu-west-1'
+  #     #     bucketName: 'ivectorone-codedeploy'
+  #     #     sourceFolder: '$(Build.ArtifactStagingDirectory)'
+  #     #     globExpressions: '*.zip'
 
-    - task: CodeDeployDeployApplication@1
-      displayName: 'Push Artifact to AWS'
-      inputs:
-        awsCredentials: 'AWS S3 Bucket for Code Deploy'
-        regionName: 'eu-west-1'
-        applicationName: $(codeDeployAppName)
-        deploymentGroupName: $(codeDeployGroupName)
-        deploymentRevisionSource: 'workspace'
-        revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
-        bucketName: 'ivectorone-codedeploy'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+          publishLocation: 'pipeline'
+          artifactName: '$(project)-$(appVersion)'
+          
+      - task: CodeDeployDeployApplication@1
+        displayName: 'Push Artifact to AWS'
+        inputs:
+          awsCredentials: 'AWS S3 Bucket for Code Deploy'
+          regionName: 'eu-west-1'
+          applicationName: $(codeDeployAppName)
+          deploymentGroupName: $(codeDeployGroupName)
+          deploymentRevisionSource: 'workspace'
+          revisionBundle: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
+          bucketName: 'ivectorone-codedeploy'
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(project)-$(appVersion).zip'
-        publishLocation: 'pipeline'
-        artifactName: '$(project)-$(appVersion)'

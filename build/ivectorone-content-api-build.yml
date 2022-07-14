@@ -4,17 +4,17 @@ trigger:
     - main
   paths:
     include:
-    - src/iVectorOne-Search-Api
-    - tests/iVectorOne-Search-Api-BuildTests
+    - src/iVectorOne-Content-Api
+    - tests/iVectorOne-Content-Api-BuildTests
 
 pool:
   vmImage: 'windows-latest'
 
 variables:
 - name : project
-  value: 'iVectorOne-Search-Api'
+  value: 'iVectorOne-Content-Api'
 - name : testProject
-  value: 'iVectorOne-Search-Api-BuildTests'
+  value: 'iVectorOne-Content-Api-BuildTests'
 - name: buildPlatform
   value: 'Any CPU'
 - name: buildConfiguration
@@ -28,7 +28,7 @@ variables:
 - name:  codeDeployAppName
   value : 'IVOSearch'
 - name:  codeDeployGroupName
-  value : 'IVOSearch'
+  value : 'Content'
 
 stages:
 - stage: build
@@ -62,8 +62,8 @@ stages:
         FailOnWarning: false
         DisableTelemetry: false
         Company: 'Intuitive'
-        Product: 'iVectorOne Search Api'
-        Description: 'iVectorOne Search Api'
+        Product: 'iVectorOne Content Api'
+        Description: 'iVectorOne Content Api'
         Copyright: 'Copyright © $(date:YYYY) Intuitive'
         Culture: 'en-GB'
         VersionNumber: '$(appVersion)'
@@ -74,13 +74,13 @@ stages:
         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
         AddBuildTag: 'v$(appVersion)'
 
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'intuitive-systems'
-        scannerMode: 'MSBuild'
-        projectKey: 'Intuitive_iVectorOne_Search_Api'
-        projectName: 'iVectorOne Search Api'
+    # - task: SonarCloudPrepare@1
+    #   inputs:
+    #     SonarCloud: 'SonarCloud'
+    #     organization: 'intuitive-systems'
+    #     scannerMode: 'MSBuild'
+    #     projectKey: 'Intuitive_iVectorOne_Content_Api'
+    #     projectName: 'iVectorOne Content Api'
 
     - task: NuGetAuthenticate@1
       inputs:
@@ -126,11 +126,11 @@ stages:
         arguments: '-c $(buildConfiguration)'
         testRunTitle: 'Unit Tests'
 
-    - task: SonarCloudAnalyze@1
+    # - task: SonarCloudAnalyze@1
 
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+    # - task: SonarCloudPublish@1
+    #   inputs:
+    #     pollingTimeoutSec: '300'
 
     - task: PowerShell@2
       displayName: 'Save version info for later stages'
@@ -146,12 +146,12 @@ stages:
         artifact: 'drop'
         publishLocation: 'pipeline'
 
-- stage: deploy_test
+- stage: deploy_prod
   dependsOn:
   - build
   jobs:
   - job: deploy
-    displayName: 'Deploy to test'
+    displayName: 'Deploy to production'
     steps:
 
     - task: DownloadPipelineArtifact@2

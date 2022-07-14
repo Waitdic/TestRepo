@@ -1,10 +1,9 @@
 ﻿namespace ThirdParty.SDK.V2.PropertyPrebook
 {
     using System.Collections.Generic;
-    using System.Text.Json.Serialization;
     using ThirdParty.SDK.V2.PropertySearch;
 
-    public record Response
+    public record Response : ResponseBase
     {
         /// <summary>
         /// Gets or sets the booking token.
@@ -36,10 +35,5 @@
         /// Gets or sets the errata.
         /// </summary>
         public List<string> Errata { get; set; } = new List<string>();
-
-        /// <summary>Any warnings raised on the pre book response</summary>
-        /// <value>The warnings.</value>
-        [JsonIgnore]
-        public List<string> Warnings { get; set; } = new List<string>();
     }
 }

@@ -53,6 +53,8 @@
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status200OK);
 
+            _ = endpoints.MapGet("/healthcheck", () => "Hello World!");
+
             return endpoints;
         }
     }
