@@ -22,16 +22,7 @@
 
         public static IServiceCollection RegisterWebServices(this IServiceCollection services, ConfigurationManager config)
         {
-            var userLoginMethod = config.GetValue<string>("UserLoginMethod");
-
-            if (userLoginMethod == "SQL")
-            {
-                services.AddSingleton<IAuthenticationProvider, SqlAuthenticationProvider>();
-            }
-            else
-            {
-                services.AddSingleton<IAuthenticationProvider, FileAuthenticationProvider>();
-            }
+            services.AddSingleton<IAuthenticationProvider, SqlAuthenticationProvider>();
 
             services.AddAuthentication("BasicAuthentication")
                 .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -62,17 +53,23 @@
 
         public static async Task<IResult> ExecuteRequest<TRequest, TResponse>(HttpContext httpContext, IMediator mediator, TRequest request)
             where TRequest : RequestBase, IRequest<TResponse>
+            where TResponse : ResponseBase, new()
         {
             if (httpContext.User.Identity is not AuthenticationIdentity identity)
             {
                 return Results.Challenge();
             }
             request.User = identity.User;
-            TResponse? response = default;
+            var response = new TResponse();
 
             try
             {
                 response = await mediator.Send(request);
+
+                if (response.Warnings.Any())
+                {
+                    return Results.BadRequest(response.Warnings);
+                }
             }
             catch (ValidationException ex)
             {

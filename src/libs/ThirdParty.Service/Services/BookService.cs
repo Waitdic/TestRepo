@@ -67,6 +67,8 @@
                     {
                         Warnings = propertyDetails.Warnings.Select(w => w.Text).ToList()
                     };
+
+                    success = false;
                 }
                 else
                 {
