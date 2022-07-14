@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 //
-import { Sidebar, Header } from '@/components';
+import { Sidebar, Header, Spinner } from '@/components';
 import { RootState } from '@/store';
 import { useNavigate } from 'react-router-dom';
 
@@ -63,6 +63,12 @@ const Dashboard: React.FC<Props> = ({
           {children}
         </main>
       </div>
+
+      {isLoading && (
+        <div className='fixed bottom-6 right-6'>
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 };

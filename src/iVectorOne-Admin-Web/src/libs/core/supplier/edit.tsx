@@ -1,8 +1,7 @@
-import { memo, FC, useState, useEffect } from 'react';
+import { memo, FC, useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
 //
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
@@ -17,6 +16,7 @@ import {
   Spinner,
   Notification,
 } from '@/components';
+import { updateSupplier } from '../data-access';
 
 type Props = {};
 
@@ -24,6 +24,9 @@ export const SupplierEdit: FC<Props> = memo(() => {
   const { pathname } = useLocation();
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.app.user);
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
@@ -36,6 +39,11 @@ export const SupplierEdit: FC<Props> = memo(() => {
     null as Subscription | null
   );
   const [isReady, setIsReady] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState({
+    status: NotificationStatus.SUCCESS,
+    message: 'Supplier edited successfully.',
+  });
 
   const {
     register,
@@ -44,41 +52,38 @@ export const SupplierEdit: FC<Props> = memo(() => {
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({
-    status: NotificationStatus.SUCCESS,
-    message: 'Supplier edited successfully.',
-  });
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((tenant) => tenant.isSelected),
+    [user]
+  );
 
-  const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
-    try {
-      const updatedSupplier = await axios.patch(
-        'http://localhost:3001/Supplier.create',
-        data
-      );
-
-      console.error(updatedSupplier);
-      setNotification({
-        status: NotificationStatus.SUCCESS,
-        message: 'Supplier edited successfully.',
-      });
-      setShowNotification(true);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
+  const onSubmit: SubmitHandler<SupplierFormFields> = (data, event) => {
+    event?.preventDefault();
+    if (!activeTenant || activeTenant == null) return;
+    updateSupplier(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      data,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (supplier) => {
+        setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: 'Supplier edited successfully.',
+        });
+        setShowNotification(true);
+        console.log(supplier);
+        dispatch.app.setIsLoading(false);
+      },
+      (error) => {
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error.toUpperCase(),
+          message: error || 'Supplier edit failed.',
         });
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.message,
-        });
+        setShowNotification(true);
+        dispatch.app.setIsLoading(false);
       }
-      setShowNotification(true);
-    }
+    );
   };
 
   useEffect(() => {

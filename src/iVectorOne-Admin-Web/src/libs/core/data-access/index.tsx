@@ -1,10 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { get, uniqBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import ApiCall from '@/axios';
-import { User, Tenant, Module, Supplier, Subscription } from '@/types';
+import {
+  User,
+  Tenant,
+  Module,
+  Supplier,
+  Subscription,
+  SupplierFormFields,
+} from '@/types';
 
 export function useCoreFetching() {
   const dispatch = useDispatch();
@@ -16,6 +23,7 @@ export function useCoreFetching() {
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async (userKey: string) => {
+    dispatch.app.setIsLoading(true);
     try {
       const userRes = await ApiCall.get(`/users/${userKey}`);
       const userData = get(userRes, 'data', null);
@@ -70,6 +78,7 @@ export function useIvoFetching() {
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async (user: User) => {
+    dispatch.app.setIsLoading(true);
     try {
       const activeTenant = user?.tenants.find((tenant) => tenant.isSelected);
       const tenantKey: any = activeTenant?.tenantKey;
@@ -162,4 +171,47 @@ export function useIvoFetching() {
   }, [subscriptions]);
 
   return { error };
+}
+
+export async function updateSupplier(
+  tenant: { id: number; key: string },
+  data: SupplierFormFields,
+  onInit: () => void,
+  onSuccess: (updatedSupplier: Supplier) => void,
+  onFailed: (error: string) => void
+) {
+  const {
+    subscription: subscriptionId,
+    supplier: supplierId,
+    configurations,
+  } = data;
+  onInit();
+
+  const filteredConfigurations = Object.entries(configurations)
+    .filter((config) => typeof config[1] !== 'object' && config)
+    .map((config) => ({
+      supplierSubscriptionAttributeId: Number(config[0]),
+      value: config[1],
+    }));
+
+  try {
+    const updatedSupplierRes = await ApiCall.request({
+      method: 'PUT',
+      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}/suppliersubscriptionattributes`,
+      headers: {
+        Tenantkey: tenant.key,
+      },
+      data: filteredConfigurations,
+    });
+    const updatedSupplier = get(updatedSupplierRes, 'data', null);
+    onSuccess(updatedSupplier);
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed(err.message);
+    }
+  }
 }

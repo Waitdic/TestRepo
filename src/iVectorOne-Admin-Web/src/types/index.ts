@@ -70,6 +70,7 @@ export type Supplier = {
   configurations: SupplierConfiguration[];
 };
 export type SupplierConfiguration = {
+  supplierSubscriptionAttributeID: number;
   key: string;
   name: string;
   order: number;
