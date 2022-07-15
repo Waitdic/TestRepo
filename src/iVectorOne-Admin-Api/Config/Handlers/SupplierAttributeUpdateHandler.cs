@@ -47,9 +47,16 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 {
                     try
                     {
-                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x=> x.SupplierSubscriptionAttributeId == attribute.SupplierSubscriptionAttributeID)!;
-                        supplierSubAttribute.Value = attribute.Value;                        
-                        success = true;
+                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x => x.SupplierSubscriptionAttributeId == attribute.SupplierSubscriptionAttributeID)!;
+                        if (supplierSubAttribute is null)
+                        {
+                            warnings.Add($"Could not find SupplierSubscriptionAttribute with ID {attribute.SupplierSubscriptionAttributeID}");
+                        }
+                        else
+                        {
+                            supplierSubAttribute.Value = attribute.Value;
+                            success = true;
+                        }
                     }
                     catch (Exception ex)
                     {

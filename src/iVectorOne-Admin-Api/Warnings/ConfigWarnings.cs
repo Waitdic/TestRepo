@@ -7,6 +7,7 @@
         public const string NoTenantWarning = "Could not find a tenant for specified tenant id";
         public const string NoSubscriptionWarning = "Could not find a subscription with a matching id for the specified tenant";
         public const string NoSupplierWarning = "Could not find a supplier with a matching id for the specified subscription";
+        public const string NoSuppliersWarning = "Could not find any suppliers";
         public const string MultiNoSupplierAttributesWarning = "Could not find any attributes for the specified subscription/supplier combination";
         public const string SingleNoSupplierAttributeWarning = "Could not find the specified supplier attribute";
 

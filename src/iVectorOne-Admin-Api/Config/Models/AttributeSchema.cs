@@ -2,6 +2,7 @@
 {
     public class AttributeSchema
     {
+        public string? Name { get; set; }
         public string? Key { get; set; }
         public int? Order { get; set; }
         public bool? Required { get; set; }

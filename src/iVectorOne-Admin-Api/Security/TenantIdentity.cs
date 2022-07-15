@@ -10,6 +10,6 @@ namespace iVectorOne_Admin_Api.Security
             this.Tenant = tenant;
         }
 
-        public Tenant Tenant;
+        public Tenant Tenant { get; set; }
     }
 }

@@ -4,7 +4,10 @@ namespace iVectorOne_Admin_Api.Config.Models
 {
     public class ConfigurationDTO
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int SupplierSubscriptionAttributeID { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int SupplierAttributeID { get; set; }
         public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public int Order { get; set; }
