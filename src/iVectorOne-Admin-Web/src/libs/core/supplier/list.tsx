@@ -38,7 +38,7 @@ export const SupplierList: FC<Props> = memo(() => {
       (sub) => sub.subscriptionId === subId
     );
     setActiveSub(selectedSub as Subscription);
-    setSuppliers(sortBy(selectedSub?.suppliers, 'name'));
+    setSuppliers(sortBy(selectedSub?.suppliers, 'supplierName'));
     const mainLayoutArea = document.getElementById('main-layout-area');
     if (!!mainLayoutArea?.scrollTop) {
       mainLayoutArea.scrollTop = 0;
@@ -120,9 +120,9 @@ export const SupplierList: FC<Props> = memo(() => {
                 {filteredSupplierList.length ? (
                   <CardList
                     bodyList={filteredSupplierList.map(
-                      ({ name, supplierID }) => ({
+                      ({ supplierName, supplierID }) => ({
                         id: supplierID,
-                        name,
+                        name: supplierName,
                         actions: [
                           {
                             name: 'Edit',

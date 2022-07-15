@@ -350,8 +350,8 @@ export const SupplierCreate: FC<Props> = memo(() => {
                       })}
                       labelText='Supplier'
                       options={suppliers.map((loginOption) => ({
-                        id: loginOption.name,
-                        name: loginOption.name,
+                        id: loginOption.supplierID,
+                        name: loginOption.supplierName,
                       }))}
                     />
                   ) : (

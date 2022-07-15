@@ -17,6 +17,7 @@ import {
   Notification,
 } from '@/components';
 import { updateSupplier } from '../data-access';
+import { log } from 'console';
 
 type Props = {};
 
@@ -72,7 +73,6 @@ export const SupplierEdit: FC<Props> = memo(() => {
           message: 'Supplier edited successfully.',
         });
         setShowNotification(true);
-        console.log(supplier);
         dispatch.app.setIsLoading(false);
       },
       (error) => {
@@ -172,7 +172,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
                         options={currentSubscription.suppliers.map(
                           (loginOption) => ({
                             id: loginOption.supplierID,
-                            name: loginOption.name,
+                            name: loginOption.supplierName,
                           })
                         )}
                         disabled

@@ -72,9 +72,8 @@ export function useCoreFetching() {
 export function useIvoFetching() {
   const dispatch = useDispatch();
 
-  const user = useSelector((state: RootState) => state.app.user);
+  const storedUser = useSelector((state: RootState) => state.app.user);
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async (user: User) => {
@@ -122,53 +121,32 @@ export function useIvoFetching() {
               },
             }
           );
-          setSubscriptions((prevState) =>
-            uniqBy(
-              [
-                ...prevState,
-                {
-                  ...subscription,
-                  suppliers: uniqBy(
-                    suppliers.map((supplier) => ({
-                      ...supplier,
-                      configurations: data.configurations,
-                    })),
-                    'supplierID'
-                  ),
-                },
-              ],
-              'subscriptionId'
-            )
-          );
+          subscription.suppliers = [...(subscription?.suppliers || []), data];
         });
+        dispatch.app.updateSubscriptions(subscriptions);
       });
+
       setError(null);
       dispatch.app.setIsLoading(false);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
-        setError(error.toUpperCase());
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setError(error.message);
+    } catch (err) {
+      if (typeof err === 'string') {
+        console.error(err.toUpperCase());
+        setError(err.toUpperCase());
+      } else if (err instanceof Error) {
+        console.error(err.message);
+        setError(err.message);
       }
       dispatch.app.setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    if (!!user?.tenants?.length) {
-      setSubscriptions([]);
-      fetch(user);
+    if (!!storedUser?.tenants?.length) {
+      fetch(storedUser);
     } else {
-      setSubscriptions([]);
       dispatch.app.setIsLoading(false);
     }
-  }, [fetch, user]);
-
-  useEffect(() => {
-    dispatch.app.updateSubscriptions(subscriptions);
-  }, [subscriptions]);
+  }, [fetch, storedUser]);
 
   return { error };
 }
@@ -191,7 +169,7 @@ export async function updateSupplier(
     .filter((config) => typeof config[1] !== 'object' && config)
     .map((config) => ({
       supplierSubscriptionAttributeId: Number(config[0]),
-      value: config[1],
+      value: config[1].toString(),
     }));
 
   try {

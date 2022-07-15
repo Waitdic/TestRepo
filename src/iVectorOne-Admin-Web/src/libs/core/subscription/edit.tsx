@@ -65,7 +65,6 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
         `http://localhost:3001/subscription/edit/${slug}`,
         data
       );
-      console.log(updatedSubscription);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'Subscription edited successfully.',
