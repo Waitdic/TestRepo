@@ -92,7 +92,7 @@
                         @descriptionLength = property.Description?.Length ?? 0,
                         @hasPostcode = !string.IsNullOrEmpty(property.Postcode),
                         @hasPhoneNumber = !string.IsNullOrEmpty(property.Telephone),
-                        @rating = property.Rating
+                        @rating = property.Rating ?? "0.0",
                     });
 
                 if (newProperty)

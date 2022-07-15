@@ -90,5 +90,7 @@
     <Build Include="dbo\Tables\SubscriptionCountry.sql" />
     <Build Include="dbo\Stored Procedures\Customer_GetSupplierSpecificCustomer.sql" />
     <Build Include="dbo\Stored Procedures\IVectorOne_ImportProperties.sql" />
+    <Build Include="dbo\Stored Procedures\Property_AddSubscriptionProperty.sql" />
+    <Build Include="dbo\Stored Procedures\Property_UpdateSubscriptionProperty.sql" />
   </ItemGroup>
 </Project>
