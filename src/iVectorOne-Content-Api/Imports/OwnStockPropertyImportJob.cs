@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Importer
+﻿namespace iVectorOne.Content.Imports
 {
     using System.Threading.Tasks;
     using Intuitive;
