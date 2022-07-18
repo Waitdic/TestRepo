@@ -44,7 +44,6 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                             var configItem = new ConfigurationDTO()
                             {
                                 SupplierSubscriptionAttributeID = item.SupplierSubscriptionAttributeId,
-                                Name = item.SupplierAttribute.Attribute.AttributeName,
                                 Value = item.Value,
                                 DefaultValue = item.SupplierAttribute.Attribute.DefaultValue,
                             };
@@ -61,6 +60,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                             }
                             if (config != null)
                             {
+                                configItem.Name = config.Name != null ? config.Name : item.SupplierAttribute.Attribute.AttributeName;
                                 configItem.Type = config.Type.ToSafeEnum<ConfigurationType>().Value;
                                 configItem.Key = config.Key != null ? config.Key : "";
                                 configItem.Order = config.Order.HasValue ? config.Order.Value : 999;
