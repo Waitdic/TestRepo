@@ -7,6 +7,7 @@ import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
 import { Button, CardList, Notification } from '@/components';
 import { getSubscriptions } from '../data-access';
+import { NotificationStatus } from '@/constants';
 
 interface SubscriptionListItem {
   name: string;
@@ -129,6 +130,7 @@ export const SubscriptionList: FC<Props> = memo(() => {
           description={error as string}
           show={showNotification}
           setShow={setShowNotification}
+          status={NotificationStatus.ERROR}
         />
       )}
     </>

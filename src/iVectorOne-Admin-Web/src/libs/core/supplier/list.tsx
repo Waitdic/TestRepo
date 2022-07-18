@@ -8,6 +8,7 @@ import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList, Notification } from '@/components';
 import { RootState } from '@/store';
 import { getSubscriptionsWithSuppliers } from '../data-access';
+import { NotificationStatus } from '@/constants';
 
 type Props = {};
 
@@ -69,10 +70,10 @@ export const SupplierList: FC<Props> = memo(() => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  console.log(subscriptions);
+    if (!!user) {
+      fetchData();
+    }
+  }, [fetchData, user]);
 
   return (
     <>
@@ -158,6 +159,7 @@ export const SupplierList: FC<Props> = memo(() => {
           title='Data fetching error'
           description={error as string}
           show={!!error}
+          status={NotificationStatus.ERROR}
         />
       )}
     </>

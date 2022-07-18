@@ -17,6 +17,7 @@ import {
   Notification,
 } from '@/components';
 import { getSubscriptionsWithSuppliers, updateSupplier } from '../data-access';
+import { log } from 'console';
 
 type Props = {};
 
@@ -66,10 +67,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
       (_supplier) => {
         setNotification({
           status: NotificationStatus.SUCCESS,
-          message: 'Supplier edited successfully.',
+          message: 'Supplier modified successfully.',
         });
         setShowNotification(true);
         dispatch.app.setIsLoading(false);
+        setTimeout(() => {
+          navigate('/suppliers');
+        }, 800);
       },
       (error) => {
         setNotification({
@@ -101,13 +105,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
   }, [activeTenant, subscriptions]);
 
   useEffect(() => {
-    if (!subscriptions?.length) {
+    if (!subscriptions?.length && !!user) {
       fetchData();
     }
-  }, [fetchData, subscriptions]);
+  }, [fetchData, subscriptions, user]);
 
   useEffect(() => {
-    if (!!subscriptions?.length) {
+    if (!!subscriptions?.length && !!user) {
       subscriptions.forEach((subscription) => {
         if (subscription.subscriptionId === Number(subscriptionId)) {
           setCurrentSubscription(subscription);
@@ -115,12 +119,17 @@ export const SupplierEdit: FC<Props> = memo(() => {
             (supplier) => supplier.supplierID === Number(supplierId)
           );
           setCurrentSupplier(currSupplier || null);
+          setValue('subscription', subscription.subscriptionId);
         }
       });
     }
-  }, [subscriptions, fetchData]);
+  }, [subscriptions, fetchData, user]);
 
-  console.log(currentSupplier);
+  useEffect(() => {
+    if (!!currentSupplier) {
+      setValue('supplier', currentSupplier.supplierID);
+    }
+  }, [currentSupplier, subscriptions, setValue]);
 
   return (
     <>
@@ -130,7 +139,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Edit Suppliers
+              Edit Supplier {currentSupplier?.supplierName}
             </h1>
           </div>
 

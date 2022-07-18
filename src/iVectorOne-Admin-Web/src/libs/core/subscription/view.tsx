@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { Subscription } from '@/types';
 import { useSlug } from '@/utils/use-slug';
-import { ButtonColors } from '@/constants';
+import { ButtonColors, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
   SectionTitle,
@@ -178,6 +178,7 @@ export const SubscriptionView: FC<Props> = memo(() => {
           description={error as string}
           show={showNotification}
           setShow={setShowNotification}
+          status={NotificationStatus.ERROR}
         />
       )}
     </>
