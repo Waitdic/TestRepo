@@ -98,7 +98,7 @@ export const app = createModel<RootModel>()({
         dispatch.app.updateThemeColor(payload);
       }
     },
-    resetModuleList(payload: string, state) {
+    resetModuleList(_payload: string, state) {
       const fetchedModules = state.app.modules.map((module) => {
         if (module.uri === '/') {
           return { ...module, isActive: true };

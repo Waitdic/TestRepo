@@ -86,7 +86,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
     );
   };
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     if (!activeTenant || activeTenant == null) return;
     await getSubscriptionsWithSuppliers(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
@@ -102,13 +102,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
         dispatch.app.setIsLoading(false);
       }
     );
-  }, [activeTenant, subscriptions]);
+  };
 
   useEffect(() => {
-    if (!subscriptions?.length && !!user) {
+    if (!!user) {
       fetchData();
     }
-  }, [fetchData, subscriptions, user]);
+  }, [user]);
 
   useEffect(() => {
     if (!!subscriptions?.length && !!user) {

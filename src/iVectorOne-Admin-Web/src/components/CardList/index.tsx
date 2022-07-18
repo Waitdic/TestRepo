@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //
@@ -32,6 +32,9 @@ const CardList: FC<Props> = ({
   statusIsPlaceholder = false,
   cardClassNames = 'col-span-full md:col-span-6 xl:col-span-4',
 }) => {
+  const renderStatus = (isActive: boolean) =>
+    useMemo(() => (isActive ? 'Active' : 'Inactive'), [isActive]);
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -79,7 +82,7 @@ const CardList: FC<Props> = ({
                             'bg-gray-200 text-gray-500': !isActive,
                           })}
                         >
-                          {isActive ? 'Active' : 'Inactive'}
+                          {renderStatus(!!isActive)}
                         </span>
                       </div>
                     )}
