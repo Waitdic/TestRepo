@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
+import { memo, FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -16,13 +16,14 @@ import {
   Spinner,
   Notification,
 } from '@/components';
-import { updateSupplier } from '../data-access';
-import { log } from 'console';
+import { getSubscriptionsWithSuppliers, updateSupplier } from '../data-access';
 
 type Props = {};
 
 export const SupplierEdit: FC<Props> = memo(() => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+
+  const subscriptionId = search.split('=')[1];
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,20 +32,15 @@ export const SupplierEdit: FC<Props> = memo(() => {
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [currentSupplier, setCurrentSupplier] = useState(
-    null as Supplier | null
-  );
-  const [currentSubscription, setCurrentSubscription] = useState(
-    null as Subscription | null
-  );
-  const [isReady, setIsReady] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
     message: 'Supplier edited successfully.',
   });
+  const [currentSubscription, setCurrentSubscription] =
+    useState<Subscription | null>(null);
+  const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
 
   const {
     register,
@@ -67,7 +63,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (supplier) => {
+      (_supplier) => {
         setNotification({
           status: NotificationStatus.SUCCESS,
           message: 'Supplier edited successfully.',
@@ -86,39 +82,45 @@ export const SupplierEdit: FC<Props> = memo(() => {
     );
   };
 
-  useEffect(() => {
-    if (!!subscriptions?.length) {
-      subscriptions.forEach((subscription, idx) => {
-        subscription.suppliers.forEach((supplier) => {
-          if (supplier.supplierID === Number(supplierId)) {
-            setCurrentSubscription(subscriptions[idx]);
-            setCurrentSupplier(supplier);
-          }
-        });
-      });
-      setIsReady(true);
-    }
-  }, [subscriptions, supplierId]);
+  const fetchData = useCallback(async () => {
+    if (!activeTenant || activeTenant == null) return;
+    await getSubscriptionsWithSuppliers(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (fetchedSubscriptions) => {
+        dispatch.app.updateSubscriptions(fetchedSubscriptions);
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  }, [activeTenant, subscriptions]);
 
   useEffect(() => {
-    if (isReady) {
-      if (!currentSupplier && !currentSubscription) {
-        navigate('/suppliers');
-        return;
-      }
-      setValue('subscription', currentSubscription?.subscriptionId || 0);
-      setValue('supplier', currentSupplier?.supplierID || 0);
-      if (!!currentSupplier?.configurations?.length) {
-        setDefaultConfigurationFormFields(
-          currentSupplier.configurations,
-          setValue
-        );
-      }
+    if (!subscriptions?.length) {
+      fetchData();
     }
-    if (!isLoading && !subscriptions.length) {
-      navigate('/');
+  }, [fetchData, subscriptions]);
+
+  useEffect(() => {
+    if (!!subscriptions?.length) {
+      subscriptions.forEach((subscription) => {
+        if (subscription.subscriptionId === Number(subscriptionId)) {
+          setCurrentSubscription(subscription);
+          const currSupplier = subscription.suppliers.find(
+            (supplier) => supplier.supplierID === Number(supplierId)
+          );
+          setCurrentSupplier(currSupplier || null);
+        }
+      });
     }
-  }, [currentSupplier, isReady, currentSubscription, isLoading, subscriptions]);
+  }, [subscriptions, fetchData]);
+
+  console.log(currentSupplier);
 
   return (
     <>
@@ -150,8 +152,8 @@ export const SupplierEdit: FC<Props> = memo(() => {
                         })}
                         labelText='Subscription'
                         options={subscriptions.map(
-                          ({ subscriptionId, userName }) => ({
-                            id: subscriptionId,
+                          ({ subscriptionId: id, userName }) => ({
+                            id,
                             name: userName,
                           })
                         )}
@@ -162,33 +164,32 @@ export const SupplierEdit: FC<Props> = memo(() => {
                     )}
                   </div>
                   <div className='flex-1'>
-                    {!!currentSubscription?.suppliers?.length ? (
-                      <Select
-                        id='supplier'
-                        {...register('supplier', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Supplier'
-                        options={currentSubscription.suppliers.map(
-                          (loginOption) => ({
-                            id: loginOption.supplierID,
-                            name: loginOption.supplierName,
-                          })
-                        )}
-                        disabled
-                      />
-                    ) : (
-                      <Spinner />
-                    )}
+                    <Select
+                      id='supplier'
+                      {...register('supplier', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Supplier'
+                      options={
+                        currentSubscription?.suppliers?.map((loginOption) => {
+                          return {
+                            id: loginOption?.supplierID,
+                            name: loginOption?.supplierName,
+                          };
+                        }) || []
+                      }
+                      disabled
+                    />
                   </div>
                   <div className='border-t border-gray-200 mt-2 pt-5'>
                     <SectionTitle title='Settings' />
                     <div className='flex flex-col gap-5 mt-5'>
-                      {renderConfigurationFormFields(
-                        currentSupplier?.configurations || [],
-                        register,
-                        errors
-                      )}
+                      {!!currentSupplier?.configurations?.length &&
+                        renderConfigurationFormFields(
+                          currentSupplier.configurations || [],
+                          register,
+                          errors
+                        )}
                     </div>
                   </div>
                 </div>

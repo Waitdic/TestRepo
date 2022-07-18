@@ -1,36 +1,59 @@
-import { memo, useState, useEffect, FC } from 'react';
+import { memo, useState, useEffect, FC, useMemo, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //
 import { Supplier, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList } from '@/components';
+import { EmptyState, CardList, Notification } from '@/components';
 import { RootState } from '@/store';
+import { getSubscriptionsWithSuppliers } from '../data-access';
 
 type Props = {};
 
-export const SupplierList: FC<Props> = memo(() => {
-  const navigate = useNavigate();
+const tableEmptyState = {
+  title: 'No suppliers',
+  description: 'Get started by creating a new Supplier.',
+  href: '/suppliers/create',
+  buttonText: 'New Supplier',
+};
 
+export const SupplierList: FC<Props> = memo(() => {
+  const dispatch = useDispatch();
+
+  const error = useSelector((state: RootState) => state.app.error);
+  const user = useSelector((state: RootState) => state.app.user);
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
-  const [filteredSupplierList, setFilteredSupplierList] = useState<Supplier[]>(
-    []
-  );
+  const [filteredSuppliersList, setFilteredSuppliersList] = useState<
+    Supplier[] | null
+  >(null);
   const [activeSub, setActiveSub] = useState<Subscription | null>(null);
 
-  const tableEmptyState = {
-    title: 'No suppliers',
-    description: 'Get started by creating a new Supplier.',
-    href: '/suppliers/create',
-    buttonText: 'New Supplier',
-  };
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((tenant) => tenant.isSelected),
+    [user]
+  );
+
+  const fetchData = useCallback(async () => {
+    if (!activeTenant || activeTenant == null) return;
+    await getSubscriptionsWithSuppliers(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (fetchedSubscriptions) => {
+        dispatch.app.updateSubscriptions(fetchedSubscriptions);
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  }, [activeTenant]);
 
   const handleSetActiveSub = (subId: number) => {
     if (!subscriptions?.length) return;
@@ -38,7 +61,7 @@ export const SupplierList: FC<Props> = memo(() => {
       (sub) => sub.subscriptionId === subId
     );
     setActiveSub(selectedSub as Subscription);
-    setSuppliers(sortBy(selectedSub?.suppliers, 'supplierName'));
+    setFilteredSuppliersList(sortBy(selectedSub?.suppliers, 'name'));
     const mainLayoutArea = document.getElementById('main-layout-area');
     if (!!mainLayoutArea?.scrollTop) {
       mainLayoutArea.scrollTop = 0;
@@ -46,26 +69,10 @@ export const SupplierList: FC<Props> = memo(() => {
   };
 
   useEffect(() => {
-    if (!!subscriptions?.length) {
-      const sortedSubscriptions = sortBy(subscriptions, 'userName');
-      setActiveSub(sortedSubscriptions[0]);
-      setSuppliers(sortedSubscriptions[0].suppliers);
-    }
-  }, [subscriptions]);
+    fetchData();
+  }, [fetchData]);
 
-  useEffect(() => {
-    setFilteredSupplierList(suppliers);
-  }, [suppliers]);
-
-  useEffect(() => {
-    if (!isLoading && !subscriptions?.length) {
-      navigate('/');
-    }
-  }, [isLoading, subscriptions]);
-
-  if (!subscriptions?.length) {
-    return null;
-  }
+  console.log(subscriptions);
 
   return (
     <>
@@ -78,7 +85,6 @@ export const SupplierList: FC<Props> = memo(() => {
               Suppliers
             </h1>
           </div>
-
           {/* Content */}
           <div className='bg-white shadow-lg rounded-sm mb-8'>
             <div className='flex flex-col md:flex-row md:-mr-px gap-6'>
@@ -88,7 +94,7 @@ export const SupplierList: FC<Props> = memo(() => {
                     Subscriptions
                   </div>
                   <ul className='flex flex-nowrap md:block mr-3 md:mr-0'>
-                    {sortBy(subscriptions, 'userName').map(
+                    {sortBy(subscriptions, 'userName')?.map(
                       ({ subscriptionId, userName }) => (
                         <li
                           key={subscriptionId}
@@ -117,36 +123,43 @@ export const SupplierList: FC<Props> = memo(() => {
                 </div>
               </div>
               <div className='py-6 pr-6 w-full'>
-                {filteredSupplierList.length ? (
+                {!!filteredSuppliersList?.length ? (
                   <CardList
-                    bodyList={filteredSupplierList.map(
-                      ({ supplierName, supplierID }) => ({
-                        id: supplierID,
-                        name: supplierName,
-                        actions: [
-                          {
-                            name: 'Edit',
-                            href: `/suppliers/${supplierID}/edit`,
-                          },
-                        ],
-                      })
+                    bodyList={sortBy(
+                      filteredSuppliersList.map(
+                        ({ supplierName, supplierID }) => ({
+                          id: supplierID,
+                          name: supplierName,
+                          actions: [
+                            {
+                              name: 'Edit',
+                              href: `/suppliers/${supplierID}/edit?subscriptionId=${activeSub?.subscriptionId}`,
+                            },
+                          ],
+                        })
+                      ),
+                      'name'
                     )}
                     emptyState={tableEmptyState}
                     statusIsPlaceholder
                   />
                 ) : (
-                  <EmptyState
-                    title='No subscriptions'
-                    description='Get started by creating a new subscription.'
-                    href='/suppliers/create'
-                    buttonText='New Subscription'
-                  />
+                  filteredSuppliersList !== null && (
+                    <EmptyState {...tableEmptyState} />
+                  )
                 )}
               </div>
             </div>
           </div>
         </>
       </MainLayout>
+      {!!error && (
+        <Notification
+          title='Data fetching error'
+          description={error as string}
+          show={!!error}
+        />
+      )}
     </>
   );
 });

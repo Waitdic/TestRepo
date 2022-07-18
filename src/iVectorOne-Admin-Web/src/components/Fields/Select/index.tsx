@@ -36,7 +36,7 @@ const Select: FC<Props> = forwardRef(
       disabled = false,
       description = null,
       maxItems = 100,
-      minItems = 2,
+      minItems = 1,
     },
     ref
   ) => {
@@ -76,11 +76,11 @@ const Select: FC<Props> = forwardRef(
                 'cursor-not-allowed': disabled,
               }
             )}
-            defaultValue={defaultValue.id}
+            defaultValue={defaultValue?.id}
             disabled={disabled}
             data-testid='select-field'
           >
-            {slicedOptions.map(({ id, name }) => (
+            {slicedOptions?.map(({ id, name }) => (
               <option value={id} key={id}>
                 {name}
               </option>
