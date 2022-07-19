@@ -17,7 +17,8 @@
 
         public static WebApplication ConfigureSwagger(this WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
+            var enableSwagger = app.Configuration.GetValue<bool>("EnableSwagger");
+            if (enableSwagger)
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
