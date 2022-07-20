@@ -182,6 +182,35 @@ export async function getSubscriptionById(
   }
 }
 
+export async function getSuppliersBySubscription(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  onInit: () => void,
+  onSuccess: (suppliers: Supplier[]) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const res = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const data = get(res, 'data.supplierSubscriptions', null);
+    onSuccess(data);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
 //* Fetch supplier by ID
 export async function getSupplierById(
   tenant: { id: number; key: string },

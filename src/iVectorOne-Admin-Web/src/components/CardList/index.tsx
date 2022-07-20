@@ -7,7 +7,7 @@ import { EmptyState, Spinner } from '@/components';
 type Props = {
   bodyList: {
     id: number | string;
-    name: string;
+    name?: string;
     isActive?: boolean;
     actions?: {
       name: string;

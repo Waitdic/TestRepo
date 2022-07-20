@@ -33,7 +33,7 @@ export const app = createModel<RootModel>()({
     },
     updateUser(state, payload: User) {
       if (!isEmpty(payload)) {
-        return { ...state, user: payload };
+        return { ...state, user: payload, subscriptions: [] };
       } else {
         return state;
       }

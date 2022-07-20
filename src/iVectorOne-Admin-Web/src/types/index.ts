@@ -64,6 +64,7 @@ export type Subscription = {
   suppliers: Supplier[];
 };
 export type Supplier = {
+  name?: string;
   supplierName: string;
   supplierID: number;
   supplierSubscriptionID: number;

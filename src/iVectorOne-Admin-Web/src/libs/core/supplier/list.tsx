@@ -5,9 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { Supplier, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList, Notification } from '@/components';
+import { EmptyState, CardList, Notification, Button } from '@/components';
 import { RootState } from '@/store';
-import { getSubscriptionsWithSuppliers } from '../data-access';
+import {
+  getSubscriptions,
+  getSubscriptionsWithSuppliers,
+  getSuppliersBySubscription,
+} from '../data-access';
 import { NotificationStatus } from '@/constants';
 
 type Props = {};
@@ -39,8 +43,8 @@ export const SupplierList: FC<Props> = memo(() => {
   );
 
   const fetchData = useCallback(async () => {
-    if (!activeTenant || activeTenant == null) return;
-    await getSubscriptionsWithSuppliers(
+    if (!activeTenant) return;
+    await getSubscriptions(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       () => {
         dispatch.app.setIsLoading(true);
@@ -56,13 +60,37 @@ export const SupplierList: FC<Props> = memo(() => {
     );
   }, [activeTenant]);
 
-  const handleSetActiveSub = (subId: number) => {
-    if (!subscriptions?.length) return;
+  const handleSetActiveSub = async (subId: number) => {
+    if (!subscriptions?.length || !activeTenant) return;
     const selectedSub = subscriptions.find(
       (sub) => sub.subscriptionId === subId
     );
-    setActiveSub(selectedSub as Subscription);
-    setFilteredSuppliersList(sortBy(selectedSub?.suppliers, 'name'));
+    if (!selectedSub) return;
+    setActiveSub(selectedSub);
+    await getSuppliersBySubscription(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      selectedSub.subscriptionId,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (fetchedSuppliers) => {
+        dispatch.app.updateSubscriptions(
+          subscriptions.map((sub) => {
+            if (sub.subscriptionId === selectedSub.subscriptionId) {
+              return { ...sub, suppliers: fetchedSuppliers };
+            }
+            return sub;
+          })
+        );
+        dispatch.app.setIsLoading(false);
+        setFilteredSuppliersList(sortBy(fetchedSuppliers, 'name'));
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+
     const mainLayoutArea = document.getElementById('main-layout-area');
     if (!!mainLayoutArea?.scrollTop) {
       mainLayoutArea.scrollTop = 0;
@@ -75,16 +103,21 @@ export const SupplierList: FC<Props> = memo(() => {
     }
   }, [fetchData, user]);
 
+  console.log(filteredSuppliersList);
+
   return (
     <>
       <MainLayout>
         <>
           {/* Page header */}
-          <div className='mb-8'>
+          <div className='flex align-start justify-between mb-6'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
               Suppliers
             </h1>
+            <div className='flex gap-3'>
+              <Button text='New' isLink href='/suppliers/create' />
+            </div>
           </div>
           {/* Content */}
           <div className='bg-white shadow-lg rounded-sm mb-8'>
@@ -127,18 +160,16 @@ export const SupplierList: FC<Props> = memo(() => {
                 {!!filteredSuppliersList?.length ? (
                   <CardList
                     bodyList={sortBy(
-                      filteredSuppliersList.map(
-                        ({ supplierName, supplierID }) => ({
-                          id: supplierID,
-                          name: supplierName,
-                          actions: [
-                            {
-                              name: 'Edit',
-                              href: `/suppliers/${supplierID}/edit?subscriptionId=${activeSub?.subscriptionId}`,
-                            },
-                          ],
-                        })
-                      ),
+                      filteredSuppliersList.map(({ name, supplierID }) => ({
+                        id: supplierID,
+                        name,
+                        actions: [
+                          {
+                            name: 'Edit',
+                            href: `/suppliers/${supplierID}/edit?subscriptionId=${activeSub?.subscriptionId}`,
+                          },
+                        ],
+                      })),
                       'name'
                     )}
                     emptyState={tableEmptyState}
