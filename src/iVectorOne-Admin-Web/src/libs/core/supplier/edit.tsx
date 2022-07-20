@@ -16,8 +16,7 @@ import {
   Notification,
 } from '@/components';
 import {
-  getSubscriptionsWithSuppliers,
-  getSupplierById,
+  getSubscriptionWithSupplierAndConfigurations,
   updateSupplier,
 } from '../data-access';
 
@@ -32,10 +31,6 @@ export const SupplierEdit: FC<Props> = memo(() => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
-  console.log(subscriptions);
 
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
@@ -60,7 +55,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
 
   const onSubmit: SubmitHandler<SupplierFormFields> = (data, event) => {
     event?.preventDefault();
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant) return;
     updateSupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       data,
@@ -78,10 +73,10 @@ export const SupplierEdit: FC<Props> = memo(() => {
           navigate('/suppliers');
         }, 800);
       },
-      (error) => {
+      (_error) => {
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error || 'Supplier edit failed.',
+          message: 'Supplier edit failed.',
         });
         setShowNotification(true);
         dispatch.app.setIsLoading(false);
@@ -90,28 +85,17 @@ export const SupplierEdit: FC<Props> = memo(() => {
   };
 
   const fetchData = async () => {
-    if (!activeTenant || activeTenant == null) return;
-    await getSupplierById(
+    if (!activeTenant) return;
+    await getSubscriptionWithSupplierAndConfigurations(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       Number(subscriptionId),
       Number(supplierId),
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (fetchedSupplier) => {
-        dispatch.app.updateSubscriptions(
-          subscriptions.map((sub) => {
-            if (sub.subscriptionId === Number(subscriptionId)) {
-              sub.suppliers = sub.suppliers.map((supplier) => {
-                if (supplier.supplierID === Number(supplierId)) {
-                  return fetchedSupplier;
-                }
-                return supplier;
-              });
-            }
-            return sub;
-          })
-        );
+      (subscription, supplier, configurations) => {
+        setCurrentSubscription(subscription);
+        setCurrentSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
       (err) => {
@@ -128,25 +112,11 @@ export const SupplierEdit: FC<Props> = memo(() => {
   }, [user]);
 
   useEffect(() => {
-    if (!!subscriptions?.length && !!user) {
-      subscriptions.forEach((subscription) => {
-        if (subscription.subscriptionId === Number(subscriptionId)) {
-          setCurrentSubscription(subscription);
-          const currSupplier = subscription.suppliers?.find(
-            (supplier) => supplier.supplierID === Number(supplierId)
-          );
-          setCurrentSupplier(currSupplier || null);
-          setValue('subscription', subscription.subscriptionId);
-        }
-      });
-    }
-  }, [subscriptions, fetchData, user]);
-
-  useEffect(() => {
-    if (!!currentSupplier) {
+    if (!!currentSupplier && !!currentSubscription) {
+      setValue('subscription', currentSubscription.subscriptionId);
       setValue('supplier', currentSupplier.supplierID);
     }
-  }, [currentSupplier, subscriptions, setValue]);
+  }, [currentSupplier, currentSubscription, setValue]);
 
   return (
     <>
@@ -156,7 +126,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Edit Supplier {currentSupplier?.supplierName}
+              Edit Supplier {currentSupplier?.name}
             </h1>
           </div>
 
@@ -170,19 +140,19 @@ export const SupplierEdit: FC<Props> = memo(() => {
               >
                 <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                   <div className='flex-1'>
-                    {subscriptions.length > 0 ? (
+                    {currentSubscription !== null ? (
                       <Select
                         id='subscription'
                         {...register('subscription', {
                           required: 'This field is required.',
                         })}
                         labelText='Subscription'
-                        options={subscriptions.map(
-                          ({ subscriptionId: id, userName }) => ({
-                            id,
-                            name: userName,
-                          })
-                        )}
+                        options={[
+                          {
+                            id: currentSubscription.subscriptionId,
+                            name: currentSubscription.userName,
+                          },
+                        ]}
                         disabled
                       />
                     ) : (
@@ -190,21 +160,19 @@ export const SupplierEdit: FC<Props> = memo(() => {
                     )}
                   </div>
                   <div className='flex-1'>
-                    {currentSubscription && (
+                    {currentSupplier !== null && (
                       <Select
                         id='supplier'
                         {...register('supplier', {
                           required: 'This field is required.',
                         })}
                         labelText='Supplier'
-                        options={
-                          currentSubscription.suppliers?.map((loginOption) => {
-                            return {
-                              id: loginOption.supplierID,
-                              name: loginOption.supplierName,
-                            };
-                          }) || []
-                        }
+                        options={[
+                          {
+                            id: currentSupplier.supplierID,
+                            name: currentSupplier.name,
+                          },
+                        ]}
                         disabled
                       />
                     )}

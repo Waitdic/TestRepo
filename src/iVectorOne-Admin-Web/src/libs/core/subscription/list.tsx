@@ -37,7 +37,7 @@ export const SubscriptionList: FC<Props> = memo(() => {
   const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
     SubscriptionListItem[]
   >([]);
-  const [filters, setFilters] = useState<DropdownFilterProps[]>([
+  const [_filters, _setFilters] = useState<DropdownFilterProps[]>([
     {
       name: 'Active',
       value: false,

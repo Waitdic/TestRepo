@@ -64,11 +64,12 @@ export type Subscription = {
   suppliers: Supplier[];
 };
 export type Supplier = {
-  name?: string;
+  name: string;
   supplierName: string;
   supplierID: number;
   supplierSubscriptionID: number;
   configurations: SupplierConfiguration[];
+  isSelected?: boolean;
 };
 export type SupplierConfiguration = {
   supplierSubscriptionAttributeID: number;

@@ -7,11 +7,7 @@ import { Supplier, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList, Notification, Button } from '@/components';
 import { RootState } from '@/store';
-import {
-  getSubscriptions,
-  getSubscriptionsWithSuppliers,
-  getSuppliersBySubscription,
-} from '../data-access';
+import { getSubscriptions, getSuppliersBySubscription } from '../data-access';
 import { NotificationStatus } from '@/constants';
 
 type Props = {};
@@ -102,8 +98,6 @@ export const SupplierList: FC<Props> = memo(() => {
       fetchData();
     }
   }, [fetchData, user]);
-
-  console.log(filteredSuppliersList);
 
   return (
     <>

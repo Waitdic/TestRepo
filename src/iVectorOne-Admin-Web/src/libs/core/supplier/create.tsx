@@ -1,312 +1,183 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
+import { memo, FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 //
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
-import { SupplierConfiguration, SupplierFormFields } from '@/types';
 import {
-  ButtonColors,
-  ButtonVariants,
-  ConfigurationFormFieldTypes,
-  NotificationStatus,
-} from '@/constants';
+  SelectOption,
+  Subscription,
+  Supplier,
+  SupplierConfiguration,
+  SupplierFormFields,
+} from '@/types';
+import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
   SectionTitle,
   Select,
   Button,
-  Spinner,
   Notification,
+  ErrorBoundary,
 } from '@/components';
+import {
+  createSupplier,
+  getConfigurationsBySupplier,
+  getSubscriptions,
+  getSubscriptionsWithSuppliersAndConfigurations,
+  getSuppliersBySubscription,
+} from '../data-access';
+import { sortBy, uniqBy } from 'lodash';
 
 type Props = {};
 
 export const SupplierCreate: FC<Props> = memo(() => {
-  //! Temporary
-  const supplierInfoError = null;
-  const configurations: SupplierConfiguration[] = [
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: '',
-      description: '',
-      key: 'string_field',
-      maximum: 50,
-      minimum: 10,
-      name: 'Username',
-      order: 1,
-      required: true,
-      type: ConfigurationFormFieldTypes.STRING,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: '',
-      description: '',
-      key: 'email_field',
-      maxLength: 100,
-      minLength: 6,
-      name: 'Email Address',
-      order: 2,
-      required: true,
-      type: ConfigurationFormFieldTypes.EMAIL,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: '',
-      description: '',
-      key: 'password_field',
-      maxLength: 100,
-      minLength: 8,
-      name: 'Password',
-      order: 3,
-      required: true,
-      type: ConfigurationFormFieldTypes.PASSWORD,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      dropdownOptions: [
-        { id: 'en', name: 'English' },
-        { id: 'de', name: 'German' },
-      ],
-      key: 'dropdown_field',
-      name: 'Language',
-      order: 4,
-      type: ConfigurationFormFieldTypes.DROPDOWN,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      dropdownOptions: [
-        { id: 'eur', name: 'EUR' },
-        { id: 'usd', name: 'USD' },
-      ],
-      key: 'dropdown_field',
-      name: 'Currency',
-      order: 5,
-      type: ConfigurationFormFieldTypes.DROPDOWN,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: false,
-      description: '',
-      key: 'boolean_field',
-      name: 'Allow Cancellations',
-      order: 6,
-      type: ConfigurationFormFieldTypes.BOOLEAN,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'string_field',
-      name: 'Supplier Reference',
-      order: 7,
-      required: true,
-      type: ConfigurationFormFieldTypes.STRING,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: false,
-      description: '',
-      key: 'boolean_field',
-      name: 'Use GZip',
-      order: 8,
-      type: ConfigurationFormFieldTypes.BOOLEAN,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'uri_field',
-      name: 'Search URL',
-      order: 9,
-      required: true,
-      type: ConfigurationFormFieldTypes.URI,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'uri_field',
-      name: 'Book URL',
-      order: 10,
-      required: true,
-      type: ConfigurationFormFieldTypes.URI,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'uri_field',
-      name: 'Cancel URL',
-      order: 11,
-      required: true,
-      type: ConfigurationFormFieldTypes.URI,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: 0,
-      description: '',
-      key: 'number_field',
-      maximum: 30,
-      minimum: 0,
-      name: 'Offset Cancellation Days',
-      order: 12,
-      required: true,
-      type: ConfigurationFormFieldTypes.NUMBER,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      dropdownOptions: [
-        { id: 'gb', name: 'GB' },
-        { id: 'us', name: 'USA' },
-      ],
-      key: 'dropdown_field',
-      name: 'Nationality',
-      order: 13,
-      type: ConfigurationFormFieldTypes.DROPDOWN,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'uri_field',
-      name: 'Pre Book URL',
-      order: 14,
-      required: true,
-      type: ConfigurationFormFieldTypes.URI,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      description: '',
-      key: 'string_field',
-      name: 'Accommodation Types',
-      order: 15,
-      required: true,
-      type: ConfigurationFormFieldTypes.STRING,
-    },
-    {
-      supplierSubscriptionAttributeID: Number(
-        Math.round(Math.random() * 100).toFixed(0)
-      ),
-      defaultValue: false,
-      description: '',
-      key: 'boolean_field',
-      name: 'Request Package Rates',
-      order: 16,
-      type: ConfigurationFormFieldTypes.BOOLEAN,
-    },
-  ];
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const user = useSelector((state: RootState) => state.app.user);
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
-  );
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
-
-  const suppliers = useMemo(
-    () => subscriptions.flatMap((subscription) => subscription.suppliers),
-    [subscriptions]
   );
 
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((tenant) => tenant.isSelected),
+    [user]
+  );
+
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [draftSupplier, setDraftSupplier] = useState<{
+    subscriptionId: number;
+    supplierId: number;
+    configurations: SupplierConfiguration[];
+  }>({
+    subscriptionId: -1,
+    supplierId: -1,
+    configurations: [],
+  });
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
     message: 'New Supplier created successfully.',
   });
 
-  const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
-    try {
-      const newSupplier = await axios.post(
-        'http://localhost:3001/supplier.create',
-        data
-      );
+  const sortedSubscriptions = useMemo(
+    () => sortBy(subscriptions, 'userName'),
+    [subscriptions]
+  );
+  const sortedSuppliers = useMemo(
+    () => sortBy(suppliers, 'supplierName'),
+    [suppliers]
+  );
 
-      setNotification({
-        status: NotificationStatus.SUCCESS,
-        message: 'New supplier created successfully.',
-      });
-      setShowNotification(true);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.toUpperCase(),
-        });
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.message,
-        });
+  const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
+    if (!activeTenant) return;
+    await createSupplier(
+      {
+        id: activeTenant.tenantId,
+        key: activeTenant.tenantKey,
+      },
+      draftSupplier.subscriptionId,
+      draftSupplier.supplierId,
+      data,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (newSupplier) => {
+        console.log(newSupplier);
+        dispatch.app.setIsLoading(false);
+        setShowNotification(true);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(true);
       }
-      setShowNotification(true);
-    }
+    );
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (!subscriptions?.length) {
-        navigate('/');
-        return;
-      }
-      if (supplierInfoError) {
+  const handleSubscriptionChange = (optionId: number) => {
+    const selectedSub = subscriptions.find(
+      (subscription) => subscription.subscriptionId === optionId
+    );
+    if (selectedSub) {
+      const supplierIds = selectedSub.suppliers.map(
+        (supplier) => supplier.supplierID
+      );
+      const allSuppliers = uniqBy(
+        subscriptions.flatMap((sub) => sub.suppliers),
+        'supplierID'
+      );
+      const _suppliers = allSuppliers.filter(
+        (supplier) => !supplierIds.includes(supplier.supplierID)
+      );
+      setSuppliers(_suppliers);
+    }
+    setDraftSupplier({
+      ...draftSupplier,
+      subscriptionId: optionId,
+    });
+  };
+
+  const handleSupplierChange = (optionId: number) => {
+    setDraftSupplier({
+      ...draftSupplier,
+      supplierId: optionId,
+      configurations:
+        suppliers.find((supplier) => supplier.supplierID === optionId)
+          ?.configurations || [],
+    });
+  };
+
+  const fetchData = useCallback(async () => {
+    if (!activeTenant) return;
+    await getSubscriptionsWithSuppliersAndConfigurations(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (subs) => {
+        dispatch.app.updateSubscriptions(subs);
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Supplier Info fetching failed.',
+          message: 'Subscriptions and suppliers data fetching failed.',
         });
         setShowNotification(true);
-        return;
       }
+    );
+  }, [activeTenant]);
 
-      if (configurations.length > 0) {
-        setDefaultConfigurationFormFields(configurations, setValue);
-      }
+  useEffect(() => {
+    fetchData();
+    setValue('subscription', 0);
+    setValue('supplier', 0);
 
-      if (subscriptions.length > 0) {
-        setValue('subscription', subscriptions[0].subscriptionId);
-      }
-    }
-  }, [isLoading, supplierInfoError, configurations, subscriptions, setValue]);
+    return () => {
+      setShowNotification(false);
+      setValue('subscription', 0);
+      setValue('supplier', 0);
+      setSuppliers([]);
+      setDraftSupplier({
+        subscriptionId: -1,
+        supplierId: -1,
+        configurations: [],
+      });
+      dispatch.app.setError(null);
+    };
+  }, [fetchData]);
 
   return (
     <>
@@ -323,51 +194,51 @@ export const SupplierCreate: FC<Props> = memo(() => {
             >
               <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                 <div className='flex-1'>
-                  {subscriptions.length > 0 ? (
-                    <Select
-                      id='subscription'
-                      {...register('subscription', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Subscription'
-                      options={subscriptions.map(
-                        ({ subscriptionId, userName }) => ({
-                          id: subscriptionId,
-                          name: userName,
-                        })
-                      )}
-                    />
-                  ) : (
-                    <Spinner />
-                  )}
+                  <Select
+                    id='subscription'
+                    {...register('subscription', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Subscription'
+                    options={sortedSubscriptions?.map(
+                      ({ subscriptionId, userName }) => ({
+                        id: subscriptionId,
+                        name: userName,
+                      })
+                    )}
+                    isFirstOptionEmpty
+                    onUncontrolledChange={handleSubscriptionChange}
+                  />
                 </div>
                 <div className='flex-1'>
-                  {suppliers.length > 0 ? (
-                    <Select
-                      id='supplier'
-                      {...register('supplier', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Supplier'
-                      options={suppliers.map((loginOption) => ({
+                  <Select
+                    id='supplier'
+                    {...register('supplier', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Supplier'
+                    options={
+                      sortedSuppliers?.map((loginOption) => ({
                         id: loginOption.supplierID,
-                        name: loginOption.supplierName,
-                      }))}
-                    />
-                  ) : (
-                    <Spinner />
-                  )}
+                        name: loginOption?.supplierName,
+                      })) || []
+                    }
+                    isFirstOptionEmpty
+                    onUncontrolledChange={handleSupplierChange}
+                  />
                 </div>
-                <div className='border-t border-gray-200 mt-2 pt-5'>
-                  <SectionTitle title='Settings' />
-                  <div className='flex flex-col gap-5 mt-5'>
-                    {renderConfigurationFormFields(
-                      configurations,
-                      register,
-                      errors
-                    )}
+                {!!draftSupplier?.configurations?.length && (
+                  <div className='border-t border-gray-200 mt-2 pt-5'>
+                    <SectionTitle title='Settings' />
+                    <div className='flex flex-col gap-5 mt-5'>
+                      {renderConfigurationFormFields(
+                        draftSupplier.configurations,
+                        register,
+                        errors
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className='flex justify-end mt-5 pt-5'>
                 <Button
@@ -389,18 +260,11 @@ export const SupplierCreate: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          title={
-            notification.status === NotificationStatus.ERROR
-              ? 'Error'
-              : 'Create New Supplier'
-          }
+          title='Supplier creation'
           description={notification.message}
           status={notification.status}
           show={showNotification}
           setShow={setShowNotification}
-          autoHide={
-            notification.status === NotificationStatus.ERROR ? false : true
-          }
         />
       )}
     </>
