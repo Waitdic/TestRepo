@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.SunHotels
+﻿namespace iVectorOne.CSSuppliers.SunHotels
 {
     using System;
     using System.Xml.Serialization;

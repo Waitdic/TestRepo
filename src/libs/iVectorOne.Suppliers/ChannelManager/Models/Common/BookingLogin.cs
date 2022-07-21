@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models.Common
+﻿namespace iVectorOne.CSSuppliers.ChannelManager.Models.Common
 {
     using System.Xml.Serialization;
 

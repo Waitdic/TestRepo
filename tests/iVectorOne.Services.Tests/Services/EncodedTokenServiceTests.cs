@@ -1,14 +1,14 @@
-﻿namespace ThirdParty.Service.Tests.Services
+﻿namespace iVectorOne.Service.Tests.Services
 {
     using Microsoft.Extensions.Logging;
     using Moq;
     using System;
     using System.Collections.Generic;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Repositories;
-    using ThirdParty.Services;
-    using ThirdParty.Utility;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Repositories;
+    using iVectorOne.Services;
+    using iVectorOne.Utility;
 
     public class EncodedTokenServiceTests
     {

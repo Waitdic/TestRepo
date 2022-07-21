@@ -1,13 +1,13 @@
-namespace ThirdParty.Suppliers.TPIntegrationTests
+namespace iVectorOne.Suppliers.TPIntegrationTests
 {
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
 
     /// <summary>
     /// Third Party Property Search Base Test

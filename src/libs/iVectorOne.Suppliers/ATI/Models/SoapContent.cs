@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ATI.Models
+﻿namespace iVectorOne.CSSuppliers.ATI.Models
 {
     public abstract class SoapContent
     {

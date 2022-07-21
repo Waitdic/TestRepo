@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     /// <summary>Enum representing types of API database logs</summary>
     public enum LogType

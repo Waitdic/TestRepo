@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Book
 {
     using System;
     using Newtonsoft.Json;

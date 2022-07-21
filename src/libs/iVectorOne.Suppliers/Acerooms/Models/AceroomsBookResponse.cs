@@ -1,5 +1,5 @@
 ﻿
-namespace ThirdParty.CSSuppliers.AceRooms.Models
+namespace iVectorOne.CSSuppliers.AceRooms.Models
 {
 using System.Collections.Generic;
 

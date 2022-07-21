@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Threading.Tasks;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models.Property.Booking;
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;

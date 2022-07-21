@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Hotelston
+﻿namespace iVectorOne.CSSuppliers.Hotelston
 {
     public interface IHotelstonSettings
     {

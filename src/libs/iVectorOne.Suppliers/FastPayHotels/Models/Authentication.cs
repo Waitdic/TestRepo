@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.FastPayHotels.Models
+﻿namespace iVectorOne.CSSuppliers.FastPayHotels.Models
 {
     public class Authentication
     {

@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.HotelBedsV2
+﻿namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedHotelBedsV2Settings : SettingsBase, IHotelBedsV2Settings
     {

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using Newtonsoft.Json;
     using System.Collections.Generic;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
 
     public class DerbySoftSupport
     {

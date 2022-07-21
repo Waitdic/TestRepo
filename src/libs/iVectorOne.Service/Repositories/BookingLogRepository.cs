@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System;
     using System.Linq;
     using Intuitive.Data;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;

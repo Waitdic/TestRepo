@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.SDK.V2.PropertyPrecancel
+﻿namespace iVectorOne.SDK.V2.PropertyPrecancel
 {
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using ThirdParty.Services;
+    using iVectorOne.Services;
 
     public class Handler : IRequestHandler<Request, Response>
     {

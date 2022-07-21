@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models.Common
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect.Models.Common
 {
     public class LeadCustomer
     {

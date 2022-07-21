@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.W2M {
+namespace iVectorOne.Tests.W2M {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.W2M {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.W2M.W2MRes", typeof(W2MRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.W2M.W2MRes", typeof(W2MRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

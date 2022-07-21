@@ -1,6 +1,6 @@
 ﻿#nullable disable warnings
 
-namespace ThirdParty.CSSuppliers.HotelBedsV2
+namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
     public class PaymentData
     {

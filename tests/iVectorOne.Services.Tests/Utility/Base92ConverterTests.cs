@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Service.Tests.Services
+﻿namespace iVectorOne.Service.Tests.Services
 {
     using System;
-    using ThirdParty.Utility;
+    using iVectorOne.Utility;
 
     public class Base92ConverterTests
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Restel
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Restel
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
@@ -6,9 +6,9 @@
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.CSSuppliers.Restel;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.Restel;
+    using iVectorOne.CSSuppliers.Restel;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.Restel;
 
     public class RestelSearchTests : ThirdPartyPropertySearchBaseTest
     {

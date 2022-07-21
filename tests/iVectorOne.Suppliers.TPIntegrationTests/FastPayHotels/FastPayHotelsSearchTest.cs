@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Fastpayhotels
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using Moq;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.CSSuppliers.FastPayHotels;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.CSSuppliers.FastPayHotels;
     using Xunit;
 
     public class FastPayHotelsSearchTest : ThirdPartyPropertySearchBaseTest

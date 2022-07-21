@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Bonotel
+﻿namespace iVectorOne.CSSuppliers.Bonotel
 {
     public interface IBonotelSettings
     {

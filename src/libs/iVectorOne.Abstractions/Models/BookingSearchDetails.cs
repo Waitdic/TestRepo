@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     using System;
     using System.Collections.Generic;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// A booking search details object

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Lookups
+﻿namespace iVectorOne.Lookups
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

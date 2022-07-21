@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW
+﻿namespace iVectorOne.CSSuppliers.DOTW
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,14 +8,14 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Search.Models;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.DOTW.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.DOTW.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {

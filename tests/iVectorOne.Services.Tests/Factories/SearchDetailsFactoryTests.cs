@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.API.Tests.Factories
+﻿namespace iVectorOne.API.Tests.Factories
 {
     using System;
     using System.Collections.Generic;
     using Moq;
-    using ThirdParty.Search.Settings;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Factories;
-    using ThirdParty.Models;
+    using iVectorOne.Search.Settings;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Factories;
+    using iVectorOne.Models;
 
     public class SearchDetailsFactoryTests
     {

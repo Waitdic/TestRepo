@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.ChannelManager
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.ChannelManager
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.ChannelManager;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.ChannelManager;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.ChannelManager;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.ChannelManager;
 
     public class ChannelManagerSearchTests : ThirdPartyPropertySearchBaseTest
     {

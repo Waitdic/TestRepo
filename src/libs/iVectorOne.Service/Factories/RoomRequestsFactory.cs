@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     public class RoomRequestsFactory : IRoomRequestsFactory
     {

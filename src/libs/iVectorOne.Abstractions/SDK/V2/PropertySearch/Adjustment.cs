@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertySearch
+﻿namespace iVectorOne.SDK.V2.PropertySearch
 {
     /// <summary>
     /// A class representing the adjustment for a room type

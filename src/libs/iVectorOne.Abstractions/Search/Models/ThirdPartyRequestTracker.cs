@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     using Intuitive;
     using Intuitive.Data;
@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Xml.Serialization;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// Class for tracking third party requests

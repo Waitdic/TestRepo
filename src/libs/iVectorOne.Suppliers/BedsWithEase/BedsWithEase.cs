@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,13 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.BedsWithEase.Models;
-    using ThirdParty.CSSuppliers.BedsWithEase.Models.Common;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.BedsWithEase.Models;
+    using iVectorOne.CSSuppliers.BedsWithEase.Models.Common;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class BedsWithEase : IThirdParty, ISingleSource
     {

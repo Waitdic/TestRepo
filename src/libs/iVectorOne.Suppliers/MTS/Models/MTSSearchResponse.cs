@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.MTS.Models
+﻿namespace iVectorOne.CSSuppliers.MTS.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

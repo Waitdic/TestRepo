@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase
 {
     using Intuitive.Helpers.Net;
     using System.Xml;

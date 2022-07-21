@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ATI
+﻿namespace iVectorOne.CSSuppliers.ATI
 {
     using System;
     using System.Collections.Generic;
@@ -12,13 +12,13 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.ATI.Models;
-    using ThirdParty.CSSuppliers.ATI.Models.Common;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using Erratum = ThirdParty.Models.Property.Booking.Erratum;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.ATI.Models;
+    using iVectorOne.CSSuppliers.ATI.Models.Common;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using Erratum = iVectorOne.Models.Property.Booking.Erratum;
     using Intuitive.Helpers.Extensions;
 
     public class ATI : IThirdParty, ISingleSource

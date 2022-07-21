@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.BedsWithEase
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.BedsWithEase
 {
-    using ThirdParty.CSSuppliers.BedsWithEase;
+    using iVectorOne.CSSuppliers.BedsWithEase;
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using Moq;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.BedsWithEase;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.BedsWithEase;
     using Moq.Protected;
     using System.Net;
 

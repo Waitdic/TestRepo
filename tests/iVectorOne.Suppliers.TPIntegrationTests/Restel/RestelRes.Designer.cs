@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Restel {
+namespace iVectorOne.Tests.Restel {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Restel {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Restel.RestelRes", typeof(RestelRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Restel.RestelRes", typeof(RestelRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

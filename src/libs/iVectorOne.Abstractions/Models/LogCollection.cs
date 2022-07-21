@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     using System.Xml;
 

@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Travelgate
+﻿namespace iVectorOne.CSSuppliers.Travelgate
 {
     using System.Collections.Generic;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
 
     public class TravelgateSupport
     {

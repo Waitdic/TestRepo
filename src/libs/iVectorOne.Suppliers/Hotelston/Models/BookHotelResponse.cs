@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Hotelston.Models
+﻿namespace iVectorOne.CSSuppliers.Hotelston.Models
 {
     using System.Xml.Serialization;
     using Common;

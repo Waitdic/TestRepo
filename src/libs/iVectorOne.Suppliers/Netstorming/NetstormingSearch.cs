@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming
+﻿namespace iVectorOne.CSSuppliers.Netstorming
 {
     using System;
     using System.Collections.Generic;
@@ -10,17 +10,17 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.Netstorming.Models;
-    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
-    using ThirdParty.CSSuppliers.Netstorming.Resources;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
-    using Cancellation = ThirdParty.Models.Property.Booking.Cancellation;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.Netstorming.Models;
+    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.CSSuppliers.Netstorming.Resources;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
+    using Cancellation = iVectorOne.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 
     public class NetstormingSearch : IThirdPartySearch, IMultiSource

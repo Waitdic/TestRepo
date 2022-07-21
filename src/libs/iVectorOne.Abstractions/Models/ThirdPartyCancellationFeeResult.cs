@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     /// <summary>
     /// Third Party Cancellation Fee Result

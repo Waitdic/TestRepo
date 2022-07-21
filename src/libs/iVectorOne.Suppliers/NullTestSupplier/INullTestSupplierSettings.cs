@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
     public interface INullTestSupplierSettings
     {

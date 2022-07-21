@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     using System;
     using System.Collections.Generic;

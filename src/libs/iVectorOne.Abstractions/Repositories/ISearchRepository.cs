@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A repository for returning search information from the database

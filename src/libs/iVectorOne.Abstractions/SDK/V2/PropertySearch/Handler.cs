@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.SDK.V2.PropertySearch
+﻿namespace iVectorOne.SDK.V2.PropertySearch
 {
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Services;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Services;
 
     public class Handler : IRequestHandler<Request, Response>
     {

@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive;
-    using ThirdParty;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Search.Settings;
+    using iVectorOne;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Search.Settings;
 
     /// <summary>Factory that takes in a source or supplier and returns the correct third party search or booking class</summary>
     public class ThirdPartyFactory : IThirdPartyFactory

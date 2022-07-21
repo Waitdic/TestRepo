@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     using Intuitive.Data;
     using Intuitive.Helpers.Extensions;
     using Intuitive.TPImport.Models;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
     using Content = SDK.V2.PropertyContent;
 
     /// <summary>Repository that retrieves property content from the database</summary>

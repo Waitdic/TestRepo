@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Stuba
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Stuba
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.Stuba;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.Stuba;
+    using iVectorOne.CSSuppliers.Stuba;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.Stuba;
 
     public class StubaSearchTest : ThirdPartyPropertySearchBaseTest
     {

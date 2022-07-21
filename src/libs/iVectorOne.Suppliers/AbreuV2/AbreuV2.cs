@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.CSSuppliers.AbreuV2
 {
     using System;
     using System.Collections.Generic;
@@ -12,12 +12,12 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.AbreuV2.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.AbreuV2.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class AbreuV2 : IThirdParty, ISingleSource
     {

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Service.Tests.Services
+﻿namespace iVectorOne.Service.Tests.Services
 {
     using System;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Models.Tokens.Constants;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Constants;
 
     public class TokenValuesTests
     {

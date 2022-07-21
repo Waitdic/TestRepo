@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.TeamAmerica
+﻿namespace iVectorOne.CSSuppliers.TeamAmerica
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedTeamAmericaSettings : SettingsBase, ITeamAmericaSettings
     {

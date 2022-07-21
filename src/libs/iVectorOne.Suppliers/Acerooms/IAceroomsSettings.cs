@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.Acerooms
+﻿namespace iVectorOne.CSSuppliers.Acerooms
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IAceroomsSettings
     {

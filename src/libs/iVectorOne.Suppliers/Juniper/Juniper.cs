@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper
+﻿namespace iVectorOne.CSSuppliers.Juniper
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +12,11 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.Juniper.Model;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.Juniper.Model;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class Juniper : IThirdParty, IMultiSource
     {

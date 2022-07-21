@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.JonView {
+namespace iVectorOne.Tests.JonView {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.JonView {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.JonView.JonViewRes", typeof(JonViewRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.JonView.JonViewRes", typeof(JonViewRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

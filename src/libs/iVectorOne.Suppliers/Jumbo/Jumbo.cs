@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Jumbo
+﻿namespace iVectorOne.CSSuppliers.Jumbo
 {
     using System;
     using System.Linq;
@@ -11,10 +11,10 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class Jumbo : IThirdParty, ISingleSource
     {

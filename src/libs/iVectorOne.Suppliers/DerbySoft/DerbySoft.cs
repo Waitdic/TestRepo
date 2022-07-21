@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
@@ -9,12 +9,12 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
     using System.Threading.Tasks;
 
     public class DerbySoft : IThirdParty, IMultiSource

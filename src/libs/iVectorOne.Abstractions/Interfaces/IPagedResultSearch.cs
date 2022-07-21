@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.Interfaces
+﻿namespace iVectorOne.Interfaces
 {
-    using ThirdParty.Search.Models;
+    using iVectorOne.Search.Models;
 
     public interface IPagedResultSearch
     {

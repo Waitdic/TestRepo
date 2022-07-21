@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.JonView
+﻿namespace iVectorOne.CSSuppliers.JonView
 {
     using System;
     using System.Collections.Generic;

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Jumbo {
+namespace iVectorOne.Tests.Jumbo {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Jumbo {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Jumbo.JumboRes", typeof(JumboRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Jumbo.JumboRes", typeof(JumboRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

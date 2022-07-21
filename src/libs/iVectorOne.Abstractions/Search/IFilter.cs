@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System.Collections.Generic;
     using iVector.Search.Property;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// Filters property results

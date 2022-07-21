@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Models.Soap
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Models.Soap
 {
     public abstract class SoapContent
     {

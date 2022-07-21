@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Stuba
+﻿namespace iVectorOne.CSSuppliers.Stuba
 {
 
     public interface IStubaSettings

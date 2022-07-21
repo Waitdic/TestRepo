@@ -1,18 +1,18 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Repositories;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.SDK.V2;
-    using ThirdParty.Services;
-    using ThirdParty.Utility;
+    using iVectorOne.Constants;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Repositories;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.SDK.V2;
+    using iVectorOne.Services;
+    using iVectorOne.Utility;
     using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.RMI
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.RMI
 {
     public class RMITest
     {

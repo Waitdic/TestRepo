@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Hotelston
+﻿namespace iVectorOne.CSSuppliers.Hotelston
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,13 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Hotelston.Models;
-    using ThirdParty.CSSuppliers.Hotelston.Models.Common;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using RoomDetails = ThirdParty.Models.Property.Booking.RoomDetails;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Hotelston.Models;
+    using iVectorOne.CSSuppliers.Hotelston.Models.Common;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using RoomDetails = iVectorOne.Models.Property.Booking.RoomDetails;
 
     public class Hotelston : IThirdParty, ISingleSource
     {

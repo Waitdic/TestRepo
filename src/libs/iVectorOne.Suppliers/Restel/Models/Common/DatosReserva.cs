@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Restel.Models.Common
+﻿namespace iVectorOne.CSSuppliers.Restel.Models.Common
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Interfaces
+﻿namespace iVectorOne.Interfaces
 {
     using System.Collections.Generic;
 

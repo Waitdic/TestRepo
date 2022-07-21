@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW
+﻿namespace iVectorOne.CSSuppliers.DOTW
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedDOTWSettings : SettingsBase, IDOTWSettings
     {

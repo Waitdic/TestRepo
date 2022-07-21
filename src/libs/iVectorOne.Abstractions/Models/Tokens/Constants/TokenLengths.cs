@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Tokens.Constants
+﻿namespace iVectorOne.Models.Tokens.Constants
 {
     /// <summary>Class containing the expected length of the tokens, used to trim off the whitespace</summary>
     public class TokenLengths

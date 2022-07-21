@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.CSSuppliers.ChannelManager
 {
     using System;
     using System.Collections.Generic;
@@ -12,13 +12,13 @@
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.ChannelManager.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.ChannelManager.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class ChannelManager : IThirdParty, ISingleSource
     {

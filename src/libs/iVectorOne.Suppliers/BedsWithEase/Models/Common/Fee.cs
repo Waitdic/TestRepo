@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase.Models.Common
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase.Models.Common
 {
 
     public class Fee

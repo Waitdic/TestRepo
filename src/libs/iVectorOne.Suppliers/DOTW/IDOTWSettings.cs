@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW
+﻿namespace iVectorOne.CSSuppliers.DOTW
 {
     public interface IDOTWSettings
     {

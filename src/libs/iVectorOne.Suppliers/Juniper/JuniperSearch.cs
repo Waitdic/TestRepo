@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper
+﻿namespace iVectorOne.CSSuppliers.Juniper
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,12 +8,12 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.Juniper.Model;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.Juniper.Model;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class JuniperSearch : IThirdPartySearch, IMultiSource
     {

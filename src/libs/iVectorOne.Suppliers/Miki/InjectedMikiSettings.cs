@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.Miki
+﻿namespace iVectorOne.CSSuppliers.Miki
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedMikiSettings : SettingsBase, IMikiSettings
     {

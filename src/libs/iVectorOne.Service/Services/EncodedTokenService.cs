@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,11 +6,11 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Models.Tokens.Constants;
-    using ThirdParty.Repositories;
-    using ThirdParty.Utility;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Constants;
+    using iVectorOne.Repositories;
+    using iVectorOne.Utility;
 
     /// <summary>A Service for encrypting and decrypting base 92 tokens.</summary>
     public class EncodedTokenService : ITokenService

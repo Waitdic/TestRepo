@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels
 {
     using System;
     using System.Collections.Generic;
@@ -15,11 +15,11 @@
     using Models;
     using Models.Soap;
     using Support;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class AmadeusHotels : IThirdParty, ISingleSource
     {

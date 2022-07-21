@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
     using System;
     using System.Globalization;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using Models.Common;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.OceanBeds.Models;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.OceanBeds.Models;
 
     public static class OceanBedsHelper
     {

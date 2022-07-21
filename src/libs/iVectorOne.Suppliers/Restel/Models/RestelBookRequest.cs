@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Restel.Models
+﻿namespace iVectorOne.CSSuppliers.Restel.Models
 {
     using System.Xml.Serialization;
 

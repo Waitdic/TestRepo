@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.Acerooms
+﻿namespace iVectorOne.CSSuppliers.Acerooms
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedAceroomsSettings : SettingsBase, IAceroomsSettings
     {

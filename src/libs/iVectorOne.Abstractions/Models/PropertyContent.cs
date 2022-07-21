@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     /// <summary>
     ///   <para>Property Content class, contains information about a class in the property Table</para>

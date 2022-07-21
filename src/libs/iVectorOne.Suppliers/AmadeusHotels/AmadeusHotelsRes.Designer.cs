@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.AmadeusHotels {
+namespace iVectorOne.CSSuppliers.AmadeusHotels {
     using System;
     
     

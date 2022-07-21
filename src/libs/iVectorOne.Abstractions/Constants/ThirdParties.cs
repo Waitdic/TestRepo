@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Constants
+﻿namespace iVectorOne.Constants
 {
     /// <summary>
     /// A list of constants for the third party names

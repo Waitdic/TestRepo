@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ATI
+﻿namespace iVectorOne.CSSuppliers.ATI
 {
     public interface IATISettings
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper
+﻿namespace iVectorOne.CSSuppliers.Juniper
 {
     public interface IJuniperSettings
     {

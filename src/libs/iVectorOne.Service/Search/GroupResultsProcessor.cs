@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System;
     using System.Collections.Generic;
@@ -6,11 +6,11 @@
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
-    using ThirdParty.Constants;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     /// <summary>
     /// Groups third Party results by property into our own format

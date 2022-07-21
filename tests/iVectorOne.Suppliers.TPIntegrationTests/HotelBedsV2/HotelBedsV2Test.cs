@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.HotelBedsV2
+namespace iVectorOne.Suppliers.TPIntegrationTests.HotelBedsV2
 {
     public class HotelBedsV2Test
     {

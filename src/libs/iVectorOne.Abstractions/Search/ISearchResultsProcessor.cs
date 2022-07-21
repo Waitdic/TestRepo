@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVector.Search.Property;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     /// <summary>
     /// An interface that defines a class to process results

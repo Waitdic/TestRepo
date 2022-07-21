@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.ATI
+﻿namespace iVectorOne.CSSuppliers.ATI
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedATISettings : SettingsBase, IATISettings
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.Miki {
+namespace iVectorOne.CSSuppliers.Miki {
     using System;
     
     

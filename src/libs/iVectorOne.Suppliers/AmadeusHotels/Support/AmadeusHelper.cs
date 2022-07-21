@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +6,9 @@
     using System.Text.RegularExpressions;
     using System.Xml;
     using Intuitive;
-    using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models.Property.Booking;
     using Models;
     using Models.Common;
     using Models.Header;

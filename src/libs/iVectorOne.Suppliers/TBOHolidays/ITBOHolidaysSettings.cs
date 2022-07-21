@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.TBOHolidays
+﻿namespace iVectorOne.CSSuppliers.TBOHolidays
 {
     public interface ITBOHolidaysSettings
     {

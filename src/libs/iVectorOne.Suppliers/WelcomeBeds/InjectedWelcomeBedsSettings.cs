@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedWelcomeBedsSettings : SettingsBase, IWelcomeBedsSettings
     {

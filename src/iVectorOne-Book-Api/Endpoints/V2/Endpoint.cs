@@ -4,10 +4,10 @@
     using iVectorOne.Web.Infrastructure;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Prebook = ThirdParty.SDK.V2.PropertyPrebook;
-    using Book = ThirdParty.SDK.V2.PropertyBook;
-    using Precancel = ThirdParty.SDK.V2.PropertyPrecancel;
-    using Cancel = ThirdParty.SDK.V2.PropertyCancel;
+    using Prebook = SDK.V2.PropertyPrebook;
+    using Book = SDK.V2.PropertyBook;
+    using Precancel = SDK.V2.PropertyPrecancel;
+    using Cancel = SDK.V2.PropertyCancel;
 
     public static class Endpoint
     {

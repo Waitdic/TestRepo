@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.ATI.Models
+﻿namespace iVectorOne.CSSuppliers.ATI.Models
 {
     using System.Xml.Serialization;
-    using ThirdParty.CSSuppliers.ATI.Models.Common;
+    using iVectorOne.CSSuppliers.ATI.Models.Common;
 
     public class AtiCancellationRequest : SoapContent
     {

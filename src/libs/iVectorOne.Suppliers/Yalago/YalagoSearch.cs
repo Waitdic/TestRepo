@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
 #pragma warning disable CS8618 
     using System;
@@ -9,14 +9,14 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Models.Yalago;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Models.Yalago;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class YalagoSearch : IThirdPartySearch, ISingleSource
     {
@@ -176,7 +176,7 @@
                                        hotel.establishmentInfo.LocationId.ToSafeString() + "|" + room.Code + "|" +
                                        searchDetails.OpaqueSearch.ToSafeString() + "|" + board.Type.ToSafeString();
 
-                        var cancellations = new List<ThirdParty.Models.Property.Booking.Cancellation>();
+                        var cancellations = new List<iVectorOne.Models.Property.Booking.Cancellation>();
                         var orderedCancellations = new List<YalagoAvailabilityResponse.CancellationCharge>();
                         if (board.cancellationPolicy != null)
                         {
@@ -194,7 +194,7 @@
                                 endDate = orderedCancellations[iCanx + 1].ExpiryDate.Date.AddDays(-1);
                             }
 
-                            cancellations.Add(new ThirdParty.Models.Property.Booking.Cancellation()
+                            cancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation()
                             {
                                 Amount = Math.Round(100 * cancellation.charge.Amount / amount, 2),
                                 StartDate = cancellation.ExpiryDate.Date,

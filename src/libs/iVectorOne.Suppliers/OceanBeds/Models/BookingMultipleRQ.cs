@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds.Models
+﻿namespace iVectorOne.CSSuppliers.OceanBeds.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

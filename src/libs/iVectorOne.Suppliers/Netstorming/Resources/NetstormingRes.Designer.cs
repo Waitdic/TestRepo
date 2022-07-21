@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.Netstorming.Resources {
+namespace iVectorOne.CSSuppliers.Netstorming.Resources {
     using System;
     
     

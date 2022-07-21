@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,7 +7,7 @@
     using Intuitive.Data;
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     // todo - merge this file with the tp support wrapper
     /// <summary>

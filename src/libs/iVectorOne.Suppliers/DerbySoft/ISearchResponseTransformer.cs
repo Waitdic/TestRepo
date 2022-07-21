@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public interface ISearchResponseTransformer
     {

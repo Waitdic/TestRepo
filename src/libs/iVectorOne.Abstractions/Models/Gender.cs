@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     /// <summary>
     ///   <para>A enum representing gender</para>

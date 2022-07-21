@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Schema;
 
-namespace ThirdParty.CSSuppliers.Restel.Models.Common
+namespace iVectorOne.CSSuppliers.Restel.Models.Common
 {
     using System;
     using System.Xml.Serialization;

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
 {
     using System.Linq;
-    using ThirdParty.Models;
-    using ThirdParty.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Interfaces;
 
     public class AmadeusPagingTokenKey : IPagingTokenKey
     {

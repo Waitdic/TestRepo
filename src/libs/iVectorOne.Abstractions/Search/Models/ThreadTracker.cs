@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search.Models
+﻿namespace iVectorOne.Search.Models
 {
     using System;
     using System.Threading;

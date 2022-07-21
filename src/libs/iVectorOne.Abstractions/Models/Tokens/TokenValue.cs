@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Tokens
+﻿namespace iVectorOne.Models.Tokens
 {
     /// <summary>Represents a value in a base 92 token</summary>
     public class TokenValue

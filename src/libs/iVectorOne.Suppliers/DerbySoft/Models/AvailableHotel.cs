@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft.Models
+﻿namespace iVectorOne.CSSuppliers.DerbySoft.Models
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;

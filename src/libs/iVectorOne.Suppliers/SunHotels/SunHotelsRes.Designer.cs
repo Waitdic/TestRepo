@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.SunHotels {
+namespace iVectorOne.CSSuppliers.SunHotels {
     using System;
     
     

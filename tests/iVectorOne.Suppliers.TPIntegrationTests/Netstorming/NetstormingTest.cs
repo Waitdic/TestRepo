@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.WHL
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.WHL
 {
     public class NetstormingTest
     {

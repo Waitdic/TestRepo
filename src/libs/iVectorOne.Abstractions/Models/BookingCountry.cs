@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     /// <summary>
     /// Represents a Booking Country in the Database

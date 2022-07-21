@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Threading.Tasks;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.SDK.V2.PropertyPrebook;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.SDK.V2.PropertyPrebook;
 
     /// <summary>A factory that creates property pre book responses using the provided property details</summary>
     public interface IPropertyPrebookResponseFactory

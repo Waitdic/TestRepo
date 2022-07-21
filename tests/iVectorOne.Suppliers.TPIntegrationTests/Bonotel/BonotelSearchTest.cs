@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Bonotel
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Bonotel
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.Bonotel;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.Bonotel;
+    using iVectorOne.CSSuppliers.Bonotel;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.Bonotel;
 
     public class BonotelSearchTest : ThirdPartyPropertySearchBaseTest
     {

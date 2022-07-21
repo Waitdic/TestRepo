@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Jumbo.Models
+﻿namespace iVectorOne.CSSuppliers.Jumbo.Models
 {
     public class Price
     {

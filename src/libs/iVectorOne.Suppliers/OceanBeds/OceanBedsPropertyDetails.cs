@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
     using System.Linq;
     using iVector.Search.Property;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
     using RoomDetails = iVector.Search.Property.RoomDetails;
 
     public class OceanBedsPropertyDetails

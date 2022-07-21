@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
     using System;
     using System.Collections.Generic;
@@ -7,13 +7,13 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.OceanBeds.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.OceanBeds.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
     using static OceanBedsHelper;
 
     public class OceanBedsSearch : IThirdPartySearch, ISingleSource

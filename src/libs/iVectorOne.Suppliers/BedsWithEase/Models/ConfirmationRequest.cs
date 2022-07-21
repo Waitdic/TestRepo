@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase.Models
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase.Models
 {
-    using ThirdParty.CSSuppliers.BedsWithEase.Models.Common;
+    using iVectorOne.CSSuppliers.BedsWithEase.Models.Common;
 
     public class ConfirmationRequest : SoapContent
     {

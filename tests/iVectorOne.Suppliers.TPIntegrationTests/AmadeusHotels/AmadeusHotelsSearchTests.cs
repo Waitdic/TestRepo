@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.AmadeusHotels
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.AmadeusHotels
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,8 +9,8 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Moq;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using Xunit;
 
     public class AmadeusHotelsSearchTests : ThirdPartyPropertySearchBaseTest

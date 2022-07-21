@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace ThirdParty.CSSuppliers.AbreuV2.Models
+namespace iVectorOne.CSSuppliers.AbreuV2.Models
 {
     public class RoomRq
     {

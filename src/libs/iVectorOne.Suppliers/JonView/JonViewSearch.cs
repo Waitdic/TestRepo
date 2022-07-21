@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.JonView
+﻿namespace iVectorOne.CSSuppliers.JonView
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,11 +8,11 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class JonViewSearch : IThirdPartySearch, ISingleSource
     {

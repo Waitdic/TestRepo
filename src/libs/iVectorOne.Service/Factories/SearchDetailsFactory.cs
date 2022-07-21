@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using iVector.Search.Property;
-    using ThirdParty.Models;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Models;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// A factory that creates a search details factory using a search request

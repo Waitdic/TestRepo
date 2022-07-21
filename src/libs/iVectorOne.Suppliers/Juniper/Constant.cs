@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper
+﻿namespace iVectorOne.CSSuppliers.Juniper
 {
     using System.Collections.Generic;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
 
     public static class Constant
     {

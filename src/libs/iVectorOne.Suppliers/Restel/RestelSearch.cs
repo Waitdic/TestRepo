@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Restel
+﻿namespace iVectorOne.CSSuppliers.Restel
 {
     using System;
     using System.Collections.Generic;
@@ -11,11 +11,11 @@
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Net;
     using Models;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
     using static RestelCommon;
 
     public class RestelSearch : IThirdPartySearch, ISingleSource

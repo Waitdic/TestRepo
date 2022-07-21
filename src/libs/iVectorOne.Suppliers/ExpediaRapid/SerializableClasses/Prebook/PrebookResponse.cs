@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

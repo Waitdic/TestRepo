@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     /// <summary>
     /// An Email of the booking composition

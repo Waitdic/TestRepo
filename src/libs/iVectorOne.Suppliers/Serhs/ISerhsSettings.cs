@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Serhs
+﻿namespace iVectorOne.CSSuppliers.Serhs
 {
     public interface ISerhsSettings
     {

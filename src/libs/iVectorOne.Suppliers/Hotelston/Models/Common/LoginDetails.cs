@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Hotelston.Models.Common
+﻿namespace iVectorOne.CSSuppliers.Hotelston.Models.Common
 {
     public class LoginDetails
     {

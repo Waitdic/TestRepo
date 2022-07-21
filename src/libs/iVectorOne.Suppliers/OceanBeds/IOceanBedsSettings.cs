@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IOceanBedsSettings
     {

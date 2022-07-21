@@ -1,16 +1,16 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Intuitive;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertyPrebook;
-    using ThirdParty.Services;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertyPrebook;
+    using iVectorOne.Services;
     using Search = SDK.V2.PropertySearch;
-    using ThirdParty.Utility;
+    using iVectorOne.Utility;
 
     /// <summary>
     /// A factory that creates property pre book responses using the provided property details

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Models.Altura
+﻿namespace iVectorOne.CSSuppliers.Models.Altura
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,12 +6,12 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Intuitive;
-    using ThirdParty.Factories;
-    using ThirdParty.Models;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Search;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Factories;
+    using iVectorOne.Models;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// The main search service, responsible for doing all the searching

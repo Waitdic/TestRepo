@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using ThirdParty.Models;
-    using ThirdParty.Repositories;
+    using iVectorOne.Models;
+    using iVectorOne.Repositories;
     using PropertyList = SDK.V2.PropertyList;
     using PropertyContent = SDK.V2.PropertyContent;
 

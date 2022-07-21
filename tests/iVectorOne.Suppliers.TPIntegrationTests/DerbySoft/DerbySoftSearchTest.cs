@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.DerbySoft
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.DerbySoft
 {
     using System;
     using System.Collections.Generic;
@@ -7,14 +7,14 @@
     using System.Xml;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.DerbySoft;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.DerbySoft;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.DerbySoft;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.DerbySoft;
 
     public class DerbySoftSearchTest : ThirdPartyPropertySearchBaseTest
     {

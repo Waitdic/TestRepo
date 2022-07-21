@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
     internal class Constants
     {

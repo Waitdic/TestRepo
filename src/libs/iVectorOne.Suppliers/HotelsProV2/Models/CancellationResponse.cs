@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.HotelsProV2.Models
+﻿namespace iVectorOne.CSSuppliers.HotelsProV2.Models
 {
     using Newtonsoft.Json;
 

@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.MTS
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.MTS
 {
     using Intuitive.Helpers.Serialization;
     using System.Collections.Generic;
-    using ThirdParty.CSSuppliers.MTS;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.MTS;
+    using iVectorOne.CSSuppliers.MTS;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.MTS;
 
     public class MTSSearchTests : ThirdPartyPropertySearchBaseTest
     {

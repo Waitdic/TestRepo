@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.ATI
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.ATI
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.ATI;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.CSSuppliers.ATI;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using Xunit;
 
     public class ATISearchTest : ThirdPartyPropertySearchBaseTest

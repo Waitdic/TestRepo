@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyContent
+﻿namespace iVectorOne.SDK.V2.PropertyContent
 {
     /// <summary>Class containing the information about the geography of a property</summary>
     public class Geography

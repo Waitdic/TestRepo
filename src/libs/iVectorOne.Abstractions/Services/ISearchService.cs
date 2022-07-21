@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Threading.Tasks;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Search.Models;
     using PropertySearch = SDK.V2.PropertySearch;
 
     /// <summary>

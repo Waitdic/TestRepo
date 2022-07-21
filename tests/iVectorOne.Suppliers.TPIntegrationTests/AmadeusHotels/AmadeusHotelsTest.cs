@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.AmadeusHotels
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.AmadeusHotels
 {
     public class AmadeusHotelsTest
     {

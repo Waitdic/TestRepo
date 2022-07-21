@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.SunHotels
+﻿namespace iVectorOne.CSSuppliers.SunHotels
 {
     public interface ISunHotelsSettings
     {

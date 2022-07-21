@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Web.Adaptors.Authentication
 {
     using System.Collections.Generic;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Search.Settings;
 
     public class SqlSubscription
     {

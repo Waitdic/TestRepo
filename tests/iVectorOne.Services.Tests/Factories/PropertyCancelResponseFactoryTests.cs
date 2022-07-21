@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Service.Tests.Services
+﻿namespace iVectorOne.Service.Tests.Services
 {
     using Moq;
-    using ThirdParty.Models;
-    using ThirdParty.Factories;
-    using ThirdParty.Repositories;
-    using ThirdParty.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Factories;
+    using iVectorOne.Repositories;
+    using iVectorOne.Lookups;
 
     public class CancelPropertyResponseFactoryTests
     {

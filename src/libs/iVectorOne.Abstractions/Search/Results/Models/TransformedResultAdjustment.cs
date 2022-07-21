@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Search.Results.Models
+﻿namespace iVectorOne.Search.Results.Models
 {
     using System.Xml.Serialization;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     /// <summary>
     /// The transformed result adjustment

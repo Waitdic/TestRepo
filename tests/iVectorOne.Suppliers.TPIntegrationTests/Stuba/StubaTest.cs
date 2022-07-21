@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.Stuba
+namespace iVectorOne.Suppliers.TPIntegrationTests.Stuba
 {
     public class StubaTest
     {

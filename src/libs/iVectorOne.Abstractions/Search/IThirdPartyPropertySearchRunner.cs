@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System.Threading;
     using System.Threading.Tasks;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// An interface representing a third party search runner class

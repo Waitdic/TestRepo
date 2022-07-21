@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Helpers.W2M
+﻿namespace iVectorOne.CSSuppliers.Helpers.W2M
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -6,9 +6,9 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
-    using ThirdParty.Models;
-    using ThirdParty.CSSuppliers.Models.W2M;
-    using ThirdParty.CSSuppliers.Xml.W2M;
+    using iVectorOne.Models;
+    using iVectorOne.CSSuppliers.Models.W2M;
+    using iVectorOne.CSSuppliers.Xml.W2M;
 
     internal class SoapRequestXmlBuilder
     {
@@ -148,8 +148,10 @@
 
         #region Book
 
-        internal string BuildHotelBookingRequest(BookRequestParameters parameters, string bookingCode,
-            ThirdParty.Models.Property.Booking.RoomDetails room)
+        internal string BuildHotelBookingRequest(
+            BookRequestParameters parameters,
+            string bookingCode,
+            iVectorOne.Models.Property.Booking.RoomDetails room)
         {
             var paxList = new List<Pax> { BuildFirstPax(parameters.LeadGuest, room.Passengers) };
 
@@ -218,7 +220,7 @@
             return pax;
         }
 
-        private static IEnumerable<Pax> GetAdditionalPax(ThirdParty.Models.Property.Booking.RoomDetails room)
+        private static IEnumerable<Pax> GetAdditionalPax(iVectorOne.Models.Property.Booking.RoomDetails room)
         {
             for (int i = 2; i <= room.Passengers.Count; i++)
             {

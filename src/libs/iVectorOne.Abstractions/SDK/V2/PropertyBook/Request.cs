@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyBook
+﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
     using System.Collections.Generic;
     using MediatR;

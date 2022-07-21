@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using ThirdParty.Factories;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Repositories;
+    using iVectorOne.Factories;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Repositories;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
 

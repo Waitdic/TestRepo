@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using ThirdParty.CSSuppliers.Xml.W2M;
+using iVectorOne.CSSuppliers.Xml.W2M;
 
-namespace ThirdParty.CSSuppliers.Xml.W2M
+namespace iVectorOne.CSSuppliers.Xml.W2M
 {
 #pragma warning disable CS8618
 

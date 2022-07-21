@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper.Model
+﻿namespace iVectorOne.CSSuppliers.Juniper.Model
 {
     using System;
     using System.Xml;

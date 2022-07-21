@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyContent
+﻿namespace iVectorOne.SDK.V2.PropertyContent
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;

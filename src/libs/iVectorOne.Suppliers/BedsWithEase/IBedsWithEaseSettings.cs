@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IBedsWithEaseSettings
     {

@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.OceanBeds
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.OceanBeds
 {
     using System.Collections.Generic;
-    using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.OceanBeds;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Search.Models;
+    using iVectorOne.CSSuppliers.OceanBeds;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using Xunit;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.Tests.OceanBeds;
+    using iVectorOne.Tests.OceanBeds;
 
     public class OceanBedsResSearchTests : ThirdPartyPropertySearchBaseTest
     {

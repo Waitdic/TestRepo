@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     /// <summary>
     /// An enum for holiday duration types

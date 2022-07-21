@@ -1,6 +1,6 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models.Property.Booking;
 
     /// <summary>Third party optional supplements</summary>
     public interface IThirdPartyOptionalSupplements : IThirdParty

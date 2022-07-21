@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.Search.Settings
+﻿namespace iVectorOne.Search.Settings
 {
-    using ThirdParty.Search.Results.Enums;
+    using iVectorOne.Search.Results.Enums;
 
     /// <summary>
     /// Settings used to configure the search

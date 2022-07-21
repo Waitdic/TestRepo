@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
 {
     using Newtonsoft.Json;
 

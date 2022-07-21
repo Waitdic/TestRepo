@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     /// <summary>
     /// An enum of the component type

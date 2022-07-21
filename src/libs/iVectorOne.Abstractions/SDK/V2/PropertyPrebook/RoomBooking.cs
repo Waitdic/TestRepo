@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyPrebook
+﻿namespace iVectorOne.SDK.V2.PropertyPrebook
 {
     /// <summary>
     /// a class representing a single room booking made as part of a property booking

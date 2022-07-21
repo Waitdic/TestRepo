@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Altura {
+namespace iVectorOne.Tests.Altura {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Altura {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Altura.AlturaRes", typeof(AlturaRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Altura.AlturaRes", typeof(AlturaRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,7 +70,6 @@ namespace ThirdParty.Tests.Altura {
         ///
         ///**REQUEST**
         ///
-        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
         ///&lt;AlturaDS_requests&gt;
         ///  &lt;Request type=&quot;Availability&quot; version=&quot;v2.8.3&quot; currency=&quot;EUR&quot;&gt;
         ///    &lt;Session&gt;
@@ -81,7 +80,9 @@ namespace ThirdParty.Tests.Altura {
         ///    &lt;Destination type=&quot;HOTEL&quot;&gt;102245&lt;/Destination&gt;
         ///    &lt;Arrival&gt;20210901&lt;/Arrival&gt;
         ///    &lt;Departure&gt;20210906&lt;/Departure&gt;
-        ///    &lt;NumberOfRooms&gt; [rest of string was truncated]&quot;;.
+        ///    &lt;NumberOfRooms&gt;1&lt;/NumberOfRooms&gt;
+        ///    &lt;RoomsOccupancy&gt;
+        ///     [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {

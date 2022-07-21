@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Models.Common
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Models.Common
 {
     using System;
     using System.Xml.Serialization;

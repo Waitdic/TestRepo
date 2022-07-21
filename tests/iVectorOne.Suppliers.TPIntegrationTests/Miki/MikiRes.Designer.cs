@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.Miki {
+namespace iVectorOne.Suppliers.TPIntegrationTests.Miki {
     using System;
     
     

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.WHL
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.WHL
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
@@ -7,9 +7,9 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Moq;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.Netstorming;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.Netstorming;
 
     public class NetstormingSearchTests : ThirdPartyPropertySearchBaseTest
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,13 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Helpers.W2M;
-    using ThirdParty.CSSuppliers.Models.W2M;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Helpers.W2M;
+    using iVectorOne.CSSuppliers.Models.W2M;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class W2M : IThirdParty, ISingleSource
     {

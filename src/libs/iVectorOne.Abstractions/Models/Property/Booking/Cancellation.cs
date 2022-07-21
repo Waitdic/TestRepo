@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Property.Booking
+﻿namespace iVectorOne.Models.Property.Booking
 {
     using System;
     using System.Xml.Serialization;

@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.WelcomeBeds
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.WelcomeBeds
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using ThirdParty.CSSuppliers;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.WelcomeBeds;
+    using iVectorOne.CSSuppliers;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.WelcomeBeds;
 
     public class WelcomeBedsSearchTests : ThirdPartyPropertySearchBaseTest
     {

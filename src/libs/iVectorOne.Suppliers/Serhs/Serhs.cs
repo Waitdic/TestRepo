@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Serhs
+﻿namespace iVectorOne.CSSuppliers.Serhs
 {
     using System;
     using System.Collections.Generic;
@@ -7,14 +7,14 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Constants;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
     using Models;
     using Models.Common;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Interfaces;
+    using iVectorOne.Interfaces;
     using System.Threading.Tasks;
 
     public class Serhs : IThirdParty, ISingleSource

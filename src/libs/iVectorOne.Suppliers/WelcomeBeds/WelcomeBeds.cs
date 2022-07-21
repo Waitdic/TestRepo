@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
     using System;
     using System.Collections.Generic;
@@ -9,13 +9,13 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Models.WelcomeBeds;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Models.WelcomeBeds;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class WelcomeBeds : IThirdParty, ISingleSource
     {

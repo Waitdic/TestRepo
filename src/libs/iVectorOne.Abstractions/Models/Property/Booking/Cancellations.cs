@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Property.Booking
+﻿namespace iVectorOne.Models.Property.Booking
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A list of cancellation

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Altura
+﻿namespace iVectorOne.CSSuppliers.Altura
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,14 +9,14 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Models.Altura;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Models.Altura;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class AlturaSearch : IThirdPartySearch, ISingleSource
     {

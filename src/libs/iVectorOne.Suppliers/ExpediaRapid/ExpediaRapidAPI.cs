@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
 {
     using System.Net.Http;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using iVectorOne.Models.Property.Booking;
 
     public class ExpediaRapidAPI : IExpediaRapidAPI
     {

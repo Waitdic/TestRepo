@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.Fastpayhotels {
+namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels {
     using System;
     
     

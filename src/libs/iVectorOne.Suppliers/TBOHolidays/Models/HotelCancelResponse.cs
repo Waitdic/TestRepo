@@ -1,6 +1,6 @@
-﻿using ThirdParty.CSSuppliers.TBOHolidays.Models.Common;
+﻿using iVectorOne.CSSuppliers.TBOHolidays.Models.Common;
 
-namespace ThirdParty.CSSuppliers.TBOHolidays.Models
+namespace iVectorOne.CSSuppliers.TBOHolidays.Models
 {
     public class HotelCancelResponse : SoapContent
     {

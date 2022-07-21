@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.YouTravel
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.YouTravel
 {
     using Intuitive.Helpers.Serialization;
     using Moq;
     using System.Collections.Generic;
-    using ThirdParty.CSSuppliers.YouTravel;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.YouTravel;
+    using iVectorOne.CSSuppliers.YouTravel;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.YouTravel;
 
     public class YouTravelSearchTest : ThirdPartyPropertySearchBaseTest
     {

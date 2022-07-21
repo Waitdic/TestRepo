@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.HotelsProV2
+﻿namespace iVectorOne.CSSuppliers.HotelsProV2
 {
     using System;
     using System.Linq;
@@ -9,11 +9,11 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.HotelsProV2.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.HotelsProV2.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class HotelsProV2 : IThirdParty, ISingleSource
     {

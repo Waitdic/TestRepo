@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ThirdParty.Models;
-    using ThirdParty.SDK.V2.PropertyContent;
+    using iVectorOne.Models;
+    using iVectorOne.SDK.V2.PropertyContent;
 
     /// <summary>Repository that retrieves property content from the database</summary>
     public interface IPropertyContentRepository

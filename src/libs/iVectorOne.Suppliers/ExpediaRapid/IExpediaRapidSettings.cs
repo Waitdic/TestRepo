@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
 {
     public interface IExpediaRapidSettings
     {

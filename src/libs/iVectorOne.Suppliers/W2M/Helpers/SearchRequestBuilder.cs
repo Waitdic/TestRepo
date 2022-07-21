@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Helpers.W2M
+﻿namespace iVectorOne.CSSuppliers.Helpers.W2M
 {
     using System;
     using System.Collections.Generic;
@@ -10,10 +10,10 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Models.W2M;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Models.W2M;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
 
     internal class SearchRequestBuilder
     {

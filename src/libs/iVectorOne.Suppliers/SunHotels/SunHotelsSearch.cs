@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.SunHotels
+﻿namespace iVectorOne.CSSuppliers.SunHotels
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +12,11 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Microsoft.Extensions.Caching.Memory;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class SunHotelsSearch : IThirdPartySearch, ISingleSource
     {
@@ -315,10 +315,10 @@
 
                             foreach (var meal in room.meals)
                             {
-                                var resultCancellations = new List<ThirdParty.Models.Property.Booking.Cancellation>();
+                                var resultCancellations = new List<iVectorOne.Models.Property.Booking.Cancellation>();
                                 foreach (var cancellation in cancellations)
                                 {
-                                    resultCancellations.Add(new ThirdParty.Models.Property.Booking.Cancellation()
+                                    resultCancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation()
                                     {
                                         Amount = cancellation.Percentage,
                                         StartDate = cancellation.StartDate,

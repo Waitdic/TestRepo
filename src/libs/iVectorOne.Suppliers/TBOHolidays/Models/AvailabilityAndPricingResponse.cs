@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.TBOHolidays.Models
+﻿namespace iVectorOne.CSSuppliers.TBOHolidays.Models
 {
     using Common;
 

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Models.W2M
+﻿namespace iVectorOne.CSSuppliers.Models.W2M
 {
     public class BaseRequestParameters
     {

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// An object that de-duplicates third party property results

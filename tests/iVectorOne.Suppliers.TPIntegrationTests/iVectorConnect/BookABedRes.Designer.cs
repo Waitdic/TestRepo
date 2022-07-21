@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.iVectorConnect {
+namespace iVectorOne.Tests.iVectorConnect {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.iVectorConnect {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.iVectorConnect.BookABedRes", typeof(BookABedRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.iVectorConnect.BookABedRes", typeof(BookABedRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

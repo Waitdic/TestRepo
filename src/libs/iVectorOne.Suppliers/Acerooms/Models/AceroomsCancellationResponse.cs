@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AceRooms.Models
+﻿namespace iVectorOne.CSSuppliers.AceRooms.Models
 {
     public class AceroomsCancellationResponse
     {

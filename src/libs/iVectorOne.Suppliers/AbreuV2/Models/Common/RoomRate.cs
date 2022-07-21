@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AbreuV2.Models
+﻿namespace iVectorOne.CSSuppliers.AbreuV2.Models
 {
     using System.Linq;
     using System.Xml.Serialization;

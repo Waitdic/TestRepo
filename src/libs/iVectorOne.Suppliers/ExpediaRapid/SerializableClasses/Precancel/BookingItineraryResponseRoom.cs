@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
 {
     using System;
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
 
     public class BookingItineraryResponseRoom : BookRequestRoom
     {

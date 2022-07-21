@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Utility
+﻿namespace iVectorOne.Utility
 {
     using System;
 

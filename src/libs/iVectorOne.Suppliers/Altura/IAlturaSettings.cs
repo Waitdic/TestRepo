@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.Altura
+﻿namespace iVectorOne.CSSuppliers.Altura
 {
-    using ThirdParty;
+    using iVectorOne;
     public interface IAlturaSettings
     {
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);

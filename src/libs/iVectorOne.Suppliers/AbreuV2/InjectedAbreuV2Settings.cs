@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.CSSuppliers.AbreuV2
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedAbreuV2Settings : SettingsBase, IAbreuV2Settings
     {

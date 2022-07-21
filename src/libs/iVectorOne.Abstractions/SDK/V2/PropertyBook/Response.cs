@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyBook
+﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
     public record Response : ResponseBase
     {

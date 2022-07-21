@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.CSSuppliers.Restel
+﻿namespace iVectorOne.CSSuppliers.Restel
 {
     using System;
     using System.Collections.Generic;
     using System.Xml;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
     using Models;
 
     public static class RestelCommon

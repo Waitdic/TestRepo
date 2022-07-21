@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Models.Header
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Models.Header
 {
     using System;
     using Support;

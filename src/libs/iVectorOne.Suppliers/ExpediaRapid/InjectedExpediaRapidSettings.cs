@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedExpediaRapidSettings : SettingsBase, IExpediaRapidSettings
     {

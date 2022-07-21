@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedOceanBedsSettings : SettingsBase, IOceanBedsSettings
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models
+﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models
 {
     public class DerbySoftBookingUsbV4PreBookResponse
     {

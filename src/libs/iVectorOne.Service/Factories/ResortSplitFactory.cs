@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System.Collections.Generic;
     using System.Linq;
     using iVector.Search.Property;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A factory that creates resort splits from a data row

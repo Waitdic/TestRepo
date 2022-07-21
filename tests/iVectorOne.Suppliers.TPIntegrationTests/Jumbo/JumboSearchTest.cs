@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Jumbo
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Jumbo
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.Jumbo;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.Jumbo;
+    using iVectorOne.CSSuppliers.Jumbo;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.Jumbo;
 
     public class JumboSearchTest : ThirdPartyPropertySearchBaseTest
     {

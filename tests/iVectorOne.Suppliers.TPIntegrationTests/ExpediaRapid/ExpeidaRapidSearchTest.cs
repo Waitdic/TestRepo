@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.ExpediaRapid
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.ExpediaRapid
 {
     using Moq;
     using System.Collections.Generic;
-    using ThirdParty.CSSuppliers.ExpediaRapid;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.ExpediaRapid;
+    using iVectorOne.CSSuppliers.ExpediaRapid;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.ExpediaRapid;
 
     public class ExpeidaRapidSearchTest : ThirdPartyPropertySearchBaseTest
     {

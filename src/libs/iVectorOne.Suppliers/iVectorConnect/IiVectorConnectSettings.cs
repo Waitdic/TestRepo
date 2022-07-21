@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IiVectorConnectSettings
     {

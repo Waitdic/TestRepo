@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyContent
+﻿namespace iVectorOne.SDK.V2.PropertyContent
 {
     /// <summary>Contains all the information about a properties address</summary>
     public class Address

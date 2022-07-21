@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Models
+﻿namespace iVectorOne.Models
 {
     using System.Collections.Generic;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// The user object

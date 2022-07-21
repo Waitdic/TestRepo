@@ -1,4 +1,4 @@
-namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
+namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -8,10 +8,10 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
     using iVector.Search.Property;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Settings;
-    using ThirdParty.Tests.Helpers;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Settings;
+    using iVectorOne.Tests.Helpers;
 
     //using MoreLinq;
 

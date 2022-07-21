@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.CSSuppliers.FastPayHotels
 {
     using System;
     using System.Collections.Generic;
@@ -9,12 +9,12 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.FastPayHotels.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.FastPayHotels.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class FastPayHotels : IThirdParty, ISingleSource
     {

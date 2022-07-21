@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid.ExceptionMessages
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.ExceptionMessages
 {
 
     public static class OccupancyExceptions

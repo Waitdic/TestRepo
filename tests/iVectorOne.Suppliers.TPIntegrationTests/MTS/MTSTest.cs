@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.MTS
+namespace iVectorOne.Suppliers.TPIntegrationTests.MTS
 {
     public class MTSTest
     {

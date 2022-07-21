@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Property.VirtualCreditCards
+﻿namespace iVectorOne.Models.Property.VirtualCreditCards
 {
     using System;
     using System.Collections.Generic;

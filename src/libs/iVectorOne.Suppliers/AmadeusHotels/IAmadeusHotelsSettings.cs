@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels
 {
     public interface IAmadeusHotelsSettings
     {

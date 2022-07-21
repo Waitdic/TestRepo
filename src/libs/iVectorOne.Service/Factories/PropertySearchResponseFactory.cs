@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System;
     using System.Collections.Generic;
@@ -7,14 +7,14 @@
     using Intuitive;
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Services;
-    using ThirdParty.Utility;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Services;
+    using iVectorOne.Utility;
 
     /// <summary>
     ///  Class responsible for building the property search response

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Bonotel
+﻿namespace iVectorOne.CSSuppliers.Bonotel
 {
     using System;
     using System.Collections.Generic;

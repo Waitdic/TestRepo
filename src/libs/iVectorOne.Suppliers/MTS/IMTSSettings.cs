@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.MTS
+﻿namespace iVectorOne.CSSuppliers.MTS
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IMTSSettings
     {

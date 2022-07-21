@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Models.Yalago
+﻿namespace iVectorOne.CSSuppliers.Models.Yalago
 {
 using System;
 #pragma warning disable CS8618

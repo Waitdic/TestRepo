@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Search
+﻿namespace iVectorOne.Search
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Repositories;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Enums;
+    using iVectorOne.Repositories;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Enums;
 
     /// <summary>
     ///   <br />

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     using System.Threading.Tasks;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     /// <summary>
     /// Defines a third party

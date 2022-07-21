@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Hotelston
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Hotelston
 {
     using System.Collections.Generic;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using CSSuppliers.Hotelston;
     using Helpers;
     using Xunit;

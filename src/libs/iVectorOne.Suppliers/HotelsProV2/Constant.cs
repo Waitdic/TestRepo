@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.HotelsProV2
+﻿namespace iVectorOne.CSSuppliers.HotelsProV2
 {
     public static class Constant
     {

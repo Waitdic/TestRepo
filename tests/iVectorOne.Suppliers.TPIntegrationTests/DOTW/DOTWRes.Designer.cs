@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.DOTW {
+namespace iVectorOne.Tests.DOTW {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.DOTW {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.DOTW.DOTWRes", typeof(DOTWRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.DOTW.DOTWRes", typeof(DOTWRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

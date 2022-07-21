@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Acerooms
+﻿namespace iVectorOne.CSSuppliers.Acerooms
 {
     using System;
     using System.Collections.Generic;
@@ -8,16 +8,16 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.AceRooms.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
-    using static ThirdParty.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.AceRooms.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
+    using static iVectorOne.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
 
     public class AceroomsSearch : IThirdPartySearch, ISingleSource
     {

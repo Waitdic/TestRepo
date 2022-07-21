@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Miki
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Miki
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using Intuitive.Helpers.Net;
     using Helpers;
     using Moq;
-    using ThirdParty.CSSuppliers.Miki;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.Miki;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using Xunit;
     using Intuitive.Helpers.Serialization;
 

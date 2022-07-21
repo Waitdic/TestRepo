@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Threading.Tasks;
-    using ThirdParty.SDK.V2.PropertyBook;
+    using iVectorOne.SDK.V2.PropertyBook;
 
     /// <summary>Service responsible for talking to the third party and handling the book, and returning book responses.</summary>
     public interface IBookService

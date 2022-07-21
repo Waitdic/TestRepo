@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
 
     public class FeeCalculator
     {

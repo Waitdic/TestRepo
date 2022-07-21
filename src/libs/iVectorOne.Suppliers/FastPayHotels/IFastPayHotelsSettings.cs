@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.CSSuppliers.FastPayHotels
 {
     public interface IFastPayHotelsSettings
     {

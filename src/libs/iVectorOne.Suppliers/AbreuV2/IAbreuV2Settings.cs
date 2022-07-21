@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.CSSuppliers.AbreuV2
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IAbreuV2Settings
     {

@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Restel.Models
+﻿namespace iVectorOne.CSSuppliers.Restel.Models
 {
     using System.Xml.Serialization;
-    using ThirdParty.CSSuppliers.Restel.Models.Common;
+    using iVectorOne.CSSuppliers.Restel.Models.Common;
 
     [XmlRoot("peticion")]
     public class RestelPrebookRequest

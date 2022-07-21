@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System;
     using System.Collections.Generic;
@@ -6,10 +6,10 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
 
     public class BookingUsbV4AvailabilityRequestBuilder : ISearchRequestBuilder
     {

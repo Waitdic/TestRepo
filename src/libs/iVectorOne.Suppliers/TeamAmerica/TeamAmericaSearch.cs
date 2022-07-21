@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.TeamAmerica
+﻿namespace iVectorOne.CSSuppliers.TeamAmerica
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,12 +7,12 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.TeamAmerica.Models;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.TeamAmerica.Models;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class TeamAmericaSearch : IThirdPartySearch
     {

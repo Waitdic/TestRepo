@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Serhs
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Serhs
 {
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.Serhs;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.Serhs;
+    using iVectorOne.CSSuppliers.Serhs;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.Serhs;
 
     public class SerhsSearchTests : ThirdPartyPropertySearchBaseTest
     {

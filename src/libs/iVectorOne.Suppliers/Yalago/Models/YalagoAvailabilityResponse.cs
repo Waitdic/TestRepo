@@ -1,5 +1,5 @@
 ﻿
-namespace ThirdParty.CSSuppliers.Models.Yalago
+namespace iVectorOne.CSSuppliers.Models.Yalago
 {
 #pragma warning disable CS8618
 #pragma warning disable CS0649

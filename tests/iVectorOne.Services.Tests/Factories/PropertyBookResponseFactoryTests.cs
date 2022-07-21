@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Service.Tests.Services
+﻿namespace iVectorOne.Service.Tests.Services
 {
     using Moq;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Factories;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Services;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Factories;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Services;
 
     public class PropertyBookResponseFactoryTests
     {

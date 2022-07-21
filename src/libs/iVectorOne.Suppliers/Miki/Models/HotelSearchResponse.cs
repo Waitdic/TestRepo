@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Miki.Models
+﻿namespace iVectorOne.CSSuppliers.Miki.Models
 {
     using System;
     using System.Xml.Serialization;

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.ExpediaRapid {
+namespace iVectorOne.Tests.ExpediaRapid {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.ExpediaRapid {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.ExpediaRapid.ExpediaRapidRes", typeof(ExpediaRapidRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.ExpediaRapid.ExpediaRapidRes", typeof(ExpediaRapidRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

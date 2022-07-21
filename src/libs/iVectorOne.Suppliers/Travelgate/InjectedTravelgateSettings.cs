@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Travelgate
+﻿namespace iVectorOne.CSSuppliers.Travelgate
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Support;
+    using iVectorOne.Support;
 
     public class InjectedTravelgateSettings : SettingsBase, ITravelgateSettings
     {

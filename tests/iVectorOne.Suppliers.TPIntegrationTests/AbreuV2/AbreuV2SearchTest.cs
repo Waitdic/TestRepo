@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.AbreuV2
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.AbreuV2
 {
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.AbreuV2;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.AbreuV2;
+    using iVectorOne.Search.Models;
     using Xunit;
 
     public class AbreuV2SearchTest : ThirdPartyPropertySearchBaseTest

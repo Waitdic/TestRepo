@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Threading.Tasks;
-    using ThirdParty.SDK.V2.PropertyPrebook;
+    using iVectorOne.SDK.V2.PropertyPrebook;
 
     /// <summary>
     /// a service for pre booking components

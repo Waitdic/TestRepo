@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.SDK.Tests.Models
+﻿namespace iVectorOne.SDK.Tests.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty.SDK.V2;
-    using ThirdParty.SDK.V2.PropertyBook;
-    using ThirdParty.Tests.Models;
+    using iVectorOne.SDK.V2;
+    using iVectorOne.SDK.V2.PropertyBook;
+    using iVectorOne.Tests.Models;
 
     public class LeadCustomerTest
     {

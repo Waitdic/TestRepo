@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Altura
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Altura
 {
     public class AlturaTest
     {

@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Support;
+    using iVectorOne.Support;
 
     public class InjectediVectorConnectSettings : SettingsBase, IiVectorConnectSettings
     {

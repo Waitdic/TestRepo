@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.BedsWithEase {
+namespace iVectorOne.Tests.BedsWithEase {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.BedsWithEase {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.BedsWithEase.BedsWithEaseRes", typeof(BedsWithEaseRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.BedsWithEase.BedsWithEaseRes", typeof(BedsWithEaseRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

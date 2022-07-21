@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Restel
+﻿namespace iVectorOne.CSSuppliers.Restel
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,13 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.Restel.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.CSSuppliers.Restel.Models;
     using static RestelThirdPartyReference;
     using static RestelCommon;
     using System.Threading.Tasks;

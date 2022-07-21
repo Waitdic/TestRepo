@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Utility
+﻿namespace iVectorOne.Utility
 {
     /// <summary>Interface for a class that encodes and decodes to a difference base</summary>
     public interface IBaseConverter

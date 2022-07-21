@@ -1,11 +1,11 @@
-﻿//namespace ThirdParty.Suppliers.TPIntegrationTests.Travelgate
+﻿//namespace iVectorOne.Suppliers.TPIntegrationTests.Travelgate
 //{
 //    using System.Collections.Generic;
 //    using Moq;
-//    using ThirdParty.Abstractions.Lookups;
-//    using ThirdParty.Abstractions.Search.Models;
-//    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-//    using ThirdParty.VBSuppliers;
+//    using iVectorOne.Abstractions.Lookups;
+//    using iVectorOne.Abstractions.Search.Models;
+//    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+//    using iVectorOne.VBSuppliers;
 //    using Xunit;
 //    public class TravelgateSearchTest : ThirdPartyPropertySearchBaseTest
 //    {

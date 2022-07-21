@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models.Common
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect.Models.Common
 {
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     public class GuestDetail
     {

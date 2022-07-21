@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.HotelBedsV2
+﻿namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
     using System;
     using System.Collections.Generic;
@@ -10,14 +10,14 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using Newtonsoft.Json;
-    using ThirdParty.Search.Models;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Results.Models;
 
     public class HotelBedsV2Search : IThirdPartySearch, ISingleSource
     {
@@ -198,7 +198,7 @@
                                         endDate = orderedCancellations[iCanx + 1].from.AddDays(-1);
                                     }
 
-                                    cancellations.Add(new ThirdParty.Models.Property.Booking.Cancellation
+                                    cancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation
                                     {
                                         Amount = 100 * cancellation.amount.ToSafeDecimal() / amount,
                                         StartDate = cancellation.from,

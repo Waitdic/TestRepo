@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.HotelsProV2 {
+namespace iVectorOne.Suppliers.TPIntegrationTests.HotelsProV2 {
     using System;
     
     

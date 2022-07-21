@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search.Results.Models
+﻿namespace iVectorOne.Search.Results.Models
 {
     using System.Collections.Generic;
     using System.Linq;

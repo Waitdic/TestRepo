@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.TeamAmerica.Models
+﻿namespace iVectorOne.CSSuppliers.TeamAmerica.Models
 {
     using System;
     using System.Text.RegularExpressions;

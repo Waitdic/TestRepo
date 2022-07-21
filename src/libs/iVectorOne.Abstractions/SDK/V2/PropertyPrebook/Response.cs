@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.SDK.V2.PropertyPrebook
+﻿namespace iVectorOne.SDK.V2.PropertyPrebook
 {
     using System.Collections.Generic;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     public record Response : ResponseBase
     {

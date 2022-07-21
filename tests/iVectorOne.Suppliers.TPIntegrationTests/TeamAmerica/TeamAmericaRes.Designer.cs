@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.TeamAmerica {
+namespace iVectorOne.Tests.TeamAmerica {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.TeamAmerica {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.TeamAmerica.TeamAmericaRes", typeof(TeamAmericaRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.TeamAmerica.TeamAmericaRes", typeof(TeamAmericaRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

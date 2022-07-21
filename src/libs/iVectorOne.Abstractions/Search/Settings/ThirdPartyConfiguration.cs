@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search.Settings
+﻿namespace iVectorOne.Search.Settings
 {
     using System.Collections.Generic;
 

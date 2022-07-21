@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
     using Models;
     using Models.Common;
     using Models.Soap;

@@ -1,14 +1,14 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using ThirdParty;
-    using ThirdParty.Factories;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertyBook;
+    using iVectorOne;
+    using iVectorOne.Factories;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertyBook;
 
     /// <summary>Service responsible for talking to the third party and handling the book, and returning book responses.</summary>
     public class BookService : IBookService

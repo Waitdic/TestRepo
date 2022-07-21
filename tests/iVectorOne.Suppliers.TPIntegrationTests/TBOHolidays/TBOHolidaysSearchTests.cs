@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.TBOHolidays
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.TBOHolidays
 {
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using ThirdParty.CSSuppliers.TBOHolidays;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.TBOHolidays;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using Xunit;
 
     public class TBOHolidaysSearchTests : ThirdPartyPropertySearchBaseTest

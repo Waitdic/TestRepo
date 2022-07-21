@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.Juniper
+﻿namespace iVectorOne.CSSuppliers.Juniper
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Support;
 
     public class InjectedJuniperSettings : SettingsBase, IJuniperSettings
     {

@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect
 {
     using System;
     using System.Collections.Generic;
     using Models.Common;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
 
     public static class Helper
     {

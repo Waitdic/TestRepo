@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search.Models
+﻿namespace iVectorOne.Search.Models
 {
     /// <summary>Timer support class</summary>
     internal class ProcessTimerSupport

@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.Bonotel
+namespace iVectorOne.Suppliers.TPIntegrationTests.Bonotel
 {
     public class BonotelTest
     {

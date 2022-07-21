@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Netstorming {
+namespace iVectorOne.Tests.Netstorming {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Netstorming {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Netstorming.NetstormingRes", typeof(NetstormingRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Netstorming.NetstormingRes", typeof(NetstormingRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

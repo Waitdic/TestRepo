@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Serhs {
+namespace iVectorOne.Tests.Serhs {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Serhs {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Serhs.SerhsRes", typeof(SerhsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Serhs.SerhsRes", typeof(SerhsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

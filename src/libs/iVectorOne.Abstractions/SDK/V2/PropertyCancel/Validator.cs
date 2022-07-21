@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyCancel
+﻿namespace iVectorOne.SDK.V2.PropertyCancel
 {
     using System;
     using System.Linq;

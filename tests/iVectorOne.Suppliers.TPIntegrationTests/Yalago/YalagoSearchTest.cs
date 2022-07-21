@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Yalago
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Yalago
 {
     using System.Collections.Generic;
     using Moq;
-    using ThirdParty.CSSuppliers;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.Yalago;
+    using iVectorOne.CSSuppliers;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.Yalago;
 
     public class YalagoSearchTest : ThirdPartyPropertySearchBaseTest
     {

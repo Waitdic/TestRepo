@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.SunHotels
+﻿namespace iVectorOne.CSSuppliers.SunHotels
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedSunHotelsSettings : SettingsBase, ISunHotelsSettings
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Lookups
+﻿namespace iVectorOne.Lookups
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using Intuitive.Data;
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
-    using ThirdParty.Constants;
+    using iVectorOne.Constants;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings

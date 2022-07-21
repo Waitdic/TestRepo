@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
-    using ThirdParty.Constants;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.SDK.V2;
-    using ThirdParty.SDK.V2.PropertyBook;
+    using iVectorOne.Constants;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.SDK.V2;
+    using iVectorOne.SDK.V2.PropertyBook;
 
     /// <summary>Class to Validate which suppliers need which supplier references</summary>
     public class SuppierReferenceValidator : ISuppierReferenceValidator

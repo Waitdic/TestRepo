@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.YouTravel
+﻿namespace iVectorOne.CSSuppliers.YouTravel
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedYouTravelSettings : SettingsBase, IYouTravelSettings
     {

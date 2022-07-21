@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ThirdParty.CSSuppliers.RMI.Models
+namespace iVectorOne.CSSuppliers.RMI.Models
 {
     [XmlRoot("CancelRequest")]
     public class CancelRequest

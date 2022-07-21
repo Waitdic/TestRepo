@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.CSSuppliers.ChannelManager
 {
     public interface IChannelManagerSettings
     {

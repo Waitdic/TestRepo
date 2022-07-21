@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.YouTravel
+namespace iVectorOne.Suppliers.TPIntegrationTests.YouTravel
 {
     public class YouTravelTest
     {

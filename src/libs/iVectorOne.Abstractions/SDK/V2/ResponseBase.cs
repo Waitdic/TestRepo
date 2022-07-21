@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2
+﻿namespace iVectorOne.SDK.V2
 {
     using System.Collections.Generic;
     using System.Text.Json.Serialization;

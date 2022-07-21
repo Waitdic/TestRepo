@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.JonView
+﻿namespace iVectorOne.CSSuppliers.JonView
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Search.Settings;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Search.Settings;
+    using iVectorOne.Support;
 
     public class InjectedJonViewSettings : SettingsBase, IJonViewSettings
     {

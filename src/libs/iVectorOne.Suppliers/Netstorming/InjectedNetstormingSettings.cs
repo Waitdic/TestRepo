@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming
+﻿namespace iVectorOne.CSSuppliers.Netstorming
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Support;
+    using iVectorOne.Support;
 
     public class InjectedNetstormingSettings : SettingsBase, INetstormingSettings
     {

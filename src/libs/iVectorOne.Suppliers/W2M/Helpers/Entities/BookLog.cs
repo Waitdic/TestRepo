@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Models.W2M
+﻿namespace iVectorOne.CSSuppliers.Models.W2M
 {
 #pragma warning disable CS8618
     public class BookLog

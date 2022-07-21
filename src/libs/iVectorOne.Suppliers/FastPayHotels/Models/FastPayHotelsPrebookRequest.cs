@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.FastPayHotels.Models
+﻿namespace iVectorOne.CSSuppliers.FastPayHotels.Models
 {
     using System.Collections.Generic;
 

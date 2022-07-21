@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.iVectorConnect
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.iVectorConnect
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.iVectorConnect;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.iVectorConnect;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.iVectorConnect;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.iVectorConnect;
 
     public class iVectorConnectSearchTests : ThirdPartyPropertySearchBaseTest
     {

@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.HotelsProV2
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.HotelsProV2
 {
     using System.Collections.Generic;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using Helpers;
-    using ThirdParty.CSSuppliers.HotelsProV2;
+    using iVectorOne.CSSuppliers.HotelsProV2;
     using Xunit;
 
     public class HotelsProV2SearchTest : ThirdPartyPropertySearchBaseTest

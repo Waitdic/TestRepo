@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyList
+﻿namespace iVectorOne.SDK.V2.PropertyList
 {
     using System.Collections.Generic;
 

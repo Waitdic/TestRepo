@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Miki
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Miki
 {
     public class MikiTest
     {

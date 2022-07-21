@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.CSSuppliers.FastPayHotels
 {
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedFastPayHotelsSettings : SettingsBase, IFastPayHotelsSettings
     {

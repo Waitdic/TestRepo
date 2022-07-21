@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +6,9 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class BookingUsbV4ResponseTransformer : ISearchResponseTransformer
     {

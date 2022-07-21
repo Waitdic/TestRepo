@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2
+﻿namespace iVectorOne.SDK.V2
 {
     /// <summary>A class of common warning messages for request validation</summary>
     public class WarningMessages

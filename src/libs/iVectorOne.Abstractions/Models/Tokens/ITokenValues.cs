@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Tokens
+﻿namespace iVectorOne.Models.Tokens
 {
     using System.Collections.Generic;
 

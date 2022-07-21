@@ -2,7 +2,7 @@
 #pragma warning disable CA1819 // Properties should not return arrays
 #pragma warning disable CA1034 // Nested types should not be visible
 
-namespace ThirdParty.CSSuppliers.HotelBedsV2
+namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
     public class HotelBedsV2AvailabilityRequest
     {

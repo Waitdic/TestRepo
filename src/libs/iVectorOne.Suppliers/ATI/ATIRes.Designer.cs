@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.CSSuppliers.ATI {
+namespace iVectorOne.CSSuppliers.ATI {
     using System;
     
     

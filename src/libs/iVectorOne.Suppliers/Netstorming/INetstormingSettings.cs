@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming
+﻿namespace iVectorOne.CSSuppliers.Netstorming
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface INetstormingSettings
     {

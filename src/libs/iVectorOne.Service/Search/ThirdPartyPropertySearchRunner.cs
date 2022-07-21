@@ -1,4 +1,4 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     using System;
     using System.Collections.Generic;
@@ -13,10 +13,10 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// Third Party Property Search Runner

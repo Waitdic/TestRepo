@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Search.Results.Models
+﻿namespace iVectorOne.Search.Results.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
     using System.Xml.Serialization;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models.Property.Booking;
 
     /// <summary>
     /// The transformed results

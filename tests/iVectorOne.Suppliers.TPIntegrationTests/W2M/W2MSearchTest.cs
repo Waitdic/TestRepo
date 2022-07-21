@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.W2M
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.W2M
 {
     using System.Collections.Generic;
     using System.Net;
@@ -6,10 +6,10 @@
     using Microsoft.Extensions.Logging;
     using Moq;
     using Moq.Protected;
-    using ThirdParty.CSSuppliers;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.W2M;
+    using iVectorOne.CSSuppliers;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.W2M;
 
     public class W2MSearchTests : ThirdPartyPropertySearchBaseTest
     {

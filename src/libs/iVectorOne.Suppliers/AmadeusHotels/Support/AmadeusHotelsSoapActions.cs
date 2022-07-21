@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
 {
     public static class AmadeusHotelsSoapActions
     {

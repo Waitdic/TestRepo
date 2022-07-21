@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ATI.Models.Common
+﻿namespace iVectorOne.CSSuppliers.ATI.Models.Common
 {
     public class Fee
     {

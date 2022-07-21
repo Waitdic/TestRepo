@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.SDK.V2.PropertyBook
+﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
-    using ThirdParty.Services;
+    using iVectorOne.Services;
 
     public class Handler : IRequestHandler<Request, Response>
     {

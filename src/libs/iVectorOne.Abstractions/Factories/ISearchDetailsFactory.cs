@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
-    using ThirdParty.Models;
-    using ThirdParty.SDK.V2.PropertySearch;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Models;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// Defines a factory that takes in a third party search request and creations an abstraction search details

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Threading.Tasks;
     using Cancel = SDK.V2.PropertyCancel;

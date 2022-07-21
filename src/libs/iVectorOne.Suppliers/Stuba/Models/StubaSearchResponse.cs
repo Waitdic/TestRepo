@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Stuba
+﻿namespace iVectorOne.CSSuppliers.Stuba
 {
     using System;
     using System.Collections.Generic;

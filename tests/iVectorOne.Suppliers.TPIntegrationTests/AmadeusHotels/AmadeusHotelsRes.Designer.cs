@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.AmadeusHotels {
+namespace iVectorOne.Suppliers.TPIntegrationTests.AmadeusHotels {
     using System;
     
     

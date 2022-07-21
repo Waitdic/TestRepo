@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
 {
     using System;
     using System.Collections.Generic;
@@ -10,17 +10,17 @@
     using Intuitive.Helpers.Net;
     using MoreLinq;
     using Newtonsoft.Json;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.ExpediaRapid.RequestConstants;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class ExpediaRapid : IThirdParty, ISingleSource
     {

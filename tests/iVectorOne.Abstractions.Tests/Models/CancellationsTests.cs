@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Tests
+﻿namespace iVectorOne.Tests
 {
     using System;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class CancellationsTests
     {

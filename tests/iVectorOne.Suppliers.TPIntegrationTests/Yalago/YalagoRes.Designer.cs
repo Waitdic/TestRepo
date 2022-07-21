@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Yalago {
+namespace iVectorOne.Tests.Yalago {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Yalago {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Yalago.YalagoRes", typeof(YalagoRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Yalago.YalagoRes", typeof(YalagoRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

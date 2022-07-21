@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.Restel
+namespace iVectorOne.Suppliers.TPIntegrationTests.Restel
 {
     public class RestelTest
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.CSSuppliers.OceanBeds
 {
     using System;
     using System.Net.Http;
@@ -9,13 +9,13 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.CSSuppliers.OceanBeds.Models;
-    using ThirdParty.CSSuppliers.OceanBeds.Models.Common;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.CSSuppliers.OceanBeds.Models;
+    using iVectorOne.CSSuppliers.OceanBeds.Models.Common;
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.ChannelManager {
+namespace iVectorOne.Tests.ChannelManager {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.ChannelManager {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.ChannelManager.ChannelManagerRes", typeof(ChannelManagerRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.ChannelManager.ChannelManagerRes", typeof(ChannelManagerRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -120,7 +120,7 @@ namespace ThirdParty.Tests.ChannelManager {
         ///using System.Text;
         ///using System.Threading.Tasks;
         ///
-        ///namespace ThirdParty.Suppliers.TPIntegrationTests.iVectorChannelManager.Resources
+        ///namespace iVectorOne.Suppliers.TPIntegrationTests.iVectorChannelManager.Resources
         ///{
         ///    class TransformedResultXML
         ///    {

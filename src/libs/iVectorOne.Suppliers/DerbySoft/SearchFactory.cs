@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System;
     using DerbySoftBookingUsbV4;
     using DerbySoftShoppingEngineV4;
     using Intuitive;
-    using ThirdParty;
+    using iVectorOne;
 
     public class SearchFactory
     {

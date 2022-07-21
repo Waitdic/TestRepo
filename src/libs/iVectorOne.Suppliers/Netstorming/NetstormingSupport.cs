@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming
+﻿namespace iVectorOne.CSSuppliers.Netstorming
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,8 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
 
     public class NetstormingSupport
     {

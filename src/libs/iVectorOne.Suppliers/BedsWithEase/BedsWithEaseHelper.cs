@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.CSSuppliers.BedsWithEase
 {
     using System;
     using System.Net.Http;
@@ -9,9 +9,9 @@
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Common;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Models.Property.Booking;
 
     public class BedsWithEaseHelper
     {

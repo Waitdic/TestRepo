@@ -1,13 +1,13 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.DOTW
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.DOTW
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using ThirdParty.CSSuppliers.DOTW;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.DOTW;
+    using iVectorOne.CSSuppliers.DOTW;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.DOTW;
 
     public class DOTWSearchTest : ThirdPartyPropertySearchBaseTest
     {

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.Services
+﻿namespace iVectorOne.Services
 {
     using System.Threading.Tasks;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Tokens;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Tokens;
 
     /// <summary>Token Service, responsible for encoding and decoding tokens</summary>
     public interface ITokenService

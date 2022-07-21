@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ThirdParty.CSSuppliers.AbreuV2.Models
+namespace iVectorOne.CSSuppliers.AbreuV2.Models
 {
     public class OTA_HotelResRQ : SoapContent
     {

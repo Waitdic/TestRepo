@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Juniper
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Juniper
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.Juniper;
-    using ThirdParty.Constants;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.Juniper;
+    using iVectorOne.CSSuppliers.Juniper;
+    using iVectorOne.Constants;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.Juniper;
 
     public class JuniperSearchTest : ThirdPartyPropertySearchBaseTest
     {

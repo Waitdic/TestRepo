@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.YouTravel
+﻿namespace iVectorOne.CSSuppliers.YouTravel
 {
     using System;
     using System.Collections.Generic;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     public class YouTravelSupport
     {

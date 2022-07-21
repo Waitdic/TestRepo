@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Models.Tokens.Constants
+﻿namespace iVectorOne.Models.Tokens.Constants
 {
     /// <summary>Class containing constants for how many bits are required to store certain Token values.</summary>
     public class TokenValueBits

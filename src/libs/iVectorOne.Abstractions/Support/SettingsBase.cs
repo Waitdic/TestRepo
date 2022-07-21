@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Support
+﻿namespace iVectorOne.Support
 {
     using System.Linq;
 

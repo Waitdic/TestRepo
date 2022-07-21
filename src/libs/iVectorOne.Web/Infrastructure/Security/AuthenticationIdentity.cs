@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Web.Infrastructure.Security
 {
     using System.Security.Principal;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     public class AuthenticationIdentity : GenericIdentity
     {

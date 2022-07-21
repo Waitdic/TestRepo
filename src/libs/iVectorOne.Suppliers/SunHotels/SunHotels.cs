@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.SunHotels
+﻿namespace iVectorOne.CSSuppliers.SunHotels
 {
     using System;
     using System.Linq;
@@ -11,11 +11,11 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
 
     public class SunHotels : IThirdParty, ISingleSource
     {
@@ -471,7 +471,7 @@
             return infantIncluded;
         }
 
-        public static int IsInfantIncluded(ThirdParty.Models.Property.Booking.RoomDetails roomDetails)
+        public static int IsInfantIncluded(iVectorOne.Models.Property.Booking.RoomDetails roomDetails)
         {
             int infantIncluded = 0;
 

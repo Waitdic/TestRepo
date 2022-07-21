@@ -1,8 +1,8 @@
 ﻿
-namespace ThirdParty.CSSuppliers.AceRooms.Models
+namespace iVectorOne.CSSuppliers.AceRooms.Models
 {
 using System.Collections.Generic;
-using ThirdParty.CSSuppliers.AcerRooms.Models;
+using iVectorOne.CSSuppliers.AcerRooms.Models;
 
     /// <summary>
     /// The Acerooms response class to be deserialized

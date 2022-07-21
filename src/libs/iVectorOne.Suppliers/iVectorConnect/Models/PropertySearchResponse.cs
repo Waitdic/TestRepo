@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;
-    using ThirdParty.CSSuppliers.iVectorConnect.Models.Common;
+    using iVectorOne.CSSuppliers.iVectorConnect.Models.Common;
 
     [XmlRoot("PropertySearchResponse")]
     public class PropertySearchResponse

@@ -3,7 +3,7 @@
 #pragma warning disable CA1034 // Nested types should not be visible
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 
-namespace ThirdParty.CSSuppliers.HotelBedsV2
+namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
     using System;
 

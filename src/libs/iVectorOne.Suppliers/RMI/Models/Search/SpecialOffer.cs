@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.RMI.Models
+﻿namespace iVectorOne.CSSuppliers.RMI.Models
 {
     using System.Xml.Serialization;
 

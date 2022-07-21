@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,11 +9,11 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using booking = ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using booking = iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class iVectorConnectSearch : IThirdPartySearch, IMultiSource
     {

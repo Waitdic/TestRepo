@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.SDK.V2.PropertyBook
+﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
     using System;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
-    using ThirdParty.SDK.V2;
+    using iVectorOne.SDK.V2;
 
     /// <summary>
     ///  The guest details

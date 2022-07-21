@@ -1,7 +1,7 @@
-﻿namespace ThirdParty
+﻿namespace iVectorOne
 {
     using System.Collections.Generic;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// An interface for a third party attribute search

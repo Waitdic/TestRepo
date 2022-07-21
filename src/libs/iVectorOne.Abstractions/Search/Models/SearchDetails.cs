@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Search.Models
+﻿namespace iVectorOne.Search.Models
 {
     using System;
     using System.Collections.Concurrent;
@@ -6,8 +6,8 @@
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// A search details object

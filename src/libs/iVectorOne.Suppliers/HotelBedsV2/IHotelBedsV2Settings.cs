@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.HotelBedsV2
+﻿namespace iVectorOne.CSSuppliers.HotelBedsV2
 {
-    using ThirdParty;
+    using iVectorOne;
 
     public interface IHotelBedsV2Settings
     {

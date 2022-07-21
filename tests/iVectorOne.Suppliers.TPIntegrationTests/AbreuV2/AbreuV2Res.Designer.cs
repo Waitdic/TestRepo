@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.AbreuV2 {
+namespace iVectorOne.Suppliers.TPIntegrationTests.AbreuV2 {
     using System;
     
     

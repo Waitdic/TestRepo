@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.OceanBeds.Models.Common
+﻿namespace iVectorOne.CSSuppliers.OceanBeds.Models.Common
 {
 
     public class CancellationBookingList

@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.TeamAmerica
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.TeamAmerica
 {
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.Search.Models;
-    using ThirdParty.CSSuppliers.TeamAmerica;
-    using ThirdParty.Tests.TeamAmerica;
+    using iVectorOne.Search.Models;
+    using iVectorOne.CSSuppliers.TeamAmerica;
+    using iVectorOne.Tests.TeamAmerica;
 
     public class TeamAmericaSearchTest : ThirdPartyPropertySearchBaseTest
     {

@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
-    using ThirdParty;
+    using iVectorOne;
     public interface IW2MSettings
     {
         string User(IThirdPartyAttributeSearch tpAttributeSearch);

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.DerbySoft {
+namespace iVectorOne.Tests.DerbySoft {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.DerbySoft {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.DerbySoft.DerbySoftRes", typeof(DerbySoftRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.DerbySoft.DerbySoftRes", typeof(DerbySoftRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

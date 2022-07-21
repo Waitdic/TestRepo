@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
-    using ThirdParty.Constants;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Models.Tokens;
-    using ThirdParty.Repositories;
-    using ThirdParty.SDK.V2.PropertyBook;
-    using ThirdParty.Services;
+    using iVectorOne.Constants;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Tokens;
+    using iVectorOne.Repositories;
+    using iVectorOne.SDK.V2.PropertyBook;
+    using iVectorOne.Services;
 
     /// <summary>
     /// A factory that creates property book responses using the provided property details

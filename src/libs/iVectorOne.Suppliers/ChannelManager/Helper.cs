@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.CSSuppliers.ChannelManager
 {
     using System;
     using Models.Common;

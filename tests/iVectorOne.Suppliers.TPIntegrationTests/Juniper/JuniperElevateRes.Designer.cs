@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Juniper {
+namespace iVectorOne.Tests.Juniper {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Juniper {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Juniper.JuniperElevateRes", typeof(JuniperElevateRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Juniper.JuniperElevateRes", typeof(JuniperElevateRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

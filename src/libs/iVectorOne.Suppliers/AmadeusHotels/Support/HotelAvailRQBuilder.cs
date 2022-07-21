@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
 {
     using System.Collections.Generic;
     using System.Linq;
     using Models.Common;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.Models.Property.Booking;
 
     public class HotelAvailRQBuilder
     {

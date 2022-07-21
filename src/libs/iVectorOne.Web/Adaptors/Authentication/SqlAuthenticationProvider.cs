@@ -11,8 +11,8 @@
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Settings;
 
     public class SqlAuthenticationProvider : IAuthenticationProvider
     {

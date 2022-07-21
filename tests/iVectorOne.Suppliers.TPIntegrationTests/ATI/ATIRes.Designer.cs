@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.ATI {
+namespace iVectorOne.Suppliers.TPIntegrationTests.ATI {
     using System;
     
     

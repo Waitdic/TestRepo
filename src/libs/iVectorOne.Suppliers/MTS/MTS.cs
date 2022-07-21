@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.MTS
+﻿namespace iVectorOne.CSSuppliers.MTS
 {
     using System;
     using System.Collections.Generic;
@@ -11,11 +11,11 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public partial class MTS : IThirdParty, ISingleSource
     {

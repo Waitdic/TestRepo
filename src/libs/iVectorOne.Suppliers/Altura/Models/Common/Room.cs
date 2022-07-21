@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ThirdParty.CSSuppliers.Models.Altura
+namespace iVectorOne.CSSuppliers.Models.Altura
 {
     public class Room
     {

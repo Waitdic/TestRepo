@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.ExpediaRapid
+namespace iVectorOne.Suppliers.TPIntegrationTests.ExpediaRapid
 {
     public class ExpediaRapidTest
     {

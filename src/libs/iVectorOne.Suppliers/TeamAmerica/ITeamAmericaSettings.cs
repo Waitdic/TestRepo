@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.TeamAmerica
+﻿namespace iVectorOne.CSSuppliers.TeamAmerica
 {
-    using ThirdParty;
+    using iVectorOne;
     public interface ITeamAmericaSettings
     {
         string URL(IThirdPartyAttributeSearch tpAttributeSearch);

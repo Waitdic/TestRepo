@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Acerooms
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Acerooms
 {
     using System.Collections.Generic;
     using Moq;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.CSSuppliers.Acerooms;
-    using ThirdParty.Tests.Acerooms;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.CSSuppliers.Acerooms;
+    using iVectorOne.Tests.Acerooms;
 
     public class AceroomsSearchTest : ThirdPartyPropertySearchBaseTest
     {

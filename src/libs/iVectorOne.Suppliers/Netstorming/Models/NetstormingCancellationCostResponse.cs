@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming.Models
+﻿namespace iVectorOne.CSSuppliers.Netstorming.Models
 {
     using System.Xml.Serialization;
-    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
 
     [XmlRoot("envelope")]
     public class NetstormingCancellationCostResponse : EnvelopeBase

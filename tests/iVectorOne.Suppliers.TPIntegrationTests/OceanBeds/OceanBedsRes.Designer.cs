@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.OceanBeds {
+namespace iVectorOne.Tests.OceanBeds {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.OceanBeds {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.OceanBeds.OceanBedsRes", typeof(OceanBedsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.OceanBeds.OceanBedsRes", typeof(OceanBedsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

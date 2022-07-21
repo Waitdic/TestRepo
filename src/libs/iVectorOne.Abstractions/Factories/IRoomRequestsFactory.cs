@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Factories
+﻿namespace iVectorOne.Factories
 {
     using System.Collections.Generic;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     public interface IRoomRequestsFactory
     {

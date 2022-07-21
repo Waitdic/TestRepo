@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models
+﻿namespace iVectorOne.CSSuppliers.ChannelManager.Models
 {
-    using ThirdParty.CSSuppliers.ChannelManager.Models.Common;
+    using iVectorOne.CSSuppliers.ChannelManager.Models.Common;
 
     public class CancelRequest
     {

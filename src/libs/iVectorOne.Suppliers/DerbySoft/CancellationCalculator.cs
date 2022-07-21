@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class CancellationCalculator
     {

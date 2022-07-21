@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.CSSuppliers.iVectorConnect
 {
     using System;
     using System.Collections.Generic;
@@ -12,11 +12,11 @@
     using Intuitive.Helpers.Net;
     using Lookups;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.CSSuppliers.iVectorConnect.Models;
-    using ThirdParty.CSSuppliers.iVectorConnect.Models.Common;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne.CSSuppliers.iVectorConnect.Models;
+    using iVectorOne.CSSuppliers.iVectorConnect.Models.Common;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class iVectorConnect : IThirdParty, IMultiSource
     {

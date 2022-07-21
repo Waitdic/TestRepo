@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.CSSuppliers.AbreuV2
 {
     public class Constant
     {

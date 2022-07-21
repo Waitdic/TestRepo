@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using Intuitive;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Search.Results.Models;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Results.Models;
+    using iVectorOne.Search.Models;
 
     public class TransformedResultBuilder
     {

@@ -1,12 +1,12 @@
-﻿namespace ThirdParty.Models.Property.Booking
+﻿namespace iVectorOne.Models.Property.Booking
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Models.Property.VirtualCreditCards;
-    using ThirdParty.Search.Settings;
+    using iVectorOne.Models.Property.VirtualCreditCards;
+    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// The property details passed into book and pre books

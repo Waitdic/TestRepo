@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Repositories
+﻿namespace iVectorOne.Repositories
 {
     using System.Threading.Tasks;
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.YouTravel {
+namespace iVectorOne.Tests.YouTravel {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.YouTravel {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.YouTravel.YouTravelRes", typeof(YouTravelRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.YouTravel.YouTravelRes", typeof(YouTravelRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

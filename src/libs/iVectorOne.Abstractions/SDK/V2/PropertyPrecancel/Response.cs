@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertyPrecancel
+﻿namespace iVectorOne.SDK.V2.PropertyPrecancel
 {
     public record Response : ResponseBase
     {

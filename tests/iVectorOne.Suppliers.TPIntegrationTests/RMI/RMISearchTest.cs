@@ -1,11 +1,11 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.RMI
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.RMI
 {
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.RMI;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.CSSuppliers.RMI;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
     using Xunit;
 
     public class RMISearchTest : ThirdPartyPropertySearchBaseTest

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.TBOHolidays
+﻿namespace iVectorOne.CSSuppliers.TBOHolidays
 {
     using System;
     using System.Collections.Generic;
@@ -11,11 +11,11 @@
     using Lookups;
     using Models;
     using Models.Common;
-    using ThirdParty.Constants;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {

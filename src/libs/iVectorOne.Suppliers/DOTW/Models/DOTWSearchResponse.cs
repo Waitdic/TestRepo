@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW.Models
+﻿namespace iVectorOne.CSSuppliers.DOTW.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

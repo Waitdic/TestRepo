@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
 {
     using System;
     using System.Collections.Generic;
@@ -11,15 +11,15 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using MoreLinq;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.ExpediaRapid.RequestConstants;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses;
-    using ThirdParty.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.ExpediaRapid.RequestConstants;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class ExpediaRapidSearch : IThirdPartySearch, ISingleSource
     {

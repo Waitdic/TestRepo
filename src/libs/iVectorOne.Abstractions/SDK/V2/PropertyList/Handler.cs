@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.SDK.V2.PropertyList
+﻿namespace iVectorOne.SDK.V2.PropertyList
 {
     using System.Threading;
     using System.Threading.Tasks;
     using Intuitive;
     using MediatR;
-    using ThirdParty.Services;
+    using iVectorOne.Services;
 
     // todo - move handler out of abstractions code
     public class Handler : IRequestHandler<Request, Response>

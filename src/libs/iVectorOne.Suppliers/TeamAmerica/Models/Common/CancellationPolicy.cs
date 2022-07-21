@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ThirdParty.CSSuppliers.TeamAmerica.Models
+namespace iVectorOne.CSSuppliers.TeamAmerica.Models
 {
     public class CancellationPolicy
     {

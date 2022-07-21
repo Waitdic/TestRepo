@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
+﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
 {
     using System;
     using System.Collections.Generic;
@@ -7,11 +7,11 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
-    using ThirdParty.CSSuppliers.DerbySoft.Models;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
+    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
 
     public class ShoppingEngineRequestBuilder : ISearchRequestBuilder
     {

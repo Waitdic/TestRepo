@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Altura
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Altura
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
@@ -6,10 +6,10 @@
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using ThirdParty.CSSuppliers.Altura;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Tests.Altura;
+    using iVectorOne.CSSuppliers.Altura;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Tests.Altura;
 
     public class AlturaSearchTest : ThirdPartyPropertySearchBaseTest
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.SDK.V2.PropertySearch
+﻿namespace iVectorOne.SDK.V2.PropertySearch
 {
     using System.Runtime.Serialization;
     using System.Text.Json.Serialization;

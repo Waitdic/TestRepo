@@ -1,10 +1,10 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.JonView
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.JonView
 {
     using Intuitive.Helpers.Serialization;
-    using ThirdParty.CSSuppliers.JonView;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.Tests.JonView;
+    using iVectorOne.CSSuppliers.JonView;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Tests.JonView;
 
     public class JonViewSearchTest : ThirdPartyPropertySearchBaseTest
     {

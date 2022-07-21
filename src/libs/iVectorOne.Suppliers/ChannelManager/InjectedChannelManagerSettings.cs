@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.CSSuppliers.ChannelManager
 {
-    using ThirdParty;
+    using iVectorOne;
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Support;
-    using ThirdParty.Constants;
+    using iVectorOne.Support;
+    using iVectorOne.Constants;
 
     public class InjectedChannelManagerSettings : SettingsBase, IChannelManagerSettings
     {

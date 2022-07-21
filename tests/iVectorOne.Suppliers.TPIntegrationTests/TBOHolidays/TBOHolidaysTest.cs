@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.TBOHolidays
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.TBOHolidays
 {
     public class TBOHolidaysTest
     {

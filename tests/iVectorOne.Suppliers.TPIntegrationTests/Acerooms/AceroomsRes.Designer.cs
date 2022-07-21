@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Tests.Acerooms {
+namespace iVectorOne.Tests.Acerooms {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ThirdParty.Tests.Acerooms {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Tests.Acerooms.AceroomsRes", typeof(AceroomsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Acerooms.AceroomsRes", typeof(AceroomsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

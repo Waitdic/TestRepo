@@ -1,6 +1,6 @@
-﻿namespace ThirdParty.SDK.V2
+﻿namespace iVectorOne.SDK.V2
 {
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     public record RequestBase
     {

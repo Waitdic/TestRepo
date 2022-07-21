@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ThirdParty.Suppliers.TPIntegrationTests.RMI {
+namespace iVectorOne.Suppliers.TPIntegrationTests.RMI {
     using System;
     
     

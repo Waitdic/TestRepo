@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW
+﻿namespace iVectorOne.CSSuppliers.DOTW
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +14,9 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
-    using ThirdParty.Constants;
-    using ThirdParty.DOTW;
-    using ThirdParty.Lookups;
+    using iVectorOne.Constants;
+    using iVectorOne.DOTW;
+    using iVectorOne.Lookups;
 
     public partial class DOTWSupport : IDOTWSupport
     {

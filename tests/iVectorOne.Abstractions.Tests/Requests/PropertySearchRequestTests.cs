@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Services.Tests
+﻿namespace iVectorOne.Services.Tests
 {
     using System;
     using System.Collections.Generic;
-    using ThirdParty.SDK.V2;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.SDK.V2;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     public class RequestTests
     {

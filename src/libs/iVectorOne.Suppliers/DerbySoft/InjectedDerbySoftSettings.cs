@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.CSSuppliers.DerbySoft
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty;
-    using ThirdParty.Support;
+    using iVectorOne;
+    using iVectorOne.Support;
 
     public class InjectedDerbySoftSettings : SettingsBase, IDerbySoftSettings
     {

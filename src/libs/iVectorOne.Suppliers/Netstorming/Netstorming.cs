@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Netstorming
+﻿namespace iVectorOne.CSSuppliers.Netstorming
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,13 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.CSSuppliers.Netstorming.Models;
-    using ThirdParty.CSSuppliers.Netstorming.Models.Common;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Models.Property.Booking;
+    using iVectorOne;
+    using iVectorOne.CSSuppliers.Netstorming.Models;
+    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class Netstorming : IThirdParty, IMultiSource
     {

@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Miki.Models
+﻿namespace iVectorOne.CSSuppliers.Miki.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,9 +10,9 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Caching.Memory;
-    using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
 
     public static class MikiSupport
     {

@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers
+﻿namespace iVectorOne.CSSuppliers
 {
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedNullTestSupplierSettings : SettingsBase, INullTestSupplierSettings
     {

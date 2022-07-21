@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Search.Models
+﻿namespace iVectorOne.Search.Models
 {
     using System.Collections.Generic;
-    using ThirdParty.Interfaces;
+    using iVectorOne.Interfaces;
 
     public class PagingTokenCollector : IPagingTokenCollector
     {

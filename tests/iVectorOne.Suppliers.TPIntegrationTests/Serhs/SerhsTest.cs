@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Serhs
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Serhs
 {
     public class SerhsTest
     {

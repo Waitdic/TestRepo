@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.Travelgate
+﻿namespace iVectorOne.CSSuppliers.Travelgate
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,13 @@
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.Travelgate.Models;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Lookups;
-    using ThirdParty.Models;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Search.Results.Models;
+    using iVectorOne.Constants;
+    using iVectorOne.CSSuppliers.Travelgate.Models;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using iVectorOne.Models;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
 
     public class TravelgateSearch : IThirdPartySearch, IMultiSource
     {

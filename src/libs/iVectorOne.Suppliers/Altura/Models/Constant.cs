@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ThirdParty.CSSuppliers.Models.Altura
+namespace iVectorOne.CSSuppliers.Models.Altura
 {
     public static class Constant
     {

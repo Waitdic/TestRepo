@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.Juniper
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Juniper
 {
     public class JuniperTest
     {

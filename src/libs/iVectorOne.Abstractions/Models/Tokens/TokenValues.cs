@@ -1,9 +1,9 @@
-﻿namespace ThirdParty.Models.Tokens
+﻿namespace iVectorOne.Models.Tokens
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ThirdParty.Models.Tokens.Constants;
+    using iVectorOne.Models.Tokens.Constants;
 
     /// <summary>A collection of token values, made as a class rather than just a list to allow utiltiy functions for adding new values</summary>
     public class TokenValues : ITokenValues

@@ -1,8 +1,8 @@
-﻿namespace ThirdParty.CSSuppliers.Serhs
+﻿namespace iVectorOne.CSSuppliers.Serhs
 {
     using Intuitive.Helpers.Extensions;
-    using ThirdParty.Constants;
-    using ThirdParty.Support;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
     public class InjectedSerhsSettings : SettingsBase, ISerhsSettings
     {

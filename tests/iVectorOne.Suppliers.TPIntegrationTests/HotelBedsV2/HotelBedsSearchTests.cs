@@ -1,15 +1,15 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.HotelBedsV2
+﻿namespace iVectorOne.Suppliers.TPIntegrationTests.HotelBedsV2
 {
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Net;
     using Moq;
-    using ThirdParty.Lookups;
-    using ThirdParty.Search.Models;
-    using ThirdParty.Suppliers.TPIntegrationTests.Helpers;
-    using ThirdParty.CSSuppliers.HotelBedsV2;
-    using ThirdParty.Tests.HotelBedsV2;
+    using iVectorOne.Lookups;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.CSSuppliers.HotelBedsV2;
+    using iVectorOne.Tests.HotelBedsV2;
 
     public class HotelBedsSearchTests : ThirdPartyPropertySearchBaseTest
     {

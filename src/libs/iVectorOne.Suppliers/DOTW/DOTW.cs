@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.DOTW
+﻿namespace iVectorOne.CSSuppliers.DOTW
 {
     using System;
     using System.Collections.Generic;
@@ -10,12 +10,12 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using ThirdParty;
-    using ThirdParty.Constants;
-    using ThirdParty.Lookups;
-    using ThirdParty.Interfaces;
-    using ThirdParty.Models.Property.Booking;
-    using ThirdParty.Models;
+    using iVectorOne;
+    using iVectorOne.Constants;
+    using iVectorOne.Lookups;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
     using System.Threading.Tasks;
 
     public class DOTW : IThirdParty, ISingleSource

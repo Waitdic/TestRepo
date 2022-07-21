@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.Models.Property.Booking
+﻿namespace iVectorOne.Models.Property.Booking
 {
     using System.Collections.Generic;
-    using ThirdParty.Models;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A booking question
