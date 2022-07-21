@@ -9,9 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
-    <ProjectReference Include="..\..\src\libs\ThirdParty.CSSuppliers\ThirdParty.CSSuppliers.csproj" />
-    <ProjectReference Include="..\..\src\libs\ThirdParty.Service\ThirdParty.Service.csproj" />
+    <ProjectReference Include="..\..\src\libs\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\libs\iVectorOne.Suppliers\iVectorOne.Suppliers.csproj" />
+    <ProjectReference Include="..\..\src\libs\iVectorOne.Service\iVectorOne.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

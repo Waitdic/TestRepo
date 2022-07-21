@@ -21,8 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\libs\iVectorOne.Web\iVectorOne.Web.csproj" />
-    <ProjectReference Include="..\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
-    <ProjectReference Include="..\libs\ThirdParty.Service\ThirdParty.Service.csproj" />
+    <ProjectReference Include="..\libs\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj" />
+    <ProjectReference Include="..\libs\iVectorOne.Service\iVectorOne.Service.csproj" />
   </ItemGroup>
 
 </Project>

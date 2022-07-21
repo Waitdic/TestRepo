@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\libs\iVectorOne.Service\iVectorOne.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,19 +22,4 @@
     <PackageReference Include="Moq" Version="4.16.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Models\LeadCustomerRes.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>LeadCustomerRes.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Models\LeadCustomerRes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LeadCustomerRes.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  
 </Project>

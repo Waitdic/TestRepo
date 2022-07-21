@@ -16,7 +16,7 @@
     <PackageReference Include="TPImport.Abstractions" Version="0.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj" />
-    <ProjectReference Include="..\ThirdParty.CSSuppliers\ThirdParty.CSSuppliers.csproj" />
+    <ProjectReference Include="..\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj" />
+    <ProjectReference Include="..\iVectorOne.Suppliers\iVectorOne.Suppliers.csproj" />
   </ItemGroup>
 </Project>
