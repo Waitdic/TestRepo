@@ -51,31 +51,31 @@ stages:
           $VersionString = $majorVersion + '.' + $minorVersion + '.' + $build + '.' + $(Build.BuildId)
           Write-Host "##vso[task.setvariable variable=appVersion;]$VersionString"
 
-	- script: 
-		npm install
-	  displayName: 'npm install'
-	  workingDirectory: 'src/$(project)'
-	  
-	- script: 
-		npm run build
-	  displayName: 'npm build'
-	  workingDirectory: 'src/$(project)'
+    - script: 
+      npm install
+      displayName: 'npm install'
+      workingDirectory: 'src/$(project)'
+      
+    - script: 
+      npm run build
+      displayName: 'npm build'
+      workingDirectory: 'src/$(project)'
 
-	- task: SonarCloudPrepare@1
-	  inputs:
-		SonarCloud: 'SonarCloud'
-		organization: 'intuitive-systems'
-		scannerMode: 'CLI'
-		configMode: 'manual'
-		cliProjectKey: 'Intuitive_iVectorOne_Admin_Web'
-		cliProjectName: 'iVector One Admin Web'
-		cliSources: 'src/$(project)'
-		
-	- task: SonarCloudAnalyze@1
+    - task: SonarCloudPrepare@1
+      inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'intuitive-systems'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'Intuitive_iVectorOne_Admin_Web'
+      cliProjectName: 'iVector One Admin Web'
+      cliSources: 'src/$(project)'
+      
+    - task: SonarCloudAnalyze@1
 
-	- task: SonarCloudPublish@1
-	  inputs:
-		pollingTimeoutSec: '300'
+    - task: SonarCloudPublish@1
+      inputs:
+      pollingTimeoutSec: '300'
 
     - task: PowerShell@2
       displayName: 'Save version info for later stages'
