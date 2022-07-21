@@ -23,7 +23,7 @@ variables:
 - name:  appVersion
   value : ''
 - name: iisFolder
-  value : 'D:\Websites\iVectorOne'
+  value : 'D:\Websites\Portal'
 - name: iisAppPool
   value : 'api.ivectorone.com'
 - name:  codeDeployAppName
@@ -57,28 +57,34 @@ stages:
         command: 'install'
         workingDir: 'src/$(project)'
 
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'intuitive-systems'
-        scannerMode: 'CLI'
-        configMode: 'manual'
-        cliProjectKey: 'Intuitive_iVectorOne_Admin_Web'
-        cliProjectName: 'iVector One Admin Web'
-        cliSources: 'src/$(project)'
-        
-    - task: SonarCloudAnalyze@1
-
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
-
     - task: Npm@1
       displayName: 'npm build'
       inputs:
         command: 'custom'
         customCommand: 'run build'
         workingDir: 'src/$(project)'
+
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: 'src/$(project)/dist'
+        Contents: '**'
+        TargetFolder: '$(Build.artifactStagingDirectory)/code-deploy/source'
+
+    # - task: SonarCloudPrepare@1
+    #   inputs:
+    #     SonarCloud: 'SonarCloud'
+    #     organization: 'intuitive-systems'
+    #     scannerMode: 'CLI'
+    #     configMode: 'manual'
+    #     cliProjectKey: 'Intuitive_iVectorOne_Admin_Web'
+    #     cliProjectName: 'iVector One Admin Web'
+    #     cliSources: 'src/$(project)'
+        
+    # - task: SonarCloudAnalyze@1
+
+    # - task: SonarCloudPublish@1
+    #   inputs:
+    #     pollingTimeoutSec: '300'
 
     - task: PowerShell@2
       displayName: 'Save version info for later stages'
