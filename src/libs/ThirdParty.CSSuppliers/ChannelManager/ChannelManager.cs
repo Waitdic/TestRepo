@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager
+﻿namespace ThirdParty.CSSuppliers.ChannelManager
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@
     using Microsoft.Extensions.Logging;
     using ThirdParty;
     using ThirdParty.Constants;
-    using ThirdParty.CSSuppliers.iVectorChannelManager.Models;
+    using ThirdParty.CSSuppliers.ChannelManager.Models;
     using ThirdParty.Interfaces;
     using ThirdParty.Lookups;
     using ThirdParty.Models;

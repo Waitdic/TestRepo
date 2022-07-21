@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager.Models
+﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models.Common
 {
     using System.Xml.Serialization;
 
@@ -12,7 +12,6 @@
         public bool LoggedIn { get; set; } = false;
 
         [XmlIgnore()]
-        public string Warning { get; set; } = "";
-
+        public string Warning { get; set; } = string.Empty;
     }
 }

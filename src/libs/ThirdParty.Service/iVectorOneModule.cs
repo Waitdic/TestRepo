@@ -16,6 +16,7 @@
     using ThirdParty.CSSuppliers.ATI;
     using ThirdParty.CSSuppliers.BedsWithEase;
     using ThirdParty.CSSuppliers.Bonotel;
+    using ThirdParty.CSSuppliers.ChannelManager;
     using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.CSSuppliers.DOTW;
     using ThirdParty.CSSuppliers.ExpediaRapid;
@@ -23,7 +24,6 @@
     using ThirdParty.CSSuppliers.HotelBedsV2;
     using ThirdParty.CSSuppliers.HotelsProV2;
     using ThirdParty.CSSuppliers.Hotelston;
-    using ThirdParty.CSSuppliers.iVectorChannelManager;
     using ThirdParty.CSSuppliers.iVectorConnect;
     using ThirdParty.CSSuppliers.JonView;
     using ThirdParty.CSSuppliers.Jumbo;

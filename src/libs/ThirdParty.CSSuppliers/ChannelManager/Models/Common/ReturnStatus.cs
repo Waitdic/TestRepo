@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager.Models
+﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models.Common
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -14,33 +14,27 @@
 
         public ReturnStatus()
         {
-
         }
 
-        public ReturnStatus(string sException)
+        public ReturnStatus(string exception)
         {
-            if (!string.IsNullOrEmpty(sException))
+            if (!string.IsNullOrEmpty(exception))
             {
-                Errors.Add(sException);
+                Errors.Add(exception);
             }
-            Success = string.IsNullOrEmpty(sException);
+            Success = string.IsNullOrEmpty(exception);
         }
 
-        public ReturnStatus(ArrayList sExceptions)
+        public ReturnStatus(List<string> exceptions)
         {
-            foreach (string sException in sExceptions)
+            foreach (string exception in exceptions)
             {
-                if (!string.IsNullOrEmpty(sException))
+                if (!string.IsNullOrEmpty(exception))
                 {
-                    Errors.Add(sException);
+                    Errors.Add(exception);
                 }
             }
             Success = Errors.Count == 0;
         }
-
-        public ReturnStatus(List<string> oExceptions) : this(new ArrayList(oExceptions))
-        {
-        }
-
     }
 }

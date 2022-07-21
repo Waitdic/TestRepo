@@ -1,7 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager
+﻿namespace ThirdParty.CSSuppliers.ChannelManager
 {
     using System;
-    using Models;
+    using Models.Common;
 
     public static class Helper
     {

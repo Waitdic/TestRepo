@@ -45,7 +45,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>BonotelRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="iVectorChannelManager\ChannelManagerRes.Designer.cs">
+    <Compile Update="ChannelManager\ChannelManagerRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ChannelManagerRes.resx</DependentUpon>
@@ -174,7 +174,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BonotelRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="iVectorChannelManager\ChannelManagerRes.resx">
+    <EmbeddedResource Update="ChannelManager\ChannelManagerRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ChannelManagerRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>

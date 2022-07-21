@@ -1,4 +1,4 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager
+﻿namespace ThirdParty.CSSuppliers.ChannelManager
 {
     using ThirdParty;
     using Intuitive.Helpers.Extensions;

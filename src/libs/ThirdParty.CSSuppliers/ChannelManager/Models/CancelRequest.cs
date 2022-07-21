@@ -1,5 +1,7 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager.Models
+﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models
 {
+    using ThirdParty.CSSuppliers.ChannelManager.Models.Common;
+
     public class CancelRequest
     {
         public BookingLogin LoginDetails { get; set; } = new();

@@ -1,8 +1,9 @@
-﻿namespace ThirdParty.CSSuppliers.iVectorChannelManager.Models
+﻿namespace ThirdParty.CSSuppliers.ChannelManager.Models
 {
     using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using ThirdParty.CSSuppliers.ChannelManager.Models.Common;
 
     public class BookRequest
     {
