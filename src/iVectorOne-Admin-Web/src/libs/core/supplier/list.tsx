@@ -13,8 +13,8 @@ import { NotificationStatus } from '@/constants';
 type Props = {};
 
 const tableEmptyState = {
-  title: 'No suppliers',
-  description: 'Get started by creating a new Supplier.',
+  title: 'No Suppliers',
+  description: ['It appears you have not configured any suppliers yet.'],
   href: '/suppliers/create',
   buttonText: 'New Supplier',
 };

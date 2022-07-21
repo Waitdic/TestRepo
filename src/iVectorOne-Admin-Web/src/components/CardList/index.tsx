@@ -16,7 +16,7 @@ type Props = {
   }[];
   emptyState: {
     title: string;
-    description: string;
+    description: string[];
     href: string;
     buttonText: string;
   };

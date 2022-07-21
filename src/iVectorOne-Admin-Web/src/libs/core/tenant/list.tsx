@@ -35,8 +35,8 @@ export const TenantList: FC<Props> = memo(({ error }) => {
     actions: [{ name: 'Edit', href: `/tenant/edit/${tenantId}` }],
   }));
   const tableEmptyState = {
-    title: 'No tenants',
-    description: 'Get started by creating a new tenant.',
+    title: 'No Tenants',
+    description: ['Get started by creating a new tenant.'],
     href: '/tenant/create',
     buttonText: 'New Tenant',
   };

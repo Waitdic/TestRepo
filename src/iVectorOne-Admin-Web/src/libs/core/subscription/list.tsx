@@ -19,8 +19,8 @@ interface SubscriptionListItem {
 type Props = {};
 
 const tableEmptyState = {
-  title: 'No subscriptions',
-  description: 'Get started by creating a new subscription.',
+  title: 'No Subscriptions',
+  description: ['Get started by creating a new subscription.'],
   href: '/subscriptions/create',
   buttonText: 'New Subscription',
 };

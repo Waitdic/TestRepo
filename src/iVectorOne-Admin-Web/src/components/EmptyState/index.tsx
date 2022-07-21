@@ -5,7 +5,7 @@ import { Button } from '@/components';
 
 type Props = {
   title: string;
-  description: string;
+  description?: string[];
   href: string;
   buttonText: string;
 };
@@ -32,9 +32,9 @@ const EmptyState: FC<Props> = ({ title, description, href, buttonText }) => {
         </div>
         <h2 className='text-2xl text-slate-800 font-bold mb-2'>{title}</h2>
         <div className='mb-6'>
-          <p>We ran into an unexpected error completing your request.</p>
-          <p>Please try again.</p>
-          <p>If the problem continues contact our support desk.</p>
+          {description?.map((desc, idx) => (
+            <p key={idx}>{desc}</p>
+          ))}
           <div className='mt-6'>
             <Button
               isLink

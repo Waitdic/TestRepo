@@ -38,7 +38,7 @@ export const ModuleList: FC<Props> = memo(({ fetchedModuleList }) => {
   }));
   const tableEmptyState = {
     title: 'No modules',
-    description: 'Get started by creating a new module.',
+    description: ['Get started by creating a new module.'],
     href: '/module/create',
     buttonText: 'New Module',
   };
