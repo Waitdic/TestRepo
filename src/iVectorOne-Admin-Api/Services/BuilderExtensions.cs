@@ -17,7 +17,15 @@ namespace iVectorOne_Admin_Api.Services
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddCors();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("_myAllowSpecificOrigins",
+                                      policy =>
+                                      {
+                                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                      });
+            });
+            //builder.Services.AddCors();
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
             builder.Services.AddScoped<ITenantService, TenantService>();
             builder.Services.AddAuthentication("TenantAuthorisation")
