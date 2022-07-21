@@ -109,7 +109,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       (subscription) => subscription.subscriptionId === optionId
     );
     if (selectedSub) {
-      const supplierIds = selectedSub.suppliers.map(
+      const supplierIds = selectedSub?.suppliers?.map(
         (supplier) => supplier.supplierID
       );
       const allSuppliers = uniqBy(
