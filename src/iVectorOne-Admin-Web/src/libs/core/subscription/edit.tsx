@@ -1,8 +1,8 @@
-import { memo, useEffect, useState, FC, useCallback } from 'react';
+import { memo, useEffect, useState, FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 //
 import { Subscription } from '@/types';
 import { useSlug } from '@/utils/use-slug';
@@ -23,6 +23,7 @@ import {
   Spinner,
 } from '@/components';
 import { RootState } from '@/store';
+import { getSubscriptionById } from '../data-access';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -36,6 +37,9 @@ interface SubscriptionFields extends Subscription {
 }
 
 export const SubscriptionEdit: FC<Props> = memo(() => {
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.app.user);
+  const error = useSelector((state: RootState) => state.app.error);
   const navigate = useNavigate();
   const { slug } = useSlug();
 
@@ -52,12 +56,36 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
   });
   const [showNotification, setShowNotification] = useState<boolean>(false);
 
+  const activeTenant = useMemo(
+    () => user?.tenants.find((tenant: any) => tenant.isSelected),
+    [user?.tenants]
+  );
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
   } = useForm<SubscriptionFields>();
+
+  const fetchSubscriptionById = useCallback(async () => {
+    if (!activeTenant || activeTenant == null) return;
+    await getSubscriptionById(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      Number(slug),
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (subscription) => {
+        setCurrentSubscription(subscription);
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  }, [activeTenant, slug]);
 
   const onSubmit: SubmitHandler<SubscriptionFields> = async (data) => {
     try {
@@ -99,7 +127,6 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
         return;
       }
       setCurrentSubscription(selectedSubscription);
-
       setValue('userName', selectedSubscription.userName);
       setValue(
         'propertyTprequestLimit',
@@ -115,8 +142,14 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
   }, [subscriptions, navigate, setValue, slug]);
 
   useEffect(() => {
-    loadSubscription();
-  }, [subscriptions, navigate, setValue, slug, loadSubscription]);
+    if (error) {
+      setNotification({
+        status: NotificationStatus.ERROR,
+        message: error as string,
+      });
+      setShowNotification(true);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (currentSubscription !== null) {
@@ -134,6 +167,14 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
       setValue('currencyCode', currentSubscription.currencyCode);
     }
   }, [currentSubscription]);
+
+  useEffect(() => {
+    if (!!subscriptions?.length) {
+      loadSubscription();
+    } else {
+      fetchSubscriptionById();
+    }
+  }, [loadSubscription, subscriptions]);
 
   return (
     <>

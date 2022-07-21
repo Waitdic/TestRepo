@@ -33,7 +33,7 @@ export const app = createModel<RootModel>()({
     },
     updateUser(state, payload: User) {
       if (!isEmpty(payload)) {
-        return { ...state, user: payload };
+        return { ...state, user: payload, subscriptions: [] };
       } else {
         return state;
       }
@@ -98,7 +98,7 @@ export const app = createModel<RootModel>()({
         dispatch.app.updateThemeColor(payload);
       }
     },
-    resetModuleList(payload: string, state) {
+    resetModuleList(_payload: string, state) {
       const fetchedModules = state.app.modules.map((module) => {
         if (module.uri === '/') {
           return { ...module, isActive: true };

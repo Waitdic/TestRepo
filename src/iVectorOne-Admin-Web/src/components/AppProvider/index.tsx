@@ -13,7 +13,7 @@ import { TenantCreate } from '@/libs/core/tenant/create';
 import { TenantEdit } from '@/libs/core/tenant/edit';
 import { TenantList } from '@/libs/core/tenant/list';
 import { Module } from '@/types';
-import { useCoreFetching, useIvoFetching } from '@/libs/core/data-access';
+import { useCoreFetching } from '@/libs/core/data-access';
 import { Dashboard } from '@/libs/core';
 import { SubscriptionCreate } from '@/libs/core/subscription/create';
 import { SubscriptionList } from '@/libs/core/subscription/list';
@@ -43,9 +43,6 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
 
   //* Core Data Fetch
   const { error: coreError } = useCoreFetching();
-
-  //* IVO Data Fetch
-  const { error: ivoError } = useIvoFetching();
 
   useEffect(() => {
     dispatch.app.setThemeColor(theme);

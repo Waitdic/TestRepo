@@ -1,5 +1,4 @@
 import { UseFormRegister } from 'react-hook-form';
-import { sortBy } from 'lodash';
 //
 import {
   FormErrorMessage,
@@ -7,7 +6,11 @@ import {
   SupplierFormFields,
   SelectOption,
 } from '@/types';
-import { ConfigurationFormFieldTypes, InputTypes } from '@/constants';
+import {
+  ConfigurationFormFieldTypes,
+  InputTypes,
+  URI_REGEX,
+} from '@/constants';
 import {
   Toggle,
   TextArea,
@@ -20,7 +23,7 @@ export const renderConfigurationFormFields = (
   configurations: SupplierConfiguration[],
   register: UseFormRegister<SupplierFormFields>,
   errors: {
-    configurations?: FormErrorMessage[];
+    configurations?: any[];
   }
 ) => {
   if (!configurations?.length) {
@@ -53,8 +56,8 @@ export const renderConfigurationFormFields = (
   ) => {
     const {
       supplierSubscriptionAttributeID,
-      idx,
-      key,
+      idx: _idx,
+      key: _key,
       labelText,
       description,
       required,
@@ -69,7 +72,7 @@ export const renderConfigurationFormFields = (
       maxItems = 999,
       editPresentation,
       pattern,
-      patternErrorMessage,
+      patternErrorMessage: _patternErrorMessage,
       defaultValue,
     } = fieldConfig;
 
@@ -87,7 +90,7 @@ export const renderConfigurationFormFields = (
             labelText={labelText}
             description={description}
             required={required}
-            defaultValue={Boolean(value)}
+            defaultValue={value === 'true' ? true : false}
             isDirty={!!errorMsg}
             errorMsg={errorMsg}
           />
@@ -202,13 +205,8 @@ export const renderConfigurationFormFields = (
                 message: 'This field is required.',
               },
               pattern: {
-                value:
-                  pattern ||
-                  new RegExp(
-                    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
-                  ),
-                message:
-                  patternErrorMessage || 'This is not a valid url pattern.',
+                value: pattern || URI_REGEX,
+                message: 'This is not a valid url pattern.',
               },
             })}
             labelText={labelText}
@@ -231,15 +229,15 @@ export const renderConfigurationFormFields = (
               },
               pattern: {
                 value:
-                  pattern || new RegExp(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i),
-                message:
-                  patternErrorMessage || 'This is not a valid email address.',
+                  pattern ||
+                  new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/),
+                message: errorMsg || 'This is not a valid email address.',
               },
             })}
             defaultValue={value as string}
             labelText={labelText}
             description={description}
-            isDirty={!errorMsg}
+            isDirty={!!errorMsg}
             errorMsg={errorMsg}
             required={required}
           />
@@ -301,9 +299,22 @@ export const renderConfigurationFormFields = (
       },
       idx
     ) => {
-      const dirtyField = errors.configurations && errors?.configurations[idx];
-      const errorMsg =
-        dirtyField && key in dirtyField && dirtyField[key].message;
+      const error = {
+        id: -1,
+        type: 'required',
+        message: '',
+      };
+      if (errors?.configurations) {
+        const computedErrors = Object.entries(errors.configurations);
+        const itemWithError = computedErrors?.find(
+          (err) => Number(err[0]) === supplierSubscriptionAttributeID
+        );
+        if (itemWithError) {
+          error.id = supplierSubscriptionAttributeID;
+          error.type = itemWithError[1].type;
+          error.message = itemWithError[1].message;
+        }
+      }
 
       return (
         <div key={idx}>
@@ -315,7 +326,7 @@ export const renderConfigurationFormFields = (
             description,
             required,
             value,
-            errorMsg: errorMsg as string,
+            errorMsg: error.message,
             minLength,
             maxLength,
             minNumberValue: minimum,

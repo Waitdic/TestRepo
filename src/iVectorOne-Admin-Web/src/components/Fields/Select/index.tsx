@@ -19,6 +19,8 @@ type Props = {
   description?: string;
   maxItems?: number;
   minItems?: number;
+  onUncontrolledChange?: (optionId: number) => void;
+  isFirstOptionEmpty?: boolean;
 };
 
 const Select: FC<Props> = forwardRef(
@@ -36,7 +38,9 @@ const Select: FC<Props> = forwardRef(
       disabled = false,
       description = null,
       maxItems = 100,
-      minItems = 2,
+      minItems: _minItems = 1,
+      onUncontrolledChange = null,
+      isFirstOptionEmpty = false,
     },
     ref
   ) => {
@@ -44,6 +48,7 @@ const Select: FC<Props> = forwardRef(
 
     const handleChange = (event: { target: any; type: any }) => {
       onChange(event);
+      onUncontrolledChange?.(Number(event.target.value));
 
       if (onChangeCallback) {
         onChangeCallback();
@@ -76,13 +81,14 @@ const Select: FC<Props> = forwardRef(
                 'cursor-not-allowed': disabled,
               }
             )}
-            defaultValue={defaultValue.id}
+            defaultValue={defaultValue?.id}
             disabled={disabled}
             data-testid='select-field'
           >
-            {slicedOptions.map(({ id, name }) => (
-              <option value={id} key={id}>
-                {name}
+            {isFirstOptionEmpty && <option value=''></option>}
+            {slicedOptions?.map(({ id: optionId, name: optionName }) => (
+              <option value={optionId} key={optionId}>
+                {optionName}
               </option>
             ))}
           </select>

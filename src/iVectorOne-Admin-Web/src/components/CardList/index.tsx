@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //
@@ -7,7 +7,7 @@ import { EmptyState, Spinner } from '@/components';
 type Props = {
   bodyList: {
     id: number | string;
-    name: string;
+    name?: string;
     isActive?: boolean;
     actions?: {
       name: string;
@@ -32,6 +32,9 @@ const CardList: FC<Props> = ({
   statusIsPlaceholder = false,
   cardClassNames = 'col-span-full md:col-span-6 xl:col-span-4',
 }) => {
+  const renderStatus = (isActive: boolean) =>
+    useMemo(() => (isActive ? 'Active' : 'Inactive'), [isActive]);
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -79,22 +82,15 @@ const CardList: FC<Props> = ({
                             'bg-gray-200 text-gray-500': !isActive,
                           })}
                         >
-                          {isActive ? 'Active' : 'Inactive'}
+                          {renderStatus(!!isActive)}
                         </span>
                       </div>
                     )}
-
                     <Link
                       className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
                       to={actions?.[0]?.href || ''}
                     >
                       <div className='flex items-center justify-center'>
-                        <svg
-                          className='w-4 h-4 fill-current text-slate-400 group-hover:text-slate-500 shrink-0 mr-2'
-                          viewBox='0 0 16 16'
-                        >
-                          <path d='M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z' />
-                        </svg>
                         <span>{actions?.[0]?.name}</span>
                       </div>
                     </Link>

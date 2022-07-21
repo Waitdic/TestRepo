@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 //
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { setDefaultConfigurationFormFields } from '@/utils/set-default-configuration-form-fields';
 import { Supplier, SupplierFormFields, Subscription } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
@@ -16,35 +15,31 @@ import {
   Spinner,
   Notification,
 } from '@/components';
-import { updateSupplier } from '../data-access';
-import { log } from 'console';
+import {
+  getSubscriptionWithSupplierAndConfigurations,
+  updateSupplier,
+} from '../data-access';
 
 type Props = {};
 
 export const SupplierEdit: FC<Props> = memo(() => {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
+
+  const subscriptionId = search.split('=')[1];
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [currentSupplier, setCurrentSupplier] = useState(
-    null as Supplier | null
-  );
-  const [currentSubscription, setCurrentSubscription] = useState(
-    null as Subscription | null
-  );
-  const [isReady, setIsReady] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
     message: 'Supplier edited successfully.',
   });
+  const [currentSubscription, setCurrentSubscription] =
+    useState<Subscription | null>(null);
+  const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
 
   const {
     register,
@@ -60,25 +55,28 @@ export const SupplierEdit: FC<Props> = memo(() => {
 
   const onSubmit: SubmitHandler<SupplierFormFields> = (data, event) => {
     event?.preventDefault();
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant) return;
     updateSupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       data,
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (supplier) => {
+      (_supplier) => {
         setNotification({
           status: NotificationStatus.SUCCESS,
-          message: 'Supplier edited successfully.',
+          message: 'Supplier modified successfully.',
         });
         setShowNotification(true);
         dispatch.app.setIsLoading(false);
+        setTimeout(() => {
+          navigate('/suppliers');
+        }, 800);
       },
-      (error) => {
+      (_error) => {
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error || 'Supplier edit failed.',
+          message: 'Supplier edit failed.',
         });
         setShowNotification(true);
         dispatch.app.setIsLoading(false);
@@ -86,39 +84,39 @@ export const SupplierEdit: FC<Props> = memo(() => {
     );
   };
 
-  useEffect(() => {
-    if (!!subscriptions?.length) {
-      subscriptions.forEach((subscription, idx) => {
-        subscription.suppliers.forEach((supplier) => {
-          if (supplier.supplierID === Number(supplierId)) {
-            setCurrentSubscription(subscriptions[idx]);
-            setCurrentSupplier(supplier);
-          }
-        });
-      });
-      setIsReady(true);
-    }
-  }, [subscriptions, supplierId]);
+  const fetchData = async () => {
+    if (!activeTenant) return;
+    await getSubscriptionWithSupplierAndConfigurations(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      Number(subscriptionId),
+      Number(supplierId),
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (subscription, supplier, configurations) => {
+        setCurrentSubscription(subscription);
+        setCurrentSupplier({ ...supplier, configurations });
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  };
 
   useEffect(() => {
-    if (isReady) {
-      if (!currentSupplier && !currentSubscription) {
-        navigate('/suppliers');
-        return;
-      }
-      setValue('subscription', currentSubscription?.subscriptionId || 0);
-      setValue('supplier', currentSupplier?.supplierID || 0);
-      if (!!currentSupplier?.configurations?.length) {
-        setDefaultConfigurationFormFields(
-          currentSupplier.configurations,
-          setValue
-        );
-      }
+    if (!!user) {
+      fetchData();
     }
-    if (!isLoading && !subscriptions.length) {
-      navigate('/');
+  }, [user]);
+
+  useEffect(() => {
+    if (!!currentSupplier && !!currentSubscription) {
+      setValue('subscription', currentSubscription.subscriptionId);
+      setValue('supplier', currentSupplier.supplierID);
     }
-  }, [currentSupplier, isReady, currentSubscription, isLoading, subscriptions]);
+  }, [currentSupplier, currentSubscription, setValue]);
 
   return (
     <>
@@ -128,7 +126,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
           <div className='mb-8'>
             {/* Title */}
             <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Edit Suppliers
+              Edit Supplier {currentSupplier?.name}
             </h1>
           </div>
 
@@ -142,19 +140,19 @@ export const SupplierEdit: FC<Props> = memo(() => {
               >
                 <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                   <div className='flex-1'>
-                    {subscriptions.length > 0 ? (
+                    {currentSubscription !== null ? (
                       <Select
                         id='subscription'
                         {...register('subscription', {
                           required: 'This field is required.',
                         })}
                         labelText='Subscription'
-                        options={subscriptions.map(
-                          ({ subscriptionId, userName }) => ({
-                            id: subscriptionId,
-                            name: userName,
-                          })
-                        )}
+                        options={[
+                          {
+                            id: currentSubscription.subscriptionId,
+                            name: currentSubscription.userName,
+                          },
+                        ]}
                         disabled
                       />
                     ) : (
@@ -162,33 +160,32 @@ export const SupplierEdit: FC<Props> = memo(() => {
                     )}
                   </div>
                   <div className='flex-1'>
-                    {!!currentSubscription?.suppliers?.length ? (
+                    {currentSupplier !== null && (
                       <Select
                         id='supplier'
                         {...register('supplier', {
                           required: 'This field is required.',
                         })}
                         labelText='Supplier'
-                        options={currentSubscription.suppliers.map(
-                          (loginOption) => ({
-                            id: loginOption.supplierID,
-                            name: loginOption.supplierName,
-                          })
-                        )}
+                        options={[
+                          {
+                            id: currentSupplier.supplierID,
+                            name: currentSupplier.name,
+                          },
+                        ]}
                         disabled
                       />
-                    ) : (
-                      <Spinner />
                     )}
                   </div>
                   <div className='border-t border-gray-200 mt-2 pt-5'>
                     <SectionTitle title='Settings' />
                     <div className='flex flex-col gap-5 mt-5'>
-                      {renderConfigurationFormFields(
-                        currentSupplier?.configurations || [],
-                        register,
-                        errors
-                      )}
+                      {!!currentSupplier?.configurations?.length &&
+                        renderConfigurationFormFields(
+                          currentSupplier.configurations || [],
+                          register,
+                          errors
+                        )}
                     </div>
                   </div>
                 </div>

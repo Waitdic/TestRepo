@@ -1,12 +1,13 @@
-import { memo, useState, useEffect, FC } from 'react';
+import { memo, useState, useEffect, FC, useCallback, useMemo } from 'react';
+import { sortBy } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 //
 import { DropdownFilterProps } from '@/types';
-import MainLayout from '@/layouts/Main';
-import { Button, CardList } from '@/components';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { sortBy } from 'lodash';
-import { useNavigate } from 'react-router-dom';
+import MainLayout from '@/layouts/Main';
+import { Button, CardList, Notification } from '@/components';
+import { getSubscriptions } from '../data-access';
+import { NotificationStatus } from '@/constants';
 
 interface SubscriptionListItem {
   name: string;
@@ -17,23 +18,36 @@ interface SubscriptionListItem {
 
 type Props = {};
 
-export const SubscriptionList: FC<Props> = memo(() => {
-  const navigate = useNavigate();
+const tableEmptyState = {
+  title: 'No subscriptions',
+  description: 'Get started by creating a new subscription.',
+  href: '/subscriptions/create',
+  buttonText: 'New Subscription',
+};
 
+export const SubscriptionList: FC<Props> = memo(() => {
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.app.user);
+  const error = useSelector((state: RootState) => state.app.error);
   const subscriptions = useSelector(
     (state: RootState) => state.app.subscriptions
   );
-  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [showNotification, setShowNotification] = useState(false);
   const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
     SubscriptionListItem[]
   >([]);
-  const [filters, setFilters] = useState<DropdownFilterProps[]>([
+  const [_filters, _setFilters] = useState<DropdownFilterProps[]>([
     {
       name: 'Active',
       value: false,
     },
   ]);
+
+  const activeTenant = useMemo(
+    () => user?.tenants.find((tenant: any) => tenant.isSelected),
+    [user?.tenants]
+  );
 
   const tableBodyList: any[] = filteredSubscriptionList.map(({ id, name }) => ({
     id,
@@ -44,12 +58,30 @@ export const SubscriptionList: FC<Props> = memo(() => {
       { name: 'Edit', href: `/subscriptions/${id}/edit` },
     ],
   }));
-  const tableEmptyState = {
-    title: 'No subscriptions',
-    description: 'Get started by creating a new subscription.',
-    href: '/subscriptions/create',
-    buttonText: 'New Subscription',
-  };
+
+  const fetchData = useCallback(async () => {
+    if (!activeTenant || activeTenant == null) return;
+    await getSubscriptions(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (fetchedSubscriptions) => {
+        dispatch.app.updateSubscriptions(fetchedSubscriptions);
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  }, [activeTenant]);
+
+  useEffect(() => {
+    if (!!error) {
+      setShowNotification(true);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (!!subscriptions?.length) {
@@ -66,10 +98,10 @@ export const SubscriptionList: FC<Props> = memo(() => {
   }, [subscriptions]);
 
   useEffect(() => {
-    if (!isLoading && !subscriptions?.length) {
-      navigate('/');
+    if (!!activeTenant) {
+      fetchData();
     }
-  }, [isLoading, subscriptions]);
+  }, [activeTenant]);
 
   return (
     <>
@@ -91,6 +123,16 @@ export const SubscriptionList: FC<Props> = memo(() => {
           />
         </div>
       </MainLayout>
+
+      {showNotification && (
+        <Notification
+          title='Data fetching error'
+          description={error as string}
+          show={showNotification}
+          setShow={setShowNotification}
+          status={NotificationStatus.ERROR}
+        />
+      )}
     </>
   );
 });

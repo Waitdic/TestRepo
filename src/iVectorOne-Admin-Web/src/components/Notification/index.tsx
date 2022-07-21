@@ -11,7 +11,7 @@ type Props = {
   description: string;
   status?: NotificationStatus;
   show: boolean;
-  setShow: Dispatch<SetStateAction<boolean>>;
+  setShow?: Dispatch<SetStateAction<boolean>>;
   autoHide?: boolean;
   duration?: number;
 };
@@ -28,13 +28,64 @@ const Notification: FC<Props> = ({
   const notificationRoot = document.getElementById('notification-root');
   const notificationWrap = document.createElement('div');
 
+  const typeIcon = () => {
+    switch (status) {
+      // case NotificationStatus.WARNING:
+      //   return (
+      //     <svg className="w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3" viewBox="0 0 16 16">
+      //       <path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 12c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1zm1-3H7V4h2v5z" />
+      //     </svg>
+      //   );
+      case NotificationStatus.ERROR:
+        return (
+          <svg
+            className='w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3'
+            viewBox='0 0 16 16'
+          >
+            <path d='M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.5 10.1l-1.4 1.4L8 9.4l-2.1 2.1-1.4-1.4L6.6 8 4.5 5.9l1.4-1.4L8 6.6l2.1-2.1 1.4 1.4L9.4 8l2.1 2.1z' />
+          </svg>
+        );
+      case NotificationStatus.SUCCESS:
+        return (
+          <svg
+            className='w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3'
+            viewBox='0 0 16 16'
+          >
+            <path d='M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zM7 11.4L3.6 8 5 6.6l2 2 4-4L12.4 6 7 11.4z' />
+          </svg>
+        );
+      default:
+        return (
+          <svg
+            className='w-4 h-4 shrink-0 fill-current opacity-80 mt-[3px] mr-3'
+            viewBox='0 0 16 16'
+          >
+            <path d='M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm1 12H7V7h2v5zM8 6c-.6 0-1-.4-1-1s.4-1 1-1 1 .4 1 1-.4 1-1 1z' />
+          </svg>
+        );
+    }
+  };
+
+  const typeColor = () => {
+    switch (status) {
+      // case NotificationStatus.WARNING:
+      //   return 'bg-amber-100 border-amber-200 text-amber-600';
+      case NotificationStatus.ERROR:
+        return 'bg-rose-100 border-rose-200 text-rose-600';
+      case NotificationStatus.SUCCESS:
+        return 'bg-emerald-100 border-emerald-200 text-emerald-600';
+      default:
+        return 'bg-indigo-100 border-indigo-200 text-indigo-500';
+    }
+  };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     notificationRoot?.appendChild(notificationWrap);
 
     if (autoHide && duration) {
       timer = setTimeout(() => {
-        setShow(false);
+        setShow?.(false);
       }, duration * 1000);
     }
 
@@ -47,9 +98,9 @@ const Notification: FC<Props> = ({
   return createPortal(
     <div
       aria-live='assertive'
-      className='fixed py-24 px-3 sm:px-6 z-10 inset-0 flex items-end pointer-events-none sm:items-start'
+      className='fixed z-50 inset-0 py-16 flex pointer-events-none sm:items-start'
     >
-      <div className='w-full flex flex-col items-center space-y-4 sm:items-end'>
+      <div className='lg:sidebar-expanded:ml-[16rem] w-full flex flex-col items-center space-y-4'>
         <Transition
           show={show}
           as={Fragment}
@@ -60,36 +111,21 @@ const Notification: FC<Props> = ({
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className='max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden'>
-            <div className='p-4'>
-              <div className='flex items-start'>
-                <div className='flex-shrink-0'>
-                  {status === NotificationStatus.SUCCESS ? (
-                    <CheckCircleIcon
-                      className='h-6 w-6 text-green-400'
-                      aria-hidden='true'
-                    />
-                  ) : (
-                    <XCircleIcon
-                      className='h-6 w-6 text-red-500'
-                      aria-hidden='true'
-                    />
-                  )}
-                </div>
-                <div className='ml-3 w-0 flex-1 pt-0.5'>
-                  <p className='text-sm font-medium text-gray-900'>{title}</p>
-                  <p className='mt-1 text-sm text-gray-500'>{description}</p>
-                </div>
-                <div className='ml-4 flex-shrink-0 flex'>
-                  <button
-                    className='bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                    onClick={() => setShow(false)}
-                  >
-                    <span className='sr-only'>Close</span>
-                    <XIcon className='h-5 w-5' aria-hidden='true' />
-                  </button>
-                </div>
+          <div className={`px-4 py-2 rounded-sm text-sm border ${typeColor()}`}>
+            <div className='flex w-full justify-between items-start'>
+              <div className='flex'>
+                {typeIcon()}
+                <div>{description}</div>
               </div>
+              <button
+                className='opacity-70 hover:opacity-80 ml-3 mt-[3px]'
+                onClick={() => setShow?.(false)}
+              >
+                <div className='sr-only'>Close</div>
+                <svg className='w-4 h-4 fill-current'>
+                  <path d='M7.95 6.536l4.242-4.243a1 1 0 111.415 1.414L9.364 7.95l4.243 4.242a1 1 0 11-1.415 1.415L7.95 9.364l-4.243 4.243a1 1 0 01-1.414-1.415L6.536 7.95 2.293 3.707a1 1 0 011.414-1.414L7.95 6.536z' />
+                </svg>
+              </button>
             </div>
           </div>
         </Transition>

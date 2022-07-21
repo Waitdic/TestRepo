@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { get, uniqBy } from 'lodash';
+import { useState, useEffect, useCallback } from 'react';
+import { get } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
@@ -7,21 +7,17 @@ import ApiCall from '@/axios';
 import {
   User,
   Tenant,
-  Module,
   Supplier,
   Subscription,
   SupplierFormFields,
+  SupplierConfiguration,
 } from '@/types';
 
+//* User, tenant data fetch
 export function useCoreFetching() {
   const dispatch = useDispatch();
   const { username } = useSelector((state: RootState) => state.app.awsAmplify);
-
-  const [user, setUser] = useState<User>(null);
-  const [moduleList, setModuleList] = useState<Module[]>([]);
-  const [tenantList, setTenantList] = useState<Tenant[]>([]);
   const [error, setError] = useState<string | null>(null);
-
   const fetch = useCallback(async (userKey: string) => {
     dispatch.app.setIsLoading(true);
     try {
@@ -34,99 +30,14 @@ export function useCoreFetching() {
           isSelected: idx === 0,
         })),
       };
-      setUser(user);
       dispatch.app.updateUser(user);
-
       if (user?.tenants.length > 0) {
-        setTenantList(user?.tenants);
         dispatch.app.updateTenantList(user?.tenants);
         setError(null);
       } else {
-        setTenantList([]);
         dispatch.app.updateTenantList([]);
         setError('Contact support to complete the setup of your account');
       }
-
-      dispatch.app.setIsLoading(false);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
-        setError(error.toUpperCase());
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setError(error.message);
-      }
-      dispatch.app.setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (username) {
-      fetch(username);
-    }
-  }, [fetch, username]);
-
-  return { user, moduleList, tenantList, error };
-}
-
-export function useIvoFetching() {
-  const dispatch = useDispatch();
-
-  const storedUser = useSelector((state: RootState) => state.app.user);
-
-  const [error, setError] = useState<string | null>(null);
-
-  const fetch = useCallback(async (user: User) => {
-    dispatch.app.setIsLoading(true);
-    try {
-      const activeTenant = user?.tenants.find((tenant) => tenant.isSelected);
-      const tenantKey: any = activeTenant?.tenantKey;
-      const subsRes = await ApiCall.get(
-        `/tenants/${activeTenant?.tenantId}/subscriptions`,
-        {
-          headers: {
-            Accept: 'application/json',
-            Tenantkey: tenantKey,
-          },
-        }
-      );
-      const subscriptions: Subscription[] = get(
-        subsRes,
-        'data.subscriptions',
-        []
-      );
-      subscriptions.forEach(async (subscription) => {
-        const { subscriptionId } = subscription;
-        const supplierRes = await ApiCall.get(
-          `/tenants/${activeTenant?.tenantId}/subscriptions/${subscriptionId}/suppliers`,
-          {
-            headers: {
-              Accept: 'application/json',
-              Tenantkey: tenantKey,
-            },
-          }
-        );
-        const suppliers: Supplier[] = get(
-          supplierRes,
-          'data.supplierSubscriptions',
-          []
-        );
-        suppliers.forEach(async (supplier) => {
-          const { data } = await ApiCall.get(
-            `/tenants/${activeTenant?.tenantId}/subscriptions/${subscription.subscriptionId}/suppliers/${supplier?.supplierID}`,
-            {
-              headers: {
-                Accept: 'application/json',
-                Tenantkey: tenantKey,
-              },
-            }
-          );
-          subscription.suppliers = [...(subscription?.suppliers || []), data];
-        });
-        dispatch.app.updateSubscriptions(subscriptions);
-      });
-
-      setError(null);
       dispatch.app.setIsLoading(false);
     } catch (err) {
       if (typeof err === 'string') {
@@ -141,16 +52,299 @@ export function useIvoFetching() {
   }, []);
 
   useEffect(() => {
-    if (!!storedUser?.tenants?.length) {
-      fetch(storedUser);
-    } else {
-      dispatch.app.setIsLoading(false);
+    if (username) {
+      fetch(username);
     }
-  }, [fetch, storedUser]);
+  }, [fetch, username]);
 
   return { error };
 }
 
+//* Subscriptions data fetch
+export async function getSubscriptions(
+  tenant: { id: number; key: string },
+  onInit?: () => void,
+  onSuccess?: (subscriptions: Subscription[]) => void,
+  onFailed?: (error: string | null) => void
+) {
+  onInit?.();
+  try {
+    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+    });
+    const subscriptions: Subscription[] = get(
+      subsRes,
+      'data.subscriptions',
+      []
+    );
+    onSuccess?.(subscriptions);
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed?.(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed?.(err.message);
+    }
+  }
+}
+
+//* Subscriptions data fetch with suppliers and configurations
+export async function getSubscriptionsWithSuppliersAndConfigurations(
+  tenant: { id: number; key: string },
+  onInit?: () => void,
+  onSuccess?: (subscriptions: Subscription[]) => void,
+  onFailed?: (error: string | null) => void
+) {
+  onInit?.();
+  try {
+    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+    });
+    const subscriptions: Subscription[] = get(
+      subsRes,
+      'data.subscriptions',
+      []
+    );
+    subscriptions.forEach(async (subscription) => {
+      const { subscriptionId } = subscription;
+      const supplierRes = await ApiCall.get(
+        `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Tenantkey: tenant.key,
+          },
+        }
+      );
+      const suppliersData: Supplier[] = get(
+        supplierRes,
+        'data.supplierSubscriptions',
+        []
+      );
+      suppliersData.forEach(async (supplier) => {
+        const { data } = await ApiCall.get(
+          `/tenants/${tenant.id}/subscriptions/${subscription.subscriptionId}/suppliers/${supplier?.supplierID}`,
+          {
+            headers: {
+              Accept: 'application/json',
+              Tenantkey: tenant.key,
+            },
+          }
+        );
+        subscription.suppliers = [...(subscription?.suppliers || []), data];
+        onSuccess?.(subscriptions);
+      });
+    });
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed?.(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed?.(err.message);
+    }
+  }
+}
+
+//* Subscription data fetch with suppliers and configurations
+export async function getSubscriptionWithSupplierAndConfigurations(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  supplierId: number,
+  onInit?: () => void,
+  onSuccess?: (
+    subscription: Subscription,
+    supplier: Supplier,
+    configurations: any[]
+  ) => void,
+  onFailed?: (error: string | null) => void
+) {
+  onInit?.();
+  try {
+    const subRes = ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const supplierRes = ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const configurationsRes = ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const fetchedDataRes = await Promise.all([
+      subRes,
+      supplierRes,
+      configurationsRes,
+    ]);
+    const subscription = get(fetchedDataRes[0], 'data.subscription', null);
+    const suppliers: Supplier[] = get(
+      fetchedDataRes[1],
+      'data.supplierSubscriptions',
+      null
+    );
+    const supplier = suppliers?.find((supp) => supp?.supplierID === supplierId);
+    const configurations = get(fetchedDataRes[2], 'data.configurations', []);
+    if (subscription && supplier && configurations) {
+      onSuccess?.(subscription, supplier, configurations);
+    }
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed?.(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed?.(err.message);
+    }
+  }
+}
+
+//* Fetch subscription by ID
+export async function getSubscriptionById(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  onInit: () => void,
+  onSuccess: (subscription: Subscription) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const res = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const data = get(res, 'data.subscription', null);
+    onSuccess(data);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Fetch suppliers by Subscription
+export async function getSuppliersBySubscription(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  onInit: () => void,
+  onSuccess: (suppliers: Supplier[]) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const res = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const data = get(res, 'data.supplierSubscriptions', null);
+    onSuccess(data);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Fetch supplier by ID
+export async function getSupplierById(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  supplierId: number,
+  onInit: () => void,
+  onSuccess: (supplier: Supplier) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const res = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const data = get(res, 'data', null);
+    onSuccess(data);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Fetch configurations by Supplier
+export async function getConfigurationsBySupplier(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  supplierId: number,
+  onInit: () => void,
+  onSuccess: (configurations: SupplierConfiguration[]) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const configurationsRes = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const configurations = get(configurationsRes, 'data.configurations', []);
+    onSuccess(configurations);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Update supplier data
 export async function updateSupplier(
   tenant: { id: number; key: string },
   data: SupplierFormFields,
@@ -183,6 +377,48 @@ export async function updateSupplier(
     });
     const updatedSupplier = get(updatedSupplierRes, 'data', null);
     onSuccess(updatedSupplier);
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Create supplier data
+export async function createSupplier(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  supplierId: number,
+  data: SupplierFormFields,
+  onInit: () => void,
+  onSuccess: (updatedSupplier: Supplier) => void,
+  onFailed: (error: string) => void
+) {
+  const { configurations } = data;
+  onInit();
+
+  const filteredConfigurations = Object.entries(configurations)
+    .filter((config) => typeof config[1] !== 'object' && config)
+    .map((config) => ({
+      supplierAttributeId: Number(config[0]),
+      value: config[1].toString(),
+    }));
+
+  try {
+    const newSupplierRes = await ApiCall.request({
+      method: 'POST',
+      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      headers: {
+        Tenantkey: tenant.key,
+      },
+      data: filteredConfigurations,
+    });
+    const newSupplier = get(newSupplierRes, 'data', null);
+    onSuccess(newSupplier);
   } catch (err) {
     if (typeof err === 'string') {
       console.error(err.toUpperCase());
