@@ -92,6 +92,56 @@ export async function getSubscriptions(
   }
 }
 
+//* Subscriptions data fetch with suppliers
+export async function getSubscriptionsWithSuppliers(
+  tenant: { id: number; key: string },
+  onInit?: () => void,
+  onSuccess?: (subscriptions: Subscription[]) => void,
+  onFailed?: (error: string | null) => void
+) {
+  onInit?.();
+  try {
+    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+    });
+    const subscriptions: Subscription[] = get(
+      subsRes,
+      'data.subscriptions',
+      []
+    );
+    subscriptions.forEach(async (subscription) => {
+      const { subscriptionId } = subscription;
+      const supplierRes = await ApiCall.get(
+        `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+        {
+          headers: {
+            Accept: 'application/json',
+            Tenantkey: tenant.key,
+          },
+        }
+      );
+      const suppliersData: Supplier[] = get(
+        supplierRes,
+        'data.supplierSubscriptions',
+        []
+      );
+      subscription.suppliers = suppliersData;
+      onSuccess?.(subscriptions);
+    });
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed?.(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed?.(err.message);
+    }
+  }
+}
+
 //* Subscriptions data fetch with suppliers and configurations
 export async function getSubscriptionsWithSuppliersAndConfigurations(
   tenant: { id: number; key: string },
@@ -282,6 +332,32 @@ export async function getSuppliersBySubscription(
   }
 }
 
+//* Fetch suppliers list
+export async function getSuppliers(
+  tenant: { id: number; key: string },
+  onInit: () => void,
+  onSuccess: (suppliers: Supplier[]) => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    const res = await ApiCall.get(`/suppliers`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+    });
+    const data = get(res, 'data.suppliers', null);
+    onSuccess(data);
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
 //* Fetch supplier by ID
 export async function getSupplierById(
   tenant: { id: number; key: string },
@@ -316,7 +392,6 @@ export async function getSupplierById(
 //* Fetch configurations by Supplier
 export async function getConfigurationsBySupplier(
   tenant: { id: number; key: string },
-  subscriptionId: number,
   supplierId: number,
   onInit: () => void,
   onSuccess: (configurations: SupplierConfiguration[]) => void,
@@ -324,15 +399,12 @@ export async function getConfigurationsBySupplier(
 ) {
   onInit();
   try {
-    const configurationsRes = await ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenant.key,
-        },
-      }
-    );
+    const configurationsRes = await ApiCall.get(`/suppliers/${supplierId}`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+    });
     const configurations = get(configurationsRes, 'data.configurations', []);
     onSuccess(configurations);
   } catch (err) {

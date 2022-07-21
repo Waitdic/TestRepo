@@ -72,6 +72,7 @@ export type Supplier = {
   isSelected?: boolean;
 };
 export type SupplierConfiguration = {
+  supplierAttributeID?: number;
   supplierSubscriptionAttributeID: number;
   key: string;
   name: string;

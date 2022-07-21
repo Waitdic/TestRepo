@@ -26,7 +26,9 @@ import {
   createSupplier,
   getConfigurationsBySupplier,
   getSubscriptions,
+  getSubscriptionsWithSuppliers,
   getSubscriptionsWithSuppliersAndConfigurations,
+  getSuppliers,
   getSuppliersBySubscription,
 } from '../data-access';
 import { sortBy, uniqBy } from 'lodash';
@@ -45,7 +47,6 @@ export const SupplierCreate: FC<Props> = memo(() => {
     register,
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
@@ -92,10 +93,12 @@ export const SupplierCreate: FC<Props> = memo(() => {
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (newSupplier) => {
-        console.log(newSupplier);
+      (_newSupplier) => {
         dispatch.app.setIsLoading(false);
         setShowNotification(true);
+        setTimeout(() => {
+          navigate('/suppliers');
+        }, 800);
       },
       (err) => {
         dispatch.app.setError(err);
@@ -112,14 +115,10 @@ export const SupplierCreate: FC<Props> = memo(() => {
       const supplierIds = selectedSub?.suppliers?.map(
         (supplier) => supplier.supplierID
       );
-      const allSuppliers = uniqBy(
-        subscriptions.flatMap((sub) => sub.suppliers),
-        'supplierID'
-      );
-      const _suppliers = allSuppliers.filter(
+      const selectableSuppliers = suppliers.filter(
         (supplier) => !supplierIds.includes(supplier.supplierID)
       );
-      setSuppliers(_suppliers);
+      setSuppliers(selectableSuppliers);
     }
     setDraftSupplier({
       ...draftSupplier,
@@ -127,19 +126,41 @@ export const SupplierCreate: FC<Props> = memo(() => {
     });
   };
 
-  const handleSupplierChange = (optionId: number) => {
-    setDraftSupplier({
-      ...draftSupplier,
-      supplierId: optionId,
-      configurations:
-        suppliers.find((supplier) => supplier.supplierID === optionId)
-          ?.configurations || [],
+  const handleSupplierChange = async (optionId: number) => {
+    if (!activeTenant) return;
+    await getConfigurationsBySupplier(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      optionId,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (configurations) => {
+        setDraftSupplier({
+          ...draftSupplier,
+          supplierId: optionId,
+          configurations,
+        });
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        handleError(err);
+      }
+    );
+  };
+
+  const handleError = (err: string | null) => {
+    dispatch.app.setError(err);
+    dispatch.app.setIsLoading(false);
+    setNotification({
+      status: NotificationStatus.ERROR,
+      message: 'Subscriptions and suppliers data fetching failed.',
     });
+    setShowNotification(true);
   };
 
   const fetchData = useCallback(async () => {
     if (!activeTenant) return;
-    await getSubscriptionsWithSuppliersAndConfigurations(
+    await getSubscriptionsWithSuppliers(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       () => {
         dispatch.app.setIsLoading(true);
@@ -149,13 +170,20 @@ export const SupplierCreate: FC<Props> = memo(() => {
         dispatch.app.setIsLoading(false);
       },
       (err) => {
-        dispatch.app.setError(err);
+        handleError(err);
+      }
+    );
+    await getSuppliers(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (supps) => {
+        setSuppliers(supps);
         dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: 'Subscriptions and suppliers data fetching failed.',
-        });
-        setShowNotification(true);
+      },
+      (err) => {
+        handleError(err);
       }
     );
   }, [activeTenant]);
@@ -220,7 +248,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
                     options={
                       sortedSuppliers?.map((loginOption) => ({
                         id: loginOption.supplierID,
-                        name: loginOption?.supplierName,
+                        name: loginOption?.name,
                       })) || []
                     }
                     isFirstOptionEmpty

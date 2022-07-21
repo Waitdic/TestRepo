@@ -1,7 +1,6 @@
 import { UseFormRegister } from 'react-hook-form';
 //
 import {
-  FormErrorMessage,
   SupplierConfiguration,
   SupplierFormFields,
   SelectOption,
@@ -34,6 +33,7 @@ export const renderConfigurationFormFields = (
     type: ConfigurationFormFieldTypes,
     fieldConfig: {
       supplierSubscriptionAttributeID: number;
+      supplierAttributeID?: number;
       idx: number;
       key: string;
       labelText: string;
@@ -56,6 +56,7 @@ export const renderConfigurationFormFields = (
   ) => {
     const {
       supplierSubscriptionAttributeID,
+      supplierAttributeID,
       idx: _idx,
       key: _key,
       labelText,
@@ -76,12 +77,14 @@ export const renderConfigurationFormFields = (
       defaultValue,
     } = fieldConfig;
 
+    const supplierID = supplierAttributeID ?? supplierSubscriptionAttributeID;
+
     switch (type) {
       case ConfigurationFormFieldTypes.BOOLEAN:
         return (
           <Toggle
-            id={`configurations.${supplierSubscriptionAttributeID}`}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`, {
+            id={`configurations.${supplierID}`}
+            {...register(`configurations.${supplierID}`, {
               required: {
                 value: !!required,
                 message: 'This field is required.',
@@ -98,8 +101,8 @@ export const renderConfigurationFormFields = (
       case ConfigurationFormFieldTypes.DROPDOWN:
         return (
           <Select
-            id={`configurations.${supplierSubscriptionAttributeID}`}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`)}
+            id={`configurations.${supplierID}`}
+            {...register(`configurations.${supplierID}`)}
             labelText={labelText}
             description={description}
             maxItems={maxItems}
@@ -111,9 +114,9 @@ export const renderConfigurationFormFields = (
       case ConfigurationFormFieldTypes.NUMBER:
         return (
           <TextField
-            id={`configurations.${supplierSubscriptionAttributeID}`}
+            id={`configurations.${supplierID}`}
             type={InputTypes.NUMBER}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`, {
+            {...register(`configurations.${supplierID}`, {
               required: {
                 value: !!required,
                 message: 'This field is required.',
@@ -140,24 +143,21 @@ export const renderConfigurationFormFields = (
           <>
             {editPresentation === 'multilineText' ? (
               <TextArea
-                id={`configurations.${supplierSubscriptionAttributeID}`}
-                {...register(
-                  `configurations.${supplierSubscriptionAttributeID}`,
-                  {
-                    required: {
-                      value: !!required,
-                      message: 'This field is required.',
-                    },
-                    minLength: {
-                      value: minLength,
-                      message: `Minimum length ${minLength} characters.`,
-                    },
-                    maxLength: {
-                      value: maxLength,
-                      message: `Maximum length ${maxLength} characters.`,
-                    },
-                  }
-                )}
+                id={`configurations.${supplierID}`}
+                {...register(`configurations.${supplierID}`, {
+                  required: {
+                    value: !!required,
+                    message: 'This field is required.',
+                  },
+                  minLength: {
+                    value: minLength,
+                    message: `Minimum length ${minLength} characters.`,
+                  },
+                  maxLength: {
+                    value: maxLength,
+                    message: `Maximum length ${maxLength} characters.`,
+                  },
+                })}
                 defaultValue={value as string}
                 labelText={labelText}
                 description={description}
@@ -167,24 +167,21 @@ export const renderConfigurationFormFields = (
               />
             ) : (
               <TextField
-                id={`configurations.${supplierSubscriptionAttributeID}`}
-                {...register(
-                  `configurations.${supplierSubscriptionAttributeID}`,
-                  {
-                    required: {
-                      value: !!required,
-                      message: 'This field is required.',
-                    },
-                    minLength: {
-                      value: minLength,
-                      message: `Minimum length ${minLength} characters.`,
-                    },
-                    maxLength: {
-                      value: maxLength,
-                      message: `Maximum length ${maxLength} characters.`,
-                    },
-                  }
-                )}
+                id={`configurations.${supplierID}`}
+                {...register(`configurations.${supplierID}`, {
+                  required: {
+                    value: !!required,
+                    message: 'This field is required.',
+                  },
+                  minLength: {
+                    value: minLength,
+                    message: `Minimum length ${minLength} characters.`,
+                  },
+                  maxLength: {
+                    value: maxLength,
+                    message: `Maximum length ${maxLength} characters.`,
+                  },
+                })}
                 labelText={labelText}
                 defaultValue={value as string}
                 description={description}
@@ -198,8 +195,8 @@ export const renderConfigurationFormFields = (
       case ConfigurationFormFieldTypes.URI:
         return (
           <TextField
-            id={`configurations.${supplierSubscriptionAttributeID}`}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`, {
+            id={`configurations.${supplierID}`}
+            {...register(`configurations.${supplierID}`, {
               required: {
                 value: !!required,
                 message: 'This field is required.',
@@ -220,9 +217,9 @@ export const renderConfigurationFormFields = (
       case ConfigurationFormFieldTypes.EMAIL:
         return (
           <TextField
-            id={`configurations.${supplierSubscriptionAttributeID}`}
+            id={`configurations.${supplierID}`}
             type={InputTypes.EMAIL}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`, {
+            {...register(`configurations.${supplierID}`, {
               required: {
                 value: !!required,
                 message: 'This field is required.',
@@ -245,9 +242,9 @@ export const renderConfigurationFormFields = (
       case ConfigurationFormFieldTypes.PASSWORD:
         return (
           <TextField
-            id={`configurations.${supplierSubscriptionAttributeID}`}
+            id={`configurations.${supplierID}`}
             type={InputTypes.PASSWORD}
-            {...register(`configurations.${supplierSubscriptionAttributeID}`, {
+            {...register(`configurations.${supplierID}`, {
               required: {
                 value: !!required,
                 message: 'This field is required.',
@@ -296,6 +293,7 @@ export const renderConfigurationFormFields = (
         format: _format,
         required,
         supplierSubscriptionAttributeID,
+        supplierAttributeID,
       },
       idx
     ) => {
@@ -307,7 +305,9 @@ export const renderConfigurationFormFields = (
       if (errors?.configurations) {
         const computedErrors = Object.entries(errors.configurations);
         const itemWithError = computedErrors?.find(
-          (err) => Number(err[0]) === supplierSubscriptionAttributeID
+          (err) =>
+            Number(err[0]) ===
+            (supplierAttributeID || supplierSubscriptionAttributeID)
         );
         if (itemWithError) {
           error.id = supplierSubscriptionAttributeID;
@@ -320,6 +320,7 @@ export const renderConfigurationFormFields = (
         <div key={idx}>
           {renderConfigurationFormField(type, {
             supplierSubscriptionAttributeID,
+            supplierAttributeID,
             idx,
             key,
             labelText: name,
