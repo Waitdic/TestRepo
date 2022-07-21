@@ -210,80 +210,88 @@ export const SupplierCreate: FC<Props> = memo(() => {
   return (
     <>
       <MainLayout>
-        <div className='flex flex-col'>
-          {/* Create Supplier */}
-          <div className='mb-6'>
-            <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-              New Supplier
-            </h2>
-            <form
-              className='w-full divide-y divide-gray-200'
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
-                <div className='flex-1'>
-                  <Select
-                    id='subscription'
-                    {...register('subscription', {
-                      required: 'This field is required.',
-                    })}
-                    labelText='Subscription'
-                    options={sortedSubscriptions?.map(
-                      ({ subscriptionId, userName }) => ({
-                        id: subscriptionId,
-                        name: userName,
-                      })
-                    )}
-                    isFirstOptionEmpty
-                    onUncontrolledChange={handleSubscriptionChange}
-                  />
-                </div>
-                <div className='flex-1'>
-                  <Select
-                    id='supplier'
-                    {...register('supplier', {
-                      required: 'This field is required.',
-                    })}
-                    labelText='Supplier'
-                    options={
-                      sortedSuppliers?.map((loginOption) => ({
-                        id: loginOption.supplierID,
-                        name: loginOption?.name,
-                      })) || []
-                    }
-                    isFirstOptionEmpty
-                    onUncontrolledChange={handleSupplierChange}
-                  />
-                </div>
-                {!!draftSupplier?.configurations?.length && (
-                  <div className='border-t border-gray-200 mt-2 pt-5'>
-                    <SectionTitle title='Settings' />
-                    <div className='flex flex-col gap-5 mt-5'>
-                      {renderConfigurationFormFields(
-                        draftSupplier.configurations,
-                        register,
-                        errors
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className='flex justify-end mt-5 pt-5'>
-                <Button
-                  text='Cancel'
-                  color={ButtonColors.OUTLINE}
-                  className='ml-4'
-                  onClick={() => navigate(-1)}
-                />
-                <Button
-                  type={ButtonVariants.SUBMIT}
-                  text='Save'
-                  className='ml-4'
-                />
-              </div>
-            </form>
+        <>
+          {/* Page header */}
+          <div className='mb-8'>
+            {/* Title */}
+            <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
+              Create Supplier
+            </h1>
           </div>
-        </div>
+
+          {/* Content */}
+          <div className='bg-white shadow-lg rounded-sm mb-8'>
+            <div className='flex flex-col md:flex-row md:-mr-px'>
+              <div className='min-w-60'></div>
+              <form
+                className='grow p-6 w-full divide-y divide-gray-200'
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
+                  <div className='flex-1'>
+                    <Select
+                      id='subscription'
+                      {...register('subscription', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Subscription'
+                      options={sortedSubscriptions?.map(
+                        ({ subscriptionId, userName }) => ({
+                          id: subscriptionId,
+                          name: userName,
+                        })
+                      )}
+                      isFirstOptionEmpty
+                      onUncontrolledChange={handleSubscriptionChange}
+                    />
+                  </div>
+                  <div className='flex-1'>
+                    <Select
+                      id='supplier'
+                      {...register('supplier', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Supplier'
+                      options={
+                        sortedSuppliers?.map((loginOption) => ({
+                          id: loginOption.supplierID,
+                          name: loginOption?.name,
+                        })) || []
+                      }
+                      isFirstOptionEmpty
+                      onUncontrolledChange={handleSupplierChange}
+                    />
+                  </div>
+                  {!!draftSupplier?.configurations?.length && (
+                    <div className='border-t border-gray-200 mt-2 pt-5'>
+                      <SectionTitle title='Settings' />
+                      <div className='flex flex-col gap-5 mt-5'>
+                        {renderConfigurationFormFields(
+                          draftSupplier.configurations,
+                          register,
+                          errors
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className='flex justify-end mt-5 pt-5'>
+                  <Button
+                    text='Cancel'
+                    color={ButtonColors.OUTLINE}
+                    className='ml-4'
+                    onClick={() => navigate(-1)}
+                  />
+                  <Button
+                    type={ButtonVariants.SUBMIT}
+                    text='Save'
+                    className='ml-4'
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
       </MainLayout>
 
       {showNotification && (
