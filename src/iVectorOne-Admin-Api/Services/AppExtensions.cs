@@ -5,8 +5,8 @@
         public static WebApplication ConfigureApp(this WebApplication app)
         {
             app.UseHttpsRedirection();
-            var allowedHosts = app.Configuration.GetSection("CorsOrigins").Get<string[]>();
-            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            //var allowedHosts = app.Configuration.GetSection("CorsOrigins").Get<string[]>();
+            //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseRouting();
             app.UseAuthentication();

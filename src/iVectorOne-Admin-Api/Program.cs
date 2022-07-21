@@ -10,6 +10,15 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 builder.RegisterServices();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("_myAllowSpecificOrigins",
+                          policy =>
+                          {
+                              policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                          });
+});
+
 var app = builder.Build();
 app.ConfigureApp();
 
@@ -255,5 +264,7 @@ app.MapPost("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{sup
     }).RequireAuthorization();
 
 app.ConfigureSwagger();
+
+app.UseCors("_myAllowSpecificOrigins");
 
 app.Run();
