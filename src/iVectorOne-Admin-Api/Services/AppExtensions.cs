@@ -9,6 +9,9 @@
             //app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseRouting();
+
+            app.UseCors("_myAllowSpecificOrigins");
+
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -265,6 +265,4 @@ app.MapPost("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{sup
 
 app.ConfigureSwagger();
 
-app.UseCors("_myAllowSpecificOrigins");
-
 app.Run();
