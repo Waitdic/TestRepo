@@ -62,9 +62,9 @@
             string[] resortSplitItems = resortSplit.ResortCode.Split('|');
             string guestNationality = string.Empty;
 
-            if (!string.IsNullOrEmpty(searchDetails.NationalityCode))
+            if (!string.IsNullOrEmpty(searchDetails.ISONationalityCode))
             {
-                guestNationality = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
+                guestNationality = await _support.TPNationalityLookupAsync(Source, searchDetails.ISONationalityCode);
             }
 
             if (string.IsNullOrEmpty(guestNationality))

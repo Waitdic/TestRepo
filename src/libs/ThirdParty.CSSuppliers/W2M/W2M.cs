@@ -118,7 +118,7 @@
                 new ThirdPartyCancellationFeeResult
                     {
                         Success = true,
-                        CurrencyCode = propertyDetails.CurrencyCode
+                        CurrencyCode = propertyDetails.ISOCurrencyCode
                     });
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch searchDetails, string source)

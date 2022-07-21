@@ -439,7 +439,7 @@
             sbPrebookRequest.Append("<OptionType>Hotel</OptionType>");
 
             string nationality = "";
-            string nationalityLookupValue = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, propertyDetails.NationalityCode);
+            string nationalityLookupValue = await _support.TPNationalityLookupAsync(ThirdParties.TRAVELGATE, propertyDetails.ISONationalityCode);
             string defaultNationality = _settings.LeadGuestNationality(propertyDetails, propertyDetails.Source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
@@ -594,7 +594,7 @@
             sbBookRequest.AppendFormat("<HotelCode>{0}</HotelCode>", propertyDetails.TPKey);
 
             string nationality = "";
-            string nationalityLookupValue = await _support.TPNationalityLookupAsync(source, propertyDetails.NationalityCode);
+            string nationalityLookupValue = await _support.TPNationalityLookupAsync(source, propertyDetails.ISONationalityCode);
             string defaultNationality = _settings.LeadGuestNationality(propertyDetails, source);
 
             if (!string.IsNullOrEmpty(nationalityLookupValue))
@@ -610,7 +610,7 @@
                 sbBookRequest.AppendFormat("<Nationality>{0}</Nationality>", nationality);
             }
 
-            string currencyCode = await _support.TPCurrencyLookupAsync(source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(source, propertyDetails.ISOCurrencyCode);
             // send gross cost as gross net down can be used (local is the net)
             sbBookRequest.AppendFormat("<Price currency = \"{0}\" amount = \"{1}\" binding = \"{2}\" commission = \"{3}\"/>", currencyCode, propertyDetails.GrossCost, propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[6], propertyDetails.Rooms[0].ThirdPartyReference.Split(delimiter)[5]);
             sbBookRequest.Append("<ResGuests>");

@@ -10,7 +10,7 @@
 
         int GetCurrencyID(IThirdPartyAttributeSearch searchDetails);
 
-        Task<int> GetCurrencyCodeAsync(int currencyId, IThirdPartyAttributeSearch searchDetails);
+        Task<int> GetCurrencyCodeAsync(string isoCurrencyCode, IThirdPartyAttributeSearch searchDetails);
 
         string CleanName(string name);
     }

@@ -3,9 +3,8 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using ThirdParty;
     using ThirdParty.Factories;
-    using ThirdParty.Models;
+    using ThirdParty.Models.Property.Booking;
     using ThirdParty.Repositories;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
@@ -53,10 +52,12 @@
         {
             Cancel.Response response = null!;
             var exceptionString = string.Empty;
+            bool success = true;
+            var propertyDetails = new PropertyDetails();
 
             try
             {
-                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
+                propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
                 this.referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
@@ -68,14 +69,27 @@
                 }
                 else
                 {
-                    IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
-                    propertyDetails.Source,
-                    cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                        propertyDetails.Source,
+                        cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
                         var thirdPartyReponse = await thirdParty.CancelBookingAsync(propertyDetails);
-                        response = this.responseFactory.Create(thirdPartyReponse);
+                        success = thirdPartyReponse?.Success ?? false;
+
+                        if (success)
+                        {
+                            response = this.responseFactory.Create(thirdPartyReponse!);
+                        }
+                        else
+                        {
+                            exceptionString = "Suppplier cancellation failed";
+                            response = new Cancel.Response()
+                            {
+                                Warnings = new System.Collections.Generic.List<string>() { exceptionString }
+                            };
+                        }
                     }
                 }
             }
@@ -85,6 +99,11 @@
             }
             finally
             {
+                if (!success && propertyDetails.Warnings.Any())
+                {
+                    exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
+                }
+
                 await this.logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.User, exceptionString);
             }
 
@@ -96,10 +115,12 @@
         {
             Precancel.Response response = null!;
             var exceptionString = string.Empty;
+            bool success = true;
+            var propertyDetails = new PropertyDetails();
 
             try
             {
-                var propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
+                propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
                 this.referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
@@ -111,17 +132,26 @@
                 }
                 else
                 {
-                    IThirdParty thirdParty = this.thirdPartyFactory.CreateFromSource(
-                    propertyDetails.Source,
-                    cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                        propertyDetails.Source,
+                        cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
                         var cancellationFees = await thirdParty.GetCancellationCostAsync(propertyDetails);
+                        success = !propertyDetails.Warnings.Any();
 
-                        if (!propertyDetails.Warnings.Any())
+                        if (success)
                         {
                             response = await this.responseFactory.CreateFeesResponseAsync(cancellationFees, propertyDetails);
+                        }
+                        else
+                        {
+                            exceptionString = "Suppplier pre-cancellation failed";
+                            response = new Precancel.Response()
+                            {
+                                Warnings = new System.Collections.Generic.List<string>() { exceptionString }
+                            };
                         }
                     }
                 }
@@ -129,6 +159,15 @@
             catch (Exception ex)
             {
                 exceptionString = ex.ToString();
+            }
+            finally
+            {
+                if (!success && propertyDetails.Warnings.Any())
+                {
+                    exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
+                }
+
+                // todo - log precancel
             }
 
             return response!;

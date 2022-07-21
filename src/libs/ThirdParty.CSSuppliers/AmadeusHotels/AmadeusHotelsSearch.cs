@@ -222,7 +222,7 @@
                 where request.Success
                 select _serializer.DeSerialize<EnvelopeResponse<OTAHotelAvailRS>>(_serializer.CleanXmlNamespaces(request.ResponseXML));
 
-            var searchHelper = (AmadeusSearchHelper)requests[0].ExtraInfo;
+            var searchHelper = (AmadeusSearchHelper)requests[0].ExtraInfo!;
 
             transformedResults.TransformedResults.AddRange(responses.SelectMany(r => GetResultFromResponse(r.Body.Content, searchHelper, searchDetails)));
 
@@ -319,7 +319,7 @@
                             MealBasisCode = mealBasisCode,
                             RoomTypeCode = roomTypeCode,
                             TPReference = thirdPartyReference,
-                            TPRateCode = ratePlanCode,
+                            RateCode = ratePlanCode,
                             Adults = adults,
                             Children = children,
                             PropertyRoomBookingID = propertyRoomBookingId,

@@ -25,21 +25,5 @@
         public decimal OldToNewExchangeRate { get; set; }
         public int NewCurrencyID { get; set; }
         public decimal NewCurrencyAmount { get; set; }
-
-        // todo - port this code from the old interface: 
-
-        //public PerformedUpdate PerformedUpdate = = PerformedUpdate.NotAttempted;
-
-        //public List<SchedulePayment> ScheduledPayments = new List<SchedulePayment>();
-
-        //public List<VirtualCardTransactionLog> XmlLogs = new List<VirtualCardTransactionLog>();
-
-        //public void AddLogEntry(string Name, string XMLLog)
-        //{
-        //    var oLog = new VirtualCardTransactionLog();
-        //    oLog.LogName = Name;
-        //    oLog.Log = XMLLog;
-        //    XmlLogs.Add(oLog);
-        //}
     }
 }

@@ -17,14 +17,6 @@
         Task<List<Currency>> GetCurrenciesAsync();
 
         /// <summary>
-        /// Gets the currency code from currency identifier.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="currencyID">The currency identifier.</param>
-        /// <returns> a currency code as string, for the specified source currency identifier</returns>
-        Task<string> GetCurrencyCodeFromCurrencyIDAsync(string source, int currencyID);
-
-        /// <summary>
         /// Gets the  currency identifier from the third party code.
         /// </summary>
         /// <param name="source">The source.</param>

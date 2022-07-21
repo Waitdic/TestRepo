@@ -66,7 +66,11 @@
             {
                 response = await mediator.Send(request);
 
-                if (response.Warnings.Any())
+                if (response is null)
+                {
+                    return Results.UnprocessableEntity();
+                }
+                else if (response.Warnings.Any())
                 {
                     return Results.BadRequest(response.Warnings);
                 }

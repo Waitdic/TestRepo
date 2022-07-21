@@ -1,6 +1,5 @@
 ﻿namespace ThirdParty.CSSuppliers.iVectorConnect.Models
 {
-    using System;
     using System.Collections.Generic;
     using System.Xml.Serialization;
     using Common;
@@ -20,5 +19,7 @@
 
         [XmlElement("PropertyBookings")]
         public PropertyBookings PropertyBookings { get; set; } = new();
+
+        public string ExternalReference { get; set; } = string.Empty;
     }
 }

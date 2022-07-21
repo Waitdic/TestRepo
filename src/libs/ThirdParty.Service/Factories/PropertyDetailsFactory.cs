@@ -55,7 +55,7 @@
 
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
 
-            if (propertyToken != null)
+            if (propertyToken is not null)
             {
                 propertyDetails = new PropertyDetails()
                 {
@@ -66,8 +66,8 @@
                     CentralPropertyID = propertyToken.CentralPropertyID,
                     PropertyID = propertyToken.PropertyID,
                     TPKey = propertyToken.TPKey,
-                    NationalityCode = request.NationalityID,
-                    CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISONationalityCode = request.NationalityID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = request.User.Configurations,
@@ -78,7 +78,7 @@
                 {
                     var roomToken = _tokenService.DecodeRoomToken(room.RoomBookingToken);
 
-                    if (roomToken != null && roomToken.Adults != 0)
+                    if (roomToken is not null && roomToken.Adults != 0)
                     {
                         var passengers = SetupPrebookPassengers(roomToken);
                         var mealbasisId = PropertyFactoryHelper.GetNumFromList(roomToken.MealBasisID, 2);
@@ -109,7 +109,6 @@
             Validate(propertyToken!, propertyDetails);
 
             return propertyDetails;
-
         }
 
         /// <summary>Validates wether the property details matches the expected values from teh token</summary>
@@ -181,7 +180,7 @@
             var leadCustomer = request.LeadCustomer;
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
 
-            if (propertyToken != null)
+            if (propertyToken is not null)
             {
                 propertyDetails = new PropertyDetails()
                 {
@@ -199,6 +198,7 @@
                     LeadGuestPhone = leadCustomer.CustomerPhone,
                     LeadGuestMobile = leadCustomer.CustomerMobile,
                     LeadGuestEmail = leadCustomer.CustomerEmail,
+                    LeadGuestPassportNumber = leadCustomer.PassportNumber,
                     TPRef1 = request.SupplierReference1,
                     TPRef2 = request.SupplierReference2,
                     Source = propertyToken.Source,
@@ -208,8 +208,8 @@
                     TPKey = propertyToken.TPKey,
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
-                    NationalityCode = request.NationalityID,
-                    CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISONationalityCode = request.NationalityID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = request.User.Configurations,
@@ -237,7 +237,7 @@
         {
             var roomToken = _tokenService.DecodeRoomToken(roomBooking.RoomBookingToken);
 
-            if (roomToken != null && roomToken.Adults != 0)
+            if (roomToken is not null && roomToken.Adults != 0)
             {
                 var mealbasisId = PropertyFactoryHelper.GetNumFromList(roomToken.MealBasisID, 2);
                 decimal localCost = PropertyFactoryHelper.GetNumFromList(roomToken.LocalCost, 7) / 100m;
@@ -307,7 +307,7 @@
             var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.User);
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
 
-            if (token != null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
+            if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {
                 propertyDetails = new PropertyDetails()
                 {
@@ -315,7 +315,7 @@
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
                     TPKey = propertyToken.TPKey,
-                    CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     ThirdPartyConfigurations = request.User.Configurations,
                 };
 
@@ -338,7 +338,7 @@
             var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.User);
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
 
-            if (token != null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
+            if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {
                 propertyDetails = new PropertyDetails()
                 {
@@ -346,7 +346,7 @@
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
                     TPKey = propertyToken.TPKey,
-                    CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     ThirdPartyConfigurations = request.User.Configurations,
                 };
 

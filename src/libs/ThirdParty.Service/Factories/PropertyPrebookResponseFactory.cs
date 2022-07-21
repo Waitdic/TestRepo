@@ -56,8 +56,8 @@
             var errata = new List<string>();
             var cancellationTerms = new List<Search.CancellationTerm>();
             var roomBookings = new List<RoomBooking>();
-            int currencyId = !string.IsNullOrEmpty(propertyDetails.CurrencyCode) ?
-                await _support.ISOCurrencyIDLookupAsync(propertyDetails.CurrencyCode) :
+            int currencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
+                await _support.ISOCurrencyIDLookupAsync(propertyDetails.ISOCurrencyCode) :
                 0;
 
             foreach (var erratum in propertyDetails.Errata)

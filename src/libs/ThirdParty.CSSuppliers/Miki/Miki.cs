@@ -284,11 +284,12 @@
 
         private async Task<XmlDocument> HotelSearchAsync(PropertyDetails propertyDetails)
         {
-            string agentCode = MikiSupport.GetAgentCode(propertyDetails.CurrencyCode, propertyDetails, _settings);
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode);
+            string agentCode = MikiSupport.GetAgentCode(currencyCode, propertyDetails, _settings);
             string password = await MikiSupport.GetPasswordAsync(propertyDetails, _settings, _serializer, _cache);
 
             string paxNationality = string.Empty;
-            string nationalityId = propertyDetails.NationalityCode;
+            string nationalityId = propertyDetails.ISONationalityCode;
 
             if (!string.IsNullOrEmpty(nationalityId))
             {
@@ -348,7 +349,7 @@
                         RequestAuditInfo = MikiSupport.BuildRequestAuditInfo(agentCode, password),
                         HotelSearchCriteria =
                         {
-                            CurrencyCode = propertyDetails.CurrencyCode,
+                            CurrencyCode = propertyDetails.ISOCurrencyCode,
                             PaxNationality = paxNationality,
                             LanguageCode = _settings.Language(propertyDetails).ToLower(),
                             Destination =
@@ -422,24 +423,14 @@
         private async Task<XmlDocument> GetXmlAsync(PropertyDetails propertyDetails)
         {
             string password = await MikiSupport.GetPasswordAsync(propertyDetails, _settings, _serializer, _cache);
-            string currencyCode = propertyDetails.CurrencyCode;
+            string currencyCode = propertyDetails.ISOCurrencyCode;
             string agentCode = MikiSupport.GetAgentCode(currencyCode, propertyDetails, _settings);
             string ivectorReference = propertyDetails.BookingReference.Trim();
             string paxNationality = string.Empty;
 
-            if (_settings.SendTradeReference(propertyDetails))
+            if (!string.IsNullOrEmpty(propertyDetails.ISONationalityCode))
             {
-                ivectorReference = propertyDetails.TradeReference;
-            }
-
-            if (string.IsNullOrEmpty(propertyDetails.BookingReference))
-            {
-                ivectorReference = propertyDetails.BookingID.ToString();
-            }
-
-            if (!string.IsNullOrEmpty(propertyDetails.NationalityCode))
-            {
-                paxNationality = await _support.TPNationalityLookupAsync(Source, propertyDetails.NationalityCode);
+                paxNationality = await _support.TPNationalityLookupAsync(Source, propertyDetails.ISONationalityCode);
             }
 
             if (string.IsNullOrEmpty(paxNationality))

@@ -19,7 +19,7 @@
             _provider,
             new List<SearchDetails>() { _searchDetails },
             _settings,
-            new ATISearch(_settings, new Serializer(), null))
+            new ATISearch(_settings, new Serializer(), null!))
         {
         }
 

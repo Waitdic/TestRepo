@@ -16,6 +16,7 @@
     using ThirdParty.CSSuppliers.ATI;
     using ThirdParty.CSSuppliers.BedsWithEase;
     using ThirdParty.CSSuppliers.Bonotel;
+    using ThirdParty.CSSuppliers.ChannelManager;
     using ThirdParty.CSSuppliers.DerbySoft;
     using ThirdParty.CSSuppliers.DOTW;
     using ThirdParty.CSSuppliers.ExpediaRapid;
@@ -143,6 +144,7 @@
             services.AddSingleton<IAmadeusHotelsSettings, InjectedAmadeusHotelsSettings>();
             services.AddSingleton<IBedsWithEaseSettings, InjectedBedsWithEaseSettings>();
             services.AddSingleton<IBonotelSettings, InjectedBonotelSettings>();
+            services.AddSingleton<IChannelManagerSettings, InjectedChannelManagerSettings>();
             services.AddSingleton<IDerbySoftSettings, InjectedDerbySoftSettings>();
             services.AddSingleton<IDOTWSettings, InjectedDOTWSettings>();
             services.AddSingleton<IExpediaRapidSettings, InjectedExpediaRapidSettings>();
@@ -182,6 +184,7 @@
             services.AddSingleton<IThirdPartySearch, ATISearch>();
             services.AddSingleton<IThirdPartySearch, BedsWithEaseSearch>();
             services.AddSingleton<IThirdPartySearch, BonotelSearch>();
+            services.AddSingleton<IThirdPartySearch, ChannelManagerSearch>();
             services.AddSingleton<IThirdPartySearch, DerbySoftSearch>();
             services.AddSingleton<IThirdPartySearch, DOTWSearch>();
             services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
@@ -221,6 +224,7 @@
             services.AddSingleton<IThirdParty, ATI>();
             services.AddSingleton<IThirdParty, BedsWithEase>();
             services.AddSingleton<IThirdParty, Bonotel>();
+            services.AddSingleton<IThirdParty, ChannelManager>();
             services.AddSingleton<IThirdParty, DerbySoft>();
             services.AddSingleton<IThirdParty, DOTW>();
             services.AddSingleton<IThirdParty, ExpediaRapid>();

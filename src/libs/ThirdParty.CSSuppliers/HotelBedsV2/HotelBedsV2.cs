@@ -314,11 +314,6 @@
                 {
                     reference = "failed";
                 }
-
-                if (reference != "failed")
-                {
-                    propertyDetails.SupplierInfo = $"Payable through {response.booking.hotel.supplier.name}, acting as agent for the service operating company, details of which can be provided upon request. VAT: {response.booking.hotel.supplier.vatNumber} Reference: {response.booking.reference}";
-                }
             }
             catch (Exception exception)
             {

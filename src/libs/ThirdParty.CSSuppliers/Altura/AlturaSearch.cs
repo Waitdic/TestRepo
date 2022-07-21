@@ -126,7 +126,7 @@
             var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.SubscriptionID);
             var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
-            var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.NationalityCode);
+            var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.ISONationalityCode);
             var leadGuestNationality = !string.IsNullOrEmpty(nationalityLookupValue) ? nationalityLookupValue : _settings.LeadGuestNationality(searchDetails);
 
             var childAges = room.ChildAges ?? new List<int>()

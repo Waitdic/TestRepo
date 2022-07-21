@@ -39,23 +39,6 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> GetCurrencyCodeFromCurrencyIDAsync(string source, int currencyID)
-        {
-            string currencyCode = string.Empty;
-
-            var currencies = await GetCurrenciesAsync();
-
-            var currency = currencies.FirstOrDefault(c => (c.Source == source) && (c.CurrencyID == currencyID));
-
-            if (currency != null)
-            {
-                currencyCode = currency.CurrencyCode;
-            }
-
-            return currencyCode;
-        }
-
-        /// <inheritdoc />
         public async Task<int> GetISOCurrencyIDFromSupplierCurrencyCodeAsync(string source, string thirdPartyCurrencyCode)
         {
             int isoCurrencyID = 0;
@@ -111,7 +94,7 @@
         public class SubscriptionCurrency
         {
             public int SubscriptionID { get; set; }
-            public string CurrencyCode { get; set; }
+            public string CurrencyCode { get; set; } = string.Empty;
             public int ISOCurrencyID { get; set; }
         }
     }

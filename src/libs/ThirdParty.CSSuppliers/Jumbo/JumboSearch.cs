@@ -74,9 +74,9 @@
             sb.Append("<typ:availableHotelsByMultiQueryV12>");
 
             sb.Append("<AvailableHotelsByMultiQueryRQ_1>");
-            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "AgencyCode", _settings));
-            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "BrandCode", _settings));
-            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.NationalityCode, "POS", _settings));
+            sb.AppendFormat("<agencyCode>{0}</agencyCode>", Jumbo.GetCredentials(searchDetails, searchDetails.ISONationalityCode, "AgencyCode", _settings));
+            sb.AppendFormat("<brandCode>{0}</brandCode>", Jumbo.GetCredentials(searchDetails, searchDetails.ISONationalityCode, "BrandCode", _settings));
+            sb.AppendFormat("<pointOfSaleId>{0}</pointOfSaleId>", Jumbo.GetCredentials(searchDetails, searchDetails.ISONationalityCode, "POS", _settings));
             sb.AppendFormat("<checkin>{0}</checkin>", searchDetails.ArrivalDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<checkout>{0}</checkout>", searchDetails.DepartureDate.ToString("yyyy-MM-ddThh:mm:ss"));
             sb.AppendFormat("<fromPrice>{0}</fromPrice>", "0");

@@ -214,13 +214,13 @@
         {
             string agentCode = await MikiSupport.GetAgentCodeAsync(searchDetails, _settings, _support);
             string password = await MikiSupport.GetPasswordAsync(searchDetails, _settings, _serializer, _cache);
-            string currencyCode = await MikiSupport.GetCurrencyCodeAsync(searchDetails.CurrencyCode, _support);
+            string currencyCode = await MikiSupport.GetCurrencyCodeAsync(searchDetails.ISOCurrencyCode, _support);
             string languageCode = _settings.Language(searchDetails);
             string paxNationality = string.Empty;
 
-            if (!string.IsNullOrEmpty(searchDetails.NationalityCode))
+            if (!string.IsNullOrEmpty(searchDetails.ISONationalityCode))
             {
-                paxNationality = await _support.TPNationalityLookupAsync(ThirdParties.MIKI, searchDetails.NationalityCode);
+                paxNationality = await _support.TPNationalityLookupAsync(ThirdParties.MIKI, searchDetails.ISONationalityCode);
             }
 
             if (string.IsNullOrEmpty(paxNationality))

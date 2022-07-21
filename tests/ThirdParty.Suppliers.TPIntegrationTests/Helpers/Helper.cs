@@ -51,7 +51,7 @@ namespace ThirdParty.Suppliers.TPIntegrationTests.Helpers
                 ThirdPartyConfigurations = new List<ThirdPartyConfiguration> { CreateThirdPartyConfiguration(supplier) },
                 DedupeResults = true,
                 LoggingType = "All",
-                CurrencyCode = "GBP"
+                ISOCurrencyCode = "GBP"
             };
 
             return searchDetails;

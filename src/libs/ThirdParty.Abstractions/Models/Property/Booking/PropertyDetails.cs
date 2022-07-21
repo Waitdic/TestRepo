@@ -53,13 +53,7 @@
         /// <summary>
         /// Gets or sets The ISO currency code
         /// </summary>
-        public string CurrencyCode { get; set; } = string.Empty;
-
-        // todo - remove as never set, replace with currency code
-        /// <summary>
-        /// Gets or sets The currency identifier
-        /// </summary>
-        public int CurrencyID { get; set; }
+        public string ISOCurrencyCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The gross cost
@@ -101,12 +95,6 @@
         /// </summary>
         public List<RoomDetails> Rooms { get; set; } = new();
 
-        // todo - probably remove
-        /// <summary>
-        /// Gets or sets The booking identifier
-        /// </summary>
-        public int BookingID { get; set; } = 0;
-
         /// <summary>
         /// Gets or sets The booking reference
         /// </summary>
@@ -132,12 +120,6 @@
         /// </summary>
         public string SupplierSourceReference { get; set; } = string.Empty;
 
-        // todo - possibly remove, as never set
-        /// <summary>
-        /// Gets or sets The supplier information
-        /// </summary>
-        public string SupplierInfo { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets The Third party ref1
         /// </summary>
@@ -147,18 +129,6 @@
         /// Gets or sets The Third party ref2
         /// </summary>
         public string TPRef2 { get; set; } = string.Empty;
-
-        // todo - remove as never set
-        /// <summary>
-        /// Gets or sets The trade reference
-        /// </summary>
-        public string TradeReference { get; set; } = string.Empty;
-
-        // todo - remove as never used
-        /// <summary>
-        /// Gets or sets The cancellation amount
-        /// </summary>
-        public decimal CancellationAmount { get; set; }
 
         /// <summary>
         /// Gets or sets The lead guest title
@@ -180,11 +150,10 @@
         /// </summary>
         public DateTime LeadGuestDateOfBirth { get; set; }
 
-        // todo - remove or set in the factory
         /// <summary>
         /// Gets or sets  The passport number
         /// </summary>
-        public string PassportNumber { get; set; } = string.Empty;
+        public string LeadGuestPassportNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The lead guest address1
@@ -249,7 +218,7 @@
         /// <summary>
         /// Get or sets the unique nationality code 
         /// </summary>
-        public string NationalityCode { get; set; } = string.Empty;
+        public string ISONationalityCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the boolean to decide whether opaque rates are supported.

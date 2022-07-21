@@ -53,7 +53,7 @@
         {
             Response response = null!;
             var exceptionString = string.Empty;
-            var success = true;
+            bool success = true;
             var propertyDetails = new PropertyDetails();
 
             try
@@ -86,6 +86,14 @@
                     if (success)
                     {
                         response = this.responseFactory.Create(propertyDetails);
+                    }
+                    else
+                    {
+                        exceptionString = "Suppplier book failed";
+                        response = new Response()
+                        {
+                            Warnings = new System.Collections.Generic.List<string>() { exceptionString }
+                        };
                     }
                 }
             }

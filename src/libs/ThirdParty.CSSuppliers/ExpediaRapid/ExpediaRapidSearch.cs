@@ -76,7 +76,7 @@
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
-            string currencyCode = await _support.TPCurrencyLookupAsync(Source, searchDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
@@ -133,9 +133,31 @@
             return request;
         }
 
-        public static string BuildSearchURL(IEnumerable<string> tpKeys, IExpediaRapidSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, DateTime arrivalDate, DateTime departureDate, string currencyCode, IEnumerable<ExpediaRapidOccupancy> occupancies)
+        public static string BuildSearchURL(
+            IEnumerable<string> tpKeys,
+            IExpediaRapidSettings settings,
+            IThirdPartyAttributeSearch tpAttributeSearch,
+            DateTime arrivalDate,
+            DateTime departureDate,
+            string currencyCode,
+            IEnumerable<ExpediaRapidOccupancy> occupancies)
         {
-            var nvc = new NameValueCollection() { { SearchQueryKeys.CheckIn, arrivalDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") }, { SearchQueryKeys.Currency, currencyCode }, { SearchQueryKeys.Language, settings.LanguageCode(tpAttributeSearch) }, { SearchQueryKeys.CountryCode, settings.SourceMarket(tpAttributeSearch) }, { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) }, { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) }, { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) }, { SearchQueryKeys.RatePlanCount, settings.RatePlanCount(tpAttributeSearch).ToString() }, { SearchQueryKeys.PaymentTerms, settings.PaymentTerms(tpAttributeSearch) }, { SearchQueryKeys.PartnerPointOfSale, settings.PartnerPointOfSale(tpAttributeSearch) }, { SearchQueryKeys.BillingTerms, settings.BillingTerms(tpAttributeSearch) }, { SearchQueryKeys.RateOption, settings.RateOption(tpAttributeSearch) } };
+            var nvc = new NameValueCollection()
+            {
+                { SearchQueryKeys.CheckIn, arrivalDate.ToString("yyyy-MM-dd") },
+                { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") },
+                { SearchQueryKeys.Currency, currencyCode },
+                { SearchQueryKeys.Language, settings.LanguageCode(tpAttributeSearch) },
+                { SearchQueryKeys.CountryCode, settings.SourceMarket(tpAttributeSearch) },
+                { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) },
+                { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) },
+                { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) },
+                { SearchQueryKeys.RatePlanCount, settings.RatePlanCount(tpAttributeSearch).ToString() },
+                { SearchQueryKeys.PaymentTerms, settings.PaymentTerms(tpAttributeSearch) },
+                { SearchQueryKeys.PartnerPointOfSale, settings.PartnerPointOfSale(tpAttributeSearch) },
+                { SearchQueryKeys.BillingTerms, settings.BillingTerms(tpAttributeSearch) },
+                { SearchQueryKeys.RateOption, settings.RateOption(tpAttributeSearch) }
+            };
 
             if (!string.IsNullOrWhiteSpace(settings.PlatformName(tpAttributeSearch)))
             {

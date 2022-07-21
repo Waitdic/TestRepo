@@ -144,7 +144,7 @@
 
         #endregion
 
-        #region "Book"
+        #region Book
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
@@ -159,7 +159,7 @@
 
             try
             {
-                var bookRequest = CreateBookRequest(propertyDetails, Guid.NewGuid().ToString());
+                var bookRequest = await CreateBookRequestAsync(propertyDetails, Guid.NewGuid().ToString());
                 string requestString = JsonConvert.SerializeObject(bookRequest);
 
                 webRequest = CreateWebRequest(bookingUrl, "Book", propertyDetails, ContentTypes.Application_json, _settings, requestString);
@@ -194,13 +194,13 @@
 
         #endregion
 
-        #region "Booking Search"
+        #region Booking Search
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails) => new ThirdPartyBookingSearchResults();
 
         #endregion
 
-        #region "Bookings status update"
+        #region Bookings status update
 
         public ThirdPartyBookingStatusUpdateResult BookingStatusUpdate(PropertyDetails propertyDetails) => new ThirdPartyBookingStatusUpdateResult();
 
@@ -381,12 +381,12 @@
             return rooms;
         }
 
-        private FastPayHotelsBookRequest CreateBookRequest(PropertyDetails propertyDetails, string messageId)
+        private async Task<FastPayHotelsBookRequest> CreateBookRequestAsync(PropertyDetails propertyDetails, string messageId)
         {
             return new FastPayHotelsBookRequest()
             {
                 messageID = messageId,
-                currency = propertyDetails.CurrencyCode,
+                currency = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
                 agencyCode = string.IsNullOrEmpty(propertyDetails.BookingReference) ? DateTime.Now.ToString("yyyyMMddhhmmssfff") : propertyDetails.BookingReference,
                 comments = "",
                 customer = GetLeadGuestDetails(propertyDetails),

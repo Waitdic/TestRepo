@@ -71,7 +71,7 @@
 
                 foreach (var roomCombinationRequest in roomRequests)
                 {
-                    string nationality = await _support.TPNationalityLookupAsync(source, searchDetails.NationalityCode);
+                    string nationality = await _support.TPNationalityLookupAsync(source, searchDetails.ISONationalityCode);
                     var xmlRequest = BuildRequest(searchDetails, roomCombinationRequest, resortCode,
                         searchDetails.ArrivalDate, searchDetails.DepartureDate,
                         _settings.Actor(searchDetails, source), _settings.User(searchDetails, source),

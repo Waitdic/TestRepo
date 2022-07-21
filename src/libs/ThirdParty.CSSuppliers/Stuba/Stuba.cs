@@ -125,7 +125,7 @@
                 }
 
                 thirdPartyCancellationFeeResult.Amount = totalCancellationFee;
-                thirdPartyCancellationFeeResult.CurrencyCode = propertyDetails.CurrencyCode;
+                thirdPartyCancellationFeeResult.CurrencyCode = propertyDetails.ISOCurrencyCode;
             }
             catch (Exception ex)
             {
@@ -237,9 +237,9 @@
         private async Task<string> GetNationalityAsync(PropertyDetails propertyDetails)
         {
             string nationality = string.Empty;
-            if (!string.IsNullOrWhiteSpace(propertyDetails.NationalityCode))
+            if (!string.IsNullOrWhiteSpace(propertyDetails.ISONationalityCode))
             {
-                nationality = await _support.TPNationalityLookupAsync(ThirdParties.STUBA, propertyDetails.NationalityCode);
+                nationality = await _support.TPNationalityLookupAsync(ThirdParties.STUBA, propertyDetails.ISONationalityCode);
             }
             if (string.IsNullOrEmpty(nationality))
             {

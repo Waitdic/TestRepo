@@ -190,7 +190,7 @@
                 // Nationality and Country of residence
                 if (_settings.Version(searchDetails) == 2)
                 {
-                    string nationality = await DOTW.GetNationalityAsync(searchDetails.NationalityCode, searchDetails, _support, _settings);
+                    string nationality = await DOTW.GetNationalityAsync(searchDetails.ISONationalityCode, searchDetails, _support, _settings);
                     string countryCode = DOTW.GetCountryOfResidence(nationality, searchDetails, _settings);
 
                     if (!string.IsNullOrEmpty(nationality))

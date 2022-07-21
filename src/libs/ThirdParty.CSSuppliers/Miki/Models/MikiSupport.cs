@@ -34,11 +34,11 @@
             return randomNumber;
         }
 
-        public async static Task<string> GetCurrencyCodeAsync(string currencyCode, ITPSupport support)
+        public async static Task<string> GetCurrencyCodeAsync(string isoCurrencyCode, ITPSupport support)
         {
-            string sqlCurrencyCode = await support.TPCurrencyLookupAsync(ThirdParties.MIKI, currencyCode);
+            string currencyCode = await support.TPCurrencyCodeLookupAsync(ThirdParties.MIKI, isoCurrencyCode);
 
-            return !string.IsNullOrEmpty(sqlCurrencyCode) ? sqlCurrencyCode : "GBP";
+            return !string.IsNullOrEmpty(currencyCode) ? currencyCode : "GBP";
         }
 
         public async static Task<string> GetAgentCodeAsync(
@@ -46,7 +46,7 @@
             IMikiSettings settings,
             ITPSupport support)
         {
-            return GetAgentCode(await GetCurrencyCodeAsync(searchDetails.CurrencyCode, support), searchDetails, settings);
+            return GetAgentCode(await GetCurrencyCodeAsync(searchDetails.ISOCurrencyCode, support), searchDetails, settings);
         }
 
         public static string GetAgentCode(

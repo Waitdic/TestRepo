@@ -187,7 +187,7 @@
             return new ThirdPartyCancellationResponse()
             {
                 Amount = amount,
-                CurrencyCode = _support.CurrencyLookup(propertyDetails.CurrencyID),
+                CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
                 Success = success,
                 CostRecievedFromThirdParty = amount > 0m,
                 TPCancellationReference = string.Join("|", cancelReferences)
@@ -231,7 +231,7 @@
             return new ThirdPartyCancellationFeeResult()
             {
                 Amount = amount,
-                CurrencyCode = _support.CurrencyLookup(propertyDetails.CurrencyID),
+                CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
                 Success = success
             };
         }
@@ -396,7 +396,7 @@
         private async Task<Errata> GetErrataFromAllRoomsAsync(PropertyDetails propertyDetails, List<SearchResponseRoom> responseRooms)
         {
             var errata = new Errata();
-            string currencyCode = await _support.TPCurrencyLookupAsync(Source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
 
             var mandatoryFees = new List<OccupancyRateFee>();
             var resortFees = new List<OccupancyRateFee>();
@@ -405,7 +405,7 @@
             decimal salesTax = 0m;
             decimal extraPersonFee = 0m;
 
-            foreach (RoomDetails room in propertyDetails.Rooms)
+            foreach (var room in propertyDetails.Rooms)
             {
                 var occuapncy = new ExpediaRapidOccupancy(room.Adults, room.ChildAges, room.Infants);
                 string roomID = room.RoomTypeCode.Split('|')[0];
@@ -533,7 +533,7 @@
         private async Task<string> BuildPrebookSearchURLAsync(PropertyDetails propertyDetails)
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
-            string currencyCode = await _support.TPCurrencyLookupAsync(Source, propertyDetails.CurrencyCode);
+            string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);

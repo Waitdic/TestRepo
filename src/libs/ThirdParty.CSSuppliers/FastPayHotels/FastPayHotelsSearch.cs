@@ -108,7 +108,7 @@
             return new FastPayHotelsAvailabilityRequest
             {
                 messageID = guid,
-                currency = searchDetails.CurrencyCode,
+                currency = searchDetails.ISOCurrencyCode,
                 checkIn = searchDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                 checkOut = searchDetails.DepartureDate.ToString("yyyy-MM-dd"),
                 occupancies = GetOccupancies(roomDetails),
@@ -423,9 +423,9 @@
                 countryOfResidence = string.IsNullOrEmpty(searchDetails.SellingCountry) ?
                     settings.CountryOfResidence(searchDetails) :
                     await _support.TPCountryCodeLookupAsync(this.Source, searchDetails.SellingCountry, searchDetails.SubscriptionID),
-                nationality = string.IsNullOrEmpty(searchDetails.NationalityCode) ?
+                nationality = string.IsNullOrEmpty(searchDetails.ISONationalityCode) ?
                     settings.LeadGuestNationality(searchDetails) :
-                    await _support.TPNationalityLookupAsync(this.Source, searchDetails.NationalityCode)
+                    await _support.TPNationalityLookupAsync(this.Source, searchDetails.ISONationalityCode)
             };
         }
 
