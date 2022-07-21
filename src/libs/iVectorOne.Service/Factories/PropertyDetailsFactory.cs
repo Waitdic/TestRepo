@@ -17,6 +17,7 @@
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using Intuitive;
 
     /// <summary>
     /// Factory that builds up property details from api requests, used to pass into the third party code
@@ -43,9 +44,9 @@
             IMealBasisLookupRepository mealBasisLookup,
             ITPSupport support)
         {
-            _tokenService = tokenService;
-            _mealbasisRepository = mealBasisLookup;
-            _support = support;
+            _tokenService = Ensure.IsNotNull(tokenService, nameof(tokenService));
+            _mealbasisRepository = Ensure.IsNotNull(mealBasisLookup, nameof(mealBasisLookup));
+            _support = Ensure.IsNotNull(support, nameof(support));
         }
 
         /// <inheritdoc />

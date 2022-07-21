@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.RMI;
+    using iVectorOne.Suppliers.RMI;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Xunit;

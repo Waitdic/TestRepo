@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.RMI
+﻿namespace iVectorOne.Suppliers.RMI
 {
     public static class Constant
     {

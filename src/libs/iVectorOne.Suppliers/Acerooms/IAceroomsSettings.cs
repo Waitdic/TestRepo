@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Acerooms
+﻿namespace iVectorOne.Suppliers.Acerooms
 {
     using iVectorOne;
 

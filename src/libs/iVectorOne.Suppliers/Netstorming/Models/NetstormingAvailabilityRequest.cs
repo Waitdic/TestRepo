@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.Netstorming.Models
+﻿namespace iVectorOne.Suppliers.Netstorming.Models
 {
     using System.Xml.Serialization;
-    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.Suppliers.Netstorming.Models.Common;
 
     [XmlRoot("envelope")]
     public class NetstormingAvailabilityRequest : EnvelopeBase

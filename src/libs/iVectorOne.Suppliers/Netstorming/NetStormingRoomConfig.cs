@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Netstorming
+﻿namespace iVectorOne.Suppliers.Netstorming
 {
     using System.Collections;
 

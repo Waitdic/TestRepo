@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.ATI.Models
+﻿namespace iVectorOne.Suppliers.ATI.Models
 {
     using System;
     using System.Xml.Serialization;
-    using iVectorOne.CSSuppliers.ATI.Models.Common;
+    using iVectorOne.Suppliers.ATI.Models.Common;
 
     public class AtiBookRequest : SoapContent
     {

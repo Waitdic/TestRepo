@@ -6,6 +6,7 @@
     using System.Text.Encodings.Web;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Intuitive;
     using iVectorOne.Web.Adaptors.Authentication;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Http.Features;
@@ -25,8 +26,8 @@
             IAuthenticationProvider loginService
             ) : base(options, loggerFactory, encoder, clock)
         {
-            _loginService = loginService;
-            _logger = loggerFactory.CreateLogger<BasicAuthenticationHandler>();
+            _loginService = Ensure.IsNotNull(loginService, nameof(loginService));
+            _logger = Ensure.IsNotNull(loggerFactory, nameof(loggerFactory)).CreateLogger<BasicAuthenticationHandler>();
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 

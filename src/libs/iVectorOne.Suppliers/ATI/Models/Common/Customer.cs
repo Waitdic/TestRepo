@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ATI.Models.Common
+﻿namespace iVectorOne.Suppliers.ATI.Models.Common
 {
     public class Customer
     {

@@ -4,7 +4,7 @@
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using iVectorOne.CSSuppliers.TBOHolidays;
+    using iVectorOne.Suppliers.TBOHolidays;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Xunit;

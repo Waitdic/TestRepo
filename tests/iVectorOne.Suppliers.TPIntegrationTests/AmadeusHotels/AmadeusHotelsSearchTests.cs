@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using CSSuppliers.AmadeusHotels;
-    using CSSuppliers.AmadeusHotels.Support;
+    using Suppliers.AmadeusHotels;
+    using Suppliers.AmadeusHotels.Support;
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;

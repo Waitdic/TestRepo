@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Intuitive;
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using iVectorOne.Constants;
@@ -32,9 +33,9 @@
         /// <param name="mealbasisRepository">Repository for retrieving third party meal basis</param>
         public GroupResultsProcessor(IFilter filter, ICurrencyLookupRepository currencyRepository, IMealBasisLookupRepository mealbasisRepository)
         {
-            _filter = filter;
-            _currencyRepository = currencyRepository;
-            _mealbasisRepository = mealbasisRepository;
+            _filter = Ensure.IsNotNull(filter, nameof(filter));
+            _currencyRepository = Ensure.IsNotNull(currencyRepository, nameof(currencyRepository));
+            _mealbasisRepository = Ensure.IsNotNull(mealbasisRepository, nameof(mealbasisRepository));
         }
 
         /// <summary>Groups the property results.</summary>

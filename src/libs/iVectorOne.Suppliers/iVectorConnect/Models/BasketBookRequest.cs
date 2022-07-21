@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.iVectorConnect.Models
+﻿namespace iVectorOne.Suppliers.iVectorConnect.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

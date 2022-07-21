@@ -28,7 +28,7 @@
                 }
 
                 var resorts = resortSplits.Where(rs => rs.ThirdPartySupplier == propertyResult.PropertyData.Source);
-                Hotel hotel = null!;
+                Hotel? hotel = null;
 
                 if (!resorts.Any())
                 {

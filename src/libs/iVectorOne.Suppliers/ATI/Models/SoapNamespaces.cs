@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ATI.Models
+﻿namespace iVectorOne.Suppliers.ATI.Models
 {
     using System.Xml;
     using System.Xml.Serialization;

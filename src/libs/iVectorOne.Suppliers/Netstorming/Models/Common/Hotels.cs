@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Netstorming.Models.Common
+﻿namespace iVectorOne.Suppliers.Netstorming.Models.Common
 {
     using System;
     using System.Xml.Serialization;

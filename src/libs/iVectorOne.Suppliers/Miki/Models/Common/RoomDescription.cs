@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Miki.Models.Common
+﻿namespace iVectorOne.Suppliers.Miki.Models.Common
 {
     public class RoomDescription
     {

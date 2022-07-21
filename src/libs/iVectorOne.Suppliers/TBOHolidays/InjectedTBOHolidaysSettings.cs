@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TBOHolidays
+﻿namespace iVectorOne.Suppliers.TBOHolidays
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

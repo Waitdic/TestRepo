@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TBOHolidays.Models.Common
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
     public enum ChargeType
     {

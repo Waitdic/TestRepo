@@ -1,5 +1,5 @@
 ﻿
-namespace iVectorOne.CSSuppliers.TBOHolidays.Models
+namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
     using System;
     using System.Xml.Serialization;

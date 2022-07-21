@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Hotelston
+﻿namespace iVectorOne.Suppliers.Hotelston
 {
     using System.Collections.Generic;
     using System.IO;
@@ -8,7 +8,7 @@
     using System.Xml.Serialization;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.Hotelston.Models.Common;
+    using iVectorOne.Suppliers.Hotelston.Models.Common;
 
     public static class HotelstonHelper
     {

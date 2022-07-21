@@ -2,7 +2,7 @@
 {
     using Moq;
     using System.Collections.Generic;
-    using iVectorOne.CSSuppliers.ExpediaRapid;
+    using iVectorOne.Suppliers.ExpediaRapid;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;

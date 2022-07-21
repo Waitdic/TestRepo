@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.RMI
+﻿namespace iVectorOne.Suppliers.RMI
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.RMI.Models;
+    using iVectorOne.Suppliers.RMI.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

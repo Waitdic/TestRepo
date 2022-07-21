@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.FastPayHotels.Models
+﻿namespace iVectorOne.Suppliers.FastPayHotels.Models
 {
     public class FastPayHotelsCancelResponse
     {

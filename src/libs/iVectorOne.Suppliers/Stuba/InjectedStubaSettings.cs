@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Stuba
+﻿namespace iVectorOne.Suppliers.Stuba
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;

@@ -8,6 +8,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using Intuitive;
 
     /// <summary>
     /// Processes search results
@@ -34,9 +35,9 @@
             IGroupResultsProcessor grouper,
             ILogger<SearchResultsProcessor> logger)
         {
-            _deduper = deduper;
-            _grouper = grouper;
-            _logger = logger;
+            _deduper = Ensure.IsNotNull(deduper, nameof(deduper));
+            _grouper = Ensure.IsNotNull(grouper, nameof(grouper));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
         /// <summary>

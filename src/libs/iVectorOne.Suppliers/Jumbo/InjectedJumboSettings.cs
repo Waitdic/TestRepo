@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Jumbo
+﻿namespace iVectorOne.Suppliers.Jumbo
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;

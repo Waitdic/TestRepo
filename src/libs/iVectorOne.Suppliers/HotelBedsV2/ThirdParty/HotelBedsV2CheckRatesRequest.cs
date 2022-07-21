@@ -1,6 +1,6 @@
 ﻿#nullable disable warnings
 
-namespace iVectorOne.CSSuppliers.HotelBedsV2
+namespace iVectorOne.Suppliers.HotelBedsV2
 {
     public class HotelBedsV2CheckRatesRequest
     {

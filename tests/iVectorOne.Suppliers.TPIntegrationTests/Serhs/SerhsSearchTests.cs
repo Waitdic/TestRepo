@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.Serhs;
+    using iVectorOne.Suppliers.Serhs;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.Serhs;
 

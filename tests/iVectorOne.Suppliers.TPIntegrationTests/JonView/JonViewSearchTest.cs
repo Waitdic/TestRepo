@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.TPIntegrationTests.JonView
 {
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.JonView;
+    using iVectorOne.Suppliers.JonView;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Tests.JonView;

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers
+﻿namespace iVectorOne.Suppliers
 {
 #pragma warning disable CS8618 
     using System;
@@ -11,7 +11,7 @@
     using Newtonsoft.Json;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.Yalago;
+    using iVectorOne.Suppliers.Models.Yalago;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

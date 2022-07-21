@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TBOHolidays
+﻿namespace iVectorOne.Suppliers.TBOHolidays
 {
     using System;
     using System.Collections.Generic;

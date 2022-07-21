@@ -293,7 +293,6 @@
             var supportMock = new Mock<ITPSupport>();
             return new PropertyPrebookResponseFactory(
                 tokenServiceMock.Object,
-                currencyRepoMock.Object,
                 mealbasisReopoMock.Object,
                 supportMock.Object);
         }

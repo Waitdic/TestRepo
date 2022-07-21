@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Hotelston
+﻿namespace iVectorOne.Suppliers.Hotelston
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Hotelston.Models;
-    using iVectorOne.CSSuppliers.Hotelston.Models.Common;
+    using iVectorOne.Suppliers.Hotelston.Models;
+    using iVectorOne.Suppliers.Hotelston.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

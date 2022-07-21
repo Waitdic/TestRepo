@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DOTW
+﻿namespace iVectorOne.Suppliers.DOTW
 {
     using System;
     using System.Collections.Generic;

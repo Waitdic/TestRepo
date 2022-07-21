@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace iVectorOne.CSSuppliers.RMI.Models
+namespace iVectorOne.Suppliers.RMI.Models
 {
     [XmlRoot("SearchResponse")]
     public class SearchResponse

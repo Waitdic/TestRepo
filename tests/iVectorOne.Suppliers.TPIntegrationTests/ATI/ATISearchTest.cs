@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.ATI;
+    using iVectorOne.Suppliers.ATI;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using Xunit;

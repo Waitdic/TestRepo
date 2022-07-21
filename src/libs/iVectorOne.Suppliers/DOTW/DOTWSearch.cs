@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DOTW
+﻿namespace iVectorOne.Suppliers.DOTW
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,7 +11,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.DOTW.Models;
+    using iVectorOne.Suppliers.DOTW.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

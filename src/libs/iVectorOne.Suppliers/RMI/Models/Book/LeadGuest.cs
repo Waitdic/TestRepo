@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.RMI.Models
+﻿namespace iVectorOne.Suppliers.RMI.Models
 {
     public class LeadGuest
     {

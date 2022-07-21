@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Travelgate
+﻿namespace iVectorOne.Suppliers.Travelgate
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Travelgate.Models;
+    using iVectorOne.Suppliers.Travelgate.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

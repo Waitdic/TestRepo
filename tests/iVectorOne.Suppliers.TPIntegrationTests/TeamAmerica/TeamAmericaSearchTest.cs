@@ -4,7 +4,7 @@
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Search.Models;
-    using iVectorOne.CSSuppliers.TeamAmerica;
+    using iVectorOne.Suppliers.TeamAmerica;
     using iVectorOne.Tests.TeamAmerica;
 
     public class TeamAmericaSearchTest : ThirdPartyPropertySearchBaseTest

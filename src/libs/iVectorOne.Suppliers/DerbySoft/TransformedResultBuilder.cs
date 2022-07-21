@@ -1,9 +1,9 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using Intuitive;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Search.Models;

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.Suppliers.FastPayHotels
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using Newtonsoft.Json;
     using iVectorOne.Search.Models;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.FastPayHotels.Models;
+    using iVectorOne.Suppliers.FastPayHotels.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
@@ -19,9 +19,9 @@
     using iVectorOne.Search.Results.Models;
     using Cancellation = iVectorOne.Models.Property.Booking.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
-    using static iVectorOne.CSSuppliers.FastPayHotels.Models.SharedModels;
-    using static iVectorOne.CSSuppliers.FastPayHotels.Models.FastPayHotelsAvailabilityResponse;
-    using static iVectorOne.CSSuppliers.FastPayHotels.Models.FastPayHotelsAvailabilityRequest;
+    using static iVectorOne.Suppliers.FastPayHotels.Models.SharedModels;
+    using static iVectorOne.Suppliers.FastPayHotels.Models.FastPayHotelsAvailabilityResponse;
+    using static iVectorOne.Suppliers.FastPayHotels.Models.FastPayHotelsAvailabilityRequest;
 
     public class FastPayHotelsSearch : IThirdPartySearch, ISingleSource
     {

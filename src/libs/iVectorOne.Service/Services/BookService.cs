@@ -3,9 +3,8 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using iVectorOne;
+    using Intuitive;
     using iVectorOne.Factories;
-    using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertyBook;
@@ -14,19 +13,19 @@
     public class BookService : IBookService
     {
         /// <summary>The property details factory</summary>
-        private readonly IPropertyDetailsFactory propertyDetailsFactory;
+        private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
         /// <summary>The log repository</summary>
-        private readonly IBookingLogRepository logRepository;
+        private readonly IBookingLogRepository _logRepository;
 
         /// <summary>Factory that creates the third party class</summary>
-        private readonly IThirdPartyFactory thirdPartyFactory;
+        private readonly IThirdPartyFactory _thirdPartyFactory;
 
         /// <summary>Creates a book response using information from the property details</summary>
-        private readonly IPropertyBookResponseFactory responseFactory;
+        private readonly IPropertyBookResponseFactory _responseFactory;
 
         /// <summary>The reference validator</summary>
-        private readonly ISuppierReferenceValidator referenceValidator;
+        private readonly ISuppierReferenceValidator _referenceValidator;
 
         /// <summary>Initializes a new instance of the <see cref="BookService" /> class.</summary>
         /// <param name="propertyDetailsFactory">The property details factory.</param>
@@ -41,11 +40,11 @@
             IPropertyBookResponseFactory responseFactory,
             ISuppierReferenceValidator referenceValidator)
         {
-            this.propertyDetailsFactory = propertyDetailsFactory;
-            this.logRepository = logRepository;
-            this.thirdPartyFactory = thirdPartyFactory;
-            this.responseFactory = responseFactory;
-            this.referenceValidator = referenceValidator;
+            _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
+            _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
+            _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
+            _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
+            _referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
         }
 
         /// <inheritdoc/>
@@ -58,8 +57,8 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(bookRequest);
-                this.referenceValidator.ValidateBook(propertyDetails, bookRequest);
+                propertyDetails = await _propertyDetailsFactory.CreateAsync(bookRequest);
+                _referenceValidator.ValidateBook(propertyDetails, bookRequest);
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -72,7 +71,7 @@
                 }
                 else
                 {
-                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                    var thirdParty = _thirdPartyFactory.CreateFromSource(
                                         propertyDetails.Source,
                                         bookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
@@ -85,7 +84,7 @@
 
                     if (success)
                     {
-                        response = this.responseFactory.Create(propertyDetails);
+                        response = _responseFactory.Create(propertyDetails);
                     }
                     else
                     {
@@ -108,7 +107,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await this.logRepository.LogBookAsync(bookRequest, response!, bookRequest.User, exceptionString);
+                await _logRepository.LogBookAsync(bookRequest, response!, bookRequest.User, exceptionString);
             }
 
             return response!;

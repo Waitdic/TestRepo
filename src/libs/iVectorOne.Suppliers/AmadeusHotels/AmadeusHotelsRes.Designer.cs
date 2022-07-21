@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.CSSuppliers.AmadeusHotels {
+namespace iVectorOne.Suppliers.AmadeusHotels {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.CSSuppliers.AmadeusHotels {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.AmadeusHotels.AmadeusHotelsRes", typeof(AmadeusHotelsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.AmadeusHotels.AmadeusHotelsRes", typeof(AmadeusHotelsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

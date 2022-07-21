@@ -3,9 +3,8 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using iVectorOne;
+    using Intuitive;
     using iVectorOne.Factories;
-    using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertyPrebook;
@@ -16,16 +15,16 @@
     public class PrebookService : IPrebookService
     {
         /// <summary>The property details factory</summary>
-        private readonly IPropertyDetailsFactory propertyDetailsFactory;
+        private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
         /// <summary>The log repository</summary>
-        private readonly IBookingLogRepository logRepository;
+        private readonly IBookingLogRepository _logRepository;
 
         /// <summary>Factory that creates the third party class</summary>
-        private readonly IThirdPartyFactory thirdPartyFactory;
+        private readonly IThirdPartyFactory _thirdPartyFactory;
 
         /// <summary>The factory responsible for building the pre book response</summary>
-        private readonly IPropertyPrebookResponseFactory responseFactory;
+        private readonly IPropertyPrebookResponseFactory _responseFactory;
 
         /// <summary>Initializes a new instance of the <see cref="PrebookService" /> class.</summary>
         /// <param name="propertyDetailsFactory">The property details factory.</param>
@@ -38,10 +37,10 @@
             IThirdPartyFactory thirdPartyFactory,
             IPropertyPrebookResponseFactory responseFactory)
         {
-            this.propertyDetailsFactory = propertyDetailsFactory;
-            this.logRepository = logRepository;
-            this.thirdPartyFactory = thirdPartyFactory;
-            this.responseFactory = responseFactory;
+            _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
+            _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
+            _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
+            _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
         }
 
         /// <inheritdoc/>
@@ -54,7 +53,7 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(prebookRequest);
+                propertyDetails = await _propertyDetailsFactory.CreateAsync(prebookRequest);
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -65,7 +64,7 @@
                 }
                 else
                 {
-                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                    var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
                         prebookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
@@ -76,7 +75,7 @@
 
                     if (success)
                     {
-                        response = await this.responseFactory.CreateAsync(propertyDetails);
+                        response = await _responseFactory.CreateAsync(propertyDetails);
                     }
                     else
                     {
@@ -99,7 +98,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await this.logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.User, exceptionString);
+                await _logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.User, exceptionString);
             }
 
             return response;

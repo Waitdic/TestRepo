@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.OceanBeds.Models.Common
+﻿namespace iVectorOne.Suppliers.OceanBeds.Models.Common
 {
     using System;
     using System.Xml.Serialization;

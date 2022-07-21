@@ -8,7 +8,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
-    using iVectorOne.CSSuppliers.HotelBedsV2;
+    using iVectorOne.Suppliers.HotelBedsV2;
     using iVectorOne.Tests.HotelBedsV2;
 
     public class HotelBedsSearchTests : ThirdPartyPropertySearchBaseTest

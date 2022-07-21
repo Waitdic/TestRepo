@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Juniper.Model
+﻿namespace iVectorOne.Suppliers.Juniper.Model
 {
     using System.Xml.Serialization;
 

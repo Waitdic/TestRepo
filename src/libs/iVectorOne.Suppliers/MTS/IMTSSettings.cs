@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.MTS
+﻿namespace iVectorOne.Suppliers.MTS
 {
     using iVectorOne;
 

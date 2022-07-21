@@ -5,7 +5,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
-    using iVectorOne.CSSuppliers.Acerooms;
+    using iVectorOne.Suppliers.Acerooms;
     using iVectorOne.Tests.Acerooms;
 
     public class AceroomsSearchTest : ThirdPartyPropertySearchBaseTest

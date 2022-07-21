@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.HotelsProV2
+﻿namespace iVectorOne.Suppliers.HotelsProV2
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,7 +8,7 @@
     using iVector.Search.Property;
     using Newtonsoft.Json;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.HotelsProV2.Models;
+    using iVectorOne.Suppliers.HotelsProV2.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

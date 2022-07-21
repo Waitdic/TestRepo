@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.Suppliers.iVectorConnect
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@
     using Intuitive.Helpers.Net;
     using Lookups;
     using Microsoft.Extensions.Logging;
-    using iVectorOne.CSSuppliers.iVectorConnect.Models;
-    using iVectorOne.CSSuppliers.iVectorConnect.Models.Common;
+    using iVectorOne.Suppliers.iVectorConnect.Models;
+    using iVectorOne.Suppliers.iVectorConnect.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

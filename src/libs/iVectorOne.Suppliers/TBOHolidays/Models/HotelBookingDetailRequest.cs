@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
     public class HotelBookingDetailRequest : SoapContent
     {

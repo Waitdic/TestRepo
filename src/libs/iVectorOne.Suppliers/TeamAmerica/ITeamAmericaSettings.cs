@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TeamAmerica
+﻿namespace iVectorOne.Suppliers.TeamAmerica
 {
     using iVectorOne;
     public interface ITeamAmericaSettings

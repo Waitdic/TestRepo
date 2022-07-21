@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Jumbo
+﻿namespace iVectorOne.Suppliers.Jumbo
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +10,7 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Jumbo.Models;
+    using iVectorOne.Suppliers.Jumbo.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

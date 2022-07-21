@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Models.Header
+﻿namespace iVectorOne.Suppliers.AmadeusHotels.Models.Header
 {
     using System.Xml.Serialization;
     using Soap;

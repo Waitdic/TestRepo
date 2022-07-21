@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.BedsWithEase.Models
+﻿namespace iVectorOne.Suppliers.BedsWithEase.Models
 {
     using System;
     using System.Xml.Serialization;

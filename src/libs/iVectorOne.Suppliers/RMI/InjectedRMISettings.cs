@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.RMI
+﻿namespace iVectorOne.Suppliers.RMI
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

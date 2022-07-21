@@ -6,7 +6,7 @@
     using Microsoft.Extensions.Logging;
     using Moq;
     using Moq.Protected;
-    using iVectorOne.CSSuppliers;
+    using iVectorOne.Suppliers;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Tests.W2M;

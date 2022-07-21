@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Support
+﻿namespace iVectorOne.Suppliers.AmadeusHotels.Support
 {
     using System;
     using System.Collections.Generic;

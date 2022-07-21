@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Helpers;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.AbreuV2;
+    using iVectorOne.Suppliers.AbreuV2;
     using iVectorOne.Search.Models;
     using Xunit;
 

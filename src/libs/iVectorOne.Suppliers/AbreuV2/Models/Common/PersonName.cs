@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AbreuV2.Models
+﻿namespace iVectorOne.Suppliers.AbreuV2.Models
 {
     public class PersonName
     {

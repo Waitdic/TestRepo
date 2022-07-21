@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Intuitive;
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Repositories;
     using iVectorOne.Search.Models;
@@ -17,7 +18,7 @@
 
         public ResultsDeduper(ICurrencyLookupRepository currencyRepository)
         {
-            _currencyRepository = currencyRepository;
+            _currencyRepository = Ensure.IsNotNull(currencyRepository, nameof(currencyRepository));
         }
 
         /// <summary>Groups the properties asynchronous.</summary>

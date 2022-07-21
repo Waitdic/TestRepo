@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iVectorOne.CSSuppliers.RMI.Models
+namespace iVectorOne.Suppliers.RMI.Models
 {
     [XmlRoot("CancelResponse")]
     public class CancelResponse

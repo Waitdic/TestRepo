@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AmadeusHotels
+﻿namespace iVectorOne.Suppliers.AmadeusHotels
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

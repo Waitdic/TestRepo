@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers
+﻿namespace iVectorOne.Suppliers
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.WelcomeBeds;
+    using iVectorOne.Suppliers.Models.WelcomeBeds;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

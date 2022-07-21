@@ -1,6 +1,6 @@
-﻿namespace iVectorOne.CSSuppliers.ATI.Models
+﻿namespace iVectorOne.Suppliers.ATI.Models
 {
-    using iVectorOne.CSSuppliers.ATI.Models.Common;
+    using iVectorOne.Suppliers.ATI.Models.Common;
 
     public class AtiCancellationResponse : SoapContent
     {

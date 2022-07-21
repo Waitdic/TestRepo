@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.Suppliers.iVectorConnect
 {
     using System;
     using System.Collections.Generic;

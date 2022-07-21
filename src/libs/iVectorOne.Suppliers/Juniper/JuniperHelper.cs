@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.Juniper
+﻿namespace iVectorOne.Suppliers.Juniper
 {
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.Juniper.Model;
+    using iVectorOne.Suppliers.Juniper.Model;
 
     public static class JuniperHelper
     {

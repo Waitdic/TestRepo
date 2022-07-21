@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.HotelsProV2
+﻿namespace iVectorOne.Suppliers.HotelsProV2
 {
     public interface IHotelsProV2Settings
     {

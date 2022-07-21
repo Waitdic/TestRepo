@@ -2,7 +2,7 @@
 {
     using Intuitive.Helpers.Serialization;
     using System.Collections.Generic;
-    using iVectorOne.CSSuppliers.MTS;
+    using iVectorOne.Suppliers.MTS;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Tests.MTS;

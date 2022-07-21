@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.MTS
+﻿namespace iVectorOne.Suppliers.MTS
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,7 +9,7 @@
     using Intuitive.Helpers.Net;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.MTS.Models;
+    using iVectorOne.Suppliers.MTS.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

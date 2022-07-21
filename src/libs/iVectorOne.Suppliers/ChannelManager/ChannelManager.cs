@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.Suppliers.ChannelManager
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.ChannelManager.Models;
+    using iVectorOne.Suppliers.ChannelManager.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

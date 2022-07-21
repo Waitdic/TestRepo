@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Altura
+﻿namespace iVectorOne.Suppliers.Altura
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,7 +11,7 @@
     using iVector.Search.Property;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.Altura;
+    using iVectorOne.Suppliers.Models.Altura;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

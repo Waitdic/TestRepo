@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iVectorOne.CSSuppliers.Models.W2M
+namespace iVectorOne.Suppliers.Models.W2M
 {
 #pragma warning disable CS8618
 

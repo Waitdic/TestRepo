@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Factories
 {
+    using Intuitive;
     using iVectorOne.Constants;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.Tokens;
@@ -20,7 +21,7 @@
         /// <param name="tokenService">The token service, that encodes and decodes response and request tokens.</param>
         public PropertyBookResponseFactory(ITokenService tokenService)
         {
-            _tokenService = tokenService;
+            _tokenService = Ensure.IsNotNull(tokenService, nameof(tokenService));
         }
 
         /// <summary>

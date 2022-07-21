@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Miki
+﻿namespace iVectorOne.Suppliers.Miki
 {
     public interface IMikiSettings
     {

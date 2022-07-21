@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.AmadeusHotels.Models
+﻿namespace iVectorOne.Suppliers.AmadeusHotels.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;
-    using iVectorOne.CSSuppliers.AmadeusHotels.Models.Common;
+    using iVectorOne.Suppliers.AmadeusHotels.Models.Common;
 
     public class RoomStays
     {

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Search
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Search
 {
     using Newtonsoft.Json;
 

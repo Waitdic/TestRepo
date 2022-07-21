@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.YouTravel
+﻿namespace iVectorOne.Suppliers.YouTravel
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

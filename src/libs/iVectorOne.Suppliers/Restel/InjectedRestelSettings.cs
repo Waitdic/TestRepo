@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Restel
+﻿namespace iVectorOne.Suppliers.Restel
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;

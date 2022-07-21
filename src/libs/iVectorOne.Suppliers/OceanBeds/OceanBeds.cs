@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.Suppliers.OceanBeds
 {
     using System;
     using System.Net.Http;
@@ -14,8 +14,8 @@
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.CSSuppliers.OceanBeds.Models;
-    using iVectorOne.CSSuppliers.OceanBeds.Models.Common;
+    using iVectorOne.Suppliers.OceanBeds.Models;
+    using iVectorOne.Suppliers.OceanBeds.Models.Common;
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
 

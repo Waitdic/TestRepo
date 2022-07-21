@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.HotelBedsV2
+﻿namespace iVectorOne.Suppliers.HotelBedsV2
 {
     using System;
     using System.Collections.Generic;

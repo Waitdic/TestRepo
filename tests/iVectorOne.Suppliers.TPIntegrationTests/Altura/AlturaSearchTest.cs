@@ -6,7 +6,7 @@
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using iVectorOne.CSSuppliers.Altura;
+    using iVectorOne.Suppliers.Altura;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.Altura;

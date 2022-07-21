@@ -4,10 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Intuitive;
     using iVectorOne.Models;
     using iVectorOne.Repositories;
-    using PropertyList = SDK.V2.PropertyList;
     using PropertyContent = SDK.V2.PropertyContent;
+    using PropertyList = SDK.V2.PropertyList;
 
     /// <summary>Property content service responsible for retrieving third party content for properties.</summary>
     public class PropertyContentService : IPropertyContentService
@@ -19,7 +20,7 @@
         /// <param name="contentRepo">The content repo.</param>
         public PropertyContentService(IPropertyContentRepository contentRepo)
         {
-            _contentRepo = contentRepo;
+            _contentRepo = Ensure.IsNotNull(contentRepo, nameof(contentRepo));
         }
 
         /// <inheritdoc/>
