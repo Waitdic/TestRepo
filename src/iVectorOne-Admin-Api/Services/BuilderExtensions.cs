@@ -22,7 +22,7 @@ namespace iVectorOne_Admin_Api.Services
                 options.AddPolicy("_myAllowSpecificOrigins",
                                       policy =>
                                       {
-                                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowAnyHeader();
                                       });
             });
             //builder.Services.AddCors();

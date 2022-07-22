@@ -4,8 +4,8 @@
     using MediatR;
     using iVectorOne.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
-    using List = ThirdParty.SDK.V2.PropertyList;
-    using Content = ThirdParty.SDK.V2.PropertyContent;
+    using List = SDK.V2.PropertyList;
+    using Content = SDK.V2.PropertyContent;
 
     public static class Endpoint
     {

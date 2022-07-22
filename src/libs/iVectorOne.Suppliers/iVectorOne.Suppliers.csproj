@@ -1,0 +1,56 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS8603;CS8604;CS1591;CA1304;CA1716;CS8629;CS8618;CS1591;CA1304;CA1716;CS8602;</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Intuitive.Helpers" Version="0.16.0" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="C:\ProjectsStash\thirdparty.api\build\src\Common.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Netstorming\Resources\NetstormingRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NetstormingRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\SunHotels\SunHotelsRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SunHotelsRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="SunHotels\SunHotelsRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SunHotelsRes.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Netstorming\Resources\NetstormingRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\SunHotels\SunHotelsRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SunHotelsRes.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="SunHotels\SunHotelsRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SunHotelsRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

@@ -13,7 +13,7 @@
     using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using ThirdParty.SDK.V2;
+    using iVectorOne.SDK.V2;
 
     public static class EndpointBase
     {

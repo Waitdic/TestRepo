@@ -19,11 +19,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{0DBE9519-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Search-Api", "src\iVectorOne-Search-Api\iVectorOne-Search-Api.csproj", "{D279E69A-B2B1-4F94-AE3F-A1A8BAEADDBC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Abstractions", "src\libs\ThirdParty.Abstractions\ThirdParty.Abstractions.csproj", "{299BE877-52A7-4601-8E94-BF1E9D2871D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Abstractions", "src\libs\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj", "{299BE877-52A7-4601-8E94-BF1E9D2871D9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.CSSuppliers", "src\libs\ThirdParty.CSSuppliers\ThirdParty.CSSuppliers.csproj", "{02A2810C-FA55-42E3-90A2-EF4BC2276A0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Suppliers", "src\libs\iVectorOne.Suppliers\iVectorOne.Suppliers.csproj", "{02A2810C-FA55-42E3-90A2-EF4BC2276A0C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Service", "src\libs\ThirdParty.Service\ThirdParty.Service.csproj", "{22E95967-E2AD-42A5-8C2E-5EFC8ADDB21A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Service", "src\libs\iVectorOne.Service\iVectorOne.Service.csproj", "{22E95967-E2AD-42A5-8C2E-5EFC8ADDB21A}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "iVectorOne", "data\iVectorOne\iVectorOne.sqlproj", "{ED91DB50-23E7-4513-8B15-3657B43E22D8}"
 EndProject
@@ -43,11 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Search-Api-Build
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne-Admin-Api", "src\iVectorOne-Admin-Api\iVectorOne-Admin-Api.csproj", "{EEE64EB3-D454-4809-8F6B-0CF0C45A9B95}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Abstractions.Tests", "tests\ThirdParty.Abstractions.Tests\ThirdParty.Abstractions.Tests.csproj", "{249B9BDC-473D-4E5E-8630-DBDE473402CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Abstractions.Tests", "tests\iVectorOne.Abstractions.Tests\iVectorOne.Abstractions.Tests.csproj", "{249B9BDC-473D-4E5E-8630-DBDE473402CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Services.Tests", "tests\ThirdParty.Services.Tests\ThirdParty.Services.Tests.csproj", "{F79C0757-5647-4678-8AED-268845860680}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Services.Tests", "tests\iVectorOne.Services.Tests\iVectorOne.Services.Tests.csproj", "{F79C0757-5647-4678-8AED-268845860680}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThirdParty.Suppliers.TPIntegrationTests", "tests\ThirdParty.Suppliers.TPIntegrationTests\ThirdParty.Suppliers.TPIntegrationTests.csproj", "{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.Suppliers.TPIntegrationTests", "tests\iVectorOne.Suppliers.TPIntegrationTests\iVectorOne.Suppliers.TPIntegrationTests.csproj", "{077CDE79-49BE-4338-8B2F-5AF0C59C96A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

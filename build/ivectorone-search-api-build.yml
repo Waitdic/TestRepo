@@ -74,13 +74,13 @@ stages:
         UpdateBuildNumber: '$(Build.DefinitionName)_$(appVersion)'
         AddBuildTag: 'v$(appVersion)'
 
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'SonarCloud'
-        organization: 'intuitive-systems'
-        scannerMode: 'MSBuild'
-        projectKey: 'Intuitive_iVectorOne_Search_Api'
-        projectName: 'iVectorOne Search Api'
+    # - task: SonarCloudPrepare@1
+    #   inputs:
+    #     SonarCloud: 'SonarCloud'
+    #     organization: 'intuitive-systems'
+    #     scannerMode: 'MSBuild'
+    #     projectKey: 'Intuitive_iVectorOne_Search_Api'
+    #     projectName: 'iVectorOne Search Api'
 
     - task: NuGetAuthenticate@1
       inputs:
@@ -126,11 +126,11 @@ stages:
         arguments: '-c $(buildConfiguration)'
         testRunTitle: 'Unit Tests'
 
-    - task: SonarCloudAnalyze@1
+    # - task: SonarCloudAnalyze@1
 
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
+    # - task: SonarCloudPublish@1
+    #   inputs:
+    #     pollingTimeoutSec: '300'
 
     - task: PowerShell@2
       displayName: 'Save version info for later stages'

@@ -1,0 +1,22 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>iVectorOne</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Intuitive.Helpers" Version="0.16.0" />
+    <PackageReference Include="iVector.Search.Abstractions" Version="0.11.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="TPImport.Abstractions" Version="0.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\iVectorOne.Abstractions\iVectorOne.Abstractions.csproj" />
+    <ProjectReference Include="..\iVectorOne.Suppliers\iVectorOne.Suppliers.csproj" />
+  </ItemGroup>
+</Project>

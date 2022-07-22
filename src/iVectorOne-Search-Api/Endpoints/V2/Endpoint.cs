@@ -4,8 +4,8 @@
     using iVectorOne.Web.Infrastructure;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using ThirdParty.Factories;
-    using ThirdParty.SDK.V2.PropertySearch;
+    using iVectorOne.Factories;
+    using iVectorOne.SDK.V2.PropertySearch;
 
     public static class Endpoint
     {

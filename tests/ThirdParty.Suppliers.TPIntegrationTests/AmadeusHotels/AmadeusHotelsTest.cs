@@ -1,9 +1,0 @@
-﻿namespace ThirdParty.Suppliers.TPIntegrationTests.AmadeusHotels
-{
-    public class AmadeusHotelsTest
-    {
-        //todo Book Test
-        //todo Prebook Test
-        //todo Cancel Test
-    }
-}
