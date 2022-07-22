@@ -1,47 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 //
-import { Sidebar, Header, Spinner } from '@/components';
+import { Sidebar, Header, Spinner, Button } from '@/components';
 import { RootState } from '@/store';
-import { useNavigate } from 'react-router-dom';
 
 type Props = {
+  title?: string;
+  addNew?: boolean;
+  addNewHref?: string;
   children: React.ReactNode;
   bg?: string;
   padding?: string;
   minHeight?: string;
   maxWidth?: string;
-  authGuard?: boolean;
 };
 
 const Dashboard: React.FC<Props> = ({
+  title,
+  addNew = false,
+  addNewHref,
   children,
   bg = 'slate-100',
   padding = 'px-4 sm:px-6 lg:px-8 py-8',
   minHeight = 'min-h-initial',
   maxWidth = 'max-w-9xl',
-  authGuard = false,
 }) => {
-  const navigate = useNavigate();
-
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
-  const user = useSelector((state: RootState) => state.app.user);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && !user && authGuard) {
-      navigate('/');
-    }
-  }, [isLoading, user]);
 
   return (
     <div className='flex h-screen overflow-hidden w-full'>
-      {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
-      {/* Content area */}
       <div
         id='main-layout-area'
         className={classNames(
@@ -49,9 +39,7 @@ const Dashboard: React.FC<Props> = ({
           { [`bg-${bg}`]: bg }
         )}
       >
-        {/*  Site header */}
         <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-
         <main
           className={classNames('w-full mx-auto', {
             [minHeight]: minHeight,
@@ -59,11 +47,29 @@ const Dashboard: React.FC<Props> = ({
             [padding]: padding,
           })}
         >
-          {/* Content */}
-          {children}
+          <>
+            {!!title && (
+              <div
+                className={classNames('mb-8', {
+                  'flex align-start justify-between ': addNew,
+                })}
+              >
+                {
+                  <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
+                    {title}
+                  </h1>
+                }
+                {addNew && (
+                  <div className='flex gap-3'>
+                    <Button text='New' isLink href={addNewHref} />
+                  </div>
+                )}
+              </div>
+            )}
+            {children}
+          </>
         </main>
       </div>
-
       {isLoading && (
         <div className='fixed bottom-6 right-6'>
           <Spinner />

@@ -6,18 +6,15 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import NotFound from '@/layouts/NotFound';
-import { ModuleCreate } from '@/libs/core/module/create';
-import { ModuleEdit } from '@/libs/core/module/edit';
-import { ModuleList } from '@/libs/core/module/list';
 import { TenantCreate } from '@/libs/core/tenant/create';
 import { TenantEdit } from '@/libs/core/tenant/edit';
 import { TenantList } from '@/libs/core/tenant/list';
-import { Module } from '@/types';
 import { useCoreFetching } from '@/libs/core/data-access';
 import { Dashboard } from '@/libs/core';
 import { SubscriptionCreate } from '@/libs/core/subscription/create';
 import { SubscriptionList } from '@/libs/core/subscription/list';
 import { SubscriptionEdit } from '@/libs/core/subscription/edit';
+import { SubscriptionView } from '@/libs/core/subscription/view';
 import { SupplierList } from '@/libs/core/supplier/list';
 import { SupplierCreate } from '@/libs/core/supplier/create';
 import { SupplierEdit } from '@/libs/core/supplier/edit';
@@ -26,9 +23,6 @@ import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
 import ChangeLog from '@/libs/core/support/change-log';
 import RoadMap from '@/libs/core/support/road-map';
-//! Temp
-import { dummyModuleList } from '@/temp';
-import { SubscriptionView } from '@/libs/core/subscription/view';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -73,30 +67,6 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           <Route
             path='/tenant/edit/:slug'
             element={<TenantEdit error={coreError} />}
-          />
-          {/* Module Routes */}
-          <Route
-            path='/module/list'
-            element={
-              <ModuleList
-                fetchedModuleList={{
-                  // moduleList,
-                  // isLoading: coreIsLoading,
-                  // error: coreError,
-                  moduleList: dummyModuleList as Module[],
-                  isLoading: false,
-                  error: null,
-                }}
-              />
-            }
-          />
-          <Route
-            path='/module/create'
-            element={<ModuleCreate error={null} isLoading={false} />}
-          />
-          <Route
-            path='/module/edit/:slug'
-            element={<ModuleEdit error={null} isLoading={false} />}
           />
           {/* Subscription Routes */}
           <Route

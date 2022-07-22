@@ -46,6 +46,21 @@ const Button: FC<Props> = ({
   const fullWidthClassName = 'w-full';
   const disabledClassName = 'cursor-not-allowed opacity-50';
 
+  const classNames = classnames(
+    'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
+    {
+      [primaryClassNames]: color === ButtonColors.PRIMARY,
+      [dangerClassNames]: color === ButtonColors.DANGER,
+      [warningClassNames]: color === ButtonColors.WARNING,
+      [infoClassNames]: color === ButtonColors.INFO,
+      [createClassNames]: color === ButtonColors.CREATE,
+      [outlineClassNames]: color === ButtonColors.OUTLINE,
+      [fullWidthClassName]: fullWidth,
+      [disabledClassName]: disabled,
+      [className as string]: className,
+    }
+  );
+
   const handleOnClick = (e: SyntheticEvent) => {
     if (!onClick || disabled) return;
 
@@ -56,23 +71,7 @@ const Button: FC<Props> = ({
   if (isLink && !externalLink) {
     if (disabled) {
       return (
-        <button
-          type={ButtonVariants.BUTTON}
-          className={classnames(
-            'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
-            {
-              [primaryClassNames]: color === ButtonColors.PRIMARY,
-              [dangerClassNames]: color === ButtonColors.DANGER,
-              [warningClassNames]: color === ButtonColors.WARNING,
-              [infoClassNames]: color === ButtonColors.INFO,
-              [createClassNames]: color === ButtonColors.CREATE,
-              [outlineClassNames]: color === ButtonColors.OUTLINE,
-              [fullWidthClassName]: fullWidth,
-              [disabledClassName]: disabled,
-              [className as string]: className,
-            }
-          )}
-        >
+        <button disabled type={ButtonVariants.BUTTON} className={classNames}>
           {icon}
           {text}
         </button>
@@ -80,72 +79,24 @@ const Button: FC<Props> = ({
     } else {
       return (
         <Link to={href}>
-          <button
-            type={ButtonVariants.BUTTON}
-            className={classnames(
-              'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
-              {
-                [primaryClassNames]: color === ButtonColors.PRIMARY,
-                [dangerClassNames]: color === ButtonColors.DANGER,
-                [warningClassNames]: color === ButtonColors.WARNING,
-                [infoClassNames]: color === ButtonColors.INFO,
-                [createClassNames]: color === ButtonColors.CREATE,
-                [outlineClassNames]: color === ButtonColors.OUTLINE,
-                [fullWidthClassName]: fullWidth,
-                [className as string]: className,
-              }
-            )}
-          >
+          <a className={classNames}>
             {icon}
             {text}
-          </button>
+          </a>
         </Link>
       );
     }
   } else if (isLink && externalLink) {
     return (
-      <a href={href} target='_blank' rel='noreferrer'>
-        <button
-          type={ButtonVariants.BUTTON}
-          className={classnames(
-            'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
-            {
-              [primaryClassNames]: color === ButtonColors.PRIMARY,
-              [dangerClassNames]: color === ButtonColors.DANGER,
-              [warningClassNames]: color === ButtonColors.WARNING,
-              [infoClassNames]: color === ButtonColors.INFO,
-              [createClassNames]: color === ButtonColors.CREATE,
-              [outlineClassNames]: color === ButtonColors.OUTLINE,
-              [fullWidthClassName]: fullWidth,
-              [className as string]: className,
-            }
-          )}
-        >
-          {icon}
-          {text}
-        </button>
+      <a href={href} target='_blank' rel='noreferrer' className={classNames}>
+        {icon}
+        {text}
       </a>
     );
   }
 
   return (
-    <button
-      type={type}
-      className={classnames(
-        'inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2',
-        {
-          [primaryClassNames]: color === ButtonColors.PRIMARY,
-          [dangerClassNames]: color === ButtonColors.DANGER,
-          [warningClassNames]: color === ButtonColors.WARNING,
-          [infoClassNames]: color === ButtonColors.INFO,
-          [createClassNames]: color === ButtonColors.CREATE,
-          [outlineClassNames]: color === ButtonColors.OUTLINE,
-          [fullWidthClassName]: fullWidth,
-          [className as string]: className,
-        }
-      )}
-      onClick={handleOnClick}
-    >
+    <button type={type} className={classNames} onClick={handleOnClick}>
       {icon}
       {text}
     </button>

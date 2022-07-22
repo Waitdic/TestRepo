@@ -10,16 +10,7 @@ const RoadMap: React.FC<Props> = () => {
   const roadMapData = RoadMapData.data;
 
   return (
-    <Main authGuard>
-      {/* Page header */}
-      <div className='sm:flex sm:justify-between sm:items-center mb-8'>
-        {/* Left: Title */}
-        <div className='mb-4 sm:mb-0'>
-          <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-            Roadmap
-          </h1>
-        </div>
-      </div>
+    <Main title='Roadmap'>
       <div className='border-t border-slate-200'>
         <div className='max-w-3xl m-auto mt-8'>
           <div className='xl:-translate-x-16'>

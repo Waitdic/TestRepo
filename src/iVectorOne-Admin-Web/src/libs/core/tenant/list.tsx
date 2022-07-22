@@ -18,6 +18,7 @@ type Props = {
   error: string | null;
 };
 
+//! Currently not used
 export const TenantList: FC<Props> = memo(({ error }) => {
   const tenants = useSelector((state: RootState) => state.app.user?.tenants);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);

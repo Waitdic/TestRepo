@@ -8,13 +8,7 @@ import { useSlug } from '@/utils/use-slug';
 import { NotificationStatus, ButtonColors, ButtonVariants } from '@/constants';
 //
 import MainLayout from '@/layouts/Main';
-import {
-  ErrorBoundary,
-  TextField,
-  Spinner,
-  Notification,
-  Button,
-} from '@/components';
+import { TextField, Notification, Button } from '@/components';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 
@@ -27,6 +21,7 @@ type Props = {
   error: string | null;
 };
 
+//! Currently not used
 export const TenantEdit: FC<Props> = memo(({ error }) => {
   const navigate = useNavigate();
   const { slug } = useSlug();
@@ -107,54 +102,43 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
 
   return (
     <>
-      <MainLayout
-      // title='Tenant Edit'
-      >
-        <div className='flex flex-col'>
-          {/* Edit Tenant */}
-          {error ? (
-            <ErrorBoundary />
-          ) : (
-            <>
-              <h2 className='md:text-3xl text-2xl font-semibold sm:font-medium text-gray-900 mb-5 pb-3 md:mb-8 md:pb-6'>
-                Edit Tenant
-              </h2>
-              <form
-                className='w-full divide-y divide-gray-200'
-                onSubmit={handleSubmit(onSubmit)}
-                autoComplete='turnedOff'
-              >
-                <div className='mb-8 md:w-3/4'>
-                  {!isLoading && !!tenants?.length ? (
-                    <TextField
-                      id='newTenant'
-                      {...register('name', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Name'
-                      isDirty={errors.name ? true : false}
-                      errorMsg={errors.name?.message}
-                    />
-                  ) : (
-                    <Spinner />
-                  )}
-                </div>
-                <div className='flex justify-end mt-5 pt-5'>
-                  <Button
-                    text='Cancel'
-                    color={ButtonColors.OUTLINE}
-                    className='ml-4'
-                    onClick={() => navigate(-1)}
+      <MainLayout title='Edit Tenant'>
+        <div className='bg-white shadow-lg rounded-sm mb-8'>
+          <div className='flex flex-col md:flex-row md:-mr-px'>
+            <div className='min-w-60'></div>
+            <form
+              className='w-full divide-y divide-gray-200'
+              onSubmit={handleSubmit(onSubmit)}
+              autoComplete='turnedOff'
+            >
+              <div className='mb-8 md:w-3/4'>
+                {!isLoading && !!tenants?.length && (
+                  <TextField
+                    id='newTenant'
+                    {...register('name', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Name'
+                    isDirty={!!errors.name}
+                    errorMsg={errors.name?.message}
                   />
-                  <Button
-                    type={ButtonVariants.SUBMIT}
-                    text='Save'
-                    className='ml-4'
-                  />
-                </div>
-              </form>
-            </>
-          )}
+                )}
+              </div>
+              <div className='flex justify-end mt-5 pt-5'>
+                <Button
+                  text='Cancel'
+                  color={ButtonColors.OUTLINE}
+                  className='ml-4'
+                  onClick={() => navigate(-1)}
+                />
+                <Button
+                  type={ButtonVariants.SUBMIT}
+                  text='Save'
+                  className='ml-4'
+                />
+              </div>
+            </form>
+          </div>
         </div>
       </MainLayout>
 

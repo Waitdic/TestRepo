@@ -101,27 +101,21 @@ export const SubscriptionList: FC<Props> = memo(() => {
     if (!!activeTenant) {
       fetchData();
     }
-  }, [activeTenant]);
+  }, [activeTenant, fetchData]);
 
   return (
     <>
-      <MainLayout>
-        <div className='flex flex-col'>
-          <div className='flex align-start justify-between mb-6'>
-            <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
-              Subscriptions
-            </h1>
-            <div className='flex gap-3'>
-              <Button text='New' isLink href='/subscriptions/create' disabled />
-            </div>
-          </div>
-          <CardList
-            bodyList={tableBodyList}
-            isLoading={!subscriptions.length}
-            emptyState={tableEmptyState}
-            statusIsPlaceholder
-          />
-        </div>
+      <MainLayout
+        title='Subscriptions'
+        addNew={false}
+        addNewHref='/subscriptions/create'
+      >
+        <CardList
+          bodyList={tableBodyList}
+          isLoading={!subscriptions.length}
+          emptyState={tableEmptyState}
+          statusIsPlaceholder
+        />
       </MainLayout>
 
       {showNotification && (
