@@ -86,18 +86,11 @@ export const SupplierList: FC<Props> = memo(() => {
         dispatch.app.setIsLoading(false);
       }
     );
-
-    const mainLayoutArea = document.getElementById('main-layout-area');
-    if (!!mainLayoutArea?.scrollTop) {
-      mainLayoutArea.scrollTop = 0;
-    }
   };
 
   useEffect(() => {
-    if (!!user) {
-      fetchSubscriptions();
-    }
-  }, [fetchSubscriptions, user]);
+    fetchSubscriptions();
+  }, [fetchSubscriptions]);
 
   return (
     <>
@@ -166,14 +159,12 @@ export const SupplierList: FC<Props> = memo(() => {
           </div>
         </div>
       </MainLayout>
-      {!!error && (
-        <Notification
-          title='Data fetching error'
-          description={error as string}
-          show={!!error}
-          status={NotificationStatus.ERROR}
-        />
-      )}
+      <Notification
+        title='Data fetching error'
+        description={error as string}
+        show={!!error}
+        status={NotificationStatus.ERROR}
+      />
     </>
   );
 });

@@ -44,7 +44,7 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
 
   const onSubmit: SubmitHandler<Tenant> = async (data) => {
     try {
-      const updatedTenant = await axios.patch(
+      const _updatedTenant = await axios.patch(
         'http://localhost:3001/tenant.edit/100',
         data
       );
@@ -54,18 +54,18 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
         message: 'Tenant edited successfully.',
       });
       setShowNotification(true);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
+    } catch (err) {
+      if (typeof err === 'string') {
+        console.error(err.toUpperCase());
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error.toUpperCase(),
+          message: err.toUpperCase(),
         });
-      } else if (error instanceof Error) {
-        console.error(error.message);
+      } else if (err instanceof Error) {
+        console.error(err.message);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error.message,
+          message: err.message,
         });
       }
       setShowNotification(true);

@@ -69,7 +69,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
   } = useForm<SubscriptionFields>();
 
   const fetchSubscriptionById = useCallback(async () => {
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant) return;
     await getSubscriptionById(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       Number(slug),
@@ -87,9 +87,10 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
     );
   }, [activeTenant, slug]);
 
+  //! Temporary placeholder onSubmit function for subscription edit
   const onSubmit: SubmitHandler<SubscriptionFields> = async (data) => {
     try {
-      const updatedSubscription = await axios.patch(
+      const _updatedSubscription = await axios.patch(
         `http://localhost:3001/subscription/edit/${slug}`,
         data
       );
@@ -98,30 +99,17 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
         message: 'Subscription edited successfully.',
       });
       setShowNotification(true);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.toUpperCase(),
-        });
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.message,
-        });
-      }
+    } catch (err) {
+      console.error(err);
       setShowNotification(true);
     }
   };
 
   const loadSubscription = useCallback(() => {
-    if (subscriptions.length > 0) {
+    if (!!subscriptions?.length) {
       const selectedSubscription = subscriptions.find(
         (sub) => sub.subscriptionId === Number(slug)
       );
-
       if (!selectedSubscription) {
         navigate('/subscriptions');
         return;
@@ -169,12 +157,12 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
   }, [currentSubscription]);
 
   useEffect(() => {
-    if (!!subscriptions?.length) {
-      loadSubscription();
-    } else {
-      fetchSubscriptionById();
-    }
-  }, [loadSubscription, subscriptions]);
+    loadSubscription();
+  }, [subscriptions, loadSubscription]);
+
+  useEffect(() => {
+    fetchSubscriptionById();
+  }, [fetchSubscriptionById]);
 
   return (
     <>

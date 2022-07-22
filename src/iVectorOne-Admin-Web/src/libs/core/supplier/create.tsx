@@ -2,17 +2,11 @@ import { memo, FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
+import { sortBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import {
-  SelectOption,
-  Subscription,
-  Supplier,
-  SupplierConfiguration,
-  SupplierFormFields,
-} from '@/types';
+import { Supplier, SupplierConfiguration, SupplierFormFields } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
@@ -20,19 +14,14 @@ import {
   Select,
   Button,
   Notification,
-  ErrorBoundary,
   Spinner,
 } from '@/components';
 import {
   createSupplier,
   getConfigurationsBySupplier,
-  getSubscriptions,
   getSubscriptionsWithSuppliers,
-  getSubscriptionsWithSuppliersAndConfigurations,
   getSuppliers,
-  getSuppliersBySubscription,
 } from '../data-access';
-import { sortBy, uniqBy } from 'lodash';
 
 type Props = {};
 
@@ -259,12 +248,10 @@ export const SupplierCreate: FC<Props> = memo(() => {
                       required: 'This field is required.',
                     })}
                     labelText='Supplier'
-                    options={
-                      sortedSuppliers?.map((loginOption) => ({
-                        id: loginOption.supplierID,
-                        name: loginOption?.name,
-                      })) || []
-                    }
+                    options={sortedSuppliers?.map((loginOption) => ({
+                      id: loginOption.supplierID,
+                      name: loginOption?.name,
+                    }))}
                     isFirstOptionEmpty
                     onUncontrolledChange={handleSupplierChange}
                   />
@@ -283,7 +270,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
                 ) : (
                   isLoading && (
                     <div className='relative w-8 h-8'>
-                      {isLoading && <Spinner />}
+                      <Spinner />
                     </div>
                   )
                 )}
@@ -305,15 +292,14 @@ export const SupplierCreate: FC<Props> = memo(() => {
           </div>
         </div>
       </MainLayout>
-      {showNotification && (
-        <Notification
-          title='Supplier creation'
-          description={notification.message}
-          status={notification.status}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
+
+      <Notification
+        title='Supplier creation'
+        description={notification.message}
+        status={notification.status}
+        show={showNotification}
+        setShow={setShowNotification}
+      />
     </>
   );
 });

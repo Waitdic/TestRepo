@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DropdownFilterProps } from '@/types';
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
-import { Button, CardList, Notification } from '@/components';
+import { CardList, Notification } from '@/components';
 import { getSubscriptions } from '../data-access';
 import { NotificationStatus } from '@/constants';
 

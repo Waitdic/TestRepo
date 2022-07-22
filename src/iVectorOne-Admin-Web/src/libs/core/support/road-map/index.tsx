@@ -45,10 +45,10 @@ const RoadMap: React.FC<Props> = () => {
                       </div>
                     </header>
                     <ul className='-my-2'>
-                      {item.list.map((listItem, idx) => (
-                        <li key={idx} className='relative py-2'>
+                      {item.list.map((listItem, i) => (
+                        <li key={i} className='relative py-2'>
                           <div className='flex items-center mb-1'>
-                            {idx < item.list.length - 1 && (
+                            {i < item.list.length - 1 && (
                               <div
                                 className='absolute left-0 h-full w-0.5 bg-slate-200 self-start ml-2.5 -translate-x-1/2 translate-y-3'
                                 aria-hidden='true'
