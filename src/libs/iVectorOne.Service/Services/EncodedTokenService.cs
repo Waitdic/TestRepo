@@ -165,7 +165,7 @@
                 int month = _tokenValues.GetValue(TokenValueType.Month);
                 int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
 
-                if (day > 1 && month > 1)
+                if (day > 0 && month > 0)
                 {
                     token.ArrivalDate = new DateTime(year, month, day);
                 }
