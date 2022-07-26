@@ -35,7 +35,7 @@
 
             _ = endpoints
                 .MapPost(
-                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/cancelfee",
+                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/precancel",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Precancel.Request request)
                         => await EndpointBase.ExecuteRequest<Precancel.Request, Precancel.Response>(httpContext, mediator, request))
                 .RequireAuthorization()
@@ -53,6 +53,7 @@
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status200OK);
 
+            // todo - integrate with health checks
             _ = endpoints.MapGet("/healthcheck", () => "Hello World!");
 
             return endpoints;

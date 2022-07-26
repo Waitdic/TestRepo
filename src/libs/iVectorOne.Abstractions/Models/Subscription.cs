@@ -18,7 +18,7 @@
         public string Password { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the environment.</summary>
-        public string Environment { get; set; } = string.Empty;
+        public SubscriptionEnvironment Environment { get; set; }
 
         /// <summary>Gets or sets the configurations.</summary>
         public List<ThirdPartyConfiguration> Configurations { get; set; } = new();

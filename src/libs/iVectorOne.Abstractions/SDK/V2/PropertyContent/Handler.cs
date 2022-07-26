@@ -21,7 +21,7 @@
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
             return await _service.PropertyContentAsync(
-                request.PropertyIDs.Split(',').Select(s => s.ToSafeInt()).ToList(),
+                request.PropertyIDs.Select(s => s.ToSafeInt()).ToList(),
                 request.User);
         }
     }

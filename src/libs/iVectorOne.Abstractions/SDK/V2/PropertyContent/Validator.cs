@@ -6,7 +6,8 @@
     {
         public Validator()
         {
-            RuleFor(x => x.PropertyIDs).NotEmpty().WithMessage("At least one Property ID must be provided");
+            RuleFor(x => x.PropertyIDs).NotEmpty().WithMessage(WarningMessages.InvalidPropertyID);
+            RuleFor(x => x.PropertyIDs.Count).LessThanOrEqualTo(500).WithMessage(WarningMessages.TooManyPropertyIDsSpecified);
         }
     }
 }

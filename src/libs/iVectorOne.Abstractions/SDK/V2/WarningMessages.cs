@@ -121,7 +121,7 @@
         /// <summary>
         ///   <para>Every prebook and book call must include a booking token</para>
         /// </summary>
-        public const string InvalidBookingReference= "A Booking Reference is required";
+        public const string InvalidBookingReference = "A Booking Reference is required";
 
         /// <summary>
         ///   <para>Every cancel request must have a supplier booking reference</para>
@@ -224,15 +224,18 @@
         public const string InvalidPropertyID = "At least one Property ID must be provided";
 
         /// <summary>
+        ///   <para>The booking reference cannot exceed the supplier permitted length</para>
+        /// </summary>
+        public const string TooManyPropertyIDsSpecified = "No more than 500 Property IDs may be specified";
+
+        /// <summary>
         ///   <para>The Rooms must match those passed in at search</para>
         /// </summary>
         public const string InvalidRooms = "The number of rooms in the request must match what was searched for";
-
 
         /// <summary>
         ///   <para>The booking reference cannot exceed the supplier permitted length</para>
         /// </summary>
         public const string InvalidBookingReferenceLength = "The booking reference exceeds the supplier permitted length, the maximum allowed length is ";
-
-    }   
+    }
 }

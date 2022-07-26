@@ -6,9 +6,9 @@
     public class SqlSubscription
     {
         public int SubscriptionID { get; set; }
-        public string? Login { get; set; }
-        public string? Password { get; set; }
-        public string? Environment { get; set; }
+        public string Login { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Environment { get; set; } = string.Empty;
         public bool DummyResponses { get; set; }
         public Settings? TPSettings { get; set; }
         public List<Configuration> Configurations { get; set; } = new();

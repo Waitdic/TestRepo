@@ -13,40 +13,41 @@
         {
             _ = endpoints
                 .MapGet(
-                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/list",
-                    async (HttpContext httpContext, [FromServices] IMediator mediator, [FromQuery] DateTime? lastModified, [FromQuery] string? suppliers)
-                        =>
-                        {
-                            var request = new List.Request
-                            {
-                                LastModified = lastModified,
-                                Suppliers = suppliers ?? string.Empty,
-                            };
-
-                            return await EndpointBase.ExecuteRequest<List.Request, List.Response>(httpContext, mediator, request);
-                        })
-                .RequireAuthorization()
-                .WithName("Property List")
-                .ProducesValidationProblem(StatusCodes.Status400BadRequest)
-                .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
-                .Produces(StatusCodes.Status200OK);
-
-            _ = endpoints
-                .MapGet(
                     $"/{EndpointBase.Version}/{EndpointBase.Domain}",
-                    async (HttpContext httpContext, [FromServices] IMediator mediator, [FromQuery] string propertyids)
+                    async (
+                        HttpContext httpContext,
+                        [FromServices] IMediator mediator,
+                        [FromQuery] string? propertyids,
+                        [FromQuery] DateTime? lastModified,
+                        [FromQuery] string? suppliers)
                         =>
                         {
-                            var request = new Content.Request
-                            {
-                                PropertyIDs = propertyids,
-                            };
+                            var propertyIdList = (propertyids ?? string.Empty).Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                            return await EndpointBase.ExecuteRequest<Content.Request, Content.Response>(httpContext, mediator, request);
+                            if (propertyIdList.Any())
+                            {
+                                var request = new Content.Request
+                                {
+                                    PropertyIDs = propertyIdList,
+                                };
+
+                                return await EndpointBase.ExecuteRequest<Content.Request, Content.Response>(httpContext, mediator, request);
+                            }
+                            else
+                            {
+                                var request = new List.Request
+                                {
+                                    LastModified = lastModified,
+                                    Suppliers = suppliers ?? string.Empty,
+                                };
+
+                                return await EndpointBase.ExecuteRequest<List.Request, List.Response>(httpContext, mediator, request);
+                            }
                         })
                 .RequireAuthorization()
                 .WithName("Property Content")
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+                .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
                 .Produces(StatusCodes.Status200OK);
 
             return endpoints;
