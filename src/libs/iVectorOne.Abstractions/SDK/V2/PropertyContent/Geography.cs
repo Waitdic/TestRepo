@@ -22,5 +22,9 @@
         /// <summary>Gets or sets the longitude.</summary>
         /// <value>The longitude.</value>
         public decimal Longitude { get; set; }
+
+        /// <summary>Gets or sets the code.</summary>
+        /// <value>The longitude.</value>
+        public string Code { get; set; }
     }
 }
