@@ -55,7 +55,7 @@
 
                 var properties = await _propertyListService.GetOwnStockPropertiesAsync(request);
 
-                foreach (var property in properties.Where(p => customer.SuppliersList.Contains(p.PropertyType!)))
+                foreach (var property in properties.Where(p => customer.SuppliersList.Contains(p.Source)))
                 {
                     await ImportProperty(customer, property);
                 }
@@ -112,8 +112,10 @@
             public int SubscriptionID { get; set; }
             public string Suppliers { get; set; } = string.Empty;
             public string PropertyIDs { get; set; } = string.Empty;
-            public List<string> SuppliersList => Suppliers.Split(",").ToList();
-            public HashSet<string> PropertyIDSet => PropertyIDs.Split(",").ToHashSet();
+            public List<string> SuppliersList
+                => Suppliers.Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
+            public HashSet<string> PropertyIDSet
+                => PropertyIDs.Split(",", StringSplitOptions.RemoveEmptyEntries).ToHashSet();
         }
     }
 }
