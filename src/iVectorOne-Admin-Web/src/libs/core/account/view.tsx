@@ -2,7 +2,7 @@ import { memo, useEffect, useState, FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import { Subscription } from '@/types';
+import { Account } from '@/types';
 import { useSlug } from '@/utils/use-slug';
 import { ButtonColors, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
@@ -15,19 +15,17 @@ import {
   CopyField,
 } from '@/components';
 import { RootState } from '@/store';
-import { getSubscriptionById } from '../data-access';
+import { getAccountById } from '../data-access';
 
 type Props = {};
 
-export const SubscriptionView: FC<Props> = memo(() => {
+export const AccountView: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useSlug();
 
   const error = useSelector((state: RootState) => state.app.error);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
+  const accounts = useSelector((state: RootState) => state.app.accounts);
   const user = useSelector((state: RootState) => state.app.user);
 
   const activeTenant = useMemo(
@@ -36,34 +34,32 @@ export const SubscriptionView: FC<Props> = memo(() => {
   );
 
   const [showNotification, setShowNotification] = useState(false);
-  const [currentSubscription, setCurrentSubscription] = useState(
-    null as Subscription | null
-  );
+  const [currentAccount, setCurrentAccount] = useState(null as Account | null);
 
-  const loadSubscription = useCallback(() => {
-    if (subscriptions.length > 0) {
-      const currSubscription = subscriptions.find(
-        (sub) => sub.subscriptionId === Number(slug)
+  const loadAccount = useCallback(() => {
+    if (accounts.length > 0) {
+      const currAccount = accounts.find(
+        (acc) => acc.subscriptionId === Number(slug)
       );
 
-      if (!currSubscription) {
-        navigate('/subscriptions');
+      if (!currAccount) {
+        navigate('/accounts');
       } else {
-        setCurrentSubscription(currSubscription);
+        setCurrentAccount(currAccount);
       }
     }
-  }, [subscriptions, navigate, slug]);
+  }, [accounts, navigate, slug]);
 
-  const fetchSubscriptionById = useCallback(async () => {
+  const fetchAccountById = useCallback(async () => {
     if (!activeTenant || activeTenant == null) return;
-    await getSubscriptionById(
+    await getAccountById(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (subscription) => {
-        setCurrentSubscription(subscription);
+      (acc) => {
+        setCurrentAccount(acc);
         dispatch.app.setIsLoading(false);
       },
       (err) => {
@@ -74,37 +70,37 @@ export const SubscriptionView: FC<Props> = memo(() => {
   }, [activeTenant, slug]);
 
   useEffect(() => {
-    if (!!subscriptions?.length) {
-      loadSubscription();
+    if (!!accounts?.length) {
+      loadAccount();
     } else {
-      fetchSubscriptionById();
+      fetchAccountById();
     }
-  }, [subscriptions, loadSubscription, fetchSubscriptionById]);
+  }, [accounts, loadAccount, fetchAccountById]);
 
   return (
     <>
-      <MainLayout title={`View Subscription ${currentSubscription?.userName}`}>
+      <MainLayout title={`View Account ${currentAccount?.userName}`}>
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>
             <div className='grow p-6 space-y-6 w-full divide-y divide-gray-200'>
               <div className='flex flex-col gap-5 mb-8'>
                 <div className='flex-1'>
-                  <SectionTitle title='Authentication' />
+                  <SectionTitle title='Login Credentials' />
                 </div>
-                {!!currentSubscription ? (
+                {!!currentAccount ? (
                   <>
                     <div className='flex-1 md:w-1/2'>
                       <h4 className='block text-sm font-medium mb-1'>
                         Username
                       </h4>
-                      <CopyField value={currentSubscription.userName} />
+                      <CopyField value={currentAccount.userName} />
                     </div>
-                    <div className='flex-1 md:w-1/2'>
+                    <div className='flex-1 md:w-1/2 border-b border-gray-200 pb-5'>
                       <h4 className='block text-sm font-medium mb-1'>
                         Password
                       </h4>
-                      <CopyField value={currentSubscription.password} />
+                      <CopyField value={currentAccount.password} />
                     </div>
                     <div className='flex-1'>
                       <SectionTitle title='Settings' />
@@ -114,7 +110,7 @@ export const SubscriptionView: FC<Props> = memo(() => {
                         Property TP Request Limit
                       </h4>
                       <p className='text-sm'>
-                        {currentSubscription.propertyTprequestLimit}
+                        {currentAccount.propertyTprequestLimit}
                       </p>
                     </div>
                     <div className='flex-1 md:w-1/2'>
@@ -122,16 +118,14 @@ export const SubscriptionView: FC<Props> = memo(() => {
                         Search Timeout Seconds
                       </h4>
                       <p className='text-sm'>
-                        {currentSubscription.searchTimeoutSeconds}
+                        {currentAccount.searchTimeoutSeconds}
                       </p>
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <h4 className='block text-sm font-medium mb-1'>
                         Currency Code
                       </h4>
-                      <p className='text-sm'>
-                        {currentSubscription.currencyCode}
-                      </p>
+                      <p className='text-sm'>{currentAccount.currencyCode}</p>
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <div className='flex items-center justify-between'>
@@ -139,7 +133,7 @@ export const SubscriptionView: FC<Props> = memo(() => {
                           Log Main Search Error
                         </h4>
                         <YesOrNo
-                          isActive={!!currentSubscription.logMainSearchError}
+                          isActive={!!currentAccount.logMainSearchError}
                         />
                       </div>
                     </div>

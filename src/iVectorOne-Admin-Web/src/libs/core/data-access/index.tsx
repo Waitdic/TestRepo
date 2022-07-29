@@ -8,7 +8,7 @@ import {
   User,
   Tenant,
   Supplier,
-  Subscription,
+  Account,
   SupplierFormFields,
   SupplierConfiguration,
 } from '@/types';
@@ -60,11 +60,11 @@ export function useCoreFetching() {
   return { error };
 }
 
-//* Subscriptions data fetch
-export async function getSubscriptions(
+//* Accounts data fetch
+export async function getAccounts(
   tenant: { id: number; key: string },
   onInit?: () => void,
-  onSuccess?: (subscriptions: Subscription[]) => void,
+  onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
 ) {
   onInit?.();
@@ -75,12 +75,8 @@ export async function getSubscriptions(
         Tenantkey: tenant.key,
       },
     });
-    const subscriptions: Subscription[] = get(
-      subsRes,
-      'data.subscriptions',
-      []
-    );
-    onSuccess?.(subscriptions);
+    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    onSuccess?.(accounts);
   } catch (err) {
     if (typeof err === 'string') {
       console.error(err.toUpperCase());
@@ -92,11 +88,11 @@ export async function getSubscriptions(
   }
 }
 
-//* Subscriptions data fetch with suppliers
-export async function getSubscriptionsWithSuppliers(
+//* Accounts data fetch with suppliers
+export async function getAccountsWithSuppliers(
   tenant: { id: number; key: string },
   onInit?: () => void,
-  onSuccess?: (subscriptions: Subscription[]) => void,
+  onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
 ) {
   onInit?.();
@@ -107,13 +103,9 @@ export async function getSubscriptionsWithSuppliers(
         Tenantkey: tenant.key,
       },
     });
-    const subscriptions: Subscription[] = get(
-      subsRes,
-      'data.subscriptions',
-      []
-    );
-    subscriptions.forEach(async (subscription) => {
-      const { subscriptionId } = subscription;
+    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    accounts.forEach(async (account) => {
+      const { subscriptionId } = account;
       const supplierRes = await ApiCall.get(
         `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
         {
@@ -128,8 +120,8 @@ export async function getSubscriptionsWithSuppliers(
         'data.supplierSubscriptions',
         []
       );
-      subscription.suppliers = suppliersData;
-      onSuccess?.(subscriptions);
+      account.suppliers = suppliersData;
+      onSuccess?.(accounts);
     });
   } catch (err) {
     if (typeof err === 'string') {
@@ -142,11 +134,11 @@ export async function getSubscriptionsWithSuppliers(
   }
 }
 
-//* Subscriptions data fetch with suppliers and configurations
-export async function getSubscriptionsWithSuppliersAndConfigurations(
+//* Accounts data fetch with suppliers and configurations
+export async function getAccountsWithSuppliersAndConfigurations(
   tenant: { id: number; key: string },
   onInit?: () => void,
-  onSuccess?: (subscriptions: Subscription[]) => void,
+  onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
 ) {
   onInit?.();
@@ -157,13 +149,9 @@ export async function getSubscriptionsWithSuppliersAndConfigurations(
         Tenantkey: tenant.key,
       },
     });
-    const subscriptions: Subscription[] = get(
-      subsRes,
-      'data.subscriptions',
-      []
-    );
-    subscriptions.forEach(async (subscription) => {
-      const { subscriptionId } = subscription;
+    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    accounts.forEach(async (account) => {
+      const { subscriptionId } = account;
       const supplierRes = await ApiCall.get(
         `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
         {
@@ -180,7 +168,7 @@ export async function getSubscriptionsWithSuppliersAndConfigurations(
       );
       suppliersData.forEach(async (supplier) => {
         const { data } = await ApiCall.get(
-          `/tenants/${tenant.id}/subscriptions/${subscription.subscriptionId}/suppliers/${supplier?.supplierID}`,
+          `/tenants/${tenant.id}/subscriptions/${account.subscriptionId}/suppliers/${supplier?.supplierID}`,
           {
             headers: {
               Accept: 'application/json',
@@ -188,8 +176,8 @@ export async function getSubscriptionsWithSuppliersAndConfigurations(
             },
           }
         );
-        subscription.suppliers = [...(subscription?.suppliers || []), data];
-        onSuccess?.(subscriptions);
+        account.suppliers = [...(account?.suppliers || []), data];
+        onSuccess?.(accounts);
       });
     });
   } catch (err) {
@@ -203,14 +191,14 @@ export async function getSubscriptionsWithSuppliersAndConfigurations(
   }
 }
 
-//* Subscription data fetch with suppliers and configurations
-export async function getSubscriptionWithSupplierAndConfigurations(
+//* Account data fetch with suppliers and configurations
+export async function getAccountWithSupplierAndConfigurations(
   tenant: { id: number; key: string },
   subscriptionId: number,
   supplierId: number,
   onInit?: () => void,
   onSuccess?: (
-    subscription: Subscription,
+    account: Account,
     supplier: Supplier,
     configurations: any[]
   ) => void,
@@ -250,7 +238,7 @@ export async function getSubscriptionWithSupplierAndConfigurations(
       supplierRes,
       configurationsRes,
     ]);
-    const subscription = get(fetchedDataRes[0], 'data.subscription', null);
+    const account = get(fetchedDataRes[0], 'data.subscription', null);
     const suppliers: Supplier[] = get(
       fetchedDataRes[1],
       'data.supplierSubscriptions',
@@ -258,8 +246,8 @@ export async function getSubscriptionWithSupplierAndConfigurations(
     );
     const supplier = suppliers?.find((supp) => supp?.supplierID === supplierId);
     const configurations = get(fetchedDataRes[2], 'data.configurations', []);
-    if (subscription && supplier && configurations) {
-      onSuccess?.(subscription, supplier, configurations);
+    if (account && supplier && configurations) {
+      onSuccess?.(account, supplier, configurations);
     }
   } catch (err) {
     if (typeof err === 'string') {
@@ -272,12 +260,12 @@ export async function getSubscriptionWithSupplierAndConfigurations(
   }
 }
 
-//* Fetch subscription by ID
-export async function getSubscriptionById(
+//* Fetch account by ID
+export async function getAccountById(
   tenant: { id: number; key: string },
   subscriptionId: number,
   onInit: () => void,
-  onSuccess: (subscription: Subscription) => void,
+  onSuccess: (account: Account) => void,
   onFailed: (error: string | null) => void
 ) {
   onInit();
@@ -302,8 +290,8 @@ export async function getSubscriptionById(
   }
 }
 
-//* Fetch suppliers by Subscription
-export async function getSuppliersBySubscription(
+//* Fetch suppliers by Account
+export async function getSuppliersByAccount(
   tenant: { id: number; key: string },
   subscriptionId: number,
   onInit: () => void,
@@ -425,7 +413,7 @@ export async function updateSupplier(
   onFailed: (error: string) => void
 ) {
   const {
-    subscription: subscriptionId,
+    account: subscriptionId,
     supplier: supplierId,
     configurations,
   } = data;

@@ -58,7 +58,7 @@ const ChangeLog: React.FC<Props> = () => {
   }, [currentPageCount, filteredChangeLogData]);
 
   return (
-    <Main title='Changelog'>
+    <Main title='Change Log'>
       <div className='border-t border-slate-200'>
         <div className='max-w-3xl m-auto mt-8'>
           {/* Filters */}

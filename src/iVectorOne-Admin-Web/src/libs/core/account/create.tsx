@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 //
 import { RootState } from '@/store';
-import { Subscription } from '@/types';
+import { Account } from '@/types';
 import {
   InputTypes,
   ButtonColors,
@@ -25,7 +25,7 @@ import {
 
 type Props = {};
 
-export const SubscriptionCreate: FC<Props> = memo(() => {
+export const AccountCreate: FC<Props> = memo(() => {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.app.user);
@@ -35,16 +35,16 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Subscription>();
+  } = useForm<Account>();
 
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({
     status: NotificationStatus.SUCCESS,
-    message: 'Create New Subscription',
+    message: 'Create New Account',
   });
 
-  const onSubmit: SubmitHandler<Subscription> = async (data) => {
-    const subscriptionData = pick(data, [
+  const onSubmit: SubmitHandler<Account> = async (data) => {
+    const accountData = pick(data, [
       'name',
       'userName',
       'password',
@@ -54,14 +54,14 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
       'CurrencyCode',
     ]);
     try {
-      const newSubscription = await axios.post(
+      const newAccount = await axios.post(
         'http://localhost:3001/subsciption.create',
-        subscriptionData
+        accountData
       );
-      console.log(newSubscription);
+      console.log(newAccount);
       setNotification({
         status: NotificationStatus.SUCCESS,
-        message: 'New Subscription created successfully.',
+        message: 'New Account created successfully.',
       });
       setShowNotification(true);
     } catch (error) {
@@ -90,7 +90,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout title='New Subscription'>
+      <MainLayout title='New Account'>
         <div className='flex flex-col'>
           <div className='mb-6'>
             <form
@@ -100,7 +100,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
             >
               <div className='mb-8 flex flex-col gap-5'>
                 <div className='flex-1'>
-                  <SectionTitle title='Subscription' />
+                  <SectionTitle title='Account' />
                 </div>
                 <div className='flex-1 md:w-1/2'>
                   <TextField
@@ -212,7 +212,7 @@ export const SubscriptionCreate: FC<Props> = memo(() => {
           title={
             notification.status === NotificationStatus.ERROR
               ? 'Error'
-              : 'Create New Subscription'
+              : 'Create New Account'
           }
           description={notification.message}
           status={notification.status}

@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 //
 import {
-  getSubscriptionWithSupplierAndConfigurations,
+  getAccountWithSupplierAndConfigurations,
   updateSupplier,
 } from '../data-access';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { Supplier, SupplierFormFields, Subscription } from '@/types';
+import { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import {
@@ -37,8 +37,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
     status: NotificationStatus.SUCCESS,
     message: 'Supplier edited successfully.',
   });
-  const [currentSubscription, setCurrentSubscription] =
-    useState<Subscription | null>(null);
+  const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
 
   const {
@@ -86,15 +85,15 @@ export const SupplierEdit: FC<Props> = memo(() => {
 
   const fetchData = async () => {
     if (!activeTenant) return;
-    await getSubscriptionWithSupplierAndConfigurations(
+    await getAccountWithSupplierAndConfigurations(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       Number(subscriptionId),
       Number(supplierId),
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (subscription, supplier, configurations) => {
-        setCurrentSubscription(subscription);
+      (account, supplier, configurations) => {
+        setCurrentAccount(account);
         setCurrentSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
@@ -112,15 +111,15 @@ export const SupplierEdit: FC<Props> = memo(() => {
   }, [user]);
 
   useEffect(() => {
-    if (!!currentSupplier && !!currentSubscription) {
-      setValue('subscription', currentSubscription.subscriptionId);
+    if (!!currentSupplier && !!currentAccount) {
+      setValue('account', currentAccount.subscriptionId);
       setValue('supplier', currentSupplier.supplierID);
     }
-  }, [currentSupplier, currentSubscription, setValue]);
+  }, [currentSupplier, currentAccount, setValue]);
 
   return (
     <>
-      <MainLayout title={`Edit Supplier ${currentSupplier?.name}`}>
+      <MainLayout title={`${currentSupplier?.name}`}>
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>
@@ -129,54 +128,14 @@ export const SupplierEdit: FC<Props> = memo(() => {
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
-                <div className='flex-1'>
-                  {currentSubscription !== null ? (
-                    <Select
-                      id='subscription'
-                      {...register('subscription', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Subscription'
-                      options={[
-                        {
-                          id: currentSubscription.subscriptionId,
-                          name: currentSubscription.userName,
-                        },
-                      ]}
-                      disabled
-                    />
-                  ) : (
-                    <Spinner />
-                  )}
-                </div>
-                <div className='flex-1'>
-                  {currentSupplier !== null && (
-                    <Select
-                      id='supplier'
-                      {...register('supplier', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Supplier'
-                      options={[
-                        {
-                          id: currentSupplier.supplierID,
-                          name: currentSupplier.name,
-                        },
-                      ]}
-                      disabled
-                    />
-                  )}
-                </div>
-                <div className='border-t border-gray-200 mt-2 pt-5'>
-                  <SectionTitle title='Settings' />
-                  <div className='flex flex-col gap-5 mt-5'>
-                    {!!currentSupplier?.configurations?.length &&
-                      renderConfigurationFormFields(
-                        currentSupplier.configurations || [],
-                        register,
-                        errors
-                      )}
-                  </div>
+                <SectionTitle title='Settings' />
+                <div className='flex flex-col gap-5'>
+                  {!!currentSupplier?.configurations?.length &&
+                    renderConfigurationFormFields(
+                      currentSupplier.configurations || [],
+                      register,
+                      errors
+                    )}
                 </div>
               </div>
               <div className='flex justify-end mt-5 pt-5'>

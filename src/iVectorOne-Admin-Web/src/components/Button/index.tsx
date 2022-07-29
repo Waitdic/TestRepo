@@ -79,10 +79,10 @@ const Button: FC<Props> = ({
     } else {
       return (
         <Link to={href}>
-          <a className={classNames}>
+          <span className={classNames}>
             {icon}
             {text}
-          </a>
+          </span>
         </Link>
       );
     }

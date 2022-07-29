@@ -11,10 +11,10 @@ import { TenantEdit } from '@/libs/core/tenant/edit';
 import { TenantList } from '@/libs/core/tenant/list';
 import { useCoreFetching } from '@/libs/core/data-access';
 import { Dashboard } from '@/libs/core';
-import { SubscriptionCreate } from '@/libs/core/subscription/create';
-import { SubscriptionList } from '@/libs/core/subscription/list';
-import { SubscriptionEdit } from '@/libs/core/subscription/edit';
-import { SubscriptionView } from '@/libs/core/subscription/view';
+import { AccountCreate } from '@/libs/core/account/create';
+import { AccountList } from '@/libs/core/account/list';
+import { AccountEdit } from '@/libs/core/account/edit';
+import { AccountView } from '@/libs/core/account/view';
 import { SupplierList } from '@/libs/core/supplier/list';
 import { SupplierCreate } from '@/libs/core/supplier/create';
 import { SupplierEdit } from '@/libs/core/supplier/edit';
@@ -68,17 +68,11 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
             path='/tenant/edit/:slug'
             element={<TenantEdit error={coreError} />}
           />
-          {/* Subscription Routes */}
-          <Route
-            path='/subscriptions/create'
-            element={<SubscriptionCreate />}
-          />
-          <Route path='/subscriptions' element={<SubscriptionList />} />
-          <Route
-            path='/subscriptions/:slug/edit'
-            element={<SubscriptionEdit />}
-          />
-          <Route path='/subscriptions/:slug' element={<SubscriptionView />} />
+          {/* Account Routes */}
+          <Route path='/accounts/create' element={<AccountCreate />} />
+          <Route path='/accounts' element={<AccountList />} />
+          <Route path='/accounts/:slug/edit' element={<AccountEdit />} />
+          <Route path='/accounts/:slug' element={<AccountView />} />
           {/* Supplier Routes */}
           <Route path='/suppliers' element={<SupplierList />} />
           <Route path='/suppliers/create' element={<SupplierCreate />} />

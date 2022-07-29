@@ -51,7 +51,7 @@ export type Module = {
   uri: string;
   consoles: Console[];
 };
-export type Subscription = {
+export type Account = {
   subscriptionId: number;
   userName: string;
   password: string;
@@ -95,7 +95,7 @@ export type SupplierConfiguration = {
   required?: boolean;
 };
 export type SupplierFormFields = {
-  subscription: number;
+  account: number;
   supplier: number;
   configurations: any[];
 };
@@ -129,7 +129,7 @@ export type AppState = {
   user: User;
   awsAmplify: { username: string | null; jwtToken: string | null | undefined };
   modules: Module[];
-  subscriptions: Subscription[];
+  accounts: Account[];
   isLoading: boolean;
   error: null | string | Error;
 };

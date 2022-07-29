@@ -58,9 +58,9 @@ export const dummyModuleList = [
   {
     consoles: [
       {
-        name: 'Subscription',
-        uri: '/ivo/subscription/list',
-        roles: [{ name: 'subscription-administrator' }],
+        name: 'Accounts',
+        uri: '/accounts',
+        roles: [{ name: 'account-administrator' }],
       },
       {
         name: 'Supplier',
@@ -75,7 +75,7 @@ export const dummyModuleList = [
   },
 ];
 
-export const dummySubscriptions = [
+export const dummyAccounts = [
   {
     CurrencyCode: 'usd',
     LogMainSearchError: true,

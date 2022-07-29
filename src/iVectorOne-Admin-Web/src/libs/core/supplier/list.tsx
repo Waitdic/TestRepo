@@ -3,9 +3,9 @@ import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import { getSubscriptions, getSuppliersBySubscription } from '../data-access';
+import { getAccounts, getSuppliersByAccount } from '../data-access';
 import { RootState } from '@/store';
-import { Supplier, Subscription } from '@/types';
+import { Supplier, Account } from '@/types';
 import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList, Notification } from '@/components';
@@ -24,29 +24,27 @@ export const SupplierList: FC<Props> = memo(() => {
 
   const error = useSelector((state: RootState) => state.app.error);
   const user = useSelector((state: RootState) => state.app.user);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
+  const accounts = useSelector((state: RootState) => state.app.accounts);
 
   const [filteredSuppliersList, setFilteredSuppliersList] = useState<
     Supplier[] | null
   >(null);
-  const [activeSub, setActiveSub] = useState<Subscription | null>(null);
+  const [activeAcc, setActiveAcc] = useState<Account | null>(null);
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((tenant) => tenant.isSelected),
     [user]
   );
 
-  const fetchSubscriptions = useCallback(async () => {
+  const fetchAccounts = useCallback(async () => {
     if (!activeTenant) return;
-    await getSubscriptions(
+    await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (fetchedSubscriptions) => {
-        dispatch.app.updateSubscriptions(fetchedSubscriptions);
+      (fetchedAccounts) => {
+        dispatch.app.updateAccounts(fetchedAccounts);
         dispatch.app.setIsLoading(false);
       },
       (err) => {
@@ -56,26 +54,24 @@ export const SupplierList: FC<Props> = memo(() => {
     );
   }, [activeTenant]);
 
-  const handleSetActiveSub = async (subId: number) => {
-    if (!subscriptions?.length || !activeTenant) return;
-    const selectedSub = subscriptions.find(
-      (sub) => sub.subscriptionId === subId
-    );
-    if (!selectedSub) return;
-    setActiveSub(selectedSub);
-    await getSuppliersBySubscription(
+  const handleSetActiveAcc = async (accId: number) => {
+    if (!accounts?.length || !activeTenant) return;
+    const selectedAcc = accounts.find((acc) => acc.subscriptionId === accId);
+    if (!selectedAcc) return;
+    setActiveAcc(selectedAcc);
+    await getSuppliersByAccount(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-      selectedSub.subscriptionId,
+      selectedAcc.subscriptionId,
       () => {
         dispatch.app.setIsLoading(true);
       },
       (fetchedSuppliers) => {
-        dispatch.app.updateSubscriptions(
-          subscriptions.map((sub) => {
-            if (sub.subscriptionId === selectedSub.subscriptionId) {
-              return { ...sub, suppliers: fetchedSuppliers };
+        dispatch.app.updateAccounts(
+          accounts.map((acc) => {
+            if (acc.subscriptionId === selectedAcc.subscriptionId) {
+              return { ...acc, suppliers: fetchedSuppliers };
             }
-            return sub;
+            return acc;
           })
         );
         dispatch.app.setIsLoading(false);
@@ -89,8 +85,8 @@ export const SupplierList: FC<Props> = memo(() => {
   };
 
   useEffect(() => {
-    fetchSubscriptions();
-  }, [fetchSubscriptions]);
+    fetchAccounts();
+  }, [fetchAccounts]);
 
   return (
     <>
@@ -100,10 +96,10 @@ export const SupplierList: FC<Props> = memo(() => {
             <div className='flex flex-nowrap overflow-x-scroll no-scrollbar md:block md:overflow-auto px-3 py-6 border-b md:border-b-0 md:border-r border-slate-200 min-w-60 md:space-y-3'>
               <div>
                 <div className='text-xs font-semibold text-slate-400 uppercase mb-3'>
-                  Subscriptions
+                  Accounts
                 </div>
                 <ul className='flex flex-nowrap md:block mr-3 md:mr-0'>
-                  {sortBy(subscriptions, 'userName')?.map(
+                  {sortBy(accounts, 'userName')?.map(
                     ({ subscriptionId, userName }) => (
                       <li
                         key={subscriptionId}
@@ -111,14 +107,14 @@ export const SupplierList: FC<Props> = memo(() => {
                           'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
                           {
                             'bg-indigo-50':
-                              activeSub?.subscriptionId === subscriptionId,
+                              activeAcc?.subscriptionId === subscriptionId,
                           }
                         )}
-                        onClick={() => handleSetActiveSub(subscriptionId)}
+                        onClick={() => handleSetActiveAcc(subscriptionId)}
                       >
                         <span
                           className={`text-sm font-medium ${
-                            activeSub?.subscriptionId === subscriptionId
+                            activeAcc?.subscriptionId === subscriptionId
                               ? 'text-indigo-500'
                               : 'hover:text-slate-700'
                           }`}
@@ -141,7 +137,7 @@ export const SupplierList: FC<Props> = memo(() => {
                       actions: [
                         {
                           name: 'Edit',
-                          href: `/suppliers/${supplierID}/edit?subscriptionId=${activeSub?.subscriptionId}`,
+                          href: `/suppliers/${supplierID}/edit?subscriptionId=${activeAcc?.subscriptionId}`,
                         },
                       ],
                     })),

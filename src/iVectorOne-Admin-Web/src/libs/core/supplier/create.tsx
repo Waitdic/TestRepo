@@ -19,7 +19,7 @@ import {
 import {
   createSupplier,
   getConfigurationsBySupplier,
-  getSubscriptionsWithSuppliers,
+  getAccountsWithSuppliers,
   getSuppliers,
 } from '../data-access';
 
@@ -29,9 +29,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
+  const accounts = useSelector((state: RootState) => state.app.accounts);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const {
@@ -62,9 +60,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
     message: 'New Supplier created successfully.',
   });
 
-  const sortedSubscriptions = useMemo(
-    () => sortBy(subscriptions, 'userName'),
-    [subscriptions]
+  const sortedAccounts = useMemo(
+    () => sortBy(accounts, 'userName'),
+    [accounts]
   );
   const sortedSuppliers = useMemo(() => {
     if (draftSupplier.subscriptionId === -1) {
@@ -101,9 +99,9 @@ export const SupplierCreate: FC<Props> = memo(() => {
     );
   };
 
-  const handleSubscriptionChange = (optionId: number) => {
-    const selectedSub = subscriptions.find(
-      (subscription) => subscription.subscriptionId === optionId
+  const handleAccountChange = (optionId: number) => {
+    const selectedSub = accounts.find(
+      (account) => account.subscriptionId === optionId
     );
     if (selectedSub) {
       const supplierIds = selectedSub?.suppliers?.map(
@@ -118,7 +116,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
         subscriptionId: optionId,
       });
     } else {
-      setValue('subscription', 0);
+      setValue('account', 0);
       setValue('supplier', 0);
       setDraftSupplier({
         ...draftSupplier,
@@ -162,16 +160,16 @@ export const SupplierCreate: FC<Props> = memo(() => {
     setShowNotification(true);
   };
 
-  const fetchSubscriptionsWithSuppliers = useCallback(async () => {
+  const fetchAccountsWithSuppliers = useCallback(async () => {
     if (!activeTenant) return;
     await Promise.all([
-      getSubscriptionsWithSuppliers(
+      getAccountsWithSuppliers(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
         () => {
           dispatch.app.setIsLoading(true);
         },
-        (subs) => {
-          dispatch.app.updateSubscriptions(subs);
+        (accs) => {
+          dispatch.app.updateAccounts(accs);
           dispatch.app.setIsLoading(false);
         },
         (err) => {
@@ -195,13 +193,13 @@ export const SupplierCreate: FC<Props> = memo(() => {
   }, [activeTenant]);
 
   useEffect(() => {
-    fetchSubscriptionsWithSuppliers();
-    setValue('subscription', 0);
+    fetchAccountsWithSuppliers();
+    setValue('account', 0);
     setValue('supplier', 0);
 
     return () => {
       setShowNotification(false);
-      setValue('subscription', 0);
+      setValue('account', 0);
       setValue('supplier', 0);
       setSuppliers([]);
       setDraftSupplier({
@@ -211,7 +209,7 @@ export const SupplierCreate: FC<Props> = memo(() => {
       });
       dispatch.app.setError(null);
     };
-  }, [fetchSubscriptionsWithSuppliers]);
+  }, [fetchAccountsWithSuppliers]);
 
   return (
     <>
@@ -226,19 +224,19 @@ export const SupplierCreate: FC<Props> = memo(() => {
               <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                 <div className='flex-1'>
                   <Select
-                    id='subscription'
-                    {...register('subscription', {
+                    id='account'
+                    {...register('account', {
                       required: 'This field is required.',
                     })}
-                    labelText='Subscription'
-                    options={sortedSubscriptions?.map(
+                    labelText='Account'
+                    options={sortedAccounts?.map(
                       ({ subscriptionId, userName }) => ({
                         id: subscriptionId,
                         name: userName,
                       })
                     )}
                     isFirstOptionEmpty
-                    onUncontrolledChange={handleSubscriptionChange}
+                    onUncontrolledChange={handleAccountChange}
                   />
                 </div>
                 <div className='flex-1'>

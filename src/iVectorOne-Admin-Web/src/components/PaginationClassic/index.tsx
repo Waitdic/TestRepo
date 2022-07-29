@@ -67,7 +67,9 @@ const PaginationClassic: React.FC<Props> = ({
         </span>{' '}
         to{' '}
         <span className='font-medium text-slate-600'>
-          {currentPageCount * postPerPage + postPerPage}
+          {resultCount < currentPageCount * postPerPage + postPerPage
+            ? resultCount
+            : currentPageCount * postPerPage + postPerPage}
         </span>{' '}
         of <span className='font-medium text-slate-600'>{resultCount}</span>{' '}
         results

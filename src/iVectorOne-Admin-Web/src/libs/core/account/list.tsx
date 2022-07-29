@@ -6,10 +6,10 @@ import { DropdownFilterProps } from '@/types';
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
 import { CardList, Notification } from '@/components';
-import { getSubscriptions } from '../data-access';
+import { getAccounts } from '../data-access';
 import { NotificationStatus } from '@/constants';
 
-interface SubscriptionListItem {
+interface AccountListItem {
   name: string;
   id: number;
   isActive?: boolean;
@@ -19,23 +19,21 @@ interface SubscriptionListItem {
 type Props = {};
 
 const tableEmptyState = {
-  title: 'No Subscriptions',
-  description: ['Get started by creating a new subscription.'],
-  href: '/subscriptions/create',
-  buttonText: 'New Subscription',
+  title: 'No Accounts',
+  description: ['Get started by creating a new account.'],
+  href: '/accounts/create',
+  buttonText: 'New Account',
 };
 
-export const SubscriptionList: FC<Props> = memo(() => {
+export const AccountList: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
   const error = useSelector((state: RootState) => state.app.error);
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
+  const accounts = useSelector((state: RootState) => state.app.accounts);
 
   const [showNotification, setShowNotification] = useState(false);
-  const [filteredSubscriptionList, setFilteredSubscriptionList] = useState<
-    SubscriptionListItem[]
+  const [filteredAccountList, setFilteredAccountList] = useState<
+    AccountListItem[]
   >([]);
   const [_filters, _setFilters] = useState<DropdownFilterProps[]>([
     {
@@ -49,25 +47,25 @@ export const SubscriptionList: FC<Props> = memo(() => {
     [user?.tenants]
   );
 
-  const tableBodyList: any[] = filteredSubscriptionList.map(({ id, name }) => ({
+  const tableBodyList: any[] = filteredAccountList.map(({ id, name }) => ({
     id,
     name,
     isActive: false, //! TODO: this property is not available in the response
     actions: [
-      { name: 'View', href: `/subscriptions/${id}` },
-      { name: 'Edit', href: `/subscriptions/${id}/edit` },
+      { name: 'View', href: `/accounts/${id}` },
+      { name: 'Edit', href: `/accounts/${id}/edit` },
     ],
   }));
 
   const fetchData = useCallback(async () => {
     if (!activeTenant || activeTenant == null) return;
-    await getSubscriptions(
+    await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (fetchedSubscriptions) => {
-        dispatch.app.updateSubscriptions(fetchedSubscriptions);
+      (fetchedAccounts) => {
+        dispatch.app.updateAccounts(fetchedAccounts);
         dispatch.app.setIsLoading(false);
       },
       (err) => {
@@ -84,18 +82,16 @@ export const SubscriptionList: FC<Props> = memo(() => {
   }, [error]);
 
   useEffect(() => {
-    if (!!subscriptions?.length) {
-      setFilteredSubscriptionList(
-        sortBy(subscriptions, 'userName').map(
-          ({ userName, subscriptionId }) => ({
-            name: userName,
-            id: subscriptionId,
-            isActive: false,
-          })
-        )
+    if (!!accounts?.length) {
+      setFilteredAccountList(
+        sortBy(accounts, 'userName').map(({ userName, subscriptionId }) => ({
+          name: userName,
+          id: subscriptionId,
+          isActive: false,
+        }))
       );
     }
-  }, [subscriptions]);
+  }, [accounts]);
 
   useEffect(() => {
     if (!!activeTenant) {
@@ -105,14 +101,10 @@ export const SubscriptionList: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout
-        title='Subscriptions'
-        addNew={false}
-        addNewHref='/subscriptions/create'
-      >
+      <MainLayout title='Accounts' addNew={false} addNewHref='/accounts/create'>
         <CardList
           bodyList={tableBodyList}
-          isLoading={!subscriptions.length}
+          isLoading={!accounts.length}
           emptyState={tableEmptyState}
           statusIsPlaceholder
         />

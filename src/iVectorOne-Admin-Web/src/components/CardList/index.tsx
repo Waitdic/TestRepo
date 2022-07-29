@@ -2,7 +2,7 @@ import { FC, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //
-import { EmptyState, Spinner } from '@/components';
+import { DropdownEditMenu, EmptyState, Spinner } from '@/components';
 
 type Props = {
   bodyList: {
@@ -65,6 +65,18 @@ const CardList: FC<Props> = ({
                     <header>
                       <h3 className='text-2xl'>{name}</h3>
                     </header>
+                    <DropdownEditMenu align='right' className='relative'>
+                      <li>
+                        <Link
+                          className='font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3'
+                          to={actions?.[0]?.href || ''}
+                        >
+                          <div className='flex items-center justify-center'>
+                            <span>{actions?.[0]?.name}</span>
+                          </div>
+                        </Link>
+                      </li>
+                    </DropdownEditMenu>
                   </div>
                 </div>
                 {/* Card footer */}
@@ -86,14 +98,9 @@ const CardList: FC<Props> = ({
                         </span>
                       </div>
                     )}
-                    <Link
-                      className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'
-                      to={actions?.[0]?.href || ''}
-                    >
-                      <div className='flex items-center justify-center'>
-                        <span>{actions?.[0]?.name}</span>
-                      </div>
-                    </Link>
+                    <div className='block flex-1 text-center text-sm text-slate-600 hover:text-slate-800 font-medium px-3 py-4 group'>
+                      {/* placeholder */}
+                    </div>
                   </div>
                 </div>
               </div>

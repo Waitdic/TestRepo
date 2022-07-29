@@ -2,13 +2,13 @@ import { createModel } from '@rematch/core';
 import { isEmpty } from 'lodash';
 //
 import { RootModel } from '.';
-import { AppState, Module, Subscription, Tenant, User } from '@/types';
+import { AppState, Module, Account, Tenant, User } from '@/types';
 import { getAwsJwtToken } from '@/utils/getAwsJwtToken';
 
 export const app = createModel<RootModel>()({
   state: {
     modules: [],
-    subscriptions: [],
+    accounts: [],
     user: null,
     awsAmplify: { username: null, jwtToken: null },
     lang: window?.localStorage.getItem('lang') || navigator.language,
@@ -33,7 +33,7 @@ export const app = createModel<RootModel>()({
     },
     updateUser(state, payload: User) {
       if (!isEmpty(payload)) {
-        return { ...state, user: payload, subscriptions: [] };
+        return { ...state, user: payload, accounts: [] };
       } else {
         return state;
       }
@@ -56,10 +56,10 @@ export const app = createModel<RootModel>()({
         tenants: payload,
       };
     },
-    updateSubscriptions(state, payload: Subscription[]) {
+    updateAccounts(state, payload: Account[]) {
       return {
         ...state,
-        subscriptions: payload,
+        accounts: payload,
       };
     },
     setIsLoading(state, payload: boolean) {

@@ -4,7 +4,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import { Subscription } from '@/types';
+import { Account } from '@/types';
 import { useSlug } from '@/utils/use-slug';
 import {
   NotificationStatus,
@@ -23,7 +23,7 @@ import {
   Spinner,
 } from '@/components';
 import { RootState } from '@/store';
-import { getSubscriptionById } from '../data-access';
+import { getAccountById } from '../data-access';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -32,27 +32,23 @@ type NotificationState = {
 
 type Props = {};
 
-interface SubscriptionFields extends Subscription {
+interface AccountFields extends Account {
   confirmPassword: string;
 }
 
-export const SubscriptionEdit: FC<Props> = memo(() => {
+export const AccountEdit: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
   const error = useSelector((state: RootState) => state.app.error);
   const navigate = useNavigate();
   const { slug } = useSlug();
 
-  const subscriptions = useSelector(
-    (state: RootState) => state.app.subscriptions
-  );
+  const accounts = useSelector((state: RootState) => state.app.accounts);
 
-  const [currentSubscription, setCurrentSubscription] = useState(
-    null as Subscription | null
-  );
+  const [currentAccount, setCurrentAccount] = useState(null as Account | null);
   const [notification, setNotification] = useState<NotificationState>({
     status: NotificationStatus.SUCCESS,
-    message: 'Subscription edited successfully.',
+    message: 'Account edited successfully.',
   });
   const [showNotification, setShowNotification] = useState<boolean>(false);
 
@@ -66,18 +62,18 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<SubscriptionFields>();
+  } = useForm<AccountFields>();
 
-  const fetchSubscriptionById = useCallback(async () => {
+  const fetchAccountById = useCallback(async () => {
     if (!activeTenant) return;
-    await getSubscriptionById(
+    await getAccountById(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (subscription) => {
-        setCurrentSubscription(subscription);
+      (account) => {
+        setCurrentAccount(account);
         dispatch.app.setIsLoading(false);
       },
       (err) => {
@@ -87,16 +83,16 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
     );
   }, [activeTenant, slug]);
 
-  //! Temporary placeholder onSubmit function for subscription edit
-  const onSubmit: SubmitHandler<SubscriptionFields> = async (data) => {
+  //! Temporary placeholder onSubmit function for account edit
+  const onSubmit: SubmitHandler<AccountFields> = async (data) => {
     try {
-      const _updatedSubscription = await axios.patch(
-        `http://localhost:3001/subscription/edit/${slug}`,
+      const _updatedAccount = await axios.patch(
+        `http://localhost:3001/account/edit/${slug}`,
         data
       );
       setNotification({
         status: NotificationStatus.SUCCESS,
-        message: 'Subscription edited successfully.',
+        message: 'Account edited successfully.',
       });
       setShowNotification(true);
     } catch (err) {
@@ -105,29 +101,26 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
     }
   };
 
-  const loadSubscription = useCallback(() => {
-    if (!!subscriptions?.length) {
-      const selectedSubscription = subscriptions.find(
-        (sub) => sub.subscriptionId === Number(slug)
+  const loadAccount = useCallback(() => {
+    if (!!accounts?.length) {
+      const selectedAccount = accounts.find(
+        (acc) => acc.subscriptionId === Number(slug)
       );
-      if (!selectedSubscription) {
-        navigate('/subscriptions');
+      if (!selectedAccount) {
+        navigate('/accounts');
         return;
       }
-      setCurrentSubscription(selectedSubscription);
-      setValue('userName', selectedSubscription.userName);
+      setCurrentAccount(selectedAccount);
+      setValue('userName', selectedAccount.userName);
       setValue(
         'propertyTprequestLimit',
-        selectedSubscription.propertyTprequestLimit
+        selectedAccount.propertyTprequestLimit
       );
-      setValue(
-        'searchTimeoutSeconds',
-        selectedSubscription.searchTimeoutSeconds
-      );
-      setValue('logMainSearchError', selectedSubscription.logMainSearchError);
-      setValue('currencyCode', selectedSubscription.currencyCode);
+      setValue('searchTimeoutSeconds', selectedAccount.searchTimeoutSeconds);
+      setValue('logMainSearchError', selectedAccount.logMainSearchError);
+      setValue('currencyCode', selectedAccount.currencyCode);
     }
-  }, [subscriptions, navigate, setValue, slug]);
+  }, [accounts, navigate, setValue, slug]);
 
   useEffect(() => {
     if (error) {
@@ -140,33 +133,27 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
   }, [error]);
 
   useEffect(() => {
-    if (currentSubscription !== null) {
-      setValue('userName', currentSubscription.userName);
-      setValue('password', currentSubscription.password);
-      setValue(
-        'propertyTprequestLimit',
-        currentSubscription.propertyTprequestLimit
-      );
-      setValue(
-        'searchTimeoutSeconds',
-        currentSubscription.searchTimeoutSeconds
-      );
-      setValue('logMainSearchError', currentSubscription.logMainSearchError);
-      setValue('currencyCode', currentSubscription.currencyCode);
+    if (currentAccount !== null) {
+      setValue('userName', currentAccount.userName);
+      setValue('password', currentAccount.password);
+      setValue('propertyTprequestLimit', currentAccount.propertyTprequestLimit);
+      setValue('searchTimeoutSeconds', currentAccount.searchTimeoutSeconds);
+      setValue('logMainSearchError', currentAccount.logMainSearchError);
+      setValue('currencyCode', currentAccount.currencyCode);
     }
-  }, [currentSubscription]);
+  }, [currentAccount]);
 
   useEffect(() => {
-    loadSubscription();
-  }, [subscriptions, loadSubscription]);
+    loadAccount();
+  }, [accounts, loadAccount]);
 
   useEffect(() => {
-    fetchSubscriptionById();
-  }, [fetchSubscriptionById]);
+    fetchAccountById();
+  }, [fetchAccountById]);
 
   return (
     <>
-      <MainLayout title='Edit Subscriptions'>
+      <MainLayout title='Edit Account'>
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>
@@ -177,9 +164,9 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
             >
               <div className='flex flex-col gap-5 mb-8'>
                 <div className='flex-1'>
-                  <SectionTitle title='Subscription' />
+                  <SectionTitle title='Account' />
                 </div>
-                {subscriptions.length > 0 ? (
+                {accounts.length > 0 ? (
                   <>
                     <div className='flex-1 md:w-1/2'>
                       <TextField
@@ -266,7 +253,7 @@ export const SubscriptionEdit: FC<Props> = memo(() => {
                         isDirty={!!errors.logMainSearchError}
                         errorMsg={errors.logMainSearchError?.message}
                         defaultValue={
-                          currentSubscription?.logMainSearchError as boolean
+                          currentAccount?.logMainSearchError as boolean
                         }
                       />
                     </div>
