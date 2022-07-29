@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ChannelManager
+﻿namespace iVectorOne.Suppliers.ChannelManager
 {
     using iVectorOne;
     using Intuitive.Helpers.Extensions;

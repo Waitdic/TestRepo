@@ -1,10 +1,10 @@
-﻿namespace iVectorOne.CSSuppliers.iVectorConnect
+﻿namespace iVectorOne.Suppliers.iVectorConnect
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using CSSuppliers.iVectorConnect.Models;
-    using CSSuppliers.iVectorConnect.Models.Common;
+    using Suppliers.iVectorConnect.Models;
+    using Suppliers.iVectorConnect.Models.Common;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;

@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.Stuba;
+    using iVectorOne.Suppliers.Stuba;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Tests.Stuba;

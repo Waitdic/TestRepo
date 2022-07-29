@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Travelgate
+﻿namespace iVectorOne.Suppliers.Travelgate
 {
     public interface ITravelgateSettings
     {

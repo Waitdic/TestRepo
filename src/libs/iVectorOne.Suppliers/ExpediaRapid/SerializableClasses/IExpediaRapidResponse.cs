@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses
 {
     public interface IExpediaRapidResponse<TResponse>
     {

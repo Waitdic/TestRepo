@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Netstorming
+﻿namespace iVectorOne.Suppliers.Netstorming
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Support;

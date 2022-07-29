@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.Suppliers.ExpediaRapid
 {
     using System;
     using System.Collections.Generic;
@@ -11,12 +11,12 @@
     using MoreLinq;
     using Newtonsoft.Json;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.ExpediaRapid.RequestConstants;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Prebook;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using iVectorOne.Suppliers.ExpediaRapid.RequestConstants;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Book;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.BookingItinerary;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Prebook;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Search;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

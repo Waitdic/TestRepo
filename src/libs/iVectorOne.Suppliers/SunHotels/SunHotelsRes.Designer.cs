@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.CSSuppliers.SunHotels {
+namespace iVectorOne.Suppliers.SunHotels {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.CSSuppliers.SunHotels {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.SunHotels.SunHotelsRes", typeof(SunHotelsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.SunHotels.SunHotelsRes", typeof(SunHotelsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

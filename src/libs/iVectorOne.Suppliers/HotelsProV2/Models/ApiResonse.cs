@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.HotelsProV2.Models
+﻿namespace iVectorOne.Suppliers.HotelsProV2.Models
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

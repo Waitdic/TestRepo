@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Models.WelcomeBeds
+﻿namespace iVectorOne.Suppliers.Models.WelcomeBeds
 {
     public static class Constant
     {

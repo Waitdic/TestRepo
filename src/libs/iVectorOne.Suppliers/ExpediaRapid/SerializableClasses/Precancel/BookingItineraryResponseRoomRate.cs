@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.BookingItinerary
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Search;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Search;
 
     public class BookingItineraryResponseRoomRate
     {

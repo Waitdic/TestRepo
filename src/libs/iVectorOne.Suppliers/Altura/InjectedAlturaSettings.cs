@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Altura
+﻿namespace iVectorOne.Suppliers.Altura
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;

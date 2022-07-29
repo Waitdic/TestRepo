@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Juniper
+﻿namespace iVectorOne.Suppliers.Juniper
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.Juniper.Model;
+    using iVectorOne.Suppliers.Juniper.Model;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

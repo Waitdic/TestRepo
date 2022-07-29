@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.Suppliers.AbreuV2
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

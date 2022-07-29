@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.Hotelston.Models
+﻿namespace iVectorOne.Suppliers.Hotelston.Models
 {
     using System.Xml.Serialization;
-    using iVectorOne.CSSuppliers.Hotelston.Models.Common;
+    using iVectorOne.Suppliers.Hotelston.Models.Common;
 
     public class CancelHotelBookingRequest : RequestBase
     {

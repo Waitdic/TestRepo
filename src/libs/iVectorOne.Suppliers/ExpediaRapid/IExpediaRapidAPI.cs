@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.Suppliers.ExpediaRapid
 {
     using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses;
     using iVectorOne.Models.Property.Booking;
 
     public interface IExpediaRapidAPI

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

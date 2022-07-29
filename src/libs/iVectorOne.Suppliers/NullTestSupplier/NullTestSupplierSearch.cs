@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers
+﻿namespace iVectorOne.Suppliers
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4.Models
 {
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
 
     public class DerbySoftShoppingEngineV4SearchResponse
     {

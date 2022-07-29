@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.RMI
+﻿namespace iVectorOne.Suppliers.RMI
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +10,7 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.RMI.Models;
+    using iVectorOne.Suppliers.RMI.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

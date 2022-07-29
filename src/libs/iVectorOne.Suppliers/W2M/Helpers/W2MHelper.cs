@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Helpers.W2M
+﻿namespace iVectorOne.Suppliers.Helpers.W2M
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@
     using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.W2M;
-    using iVectorOne.CSSuppliers.Xml.W2M;
+    using iVectorOne.Suppliers.Models.W2M;
+    using iVectorOne.Suppliers.Xml.W2M;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using Log = iVectorOne.Models.Log;

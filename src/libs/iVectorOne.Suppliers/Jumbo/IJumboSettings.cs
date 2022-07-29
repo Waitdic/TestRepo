@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Jumbo
+﻿namespace iVectorOne.Suppliers.Jumbo
 {
     public interface IJumboSettings
     {

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,8 @@
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
 
@@ -101,7 +101,7 @@
             };
         }
 
-        private CSSuppliers.DerbySoft.Models.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
+        private Suppliers.DerbySoft.Models.Hotel BuildHotel(IThirdPartyAttributeSearch searchDetails, string tpKey) =>
             new()
             {
                 HotelId = tpKey,

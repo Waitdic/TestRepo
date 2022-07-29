@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TeamAmerica.Models
+﻿namespace iVectorOne.Suppliers.TeamAmerica.Models
 {
     public static class Constant
     {

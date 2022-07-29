@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.Suppliers.BedsWithEase
 {
     using iVectorOne;
 

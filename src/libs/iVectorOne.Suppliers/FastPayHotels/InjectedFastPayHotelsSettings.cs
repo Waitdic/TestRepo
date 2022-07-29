@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.Suppliers.FastPayHotels
 {
     using iVectorOne;
     using iVectorOne.Constants;

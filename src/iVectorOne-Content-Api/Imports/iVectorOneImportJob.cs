@@ -23,9 +23,9 @@
             try
             {
                 await _sql.ExecuteAsync(
-                "IVectorOne_ImportProperties",
-                new CommandSettings()
-                    .IsStoredProcedure());
+                    "IVectorOne_ImportProperties",
+                    new CommandSettings()
+                        .IsStoredProcedure());
             }
             catch (Exception e)
             {

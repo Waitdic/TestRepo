@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.BedsWithEase
+﻿namespace iVectorOne.Suppliers.BedsWithEase
 {
     using System;
     using System.Collections.Generic;
@@ -13,8 +13,8 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.BedsWithEase.Models;
-    using iVectorOne.CSSuppliers.BedsWithEase.Models.Common;
+    using iVectorOne.Suppliers.BedsWithEase.Models;
+    using iVectorOne.Suppliers.BedsWithEase.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

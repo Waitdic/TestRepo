@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Helpers.W2M
+﻿namespace iVectorOne.Suppliers.Helpers.W2M
 {
     using System;
     using System.Collections.Generic;
@@ -11,7 +11,7 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.W2M;
+    using iVectorOne.Suppliers.Models.W2M;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
 

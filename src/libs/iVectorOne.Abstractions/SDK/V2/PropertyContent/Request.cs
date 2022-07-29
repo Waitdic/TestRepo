@@ -1,9 +1,10 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyContent
 {
     using MediatR;
+    using System.Collections.Generic;
 
     public record Request : RequestBase, IRequest<Response>
     {
-        public string PropertyIDs { get; set; } = "";
+        public List<string> PropertyIDs { get; set; } = new();
     }
 }

@@ -4,7 +4,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Helpers;
-    using iVectorOne.CSSuppliers.HotelsProV2;
+    using iVectorOne.Suppliers.HotelsProV2;
     using Xunit;
 
     public class HotelsProV2SearchTest : ThirdPartyPropertySearchBaseTest

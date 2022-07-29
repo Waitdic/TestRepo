@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers
+﻿namespace iVectorOne.Suppliers
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,7 +8,7 @@
     using Intuitive.Helpers.Net;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.WelcomeBeds;
+    using iVectorOne.Suppliers.Models.WelcomeBeds;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

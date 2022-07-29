@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.CSSuppliers.Bonotel;
+    using iVectorOne.Suppliers.Bonotel;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Tests.Bonotel;

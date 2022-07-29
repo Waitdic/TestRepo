@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DOTW
+﻿namespace iVectorOne.Suppliers.DOTW
 {
     using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TeamAmerica
+﻿namespace iVectorOne.Suppliers.TeamAmerica
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,7 +9,7 @@
     using Intuitive.Helpers.Net;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.TeamAmerica.Models;
+    using iVectorOne.Suppliers.TeamAmerica.Models;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;

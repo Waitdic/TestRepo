@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4.Models
 {
     using System.Collections.Generic;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
 
     public class DerbySoftBookingUsbV4PreBookRequest
     {

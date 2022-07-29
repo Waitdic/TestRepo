@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Netstorming
+﻿namespace iVectorOne.Suppliers.Netstorming
 {
     using System;
     using System.Collections.Generic;
@@ -12,8 +12,8 @@
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.Netstorming.Models;
-    using iVectorOne.CSSuppliers.Netstorming.Models.Common;
+    using iVectorOne.Suppliers.Netstorming.Models;
+    using iVectorOne.Suppliers.Netstorming.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

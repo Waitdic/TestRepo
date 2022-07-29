@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AcerRooms.Models
+﻿namespace iVectorOne.Suppliers.AcerRooms.Models
 {
     public class AuditDataDetails
     {

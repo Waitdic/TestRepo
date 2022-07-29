@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
@@ -10,8 +10,8 @@
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

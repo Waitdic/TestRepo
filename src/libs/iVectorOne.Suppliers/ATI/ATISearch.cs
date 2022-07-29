@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ATI
+﻿namespace iVectorOne.Suppliers.ATI
 {
     using System;
     using System.Collections.Generic;
@@ -13,8 +13,8 @@
     using iVector.Search.Property;
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.ATI.Models;
-    using iVectorOne.CSSuppliers.ATI.Models.Common;
+    using iVectorOne.Suppliers.ATI.Models;
+    using iVectorOne.Suppliers.ATI.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

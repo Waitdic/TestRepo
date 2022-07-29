@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.ChannelManager.Models
+﻿namespace iVectorOne.Suppliers.ChannelManager.Models
 {
     using System.Collections.Generic;
-    using iVectorOne.CSSuppliers.ChannelManager.Models.Common;
+    using iVectorOne.Suppliers.ChannelManager.Models.Common;
 
     public class PreBookResponse
     {

@@ -1,10 +1,10 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.BookingItinerary
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.BookingItinerary
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Book;
+    using iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Book;
 
     public class BookingItineraryResponse : IExpediaRapidResponse<BookingItineraryResponse>
     {

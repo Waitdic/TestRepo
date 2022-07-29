@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     public interface IDerbySoftSettings
     {

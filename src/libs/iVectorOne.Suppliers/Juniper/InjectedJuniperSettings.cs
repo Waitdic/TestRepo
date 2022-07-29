@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Juniper
+﻿namespace iVectorOne.Suppliers.Juniper
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

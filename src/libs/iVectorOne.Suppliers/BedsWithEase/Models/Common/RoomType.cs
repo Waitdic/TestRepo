@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.BedsWithEase.Models.Common
+﻿namespace iVectorOne.Suppliers.BedsWithEase.Models.Common
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

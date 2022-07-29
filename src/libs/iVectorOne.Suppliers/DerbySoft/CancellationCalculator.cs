@@ -1,10 +1,10 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Intuitive.Helpers.Extensions;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models.Property.Booking;
 
     public class CancellationCalculator

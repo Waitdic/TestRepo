@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Restel
+﻿namespace iVectorOne.Suppliers.Restel
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.CSSuppliers.Restel.Models;
+    using iVectorOne.Suppliers.Restel.Models;
     using static RestelThirdPartyReference;
     using static RestelCommon;
     using System.Threading.Tasks;

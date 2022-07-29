@@ -5,7 +5,7 @@
     using Intuitive.Helpers.Net;
     using Helpers;
     using Moq;
-    using iVectorOne.CSSuppliers.Miki;
+    using iVectorOne.Suppliers.Miki;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Xunit;

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.MTS
+﻿namespace iVectorOne.Suppliers.MTS
 {
     using System;
     using System.Collections.Generic;

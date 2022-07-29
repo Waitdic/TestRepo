@@ -93,6 +93,7 @@
                             Resort = details.Geography.Resort!,
                             Latitude = details.Latitude!.ToSafeDecimal(),
                             Longitude = details.Longitude!.ToSafeDecimal(),
+                            Code = details.Geography.Code!
                         },
                         Rating = details.Rating!,
                         Supplier = details.Source!,

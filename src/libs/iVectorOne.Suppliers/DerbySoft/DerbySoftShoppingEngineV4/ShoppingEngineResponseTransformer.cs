@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,8 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 

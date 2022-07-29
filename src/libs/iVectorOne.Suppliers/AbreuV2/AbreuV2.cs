@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.Suppliers.AbreuV2
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.AbreuV2.Models;
+    using iVectorOne.Suppliers.AbreuV2.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

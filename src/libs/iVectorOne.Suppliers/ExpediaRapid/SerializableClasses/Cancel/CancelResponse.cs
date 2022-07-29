@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.SerializableClasses.Cancel
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.SerializableClasses.Cancel
 {
     public class CancelResponse : IExpediaRapidResponse<CancelResponse>
     {

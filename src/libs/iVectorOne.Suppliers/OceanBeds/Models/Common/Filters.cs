@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace iVectorOne.CSSuppliers.OceanBeds.Models.Common
+namespace iVectorOne.Suppliers.OceanBeds.Models.Common
 {
     public class Filters
     {

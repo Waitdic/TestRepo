@@ -9,6 +9,7 @@
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;
     using System.Threading.Tasks;
+    using Intuitive;
 
     /// <summary>
     /// A repository responsible for logging book, pre book and cancellation logs to the database
@@ -25,8 +26,8 @@
         /// <param name="logger">The log writer.</param>
         public BookingLogRepository(ILogger<BookingLogRepository> logger, ISql sql)
         {
-            _logger = logger;
-            _sql = sql;
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
         /// <summary>Logs the pre book.</summary>

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Altura
+﻿namespace iVectorOne.Suppliers.Altura
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Models.Altura;
+    using iVectorOne.Suppliers.Models.Altura;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

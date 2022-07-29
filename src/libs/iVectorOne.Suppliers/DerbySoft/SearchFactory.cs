@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     using System;
     using DerbySoftBookingUsbV4;

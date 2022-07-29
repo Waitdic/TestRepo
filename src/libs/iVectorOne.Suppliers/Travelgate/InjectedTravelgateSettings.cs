@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Travelgate
+﻿namespace iVectorOne.Suppliers.Travelgate
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Support;

@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
-    using CSSuppliers.Netstorming;
+    using Suppliers.Netstorming;
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;

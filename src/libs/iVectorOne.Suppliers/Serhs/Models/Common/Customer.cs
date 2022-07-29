@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Serhs.Models.Common
+﻿namespace iVectorOne.Suppliers.Serhs.Models.Common
 {
     using System.Xml.Serialization;
     public class Customer

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Helpers.W2M
+﻿namespace iVectorOne.Suppliers.Helpers.W2M
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -7,8 +7,8 @@
     using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
     using iVectorOne.Models;
-    using iVectorOne.CSSuppliers.Models.W2M;
-    using iVectorOne.CSSuppliers.Xml.W2M;
+    using iVectorOne.Suppliers.Models.W2M;
+    using iVectorOne.Suppliers.Xml.W2M;
 
     internal class SoapRequestXmlBuilder
     {

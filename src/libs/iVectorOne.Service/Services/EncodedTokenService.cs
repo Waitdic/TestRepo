@@ -5,12 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
-    using Microsoft.Extensions.Logging;
     using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
     using iVectorOne.Models.Tokens.Constants;
     using iVectorOne.Repositories;
     using iVectorOne.Utility;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>A Service for encrypting and decrypting base 92 tokens.</summary>
     public class EncodedTokenService : ITokenService
@@ -31,9 +31,9 @@
             ITokenValues tokenValues,
             ILogger<EncodedTokenService> logger)
         {
-            _contentRepository = contentRepository;
-            _converter = converter;
-            _tokenValues = tokenValues;
+            _contentRepository = Ensure.IsNotNull(contentRepository, nameof(contentRepository));
+            _converter = Ensure.IsNotNull(converter, nameof(converter));
+            _tokenValues = Ensure.IsNotNull(tokenValues, nameof(tokenValues));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
@@ -165,7 +165,7 @@
                 int month = _tokenValues.GetValue(TokenValueType.Month);
                 int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
 
-                if (day > 1 && month > 1)
+                if (day > 0 && month > 0)
                 {
                     token.ArrivalDate = new DateTime(year, month, day);
                 }

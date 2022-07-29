@@ -7,7 +7,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
-    using iVectorOne.CSSuppliers.FastPayHotels;
+    using iVectorOne.Suppliers.FastPayHotels;
     using Xunit;
 
     public class FastPayHotelsSearchTest : ThirdPartyPropertySearchBaseTest

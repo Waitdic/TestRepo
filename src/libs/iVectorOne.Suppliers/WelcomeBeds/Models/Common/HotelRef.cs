@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Models.WelcomeBeds
+﻿namespace iVectorOne.Suppliers.Models.WelcomeBeds
 {
     using System.Xml.Serialization;
 

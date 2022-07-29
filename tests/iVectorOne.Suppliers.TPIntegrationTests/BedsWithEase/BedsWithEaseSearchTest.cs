@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.TPIntegrationTests.BedsWithEase
 {
-    using iVectorOne.CSSuppliers.BedsWithEase;
+    using iVectorOne.Suppliers.BedsWithEase;
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using Moq;

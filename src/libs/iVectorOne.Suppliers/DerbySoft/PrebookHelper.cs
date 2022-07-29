@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft
+﻿namespace iVectorOne.Suppliers.DerbySoft
 {
     using Newtonsoft.Json;
-    using iVectorOne.CSSuppliers.DerbySoft.Models;
+    using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models.Property.Booking;
 
     public class PreBookHelper

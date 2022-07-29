@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace iVectorOne.CSSuppliers.Xml.W2M
+namespace iVectorOne.Suppliers.Xml.W2M
 {
 #pragma warning disable CS8618
     [XmlRoot(ElementName = "RelPaxesDist")]

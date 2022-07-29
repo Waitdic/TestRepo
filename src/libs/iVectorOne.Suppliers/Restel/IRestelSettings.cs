@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Restel
+﻿namespace iVectorOne.Suppliers.Restel
 {
 
     public interface IRestelSettings

@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4
+﻿namespace iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4
 {
     using System.Collections.Generic;
     using System.Linq;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4.Models;
 
     public class HotelValidator
     {

@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
-    using CSSuppliers.Hotelston;
+    using Suppliers.Hotelston;
     using Helpers;
     using Xunit;
     using Intuitive.Helpers.Serialization;

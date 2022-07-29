@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Juniper
+﻿namespace iVectorOne.Suppliers.Juniper
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,7 +9,7 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.Juniper.Model;
+    using iVectorOne.Suppliers.Juniper.Model;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

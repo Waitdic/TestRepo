@@ -1,7 +1,7 @@
-﻿namespace iVectorOne.CSSuppliers.Restel.Models
+﻿namespace iVectorOne.Suppliers.Restel.Models
 {
     using System.Xml.Serialization;
-    using iVectorOne.CSSuppliers.Restel.Models.Common;
+    using iVectorOne.Suppliers.Restel.Models.Common;
 
     [XmlRoot("respuesta")]
     public class RestelAvailabilityResponse

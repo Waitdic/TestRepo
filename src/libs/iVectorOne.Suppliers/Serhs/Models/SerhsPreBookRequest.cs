@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Serhs.Models
+﻿namespace iVectorOne.Suppliers.Serhs.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

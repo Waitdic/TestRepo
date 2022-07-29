@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.CSSuppliers.Netstorming.Resources {
+namespace iVectorOne.Suppliers.Netstorming.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.CSSuppliers.Netstorming.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.CSSuppliers.Netstorming.Resources.NetstormingRes", typeof(NetstormingRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.Netstorming.Resources.NetstormingRes", typeof(NetstormingRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

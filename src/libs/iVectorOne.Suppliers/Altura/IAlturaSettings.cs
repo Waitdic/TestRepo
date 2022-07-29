@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Altura
+﻿namespace iVectorOne.Suppliers.Altura
 {
     using iVectorOne;
     public interface IAlturaSettings

@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using iVectorOne.Search.Models;
-    using iVectorOne.CSSuppliers.OceanBeds;
+    using iVectorOne.Suppliers.OceanBeds;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using Xunit;
     using Intuitive.Helpers.Serialization;

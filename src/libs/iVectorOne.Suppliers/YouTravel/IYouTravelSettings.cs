@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.YouTravel
+﻿namespace iVectorOne.Suppliers.YouTravel
 {
     public interface IYouTravelSettings
     {

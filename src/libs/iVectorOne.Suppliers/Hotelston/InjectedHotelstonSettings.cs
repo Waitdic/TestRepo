@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Hotelston
+﻿namespace iVectorOne.Suppliers.Hotelston
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne;

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid
+﻿namespace iVectorOne.Suppliers.ExpediaRapid
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using Intuitive.Helpers.Extensions;
-    using iVectorOne.CSSuppliers.ExpediaRapid.ExceptionMessages;
+    using iVectorOne.Suppliers.ExpediaRapid.ExceptionMessages;
 
 
     public class ExpediaRapidOccupancy

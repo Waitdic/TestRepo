@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.JonView
+﻿namespace iVectorOne.Suppliers.JonView
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;

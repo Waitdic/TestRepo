@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ExpediaRapid.RequestConstants
+﻿namespace iVectorOne.Suppliers.ExpediaRapid.RequestConstants
 {
 
     public static class SearchQueryKeys

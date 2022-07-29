@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.ChannelManager;
+    using iVectorOne.Suppliers.ChannelManager;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.ChannelManager;
 

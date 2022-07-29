@@ -23,25 +23,19 @@
         /// <summary>The token service</summary>
         private readonly ITokenService _tokenService;
 
-        /// <summary>Repository for looking up Currency information.</summary>
-        private readonly ICurrencyLookupRepository _currencyRepository;
-
         /// <summary>Repository for retrieving third party meal basis</summary>
         private readonly IMealBasisLookupRepository _mealbasisRepository;
 
         /// <summary>Initializes a new instance of the <see cref="PropertyPrebookResponseFactory" /> class.</summary>
         /// <param name="tokenService">The token service, that encodes and decodes response and request tokens</param>
-        /// <param name="currencyRepository">Repository for looking up Currency information.</param>
         /// <param name="mealbasisRepository">Repository for retrieving third party meal basis</param>
         /// <param name="support">The third party support interface</param>
         public PropertyPrebookResponseFactory(
             ITokenService tokenService,
-            ICurrencyLookupRepository currencyRepository,
             IMealBasisLookupRepository mealbasisRepository,
             ITPSupport support)
         {
             _tokenService = Ensure.IsNotNull(tokenService, nameof(tokenService));
-            _currencyRepository = Ensure.IsNotNull(currencyRepository, nameof(currencyRepository));
             _mealbasisRepository = Ensure.IsNotNull(mealbasisRepository, nameof(mealbasisRepository));
             _support = Ensure.IsNotNull(support, nameof(support));
         }

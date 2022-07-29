@@ -6,14 +6,25 @@
     using Microsoft.AspNetCore.Mvc;
     using iVectorOne.Factories;
     using iVectorOne.SDK.V2.PropertySearch;
+    using Intuitive.Helpers.Extensions;
 
     public static class Endpoint
     {
         public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder endpoints)
         {
+            RegisterSearchEndpointsForDomain(endpoints, EndpointBase.Domain);
+            RegisterSearchEndpointsForDomain(endpoints, "property"); // temporary - until Travelgenix have switched to the new domain
+
+            _ = endpoints.MapGet("/healthcheck", () => "Hello World!");
+
+            return endpoints;
+        }
+
+        private static void RegisterSearchEndpointsForDomain(IEndpointRouteBuilder endpoints, string domain)
+        {
             _ = endpoints
                 .MapGet(
-                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/search",
+                    $"/{EndpointBase.Version}/{domain}/search",
                     async (
                         HttpContext httpContext,
                         [FromServices] IMediator mediator,
@@ -51,23 +62,19 @@
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);
                     })
                 .RequireAuthorization()
-                .WithName("Property Search Query")
+                .WithName($"{domain.ToProperCase()} Search Query")
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status200OK);
 
             _ = endpoints
                 .MapPost(
-                    $"/{EndpointBase.Version}/{EndpointBase.Domain}/search",
+                    $"/{EndpointBase.Version}/{domain}/search",
                     async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Request request)
                         => await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request))
                 .RequireAuthorization()
-                .WithName("Property Search")
+                .WithName($"{domain.ToProperCase()} Search")
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status200OK);
-
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!");
-
-            return endpoints;
         }
     }
 }

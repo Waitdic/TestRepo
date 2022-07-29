@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.FastPayHotels
+﻿namespace iVectorOne.Suppliers.FastPayHotels
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.FastPayHotels.Models;
+    using iVectorOne.Suppliers.FastPayHotels.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

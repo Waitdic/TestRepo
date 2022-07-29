@@ -6,7 +6,7 @@
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using iVectorOne.CSSuppliers.Restel;
+    using iVectorOne.Suppliers.Restel;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.Restel;
 

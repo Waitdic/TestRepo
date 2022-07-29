@@ -8,9 +8,9 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.DerbySoft;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftBookingUsbV4;
-    using iVectorOne.CSSuppliers.DerbySoft.DerbySoftShoppingEngineV4;
+    using iVectorOne.Suppliers.DerbySoft;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftBookingUsbV4;
+    using iVectorOne.Suppliers.DerbySoft.DerbySoftShoppingEngineV4;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;

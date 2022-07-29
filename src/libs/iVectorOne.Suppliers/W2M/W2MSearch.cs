@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers
+﻿namespace iVectorOne.Suppliers
 {
     using System;
     using System.Collections.Generic;
@@ -13,8 +13,8 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Helpers.W2M;
-    using iVectorOne.CSSuppliers.Xml.W2M;
+    using iVectorOne.Suppliers.Helpers.W2M;
+    using iVectorOne.Suppliers.Xml.W2M;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Hotelston
+﻿namespace iVectorOne.Suppliers.Hotelston
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,8 +8,8 @@
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.Hotelston.Models;
-    using iVectorOne.CSSuppliers.Hotelston.Models.Common;
+    using iVectorOne.Suppliers.Hotelston.Models;
+    using iVectorOne.Suppliers.Hotelston.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;

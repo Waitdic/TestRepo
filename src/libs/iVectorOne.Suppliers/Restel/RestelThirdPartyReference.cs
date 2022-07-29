@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Restel
+﻿namespace iVectorOne.Suppliers.Restel
 {
     using System.Collections.Generic;
     using Intuitive.Helpers.Security;

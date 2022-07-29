@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.AbreuV2
+﻿namespace iVectorOne.Suppliers.AbreuV2
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +10,7 @@
     using Intuitive.Helpers.Net;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.AbreuV2.Models;
+    using iVectorOne.Suppliers.AbreuV2.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

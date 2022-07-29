@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Intuitive.Helpers.Serialization;
     using Moq;
-    using iVectorOne.CSSuppliers.DOTW;
+    using iVectorOne.Suppliers.DOTW;
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;

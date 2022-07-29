@@ -3,29 +3,30 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
+    using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Repositories;
-    using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using Precancel = SDK.V2.PropertyPrecancel;
 
     /// <summary>Cancellation service responsible for cancelling third party bookings.</summary>
     public class CancellationService : ICancellationService
     {
         /// <summary>Factory used for building a property details from the request</summary>
-        private readonly IPropertyDetailsFactory propertyDetailsFactory;
+        private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
         /// <summary>Repository responsible for logging</summary>
-        private readonly IBookingLogRepository logRepository;
+        private readonly IBookingLogRepository _logRepository;
 
         /// <summary>Factory responsible for creating the correct Third party class</summary>
-        private readonly IThirdPartyFactory thirdPartyFactory;
+        private readonly IThirdPartyFactory _thirdPartyFactory;
 
         /// <summary>Builds the cancellation response</summary>
-        private readonly ICancelPropertyResponseFactory responseFactory;
+        private readonly ICancelPropertyResponseFactory _responseFactory;
 
         /// <summary>The reference validator</summary>
-        private readonly ISuppierReferenceValidator referenceValidator;
+        private readonly ISuppierReferenceValidator _referenceValidator;
 
         /// <summary>Initializes a new instance of the <see cref="CancellationService" /> class.</summary>
         /// <param name="propertyDetailsFactory">Factory used for building a property details from the request</param>
@@ -40,11 +41,11 @@
             ICancelPropertyResponseFactory responseFactory,
             ISuppierReferenceValidator referenceValidator)
         {
-            this.propertyDetailsFactory = propertyDetailsFactory;
-            this.logRepository = logRepository;
-            this.thirdPartyFactory = thirdPartyFactory;
-            this.responseFactory = responseFactory;
-            this.referenceValidator = referenceValidator;
+            _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
+            _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
+            _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
+            _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
+            _referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
         }
 
         /// <inheritdoc/>
@@ -57,8 +58,8 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
-                this.referenceValidator.ValidateCancel(propertyDetails);
+                propertyDetails = await _propertyDetailsFactory.CreateAsync(cancelRequest);
+                _referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -69,7 +70,7 @@
                 }
                 else
                 {
-                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                    var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
                         cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
@@ -80,7 +81,7 @@
 
                         if (success)
                         {
-                            response = this.responseFactory.Create(thirdPartyReponse!);
+                            response = _responseFactory.Create(thirdPartyReponse!);
                         }
                         else
                         {
@@ -104,7 +105,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await this.logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.User, exceptionString);
+                await _logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.User, exceptionString);
             }
 
             return response!;
@@ -120,8 +121,8 @@
 
             try
             {
-                propertyDetails = await this.propertyDetailsFactory.CreateAsync(cancelRequest);
-                this.referenceValidator.ValidateCancel(propertyDetails);
+                propertyDetails = await _propertyDetailsFactory.CreateAsync(cancelRequest);
+                _referenceValidator.ValidateCancel(propertyDetails);
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -132,7 +133,7 @@
                 }
                 else
                 {
-                    var thirdParty = this.thirdPartyFactory.CreateFromSource(
+                    var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
                         cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
@@ -143,7 +144,7 @@
 
                         if (success)
                         {
-                            response = await this.responseFactory.CreateFeesResponseAsync(cancellationFees, propertyDetails);
+                            response = await _responseFactory.CreateFeesResponseAsync(cancellationFees, propertyDetails);
                         }
                         else
                         {

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.Suppliers.OceanBeds
 {
     using System;
     using System.Globalization;
@@ -6,7 +6,7 @@
     using Intuitive.Helpers.Extensions;
     using Models.Common;
     using iVectorOne;
-    using iVectorOne.CSSuppliers.OceanBeds.Models;
+    using iVectorOne.Suppliers.OceanBeds.Models;
 
     public static class OceanBedsHelper
     {

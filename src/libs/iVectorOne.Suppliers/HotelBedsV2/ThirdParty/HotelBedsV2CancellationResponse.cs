@@ -3,7 +3,7 @@
 #pragma warning disable CA1707 // Identifiers should not contain underscores
 #pragma warning disable CA1724 // Type names should not match namespaces
 
-namespace iVectorOne.CSSuppliers.HotelBedsV2
+namespace iVectorOne.Suppliers.HotelBedsV2
 {
     using System;
 

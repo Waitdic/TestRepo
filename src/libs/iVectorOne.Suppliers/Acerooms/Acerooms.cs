@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Acerooms
+﻿namespace iVectorOne.Suppliers.Acerooms
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@
     using Newtonsoft.Json;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.AceRooms.Models;
+    using iVectorOne.Suppliers.AceRooms.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

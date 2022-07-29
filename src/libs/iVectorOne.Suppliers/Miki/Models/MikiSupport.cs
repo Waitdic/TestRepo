@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Miki.Models
+﻿namespace iVectorOne.Suppliers.Miki.Models
 {
     using System;
     using System.Collections.Generic;

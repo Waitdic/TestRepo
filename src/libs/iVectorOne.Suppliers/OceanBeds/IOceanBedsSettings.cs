@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.OceanBeds
+﻿namespace iVectorOne.Suppliers.OceanBeds
 {
     using iVectorOne;
 

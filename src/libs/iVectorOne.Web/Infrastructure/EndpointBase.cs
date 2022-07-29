@@ -18,7 +18,7 @@
     public static class EndpointBase
     {
         public const string Version = "v2";
-        public const string Domain = "property";
+        public const string Domain = "properties";
 
         public static IServiceCollection RegisterWebServices(this IServiceCollection services, ConfigurationManager config)
         {

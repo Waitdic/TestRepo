@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Acerooms
+﻿namespace iVectorOne.Suppliers.Acerooms
 {
     using System;
     using System.Collections.Generic;
@@ -10,14 +10,14 @@
     using Newtonsoft.Json;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers.AceRooms.Models;
+    using iVectorOne.Suppliers.AceRooms.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using static iVectorOne.CSSuppliers.AceRooms.Models.AceroomsAvailabilityRequest;
+    using static iVectorOne.Suppliers.AceRooms.Models.AceroomsAvailabilityRequest;
 
     public class AceroomsSearch : IThirdPartySearch, ISingleSource
     {

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.ChannelManager.Models.Common
+﻿namespace iVectorOne.Suppliers.ChannelManager.Models.Common
 {
     using System.Collections;
     using System.Collections.Generic;

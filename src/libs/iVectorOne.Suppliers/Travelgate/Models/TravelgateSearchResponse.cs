@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.Travelgate.Models
+﻿namespace iVectorOne.Suppliers.Travelgate.Models
 {
     using System;
     using System.Collections.Generic;

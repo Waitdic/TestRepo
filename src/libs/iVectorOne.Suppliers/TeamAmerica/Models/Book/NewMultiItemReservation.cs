@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.CSSuppliers.TeamAmerica.Models
+﻿namespace iVectorOne.Suppliers.TeamAmerica.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;
