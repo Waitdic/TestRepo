@@ -79,7 +79,7 @@ export const AccountView: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout title={`View Account ${currentAccount?.userName}`}>
+      <MainLayout title={`${currentAccount?.userName}`}>
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>
@@ -115,7 +115,7 @@ export const AccountView: FC<Props> = memo(() => {
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <h4 className='block text-sm font-medium mb-1'>
-                        Search Timeout Seconds
+                        Search Timeout (seconds)
                       </h4>
                       <p className='text-sm'>
                         {currentAccount.searchTimeoutSeconds}

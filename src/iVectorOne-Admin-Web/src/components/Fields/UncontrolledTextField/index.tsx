@@ -5,6 +5,7 @@ type Props = {
   name: string;
   type?: 'text' | 'number' | 'email' | 'password';
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 };
 
 const UncontrolledTextField: React.FC<Props> = ({
@@ -12,11 +13,12 @@ const UncontrolledTextField: React.FC<Props> = ({
   name,
   type = 'text',
   onChange,
+  required = false,
 }) => {
   return (
     <>
       <label className='block text-sm font-medium mb-1' htmlFor={name}>
-        {label}
+        {label} {required ? '(*)' : ''}
       </label>
       <input
         type={type}

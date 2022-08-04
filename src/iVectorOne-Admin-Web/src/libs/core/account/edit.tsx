@@ -217,7 +217,7 @@ export const AccountEdit: FC<Props> = memo(() => {
                         {...register('searchTimeoutSeconds', {
                           required: 'This field is required.',
                         })}
-                        labelText='Search Timeout Seconds'
+                        labelText='Search Timeout (seconds)'
                         isDirty={!!errors.searchTimeoutSeconds}
                         errorMsg={errors.searchTimeoutSeconds?.message}
                       />
