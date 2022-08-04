@@ -386,7 +386,7 @@
             return new FastPayHotelsBookRequest()
             {
                 messageID = messageId,
-                currency = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
+                currency = _settings.UseCurrencyCode(propertyDetails) ? await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode) : string.Empty,
                 agencyCode = string.IsNullOrEmpty(propertyDetails.BookingReference) ? DateTime.Now.ToString("yyyyMMddhhmmssfff") : propertyDetails.BookingReference,
                 comments = "",
                 customer = GetLeadGuestDetails(propertyDetails),

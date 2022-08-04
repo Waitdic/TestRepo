@@ -108,7 +108,7 @@
             return new FastPayHotelsAvailabilityRequest
             {
                 messageID = guid,
-                currency = searchDetails.ISOCurrencyCode,
+                currency = _settings.UseCurrencyCode(searchDetails) ? searchDetails.ISOCurrencyCode : string.Empty,
                 checkIn = searchDetails.ArrivalDate.ToString("yyyy-MM-dd"),
                 checkOut = searchDetails.DepartureDate.ToString("yyyy-MM-dd"),
                 occupancies = GetOccupancies(roomDetails),

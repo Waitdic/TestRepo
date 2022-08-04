@@ -50,6 +50,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ChannelManagerRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="FastPayHotels\FastPayHotelsRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FastPayHotelsRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -177,6 +182,10 @@
     <EmbeddedResource Update="ChannelManager\ChannelManagerRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ChannelManagerRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="FastPayHotels\FastPayHotelsRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FastPayHotelsRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

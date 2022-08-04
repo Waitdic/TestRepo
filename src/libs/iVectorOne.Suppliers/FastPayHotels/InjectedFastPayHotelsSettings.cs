@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.FastPayHotels
 {
+    using Intuitive.Helpers.Extensions;
     using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Support;
@@ -58,6 +59,11 @@
         public string CountryOfResidence(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("CountryOfResidence", tpAttributeSearch);
+        }
+
+        public bool UseCurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("UseCurrencyCode", tpAttributeSearch).ToSafeBoolean();
         }
     }
 }
