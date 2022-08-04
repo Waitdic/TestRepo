@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 type Props = {
   postPerPage: number;
@@ -14,6 +14,12 @@ const PaginationClassic: React.FC<Props> = ({
   resultCount,
   setCurrentPageCount,
 }) => {
+  const showingCount = useMemo(() => {
+    if (resultCount === 0) return 0;
+    if (currentPageCount * postPerPage === 0) return 1;
+    return currentPageCount * postPerPage;
+  }, []);
+
   const handleIncrementPageCount = () => {
     if (currentPageCount === Math.ceil(resultCount / postPerPage) - 1) return;
     setCurrentPageCount(currentPageCount + 1);
@@ -60,12 +66,7 @@ const PaginationClassic: React.FC<Props> = ({
       </nav>
       <div className='text-sm text-slate-500 text-center sm:text-left'>
         Showing{' '}
-        <span className='font-medium text-slate-800'>
-          {currentPageCount * postPerPage === 0
-            ? 1
-            : currentPageCount * postPerPage}
-        </span>{' '}
-        to{' '}
+        <span className='font-medium text-slate-800'>{showingCount}</span> to{' '}
         <span className='font-medium text-slate-800'>
           {resultCount < currentPageCount * postPerPage + postPerPage
             ? resultCount
