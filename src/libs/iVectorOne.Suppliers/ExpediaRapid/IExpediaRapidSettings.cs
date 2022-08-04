@@ -24,5 +24,6 @@
         string PlatformName(IThirdPartyAttributeSearch tpAttributeSearch);
         string RateOption(IThirdPartyAttributeSearch tpAttributeSearch);
         bool ValidateAffiliateID(IThirdPartyAttributeSearch tpAttributeSearch);
+        string TermsAndConditionsLink(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

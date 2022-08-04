@@ -116,5 +116,17 @@
         {
             return Get_Value("ValidateAffiliateID", tpAttributeSearch).ToSafeBoolean();
         }
+
+        public string TermsAndConditionsLink(IThirdPartyAttributeSearch tpAttributSearch)
+        {
+            var link = Get_Value("TermsAndConditionsLink", tpAttributSearch);
+
+            if (string.IsNullOrEmpty(link))
+            {
+                link = "https://developer.expediapartnersolutions.com/terms/en";
+            }
+
+            return link;
+        }
     }
 }

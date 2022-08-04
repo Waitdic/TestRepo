@@ -14,12 +14,6 @@
         [JsonProperty("currency")]
         public string Currency { get; set; }
 
-        [JsonProperty("scope")]
-        public string Scope { get; set; }
-
-        [JsonProperty("frequency")]
-        public string Frequency { get; set; }
-
     }
 
 }
