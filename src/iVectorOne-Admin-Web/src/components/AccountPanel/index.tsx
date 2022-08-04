@@ -19,7 +19,7 @@ const AccountPanel: React.FC<Props> = () => {
       {/* Panel body */}
       <div className='p-6 space-y-6'>
         <section>
-          <h2 className='text-xl leading-snug textDark font-bold mb-1'>
+          <h2 className='text-xl leading-snug text-dark font-bold mb-1'>
             Tenant Profile
           </h2>
           <div className='sm:flex sm:flex-col space-y-4 mt-5'>
@@ -52,7 +52,7 @@ const AccountPanel: React.FC<Props> = () => {
       {/* <footer>
         <div className='flex flex-col px-6 py-5 border-t border-slate-200'>
           <div className='flex self-end'>
-            <button className='btn border-slate-200 hover:border-slate-300 textDark'>
+            <button className='btn border-slate-200 hover:border-slate-300 text-dark'>
               Cancel
             </button>
             <button className='btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3'>

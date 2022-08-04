@@ -30,7 +30,7 @@ const EmptyState: FC<Props> = ({ title, description, href, buttonText }) => {
             />
           </svg>
         </div>
-        <h2 className='text-2xl textDark font-bold mb-2'>{title}</h2>
+        <h2 className='text-2xl text-dark font-bold mb-2'>{title}</h2>
         <div className='mb-6'>
           {description?.map((desc, idx) => (
             <p key={idx}>{desc}</p>

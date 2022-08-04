@@ -75,7 +75,7 @@ const TenantSelector: FC<Props> = () => {
                     className={classNames(
                       active ? 'bg-gray-100' : '',
                       isSelected ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm textDark cursor-pointer'
+                      'block px-4 py-2 text-sm text-dark cursor-pointer'
                     )}
                     onClick={() => handleChangeTenant(tenantId)}
                   >

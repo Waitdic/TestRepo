@@ -73,7 +73,7 @@ const SettingsSidebar: React.FC<Props> = () => {
                     className={`text-sm font-medium ${
                       pathname.includes(to)
                         ? 'text-indigo-500'
-                        : 'hover:textDark'
+                        : 'hover:text-dark'
                     }`}
                   >
                     {title}

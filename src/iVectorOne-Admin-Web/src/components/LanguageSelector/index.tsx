@@ -35,7 +35,7 @@ const LanguageSelector: FC = () => {
                   <span
                     className={classnames(
                       active ? 'bg-gray-100' : '',
-                      'block flex items-center px-4 py-2 text-sm textDark cursor-pointer'
+                      'block flex items-center px-4 py-2 text-sm text-dark cursor-pointer'
                     )}
                     onClick={() => dispatch.app.updateLang(locale[1])}
                   >

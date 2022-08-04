@@ -51,7 +51,7 @@ const Checkbox: FC<Props> = forwardRef(
           />
         </div>
         <div className='ml-3 text-sm'>
-          <label htmlFor={id} className='font-medium textDark'>
+          <label htmlFor={id} className='font-medium text-dark'>
             {labelText} {required && '(required)'}
           </label>
           {description && <p className='text-gray-500'>{description}</p>}

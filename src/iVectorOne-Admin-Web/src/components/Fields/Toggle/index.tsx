@@ -69,7 +69,7 @@ const Toggle: FC<Props> = forwardRef(
           htmlFor={id}
           className='flex items-center justify-between w-full'
         >
-          <div className='text-sm font-medium textDark'>
+          <div className='text-sm font-medium text-dark'>
             {labelText} {required && '(required)'}
             {description && <p className='text-gray-500'>{description}</p>}
           </div>

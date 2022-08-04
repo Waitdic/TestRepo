@@ -12,7 +12,7 @@ const NotFound: FC = () => {
           </p>
           <div className='sm:ml-6'>
             <div className='sm:border-l sm:border-gray-200 sm:pl-6'>
-              <h1 className='text-4xl font-extrabold textDark tracking-tight sm:text-5xl'>
+              <h1 className='text-4xl font-extrabold text-dark tracking-tight sm:text-5xl'>
                 Page not found
               </h1>
               <p className='mt-1 text-base text-gray-500'>

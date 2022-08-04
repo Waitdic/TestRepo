@@ -68,7 +68,7 @@ const CardList: FC<Props> = ({
                     <DropdownEditMenu align='right' className='relative'>
                       <li>
                         <Link
-                          className='font-medium text-sm textDark hover:opacity-80 flex py-1 px-3'
+                          className='font-medium text-sm text-dark hover:opacity-80 flex py-1 px-3'
                           to={actions?.[0]?.href || ''}
                         >
                           <div className='flex items-center justify-center'>
@@ -83,7 +83,7 @@ const CardList: FC<Props> = ({
                 <div className='border-t border-slate-200'>
                   <div className='flex divide-x divide-slate-200r'>
                     {statusIsPlaceholder ? (
-                      <span className='block flex-1 text-center text-sm textDark hover:opacity-80 font-medium px-3 py-4 group'>
+                      <span className='block flex-1 text-center text-sm text-dark hover:opacity-80 font-medium px-3 py-4 group'>
                         {/* placeholder */}
                       </span>
                     ) : (
@@ -98,7 +98,7 @@ const CardList: FC<Props> = ({
                         </span>
                       </div>
                     )}
-                    <div className='block flex-1 text-center text-sm textDark font-medium px-3 py-4 group'>
+                    <div className='block flex-1 text-center text-sm text-dark font-medium px-3 py-4 group'>
                       {/* placeholder */}
                     </div>
                   </div>

@@ -31,7 +31,7 @@ const Datepicker: React.FC<Props> = ({ align }) => {
   return (
     <div className='relative'>
       <Flatpickr
-        className='form-input form-input-with-icon-left textDark font-medium focus:border-slate-300 w-60'
+        className='form-input form-input-with-icon-left text-dark font-medium focus:border-slate-300 w-60'
         options={options as any}
       />
       <div className='absolute inset-0 right-auto flex items-center pointer-events-none'>

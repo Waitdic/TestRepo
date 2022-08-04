@@ -65,7 +65,7 @@ const TextArea: FC<Props> = forwardRef(
     return (
       <>
         {hasLabel && (
-          <label htmlFor={id} className='block text-sm font-medium textDark'>
+          <label htmlFor={id} className='block text-sm font-medium text-dark'>
             {`${labelText} ${required ? '(required)' : ''}`}
           </label>
         )}

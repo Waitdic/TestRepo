@@ -13,6 +13,7 @@
 
 :root {
   --primary-color: #125c13;
+  --text-dark: #808080;
   --amplify-fonts-default-variable: Inter;
 }
 
@@ -27,6 +28,7 @@ body {
   font-family: Inter;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--text-dark);
 }
 
 .custom {

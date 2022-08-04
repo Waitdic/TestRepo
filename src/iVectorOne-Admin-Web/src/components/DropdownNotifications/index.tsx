@@ -85,7 +85,7 @@ const DropdownNotifications: React.FC<Props> = ({ align }) => {
           onFocus={() => setDropdownOpen(true)}
           onBlur={() => setDropdownOpen(false)}
         >
-          <div className='text-xs font-semibold textDark uppercase pt-1.5 pb-2 px-4'>
+          <div className='text-xs font-semibold text-dark uppercase pt-1.5 pb-2 px-4'>
             Notifications
           </div>
           <ul>
@@ -97,7 +97,7 @@ const DropdownNotifications: React.FC<Props> = ({ align }) => {
               >
                 <span className='block text-sm mb-2'>
                   📣{' '}
-                  <span className='font-medium textDark'>
+                  <span className='font-medium text-dark'>
                     Edit your information in a swipe
                   </span>{' '}
                   Sint occaecat cupidatat non proident, sunt in culpa qui
@@ -116,7 +116,7 @@ const DropdownNotifications: React.FC<Props> = ({ align }) => {
               >
                 <span className='block text-sm mb-2'>
                   📣{' '}
-                  <span className='font-medium textDark'>
+                  <span className='font-medium text-dark'>
                     Edit your information in a swipe
                   </span>{' '}
                   Sint occaecat cupidatat non proident, sunt in culpa qui
@@ -135,7 +135,7 @@ const DropdownNotifications: React.FC<Props> = ({ align }) => {
               >
                 <span className='block text-sm mb-2'>
                   🚀
-                  <span className='font-medium textDark'>
+                  <span className='font-medium text-dark'>
                     Say goodbye to paper receipts!
                   </span>{' '}
                   Sint occaecat cupidatat non proident, sunt in culpa qui

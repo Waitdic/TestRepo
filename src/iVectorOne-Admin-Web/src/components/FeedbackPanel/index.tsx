@@ -20,7 +20,7 @@ const FeedbackPanel: React.FC = () => {
       {/* Panel body */}
       <div className='p-6 space-y-6'>
         <div>
-          <h2 className='text-2xl textDark font-bold mb-4'>Give Feedback</h2>
+          <h2 className='text-2xl text-dark font-bold mb-4'>Give Feedback</h2>
           <div className='text-sm'>
             Our product depends on customer feedback to improve the overall
             experience!
@@ -28,7 +28,7 @@ const FeedbackPanel: React.FC = () => {
         </div>
         {/* Rate */}
         <section>
-          <h3 className='text-xl leading-snug textDark font-bold mb-6'>
+          <h3 className='text-xl leading-snug text-dark font-bold mb-6'>
             How likely would you recommend us to a friend or colleague?
           </h3>
           <div className='w-full max-w-xl'>
@@ -56,7 +56,7 @@ const FeedbackPanel: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <div className='w-full flex justify-between text-sm textDark italic mt-3'>
+            <div className='w-full flex justify-between text-sm text-dark italic mt-3'>
               <div>Not at all</div>
               <div>Extremely likely</div>
             </div>
@@ -64,7 +64,7 @@ const FeedbackPanel: React.FC = () => {
         </section>
         {/* Tell us in words */}
         <section>
-          <h3 className='text-xl leading-snug textDark font-bold mb-5'>
+          <h3 className='text-xl leading-snug text-dark font-bold mb-5'>
             Tell us in words
           </h3>
           {/* Form */}
@@ -88,7 +88,7 @@ const FeedbackPanel: React.FC = () => {
       <footer>
         <div className='flex flex-col px-6 py-5 border-t border-slate-200'>
           <div className='flex self-end'>
-            <button className='btn border-slate-200 hover:border-slate-300 textDark'>
+            <button className='btn border-slate-200 hover:border-slate-300 text-dark'>
               Cancel
             </button>
             <button className='btn bg-primary text-white ml-3'>Save</button>

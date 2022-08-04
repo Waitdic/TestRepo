@@ -56,7 +56,7 @@ const DropdownProfile: React.FC<Props> = ({ align }) => {
           alt='User'
         />
         <div className='flex items-center truncate'>
-          <span className='truncate ml-2 text-sm font-medium group-hover:textDark'>
+          <span className='truncate ml-2 text-sm font-medium group-hover:text-dark'>
             Acme Inc.
           </span>
           <svg
@@ -86,7 +86,7 @@ const DropdownProfile: React.FC<Props> = ({ align }) => {
           onBlur={() => setDropdownOpen(false)}
         >
           <div className='pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200'>
-            <div className='font-medium textDark'>Acme Inc.</div>
+            <div className='font-medium text-dark'>Acme Inc.</div>
             <div className='text-xs text-slate-500 italic'>Administrator</div>
           </div>
           <ul>

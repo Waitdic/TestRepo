@@ -60,18 +60,19 @@ const PaginationClassic: React.FC<Props> = ({
       </nav>
       <div className='text-sm text-slate-500 text-center sm:text-left'>
         Showing{' '}
-        <span className='font-medium textDark'>
+        <span className='font-medium text-slate-800'>
           {currentPageCount * postPerPage === 0
             ? 1
             : currentPageCount * postPerPage}
         </span>{' '}
         to{' '}
-        <span className='font-medium textDark'>
+        <span className='font-medium text-slate-800'>
           {resultCount < currentPageCount * postPerPage + postPerPage
             ? resultCount
             : currentPageCount * postPerPage + postPerPage}
         </span>{' '}
-        of <span className='font-medium textDark'>{resultCount}</span> results
+        of <span className='font-medium text-slate-800'>{resultCount}</span>{' '}
+        results
       </div>
     </div>
   );
