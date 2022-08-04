@@ -63,7 +63,9 @@ const CardList: FC<Props> = ({
                   <div className='flex justify-between items-start'>
                     {/* Name */}
                     <header>
-                      <h3 className='text-2xl'>{name}</h3>
+                      <h3 className='text-xl xl:text-lg 2xl:text-2xl'>
+                        {name}
+                      </h3>
                     </header>
                     <DropdownEditMenu align='right' className='relative'>
                       <li>

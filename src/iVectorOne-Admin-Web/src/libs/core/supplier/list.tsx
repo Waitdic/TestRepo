@@ -99,35 +99,37 @@ export const SupplierList: FC<Props> = memo(() => {
                   Accounts
                 </div>
                 <ul className='flex flex-nowrap md:block mr-3 md:mr-0'>
-                  {sortBy(accounts, 'userName')?.map(
-                    ({ subscriptionId, userName }) => (
-                      <li
-                        key={subscriptionId}
-                        className={classNames(
-                          'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
-                          {
-                            'bg-indigo-50':
-                              activeAcc?.subscriptionId === subscriptionId,
-                          }
-                        )}
-                        onClick={() => handleSetActiveAcc(subscriptionId)}
+                  {sortBy(accounts, [
+                    function (o) {
+                      return o.userName?.toLowerCase?.();
+                    },
+                  ])?.map(({ subscriptionId, userName }) => (
+                    <li
+                      key={subscriptionId}
+                      className={classNames(
+                        'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
+                        {
+                          'bg-indigo-50':
+                            activeAcc?.subscriptionId === subscriptionId,
+                        }
+                      )}
+                      onClick={() => handleSetActiveAcc(subscriptionId)}
+                    >
+                      <span
+                        className={`text-sm font-medium ${
+                          activeAcc?.subscriptionId === subscriptionId
+                            ? 'text-indigo-500'
+                            : 'hover:text-dark'
+                        }`}
                       >
-                        <span
-                          className={`text-sm font-medium ${
-                            activeAcc?.subscriptionId === subscriptionId
-                              ? 'text-indigo-500'
-                              : 'hover:text-dark'
-                          }`}
-                        >
-                          {userName}
-                        </span>
-                      </li>
-                    )
-                  )}
+                        {userName}
+                      </span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
-            <div className='py-6 pr-6 w-full'>
+            <div className='pl-6 md:pl-0 py-6 pr-6 w-full'>
               {!!filteredSuppliersList?.length ? (
                 <CardList
                   bodyList={sortBy(

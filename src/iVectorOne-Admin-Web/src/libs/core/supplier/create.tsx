@@ -61,14 +61,24 @@ export const SupplierCreate: FC<Props> = memo(() => {
   });
 
   const sortedAccounts = useMemo(
-    () => sortBy(accounts, 'userName'),
+    () =>
+      sortBy(accounts, [
+        function (o) {
+          return o.userName?.toLowerCase?.();
+        },
+      ]),
     [accounts]
   );
+
   const sortedSuppliers = useMemo(() => {
     if (draftSupplier.subscriptionId === -1) {
       return [];
     } else {
-      return sortBy(suppliers, 'supplierName');
+      return sortBy(suppliers, [
+        function (o) {
+          return o.name?.toLowerCase?.();
+        },
+      ]);
     }
   }, [suppliers, draftSupplier]);
 
