@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,7 +12,8 @@
 @import 'additional-styles/theme.scss';
 
 :root {
-  --primary-color: #125c13; //? This CSS variable could be changed later for the custom theme color
+  --primary-color: #125c13;
+  --amplify-fonts-default-variable: Inter;
 }
 
 #amplify-container {
@@ -21,6 +24,9 @@
 
 body {
   overflow-x: hidden;
+  font-family: Inter;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .custom {
