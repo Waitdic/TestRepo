@@ -12,6 +12,12 @@
         [JsonProperty("hold")]
         public bool Hold { get; set; }
 
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("phone")]
+        public Phone LeadGuestPhone { get; set; }
+
         [JsonProperty("rooms")]
         public List<BookRequestRoom> Rooms { get; set; } = new List<BookRequestRoom>();
 

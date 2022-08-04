@@ -15,12 +15,6 @@
         [JsonProperty("refundable")]
         public bool IsRefundable { get; set; }
 
-        [JsonProperty("fenced_deal")]
-        public bool IsFencedDeal { get; set; }
-
-        [JsonProperty("fenced_deal_available")]
-        public bool HasFencedDealAvailable { get; set; }
-
         [JsonProperty("deposit_required")]
         public bool DepositRequired { get; set; }
 

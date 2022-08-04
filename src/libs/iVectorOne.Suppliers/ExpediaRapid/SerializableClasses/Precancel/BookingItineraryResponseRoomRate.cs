@@ -28,7 +28,7 @@
         [JsonProperty("cancel_penalties")]
         public List<CancelPenalty> CancelPenalities { get; set; } = new List<CancelPenalty>();
 
-        [JsonProperty("deposit_policies")]
+        [JsonProperty("deposits")]
         public List<DepositPolicy> DepositPolicies { get; set; } = new List<DepositPolicy>();
 
         [JsonProperty("nightly")]

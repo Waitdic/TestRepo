@@ -73,6 +73,9 @@
 
                 propertyDetails.Errata = await GetErrataFromAllRoomsAsync(propertyDetails, responseRooms);
 
+                //Mandatory to display terms and conditions link
+                propertyDetails.Errata.AddNew("Terms and Conditions - link", _settings.TermsAndConditionsLink(propertyDetails));
+
                 propertyDetails.Cancellations = GetCancellationsFromAllRooms(propertyDetails, responseRooms);
                 propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
             }
@@ -118,15 +121,42 @@
                 var firstRoom = propertyDetails.Rooms.First();
                 string bookRequestBody = await BuildBookRequestBodyAsync(propertyDetails);
 
-                var bookResponse = await GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, RequestMethod.POST, "Book ", true, bookRequestBody);
-
-                if (bookResponse is null)
+                var bookResponse = GetResponseAsync<BookResponse>(propertyDetails, propertyDetails.TPRef2, RequestMethod.POST, "Book ", true, bookRequestBody);
+                if (await Task.WhenAny(bookResponse, Task.Delay(90000)) == bookResponse)
                 {
-                    throw new ArgumentNullException("bookResponse", "Invalid book response recieved for room.");
-                }
+                    if (bookResponse.Result is null)
+                    {
+                        throw new ArgumentNullException("bookResponse", "Invalid book response recieved for room.");
+                    }
 
-                propertyDetails.SourceSecondaryReference = bookResponse.Links["retrieve"].HRef;
-                return bookResponse.ItineraryID;
+                    propertyDetails.SourceSecondaryReference = bookResponse.Result.Links["retrieve"].HRef;
+                    return bookResponse.Result.ItineraryID;
+                }
+                else
+                {
+                    var retrieveResponse = await GetResponseAsync<RetrieveResponse>(propertyDetails, propertyDetails.TPRef2, RequestMethod.GET, "Retrieve Book ", true, bookRequestBody);
+                    if (retrieveResponse.Message == "Itinerary was not found with provided request.")
+                    {
+                        await bookResponse;
+
+                        if (bookResponse.Result is null)
+                        {
+                            throw new ArgumentNullException("bookResponse", "Invalid book response recieved for room.");
+                        }
+
+                        propertyDetails.SourceSecondaryReference = bookResponse.Result.Links["retrieve"].HRef;
+                        return bookResponse.Result.ItineraryID;
+                    }
+                    else if (retrieveResponse.Message == "An itinerary already exists with this affiliate reference id.")
+                    {
+                        throw new ArgumentException("Book response still processing.", "Retrieve Response");
+                    }
+                    else
+                    {
+                        propertyDetails.SourceSecondaryReference = retrieveResponse.Links["retrieve"].HRef;
+                        return retrieveResponse.ItineraryID;
+                    }
+                }
             }
 
             catch (Exception ex)
@@ -575,6 +605,8 @@
             {
                 AffiliateReferenceId = propertyDetails.BookingReference.Trim(),
                 Hold = false,
+                Email = propertyDetails.LeadGuestEmail,
+                LeadGuestPhone = new Phone(propertyDetails.LeadGuestPhone),
                 Rooms = propertyDetails.Rooms.Select((r, i) => CreateBookRequestRoom(propertyDetails, r.Passengers.First(), r,i)).ToList(),
                 Payments = new List<Payment>()
                 {
@@ -585,8 +617,6 @@
                         {
                             GivenName = propertyDetails.LeadGuestFirstName,
                             FamilyName = propertyDetails.LeadGuestLastName,
-                            Email = propertyDetails.LeadGuestEmail,
-                            Phone = new Phone(propertyDetails.LeadGuestPhone),
                             Address = new SerializableClasses.Book.Address()
                             {
                                 Line1 = propertyDetails.LeadGuestAddress1,
@@ -604,32 +634,29 @@
             return JsonConvert.SerializeObject(bookRequest);
         }
 
+        private bool ValidateBookRequest(PropertyDetails propertyDetails)
+        {
+            char[] specialChars = new char[] { '<', '>', '(', ')', '&' };
+            string bookingReference = propertyDetails.BookingReference.Trim();
+
+            // booking reference should not contain special characters and should not exceed 28 chars
+            return !bookingReference.Any(specialChars.Contains) | bookingReference.Count() <= 28;
+        }
+
         private BookRequestRoom CreateBookRequestRoom(PropertyDetails propertyDetails, Passenger firstPasseneger, RoomDetails room,int index)
         {
-            if (index == 0)
+            if (!ValidateBookRequest(propertyDetails))
             {
-                return new BookRequestRoom()
-                {
-                    Title = propertyDetails.LeadGuestTitle,
-                    GivenName = propertyDetails.LeadGuestFirstName,
-                    FamilyName = propertyDetails.LeadGuestLastName,
-                    Email = propertyDetails.LeadGuestEmail,
-                    Phone = new Phone(propertyDetails.LeadGuestPhone),
-                    SpecialRequest = room.SpecialRequest
-                };
+                propertyDetails.Warnings.AddNew("Invalid booking reference", "Booking reference should not be more than 28 characters and it should not contain special characters such as following: <, >, (, ) or &");
+                throw new Exception("Invalid booking reference");
             }
-            else
+
+            return new BookRequestRoom()
             {
-                return new BookRequestRoom()
-                {
-                    Title = firstPasseneger.Title,
-                    GivenName = firstPasseneger.FirstName,
-                    FamilyName = firstPasseneger.LastName,
-                    Email = propertyDetails.LeadGuestEmail,
-                    Phone = new Phone(propertyDetails.LeadGuestPhone),
-                    SpecialRequest = room.SpecialRequest
-                };
-            }
+                SpecialRequest = room.SpecialRequest,
+                GivenName = index == 0 ? propertyDetails.LeadGuestFirstName : firstPasseneger.FirstName,
+                FamilyName = index == 0 ? propertyDetails.LeadGuestLastName : firstPasseneger.LastName
+            };
         }
 
         private string BuildDefaultURL(PropertyDetails propertyDetails, string path)
