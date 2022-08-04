@@ -11,12 +11,6 @@
         [JsonProperty("request_currency")]
         public OccupancyRateAmount TotalInRequestCurrency { get; set; }
 
-        [JsonProperty("scope")]
-        public string FeeScope { get; set; }
-
-        [JsonProperty("frequency")]
-        public string FeeFrequency { get; set; }
-
     }
 
 }
