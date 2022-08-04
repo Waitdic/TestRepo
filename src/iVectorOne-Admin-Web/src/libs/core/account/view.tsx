@@ -107,7 +107,7 @@ export const AccountView: FC<Props> = memo(() => {
                     </div>
                     <div className='flex-1 md:w-1/2'>
                       <h4 className='block text-sm font-medium mb-1'>
-                        Property TP Request Limit
+                        Maximum Single Request Property Search Limit
                       </h4>
                       <p className='text-sm'>
                         {currentAccount.propertyTprequestLimit}

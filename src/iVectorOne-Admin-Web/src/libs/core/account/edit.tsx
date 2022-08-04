@@ -205,7 +205,7 @@ export const AccountEdit: FC<Props> = memo(() => {
                         {...register('propertyTprequestLimit', {
                           required: 'This field is required.',
                         })}
-                        labelText='Property TP Request Limit'
+                        labelText='Maximum Single Request Property Search Limit'
                         isDirty={!!errors.propertyTprequestLimit}
                         errorMsg={errors.propertyTprequestLimit?.message}
                       />
