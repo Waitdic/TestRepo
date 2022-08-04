@@ -61,7 +61,7 @@ const Radio: FC<Props> = forwardRef(
           <div>
             <label
               htmlFor={id}
-              className='ml-3 block text-sm font-medium text-gray-700'
+              className='ml-3 block text-sm font-medium textDark'
             >
               {labelText}
             </label>

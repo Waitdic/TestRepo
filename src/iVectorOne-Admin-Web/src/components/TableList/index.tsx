@@ -73,7 +73,7 @@ const TableList: FC<Props> = ({
                   <tr key={id}>
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='flex flex-col justify-center'>
-                        <div className='text-sm font-medium text-gray-700'>
+                        <div className='text-sm font-medium textDark'>
                           {name}
                         </div>
                         {typeof isActive !== 'undefined' && (

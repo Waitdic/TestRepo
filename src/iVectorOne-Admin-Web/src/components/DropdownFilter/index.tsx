@@ -92,7 +92,7 @@ const DropdownFilter: React.FC<Props> = ({
     <div className='relative inline-flex'>
       <button
         ref={trigger}
-        className='btn bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-blue-500'
+        className='btn bg-white border border-gray-300 textDark hover:bg-gray-50 focus:ring-blue-500'
         aria-haspopup='true'
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
@@ -117,7 +117,7 @@ const DropdownFilter: React.FC<Props> = ({
         leaveEnd='opacity-0'
       >
         <div ref={dropdown}>
-          <div className='text-xs font-semibold text-slate-400 uppercase pt-1.5 pb-2 px-4'>
+          <div className='text-xs font-semibold textDark uppercase pt-1.5 pb-2 px-4'>
             {title}
           </div>
           <ul className='mb-4'>
@@ -140,7 +140,7 @@ const DropdownFilter: React.FC<Props> = ({
             <ul className='flex items-center justify-between'>
               <li>
                 <button
-                  className='btn-xs bg-white border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-600'
+                  className='btn-xs bg-white border-slate-200 hover:border-slate-300 textDark'
                   onClick={handleClearFilter}
                 >
                   Clear

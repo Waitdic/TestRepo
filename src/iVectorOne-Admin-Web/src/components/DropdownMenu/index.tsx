@@ -57,7 +57,7 @@ const DropdownMenu: FC<Props> = ({
                         <Link
                           className={classnames(
                             active ? 'bg-gray-100' : '',
-                            'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
+                            'block px-4 py-2 text-sm textDark cursor-pointer'
                           )}
                           to={href}
                         >
@@ -68,7 +68,7 @@ const DropdownMenu: FC<Props> = ({
                         <span
                           className={classnames(
                             active ? 'bg-gray-100' : '',
-                            'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
+                            'block px-4 py-2 text-sm textDark cursor-pointer'
                           )}
                           onClick={() => {
                             Auth.signOut({ global: true });

@@ -116,7 +116,7 @@ export const SupplierList: FC<Props> = memo(() => {
                           className={`text-sm font-medium ${
                             activeAcc?.subscriptionId === subscriptionId
                               ? 'text-indigo-500'
-                              : 'hover:text-slate-700'
+                              : 'hover:textDark'
                           }`}
                         >
                           {userName}

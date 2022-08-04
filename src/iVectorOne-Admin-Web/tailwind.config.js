@@ -8,6 +8,7 @@ module.exports = {
       colors: {
         primary: '#4f82bf',
         primaryHover: '#244063',
+        textDark: '#808080',
       },
       boxShadow: {
         DEFAULT:

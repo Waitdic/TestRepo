@@ -18,7 +18,7 @@ const RoadMap: React.FC<Props> = () => {
               <article key={idx} className='pt-6'>
                 <div className='xl:flex'>
                   <div className='w-32 shrink-0'>
-                    <h2 className='text-xl leading-snug font-bold text-slate-800 xl:leading-7 mb-4 xl:mb-0'>
+                    <h2 className='text-xl leading-snug font-bold textDark xl:leading-7 mb-4 xl:mb-0'>
                       {item.title}
                     </h2>
                   </div>
@@ -78,7 +78,7 @@ const RoadMap: React.FC<Props> = () => {
                                 </svg>
                               </div>
                             )}
-                            <h3 className='text-lg font-bold text-slate-800 pl-9'>
+                            <h3 className='text-lg font-bold textDark pl-9'>
                               {listItem.title}
                             </h3>
                           </div>

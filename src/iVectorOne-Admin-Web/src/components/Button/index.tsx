@@ -42,7 +42,7 @@ const Button: FC<Props> = ({
   const createClassNames =
     'bg-green-600 hover:bg-green-700 focus:ring-green-500 text-white border-transparent';
   const outlineClassNames =
-    'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-blue-500';
+    'bg-white border border-gray-300 textDark hover:bg-gray-50 focus:ring-blue-500';
   const fullWidthClassName = 'w-full';
   const disabledClassName = 'cursor-not-allowed opacity-50';
 

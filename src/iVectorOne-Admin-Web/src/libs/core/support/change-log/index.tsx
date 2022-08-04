@@ -99,13 +99,13 @@ const ChangeLog: React.FC<Props> = () => {
                   </div>
                   <div className='grow pb-6 border-b border-slate-200'>
                     <header>
-                      <h2 className='text-2xl text-slate-800 font-bold mb-3'>
+                      <h2 className='text-2xl textDark font-bold mb-3'>
                         {item.title}
                       </h2>
                       <div className='flex flex-nowrap items-center space-x-2 mb-4'>
                         <div className='flex items-center'>
                           <a
-                            className='block text-sm font-semibold text-slate-800'
+                            className='block text-sm font-semibold textDark'
                             href='#0'
                           >
                             {item.author}

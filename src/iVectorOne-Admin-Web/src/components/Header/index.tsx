@@ -21,7 +21,7 @@ const Header: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
           <div className='flex'>
             {/* Hamburger button */}
             <button
-              className='text-slate-500 hover:text-slate-600 lg:hidden'
+              className='textDark lg:hidden'
               aria-controls='sidebar'
               aria-expanded={sidebarOpen}
               onClick={() => setSidebarOpen(!sidebarOpen)}

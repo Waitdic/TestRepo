@@ -58,10 +58,7 @@ const Select: FC<Props> = forwardRef(
     return (
       <div>
         {hasLabel && (
-          <label
-            htmlFor={id}
-            className='block text-sm font-medium text-gray-700'
-          >
+          <label htmlFor={id} className='block text-sm font-medium textDark'>
             {labelText}
           </label>
         )}

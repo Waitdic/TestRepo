@@ -80,7 +80,7 @@ const DropdownHelp: React.FC<Props> = ({ align }) => {
           onFocus={() => setDropdownOpen(true)}
           onBlur={() => setDropdownOpen(false)}
         >
-          <div className='text-xs font-semibold text-slate-400 uppercase pt-1.5 pb-2 px-4'>
+          <div className='text-xs font-semibold textDark uppercase pt-1.5 pb-2 px-4'>
             Need help?
           </div>
           <ul>

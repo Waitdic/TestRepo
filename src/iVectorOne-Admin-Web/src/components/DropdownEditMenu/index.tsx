@@ -44,7 +44,7 @@ const DropdownEditMenu: React.FC<Props> = ({ children, align, className }) => {
     <div className={className}>
       <button
         ref={trigger}
-        className={`bg-white text-slate-400 hover:text-slate-500 rounded-full ${
+        className={`bg-white textDark rounded-full ${
           dropdownOpen && 'bg-slate-100 text-slate-500'
         }`}
         aria-haspopup='true'

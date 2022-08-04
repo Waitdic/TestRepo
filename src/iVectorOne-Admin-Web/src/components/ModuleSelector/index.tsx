@@ -24,7 +24,7 @@ const ModuleSelector: FC<Props> = ({
           className='max-w-xs p-1 flex items-center text-sm focus:outline-none'
           title='Change Module'
         >
-          <ViewGridIcon className='navbar__hover h-6 w-6 text-gray-700 dark:text-gray-400 hover:text-primary dark:hover:text-white' />
+          <ViewGridIcon className='navbar__hover h-6 w-6 textDark dark:text-gray-400 hover:text-primary dark:hover:text-white' />
         </Menu.Button>
       </div>
       <Transition
@@ -53,7 +53,7 @@ const ModuleSelector: FC<Props> = ({
                     className={classnames(
                       active ? 'bg-gray-100' : '',
                       isActive ? 'bg-gray-200' : '',
-                      'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
+                      'block px-4 py-2 text-sm textDark cursor-pointer'
                     )}
                     onClick={() => handleChangeModule(moduleId, uri)}
                   >
