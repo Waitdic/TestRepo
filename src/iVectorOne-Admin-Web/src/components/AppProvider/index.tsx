@@ -18,7 +18,7 @@ import { AccountView } from '@/libs/core/account/view';
 import { SupplierList } from '@/libs/core/supplier/list';
 import { SupplierCreate } from '@/libs/core/supplier/create';
 import { SupplierEdit } from '@/libs/core/supplier/edit';
-import MyAccount from '@/libs/core/settings/my-account';
+import Contact from '@/libs/core/settings/contact';
 import Feedback from '@/libs/core/settings/feedback';
 import KnowledgeBase from '@/libs/core/support/knowledge-base';
 import ChangeLog from '@/libs/core/support/change-log';
@@ -56,7 +56,7 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           {/* Dashboard */}
           <Route path='/' element={<Dashboard error={coreError} />} />
           {/* Tenant Routes */}
-          <Route
+          {/* <Route
             path='/tenant/list'
             element={<TenantList error={coreError} />}
           />
@@ -67,23 +67,32 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           <Route
             path='/tenant/edit/:slug'
             element={<TenantEdit error={coreError} />}
-          />
+          /> */}
           {/* Account Routes */}
-          <Route path='/accounts/create' element={<AccountCreate />} />
-          <Route path='/accounts' element={<AccountList />} />
-          <Route path='/accounts/:slug/edit' element={<AccountEdit />} />
-          <Route path='/accounts/:slug' element={<AccountView />} />
+          <Route path='/accounts'>
+            <Route index element={<AccountList />} />
+            <Route path='create' element={<AccountCreate />} />
+            <Route path=':slug' element={<AccountView />}>
+              <Route path='edit' element={<AccountEdit />} />
+            </Route>
+          </Route>
           {/* Supplier Routes */}
-          <Route path='/suppliers' element={<SupplierList />} />
-          <Route path='/suppliers/create' element={<SupplierCreate />} />
-          <Route path='/suppliers/:slug/edit' element={<SupplierEdit />} />
+          <Route path='/suppliers'>
+            <Route index element={<SupplierList />} />
+            <Route path='create' element={<SupplierCreate />} />
+            <Route path=':slug/edit' element={<SupplierEdit />} />
+          </Route>
           {/* Settings */}
-          <Route path='/settings/my-account' element={<MyAccount />} />
-          <Route path='/settings/feedback' element={<Feedback />} />
+          <Route path='/settings'>
+            <Route path='contact' element={<Contact />} />
+            <Route path='feedback' element={<Feedback />} />
+          </Route>
           {/* Support */}
-          <Route path='/support/knowledge-base' element={<KnowledgeBase />} />
-          <Route path='/support/change-log' element={<ChangeLog />} />
-          <Route path='/support/road-map' element={<RoadMap />} />
+          <Route path='/support'>
+            <Route path='knowledge-base' element={<KnowledgeBase />} />
+            <Route path='change-log' element={<ChangeLog />} />
+            <Route path='road-map' element={<RoadMap />} />
+          </Route>
           {/* Not Found Route */}
           <Route path='*' element={<NotFound />} />
         </Routes>

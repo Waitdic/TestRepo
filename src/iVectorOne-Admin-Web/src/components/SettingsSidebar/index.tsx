@@ -13,12 +13,12 @@ const SettingsSidebar: React.FC<Props> = () => {
         title: 'Business settings',
         items: [
           {
-            title: 'My account',
-            to: '/settings/my-account',
+            title: 'Contact',
+            to: '/settings/contact',
             icon: (
               <svg
                 className={`w-4 h-4 shrink-0 fill-current text-slate-400 mr-2 ${
-                  pathname.includes('/settings/account') && 'text-indigo-400'
+                  pathname.includes('/settings/contact') && 'text-indigo-400'
                 }`}
                 viewBox='0 0 16 16'
               >
