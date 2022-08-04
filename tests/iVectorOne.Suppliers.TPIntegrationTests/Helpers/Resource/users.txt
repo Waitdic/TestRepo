@@ -497,6 +497,22 @@
           "SplitMultiroom": "true",
           "UseGZip": "true"
         }
+      },
+      {
+        "Supplier": "Fastpayhotels",
+        "Configurations": {
+          "ClientId": "Intuitive.fph.com",
+          "ClientSecret": "test1",
+          "XMLUser": "APIintuitive",
+          "Password": "test2345",
+          "AvailabilityURL": "https://avail.fastpayhotels.net/",
+          "BookingURL": "https://booking.fastpayhotels.net/api/booking",
+          "UserRateType": "Net",
+          "DelimChar": "~",
+          "AccessToken": "test",
+          "LeadGuestNationality": "GB",
+          "CountryOfResidence": "GB"
+        }
       }
     ]
   }

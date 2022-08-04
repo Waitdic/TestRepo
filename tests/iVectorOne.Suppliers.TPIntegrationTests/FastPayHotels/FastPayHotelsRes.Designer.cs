@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels {
+namespace iVectorOne.Tests.FastPayHotels {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.Fastpayhotels.FastpayhotelsRes", typeof(FastPayHotelsRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.FastPayHotels.FastPayHotelsRes", typeof(FastPayHotelsRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -71,7 +71,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels {
         ///
         ///**REQUEST**
         ///
-        ///{&quot;messageID&quot;:&quot;Test1234&quot;,&quot;currency&quot;:&quot;GBP&quot;,&quot;checkIn&quot;:&quot;2021-09-01&quot;,&quot;checkOut&quot;:&quot;2021-09-06&quot;,&quot;occupancies&quot;:[{&quot;adults&quot;:1,&quot;children&quot;:0,&quot;childrenAges&quot;:[]}],&quot;hotelCodes&quot;:[&quot;102245&quot;],&quot;parameters&quot;:{&quot;countryOfResidence&quot;:&quot;GB&quot;,&quot;nationality&quot;:&quot;GB&quot;}}
+        ///{&quot;messageID&quot;:&quot;Test1234&quot;,&quot;currency&quot;:&quot;&quot;,&quot;checkIn&quot;:&quot;2021-09-01&quot;,&quot;checkOut&quot;:&quot;2021-09-06&quot;,&quot;occupancies&quot;:[{&quot;adults&quot;:1,&quot;children&quot;:0,&quot;childrenAges&quot;:[]}],&quot;hotelCodes&quot;:[&quot;102245&quot;],&quot;parameters&quot;:{&quot;countryOfResidence&quot;:&quot;GB&quot;,&quot;nationality&quot;:&quot;GB&quot;}}
         ///
         ///URL: https://avail.fastpayhotels.net/api/booking/availability
         ///
@@ -82,7 +82,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Fastpayhotels {
         ///
         ///**REQUEST**
         ///
-        ///{&quot;messageID&quot;:&quot;Test1234&quot;,&quot;c [rest of string was truncated]&quot;;.
+        ///{&quot;messageID&quot;:&quot;Test1234&quot;,&quot;curr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLogs {
             get {

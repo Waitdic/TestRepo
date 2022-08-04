@@ -78,7 +78,7 @@
         /// <summary>
         /// The third party FastPayHotels
         /// </summary>
-        public const string FASTPAYHOTELS = "FastPayHotels";
+        public const string FASTPAYHOTELS = "Fastpayhotels";
 
         /// <summary>
         /// The third party GoGlobal
