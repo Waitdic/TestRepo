@@ -347,10 +347,10 @@
           "Password": "Test123",
           "GenericURL": "http://xml.cloud.goglobal.travel/XMLWebService.asmx",
           "OffsetCancellationDays": "0",
-          "AllowCancellations": "True",
-          "UseGZip": "True",
-          "SecondsBeforeSearchCutoff": "6",
-          "HotelBatchLimit": ""
+          "AllowCancellations": "true",
+          "UseGZip": "true",
+          "HotelSearchLimit": "100",
+          "DefaultNationality": "GB"
         }
       },
       {

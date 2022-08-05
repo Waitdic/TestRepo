@@ -55,6 +55,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>FastPayHotelsRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="GoGlobal\GoGlobalRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GoGlobalRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -186,6 +191,10 @@
     <EmbeddedResource Update="FastPayHotels\FastPayHotelsRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FastPayHotelsRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="GoGlobal\GoGlobalRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
