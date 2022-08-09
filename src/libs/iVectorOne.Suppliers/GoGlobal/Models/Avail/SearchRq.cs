@@ -7,6 +7,8 @@
     public class SearchRq : Main
     {
         public string MaximumWaitTime { get; set; } = string.Empty;
+        public bool ShouldSerializeMaximumWaitTime() => !string.IsNullOrEmpty(MaximumWaitTime);
+
         public string CityCode { get; set; } = string.Empty;
         public bool ShouldSerializeCityCode() => !string.IsNullOrEmpty(CityCode);
 
