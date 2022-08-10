@@ -18,7 +18,8 @@ const UncontrolledTextField: React.FC<Props> = ({
   return (
     <>
       <label className='block text-sm font-medium mb-1' htmlFor={name}>
-        {label} {required ? '(*)' : ''}
+        {label}{' '}
+        {required ? <span className='text-md text-red-500'>*</span> : ''}
       </label>
       <input
         type={type}

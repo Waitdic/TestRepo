@@ -56,7 +56,9 @@ const TextField: FC<Props> = forwardRef(
         {hasLabel && (
           <>
             <label htmlFor={id} className='block text-sm font-medium mb-1'>
-              {`${labelText} ${required ? '(*)' : ''}`}
+              {`${labelText} ${
+                required ? <span className='text-md text-red-500'>*</span> : ''
+              }`}
             </label>
             {description && (
               <p className='block text-sm text-gray-500'>{description}</p>
