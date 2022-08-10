@@ -14,11 +14,7 @@ namespace iVectorOne_Admin_Api.Config.Models
         [JsonIgnore]
         public string Status { get; set; } = null!;
 
-        public bool IsActive { get
-            {
-                return Status.ToLower() == "active";
-            }
-        }
+        public bool IsActive => Status.ToLower() == RecordStatus.Active;
         public Guid TenantKey { get; set; }
     }
 }

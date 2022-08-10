@@ -21,6 +21,7 @@
     using iVectorOne.Suppliers.DOTW;
     using iVectorOne.Suppliers.ExpediaRapid;
     using iVectorOne.Suppliers.FastPayHotels;
+    using iVectorOne.Suppliers.GoGlobal;
     using iVectorOne.Suppliers.HotelBedsV2;
     using iVectorOne.Suppliers.HotelsProV2;
     using iVectorOne.Suppliers.Hotelston;
@@ -149,6 +150,7 @@
             services.AddSingleton<IDOTWSettings, InjectedDOTWSettings>();
             services.AddSingleton<IExpediaRapidSettings, InjectedExpediaRapidSettings>();
             services.AddSingleton<IFastPayHotelsSettings, InjectedFastPayHotelsSettings>();
+            services.AddSingleton<IGoGlobalSettings, InjectedGoGlobalSettings>();
             services.AddSingleton<IHotelBedsV2Settings, InjectedHotelBedsV2Settings>();
             services.AddSingleton<IHotelsProV2Settings, InjectedHotelsProV2Settings>();
             services.AddSingleton<IHotelstonSettings, InjectedHotelstonSettings>();
@@ -189,6 +191,7 @@
             services.AddSingleton<IThirdPartySearch, DOTWSearch>();
             services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
             services.AddSingleton<IThirdPartySearch, FastPayHotelsSearch>();
+            services.AddSingleton<IThirdPartySearch, GoGlobalSearch>();
             services.AddSingleton<IThirdPartySearch, HotelBedsV2Search>();
             services.AddSingleton<IThirdPartySearch, HotelsProV2Search>();
             services.AddSingleton<IThirdPartySearch, HotelstonSearch>();
@@ -229,6 +232,7 @@
             services.AddSingleton<IThirdParty, DOTW>();
             services.AddSingleton<IThirdParty, ExpediaRapid>();
             services.AddSingleton<IThirdParty, FastPayHotels>();
+            services.AddSingleton<IThirdParty, GoGlobal>();
             services.AddSingleton<IThirdParty, HotelBedsV2>();
             services.AddSingleton<IThirdParty, HotelsProV2>();
             services.AddSingleton<IThirdParty, Hotelston>();

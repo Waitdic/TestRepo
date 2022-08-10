@@ -1,10 +1,5 @@
-﻿using AutoMapper;
-using iVectorOne_Admin_Api.Config.Context;
-using iVectorOne_Admin_Api.Config.Models;
-using iVectorOne_Admin_Api.Config.Requests;
+﻿using iVectorOne_Admin_Api.Config.Requests;
 using iVectorOne_Admin_Api.Config.Responses;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace iVectorOne_Admin_Api.Config.Handlers
 {

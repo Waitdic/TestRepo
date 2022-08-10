@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Intuitive.Helpers.Extensions;
-using iVectorOne_Admin_Api.Config.Context;
 using iVectorOne_Admin_Api.Config.Models;
 using iVectorOne_Admin_Api.Config.Requests;
 using iVectorOne_Admin_Api.Config.Responses;
+using iVectorOne_Admin_Api.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;

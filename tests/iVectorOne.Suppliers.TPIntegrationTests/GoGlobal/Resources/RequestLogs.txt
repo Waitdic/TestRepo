@@ -1,0 +1,54 @@
+﻿URL: http://xml.cloud.goglobal.travel/XMLWebService.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><MakeRequest xmlns="http://www.goglobal.travel/"><requestType>11</requestType><xmlRequest><![CDATA[<?xml version="1.0" encoding="utf-8"?><Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Header><Agency>12345</Agency><User>TestUser</User><Password>Test123</Password><Operation>HOTEL_SEARCH_REQUEST</Operation><OperationType>Request</OperationType></Header><Main Version="2.3" ResponseFormat="JSON"><MaximumWaitTime /><Hotels><HotelId>102245</HotelId></Hotels><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Rooms><Room Adults="1" RoomCount="1" ChildCount="0" /></Rooms><Nationality>GB</Nationality></Main></Root>]]></xmlRequest></MakeRequest></soap:Body></soap:Envelope>
+
+URL: http://xml.cloud.goglobal.travel/XMLWebService.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><MakeRequest xmlns="http://www.goglobal.travel/"><requestType>11</requestType><xmlRequest><![CDATA[<?xml version="1.0" encoding="utf-8"?><Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Header><Agency>12345</Agency><User>TestUser</User><Password>Test123</Password><Operation>HOTEL_SEARCH_REQUEST</Operation><OperationType>Request</OperationType></Header><Main Version="2.3" ResponseFormat="JSON"><MaximumWaitTime /><Hotels><HotelId>102245</HotelId></Hotels><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Rooms><Room Adults="2" RoomCount="1" ChildCount="0" /></Rooms><Nationality>GB</Nationality></Main></Root>]]></xmlRequest></MakeRequest></soap:Body></soap:Envelope>
+
+URL: http://xml.cloud.goglobal.travel/XMLWebService.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><MakeRequest xmlns="http://www.goglobal.travel/"><requestType>11</requestType><xmlRequest><![CDATA[<?xml version="1.0" encoding="utf-8"?><Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Header><Agency>12345</Agency><User>TestUser</User><Password>Test123</Password><Operation>HOTEL_SEARCH_REQUEST</Operation><OperationType>Request</OperationType></Header><Main Version="2.3" ResponseFormat="JSON"><MaximumWaitTime /><Hotels><HotelId>102245</HotelId></Hotels><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Rooms><Room Adults="1" RoomCount="1" ChildCount="1"><ChildAge>8</ChildAge></Room></Rooms><Nationality>GB</Nationality></Main></Root>]]></xmlRequest></MakeRequest></soap:Body></soap:Envelope>
+
+URL: http://xml.cloud.goglobal.travel/XMLWebService.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><MakeRequest xmlns="http://www.goglobal.travel/"><requestType>11</requestType><xmlRequest><![CDATA[<?xml version="1.0" encoding="utf-8"?><Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Header><Agency>12345</Agency><User>TestUser</User><Password>Test123</Password><Operation>HOTEL_SEARCH_REQUEST</Operation><OperationType>Request</OperationType></Header><Main Version="2.3" ResponseFormat="JSON"><MaximumWaitTime /><Hotels><HotelId>102245</HotelId></Hotels><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Rooms><Room Adults="1" RoomCount="1" ChildCount="1"><ChildAge>1</ChildAge></Room></Rooms><Nationality>GB</Nationality></Main></Root>]]></xmlRequest></MakeRequest></soap:Body></soap:Envelope>
+
+URL: http://xml.cloud.goglobal.travel/XMLWebService.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><MakeRequest xmlns="http://www.goglobal.travel/"><requestType>11</requestType><xmlRequest><![CDATA[<?xml version="1.0" encoding="utf-8"?><Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><Header><Agency>12345</Agency><User>TestUser</User><Password>Test123</Password><Operation>HOTEL_SEARCH_REQUEST</Operation><OperationType>Request</OperationType></Header><Main Version="2.3" ResponseFormat="JSON"><MaximumWaitTime /><Hotels><HotelId>102245</HotelId></Hotels><ArrivalDate>2021-09-01</ArrivalDate><Nights>5</Nights><Rooms><Room Adults="1" RoomCount="1" ChildCount="2"><ChildAge>8</ChildAge><ChildAge>1</ChildAge></Room></Rooms><Nationality>GB</Nationality></Main></Root>]]></xmlRequest></MakeRequest></soap:Body></soap:Envelope>

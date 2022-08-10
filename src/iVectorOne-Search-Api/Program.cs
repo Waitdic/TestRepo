@@ -1,10 +1,10 @@
-using System.Diagnostics;
-using System.Net;
 using Intuitive.Modules;
 using iVectorOne.Search.Api.Endpoints.V2;
 using iVectorOne.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using System.Diagnostics;
+using System.Net;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -23,7 +23,7 @@ try
         .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
         .ReadFrom.Configuration(ctx.Configuration));
 
-        // Add services to the container.
+    // Add services to the container.
     builder.Services.RegisterWebServices(builder.Configuration);
     builder.Host.UseDiscoveredModules();
 
