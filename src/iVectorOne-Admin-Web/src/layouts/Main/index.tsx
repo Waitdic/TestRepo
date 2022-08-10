@@ -55,7 +55,7 @@ const Dashboard: React.FC<Props> = ({
                 })}
               >
                 {
-                  <h1 className='text-2xl md:text-3xl text-slate-800 font-bold'>
+                  <h1 className='text-2xl md:text-3xl text-dark-heading font-bold'>
                     {title}
                   </h1>
                 }

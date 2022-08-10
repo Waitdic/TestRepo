@@ -8,7 +8,8 @@ module.exports = {
       colors: {
         primary: '#4f82bf',
         primaryHover: '#244063',
-        dark: '#808080',
+        ['dark-heading']: '#1E293B',
+        ['dark']: '#475569',
       },
       boxShadow: {
         DEFAULT:

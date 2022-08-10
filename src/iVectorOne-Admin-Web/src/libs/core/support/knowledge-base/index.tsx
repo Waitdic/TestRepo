@@ -104,7 +104,9 @@ const KnowledgeBase: React.FC<Props> = () => {
           {/* Popular Topics */}
           <div>
             <div className='mb-5'>
-              <h2 className='text-xl text-slate-800 font-bold'>Quick Links</h2>
+              <h2 className='text-xl text-dark-heading font-bold'>
+                Quick Links
+              </h2>
             </div>
             {/* Grid */}
             <div className='grid sm:grid-cols-2 lg:grid-cols-4 lg:sidebar-expanded:grid-cols-2 xl:sidebar-expanded:grid-cols-4 gap-6'>
@@ -146,10 +148,10 @@ const KnowledgeBase: React.FC<Props> = () => {
                       </svg>
                     </div>
                     {/* Content */}
-                    <h3 className='text-lg font-semibold text-slate-800 mb-1'>
+                    <h3 className='text-lg font-semibold text-dark-heading mb-1'>
                       Integration Support
                     </h3>
-                    <div className='text-sm text-slate-800'>
+                    <div className='text-sm text-dark-heading'>
                       For help and support during your integration, please email
                       the team and we’ll do our best to assist.
                     </div>
@@ -202,10 +204,10 @@ const KnowledgeBase: React.FC<Props> = () => {
                       </svg>
                     </div>
                     {/* Content */}
-                    <h3 className='text-lg font-semibold text-slate-800 mb-1'>
+                    <h3 className='text-lg font-semibold text-dark-heading mb-1'>
                       Swagger Documentation
                     </h3>
-                    <div className='text-sm text-slate-800'>
+                    <div className='text-sm text-dark-heading'>
                       To create a client SDK, please download the YAML file,
                       which can then be loaded into the Swagger Editor and then
                       transformed into your preferred language
@@ -260,10 +262,10 @@ const KnowledgeBase: React.FC<Props> = () => {
                       </svg>
                     </div>
                     {/* Content */}
-                    <h3 className='text-lg font-semibold text-slate-800 mb-1'>
+                    <h3 className='text-lg font-semibold text-dark-heading mb-1'>
                       Postman Collection
                     </h3>
-                    <div className='text-sm text-slate-800'>
+                    <div className='text-sm text-dark-heading'>
                       This contains examples of each call referenced in the API
                       documentation, but with examples relevant to your account
                     </div>
@@ -317,10 +319,10 @@ const KnowledgeBase: React.FC<Props> = () => {
                       </svg>
                     </div>
                     {/* Content */}
-                    <h3 className='text-lg font-semibold text-slate-800 mb-1'>
+                    <h3 className='text-lg font-semibold text-dark-heading mb-1'>
                       API Documentation
                     </h3>
-                    <div className='text-sm text-slate-800'>
+                    <div className='text-sm text-dark-heading'>
                       All of the iVectorOne API requests and responses explained
                       in detail
                     </div>
@@ -343,7 +345,7 @@ const KnowledgeBase: React.FC<Props> = () => {
           {/* Popular Guides */}
           <div>
             <div className='mb-5'>
-              <h2 className='text-xl text-slate-800 font-bold'>Guides</h2>
+              <h2 className='text-xl text-dark-heading font-bold'>Guides</h2>
             </div>
             {/* Grid */}
             <div className='grid sm:grid-cols-2 gap-6'>
@@ -360,10 +362,10 @@ const KnowledgeBase: React.FC<Props> = () => {
                   <div className='flex flex-col h-full'>
                     {/* Content */}
                     <div className='grow mb-2'>
-                      <div className='font-semibold text-slate-800 mb-1'>
+                      <div className='font-semibold text-dark-heading mb-1'>
                         API Documentation
                       </div>
-                      <div className='text-sm text-slate-800'>
+                      <div className='text-sm text-dark-heading'>
                         All of the iVectorOne API requests and responses
                         explained in detail
                       </div>

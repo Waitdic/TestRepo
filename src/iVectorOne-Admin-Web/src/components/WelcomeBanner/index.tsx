@@ -70,7 +70,7 @@ const WelcomeBanner: React.FC<Props> = () => {
 
       {/* Content */}
       <div className='relative'>
-        <h1 className='text-2xl md:text-3xl text-slate-800 font-bold mb-1'>
+        <h1 className='text-2xl md:text-3xl text-dark-heading font-bold mb-1'>
           Here is what’s happening with your iVectorOne today
         </h1>
       </div>
