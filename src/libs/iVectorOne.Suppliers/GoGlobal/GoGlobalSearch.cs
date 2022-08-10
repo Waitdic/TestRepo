@@ -69,11 +69,11 @@
             var oRequests = new List<Request>();
 
             string sNationalityCode = string.IsNullOrEmpty(oSearchDetails.ISONationalityCode)
-                ? _settings.DefaultNationality(oSearchDetails)
+                ? _settings.LeadGuestNationality(oSearchDetails)
                 : oSearchDetails.ISONationalityCode;
 
             var TPKeyBatches = oResortSplits.SelectMany(split => split.Hotels.Select(h => h.TPKey))
-                                .Distinct().Batch(_settings.HotelSearchLimit(oSearchDetails)).ToList();
+                                .Distinct().Batch(_settings.HotelBatchLimit(oSearchDetails)).ToList();
 
             foreach (var TPKeyBatch in TPKeyBatches)
             {
