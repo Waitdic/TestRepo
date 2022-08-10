@@ -44,7 +44,7 @@ const DropdownEditMenu: React.FC<Props> = ({ children, align, className }) => {
     <div className={className}>
       <button
         ref={trigger}
-        className={`bg-white text-dark rounded-full ${
+        className={`bg-white text-dark rounded-full p-2 ${
           dropdownOpen && 'bg-slate-100 text-slate-500'
         }`}
         aria-haspopup='true'
@@ -52,10 +52,12 @@ const DropdownEditMenu: React.FC<Props> = ({ children, align, className }) => {
         aria-expanded={dropdownOpen}
       >
         <span className='sr-only'>Menu</span>
-        <svg className='w-8 h-8 fill-current' viewBox='0 0 32 32'>
-          <circle cx='16' cy='16' r='2' />
-          <circle cx='10' cy='16' r='2' />
-          <circle cx='22' cy='16' r='2' />
+        <svg className='w-4 h-4 fill-current' viewBox='0 0 46 168'>
+          <g transform='translate(-129 -183)'>
+            <circle cx='23' cy='23' r='23' transform='translate(129 183)' />
+            <circle cx='23' cy='23' r='23' transform='translate(129 244)' />
+            <circle cx='23' cy='23' r='23' transform='translate(129 305)' />
+          </g>
         </svg>
       </button>
       <Transition
