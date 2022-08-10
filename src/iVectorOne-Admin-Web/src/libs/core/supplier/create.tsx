@@ -19,9 +19,9 @@ import {
 import {
   createSupplier,
   getConfigurationsBySupplier,
-  getAccountsWithSuppliers,
   getSuppliers,
-} from '../data-access';
+} from '../data-access/supplier';
+import { getAccountsWithSuppliers } from '../data-access/account';
 
 type Props = {};
 
@@ -257,8 +257,8 @@ export const SupplierCreate: FC<Props> = memo(() => {
                     })}
                     labelText='Supplier'
                     options={sortedSuppliers?.map((loginOption) => ({
-                      id: loginOption.supplierID,
-                      name: loginOption?.name,
+                      id: loginOption.supplierID || 0,
+                      name: loginOption?.name || '',
                     }))}
                     isFirstOptionEmpty
                     onUncontrolledChange={handleSupplierChange}

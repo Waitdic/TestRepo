@@ -6,7 +6,7 @@ import { DropdownFilterProps } from '@/types';
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
 import { CardList, Notification } from '@/components';
-import { getAccounts } from '../data-access';
+import { getAccounts } from '../data-access/account';
 import { NotificationStatus } from '@/constants';
 
 interface AccountListItem {

@@ -15,14 +15,15 @@ type Props = {
   id: string;
   name: string;
   checked?: boolean;
-  onChange: ChangeHandler;
-  onBlur: ChangeHandler;
+  onChange?: ChangeHandler;
+  onBlur?: ChangeHandler;
   labelText: string;
   description?: string | null;
   isDirty?: boolean;
   errorMsg?: string | null;
   required?: boolean;
   defaultValue?: boolean;
+  readOnly?: boolean;
 };
 
 const Toggle: FC<Props> = forwardRef(
@@ -38,13 +39,15 @@ const Toggle: FC<Props> = forwardRef(
       onBlur,
       required = false,
       defaultValue = false,
+      readOnly,
     },
     ref
   ) => {
     const [isChecked, setIsChecked] = useState<boolean>(defaultValue);
 
     const handleChange = (e: FormEvent<HTMLInputElement>): void => {
-      onChange(e);
+      if (readOnly) return;
+      onChange?.(e);
       setIsChecked(e.currentTarget.checked);
     };
 

@@ -23,7 +23,7 @@ import {
   Spinner,
 } from '@/components';
 import { RootState } from '@/store';
-import { getAccountById } from '../data-access';
+import { getAccountById } from '../data-access/account';
 
 type NotificationState = {
   status: NotificationStatus;

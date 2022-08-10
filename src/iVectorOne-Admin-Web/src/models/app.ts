@@ -2,8 +2,8 @@ import { createModel } from '@rematch/core';
 import { isEmpty } from 'lodash';
 //
 import { RootModel } from '.';
-import { AppState, Module, Account, Tenant, User } from '@/types';
 import { getAwsJwtToken } from '@/utils/getAwsJwtToken';
+import type { AppState, Module, Account, User } from '@/types';
 
 export const app = createModel<RootModel>()({
   state: {
@@ -48,12 +48,6 @@ export const app = createModel<RootModel>()({
       return {
         ...state,
         modules: payload,
-      };
-    },
-    updateTenantList(state, payload: Tenant[]) {
-      return {
-        ...state,
-        tenants: payload,
       };
     },
     updateAccounts(state, payload: Account[]) {

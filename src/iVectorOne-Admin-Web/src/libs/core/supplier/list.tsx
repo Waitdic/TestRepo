@@ -3,12 +3,13 @@ import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import { getAccounts, getSuppliersByAccount } from '../data-access';
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
 import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import { EmptyState, CardList, Notification } from '@/components';
+import { getAccounts } from '../data-access/account';
+import { getSuppliersByAccount } from '../data-access/supplier';
 
 type Props = {};
 
@@ -134,7 +135,7 @@ export const SupplierList: FC<Props> = memo(() => {
                 <CardList
                   bodyList={sortBy(
                     filteredSuppliersList.map(({ name, supplierID }) => ({
-                      id: supplierID,
+                      id: supplierID as number,
                       name,
                       actions: [
                         {

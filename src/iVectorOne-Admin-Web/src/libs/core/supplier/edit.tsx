@@ -3,22 +3,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 //
-import {
-  getAccountWithSupplierAndConfigurations,
-  updateSupplier,
-} from '../data-access';
+import { updateSupplier } from '../data-access/supplier';
+import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
 import { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import {
-  SectionTitle,
-  Select,
-  Button,
-  Spinner,
-  Notification,
-} from '@/components';
+import { SectionTitle, Button, Notification } from '@/components';
 
 type Props = {};
 
@@ -57,6 +49,8 @@ export const SupplierEdit: FC<Props> = memo(() => {
     if (!activeTenant) return;
     updateSupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      Number(currentAccount?.subscriptionId),
+      Number(currentSupplier?.supplierID),
       data,
       () => {
         dispatch.app.setIsLoading(true);
@@ -92,7 +86,7 @@ export const SupplierEdit: FC<Props> = memo(() => {
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (account, supplier, configurations) => {
+      (account, configurations, supplier) => {
         setCurrentAccount(account);
         setCurrentSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
@@ -113,13 +107,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
   useEffect(() => {
     if (!!currentSupplier && !!currentAccount) {
       setValue('account', currentAccount.subscriptionId);
-      setValue('supplier', currentSupplier.supplierID);
+      setValue('supplier', currentSupplier.supplierID as number);
     }
   }, [currentSupplier, currentAccount, setValue]);
 
   return (
     <>
-      <MainLayout title={`${currentSupplier?.name}`}>
+      <MainLayout title={`${currentSupplier?.name || ''}`}>
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>

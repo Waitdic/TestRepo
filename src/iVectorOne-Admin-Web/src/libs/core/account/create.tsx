@@ -54,11 +54,10 @@ export const AccountCreate: FC<Props> = memo(() => {
       'CurrencyCode',
     ]);
     try {
-      const newAccount = await axios.post(
+      const _newAccount = await axios.post(
         'http://localhost:3001/subsciption.create',
         accountData
       );
-      console.log(newAccount);
       setNotification({
         status: NotificationStatus.SUCCESS,
         message: 'New Account created successfully.',

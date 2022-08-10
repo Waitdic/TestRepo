@@ -2,28 +2,10 @@ import { ConfigurationFormFieldTypes, NotificationStatus } from '@/constants';
 import { NetworkInterfaceInfoIPv4 } from 'os';
 import { ComponentProps } from 'react';
 
-//! TEMP TYPES
-export type ProductProps = {
-  id: number;
-  slug: string;
-  name: string;
-  description: string;
-  status: { id: number; name: string };
-  category: { id: number; name: string };
-  img: string;
-};
-export type ProductFormData = {
-  name: string;
-  description: string;
-  status: { id: number; name: string };
-  category: { id: number; name: string };
-  img: string;
-};
-//! END TEMP TYPES
-
 export type SelectOption = { id: number | string; name: string };
 export type Tenant = {
   contactEmail: string;
+  companyName: string;
   contactName: string;
   contactTelephone: string;
   isActive: boolean;
@@ -31,10 +13,18 @@ export type Tenant = {
   tenantId: number;
   tenantKey: string;
   isSelected?: boolean;
+  status: 'active' | 'inactive';
+  isDeleted: boolean;
 };
 export type User = {
   fullName: string;
   tenants: Tenant[];
+  authorisations: {
+    user: string;
+    relationship: string;
+    object: string;
+  }[];
+  success: boolean;
 } | null;
 export type Role = {
   name: string;
@@ -64,18 +54,18 @@ export type Account = {
   suppliers: Supplier[];
 };
 export type Supplier = {
-  name: string;
-  supplierName: string;
-  supplierID: number;
-  supplierSubscriptionID: number;
-  configurations: SupplierConfiguration[];
+  name?: string;
+  supplierName?: string;
+  supplierID?: number;
+  supplierSubscriptionID?: number;
+  configurations?: SupplierConfiguration[];
   isSelected?: boolean;
 };
 export type SupplierConfiguration = {
   supplierAttributeID?: number;
   supplierSubscriptionAttributeID: number;
   key: string;
-  name: string;
+  name?: string;
   order: number;
   type: ConfigurationFormFieldTypes;
   value?: number | string | boolean;

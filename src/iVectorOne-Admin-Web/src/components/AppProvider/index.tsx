@@ -56,18 +56,13 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           {/* Dashboard */}
           <Route path='/' element={<Dashboard error={coreError} />} />
           {/* Tenant Routes */}
-          {/* <Route
-            path='/tenant/list'
-            element={<TenantList error={coreError} />}
-          />
-          <Route
-            path='/tenant/create'
-            element={<TenantCreate error={null} />}
-          />
-          <Route
-            path='/tenant/edit/:slug'
-            element={<TenantEdit error={coreError} />}
-          /> */}
+          <Route path='/tenants'>
+            <Route index element={<TenantList error={coreError} />} />
+            <Route path='create' element={<TenantCreate error={null} />} />
+            <Route path=':slug' element={<TenantEdit error={coreError} />}>
+              <Route path='edit' element={<TenantEdit error={coreError} />} />
+            </Route>
+          </Route>
           {/* Account Routes */}
           <Route path='/accounts'>
             <Route index element={<AccountList />} />

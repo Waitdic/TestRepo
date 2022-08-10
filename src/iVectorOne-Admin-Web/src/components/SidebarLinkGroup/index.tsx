@@ -72,22 +72,22 @@ const SidebarLinkGroup: React.FC<Props> = ({
           </div>
         </Link>
         {links &&
-          links.map(({ to, title }) => (
+          links.map(({ to: subLinkTo, title: subLinkTitle }) => (
             <div
-              key={title}
+              key={subLinkTitle}
               className='lg:hidden lg:sidebar-expanded:block 2xl:block'
             >
               <ul className={`pl-9 mt-1 ${!open && 'hidden'}`}>
                 <li className='mb-1 last:mb-0'>
                   <NavLink
                     end
-                    to={to}
-                    className={({ isActive }) =>
+                    to={subLinkTo}
+                    className={({ isActive: _isActive }) =>
                       'block text-white hover:text-primary transition duration-150 truncate '
                     }
                   >
                     <span className='text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
-                      {title}
+                      {subLinkTitle}
                     </span>
                   </NavLink>
                 </li>

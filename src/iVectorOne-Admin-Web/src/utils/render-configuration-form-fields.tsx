@@ -323,7 +323,7 @@ export const renderConfigurationFormFields = (
             supplierAttributeID,
             idx,
             key,
-            labelText: name,
+            labelText: name as string,
             description,
             required,
             value,

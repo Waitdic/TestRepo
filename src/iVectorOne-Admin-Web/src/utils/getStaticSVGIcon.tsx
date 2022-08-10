@@ -8,7 +8,7 @@ import SupportIcon from '../icons/Support';
 
 const getStaticSVGIcon = (name: string, className: string) => {
   switch (name) {
-    case 'tenant':
+    case 'tenants':
       return <TenantIcon className={className} />;
     case 'suppliers':
       return <SupplierIcon className={className} />;

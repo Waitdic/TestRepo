@@ -1,4 +1,12 @@
-import { memo, Fragment, forwardRef, LegacyRef, FC, useState } from 'react';
+import {
+  memo,
+  Fragment,
+  forwardRef,
+  LegacyRef,
+  FC,
+  useState,
+  useMemo,
+} from 'react';
 import classnames from 'classnames';
 import { ExclamationCircleIcon } from '@heroicons/react/solid';
 import { ChangeHandler } from 'react-hook-form';
@@ -51,14 +59,21 @@ const TextField: FC<Props> = forwardRef(
   ) => {
     const [showPassword, setShowPassword] = useState(false);
 
+    const inputType = useMemo(() => {
+      if (type === InputTypes.PASSWORD) {
+        return showPassword ? InputTypes.TEXT : InputTypes.PASSWORD;
+      } else {
+        return type;
+      }
+    }, [type, showPassword]);
+
     return (
       <Fragment>
         {hasLabel && (
           <>
             <label htmlFor={id} className='block text-sm font-medium mb-1'>
-              {`${labelText} ${
-                required ? <span className='text-md text-red-500'>*</span> : ''
-              }`}
+              {labelText}{' '}
+              {required && <span className='text-md text-red-500'>*</span>}
             </label>
             {description && (
               <p className='block text-sm text-gray-500'>{description}</p>
@@ -84,13 +99,7 @@ const TextField: FC<Props> = forwardRef(
             <input
               id={id}
               name={name}
-              type={
-                type === InputTypes.PASSWORD
-                  ? showPassword
-                    ? 'text'
-                    : 'password'
-                  : type
-              }
+              type={inputType}
               value={value}
               defaultValue={defaultValue}
               onChange={onChange}

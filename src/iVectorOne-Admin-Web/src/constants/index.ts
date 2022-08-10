@@ -19,6 +19,7 @@ export enum InputTypes {
   EMAIL = 'email',
   PASSWORD = 'password',
   NUMBER = 'number',
+  PHONE = 'tel',
 }
 export enum NotificationStatus {
   SUCCESS = 'success',
@@ -41,4 +42,7 @@ export enum ChangeLogFilterTypes {
 }
 export const URI_REGEX = new RegExp(
   /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi
+);
+export const PHONE_REGEX = new RegExp(
+  /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/
 );
