@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using iVectorOne_Admin_Api.Config.Models;
+﻿using iVectorOne_Admin_Api.Config.Models;
 
 namespace iVectorOne_Admin_Api.Profiles
 {
@@ -7,7 +6,7 @@ namespace iVectorOne_Admin_Api.Profiles
     {
         public SubscriptionProfile()
         {
-            CreateMap<Tenant, TenantDTO>();
+
             CreateMap<Subscription, SubscriptionDTO>()
                 .ForMember(dest => dest.UserName, act=> act.MapFrom(src=> src.Login));
             CreateMap<SupplierSubscription, SupplierDTO>()

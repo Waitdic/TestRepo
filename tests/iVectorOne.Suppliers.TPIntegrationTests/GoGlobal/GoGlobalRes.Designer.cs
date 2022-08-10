@@ -65,17 +65,12 @@ namespace iVectorOne.Tests.GoGlobal {
         ///
         ///**HEADERS**
         ///
-        ///Timeout: 1
+        ///Timeout: 100
         ///
         ///
         ///**REQUEST**
         ///
-        ///&lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-        ///  &lt;soap:Body&gt;
-        ///    &lt;MakeRequest xmlns=&quot;http://www.goglobal.travel/&quot;&gt;
-        ///      &lt;requestType&gt;11&lt;/requestType&gt;
-        ///      &lt;xmlRequest&gt;&lt;![CDATA[&lt;Root&gt;&lt;Header&gt;&lt;Agency&gt;12345&lt;/Agency&gt;&lt;User&gt;TestUser&lt;/User&gt;&lt;Password&gt;Test123&lt;/Pa [rest of string was truncated]&quot;;.
+        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;MakeRequest xmlns=&quot;http://www.goglobal.travel/&quot;&gt;&lt;requestType&gt;11&lt;/requestType&gt;&lt;xmlRequest&gt;&lt;![CDATA[&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;Root xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLogs {
             get {

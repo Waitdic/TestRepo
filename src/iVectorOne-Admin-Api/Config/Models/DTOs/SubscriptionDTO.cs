@@ -1,4 +1,6 @@
-﻿namespace iVectorOne_Admin_Api.Config.Models
+﻿using System.Text.Json.Serialization;
+
+namespace iVectorOne_Admin_Api.Config.Models
 {
     public class SubscriptionDTO
     {
@@ -11,5 +13,8 @@
         public bool LogMainSearchError { get; set; }
         public string CurrencyCode { get; set; } = string.Empty;
         public string Environment { get; set; } = string.Empty;
+        [JsonIgnore]
+        public string Status { get; set; } = null!;
+        public bool IsActive => Status == RecordStatus.Active;
     }
 }
