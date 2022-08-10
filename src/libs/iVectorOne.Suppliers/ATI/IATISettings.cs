@@ -5,9 +5,10 @@
          bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
          int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
          string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-         string URL(IThirdPartyAttributeSearch tpAttributeSearch); 
-         string APIVersion(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
-         string UserID(IThirdPartyAttributeSearch tpAttributeSearch); 
-         bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch,bool isMandatory);
+         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch); 
+         string Version(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory);
+         string User(IThirdPartyAttributeSearch tpAttributeSearch); 
+         bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch,bool isMandatory);
+         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

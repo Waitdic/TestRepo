@@ -24,24 +24,29 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string APIVersion(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
+        public string Version(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
         {
-            return Get_Value("APIVersion", tpAttributeSearch);
+            return Get_Value("Version", tpAttributeSearch);
         }
 
-        public string UserID(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UserID", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
-        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
         {
-            return Get_Value("ExcludeNonRefundable", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
     }
 }
