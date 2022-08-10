@@ -8,8 +8,8 @@
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
-        string DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

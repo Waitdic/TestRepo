@@ -147,10 +147,10 @@
 
             try
             {
-                string apiVersion = _settings.APIVersion(propertyDetails, false);
-                string userId = _settings.UserID(propertyDetails);
+                string apiVersion = _settings.Version(propertyDetails, false);
+                string userId = _settings.User(propertyDetails);
                 string password = _settings.Password(propertyDetails);
-                string url = _settings.URL(propertyDetails);
+                string url = _settings.GenericURL(propertyDetails);
 
                 var paxRphLookup = new Dictionary<Passenger, int>();
                 int i = 1;
@@ -238,7 +238,8 @@
                     SoapAction = "",
                     SOAP = true,
                     Source = propertyDetails.Source,
-                    ContentType = ContentTypes.Text_xml
+                    ContentType = ContentTypes.Text_xml,
+                    UseGZip = _settings.UseGZip(propertyDetails)
                 };
                 webRequest.SetRequest(xmlRequest);
                 await webRequest.Send(_httpClient, _logger);
@@ -286,17 +287,18 @@
                 var requestXml = BuildCancellationRequest(propertyDetails);
                 webRequest = new Request
                 {
-                    UserName = _settings.UserID(propertyDetails),
+                    UserName = _settings.User(propertyDetails),
                     Password = _settings.Password(propertyDetails),
                     AuthenticationMode = AuthenticationMode.Basic,
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     SoapAction = "",
                     SOAP = true,
                     Source = propertyDetails.Source,
                     LogFileName = "Cancellation",
                     ContentType = ContentTypes.Text_xml,
-                    CreateLog = true
+                    CreateLog = true,
+                    UseGZip = _settings.UseGZip(propertyDetails)
                 };
                 webRequest.SetRequest(requestXml);
                 await webRequest.Send(_httpClient, _logger);
@@ -346,10 +348,10 @@
 
         private async Task<Request> BuildAndSendSearchAsync(PropertyDetails propertyDetails)
         {
-            string apiVersion = _settings.APIVersion(propertyDetails, false);
-            string userID = _settings.UserID(propertyDetails);
+            string apiVersion = _settings.Version(propertyDetails, false);
+            string userID = _settings.User(propertyDetails);
             string password = _settings.Password(propertyDetails);
-            string url = _settings.URL(propertyDetails);
+            string url = _settings.GenericURL(propertyDetails);
 
             var criterionList = new List<Criterion>
             {
@@ -382,7 +384,7 @@
                 LogFileName = "Hotel Availability",
                 ContentType = ContentTypes.Text_xml,
                 SOAP = true,
-                UseGZip = true,
+                UseGZip = _settings.UseGZip(propertyDetails),
                 Source = propertyDetails.Source,
                 CreateLog = true
             };
@@ -437,7 +439,7 @@
                 {
                     Content = new AtiCancellationRequest
                     {
-                        Version = _settings.APIVersion(propertyDetails, false),
+                        Version = _settings.Version(propertyDetails, false),
                         UniqueID = new Models.Common.UniqueId { ID = propertyDetails.SourceReference }
                     }
                 }

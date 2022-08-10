@@ -33,7 +33,7 @@
         {
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
-        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
         }
@@ -41,7 +41,7 @@
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
-        public string DefaultNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("DefaultNationality", tpAttributeSearch);
         }

@@ -37,10 +37,10 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            string userID = _settings.UserID(searchDetails);
-            string version = _settings.APIVersion(searchDetails, false);
+            string userID = _settings.User(searchDetails);
+            string version = _settings.Version(searchDetails, false);
             string password = _settings.Password(searchDetails);
-            string url = _settings.URL(searchDetails);
+            string url = _settings.GenericURL(searchDetails);
 
             var requestXml = _serializer.Serialize(
                 GetSearchRequestXml(
@@ -60,6 +60,7 @@
                 Method = RequestMethod.POST,
                 ExtraInfo = searchDetails,
                 SOAP = true,
+                UseGZip = _settings.UseGZip(searchDetails)
             };
             request.SetRequest(requestXml);
 
@@ -233,7 +234,7 @@
                             Adjustments = adjustments,
                         };
 
-                        if (settings.ExcludeNonRefundable(searchDetails, false))
+                        if (settings.ExcludeNRF(searchDetails, false))
                         {
                             if (!transformedResult.NonRefundableRates.GetValueOrDefault())
                             {
