@@ -4,10 +4,10 @@
 
     public interface IBedsWithEaseSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Username(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
         string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
         string SOAPStart(IThirdPartyAttributeSearch tpAttributeSearch);

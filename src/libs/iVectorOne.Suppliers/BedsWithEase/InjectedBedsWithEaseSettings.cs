@@ -9,14 +9,14 @@
     {
         protected override string Source => ThirdParties.BEDSWITHEASE;
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Username", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -24,7 +24,7 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
