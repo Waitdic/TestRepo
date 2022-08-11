@@ -211,7 +211,7 @@
         {
             await GetCancellationCostAsync(propertyDetails);
 
-            var supplierSourceReferences = propertyDetails.SupplierSourceReference.Split('|');
+            var supplierSourceReferences = propertyDetails.SourceReference.Split('|');
             var cancellationPrices = propertyDetails.TPRef1.Split('|');
             var sessionIds = propertyDetails.TPRef2.Split('|');
 
@@ -287,7 +287,7 @@
                 Success = true
             };
 
-            var supplierSourceReferences = propertyDetails.SupplierSourceReference.Split('|').ToList();
+            var supplierSourceReferences = propertyDetails.SourceReference.Split('|').ToList();
             var cancellationPrices = new List<string>();
 
             var sessionIds = new List<string>();
@@ -427,6 +427,7 @@
             {
                 Request =
                 {
+                    RequestType = Constant.RequestTypeCancelCost,
                     Session = GetSession(propertyDetails),
                     Cancellation =
                     {

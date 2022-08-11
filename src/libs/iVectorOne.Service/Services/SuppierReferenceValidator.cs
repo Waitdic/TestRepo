@@ -19,6 +19,7 @@
 
             switch (details.Source)
             {
+                case ThirdParties.ALTURA:
                 case ThirdParties.ACEROOMS:
                 case ThirdParties.BONOTEL:
                 case ThirdParties.CHANNELMANAGER:
@@ -101,6 +102,7 @@
 
             switch (details.Source)
             {
+                case ThirdParties.ALTURA:
                 case ThirdParties.ACEROOMS:
                 case ThirdParties.BONOTEL:
                 case ThirdParties.BOOKABED:
