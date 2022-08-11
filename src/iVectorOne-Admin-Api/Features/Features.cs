@@ -15,7 +15,9 @@ using iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Suppliers.List;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Update;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Users.Link;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink;
+using iVectorOne_Admin_Api.Features.V1.Users.Create;
 using iVectorOne_Admin_Api.Features.V1.Users.Info;
+using iVectorOne_Admin_Api.Features.V1.Users.List;
 
 namespace iVectorOne_Admin_Api.Features
 {
@@ -30,8 +32,11 @@ namespace iVectorOne_Admin_Api.Features
 
             app.MapErrorRoutes();
 
+            //Users
+            app.MapUsersInfoV1Endpoint();
             app.MapUsersListV1Endpoint();
             app.MapUsersTenantsListV1Endpoint();
+            app.MapUsersCreateV1Endpoint();
 
             //Tenant
             app.MapTenantInfoV1Endpoint();
@@ -53,6 +58,8 @@ namespace iVectorOne_Admin_Api.Features
             //Supplier
             app.MapTenantSubscriptionSupplierListV1Endpoint();
             app.MapTenantSubscriptionSupplierDeleteV1Endpoint();
+
+
 
             return app;
         }
