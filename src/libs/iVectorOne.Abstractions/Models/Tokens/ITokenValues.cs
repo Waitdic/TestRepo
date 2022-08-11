@@ -6,7 +6,6 @@
     public interface ITokenValues
     {
         /// <summary>Gets the values.</summary>
-        /// <value>Returns the stored token values.</value>
         List<TokenValue> Values { get; }
 
         /// <summary>Add value method for when you don't know the value yet</summary>
@@ -23,9 +22,7 @@
         /// <returns>The integer Value stored in the collection associated with the name.</returns>
         int GetValue(TokenValueType name);
 
-        /// <summary>
-        ///   <para>Empties the collection.</para>
-        /// </summary>
+        /// <summary>Empties the collection.</summary>
         void Clear();
     }
 }

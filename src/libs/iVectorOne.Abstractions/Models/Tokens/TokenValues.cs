@@ -11,8 +11,7 @@
         /// <summary>The values</summary>
         private List<TokenValue> _values = new();
 
-        /// <summary>Gets the values.</summary>
-        /// <value>Returns the stored token values.</value>
+        /// <summary>Gets the stored token values.</summary>
         public List<TokenValue> Values
         {
             get

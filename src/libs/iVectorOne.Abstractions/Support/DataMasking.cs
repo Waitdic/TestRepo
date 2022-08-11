@@ -97,9 +97,6 @@
             /// <summary>
             /// Gets or sets the name space manager.
             /// </summary>
-            /// <value>
-            /// The name space manager.
-            /// </value>
             public XmlNamespaceManager NameSpaceManager { get; set; } = null!;
 
             /// <summary>
@@ -126,33 +123,21 @@
             /// <summary>
             /// Gets or sets the third party.
             /// </summary>
-            /// <value>
-            /// The third party.
-            /// </value>
             public string ThirdParty { get; set; } = string.Empty;
 
             /// <summary>
             /// Gets or sets the action.
             /// </summary>
-            /// <value>
-            /// The action.
-            /// </value>
             public string Action { get; set; } = string.Empty;
 
             /// <summary>
             /// Gets or sets the x path.
             /// </summary>
-            /// <value>
-            /// The x path.
-            /// </value>
             public string XPath { get; set; } = string.Empty;
 
             /// <summary>
             /// Gets or sets the regex.
             /// </summary>
-            /// <value>
-            /// The regex.
-            /// </value>
             public string Regex { get; set; } = string.Empty;
         }
     }

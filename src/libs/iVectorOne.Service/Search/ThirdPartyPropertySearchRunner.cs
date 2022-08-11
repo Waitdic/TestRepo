@@ -54,9 +54,6 @@
         /// <summary>Gets or sets the start time.</summary>
         public DateTime StartTime { get; set; }
 
-        /// <summary>Gets or sets the log collection.</summary>
-        public List<LogCollection> LogCollection { get; set; } = new List<LogCollection>();
-
         /// <summary>Gets or sets the request tracker.</summary>
         public IRequestTracker RequestTracker { get; set; } = null!;
 

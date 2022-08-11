@@ -29,9 +29,6 @@
         /// <summary>
         /// Gets or sets the d request start time.
         /// </summary>
-        /// <value>
-        /// The d request start time.
-        /// </value>
         private DateTime requestStartTime;
 
         /// <summary>
@@ -42,9 +39,6 @@
         /// <summary>
         /// Gets or sets a value indicating whether [b this thread exception].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [b this thread exception]; otherwise, <c>false</c>.
-        /// </value>
         private bool thisThreadException = false;
 
         /// <summary>
@@ -55,41 +49,26 @@
         /// <summary>
         /// Gets or sets a value indicating whether [b thread cancelled].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [b thread cancelled]; otherwise, <c>false</c>.
-        /// </value>
         private bool threadCancelled  = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether [transform started].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [transform started]; otherwise, <c>false</c>.
-        /// </value>
-        public bool TransformStarted { get; set; } = false;
+        public bool TransformStarted { get; set; }
 
         /// <summary>
         /// Gets or sets the request limit.
         /// </summary>
-        /// <value>
-        /// The request limit.
-        /// </value>
         public int RequestLimit { get; set; } = 10;
 
         /// <summary>
         /// Gets or sets the thread time.
         /// </summary>
-        /// <value>
-        /// The thread time.
-        /// </value>
-        public ThirdPartyRequestTime ThreadTime { get; set; } = new ThirdPartyRequestTime();
+        public ThirdPartyRequestTime ThreadTime { get; set; } = new();
 
         /// <summary>
         /// Gets a value indicating whether [all responses received].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [all responses received]; otherwise, <c>false</c>.
-        /// </value>
         public bool AllResponsesReceived
         {
             get
@@ -101,9 +80,6 @@
         /// <summary>
         /// Gets a value indicating whether [all threads threw exceptions].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [all threads threw exceptions]; otherwise, <c>false</c>.
-        /// </value>
         public bool AllThreadsThrewExceptions
         {
             get
@@ -115,9 +91,6 @@
         /// <summary>
         /// Gets a value indicating whether [main thread time out].
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if [main thread time out]; otherwise, <c>false</c>.
-        /// </value>
         public bool MainThreadTimeOut
         {
             get

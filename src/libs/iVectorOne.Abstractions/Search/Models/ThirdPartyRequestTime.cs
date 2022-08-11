@@ -58,31 +58,24 @@
         }
 
         /// <summary>Gets or sets the source.</summary>
-        /// <value>The source.</value>
         public string Source { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the total results.</summary>
-        /// <value>The total results.</value>
         public int TotalResults { get; set; }
 
         /// <summary>Gets or sets the request count.</summary>
-        /// <value>The request count.</value>
         public int RequestCount { get; set; }
 
         /// <summary>Gets or sets the total time.</summary>
-        /// <value>The total time.</value>
         public decimal TotalTime { get; set; }
 
         /// <summary>Gets or sets the store time.</summary>
-        /// <value>The store time.</value>
         public decimal StoreTime { get; set; }
 
         /// <summary>Gets or sets the post process time.</summary>
-        /// <value>The post process time.</value>
         public decimal PostProcessTime { get; set; }
 
         /// <summary>Gets or sets the pre process time.</summary>
-        /// <value>The pre process time.</value>
         public decimal PreProcessTime { get; set; }
 
         /// <summary>

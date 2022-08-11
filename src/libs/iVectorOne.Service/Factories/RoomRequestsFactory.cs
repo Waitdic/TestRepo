@@ -20,7 +20,7 @@
 
                 foreach (var roomstring in roomStrings)
                 {
-                    var room = new RoomRequest() { ChildAges = new List<int>() };
+                    var room = new RoomRequest();
 
                     //next split child ages from pax totals on tilde
                     var roomsplit = roomstring.Split('~').ToList();
