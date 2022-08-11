@@ -77,7 +77,7 @@
         /// <summary>
         /// Gets the number of passengers.
         /// </summary>
-        public int TotalPassengers => Passengers.TotalAdults + Passengers.TotalChildren + Passengers.TotalInfants;
+        public int TotalPassengers => Adults + Children + Infants;
 
         /// <summary>
         ///  Gets or sets The local cost
@@ -157,9 +157,6 @@
         /// <summary>
         /// Gets and sets the special request.
         /// </summary>
-        /// <value>
-        /// The special request.
-        /// </value>
         public string SpecialRequest { get; set; } = string.Empty;
     }
 }

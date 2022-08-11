@@ -7,12 +7,10 @@
     public class BookToken
     {
         /// <summary>Gets or sets the property identifier.</summary>
-        /// <value>The property identifier.</value>
         [JsonPropertyName("P")]
         public int PropertyID { get; set; }
 
         /// <summary>Gets or sets the Source.</summary>
-        /// <value>The third party Source.</value>
         [JsonPropertyName("S")]
         public string Source { get; set; } = string.Empty;
     }

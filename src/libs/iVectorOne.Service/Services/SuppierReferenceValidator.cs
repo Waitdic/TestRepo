@@ -14,8 +14,8 @@
         /// <param name="bookRequest">The booking request.</param>
         public void ValidateBook(PropertyDetails details, Request bookRequest)
         {
-            var tpRef1Required = false;
-            var tpRef2Required = false;
+            bool tpRef1Required = false;
+            bool tpRef2Required = false;
 
             switch (details.Source)
             {
@@ -96,8 +96,8 @@
         /// <param name="details">The property details.</param>
         public void ValidateCancel(PropertyDetails details)
         {
-            var tpRef1Required = false;
-            var sourceSecondaryReferenceRequired = false;
+            bool tpRef1Required = false;
+            bool sourceSecondaryReferenceRequired = false;
 
             switch (details.Source)
             {

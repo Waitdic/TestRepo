@@ -21,18 +21,12 @@
         /// <summary>
         /// Gets or sets the transformed results.
         /// </summary>
-        /// <value>
-        /// The transformed results.
-        /// </value>
         [XmlIgnore]
         public List<TransformedResult> TransformedResults { get; set; } = new List<TransformedResult>();
 
         /// <summary>
         /// Gets the distinct valid results.
         /// </summary>
-        /// <value>
-        /// The distinct valid results.
-        /// </value>
         [XmlElement("Result")]
         public List<TransformedResult> DistinctValidResults
         {
@@ -45,9 +39,6 @@
         /// <summary>
         /// Gets or sets the equality comparer.
         /// </summary>
-        /// <value>
-        /// The equality comparer.
-        /// </value>
         private IEqualityComparer<TransformedResult> EqualityComparer { get; set; }
     }
 }

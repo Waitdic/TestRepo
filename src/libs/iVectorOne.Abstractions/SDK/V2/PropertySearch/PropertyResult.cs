@@ -10,25 +10,16 @@
         /// <summary>
         /// Gets or sets the booking token.
         /// </summary>
-        /// <value>
-        /// The booking token.
-        /// </value>
         public string BookingToken { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the property identifier.
         /// </summary>
-        /// <value>
-        /// The property identifier.
-        /// </value>
         public int PropertyID { get; set; }
 
         /// <summary>
         /// Gets or sets the room types.
         /// </summary>
-        /// <value>
-        /// The room types.
-        /// </value>
         public List<RoomType> RoomTypes { get; set; } = new List<RoomType>();
     }
 }

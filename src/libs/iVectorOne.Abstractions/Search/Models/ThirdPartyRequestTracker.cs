@@ -25,18 +25,12 @@
         /// <summary>
         /// Gets or sets the requests sent.
         /// </summary>
-        /// <value>
-        /// The requests sent.
-        /// </value>
-        public int RequestsSent { get; set; } = 0;
+        public int RequestsSent { get; set; }
 
         /// <summary>
         /// Gets or sets the requests received.
         /// </summary>
-        /// <value>
-        /// The requests received.
-        /// </value>
-        public int RequestsReceived { get; set; } = 0;
+        public int RequestsReceived { get; set; }
 
         /// <summary>
         /// Gets or sets the search id
@@ -46,12 +40,9 @@
         /// <summary>
         /// Gets or sets the request times.
         /// </summary>
-        /// <value>
-        /// The request times.
-        /// </value>
         [XmlArray("RequestTimes")]
         [XmlArrayItem("RequestTime")]
-        public List<ThirdPartyRequestTime> RequestTimes { get; set; } = new List<ThirdPartyRequestTime>();
+        public List<ThirdPartyRequestTime> RequestTimes { get; set; } = new();
 
         /// <summary>
         /// Store requests in db
