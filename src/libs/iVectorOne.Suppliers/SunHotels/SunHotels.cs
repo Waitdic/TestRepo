@@ -122,7 +122,7 @@
 
                 if (!webRequest.Success)
                 {
-                    propertyDetails.Warnings.AddNew("Prebook Failed", webRequest.RequestError.Text ?? "Unknown Error");
+                    propertyDetails.Warnings.AddNew("Prebook Failed", webRequest.RequestError?.Text ?? "Unknown Error");
                     return false;
                 }
                 else if (prebookResponseXml.SelectSingleNode("preBookResult/Error") is not null)
