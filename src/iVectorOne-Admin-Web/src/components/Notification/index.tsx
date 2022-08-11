@@ -1,8 +1,6 @@
 import { FC, useEffect, Fragment, Dispatch, SetStateAction, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { Transition } from '@headlessui/react';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/outline';
-import { XIcon } from '@heroicons/react/solid';
 //
 import { NotificationStatus } from '@/constants';
 
@@ -17,7 +15,7 @@ type Props = {
 };
 
 const Notification: FC<Props> = ({
-  title,
+  title: _title,
   description,
   status = NotificationStatus.SUCCESS,
   show,

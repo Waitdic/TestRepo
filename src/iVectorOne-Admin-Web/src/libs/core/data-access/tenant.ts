@@ -73,9 +73,7 @@ export async function updateTenant(
         Accept: 'application/json',
         Tenantkey: userTenantKey,
       },
-      data: {
-        ...data,
-      },
+      data,
     });
     const updatedTenant = get(updatedTenantRes, 'data', null);
     onSuccess(updatedTenant);
@@ -140,6 +138,37 @@ export async function deleteTenant(
       },
     });
     onSuccess();
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Create tenant
+export async function createTenant(
+  userTenantKey: string,
+  data: Tenant,
+  onInit: () => void,
+  onSuccess: (newTenant: { tenantId: number; success: boolean }) => void,
+  onFailed: (error: string) => void
+) {
+  onInit();
+  try {
+    const newTenant = await ApiCall.request({
+      method: 'POST',
+      url: `/tenants`,
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: userTenantKey,
+      },
+      data,
+    });
+    onSuccess(newTenant.data);
   } catch (err) {
     if (typeof err === 'string') {
       console.error(err.toUpperCase());
