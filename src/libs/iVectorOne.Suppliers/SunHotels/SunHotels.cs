@@ -120,7 +120,12 @@
                 // strip out anything we don't need
                 prebookResponseXml = _serializer.CleanXmlNamespaces(prebookResponseXml);
 
-                if (prebookResponseXml.SelectSingleNode("preBookResult/Error") is not null)
+                if (!webRequest.Success)
+                {
+                    propertyDetails.Warnings.AddNew("Prebook Failed", webRequest.RequestError.Text ?? "Unknown Error");
+                    return false;
+                }
+                else if (prebookResponseXml.SelectSingleNode("preBookResult/Error") is not null)
                 {
                     propertyDetails.Warnings.AddNew("Prebook Failed", prebookResponseXml.SafeNodeValue("preBookResult/Error/Message"));
                     return false;
