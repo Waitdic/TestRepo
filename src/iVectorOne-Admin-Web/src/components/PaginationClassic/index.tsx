@@ -18,7 +18,7 @@ const PaginationClassic: React.FC<Props> = ({
     if (resultCount === 0) return 0;
     if (currentPageCount * postPerPage === 0) return 1;
     return currentPageCount * postPerPage;
-  }, []);
+  }, [resultCount, currentPageCount]);
 
   const handleIncrementPageCount = () => {
     if (currentPageCount === Math.ceil(resultCount / postPerPage) - 1) return;
@@ -53,7 +53,9 @@ const PaginationClassic: React.FC<Props> = ({
             <button
               className={classNames('btn bg-white border-slate-200', {
                 'text-slate-300 cursor-not-allowed':
-                  currentPageCount === Math.ceil(resultCount / postPerPage) - 1,
+                  currentPageCount ===
+                    Math.ceil(resultCount / postPerPage) - 1 ||
+                  resultCount === 0,
                 'hover:border-slate-300 text-primary':
                   currentPageCount < Math.ceil(resultCount / postPerPage) - 1,
               })}
