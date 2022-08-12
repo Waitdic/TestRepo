@@ -7,13 +7,13 @@
         string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
         string Currency(IThirdPartyAttributeSearch thirdPartyAttributeSearch);
-        string SearchEndPoint(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool UseGzip(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch thirdPartyAttributeSearch);
-        string Telephone(IThirdPartyAttributeSearch tpAttributeSearch);
-        string DefaultEmail(IThirdPartyAttributeSearch tpAttributeSearch);
-        string BookEndPoint(IThirdPartyAttributeSearch tpAttributeSearch);
-        string GetCancellationEndPoint(IThirdPartyAttributeSearch tpAttributeSearch);
-        string ConfirmCancelEndPoint(IThirdPartyAttributeSearch tpAttributeSearch);
+        string ContactPhoneNumber(IThirdPartyAttributeSearch tpAttributeSearch);
+        string ContactEmail(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationPolicyURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

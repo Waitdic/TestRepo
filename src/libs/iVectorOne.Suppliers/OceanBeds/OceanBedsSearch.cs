@@ -71,7 +71,7 @@
 
             try
             {
-                searchWebRequest.EndPoint = _settings.SearchEndPoint(searchDetails);
+                searchWebRequest.EndPoint = _settings.SearchURL(searchDetails);
                 searchWebRequest.Method = RequestMethod.POST;
                 searchWebRequest.ExtraInfo = searchDetails;
                 searchWebRequest.SetRequest(_serializer.Serialize(request));

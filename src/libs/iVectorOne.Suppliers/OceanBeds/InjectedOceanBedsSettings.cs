@@ -24,12 +24,12 @@
              return Get_Value("Currency", tpAttributeSearch);
         }
 
-        public string SearchEndPoint(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("SearchEndPoint", tpAttributeSearch);
+             return Get_Value("SearchURL", tpAttributeSearch);
         }
 
-        public bool UseGzip(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
              return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
@@ -39,29 +39,29 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string Telephone(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ContactPhoneNumber(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("Telephone", tpAttributeSearch);
+             return Get_Value("ContactPhoneNumber", tpAttributeSearch);
         }
 
-        public string DefaultEmail(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ContactEmail(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("DefaultEmail", tpAttributeSearch);
+             return Get_Value("ContactEmail", tpAttributeSearch);
         }
 
-        public string BookEndPoint(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("BookEndPoint", tpAttributeSearch);
+             return Get_Value("BookingURL", tpAttributeSearch);
         }
 
-        public string GetCancellationEndPoint(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationPolicyURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("GetCancellationEndPoint", tpAttributeSearch);
+             return Get_Value("CancellationPolicyURL", tpAttributeSearch);
         }
 
-        public string ConfirmCancelEndPoint(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-             return Get_Value("ConfirmCancelEndPoint", tpAttributeSearch);
+             return Get_Value("CancellationURL", tpAttributeSearch);
         }
     }
 }

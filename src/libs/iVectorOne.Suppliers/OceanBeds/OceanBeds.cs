@@ -52,7 +52,7 @@
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             const string requestType = "GetPropertyAvailability";
-            string endpoint = _settings.SearchEndPoint(propertyDetails);
+            string endpoint = _settings.SearchURL(propertyDetails);
             bool success = false;
             var webRequest = new Request();
 
@@ -91,7 +91,7 @@
                 bookWebRequest = await SendRequestAsync(
                     _serializer.Serialize(bookingMultipleRq),
                     propertyDetails,
-                    _settings.BookEndPoint(propertyDetails),
+                    _settings.BookingURL(propertyDetails),
                     "Book");
 
                 var bookingResponse = _serializer.DeSerialize<BookingMultipleRS>(bookWebRequest.ResponseXML);
@@ -131,7 +131,7 @@
                 if (string.IsNullOrWhiteSpace(cancellationKey))
                     throw new Exception("No Cancellation Key");
 
-                var endpoint = _settings.ConfirmCancelEndPoint(propertyDetails);
+                var endpoint = _settings.CancellationURL(propertyDetails);
                 var credentials = Credentials(propertyDetails, _settings);
 
                 var confirmCancellationRq = BuildConfirmCancellation(cancellationKey.ToSafeInt(), credentials);
@@ -168,7 +168,7 @@
 
             try
             {
-                var endpoint = _settings.GetCancellationEndPoint(propertyDetails);
+                var endpoint = _settings.CancellationPolicyURL(propertyDetails);
                 var credentials = Credentials(propertyDetails, _settings);
 
                 var cancellationRequest = BuildBookingCancellation(propertyDetails.SourceReference, credentials);
@@ -262,7 +262,7 @@
                 Source = ThirdParties.OCEANBEDS,
                 LogFileName = requestType,
                 CreateLog = true,
-                UseGZip = _settings.UseGzip(thirdPartyAttributeSearch).ToSafeBoolean(),
+                UseGZip = _settings.UseGZip(thirdPartyAttributeSearch).ToSafeBoolean(),
                 SOAP = false
             };
 
@@ -279,12 +279,12 @@
 
             if (string.IsNullOrEmpty(phoneNumber))
             {
-                phoneNumber = _settings.Telephone(propertyDetails);
+                phoneNumber = _settings.ContactPhoneNumber(propertyDetails);
             }
 
             if (string.IsNullOrEmpty(emailAddress))
             {
-                emailAddress = _settings.DefaultEmail(propertyDetails);
+                emailAddress = _settings.ContactEmail(propertyDetails);
             }
 
             var bookingMultipleRq = new BookingMultipleRQ
