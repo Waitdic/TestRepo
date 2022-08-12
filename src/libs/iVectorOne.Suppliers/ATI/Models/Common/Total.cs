@@ -4,6 +4,7 @@
 
     public class Total
     {
+        [XmlAttribute("AmountAfterTax")]
         public decimal AmountAfterTax { get; set; }
 
         [XmlAttribute("CurrencyCode")]

@@ -21,6 +21,7 @@
             {
                 case ThirdParties.ALTURA:
                 case ThirdParties.ACEROOMS:
+                case ThirdParties.ATI:
                 case ThirdParties.BONOTEL:
                 case ThirdParties.CHANNELMANAGER:
                 case ThirdParties.DERBYSOFTCLUBMED:
@@ -104,6 +105,7 @@
             {
                 case ThirdParties.ALTURA:
                 case ThirdParties.ACEROOMS:
+                case ThirdParties.ATI:
                 case ThirdParties.BONOTEL:
                 case ThirdParties.BOOKABED:
                 case ThirdParties.CHANNELMANAGER:

@@ -275,7 +275,7 @@ const KnowledgeBase: React.FC<Props> = () => {
                     <a
                       className='text-sm font-medium text-indigo-500 hover:text-indigo-600'
                       target='_blank'
-                      href='https://documenter.getpostman.com/view/2159662/UyxqD49x'
+                      href='https://documenter.getpostman.com/view/19225969/VUjQmjqT'
                     >
                       View
                     </a>
@@ -332,7 +332,7 @@ const KnowledgeBase: React.FC<Props> = () => {
                     <a
                       className='text-sm font-medium text-indigo-500 hover:text-indigo-600'
                       target='_blank'
-                      href='https://ivectorone.com/wp-content/uploads/2021/09/iVectorOne-API-Documentation.pdf'
+                      href='https://ivectorone.com/wp-content/uploads/2022/08/iVectorOne-API-documentation.pdf'
                     >
                       View
                     </a>
@@ -375,7 +375,7 @@ const KnowledgeBase: React.FC<Props> = () => {
                       <a
                         className='text-sm font-medium text-indigo-500 hover:text-indigo-600'
                         target='_blank'
-                        href='https://ivectorone.com/wp-content/uploads/2021/09/iVectorOne-API-Documentation.pdf'
+                        href='https://ivectorone.com/wp-content/uploads/2022/08/iVectorOne-API-documentation.pdf'
                       >
                         View
                       </a>
