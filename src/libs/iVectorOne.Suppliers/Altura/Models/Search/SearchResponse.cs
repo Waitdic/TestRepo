@@ -11,7 +11,7 @@
         [XmlArrayItem("Hotel")]
         public List<Hotel> Hotels { get; set; } = new();
 
-        [XmlAttribute("Session")]
+        [XmlAttribute("session")]
         public string Session { get; set; } = string.Empty;
 
         [XmlAttribute("type")]

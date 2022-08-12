@@ -25,12 +25,12 @@
         {
             var webRequest = new Request
             {
-                EndPoint = settings.URL(searchDetails),
+                EndPoint = settings.GenericURL(searchDetails),
                 Method = RequestMethod.POST,
                 SOAP = true,
                 SoapAction = soapAction,
                 Source = ThirdParties.BEDSWITHEASE,
-                UseGZip = settings.UseGZIP(searchDetails)
+                UseGZip = settings.UseGZip(searchDetails)
             };
 
             webRequest.SetRequest(xmlRequest);
@@ -79,7 +79,7 @@
                 {
                     Content =
                     {
-                        UserId = settings.Username(searchDetails),
+                        UserId = settings.User(searchDetails),
                         Password = settings.Password(searchDetails),
                         LanguageCode = settings.LanguageCode(searchDetails)
                     }

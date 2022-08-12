@@ -6,9 +6,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Create
     {
         public List<string> Warnings { get; set; } = new();
 
-        public void Default()
+        public void Default(ResponseModelBase model)
         {
-            Result = Results.Ok();
+            Result = Results.Ok(model);
         }
 
         public void NotFound()

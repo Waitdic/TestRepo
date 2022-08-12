@@ -32,7 +32,7 @@
                 subscription.DummyResponses = false;
                 subscription.LogMainSearchError = true;
                 subscription.Environment = environment.ToLower();
-                subscription.Login = $"{subscription.Login} {environment}";
+                subscription.Login = $"{subscription.Login}_{environment}";
                 subscription.Password = "123"; // TODO: need to generate
                 return subscription;
             }
@@ -54,7 +54,7 @@
             tenant.Subscriptions.AddRange(subscriptions);
             await _context.SaveChangesAsync(cancellationToken);
 
-            response.Default();
+            response.Default(new ResponseModelBase { Success = true });
             return response;
         }
     }
