@@ -12,12 +12,34 @@
       ]
     },
     {
-      "title": "2022 Q2",
+      "title": "2022 Q3",
       "status": "Working on",
       "list": [
         {
           "title": "Portal V1",
           "description": "We will build a portal so that users can add, delete and update their subscriptions and suppliers for themselves.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "title": "2022 Q3",
+      "status": "Working on",
+      "list": [
+        {
+          "title": "Search Testing",
+          "description": "Provide the ability to test a supplier search in the portal. Users can execute a search and then analyse the related response, logs and audit information.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "title": "2022 Q3",
+      "status": "Planned",
+      "list": [
+        {
+          "title": "SEarch Reporting",
+          "description": "Provide information and statistics about searches in the portal.",
           "completed": false
         }
       ]
