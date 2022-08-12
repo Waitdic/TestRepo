@@ -101,7 +101,7 @@ export const AccountList: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout title='Accounts' addNew={false} addNewHref='/accounts/create'>
+      <MainLayout title='Accounts' addNew addNewHref='/accounts/create'>
         <CardList
           bodyList={tableBodyList}
           isLoading={!accounts.length}

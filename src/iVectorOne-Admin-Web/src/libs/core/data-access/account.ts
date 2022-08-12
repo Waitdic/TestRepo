@@ -232,3 +232,37 @@ export async function getAccountById(
     }
   }
 }
+
+//* Create account
+export async function createAccount(
+  tenant: { id: number; key: string },
+  data: {
+    UserName: string;
+    PropertyTpRequestLimit: string;
+    SearchTimeoutSeconds: string;
+    CurrencyCode: string;
+  },
+  onInit: () => void,
+  onSuccess: () => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    await ApiCall.request({
+      method: 'POST',
+      url: `/tenants/${tenant.id}/subscriptions`,
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+      data,
+    });
+    onSuccess();
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}

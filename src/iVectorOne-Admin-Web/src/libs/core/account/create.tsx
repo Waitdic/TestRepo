@@ -1,9 +1,7 @@
-import { memo, FC, useState, useEffect } from 'react';
+import { memo, FC, useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { pick } from 'lodash';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import { Account } from '@/types';
@@ -19,13 +17,14 @@ import {
   Button,
   TextField,
   Select,
-  Toggle,
   Notification,
 } from '@/components';
+import { createAccount } from '../data-access/account';
 
 type Props = {};
 
 export const AccountCreate: FC<Props> = memo(() => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.app.user);
@@ -43,42 +42,47 @@ export const AccountCreate: FC<Props> = memo(() => {
     message: 'Create New Account',
   });
 
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((tenant) => tenant.isSelected),
+    [user]
+  );
+
   const onSubmit: SubmitHandler<Account> = async (data) => {
-    const accountData = pick(data, [
-      'name',
-      'userName',
-      'password',
-      'PropertyTPRequestLimit',
-      'SearchTimeoutSeconds',
-      'LogMainSearchError',
-      'CurrencyCode',
-    ]);
-    try {
-      const _newAccount = await axios.post(
-        'http://localhost:3001/subsciption.create',
-        accountData
-      );
-      setNotification({
-        status: NotificationStatus.SUCCESS,
-        message: 'New Account created successfully.',
-      });
-      setShowNotification(true);
-    } catch (error) {
-      if (typeof error === 'string') {
-        console.error(error.toUpperCase());
+    if (!activeTenant) return;
+    await createAccount(
+      {
+        id: activeTenant.tenantId,
+        key: activeTenant.tenantKey,
+      },
+      {
+        UserName: data.userName,
+        PropertyTpRequestLimit: data.propertyTprequestLimit.toString(),
+        SearchTimeoutSeconds: data.searchTimeoutSeconds.toString(),
+        CurrencyCode: data.currencyCode,
+      },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: 'New Account Created',
+        });
+        setShowNotification(true);
+        setTimeout(() => {
+          navigate('/accounts');
+        }, 500);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: error.toUpperCase(),
+          message: 'Error Creating Account',
         });
-      } else if (error instanceof Error) {
-        console.error(error.message);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: error.message,
-        });
+        setShowNotification(true);
       }
-      setShowNotification(true);
-    }
+    );
   };
 
   useEffect(() => {
@@ -90,18 +94,18 @@ export const AccountCreate: FC<Props> = memo(() => {
   return (
     <>
       <MainLayout title='New Account'>
-        <div className='flex flex-col'>
-          <div className='mb-6'>
+        <div className='bg-white shadow-lg rounded-sm mb-8'>
+          <div className='flex flex-col md:flex-row md:-mr-px'>
+            <div className='min-w-60'></div>
             <form
-              className='w-full divide-y divide-gray-200'
+              className='grow p-6 w-full divide-y divide-gray-200'
               onSubmit={handleSubmit(onSubmit)}
-              autoComplete='turnedOff'
             >
-              <div className='mb-8 flex flex-col gap-5'>
+              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                 <div className='flex-1'>
                   <SectionTitle title='Account' />
                 </div>
-                <div className='flex-1 md:w-1/2'>
+                <div className='flex-1'>
                   <TextField
                     id='userName'
                     {...register('userName', {
@@ -112,26 +116,10 @@ export const AccountCreate: FC<Props> = memo(() => {
                     errorMsg={errors.userName?.message}
                   />
                 </div>
-                <div className='flex-1 md:w-1/2'>
-                  <TextField
-                    id='password'
-                    type={InputTypes.PASSWORD}
-                    {...register('password', {
-                      required: 'This field is required.',
-                      minLength: {
-                        value: 8,
-                        message: 'Password must be at least 8 characters.',
-                      },
-                    })}
-                    labelText='Password'
-                    isDirty={!!errors.password}
-                    errorMsg={errors.password?.message}
-                  />
-                </div>
                 <div className='flex-1'>
                   <SectionTitle title='Settings' />
                 </div>
-                <div className='flex-1 md:w-1/2'>
+                <div className='flex-1'>
                   <TextField
                     id='propertyTprequestLimit'
                     type={InputTypes.NUMBER}
@@ -143,7 +131,7 @@ export const AccountCreate: FC<Props> = memo(() => {
                     errorMsg={errors.propertyTprequestLimit?.message}
                   />
                 </div>
-                <div className='flex-1 md:w-1/2'>
+                <div className='flex-1'>
                   <TextField
                     id='searchTimeoutSeconds'
                     type={InputTypes.NUMBER}
@@ -155,7 +143,7 @@ export const AccountCreate: FC<Props> = memo(() => {
                     errorMsg={errors.searchTimeoutSeconds?.message}
                   />
                 </div>
-                <div className='flex-1 md:w-1/2'>
+                <div className='flex-1'>
                   <Select
                     id='currencyCode'
                     {...register('currencyCode', {
@@ -176,15 +164,6 @@ export const AccountCreate: FC<Props> = memo(() => {
                         name: 'EUR',
                       },
                     ]}
-                  />
-                </div>
-                <div className='flex-1 md:w-1/2'>
-                  <Toggle
-                    id='logMainSearchError'
-                    {...register('logMainSearchError')}
-                    labelText='Log Main Search Error'
-                    isDirty={!!errors.logMainSearchError}
-                    errorMsg={errors.logMainSearchError?.message}
                   />
                 </div>
               </div>
