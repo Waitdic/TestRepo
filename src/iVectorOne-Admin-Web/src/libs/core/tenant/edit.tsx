@@ -124,7 +124,9 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
           message: MESSAGES.onSuccess.update,
         });
         setShowNotification(true);
-        fetchTenant();
+        setTimeout(() => {
+          navigate('/tenants');
+        }, 500);
       },
       (err) => {
         console.error(err);
@@ -249,7 +251,7 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
               onSubmit={handleSubmit(onSubmit)}
               autoComplete='turnedOff'
             >
-              <div className='flex flex-col gap-5'>
+              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                 <div>
                   <TextField
                     id='contactEmail'
@@ -299,13 +301,6 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
                   defaultValue={tenant?.isActive}
                   onChange={handleToggleTenantStatus}
                   onBlur={handleToggleTenantStatus}
-                />
-                <Toggle
-                  id='isDeleted'
-                  name='isDeleted'
-                  labelText='Deleted'
-                  defaultValue={tenant?.isDeleted}
-                  readOnly
                 />
               </div>
               <div className='flex justify-end mt-5 pt-5'>

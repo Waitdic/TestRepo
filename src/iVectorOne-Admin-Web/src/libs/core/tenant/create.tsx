@@ -102,7 +102,7 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
               onSubmit={handleSubmit(onSubmit)}
               autoComplete='turnedOff'
             >
-              <div className='flex flex-col gap-5'>
+              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                 <div>
                   <TextField
                     id='companyName'
