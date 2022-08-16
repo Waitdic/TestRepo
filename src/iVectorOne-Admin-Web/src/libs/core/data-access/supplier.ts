@@ -199,3 +199,34 @@ export async function createSupplier(
     }
   }
 }
+
+//* Delete supplier
+export async function deleteSupplier(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  supplierId: number,
+  onInit: () => void,
+  onSuccess: () => void,
+  onFailed: (error: string) => void
+) {
+  onInit();
+
+  try {
+    await ApiCall.request({
+      method: 'DELETE',
+      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      headers: {
+        Tenantkey: tenant.key,
+      },
+    });
+    onSuccess();
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed(err.message);
+    }
+  }
+}

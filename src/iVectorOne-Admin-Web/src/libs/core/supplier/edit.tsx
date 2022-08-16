@@ -3,16 +3,32 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 //
-import { updateSupplier } from '../data-access/supplier';
+import { deleteSupplier, updateSupplier } from '../data-access/supplier';
 import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { Supplier, SupplierFormFields, Account } from '@/types';
+import {
+  Supplier,
+  SupplierFormFields,
+  Account,
+  NotificationState,
+} from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { SectionTitle, Button, Notification } from '@/components';
+import { SectionTitle, Button, Notification, ConfirmModal } from '@/components';
 
 type Props = {};
+
+const MESSAGES = {
+  onSuccess: {
+    update: 'Supplier updated successfully',
+    delete: 'Supplier deleted successfully',
+  },
+  onFailed: {
+    update: 'Failed to update supplier',
+    delete: 'Failed to delete supplier',
+  },
+};
 
 export const SupplierEdit: FC<Props> = memo(() => {
   const { pathname, search } = useLocation();
@@ -25,12 +41,10 @@ export const SupplierEdit: FC<Props> = memo(() => {
   const user = useSelector((state: RootState) => state.app.user);
 
   const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({
-    status: NotificationStatus.SUCCESS,
-    message: 'Supplier edited successfully.',
-  });
+  const [notification, setNotification] = useState<NotificationState>();
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const {
     register,
@@ -55,24 +69,56 @@ export const SupplierEdit: FC<Props> = memo(() => {
       () => {
         dispatch.app.setIsLoading(true);
       },
-      (_supplier) => {
+      () => {
+        dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.SUCCESS,
-          message: 'Supplier modified successfully.',
+          message: MESSAGES.onSuccess.update,
         });
         setShowNotification(true);
-        dispatch.app.setIsLoading(false);
         setTimeout(() => {
           navigate('/suppliers');
-        }, 800);
+        }, 500);
       },
-      (_error) => {
+      () => {
+        dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Supplier edit failed.',
+          message: MESSAGES.onFailed.update,
         });
         setShowNotification(true);
+      }
+    );
+  };
+
+  const handleDeleteSupplier = async () => {
+    if (!activeTenant) return;
+    await deleteSupplier(
+      { id: activeTenant?.tenantId, key: activeTenant?.tenantKey },
+      Number(currentAccount?.subscriptionId),
+      Number(currentSupplier?.supplierID),
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      () => {
         dispatch.app.setIsLoading(false);
+        setIsDeleting(false);
+        setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: MESSAGES.onSuccess.delete,
+        });
+        setShowNotification(true);
+        setTimeout(() => {
+          navigate('/suppliers');
+        }, 500);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.ERROR,
+          message: MESSAGES.onFailed.delete,
+        });
+        setShowNotification(true);
       }
     );
   };
@@ -91,9 +137,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
         setCurrentSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
-      (err) => {
-        dispatch.app.setError(err);
+      () => {
         dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.ERROR,
+          message: 'Failed to fetch data.',
+        });
+        navigate('/suppliers');
       }
     );
   };
@@ -140,6 +190,12 @@ export const SupplierEdit: FC<Props> = memo(() => {
                   onClick={() => navigate(-1)}
                 />
                 <Button
+                  text='Delete'
+                  color={ButtonColors.DANGER}
+                  className='ml-4'
+                  onClick={() => setIsDeleting(true)}
+                />
+                <Button
                   type={ButtonVariants.SUBMIT}
                   text='Save'
                   className='ml-4'
@@ -152,10 +208,25 @@ export const SupplierEdit: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          description={notification.message}
-          status={notification.status}
+          description={notification?.message as string}
+          status={notification?.status}
           show={showNotification}
           setShow={setShowNotification}
+        />
+      )}
+
+      {isDeleting && (
+        <ConfirmModal
+          title='Delete Supplier'
+          description={
+            <>
+              Are you sure you want to delete{' '}
+              <strong>{currentSupplier?.name}</strong>?
+            </>
+          }
+          show={isDeleting}
+          setShow={setIsDeleting}
+          onConfirm={handleDeleteSupplier}
         />
       )}
     </>
