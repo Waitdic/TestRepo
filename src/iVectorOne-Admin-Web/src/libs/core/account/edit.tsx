@@ -21,9 +21,15 @@ import {
   Button,
   TextField,
   Spinner,
+  ConfirmModal,
 } from '@/components';
 import { RootState } from '@/store';
-import { getAccountById } from '../data-access/account';
+import {
+  deleteAccount,
+  getAccountById,
+  updateAccount,
+} from '../data-access/account';
+import { log } from 'console';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -36,25 +42,36 @@ interface AccountFields extends Account {
   confirmPassword: string;
 }
 
+const MESSAGES = {
+  onSuccess: {
+    update: 'Account updated successfully',
+    delete: 'Account deleted successfully',
+  },
+  onFailed: {
+    update: 'Failed to update account',
+    delete: 'Failed to delete account',
+  },
+};
+
 export const AccountEdit: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
-  const error = useSelector((state: RootState) => state.app.error);
+  const appError = useSelector((state: RootState) => state.app.error);
   const navigate = useNavigate();
   const { slug } = useSlug();
 
-  const accounts = useSelector((state: RootState) => state.app.accounts);
-
   const [currentAccount, setCurrentAccount] = useState(null as Account | null);
-  const [notification, setNotification] = useState<NotificationState>({
-    status: NotificationStatus.SUCCESS,
-    message: 'Account edited successfully.',
-  });
+  const [notification, setNotification] = useState<NotificationState>();
   const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const activeTenant = useMemo(
     () => user?.tenants.find((tenant: any) => tenant.isSelected),
     [user?.tenants]
+  );
+  const userIsValid = useMemo(
+    () => !!activeTenant && !!currentAccount,
+    [activeTenant, currentAccount]
   );
 
   const {
@@ -83,69 +100,99 @@ export const AccountEdit: FC<Props> = memo(() => {
     );
   }, [activeTenant, slug]);
 
-  //! Temporary placeholder onSubmit function for account edit
   const onSubmit: SubmitHandler<AccountFields> = async (data) => {
-    try {
-      const _updatedAccount = await axios.patch(
-        `http://localhost:3001/account/edit/${slug}`,
-        data
-      );
-      setNotification({
-        status: NotificationStatus.SUCCESS,
-        message: 'Account edited successfully.',
-      });
-      setShowNotification(true);
-    } catch (err) {
-      console.error(err);
-      setShowNotification(true);
-    }
+    if (userIsValid) return;
+    await updateAccount(
+      {
+        id: activeTenant?.tenantId as number,
+        key: activeTenant?.tenantKey as string,
+      },
+      Number(slug),
+      {
+        UserName: data.userName,
+        Password: data.password,
+        PropertyTpRequestLimit: data.propertyTprequestLimit.toString(),
+        SearchTimeoutSeconds: data.searchTimeoutSeconds.toString(),
+        CurrencyCode: data.currencyCode,
+      },
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: MESSAGES.onSuccess.update,
+        });
+        setShowNotification(true);
+        setTimeout(() => {
+          navigate('/accounts');
+        }, 500);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.ERROR,
+          message: MESSAGES.onFailed.update,
+        });
+        setShowNotification(true);
+      }
+    );
   };
 
-  const loadAccount = useCallback(() => {
-    if (!!accounts?.length) {
-      const selectedAccount = accounts.find(
-        (acc) => acc.subscriptionId === Number(slug)
-      );
-      if (!selectedAccount) {
-        navigate('/accounts');
-        return;
+  const handleDeleteAccount = useCallback(async () => {
+    if (!userIsValid) return;
+    await deleteAccount(
+      {
+        id: activeTenant?.tenantId as number,
+        key: activeTenant?.tenantKey as string,
+      },
+      currentAccount?.subscriptionId as number,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: MESSAGES.onSuccess.delete,
+        });
+        setShowNotification(true);
+        setIsDeleting(false);
+        setTimeout(() => {
+          navigate('/accounts');
+        }, 500);
+      },
+      () => {
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.ERROR,
+          message: MESSAGES.onFailed.delete,
+        });
+        setShowNotification(true);
       }
-      setCurrentAccount(selectedAccount);
-      setValue('userName', selectedAccount.userName);
-      setValue(
-        'propertyTprequestLimit',
-        selectedAccount.propertyTprequestLimit
-      );
-      setValue('searchTimeoutSeconds', selectedAccount.searchTimeoutSeconds);
-      setValue('logMainSearchError', selectedAccount.logMainSearchError);
-      setValue('currencyCode', selectedAccount.currencyCode);
-    }
-  }, [accounts, navigate, setValue, slug]);
+    );
+  }, [activeTenant, currentAccount]);
 
   useEffect(() => {
-    if (error) {
+    if (appError) {
       setNotification({
         status: NotificationStatus.ERROR,
-        message: error as string,
+        message: appError as string,
       });
       setShowNotification(true);
     }
-  }, [error]);
+  }, [appError]);
 
   useEffect(() => {
-    if (currentAccount !== null) {
-      setValue('userName', currentAccount.userName);
-      setValue('password', currentAccount.password);
-      setValue('propertyTprequestLimit', currentAccount.propertyTprequestLimit);
-      setValue('searchTimeoutSeconds', currentAccount.searchTimeoutSeconds);
-      setValue('logMainSearchError', currentAccount.logMainSearchError);
-      setValue('currencyCode', currentAccount.currencyCode);
-    }
+    if (!currentAccount) return;
+    setValue('userName', currentAccount?.userName);
+    setValue('password', currentAccount?.password);
+    setValue('propertyTprequestLimit', currentAccount?.propertyTprequestLimit);
+    setValue('searchTimeoutSeconds', currentAccount?.searchTimeoutSeconds);
+    setValue('logMainSearchError', currentAccount?.logMainSearchError);
+    setValue('currencyCode', currentAccount?.currencyCode);
   }, [currentAccount]);
-
-  useEffect(() => {
-    loadAccount();
-  }, [accounts, loadAccount]);
 
   useEffect(() => {
     fetchAccountById();
@@ -166,101 +213,94 @@ export const AccountEdit: FC<Props> = memo(() => {
                 <div className='flex-1'>
                   <SectionTitle title='Account' />
                 </div>
-                {accounts.length > 0 ? (
-                  <>
-                    <div className='flex-1 md:w-1/2'>
-                      <TextField
-                        id='userName'
-                        {...register('userName', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Username'
-                        isDirty={!!errors.userName}
-                        errorMsg={errors.userName?.message}
-                      />
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <TextField
-                        id='password'
-                        type={InputTypes.PASSWORD}
-                        {...register('password', {
-                          required: 'This field is required.',
-                          minLength: {
-                            value: 8,
-                            message: 'Password must be at least 8 characters.',
-                          },
-                        })}
-                        labelText='Password'
-                        isDirty={!!errors.password}
-                        errorMsg={errors.password?.message}
-                      />
-                    </div>
-                    <div className='flex-1'>
-                      <SectionTitle title='Settings' />
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <TextField
-                        id='propertyTprequestLimit'
-                        type={InputTypes.NUMBER}
-                        {...register('propertyTprequestLimit', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Maximum Single Request Property Search Limit'
-                        isDirty={!!errors.propertyTprequestLimit}
-                        errorMsg={errors.propertyTprequestLimit?.message}
-                      />
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <TextField
-                        id='searchTimeoutSeconds'
-                        type={InputTypes.NUMBER}
-                        {...register('searchTimeoutSeconds', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Search Timeout (seconds)'
-                        isDirty={!!errors.searchTimeoutSeconds}
-                        errorMsg={errors.searchTimeoutSeconds?.message}
-                      />
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <Select
-                        id='currencyCode'
-                        {...register('currencyCode', {
-                          required: 'This field is required.',
-                        })}
-                        labelText='Currency Code'
-                        options={[
-                          {
-                            id: 'GBP',
-                            name: 'GBP',
-                          },
-                          {
-                            id: 'USD',
-                            name: 'USD',
-                          },
-                          {
-                            id: 'EUR',
-                            name: 'EUR',
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <Toggle
-                        id='logMainSearchError'
-                        {...register('logMainSearchError')}
-                        labelText='Log Main Search Error'
-                        isDirty={!!errors.logMainSearchError}
-                        errorMsg={errors.logMainSearchError?.message}
-                        defaultValue={
-                          currentAccount?.logMainSearchError as boolean
-                        }
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <Spinner />
-                )}
+                <div className='flex-1 md:w-1/2'>
+                  <TextField
+                    id='userName'
+                    {...register('userName', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Username'
+                    isDirty={!!errors.userName}
+                    errorMsg={errors.userName?.message}
+                  />
+                </div>
+                <div className='flex-1 md:w-1/2'>
+                  <TextField
+                    id='password'
+                    type={InputTypes.PASSWORD}
+                    {...register('password', {
+                      required: 'This field is required.',
+                      minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters.',
+                      },
+                    })}
+                    labelText='Password'
+                    isDirty={!!errors.password}
+                    errorMsg={errors.password?.message}
+                  />
+                </div>
+                <div className='flex-1'>
+                  <SectionTitle title='Settings' />
+                </div>
+                <div className='flex-1 md:w-1/2'>
+                  <TextField
+                    id='propertyTprequestLimit'
+                    type={InputTypes.NUMBER}
+                    {...register('propertyTprequestLimit', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Maximum Single Request Property Search Limit'
+                    isDirty={!!errors.propertyTprequestLimit}
+                    errorMsg={errors.propertyTprequestLimit?.message}
+                  />
+                </div>
+                <div className='flex-1 md:w-1/2'>
+                  <TextField
+                    id='searchTimeoutSeconds'
+                    type={InputTypes.NUMBER}
+                    {...register('searchTimeoutSeconds', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Search Timeout (seconds)'
+                    isDirty={!!errors.searchTimeoutSeconds}
+                    errorMsg={errors.searchTimeoutSeconds?.message}
+                  />
+                </div>
+                <div className='flex-1 md:w-1/2'>
+                  <Select
+                    id='currencyCode'
+                    {...register('currencyCode', {
+                      required: 'This field is required.',
+                    })}
+                    labelText='Currency Code'
+                    options={[
+                      {
+                        id: 'GBP',
+                        name: 'GBP',
+                      },
+                      {
+                        id: 'USD',
+                        name: 'USD',
+                      },
+                      {
+                        id: 'EUR',
+                        name: 'EUR',
+                      },
+                    ]}
+                  />
+                </div>
+                <div className='flex-1 md:w-1/2'>
+                  <Toggle
+                    id='logMainSearchError'
+                    {...register('logMainSearchError')}
+                    labelText='Log Main Search Error'
+                    isDirty={!!errors.logMainSearchError}
+                    errorMsg={errors.logMainSearchError?.message}
+                    defaultValue={currentAccount?.logMainSearchError as boolean}
+                    readOnly
+                  />
+                </div>
               </div>
               <div className='flex justify-end mt-5 pt-5'>
                 <Button
@@ -268,6 +308,12 @@ export const AccountEdit: FC<Props> = memo(() => {
                   color={ButtonColors.OUTLINE}
                   className='ml-4'
                   onClick={() => navigate(-1)}
+                />
+                <Button
+                  text='Delete'
+                  color={ButtonColors.DANGER}
+                  className='ml-4'
+                  onClick={() => setIsDeleting(true)}
                 />
                 <Button
                   type={ButtonVariants.SUBMIT}
@@ -279,14 +325,28 @@ export const AccountEdit: FC<Props> = memo(() => {
           </div>
         </div>
       </MainLayout>
+
       {showNotification && (
         <Notification
-          title='Edit Subscription'
-          description={notification.message}
+          description={notification?.message as string}
           show={showNotification}
           setShow={setShowNotification}
-          status={notification.status}
-          autoHide={false}
+          status={notification?.status}
+        />
+      )}
+
+      {isDeleting && (
+        <ConfirmModal
+          title='Delete Account'
+          description={
+            <>
+              Are you sure you want to delete{' '}
+              <strong>{currentAccount?.userName}</strong>?
+            </>
+          }
+          show={isDeleting}
+          setShow={setIsDeleting}
+          onConfirm={handleDeleteAccount}
         />
       )}
     </>

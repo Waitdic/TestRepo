@@ -302,7 +302,6 @@ export const SupplierCreate: FC<Props> = memo(() => {
       </MainLayout>
 
       <Notification
-        title='Supplier creation'
         description={notification.message}
         status={notification.status}
         show={showNotification}

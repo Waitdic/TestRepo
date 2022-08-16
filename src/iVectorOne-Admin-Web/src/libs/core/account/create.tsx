@@ -187,11 +187,6 @@ export const AccountCreate: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          title={
-            notification.status === NotificationStatus.ERROR
-              ? 'Error'
-              : 'Create New Account'
-          }
           description={notification.message}
           status={notification.status}
           show={showNotification}

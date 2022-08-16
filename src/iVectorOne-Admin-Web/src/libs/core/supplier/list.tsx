@@ -164,7 +164,6 @@ export const SupplierList: FC<Props> = memo(() => {
         </div>
       </MainLayout>
       <Notification
-        title='Data fetching error'
         description={error as string}
         show={!!error}
         status={NotificationStatus.ERROR}

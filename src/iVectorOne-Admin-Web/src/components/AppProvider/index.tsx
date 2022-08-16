@@ -67,7 +67,8 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           <Route path='/accounts'>
             <Route index element={<AccountList />} />
             <Route path='create' element={<AccountCreate />} />
-            <Route path=':slug' element={<AccountView />}>
+            <Route path=':slug'>
+              <Route index element={<AccountView />} />
               <Route path='edit' element={<AccountEdit />} />
             </Route>
           </Route>

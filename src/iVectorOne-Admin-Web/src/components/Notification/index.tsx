@@ -5,7 +5,7 @@ import { Transition } from '@headlessui/react';
 import { NotificationStatus } from '@/constants';
 
 type Props = {
-  title: string;
+  title?: string;
   description: string;
   status?: NotificationStatus;
   show: boolean;

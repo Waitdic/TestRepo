@@ -153,7 +153,6 @@ export const TenantList: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          title={notification?.title as string}
           description={notification?.message as string}
           show={showNotification}
           setShow={setShowNotification}

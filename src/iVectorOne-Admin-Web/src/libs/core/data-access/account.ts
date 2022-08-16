@@ -225,7 +225,7 @@ export async function getAccountById(
         },
       }
     );
-    const data = get(res, 'data.subscription', null);
+    const data = get(res, 'data', null);
     onSuccess(data);
   } catch (err) {
     if (typeof err === 'string') {
@@ -259,6 +259,70 @@ export async function createAccount(
         Tenantkey: tenant.key,
       },
       data,
+    });
+    onSuccess();
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Update account
+export async function updateAccount(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  data: {
+    UserName: string;
+    Password: string;
+    PropertyTpRequestLimit: string;
+    SearchTimeoutSeconds: string;
+    CurrencyCode: string;
+  },
+  onInit: () => void,
+  onSuccess: () => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    await ApiCall.request({
+      method: 'PUT',
+      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
+      data,
+    });
+    onSuccess();
+  } catch (err) {
+    if (typeof err === 'string') {
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      onFailed(err.message);
+    }
+  }
+}
+
+//* Delete account
+export async function deleteAccount(
+  tenant: { id: number; key: string },
+  subscriptionId: number,
+  onInit: () => void,
+  onSuccess: () => void,
+  onFailed: (error: string | null) => void
+) {
+  onInit();
+  try {
+    await ApiCall.request({
+      method: 'DELETE',
+      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+      },
     });
     onSuccess();
   } catch (err) {

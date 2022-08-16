@@ -331,16 +331,10 @@ export const TenantEdit: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          title={
-            notification.status === NotificationStatus.ERROR
-              ? 'Error'
-              : 'Edit Tenant'
-          }
           description={notification.message}
           show={showNotification}
           setShow={setShowNotification}
           status={notification.status}
-          autoHide
         />
       )}
 

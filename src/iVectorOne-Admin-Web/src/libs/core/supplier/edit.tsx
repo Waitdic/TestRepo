@@ -149,18 +149,13 @@ export const SupplierEdit: FC<Props> = memo(() => {
           </div>
         </div>
       </MainLayout>
+
       {showNotification && (
         <Notification
-          title={
-            notification.status === NotificationStatus.ERROR
-              ? 'Error'
-              : 'Edit Supplier'
-          }
           description={notification.message}
           status={notification.status}
           show={showNotification}
           setShow={setShowNotification}
-          autoHide={notification.status === NotificationStatus.ERROR}
         />
       )}
     </>

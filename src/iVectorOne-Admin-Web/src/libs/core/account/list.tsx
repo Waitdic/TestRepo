@@ -113,7 +113,6 @@ export const AccountList: FC<Props> = memo(() => {
 
       {showNotification && (
         <Notification
-          title='Data fetching error'
           description={error as string}
           show={showNotification}
           setShow={setShowNotification}

@@ -30,7 +30,7 @@ const Dashboard: React.FC<Props> = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className='flex h-screen overflow-hidden w-full'>
+    <div className='flex h-screen overflow-hidden w-full z-[0]'>
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
       <div
         id='main-layout-area'
