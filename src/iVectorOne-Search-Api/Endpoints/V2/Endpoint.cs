@@ -39,7 +39,8 @@
                         [FromQuery] string? currencycode,
                         [FromQuery] bool? log, // todo - move to config
                         [FromQuery] string? suppliers,
-                        [FromQuery] string? emailLogsTo)
+                        [FromQuery] string? emailLogsTo,
+                        [FromQuery] bool? dedupe)
                     =>
                     {
                         var request = new Request
@@ -57,6 +58,7 @@
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
                             EmailLogsToAddress = emailLogsTo ?? string.Empty,
+                            Dedupe = dedupe ?? true
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);
