@@ -6,7 +6,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Update
     {
         public static IEndpointRouteBuilder MapTenantSubscriptionUpdateV1Endpoint(this IEndpointRouteBuilder endpoints)
         {
-            _ = endpoints.MapPost("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator,
+            _ = endpoints.MapPut("v1/tenants/{tenantid}/subscriptions/{subscriptionid}", async (IMediator mediator,
                 HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantId,
                 int subscriptionId,
                 [FromBody] SubscriptionDto subscription) =>

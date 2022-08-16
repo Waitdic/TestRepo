@@ -11,5 +11,23 @@
         public bool LogMainSearchError { get; set; }
         public string CurrencyCode { get; set; } = string.Empty;
         public string Environment { get; set; } = string.Empty;
+
+        public string Status { get; set; } = "";
+
+        public bool IsActive
+        {
+            get
+            {
+                return Status.ToLower() == "active";
+            }
+        }
+
+        public bool IsDeleted
+        {
+            get
+            {
+                return Status.ToLower() == "deleted";
+            }
+        }
     }
 }
