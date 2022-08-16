@@ -108,8 +108,6 @@
             }
 
             var xmlRequest = _serializer.Serialize(availabilityRequest);
-            var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-            xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
             var request = new Request
             {

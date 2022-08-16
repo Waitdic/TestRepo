@@ -123,8 +123,6 @@
                 }
 
                 var xmlRequest = _serializer.Serialize(preBookRequest);
-                var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-                xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.EndPoint = _settings.GenericURL(propertyDetails);
                 request.Method = RequestMethod.POST;
@@ -335,8 +333,6 @@
                 };
 
                 var xmlRequest = _serializer.Serialize(bookRequest);
-                var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-                xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.Source = ThirdParties.SERHS;
                 request.EndPoint = _settings.GenericURL(propertyDetails);
@@ -388,8 +384,6 @@
                 var cancellationRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "1");
 
                 var xmlRequest = _serializer.Serialize(cancellationRequest);
-                var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-                xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.SetRequest(xmlRequest);
 
@@ -433,8 +427,6 @@
                 var getCancellationCostRequest = BuildCancellationRequest(propertyDetails, propertyDetails.SourceReference, "0");
 
                 var xmlRequest = _serializer.Serialize(getCancellationCostRequest);
-                var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-                xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
 
                 request.SetRequest(xmlRequest);
 

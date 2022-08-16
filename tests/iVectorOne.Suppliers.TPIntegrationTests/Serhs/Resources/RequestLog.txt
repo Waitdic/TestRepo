@@ -8,7 +8,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><request type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="0"/></rooms></request>
+<?xml version="1.0" encoding="utf-8"?><request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="0"/></rooms></request>
 
 URL: http://wsintcli.serhstourism.com/wsserhs/serhstourism
 
@@ -20,7 +20,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><request type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="2" children="0"/></rooms></request>
+<?xml version="1.0" encoding="utf-8"?><request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="2" children="0"/></rooms></request>
 
 URL: http://wsintcli.serhstourism.com/wsserhs/serhstourism
 
@@ -32,7 +32,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><request type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="1"><child age="8"/></room></rooms></request>
+<?xml version="1.0" encoding="utf-8"?><request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="1"><child age="8"/></room></rooms></request>
 
 URL: http://wsintcli.serhstourism.com/wsserhs/serhstourism
 
@@ -44,7 +44,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><request type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="1"><child age="0"/></room></rooms></request>
+<?xml version="1.0" encoding="utf-8"?><request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="1"><child age="0"/></room></rooms></request>
 
 URL: http://wsintcli.serhstourism.com/wsserhs/serhstourism
 
@@ -56,4 +56,4 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><request type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="2"><child age="8"/><child age="0"/></room></rooms></request>
+<?xml version="1.0" encoding="utf-8"?><request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" type="ACCOMMODATIONS_AVAIL" version="4.1"><client code="UKTES2" branch="26293" password="UKTES2test" tradingGroup="GBP"/><language code="ENG"/><searchCriteria><criterion type="1" code="accommodationCode" value="102245"/><criterion type="2" code="priceType" value="3"/></searchCriteria><period start="20210901" end="20210906"/><rooms><room adults="1" children="2"><child age="8"/><child age="0"/></room></rooms></request>
