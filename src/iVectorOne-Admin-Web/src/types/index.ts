@@ -52,6 +52,9 @@ export type Account = {
   currencyCode: string;
   environment: string;
   suppliers: Supplier[];
+  isActive: boolean;
+  isDeleted: boolean;
+  status: 'active' | 'inactive';
 };
 export type Supplier = {
   name?: string;
@@ -60,6 +63,7 @@ export type Supplier = {
   supplierSubscriptionID?: number;
   configurations?: SupplierConfiguration[];
   isSelected?: boolean;
+  enabled?: boolean;
 };
 export type SupplierConfiguration = {
   supplierAttributeID?: number;
@@ -93,6 +97,7 @@ export type FormErrorMessage = {
   [key: string]: { message: string };
 };
 export type NotificationState = {
+  title?: string;
   status: NotificationStatus;
   message: string;
 };

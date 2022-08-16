@@ -47,15 +47,17 @@ export const AccountList: FC<Props> = memo(() => {
     [user?.tenants]
   );
 
-  const tableBodyList: any[] = filteredAccountList.map(({ id, name }) => ({
-    id,
-    name,
-    isActive: false, //! TODO: this property is not available in the response
-    actions: [
-      { name: 'View', href: `/accounts/${id}` },
-      { name: 'Edit', href: `/accounts/${id}/edit` },
-    ],
-  }));
+  const tableBodyList: any[] = filteredAccountList.map(
+    ({ id, name, isActive }) => ({
+      id,
+      name,
+      isActive: isActive === false, //? API not returning this field
+      actions: [
+        { name: 'View', href: `/accounts/${id}` },
+        { name: 'Edit', href: `/accounts/${id}/edit` },
+      ],
+    })
+  );
 
   const fetchData = useCallback(async () => {
     if (!activeTenant || activeTenant == null) return;
@@ -106,7 +108,6 @@ export const AccountList: FC<Props> = memo(() => {
           bodyList={tableBodyList}
           isLoading={!accounts.length}
           emptyState={tableEmptyState}
-          statusIsPlaceholder
         />
       </MainLayout>
 

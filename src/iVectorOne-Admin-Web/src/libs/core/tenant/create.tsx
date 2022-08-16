@@ -16,11 +16,9 @@ import { createTenant } from '../data-access/tenant';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
-type Props = {
-  error: string | null;
-};
+type Props = {};
 
-export const TenantCreate: FC<Props> = memo(({ error }) => {
+export const TenantCreate: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
@@ -80,16 +78,6 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
       }
     );
   };
-
-  useEffect(() => {
-    if (typeof error === 'string') {
-      setNotification({
-        status: NotificationStatus.ERROR,
-        message: error,
-      });
-      setShowNotification(true);
-    }
-  }, [error]);
 
   return (
     <>
@@ -175,16 +163,6 @@ export const TenantCreate: FC<Props> = memo(({ error }) => {
           </div>
         </div>
       </MainLayout>
-      {showNotification && (
-        <Notification
-          title={typeof error === 'string' ? 'Error' : 'Create New Tenant'}
-          description={notification.message}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={notification.status}
-          autoHide={typeof error === 'string' ? false : true}
-        />
-      )}
     </>
   );
 });

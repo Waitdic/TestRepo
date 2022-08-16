@@ -2,15 +2,13 @@ import { memo, useState, useEffect, FC, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
-import type { Tenant } from '@/types';
+import type { NotificationState, Tenant } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { NotificationStatus } from '@/constants';
 import { ErrorBoundary, Notification, CardList } from '@/components';
-import { getTenants } from '../data-access/tenant';
+import { getTenants, updateTenantStatus } from '../data-access/tenant';
 
-type Props = {
-  error: string | null;
-};
+type Props = {};
 
 const tableEmptyState = {
   title: 'No Tenants',
@@ -19,7 +17,18 @@ const tableEmptyState = {
   buttonText: 'New Tenant',
 };
 
-export const TenantList: FC<Props> = memo(({ error }) => {
+const MESSAGES = {
+  onSuccess: {
+    status: 'Tenant status updated successfully',
+    fetch: 'Fetching tenants',
+  },
+  onFailed: {
+    status: 'Failed to update tenant status',
+    fetch: 'Failed to fetch tenants',
+  },
+};
+
+export const TenantList: FC<Props> = memo(() => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
@@ -27,17 +36,70 @@ export const TenantList: FC<Props> = memo(({ error }) => {
   const appError = useSelector((state: RootState) => state.app.error);
 
   const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [showError, setShowError] = useState<boolean>(false);
+  const [notification, setNotification] = useState<NotificationState>();
+  const [showNotification, setShowNotification] = useState<boolean>(false);
 
   const activeTenant = useMemo(() => {
     return user?.tenants.find((tenant) => tenant.isSelected);
   }, [user]);
+  const userIsValid = useMemo(
+    () => !!activeTenant && !!tenants && !isLoading,
+    [activeTenant, tenants, isLoading]
+  );
+
+  const handleToggleTenantStatus = useCallback(
+    async (tenantId: number, isActive: boolean) => {
+      if (!userIsValid) return;
+      await updateTenantStatus(
+        activeTenant?.tenantKey as string,
+        tenantId,
+        !isActive,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setTenants(
+            tenants.map((tenant) => {
+              if (tenant.tenantId === tenantId) {
+                tenant.isActive = !isActive;
+              }
+              return tenant;
+            })
+          );
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: MESSAGES.onSuccess.status,
+          });
+          setShowNotification(true);
+        },
+        (err) => {
+          console.error(err);
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: MESSAGES.onFailed.status,
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [activeTenant, tenants, isLoading, dispatch]
+  );
+
   const tableBodyList = useMemo(
     () =>
-      tenants?.map(({ tenantId, companyName }) => ({
+      tenants?.map(({ tenantId, companyName, isActive }) => ({
         id: tenantId,
         name: companyName,
-        actions: [{ name: 'Edit', href: `/tenants/${tenantId}/edit` }],
+        isActive,
+        actions: [
+          { name: 'Edit', href: `/tenants/${tenantId}/edit` },
+          {
+            name: isActive ? 'Disable' : 'Enable',
+            onToggle: handleToggleTenantStatus,
+          },
+        ],
       })),
     [tenants]
   );
@@ -61,12 +123,15 @@ export const TenantList: FC<Props> = memo(({ error }) => {
   }, [activeTenant]);
 
   useEffect(() => {
-    if (error) {
-      setShowError(true);
-    } else {
-      setShowError(false);
+    if (appError) {
+      setNotification({
+        status: NotificationStatus.ERROR,
+        message: appError as string,
+        title: 'Error',
+      });
+      setShowNotification(false);
     }
-  }, [error]);
+  }, [appError]);
 
   useEffect(() => {
     if (!!activeTenant) {
@@ -78,33 +143,23 @@ export const TenantList: FC<Props> = memo(({ error }) => {
     <>
       <MainLayout title='Tenants' addNew addNewHref='/tenants/create'>
         <div className='flex flex-col h-full'>
-          {/* Tenants */}
-          {error ? (
-            <ErrorBoundary />
-          ) : (
-            <>
-              <CardList
-                bodyList={tableBodyList}
-                isLoading={isLoading}
-                emptyState={tableEmptyState}
-                statusIsPlaceholder
-              />
-            </>
-          )}
+          <CardList
+            bodyList={tableBodyList}
+            isLoading={isLoading}
+            emptyState={tableEmptyState}
+          />
         </div>
       </MainLayout>
 
-      {showError ||
-        (!!appError && (
-          <Notification
-            title='Error'
-            description={(error as string) || (appError as string)}
-            show={showError || !!appError}
-            setShow={setShowError}
-            status={NotificationStatus.ERROR}
-            autoHide={false}
-          />
-        ))}
+      {showNotification && (
+        <Notification
+          title={notification?.title as string}
+          description={notification?.message as string}
+          show={showNotification}
+          setShow={setShowNotification}
+          status={notification?.status}
+        />
+      )}
     </>
   );
 });

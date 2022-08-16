@@ -55,35 +55,38 @@ export const SupplierList: FC<Props> = memo(() => {
     );
   }, [activeTenant]);
 
-  const handleSetActiveAcc = async (accId: number) => {
-    if (!accounts?.length || !activeTenant) return;
-    const selectedAcc = accounts.find((acc) => acc.subscriptionId === accId);
-    if (!selectedAcc) return;
-    setActiveAcc(selectedAcc);
-    await getSuppliersByAccount(
-      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-      selectedAcc.subscriptionId,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      (fetchedSuppliers) => {
-        dispatch.app.updateAccounts(
-          accounts.map((acc) => {
-            if (acc.subscriptionId === selectedAcc.subscriptionId) {
-              return { ...acc, suppliers: fetchedSuppliers };
-            }
-            return acc;
-          })
-        );
-        dispatch.app.setIsLoading(false);
-        setFilteredSuppliersList(sortBy(fetchedSuppliers, 'name'));
-      },
-      (err) => {
-        dispatch.app.setError(err);
-        dispatch.app.setIsLoading(false);
-      }
-    );
-  };
+  const handleSetActiveAcc = useCallback(
+    async (accId: number) => {
+      if (!accounts?.length || !activeTenant) return;
+      const selectedAcc = accounts.find((acc) => acc.subscriptionId === accId);
+      if (!selectedAcc) return;
+      setActiveAcc(selectedAcc);
+      await getSuppliersByAccount(
+        { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        selectedAcc.subscriptionId,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        (fetchedSuppliers) => {
+          dispatch.app.updateAccounts(
+            accounts.map((acc) => {
+              if (acc.subscriptionId === selectedAcc.subscriptionId) {
+                return { ...acc, suppliers: fetchedSuppliers };
+              }
+              return acc;
+            })
+          );
+          dispatch.app.setIsLoading(false);
+          setFilteredSuppliersList(sortBy(fetchedSuppliers, 'name'));
+        },
+        (err) => {
+          dispatch.app.setError(err);
+          dispatch.app.setIsLoading(false);
+        }
+      );
+    },
+    [accounts, activeTenant]
+  );
 
   useEffect(() => {
     fetchAccounts();
@@ -134,20 +137,22 @@ export const SupplierList: FC<Props> = memo(() => {
               {!!filteredSuppliersList?.length ? (
                 <CardList
                   bodyList={sortBy(
-                    filteredSuppliersList.map(({ name, supplierID }) => ({
-                      id: supplierID as number,
-                      name,
-                      actions: [
-                        {
-                          name: 'Edit',
-                          href: `/suppliers/${supplierID}/edit?subscriptionId=${activeAcc?.subscriptionId}`,
-                        },
-                      ],
-                    })),
+                    filteredSuppliersList.map(
+                      ({ name, supplierID, enabled }) => ({
+                        id: supplierID as number,
+                        isActive: enabled,
+                        name,
+                        actions: [
+                          {
+                            name: 'Edit',
+                            href: `/suppliers/${supplierID}/edit?subscriptionId=${activeAcc?.subscriptionId}`,
+                          },
+                        ],
+                      })
+                    ),
                     'name'
                   )}
                   emptyState={tableEmptyState}
-                  statusIsPlaceholder
                 />
               ) : (
                 filteredSuppliersList !== null && (

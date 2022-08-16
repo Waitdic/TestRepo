@@ -33,9 +33,7 @@ type NotificationState = {
   message: string;
 };
 
-type Props = {
-  error: string | null;
-};
+type Props = {};
 
 const MESSAGES = {
   onSuccess: {
@@ -50,13 +48,14 @@ const MESSAGES = {
   },
 };
 
-export const TenantEdit: FC<Props> = memo(({ error }) => {
+export const TenantEdit: FC<Props> = memo(() => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useSlug();
 
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const user = useSelector((state: RootState) => state.app.user);
+  const appError = useSelector((state: RootState) => state.app.error);
 
   const [notification, setNotification] = useState<NotificationState>({
     status: NotificationStatus.SUCCESS,
@@ -217,14 +216,14 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
   };
 
   useEffect(() => {
-    if (!!error) {
+    if (!!appError) {
       setNotification({
         status: NotificationStatus.ERROR,
-        message: error,
+        message: appError as string,
       });
       setShowNotification(true);
     }
-  }, [error]);
+  }, [appError]);
 
   useEffect(() => {
     if (!!tenant) {
@@ -297,10 +296,11 @@ export const TenantEdit: FC<Props> = memo(({ error }) => {
                 <Toggle
                   id='isActive'
                   name='isActive'
-                  labelText='Active'
+                  labelText='Status'
                   defaultValue={tenant?.isActive}
                   onChange={handleToggleTenantStatus}
                   onBlur={handleToggleTenantStatus}
+                  readOnly
                 />
               </div>
               <div className='flex justify-end mt-5 pt-5'>

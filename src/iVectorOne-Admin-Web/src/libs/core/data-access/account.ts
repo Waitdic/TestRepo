@@ -12,13 +12,16 @@ export async function getAccounts(
 ) {
   onInit?.();
   try {
-    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
-      headers: {
-        Accept: 'application/json',
-        Tenantkey: tenant.key,
-      },
-    });
-    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    const accountsRes = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+        },
+      }
+    );
+    const accounts: Account[] = get(accountsRes, 'data.subscriptions', []);
     onSuccess?.(accounts);
   } catch (err) {
     if (typeof err === 'string') {
