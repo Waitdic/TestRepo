@@ -1,4 +1,7 @@
-﻿namespace iVectorOne.Suppliers.Serhs.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace iVectorOne.Suppliers.Serhs.Models
 {
     using System.Xml.Serialization;
     using Common;
@@ -17,22 +20,8 @@
         [XmlElement("customer")]
         public Customer Customer { get; set; } = new();
 
-        [XmlElement("address")]
-        public string? Address { get; set; }
-
-        [XmlElement("city")]
-        public City City { get; set; } = new();
-
-        [XmlElement("region")]
-        public Region Region { get; set; } = new();
-
-        [XmlElement("document")]
-        public Document Document { get; set; } = new();
-
-        [XmlElement("contactInfo")]
-        public ContactInfo ContactInfo { get; set; } = new();
-
-        [XmlElement("preBooking")]
-        public Booking PreBooking { get; set; } = new();
+        [XmlArray("preBookings")]
+        [XmlArrayItem("preBooking")]
+        public Booking[] PreBookings { get; set; } = Array.Empty<Booking>();
     }
 }

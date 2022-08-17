@@ -302,33 +302,35 @@
                     Customer =
                     {
                         Name = propertyDetails.LeadGuestFirstName,
-                        Surname = propertyDetails.LeadGuestLastName
+                        Surname = propertyDetails.LeadGuestLastName,
+                        Address = propertyDetails.LeadGuestAddress1,
+                        City = 
+                        {
+                            Name = propertyDetails.LeadGuestTownCity,
+                            ZipCode = propertyDetails.LeadGuestPostcode
+                        },
+                        Region =
+                        {
+                            Name = propertyDetails.LeadGuestCounty
+                        },
+                        Document =
+                        {
+                            Type = "0"
+                        },
+                        ContactInfo =
+                        {
+                            Email = string.Empty,
+                            MobilePhone = string.Empty
+                        }
                     },
-                    Address = propertyDetails.LeadGuestAddress1,
-                    City = 
+                    PreBookings = new[]
                     {
-                        Name = propertyDetails.LeadGuestTownCity,
-                        ZipCode = propertyDetails.LeadGuestPostcode
-                    },
-                    Region =
-                    {
-                        Name = propertyDetails.LeadGuestCounty
-                    },
-                    Document =
-                    {
-                        Type = "0"
-                    },
-                    ContactInfo =
-                    {
-                        Email = string.Empty,
-                        MobilePhone = string.Empty
-                    },
-                    PreBooking =
-                    {
-                        Confirmed = "1",
-                        Type = "A",
-                        Code = propertyDetails.TPRef1,
-                        ClientReference = propertyDetails.BookingReference == string.Empty ? "iVector" : propertyDetails.BookingReference
+                        new Booking {
+                            Confirmed = "1",
+                            Type = "A",
+                            Code = propertyDetails.TPRef1,
+                            ClientReference = propertyDetails.BookingReference == string.Empty ? "iVector" : propertyDetails.BookingReference
+                        }
                     }
                 };
 
