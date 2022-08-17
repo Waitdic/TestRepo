@@ -8,7 +8,6 @@ import {
   ButtonColors,
   ButtonVariants,
   InputTypes,
-  PHONE_REGEX,
 } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import { TextField, Button, Notification } from '@/components';
@@ -134,10 +133,6 @@ export const TenantCreate: FC<Props> = memo(() => {
                     type={InputTypes.PHONE}
                     {...register('contactTelephone', {
                       required: 'This field is required.',
-                      pattern: {
-                        value: PHONE_REGEX,
-                        message: 'Invalid phone number.',
-                      },
                     })}
                     labelText='Contact Telephone'
                     isDirty={!!errors.contactTelephone}
