@@ -44,7 +44,7 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 }
                 else
                 {
-                    var supplierSubscription = new SupplierSubscription() { SupplierId = (short)request.SupplierId, SubscriptionId = request.SubscriptionId };
+                    var supplierSubscription = new SupplierSubscription() { SupplierId = (short)request.SupplierId, SubscriptionId = request.SubscriptionId, Enabled = true };
                     _context.SupplierSubscriptions.Add(supplierSubscription);
                 }
 
