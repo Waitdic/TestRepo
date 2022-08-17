@@ -72,6 +72,7 @@
                 case ThirdParties.TRAVELGATEVIAJESOLYMPIA:
                 case ThirdParties.TRAVELGATEWHL:
                 case ThirdParties.TRAVELGATEYALAGO:
+                case ThirdParties.SERHS:
                     tpRef1Required = true;
                     tpRef2Required = false;
                     break; // only tpref1 required
@@ -156,6 +157,7 @@
                 case ThirdParties.TRAVELGATEVIAJESOLYMPIA:
                 case ThirdParties.TRAVELGATEWHL:
                 case ThirdParties.TRAVELGATEYALAGO:
+                case ThirdParties.SERHS:
                     tpRef1Required = true;
                     sourceSecondaryReferenceRequired = false;
                     break; // only tpref1 required
