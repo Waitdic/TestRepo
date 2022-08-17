@@ -76,11 +76,12 @@
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
+            string countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.SubscriptionID);
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, occupancies);
+            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, countryCode, occupancies);
         }
 
         public static RequestHeader CreateAuthorizationHeader(string apiKey, string secret)
@@ -140,6 +141,7 @@
             DateTime arrivalDate,
             DateTime departureDate,
             string currencyCode,
+            string countryCode,
             IEnumerable<ExpediaRapidOccupancy> occupancies)
         {
             var nvc = new NameValueCollection()
@@ -148,7 +150,7 @@
                 { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") },
                 { SearchQueryKeys.Currency, currencyCode },
                 { SearchQueryKeys.Language, settings.LanguageCode(tpAttributeSearch) },
-                { SearchQueryKeys.CountryCode, settings.SourceMarket(tpAttributeSearch) },
+                { SearchQueryKeys.CountryCode, countryCode },
                 { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) },
                 { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) },
                 { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) },
