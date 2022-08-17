@@ -34,6 +34,9 @@ try
         .AddIntuitiveCors()
         .AddIntuitiveAuthentication();
 
+    builder.Services.AddHealthChecks()
+        .AddSqlServer(builder.Configuration.GetConnectionString("ConfigConnection"));
+
     var app = builder.Build();
 
     app
@@ -45,6 +48,8 @@ try
        .UseIntuitiveCors()
        .UseExceptionHandler("/error")
        .UseIntuitiveMiddleware();
+
+    app.MapHealthChecks("/healthz");
 
     app.AddFeatures();
 
