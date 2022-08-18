@@ -1,4 +1,5 @@
-﻿using iVectorOne_Admin_Api.Features.V1.Tenants.Create;
+﻿using Intuitive.Helpers.Extensions;
+using iVectorOne_Admin_Api.Features.V1.Tenants.Create;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
@@ -9,9 +10,20 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
         {
 
             _ = endpoints.MapPost("v1/tenants/", async (
-                IMediator mediator, 
-                [FromBody] Request request) =>
+                IMediator mediator,
+                [FromBody] RequestDto requestDto,
+                HttpRequest httpRequest) =>
             {
+
+                var request = new Request
+                {
+                    UserKey = httpRequest.Headers["UserKey"].ToString(),
+                    CompanyName = requestDto.CompanyName,
+                    ContactEmail = requestDto.ContactEmail,
+                    ContactName = requestDto.ContactName,
+                    ContactTelephone = requestDto.ContactTelephone
+                };
+
                 var response = await mediator.Send(request);
 
                 return response.Result;

@@ -8,5 +8,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
         {
             Result = Results.Ok(model);
         }
+
+        public void NotFound()
+        {
+            Result = Results.NotFound();
+        }
     }
 }
