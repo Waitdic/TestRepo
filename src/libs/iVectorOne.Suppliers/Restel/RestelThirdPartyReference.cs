@@ -10,6 +10,7 @@
         public string MealBasis { get; set; } = string.Empty;
         public List<string> ThirdPartyReferences { get; set; } = new();
         public string ResortCode { get; set; } = string.Empty;
+        public string RoomType { get; set; } = string.Empty;
 
         public string ToEncryptedString(ISecretKeeper secretKeeper)
         {

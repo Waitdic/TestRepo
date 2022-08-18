@@ -40,7 +40,7 @@
         {
             var requests = new List<Request>();
 
-            string codusu = _settings.Codusu(searchDetails);
+            string codusu = _settings.UserAgent(searchDetails);
 
             foreach (var resortSplit in resortSplits)
             {
@@ -113,7 +113,8 @@
                 RoomCode = hab.Cod,
                 MealBasis = reg.Cod,
                 ThirdPartyReferences = reg.Lin.ToList(),
-                ResortCode = hot.Pro
+                ResortCode = hot.Pro,
+                RoomType = hab.Desc
             }
             select new TransformedResult
             {

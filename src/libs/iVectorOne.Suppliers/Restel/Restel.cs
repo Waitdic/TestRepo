@@ -70,7 +70,7 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            string codusu = _settings.Codusu(propertyDetails);
+            string codusu = _settings.UserAgent(propertyDetails);
 
             bool preBookSuccess = false;
             var request = new Request();
@@ -86,7 +86,7 @@
                     request.SetRequest(Reservation(propertyDetails));
                     await request.Send(_httpClient, _logger);
 
-                    var response = _serializer.DeSerialize<RestelPreBookResponse>(request.ResponseXML);
+                    var response = _serializer.DeSerialize<RestelPreBookResponse>(_serializer.CleanXmlNamespaces(request.ResponseXML));
 
                     // If Restel Return an Error Bomb Out
                     if (response.Parametros.Estado == "00")
@@ -126,7 +126,7 @@
                     request.SetRequest(xmlAvailabilityRequest);
                     await request.Send(_httpClient, _logger);
 
-                    var response = _serializer.DeSerialize<RestelAvailabilityResponse>(request.ResponseXML);
+                    var response = _serializer.DeSerialize<RestelAvailabilityResponse>(_serializer.CleanXmlNamespaces(request.ResponseXML));
 
                     // If we don't have any results, fail
                     if (response.Param.Hotls.Num != 0)
@@ -141,7 +141,7 @@
                             var restelReference = FromEncryptedString(roomDetails.ThirdPartyReference, _secretKeeper);
                             string roomCode = restelReference.RoomCode;
                             string mealBasis = restelReference.MealBasis;
-                            string roomType = roomDetails.RoomType;
+                            string roomType = restelReference.RoomType;
 
                             // Get the Details for the Room we want
                             var rooms = from pax in hotel.Res.Pax
@@ -270,7 +270,7 @@
                     }
 
                     // Grab the Response
-                    var response = _serializer.DeSerialize<RestelGetCancellationsResponse>(webRequest.ResponseXML);
+                    var response = _serializer.DeSerialize<RestelGetCancellationsResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseXML));
 
                     foreach (var politicaCanc in response.Parametros.PoliticaCanc)
                     {
@@ -343,7 +343,7 @@
                 await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
-                var response = _serializer.DeSerialize<RestelGetErrataResponse>(webRequest.ResponseXML);
+                var response = _serializer.DeSerialize<RestelGetErrataResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseXML));
 
                 // Grab the Errata out of the XML response
                 if (response.Parametros?.Hotel?.Observaciones != null)
@@ -388,7 +388,7 @@
                 await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
-                var response = _serializer.DeSerialize<RestelGetAddedValuesResponse>(webRequest.ResponseXML);
+                var response = _serializer.DeSerialize<RestelGetAddedValuesResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseXML));
 
                 // Grab Each Value Add out the response and add it as an Erratum
                 if (response.Parametros?.Valorafegit != null)
@@ -466,7 +466,7 @@
                     preBookResponseLog = prebookWebRequest.ResponseLog;
 
                     // Grab the Response
-                    var preBookResponse = _serializer.DeSerialize<RestelPreBookResponse>(prebookWebRequest.ResponseXML);
+                    var preBookResponse = _serializer.DeSerialize<RestelPreBookResponse>(_serializer.CleanXmlNamespaces(prebookWebRequest.ResponseXML));
 
                     // store reference to use in book
                     propertyDetails.TPRef1 = preBookResponse.Parametros.Localizador;
@@ -499,7 +499,7 @@
                 bookResponseLog = bookWebRequest.ResponseLog;
 
                 // Grab the Response
-                var response = _serializer.DeSerialize<RestelBookResponse>(bookWebRequest.ResponseXML);
+                var response = _serializer.DeSerialize<RestelBookResponse>(_serializer.CleanXmlNamespaces(bookWebRequest.ResponseXML));
 
                 // save booking code
                 // "00" indicates successful booking; anything else is a fail
@@ -555,7 +555,7 @@
                 await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
-                var response = _serializer.DeSerialize<RestelCancellationResponse>(webRequest.ResponseXML);
+                var response = _serializer.DeSerialize<RestelCancellationResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseXML));
 
                 // "00" indicates successful cancellation; anything else is a fail
                 if (response.Parametros.Estado == "00")
@@ -586,7 +586,7 @@
 
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            string codusu = _settings.Codusu(propertyDetails);
+            string codusu = _settings.UserAgent(propertyDetails);
             var webRequest = new Request();
 
             try
@@ -609,7 +609,7 @@
                 await webRequest.Send(_httpClient, _logger);
 
                 // Grab the Response
-                var response = _serializer.DeSerialize<RestelCancellationCostResponse>(webRequest.ResponseXML);
+                var response = _serializer.DeSerialize<RestelCancellationCostResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseXML));
 
                 // Pull out the cancellation Charges
                 var helper = new List<CancellationHelper>();

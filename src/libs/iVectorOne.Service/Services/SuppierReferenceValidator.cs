@@ -33,6 +33,7 @@
                 case ThirdParties.JONVIEW:
                 case ThirdParties.JUMBO:
                 case ThirdParties.MTS:
+                case ThirdParties.RESTEL:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.STUBA:
                 case ThirdParties.TEAMAMERICA:

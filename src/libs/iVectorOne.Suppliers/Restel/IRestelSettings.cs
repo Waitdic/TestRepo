@@ -3,26 +3,21 @@
 
     public interface IRestelSettings
     {
-        string Codusu(IThirdPartyAttributeSearch tpAttributeSearch);
+        string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Codigousu(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Clausu(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Secacc(IThirdPartyAttributeSearch tpAttributeSearch);
+        string AccessToken(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
 
         bool GuestNamesAvailable(IThirdPartyAttributeSearch tpAttributeSearch);
-
-        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-
-        bool CancelFirstPreBook(IThirdPartyAttributeSearch tpAttributeSearch);
-
+             
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Afil(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }
