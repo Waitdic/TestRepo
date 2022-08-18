@@ -29,6 +29,7 @@ const SupplierList: React.FC<Props> = () => {
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [filteredSuppliersList, setFilteredSuppliersList] = useState<
     Supplier[] | null
@@ -157,6 +158,7 @@ const SupplierList: React.FC<Props> = () => {
                     ),
                     'name'
                   )}
+                  isLoading={isLoading}
                   emptyState={tableEmptyState}
                 />
               ) : (

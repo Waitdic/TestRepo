@@ -33,6 +33,7 @@ const AccountList: React.FC<Props> = () => {
   );
   const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [showNotification, setShowNotification] = useState(false);
   const [filteredAccountList, setFilteredAccountList] = useState<
@@ -110,7 +111,7 @@ const AccountList: React.FC<Props> = () => {
       <MainLayout title='Accounts' addNew addNewHref='/accounts/create'>
         <CardList
           bodyList={tableBodyList}
-          isLoading={!accounts.length}
+          isLoading={isLoading}
           emptyState={tableEmptyState}
         />
       </MainLayout>
