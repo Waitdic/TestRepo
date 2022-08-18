@@ -123,7 +123,7 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.URL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = RequestMethod.POST,
                     UseGZip = true,
                     SoapAction = "HotelAvail"

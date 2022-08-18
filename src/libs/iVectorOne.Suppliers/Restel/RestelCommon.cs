@@ -44,15 +44,15 @@
 
         public static Request CreateRequest(IRestelSettings settings, IThirdPartyAttributeSearch propertyDetails, string logFileName)
         {
-            string codusu = settings.Codusu(propertyDetails);
-            string codigousu = settings.Codigousu(propertyDetails);
-            string clausu = settings.Clausu(propertyDetails);
-            string secacc = settings.Secacc(propertyDetails);
+            string userAgent = settings.UserAgent(propertyDetails);
+            string user = settings.User(propertyDetails);
+            string password = settings.Password(propertyDetails);
+            string token = settings.AccessToken(propertyDetails);
             string URL = settings.GenericURL(propertyDetails);
 
             return new Request
             {
-                EndPoint = $"{URL}?codusu={codusu}&codigousu={codigousu}&clausu={clausu}&afiliacio=RS&secacc={secacc}",
+                EndPoint = $"{URL}?codusu={userAgent}&codigousu={user}&clausu={password}&afiliacio=RS&secacc={token}",
                 Method = RequestMethod.POST,
                 Source = ThirdParties.RESTEL,
                 ContentType = ContentTypes.Application_x_www_form_urlencoded,

@@ -13,9 +13,9 @@
             return Get_Value("AccountCode", tpAttributeSearch);
         }
 
-        public string AgencyName(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Agency(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("AgencyName", tpAttributeSearch);
+            return Get_Value("Agency", tpAttributeSearch);
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -68,9 +68,9 @@
             return Get_Value("System", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)

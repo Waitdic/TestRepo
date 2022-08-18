@@ -8,24 +8,24 @@
     {
         protected override string Source => ThirdParties.RESTEL;
 
-        public string Codusu(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Codusu", tpAttributeSearch);
+            return Get_Value("UserAgent", tpAttributeSearch);
         }
 
-        public string Codigousu(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Codigousu", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
-        public string Clausu(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Clausu", tpAttributeSearch);
+            return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string Secacc(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string AccessToken(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Secacc", tpAttributeSearch);
+            return Get_Value("AccessToken", tpAttributeSearch);
         }
 
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -43,24 +43,9 @@
             return Get_Value("GuestNamesAvailable", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
-        }
-
-        public bool CancelFirstPreBook(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("CancelFirstPreBook", tpAttributeSearch).ToSafeBoolean();
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
-        }
-
-        public string Afil(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("Afil", tpAttributeSearch);
         }
     }
 }

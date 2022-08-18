@@ -174,7 +174,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     SoapAction = "HotelRes",
                     Method = RequestMethod.POST,
                     ContentType = "text/xml",
@@ -341,7 +341,7 @@
                         ProviderTokens = new List<Token>
                         {
                             new Token { TokenCode = propertyDetails.BookingReference, TokenName = "RecordId" },
-                            new Token { TokenCode = _settings.AgencyName(propertyDetails), TokenName = "TravelAgentName" }
+                            new Token { TokenCode = _settings.Agency(propertyDetails), TokenName = "TravelAgentName" }
                         },
                         ProviderID = new ProviderID { Provider = Constant.ProviderName }
                     }
@@ -359,7 +359,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     SoapAction = "HotelRes",
                     Method = RequestMethod.POST,
                     ContentType = "text/xml",
@@ -451,7 +451,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     SoapAction = "HotelCancel",
                     Method = RequestMethod.POST,
                     ContentType = "text/xml",

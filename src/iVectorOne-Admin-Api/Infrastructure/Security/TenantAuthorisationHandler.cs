@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using System.Net;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Encodings.Web;
 
 namespace iVectorOne_Admin_Api.Security
@@ -28,6 +27,12 @@ namespace iVectorOne_Admin_Api.Security
             AuthenticationTicket? ticket = null;
             string key = Request.Headers["TenantKey"];
             string errorMessage = "Invalid TenantKey";
+
+            //Don't authenticate anonynous endpoints
+           if (Context.GetEndpoint()?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            {
+                return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name));
+            }
 
             try
             {

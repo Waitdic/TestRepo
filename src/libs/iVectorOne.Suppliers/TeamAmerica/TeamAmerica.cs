@@ -268,11 +268,11 @@
         {
             var request = new Request
             {
-                EndPoint = _settings.URL(searchDetails),
-                SoapAction = $"{_settings.URL(searchDetails)}/{soapAction}",
+                EndPoint = _settings.GenericURL(searchDetails),
+                SoapAction = $"{_settings.GenericURL(searchDetails)}/{soapAction}",
                 Method = RequestMethod.POST,
                 Source = Source,
-                ContentType = ContentTypes.Text_Xml_charset_utf_8,
+                ContentType = ContentTypes.Text_xml,
                 LogFileName = logFile,
                 CreateLog = true
             };
@@ -286,7 +286,7 @@
         {
             var request = new PriceSearch
             {
-                UserName = _settings.Username(propertyDetails),
+                UserName = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
                 CityCode = propertyDetails.ResortCode,
                 ProductCode = roomDetails.ThirdPartyReference.Split('|')[0],
@@ -410,10 +410,10 @@
         {
             var bookRequest = new NewMultiItemReservation
             {
-                UserName = _settings.Username(propertyDetails),
+                UserName = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
-                AgentName = _settings.CompanyName(propertyDetails),
-                AgentEmail = _settings.CompanyAddressEmail(propertyDetails),
+                AgentName = _settings.UserAgent(propertyDetails),
+                AgentEmail = _settings.AgentEmailAddress(propertyDetails),
                 ClientReference = propertyDetails.BookingReference,
             };
 
@@ -459,7 +459,7 @@
 
                     string nationalityCode = !string.IsNullOrWhiteSpace(passenger.NationalityCode) ?
                         (await _support.TPNationalityLookupAsync(Source, passenger.NationalityCode)) :
-                        _settings.DefaultNationalityCode(propertyDetails);
+                        _settings.LeadGuestNationality(propertyDetails);
 
                     roomItem.Passengers.Add(new NewPassenger
                     {
@@ -482,7 +482,7 @@
     {
         var cancelResponse = new CancelReservation
         {
-            UserName = _settings.Username(propertyDetails),
+            UserName = _settings.User(propertyDetails),
             Password = _settings.Password(propertyDetails),
             ReservationNumber = propertyDetails.SourceReference
         };
