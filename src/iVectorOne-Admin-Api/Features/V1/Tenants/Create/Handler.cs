@@ -17,6 +17,14 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
         {
             var response = new Response();
 
+            var user = await _context.Users.Where(u => u.Key == request.UserKey).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                response.NotFound();
+                return response;
+            }
+
             var tenant = new Tenant
             {
                 CompanyName = request.CompanyName,
@@ -29,10 +37,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
             _context.Tenants.Add(tenant);
             await _context.SaveChangesAsync();
 
-            _context.UserTenants.Add(new UserTenant { TenantId = tenant.TenantId, UserId = request.UserId });
+            _context.UserTenants.Add(new UserTenant { TenantId = tenant.TenantId, UserId = user.UserId });
             _context.Authorisations.Add(new Data.Models.Authorisation
             {
-                User = $"userid:{request.UserId}",
+                User = $"userid:{user.UserId}",
                 Relationship = "owner",
                 Object = $"tenantid: {tenant.TenantId}"
             });

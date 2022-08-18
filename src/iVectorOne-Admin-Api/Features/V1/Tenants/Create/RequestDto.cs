@@ -1,8 +1,7 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
 {
-    public record Request : IRequest<Response>
+    public record RequestDto
     {
-        public string  UserKey { get; set; }
 
         public string CompanyName { get; set; } = "";
 
