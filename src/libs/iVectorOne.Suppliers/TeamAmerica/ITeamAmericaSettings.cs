@@ -3,12 +3,12 @@
     using iVectorOne;
     public interface ITeamAmericaSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Username(IThirdPartyAttributeSearch tpAttributeSearch);
+        string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string CompanyName(IThirdPartyAttributeSearch tpAttributeSearch);
-        string CompanyAddressEmail(IThirdPartyAttributeSearch tpAttributeSearch);
-        string DefaultNationalityCode(IThirdPartyAttributeSearch tpAttributeSearch);
+        string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch);
+        string AgentEmailAddress(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);

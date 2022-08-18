@@ -13,8 +13,9 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Interfaces;
 
-    public class TeamAmericaSearch : IThirdPartySearch
+    public class TeamAmericaSearch : IThirdPartySearch, ISingleSource
     {
         #region Properties
 
@@ -55,10 +56,10 @@
 
                 var request = new Request
                 {
-                    EndPoint = _settings.URL(serchDetails),
-                    SoapAction = $"{_settings.URL(serchDetails)}/{Constant.SoapActionPreBook}",
+                    EndPoint = _settings.GenericURL(serchDetails),
+                    SoapAction = $"{_settings.GenericURL(serchDetails)}/{Constant.SoapActionPreBook}",
                     Method = RequestMethod.POST,
-                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
+                    ContentType = ContentTypes.Text_xml
                 };
                 request.SetRequest(requestXml);
 
@@ -153,7 +154,7 @@
         {
             var request = new PriceSearch
             {
-                UserName = _settings.Username(serchDetails),
+                UserName = _settings.User(serchDetails),
                 Password = _settings.Password(serchDetails),
                 CityCode = resortSplit.ResortCode,
                 ProductCode = "",

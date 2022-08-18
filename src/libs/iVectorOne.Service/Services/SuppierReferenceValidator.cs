@@ -35,6 +35,7 @@
                 case ThirdParties.MTS:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.STUBA:
+                case ThirdParties.TEAMAMERICA:
                 case ThirdParties.YALAGO:
                 case ThirdParties.YOUTRAVEL:
                     break; // neither required
@@ -44,7 +45,6 @@
                 case ThirdParties.JUNIPERELEVATE:
                 case ThirdParties.JUNIPERFASTPAYHOTELS:
                 case ThirdParties.OWNSTOCK:
-                case ThirdParties.TEAMAMERICA:
                 case ThirdParties.TRAVELGATEARABIANA:
                 case ThirdParties.TRAVELGATEBOOKOHOTEL:
                 case ThirdParties.TRAVELGATEDARINA:
