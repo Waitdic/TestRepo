@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, FC, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ const tableEmptyState = {
   buttonText: 'New Supplier',
 };
 
-export const SupplierList: FC<Props> = memo(() => {
+const SupplierList: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   const error = useSelector((state: RootState) => state.app.error);
@@ -170,4 +170,6 @@ export const SupplierList: FC<Props> = memo(() => {
       />
     </>
   );
-});
+};
+
+export default React.memo(SupplierList);

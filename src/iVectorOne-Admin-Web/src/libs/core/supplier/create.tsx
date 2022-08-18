@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -25,7 +25,7 @@ import { getAccountsWithSuppliers } from '../data-access/account';
 
 type Props = {};
 
-export const SupplierCreate: FC<Props> = memo(() => {
+const SupplierCreate: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
@@ -309,4 +309,6 @@ export const SupplierCreate: FC<Props> = memo(() => {
       />
     </>
   );
-});
+};
+
+export default React.memo(SupplierCreate);

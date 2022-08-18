@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, FC, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { sortBy } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 //
@@ -25,7 +25,7 @@ const tableEmptyState = {
   buttonText: 'New Account',
 };
 
-export const AccountList: FC<Props> = memo(() => {
+const AccountList: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
   const error = useSelector((state: RootState) => state.app.error);
@@ -121,4 +121,6 @@ export const AccountList: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(AccountList);

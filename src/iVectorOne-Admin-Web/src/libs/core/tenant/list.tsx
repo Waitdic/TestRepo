@@ -1,11 +1,11 @@
-import { memo, useState, useEffect, FC, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import type { NotificationState, Tenant } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { NotificationStatus } from '@/constants';
-import { ErrorBoundary, Notification, CardList } from '@/components';
+import { Notification, CardList, RoleGuard } from '@/components';
 import { getTenants, updateTenantStatus } from '../data-access/tenant';
 
 type Props = {};
@@ -28,7 +28,7 @@ const MESSAGES = {
   },
 };
 
-export const TenantList: FC<Props> = memo(() => {
+const TenantList: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
@@ -141,15 +141,17 @@ export const TenantList: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout title='Tenants' addNew addNewHref='/tenants/create'>
-        <div className='flex flex-col h-full'>
-          <CardList
-            bodyList={tableBodyList}
-            isLoading={isLoading}
-            emptyState={tableEmptyState}
-          />
-        </div>
-      </MainLayout>
+      <RoleGuard withRedirect>
+        <MainLayout title='Tenants' addNew addNewHref='/tenants/create'>
+          <div className='flex flex-col h-full'>
+            <CardList
+              bodyList={tableBodyList}
+              isLoading={isLoading}
+              emptyState={tableEmptyState}
+            />
+          </div>
+        </MainLayout>
+      </RoleGuard>
 
       {showNotification && (
         <Notification
@@ -161,4 +163,6 @@ export const TenantList: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(TenantList);

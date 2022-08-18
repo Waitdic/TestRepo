@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, FC, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +19,7 @@ import {
   Button,
   Toggle,
   ConfirmModal,
+  RoleGuard,
 } from '@/components';
 import {
   deleteTenant,
@@ -47,7 +48,7 @@ const MESSAGES = {
   },
 };
 
-export const TenantEdit: FC<Props> = memo(() => {
+const TenantEdit: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useSlug();
@@ -240,89 +241,91 @@ export const TenantEdit: FC<Props> = memo(() => {
 
   return (
     <>
-      <MainLayout title={`${tenant?.companyName || ''}`}>
-        <div className='bg-white shadow-lg rounded-sm mb-8'>
-          <div className='flex flex-col md:flex-row md:-mr-px'>
-            <div className='min-w-60'></div>
-            <form
-              className='w-full divide-y divide-gray-200 p-6'
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete='turnedOff'
-            >
-              <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
-                <div>
-                  <TextField
-                    id='contactEmail'
-                    type={InputTypes.EMAIL}
-                    {...register('contactEmail', {
-                      required: 'This field is required.',
-                    })}
-                    labelText='Contact Email'
-                    isDirty={!!errors.contactEmail}
-                    errorMsg={errors.contactEmail?.message}
-                    required
+      <RoleGuard withRedirect>
+        <MainLayout title={`${tenant?.companyName || ''}`}>
+          <div className='bg-white shadow-lg rounded-sm mb-8'>
+            <div className='flex flex-col md:flex-row md:-mr-px'>
+              <div className='min-w-60'></div>
+              <form
+                className='w-full divide-y divide-gray-200 p-6'
+                onSubmit={handleSubmit(onSubmit)}
+                autoComplete='turnedOff'
+              >
+                <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
+                  <div>
+                    <TextField
+                      id='contactEmail'
+                      type={InputTypes.EMAIL}
+                      {...register('contactEmail', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Contact Email'
+                      isDirty={!!errors.contactEmail}
+                      errorMsg={errors.contactEmail?.message}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      id='contactName'
+                      {...register('contactName', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Contact Name'
+                      isDirty={!!errors.contactName}
+                      errorMsg={errors.contactName?.message}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      id='contactTelephone'
+                      type={InputTypes.PHONE}
+                      {...register('contactTelephone', {
+                        required: 'This field is required.',
+                      })}
+                      labelText='Contact Telephone'
+                      isDirty={!!errors.contactTelephone}
+                      errorMsg={errors.contactTelephone?.message}
+                      required
+                    />
+                  </div>
+                  <Toggle
+                    id='isActive'
+                    name='isActive'
+                    labelText='Status'
+                    defaultValue={tenant?.isActive}
+                    onChange={handleToggleTenantStatus}
+                    onBlur={handleToggleTenantStatus}
+                    readOnly
                   />
                 </div>
-                <div>
-                  <TextField
-                    id='contactName'
-                    {...register('contactName', {
-                      required: 'This field is required.',
-                    })}
-                    labelText='Contact Name'
-                    isDirty={!!errors.contactName}
-                    errorMsg={errors.contactName?.message}
-                    required
-                  />
-                </div>
-                <div>
-                  <TextField
-                    id='contactTelephone'
-                    type={InputTypes.PHONE}
-                    {...register('contactTelephone', {
-                      required: 'This field is required.',
-                    })}
-                    labelText='Contact Telephone'
-                    isDirty={!!errors.contactTelephone}
-                    errorMsg={errors.contactTelephone?.message}
-                    required
-                  />
-                </div>
-                <Toggle
-                  id='isActive'
-                  name='isActive'
-                  labelText='Status'
-                  defaultValue={tenant?.isActive}
-                  onChange={handleToggleTenantStatus}
-                  onBlur={handleToggleTenantStatus}
-                  readOnly
-                />
-              </div>
-              <div className='flex justify-end mt-5 pt-5'>
-                <Button
-                  text='Cancel'
-                  color={ButtonColors.OUTLINE}
-                  className='ml-4'
-                  onClick={() => navigate(-1)}
-                />
-                {!tenant?.isDeleted && (
+                <div className='flex justify-end mt-5 pt-5'>
                   <Button
-                    text='Delete'
-                    color={ButtonColors.DANGER}
+                    text='Cancel'
+                    color={ButtonColors.OUTLINE}
                     className='ml-4'
-                    onClick={handleAttemptTenantDelete}
+                    onClick={() => navigate(-1)}
                   />
-                )}
-                <Button
-                  type={ButtonVariants.SUBMIT}
-                  text='Save'
-                  className='ml-4'
-                />
-              </div>
-            </form>
+                  {!tenant?.isDeleted && (
+                    <Button
+                      text='Delete'
+                      color={ButtonColors.DANGER}
+                      className='ml-4'
+                      onClick={handleAttemptTenantDelete}
+                    />
+                  )}
+                  <Button
+                    type={ButtonVariants.SUBMIT}
+                    text='Save'
+                    className='ml-4'
+                  />
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      </MainLayout>
+        </MainLayout>
+      </RoleGuard>
 
       {showNotification && (
         <Notification
@@ -349,4 +352,6 @@ export const TenantEdit: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(TenantEdit);

@@ -33,6 +33,7 @@ export { default as PaginationClassic } from './PaginationClassic';
 export { default as WelcomeBanner } from './WelcomeBanner';
 export { default as YesOrNo } from './YesOrNo';
 export { default as ConfirmModal } from './ConfirmModal';
+export { default as RoleGuard } from './RoleGuard';
 
 //* Form Fields
 export * from './Fields';

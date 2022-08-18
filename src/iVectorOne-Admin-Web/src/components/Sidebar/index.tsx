@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 //
-import { SidebarLinkGroup } from '@/components';
+import { RoleGuard, SidebarLinkGroup } from '@/components';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
@@ -132,16 +132,18 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                   sidebarExpanded={sidebarExpanded}
                   setSidebarExpanded={setSidebarExpanded}
                 />
-                {/* Tenants */}
-                <SidebarLinkGroup
-                  activecondition={
-                    pathname === '/tenants' || pathname.includes('tenants')
-                  }
-                  to='/tenants'
-                  title='Tenants'
-                  sidebarExpanded={sidebarExpanded}
-                  setSidebarExpanded={setSidebarExpanded}
-                />
+                <RoleGuard>
+                  {/* Tenants */}
+                  <SidebarLinkGroup
+                    activecondition={
+                      pathname === '/tenants' || pathname.includes('tenants')
+                    }
+                    to='/tenants'
+                    title='Tenants'
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarExpanded={setSidebarExpanded}
+                  />
+                </RoleGuard>
                 {/* Settings */}
                 <SidebarLinkGroup
                   activecondition={

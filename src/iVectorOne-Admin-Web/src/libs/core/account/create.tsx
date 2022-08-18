@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ import { createAccount } from '../data-access/account';
 
 type Props = {};
 
-export const AccountCreate: FC<Props> = memo(() => {
+const AccountCreate: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -195,4 +195,6 @@ export const AccountCreate: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(AccountCreate);

@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, FC, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 //
@@ -19,7 +19,7 @@ import { getAccountById } from '../data-access/account';
 
 type Props = {};
 
-export const AccountView: FC<Props> = memo(() => {
+const AccountView: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { slug } = useSlug();
@@ -165,4 +165,6 @@ export const AccountView: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(AccountView);

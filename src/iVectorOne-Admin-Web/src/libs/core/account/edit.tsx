@@ -1,7 +1,6 @@
-import { memo, useEffect, useState, FC, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { Account } from '@/types';
@@ -20,7 +19,6 @@ import {
   Select,
   Button,
   TextField,
-  Spinner,
   ConfirmModal,
 } from '@/components';
 import { RootState } from '@/store';
@@ -29,7 +27,6 @@ import {
   getAccountById,
   updateAccount,
 } from '../data-access/account';
-import { log } from 'console';
 
 type NotificationState = {
   status: NotificationStatus;
@@ -53,7 +50,7 @@ const MESSAGES = {
   },
 };
 
-export const AccountEdit: FC<Props> = memo(() => {
+const AccountEdit: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
   const appError = useSelector((state: RootState) => state.app.error);
@@ -351,4 +348,6 @@ export const AccountEdit: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(AccountEdit);

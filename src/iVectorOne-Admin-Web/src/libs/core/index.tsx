@@ -1,4 +1,4 @@
-import { memo, FC } from 'react';
+import React from 'react';
 //
 import MainLayout from '@/layouts/Main';
 import { WelcomeBanner } from '@/components';
@@ -7,7 +7,7 @@ type Props = {
   error: string | null;
 };
 
-export const Dashboard: FC<Props> = memo(({ error }) => {
+const Dashboard: React.FC<Props> = ({ error }) => {
   return (
     <MainLayout>
       {error && (
@@ -23,4 +23,6 @@ export const Dashboard: FC<Props> = memo(({ error }) => {
       <WelcomeBanner />
     </MainLayout>
   );
-});
+};
+
+export default React.memo(Dashboard);

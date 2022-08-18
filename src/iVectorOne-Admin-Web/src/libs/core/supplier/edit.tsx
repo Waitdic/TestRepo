@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -30,7 +30,7 @@ const MESSAGES = {
   },
 };
 
-export const SupplierEdit: FC<Props> = memo(() => {
+const SupplierEdit: React.FC<Props> = () => {
   const { pathname, search } = useLocation();
 
   const subscriptionId = search.split('=')[1];
@@ -231,4 +231,6 @@ export const SupplierEdit: FC<Props> = memo(() => {
       )}
     </>
   );
-});
+};
+
+export default React.memo(SupplierEdit);

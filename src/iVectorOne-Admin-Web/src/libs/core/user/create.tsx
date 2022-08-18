@@ -3,45 +3,42 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { NotificationState, Tenant } from '@/types';
-import {
-  NotificationStatus,
-  ButtonColors,
-  ButtonVariants,
-  InputTypes,
-} from '@/constants';
+import type { NotificationState } from '@/types';
+import { NotificationStatus, ButtonColors, ButtonVariants } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import { TextField, Button, Notification, RoleGuard } from '@/components';
-import { createTenant } from '../data-access/tenant';
 import { RootState } from '@/store';
+import { createUser } from '../data-access/user';
 
 type Props = {};
 
-const TenantCreate: React.FC<Props> = () => {
+export type UserFormFields = {
+  userName: string;
+  subject: string;
+};
+
+const UserCreate: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Tenant>();
+  } = useForm<UserFormFields>();
 
   const user = useSelector((state: RootState) => state.app.user);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [notification, setNotification] = useState<NotificationState>({
-    status: NotificationStatus.SUCCESS,
-    message: 'New Tenant created successfully.',
-  });
+  const [notification, setNotification] = useState<NotificationState>();
   const [showNotification, setShowNotification] = useState(false);
 
   const activeTenant = useMemo(() => {
     return user?.tenants.find((tenant) => tenant.isSelected);
   }, [user]);
 
-  const onSubmit: SubmitHandler<Tenant> = async (data) => {
+  const onSubmit: SubmitHandler<UserFormFields> = async (data) => {
     if (!activeTenant || isLoading) return;
-    await createTenant(
+    await createUser(
       activeTenant?.tenantKey,
       data,
       () => {
@@ -51,11 +48,11 @@ const TenantCreate: React.FC<Props> = () => {
         dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.SUCCESS,
-          message: 'New Tenant created successfully.',
+          message: 'New User created successfully.',
         });
         setShowNotification(true);
         setTimeout(() => {
-          navigate('/tenants');
+          navigate('/');
         }, 500);
       },
       (err) => {
@@ -63,7 +60,7 @@ const TenantCreate: React.FC<Props> = () => {
         console.error(err);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Tenant creation failed.',
+          message: 'User creation failed.',
         });
         setShowNotification(true);
       }
@@ -73,7 +70,7 @@ const TenantCreate: React.FC<Props> = () => {
   return (
     <>
       <RoleGuard withRedirect>
-        <MainLayout title='Create Tenant'>
+        <MainLayout title='Create User'>
           <div className='bg-white shadow-lg rounded-sm mb-8'>
             <div className='flex flex-col md:flex-row md:-mr-px'>
               <div className='min-w-60'></div>
@@ -85,51 +82,25 @@ const TenantCreate: React.FC<Props> = () => {
                 <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                   <div>
                     <TextField
-                      id='companyName'
-                      {...register('companyName', {
+                      id='userName'
+                      {...register('userName', {
                         required: 'This field is required.',
                       })}
-                      labelText='Company Name'
-                      isDirty={!!errors.companyName}
-                      errorMsg={errors.companyName?.message}
+                      labelText='User Name'
+                      isDirty={!!errors.userName}
+                      errorMsg={errors.userName?.message}
                       required
                     />
                   </div>
                   <div>
                     <TextField
-                      id='contactEmail'
-                      type={InputTypes.EMAIL}
-                      {...register('contactEmail', {
+                      id='subject'
+                      {...register('subject', {
                         required: 'This field is required.',
                       })}
                       labelText='Contact Email'
-                      isDirty={!!errors.contactEmail}
-                      errorMsg={errors.contactEmail?.message}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      id='contactName'
-                      {...register('contactName', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Contact Name'
-                      isDirty={!!errors.contactName}
-                      errorMsg={errors.contactName?.message}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <TextField
-                      id='contactTelephone'
-                      type={InputTypes.PHONE}
-                      {...register('contactTelephone', {
-                        required: 'This field is required.',
-                      })}
-                      labelText='Contact Telephone'
-                      isDirty={!!errors.contactTelephone}
-                      errorMsg={errors.contactTelephone?.message}
+                      isDirty={!!errors.subject}
+                      errorMsg={errors.subject?.message}
                       required
                     />
                   </div>
@@ -155,8 +126,8 @@ const TenantCreate: React.FC<Props> = () => {
 
       {showNotification && (
         <Notification
-          status={notification.status}
-          description={notification.message}
+          status={notification?.status}
+          description={notification?.message as string}
           show={showNotification}
           setShow={setShowNotification}
         />
@@ -165,4 +136,4 @@ const TenantCreate: React.FC<Props> = () => {
   );
 };
 
-export default React.memo(TenantCreate);
+export default React.memo(UserCreate);
