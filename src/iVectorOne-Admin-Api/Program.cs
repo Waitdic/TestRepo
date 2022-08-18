@@ -4,6 +4,7 @@ using iVectorOne_Admin_Api.Config.Responses;
 using iVectorOne_Admin_Api.Features;
 using iVectorOne_Admin_Api.Infrastructure;
 using iVectorOne_Admin_Api.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
@@ -49,7 +50,8 @@ try
        .UseExceptionHandler("/error")
        .UseIntuitiveMiddleware();
 
-    app.MapHealthChecks("/healthz");
+    app.MapHealthChecks("/healthz")
+        .WithMetadata(new AllowAnonymousAttribute());
 
     app.AddFeatures();
 
