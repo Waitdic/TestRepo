@@ -18,6 +18,7 @@ export async function getSuppliersByAccount(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
+          UserKey: tenant.key,
         },
       }
     );
@@ -45,6 +46,7 @@ export async function getSuppliers(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
     });
     const data = get(res, 'data.suppliers', null);
@@ -75,6 +77,7 @@ export async function getSupplierById(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
+          UserKey: tenant.key,
         },
       }
     );
@@ -103,6 +106,7 @@ export async function getConfigurationsBySupplier(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
     });
     const configurations = get(configurationsRes, 'data.configurations', []);
@@ -142,6 +146,7 @@ export async function updateSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}/suppliersubscriptionattributes`,
       headers: {
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
       data: filteredConfigurations,
     });
@@ -184,6 +189,7 @@ export async function createSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
       data: filteredConfigurations,
     });
@@ -217,6 +223,7 @@ export async function deleteSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
     });
     onSuccess();

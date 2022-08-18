@@ -17,6 +17,7 @@ export async function createUser(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
+        UserKey: userTenantKey,
       },
       data,
     });

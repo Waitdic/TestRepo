@@ -15,6 +15,7 @@ export async function getTenants(
     const res = await ApiCall.get(`/tenants`, {
       headers: {
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
     });
     const data = get(res, 'data.tenants', null);
@@ -41,6 +42,7 @@ export async function getTenantById(
     const res = await ApiCall.get(`/tenants/${tenantId}`, {
       headers: {
         Tenantkey: tenant.key,
+        UserKey: tenant.key,
       },
     });
     const data = get(res, 'data.tenant', null);
@@ -72,6 +74,7 @@ export async function updateTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
+        UserKey: userTenantKey,
       },
       data,
     });
@@ -105,6 +108,7 @@ export async function updateTenantStatus(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
+        UserKey: userTenantKey,
       },
     });
     onSuccess();
@@ -135,6 +139,7 @@ export async function deleteTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
+        UserKey: userTenantKey,
       },
     });
     onSuccess();
@@ -165,6 +170,7 @@ export async function createTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
+        UserKey: userTenantKey,
       },
       data,
     });
