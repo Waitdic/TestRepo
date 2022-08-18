@@ -6,7 +6,7 @@
     [XmlRoot("response")]
     public class SerhsCancellationResponse
     {
-        [XmlAttribute("status")]
+        [XmlElement("status")]
         public string? Status { get; set; }
 
         [XmlElement("booking")]

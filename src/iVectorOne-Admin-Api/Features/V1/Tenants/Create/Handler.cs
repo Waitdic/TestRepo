@@ -29,6 +29,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
             _context.Tenants.Add(tenant);
             await _context.SaveChangesAsync();
 
+            _context.UserTenants.Add(new UserTenant { TenantId = tenant.TenantId, UserId = request.UserId });
             _context.Authorisations.Add(new Data.Models.Authorisation
             {
                 User = $"userid:{request.UserId}",

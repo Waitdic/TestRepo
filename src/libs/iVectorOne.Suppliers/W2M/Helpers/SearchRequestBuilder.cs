@@ -89,7 +89,6 @@
                 SOAP = true,
                 SoapAction = $"{parameters.SoapPrefix}{soapAction}",
                 Method = RequestMethod.POST,
-                ContentType = ContentTypes.Text_Xml_charset_utf_8,
                 LogFileName = requestName,
                 UseGZip = true,
                 CreateLog = parameters.CreateLogs
