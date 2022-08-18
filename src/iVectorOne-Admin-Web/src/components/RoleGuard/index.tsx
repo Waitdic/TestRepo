@@ -18,8 +18,10 @@ const RoleGuard: React.FC<Props> = ({ children, withRedirect = false }) => {
     const hasValidRole = user?.authorisations.filter(
       (auth) => auth.object === 'system' && auth.relationship === 'owner'
     );
-    return !!hasValidRole;
+    return !!hasValidRole && hasValidRole?.length > 0;
   }, [user]);
+
+  console.log(isAdmin, user);
 
   useEffect(() => {
     if (!isAdmin && withRedirect && !!user) {
