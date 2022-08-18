@@ -102,7 +102,7 @@ const UserCreate: React.FC<Props> = () => {
                       {...register('subject', {
                         required: 'This field is required.',
                       })}
-                      labelText='Contact Email'
+                      labelText='Subject'
                       isDirty={!!errors.subject}
                       errorMsg={errors.subject?.message}
                       required
