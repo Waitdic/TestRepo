@@ -55,6 +55,9 @@ const TenantEdit: React.FC<Props> = () => {
 
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const appError = useSelector((state: RootState) => state.app.error);
 
   const [notification, setNotification] = useState<NotificationState>({
@@ -87,6 +90,7 @@ const TenantEdit: React.FC<Props> = () => {
         id: activeUserTenant.tenantId,
         key: activeUserTenant.tenantKey,
       },
+      userKey as string,
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);
@@ -111,6 +115,7 @@ const TenantEdit: React.FC<Props> = () => {
     if (!userIsValid) return;
     await updateTenant(
       activeUserTenant?.tenantKey as string,
+      userKey as string,
       Number(slug),
       data,
       () => {
@@ -143,6 +148,7 @@ const TenantEdit: React.FC<Props> = () => {
     if (!userIsValid) return;
     await updateTenantStatus(
       activeUserTenant?.tenantKey as string,
+      userKey as string,
       Number(slug),
       !tenant?.isActive,
       () => {
@@ -180,6 +186,7 @@ const TenantEdit: React.FC<Props> = () => {
   const handleDeleteTenant = async () => {
     await deleteTenant(
       activeUserTenant?.tenantKey as string,
+      userKey as string,
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);

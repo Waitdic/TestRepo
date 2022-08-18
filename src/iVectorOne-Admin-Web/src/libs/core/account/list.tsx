@@ -28,6 +28,9 @@ const tableEmptyState = {
 const AccountList: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
 
@@ -63,6 +66,7 @@ const AccountList: React.FC<Props> = () => {
     if (!activeTenant || activeTenant == null) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },

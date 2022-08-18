@@ -33,6 +33,9 @@ const TenantList: React.FC<Props> = () => {
 
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const appError = useSelector((state: RootState) => state.app.error);
 
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -52,6 +55,7 @@ const TenantList: React.FC<Props> = () => {
       if (!userIsValid) return;
       await updateTenantStatus(
         activeTenant?.tenantKey as string,
+        userKey as string,
         tenantId,
         !isActive,
         () => {
@@ -108,6 +112,7 @@ const TenantList: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getTenants(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },

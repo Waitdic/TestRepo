@@ -29,6 +29,9 @@ const SupplierCreate: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const accounts = useSelector((state: RootState) => state.app.accounts);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
@@ -89,6 +92,7 @@ const SupplierCreate: React.FC<Props> = () => {
         id: activeTenant.tenantId,
         key: activeTenant.tenantKey,
       },
+      userKey as string,
       draftSupplier.subscriptionId,
       draftSupplier.supplierId,
       data,
@@ -141,6 +145,7 @@ const SupplierCreate: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getConfigurationsBySupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       optionId,
       () => {
         dispatch.app.setIsLoading(true);
@@ -175,6 +180,7 @@ const SupplierCreate: React.FC<Props> = () => {
     await Promise.all([
       getAccountsWithSuppliers(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey as string,
         () => {
           dispatch.app.setIsLoading(true);
         },
@@ -188,6 +194,7 @@ const SupplierCreate: React.FC<Props> = () => {
       ),
       getSuppliers(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey as string,
         () => {
           dispatch.app.setIsLoading(true);
         },

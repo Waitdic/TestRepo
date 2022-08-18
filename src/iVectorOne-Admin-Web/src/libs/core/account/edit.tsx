@@ -53,7 +53,11 @@ const MESSAGES = {
 const AccountEdit: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const appError = useSelector((state: RootState) => state.app.error);
+
   const navigate = useNavigate();
   const { slug } = useSlug();
 
@@ -82,6 +86,7 @@ const AccountEdit: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getAccountById(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);
@@ -104,6 +109,7 @@ const AccountEdit: React.FC<Props> = () => {
         id: activeTenant?.tenantId as number,
         key: activeTenant?.tenantKey as string,
       },
+      userKey as string,
       Number(slug),
       {
         UserName: data.userName,
@@ -144,6 +150,7 @@ const AccountEdit: React.FC<Props> = () => {
         id: activeTenant?.tenantId as number,
         key: activeTenant?.tenantKey as string,
       },
+      userKey as string,
       currentAccount?.subscriptionId as number,
       () => {
         dispatch.app.setIsLoading(true);

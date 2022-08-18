@@ -26,6 +26,9 @@ const SupplierList: React.FC<Props> = () => {
   const error = useSelector((state: RootState) => state.app.error);
   const user = useSelector((state: RootState) => state.app.user);
   const accounts = useSelector((state: RootState) => state.app.accounts);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
 
   const [filteredSuppliersList, setFilteredSuppliersList] = useState<
     Supplier[] | null
@@ -41,6 +44,7 @@ const SupplierList: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },
@@ -63,6 +67,7 @@ const SupplierList: React.FC<Props> = () => {
       setActiveAcc(selectedAcc);
       await getSuppliersByAccount(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey as string,
         selectedAcc.subscriptionId,
         () => {
           dispatch.app.setIsLoading(true);
