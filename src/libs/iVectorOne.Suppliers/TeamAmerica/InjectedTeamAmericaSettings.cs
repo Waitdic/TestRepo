@@ -8,29 +8,14 @@
     {
         protected override string Source => ThirdParties.TEAMAMERICA;
 
-        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string CompanyAddressEmail(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CompanyAddressEmail", tpAttributeSearch);
-        }
-
-        public string CompanyName(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("CompanyName", tpAttributeSearch);
-        }
-
-        public string DefaultNationalityCode(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("DefaultNationalityCode", tpAttributeSearch);
-        }
-
-        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -38,19 +23,34 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("UserAgent", tpAttributeSearch);
+        }
+
+        public string AgentEmailAddress(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("AgentEmailAddress", tpAttributeSearch);
+        }
+
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
+        }
+
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
-        }
-
-        public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("Username", tpAttributeSearch);
         }
     }
 }

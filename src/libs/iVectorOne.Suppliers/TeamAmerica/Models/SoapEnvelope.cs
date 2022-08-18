@@ -68,6 +68,8 @@
             strDoc = Regex.Replace(strDoc, $"<{oldNs}:(\\w+)>", match => $"<{newNs}:{match.Groups[1].Value}>");
             strDoc = Regex.Replace(strDoc, $"</{oldNs}:(\\w+)>", match => $"</{newNs}:{match.Groups[1].Value}>");
             strDoc = Regex.Replace(strDoc, $"<{oldNs}:(\\w+) />", match => $"<{newNs}:{match.Groups[1].Value} />");
+            strDoc = strDoc.Replace("xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
+            strDoc = strDoc.Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
 
             return strDoc;
         }
