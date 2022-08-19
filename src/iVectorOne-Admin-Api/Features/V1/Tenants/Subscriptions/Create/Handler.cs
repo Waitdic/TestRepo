@@ -1,4 +1,8 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Create
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Subscriptions.Create
 {
     public class Handler : IRequestHandler<Request, Response>
     {
@@ -23,6 +27,25 @@
                 return response;
             }
 
+            string GeneratePassword(int length)
+            {
+                const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+                StringBuilder res = new StringBuilder();
+                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+                {
+                    byte[] uintBuffer = new byte[sizeof(uint)];
+
+                    while (length-- > 0)
+                    {
+                        rng.GetBytes(uintBuffer);
+                        uint num = BitConverter.ToUInt32(uintBuffer, 0);
+                        res.Append(valid[(int)(num % (uint)valid.Length)]);
+                    }
+                }
+
+                return res.ToString();
+              }
+
             Subscription CreateSubscription(bool isLive)
             {
                 var subscription = _mapper.Map<SubscriptionDto, Subscription>(request.Subscription);
@@ -32,8 +55,8 @@
                 subscription.DummyResponses = false;
                 subscription.LogMainSearchError = true;
                 subscription.Environment = environment.ToLower();
-                subscription.Login = $"{subscription.Login}_{environment}";
-                subscription.Password = "123"; // TODO: need to generate
+                subscription.Login = $"{subscription.Login.Replace(' ', '_')}_{environment}";
+                subscription.Password = GeneratePassword(20);
                 return subscription;
             }
 
