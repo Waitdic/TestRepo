@@ -6,6 +6,7 @@ import type { Tenant } from '@/types';
 //* Fetch tenant list
 export async function getTenants(
   tenant: { id: number; key: string },
+  userKey: string,
   onInit: () => void,
   onSuccess: (tenants: Tenant[]) => void,
   onFailed: (error: string | null) => void
@@ -15,7 +16,7 @@ export async function getTenants(
     const res = await ApiCall.get(`/tenants`, {
       headers: {
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const data = get(res, 'data.tenants', null);
@@ -32,6 +33,7 @@ export async function getTenants(
 //* Fetch tenant by id
 export async function getTenantById(
   tenant: { id: number; key: string },
+  userKey: string,
   tenantId: number,
   onInit: () => void,
   onSuccess: (tenant: Tenant) => void,
@@ -42,7 +44,7 @@ export async function getTenantById(
     const res = await ApiCall.get(`/tenants/${tenantId}`, {
       headers: {
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const data = get(res, 'data.tenant', null);
@@ -59,6 +61,7 @@ export async function getTenantById(
 //* Update tenant data
 export async function updateTenant(
   userTenantKey: string,
+  userKey: string,
   tenantId: number,
   data: Tenant,
   onInit: () => void,
@@ -74,7 +77,7 @@ export async function updateTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
-        UserKey: userTenantKey,
+        UserKey: userKey,
       },
       data,
     });
@@ -94,6 +97,7 @@ export async function updateTenant(
 //* Update tenant status
 export async function updateTenantStatus(
   userTenantKey: string,
+  userKey: string,
   tenantId: number,
   status: boolean,
   onInit: () => void,
@@ -108,7 +112,7 @@ export async function updateTenantStatus(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
-        UserKey: userTenantKey,
+        UserKey: userKey,
       },
     });
     onSuccess();
@@ -126,6 +130,7 @@ export async function updateTenantStatus(
 //* Delete tenant by id
 export async function deleteTenant(
   userTenantKey: string,
+  userKey: string,
   tenantId: number,
   onInit: () => void,
   onSuccess: () => void,
@@ -139,7 +144,7 @@ export async function deleteTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
-        UserKey: userTenantKey,
+        UserKey: userKey,
       },
     });
     onSuccess();
@@ -157,6 +162,7 @@ export async function deleteTenant(
 //* Create tenant
 export async function createTenant(
   userTenantKey: string,
+  userKey: string,
   data: Tenant,
   onInit: () => void,
   onSuccess: (newTenant: { tenantId: number; success: boolean }) => void,
@@ -170,7 +176,7 @@ export async function createTenant(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
-        UserKey: userTenantKey,
+        UserKey: userKey,
       },
       data,
     });

@@ -6,6 +6,7 @@ import type { Account, Supplier } from '@/types';
 //* Accounts data fetch
 export async function getAccounts(
   tenant: { id: number; key: string },
+  userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
@@ -18,7 +19,7 @@ export async function getAccounts(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -38,6 +39,7 @@ export async function getAccounts(
 //* Accounts data fetch with suppliers
 export async function getAccountsWithSuppliers(
   tenant: { id: number; key: string },
+  userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
@@ -48,7 +50,7 @@ export async function getAccountsWithSuppliers(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
@@ -86,6 +88,7 @@ export async function getAccountsWithSuppliers(
 //* Accounts data fetch with suppliers and configurations
 export async function getAccountsWithSuppliersAndConfigurations(
   tenant: { id: number; key: string },
+  userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
   onFailed?: (error: string | null) => void
@@ -96,7 +99,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
@@ -108,7 +111,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
           headers: {
             Accept: 'application/json',
             Tenantkey: tenant.key,
-            UserKey: tenant.key,
+            UserKey: userKey,
           },
         }
       );
@@ -124,7 +127,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
             headers: {
               Accept: 'application/json',
               Tenantkey: tenant.key,
-              UserKey: tenant.key,
+              UserKey: userKey,
             },
           }
         );
@@ -146,6 +149,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
 //* Account data fetch with suppliers and configurations
 export async function getAccountWithSupplierAndConfigurations(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   supplierId: number,
   onInit?: () => void,
@@ -164,7 +168,7 @@ export async function getAccountWithSupplierAndConfigurations(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -174,7 +178,7 @@ export async function getAccountWithSupplierAndConfigurations(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -184,7 +188,7 @@ export async function getAccountWithSupplierAndConfigurations(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -218,6 +222,7 @@ export async function getAccountWithSupplierAndConfigurations(
 //* Fetch account by ID
 export async function getAccountById(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   onInit: () => void,
   onSuccess: (account: Account) => void,
@@ -231,7 +236,7 @@ export async function getAccountById(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -249,6 +254,7 @@ export async function getAccountById(
 //* Create account
 export async function createAccount(
   tenant: { id: number; key: string },
+  userKey: string,
   data: {
     UserName: string;
     PropertyTpRequestLimit: string;
@@ -267,7 +273,7 @@ export async function createAccount(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
       data,
     });
@@ -284,6 +290,7 @@ export async function createAccount(
 //* Update account
 export async function updateAccount(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   data: {
     UserName: string;
@@ -304,7 +311,7 @@ export async function updateAccount(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
       data,
     });
@@ -321,6 +328,7 @@ export async function updateAccount(
 //* Delete account
 export async function deleteAccount(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   onInit: () => void,
   onSuccess: () => void,
@@ -334,7 +342,7 @@ export async function deleteAccount(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     onSuccess();

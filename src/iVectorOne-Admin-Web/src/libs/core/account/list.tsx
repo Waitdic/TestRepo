@@ -28,8 +28,12 @@ const tableEmptyState = {
 const AccountList: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [showNotification, setShowNotification] = useState(false);
   const [filteredAccountList, setFilteredAccountList] = useState<
@@ -63,6 +67,7 @@ const AccountList: React.FC<Props> = () => {
     if (!activeTenant || activeTenant == null) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },
@@ -106,7 +111,7 @@ const AccountList: React.FC<Props> = () => {
       <MainLayout title='Accounts' addNew addNewHref='/accounts/create'>
         <CardList
           bodyList={tableBodyList}
-          isLoading={!accounts.length}
+          isLoading={isLoading}
           emptyState={tableEmptyState}
         />
       </MainLayout>

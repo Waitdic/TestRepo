@@ -4,6 +4,7 @@ import { UserFormFields } from '../user/create';
 //* Create User
 export async function createUser(
   userTenantKey: string,
+  userKey: string,
   data: UserFormFields,
   onInit: () => void,
   onSuccess: () => void,
@@ -17,7 +18,7 @@ export async function createUser(
       headers: {
         Accept: 'application/json',
         Tenantkey: userTenantKey,
-        UserKey: userTenantKey,
+        UserKey: userKey,
       },
       data,
     });

@@ -39,6 +39,9 @@ const SupplierEdit: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
 
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState<NotificationState>();
@@ -63,6 +66,7 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!activeTenant) return;
     updateSupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       Number(currentAccount?.subscriptionId),
       Number(currentSupplier?.supplierID),
       data,
@@ -95,6 +99,7 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!activeTenant) return;
     await deleteSupplier(
       { id: activeTenant?.tenantId, key: activeTenant?.tenantKey },
+      userKey as string,
       Number(currentAccount?.subscriptionId),
       Number(currentSupplier?.supplierID),
       () => {
@@ -127,6 +132,7 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getAccountWithSupplierAndConfigurations(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       Number(subscriptionId),
       Number(supplierId),
       () => {

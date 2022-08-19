@@ -28,6 +28,9 @@ const AccountCreate: React.FC<Props> = () => {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const {
@@ -54,6 +57,7 @@ const AccountCreate: React.FC<Props> = () => {
         id: activeTenant.tenantId,
         key: activeTenant.tenantKey,
       },
+      userKey as string,
       {
         UserName: data.userName,
         PropertyTpRequestLimit: data.propertyTprequestLimit.toString(),

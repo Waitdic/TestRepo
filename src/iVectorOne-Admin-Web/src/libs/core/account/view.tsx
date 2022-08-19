@@ -27,6 +27,9 @@ const AccountView: React.FC<Props> = () => {
   const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
 
   const activeTenant = useMemo(
     () => user?.tenants.find((tenant) => tenant.isSelected),
@@ -54,6 +57,7 @@ const AccountView: React.FC<Props> = () => {
     if (!activeTenant || activeTenant == null) return;
     await getAccountById(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
       Number(slug),
       () => {
         dispatch.app.setIsLoading(true);

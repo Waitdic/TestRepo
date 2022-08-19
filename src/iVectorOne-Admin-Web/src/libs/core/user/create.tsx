@@ -27,6 +27,9 @@ const UserCreate: React.FC<Props> = () => {
   } = useForm<UserFormFields>();
 
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [notification, setNotification] = useState<NotificationState>();
@@ -40,6 +43,7 @@ const UserCreate: React.FC<Props> = () => {
     if (!activeTenant || isLoading) return;
     await createUser(
       activeTenant?.tenantKey,
+      userKey as string,
       data,
       () => {
         dispatch.app.setIsLoading(true);
@@ -98,7 +102,7 @@ const UserCreate: React.FC<Props> = () => {
                       {...register('subject', {
                         required: 'This field is required.',
                       })}
-                      labelText='Contact Email'
+                      labelText='Subject'
                       isDirty={!!errors.subject}
                       errorMsg={errors.subject?.message}
                       required

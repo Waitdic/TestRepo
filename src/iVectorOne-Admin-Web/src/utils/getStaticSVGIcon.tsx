@@ -10,6 +10,8 @@ const getStaticSVGIcon = (name: string, className: string) => {
   switch (name) {
     case 'tenants':
       return <TenantIcon className={className} />;
+    case 'users':
+      return <TenantIcon className={className} />; //! Temporary until icon is ready
     case 'suppliers':
       return <SupplierIcon className={className} />;
     case 'accounts':

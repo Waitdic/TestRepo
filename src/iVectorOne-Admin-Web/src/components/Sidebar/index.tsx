@@ -143,6 +143,16 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}
                   />
+                  {/* Users */}
+                  <SidebarLinkGroup
+                    activecondition={
+                      pathname === '/users' || pathname.includes('users')
+                    }
+                    to='/users/create' //! Temporary while not ready the list page
+                    title='Users'
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarExpanded={setSidebarExpanded}
+                  />
                 </RoleGuard>
                 {/* Settings */}
                 <SidebarLinkGroup

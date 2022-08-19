@@ -27,6 +27,9 @@ const TenantCreate: React.FC<Props> = () => {
   } = useForm<Tenant>();
 
   const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [notification, setNotification] = useState<NotificationState>({
@@ -43,6 +46,7 @@ const TenantCreate: React.FC<Props> = () => {
     if (!activeTenant || isLoading) return;
     await createTenant(
       activeTenant?.tenantKey,
+      userKey as string,
       data,
       () => {
         dispatch.app.setIsLoading(true);

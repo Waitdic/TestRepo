@@ -188,7 +188,7 @@
 
         private static void AddErrata(HotelResult result, PreBookResult preBookResult)
         {
-            if (result.HotelOptions?.First()?.OptionalElements.Comments.Comment == null)
+            if (result.HotelOptions?.First()?.OptionalElements?.Comments?.Comment == null)
             {
                 return;
             }
@@ -295,18 +295,33 @@
         internal static void AddCancellations(PreBookResult preBookResult, HotelBookingRulesResponse response,
             decimal roomCost, int duration, DateTime arrivalDate)
         {
-            foreach (var rule in response.BookingRulesRS.Results.HotelResult.HotelOptions.First().CancellationPolicy.PolicyRules.RuleList)
+            var rules = response.BookingRulesRS.Results.HotelResult.HotelOptions.First().CancellationPolicy?.PolicyRules?.RuleList;
+
+            if (rules?.FirstOrDefault() == null)
             {
                 preBookResult.Cancellations.Add(new PreBookCancellation
                 {
-                    StartDate = rule.DateFrom != null
-                        ? DateTime.ParseExact(rule.DateFrom, Constants.DateTimeFormat, CultureInfo.InvariantCulture)
-                        : DateTime.Now.Date,
-                    RuleEndDate = rule.DateTo != null
-                        ? DateTime.ParseExact(rule.DateTo, Constants.DateTimeFormat, CultureInfo.InvariantCulture).AddDays(-1)
-                        : arrivalDate,
-                    Amount = GetCancellationCost(roomCost, duration, rule)
+                    StartDate = DateTime.Now.Date,
+                    RuleEndDate = arrivalDate,
+                    Amount = roomCost
                 });
+            }
+            else
+            {
+                foreach (var rule in rules)
+                {
+                    preBookResult.Cancellations.Add(new PreBookCancellation
+                    {
+                        StartDate = rule.DateFrom != null
+                            ? DateTime.ParseExact(rule.DateFrom, Constants.DateTimeFormat, CultureInfo.InvariantCulture)
+                            : DateTime.Now.Date,
+                        RuleEndDate = rule.DateTo != null
+                            ? DateTime.ParseExact(rule.DateTo, Constants.DateTimeFormat, CultureInfo.InvariantCulture).AddDays(-1)
+                            : arrivalDate,
+                        Amount = GetCancellationCost(roomCost, duration, rule)
+                    });
+                }
+
             }
         }
 

@@ -5,6 +5,7 @@ import { get } from 'lodash';
 //* Fetch suppliers by Account
 export async function getSuppliersByAccount(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
@@ -18,7 +19,7 @@ export async function getSuppliersByAccount(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -36,6 +37,7 @@ export async function getSuppliersByAccount(
 //* Fetch suppliers list
 export async function getSuppliers(
   tenant: { id: number; key: string },
+  userKey: string,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
   onFailed: (error: string | null) => void
@@ -46,7 +48,7 @@ export async function getSuppliers(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const data = get(res, 'data.suppliers', null);
@@ -63,6 +65,7 @@ export async function getSuppliers(
 //* Fetch supplier by ID
 export async function getSupplierById(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   supplierId: number,
   onInit: () => void,
@@ -77,7 +80,7 @@ export async function getSupplierById(
         headers: {
           Accept: 'application/json',
           Tenantkey: tenant.key,
-          UserKey: tenant.key,
+          UserKey: userKey,
         },
       }
     );
@@ -95,6 +98,7 @@ export async function getSupplierById(
 //* Fetch configurations by Supplier
 export async function getConfigurationsBySupplier(
   tenant: { id: number; key: string },
+  userKey: string,
   supplierId: number,
   onInit: () => void,
   onSuccess: (configurations: SupplierConfiguration[]) => void,
@@ -106,7 +110,7 @@ export async function getConfigurationsBySupplier(
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     const configurations = get(configurationsRes, 'data.configurations', []);
@@ -123,6 +127,7 @@ export async function getConfigurationsBySupplier(
 //* Update supplier data
 export async function updateSupplier(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   supplierId: number,
   data: SupplierFormFields,
@@ -146,7 +151,7 @@ export async function updateSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}/suppliersubscriptionattributes`,
       headers: {
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
       data: filteredConfigurations,
     });
@@ -166,6 +171,7 @@ export async function updateSupplier(
 //* Create supplier data
 export async function createSupplier(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   supplierId: number,
   data: SupplierFormFields,
@@ -189,7 +195,7 @@ export async function createSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
       data: filteredConfigurations,
     });
@@ -209,6 +215,7 @@ export async function createSupplier(
 //* Delete supplier
 export async function deleteSupplier(
   tenant: { id: number; key: string },
+  userKey: string,
   subscriptionId: number,
   supplierId: number,
   onInit: () => void,
@@ -223,7 +230,7 @@ export async function deleteSupplier(
       url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
-        UserKey: tenant.key,
+        UserKey: userKey,
       },
     });
     onSuccess();
