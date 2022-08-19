@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -13,6 +12,10 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Suppliers.JonView.Models;
+    using iVectorOne.Models.Property.Booking;
+    using System;
+    using System.Text.RegularExpressions;
 
     public class JonViewSearch : IThirdPartySearch, ISingleSource
     {
@@ -73,17 +76,18 @@
                 string cityCode = resort.ResortCode;
 
                 // Build request url
-                string url = BuildSearchURL(searchDetails, cityCode);
+                string xmlBody = BuildSearchRequest(searchDetails, cityCode);
 
                 var request = new Request
                 {
-                    EndPoint = _settings.GenericURL(searchDetails) + url,
+                    EndPoint = _settings.GenericURL(searchDetails),
+                    SoapAction = Constant.RequestSoapAction,
                     Method = RequestMethod.POST,
                     Source = Source,
-                    ExtraInfo = searchDetails,
+                    ExtraInfo = string.Join(",", resort.Hotels.Select(x=>x.TPKey)),
                     UseGZip = true
                 };
-
+                request.SetRequest(xmlBody);
                 requests.Add(request);
             }
 
@@ -93,28 +97,58 @@
         public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
-            var jonviewSearchResponses = new List<JonViewSearchResponse>();
-            
+            var jonviewSearchResponses = new List<SearchResponse>();
+          
+           
             foreach (var request in requests)
             {
-                var searchResponse = new JonViewSearchResponse();
                 bool success = request.Success;
+                string[] TPKeys = (request.ExtraInfo as string).Split(',');
 
                 if (success)
                 {
-                    searchResponse = _serializer.DeSerialize<JonViewSearchResponse>(request.ResponseString);
+                    var message = JonView.ExtractEnvelopeContent<SearchResponse>(request, _serializer);
 
-                    if (searchResponse.Response is not null)
+                    //increasing performance, transform requested hotels only
+                    var roomRecords = TPKeys.Any()
+                        ? message.AlternateList.RoomRecords.Where(x => TPKeys.Contains(x.SupplierCode)).ToList()
+                        : message.AlternateList.RoomRecords;
+
+                    var transformedRooms = roomRecords.SelectMany(room =>
                     {
-                        jonviewSearchResponses.Add(searchResponse);
-                    }
+                        decimal localCost = room.DayPrice.Split('/').Sum(x => x.ToSafeDecimal());
+
+                        var cancellations = room.CancellationPolicy.Select(cancelItem =>
+                                GetCancellation(room, cancelItem, searchDetails.ArrivalDate,
+                                    searchDetails.TotalAdults + searchDetails.TotalChildren)).ToList();
+
+                        var cancellationSet = new Cancellations();
+                        cancellationSet.AddRange(cancellations);
+                        cancellationSet.Solidify(SolidifyType.Max, new DateTime(2009, 12, 31), localCost);
+
+                        string roomTypeCode = room.ProductName.Contains("-")
+                                                ? room.ProductName.Split('-').Last().Trim()
+                                                : "Standard Room";
+
+                        bool nfr = room.CancellationPolicy.All(c => string.Equals(c.FromDays, "999"));
+
+                        return Enumerable.Range(1, searchDetails.Rooms).Select(prbid => new TransformedResult
+                        {
+                            TPKey = room.SupplierCode,
+                            CurrencyCode = room.CurrencyCode,
+                            RoomTypeCode = roomTypeCode,
+                            MealBasisCode = room.ProductDetails.Board,
+                            Amount = localCost,
+                            PropertyRoomBookingID = prbid,
+                            TPReference = room.ProdCode,
+                            NonRefundableRates = nfr,
+                            RoomType = room.ProductDetails.RoomType,
+                            Cancellations = cancellationSet
+                        });
+                    });
+                    transformedResults.TransformedResults.AddRange(transformedRooms);
                 }
             }
-
-            transformedResults.TransformedResults
-                .AddRange(jonviewSearchResponses
-                    .Where(r => r.Response.Rooms.Count > 0)
-                    .SelectMany(x => GetResultFromResponse(x)));
 
             return transformedResults;
         }
@@ -132,100 +166,93 @@
 
         #region Helper classes
 
-        private string BuildSearchURL(SearchDetails searchDetails, string cityCode)
+        private string BuildSearchRequest(SearchDetails searchDetails, string cityCode) 
         {
-            var sb = new StringBuilder();
-
-            sb.AppendFormat("?actioncode=HOSTXML&clientlocseq={0}&userid={1}&" + "password={2}&message=<?xml version=\"1.0\" encoding=\"UTF-8\"?>", _settings.ClientLoc(searchDetails), _settings.User(searchDetails), _settings.Password(searchDetails));
-
-            sb.AppendFormat("<message><actionseg>CT</actionseg><searchseg><prodtypecode>FIT</prodtypecode>" + "<searchtype>CITY</searchtype>");
-            sb.AppendFormat("<citycode>{0}</citycode>", cityCode);
-            sb.AppendFormat("<startdate>{0}</startdate>", searchDetails.ArrivalDate.ToString("dd-MMM-yyyy"));
-            sb.AppendFormat("<duration>{0}</duration>", searchDetails.Duration);
-            sb.AppendFormat("<status>AVAILABLE</status>");
-            sb.AppendFormat("<displayname>Y</displayname>");
-            sb.AppendFormat("<displaynamedetails>Y</displaynamedetails>");
-            sb.AppendFormat("<displayroomconf>Y</displayroomconf>");
-            sb.AppendFormat("<displayprice>Y</displayprice>");
-            sb.AppendFormat("<displaysuppliercd>Y</displaysuppliercd>");
-            sb.AppendFormat("<displayavail>Y</displayavail>");
-            sb.AppendFormat("<displaypolicy>Y</displaypolicy>");
-            sb.AppendFormat("<displayrestriction>Y</displayrestriction>");
-            sb.AppendFormat("<displaydynamicrates>Y</displaydynamicrates>");
-
             var room = searchDetails.RoomDetails[0];
-            var sbChildAges = new StringBuilder();
-            sbChildAges.Append(room.ChildAgeCSV.Replace(",", "/"));
 
-            for (int i = 1; i <= room.Infants; i++)
+            var availRQ = new SearchRequest 
             {
-                sbChildAges.Append("/1");
-            }
-
-            string childAges = sbChildAges.ToString();
-            if (!string.IsNullOrEmpty(childAges) && childAges.Substring(0, 1) == "/")
-            {
-                childAges = childAges.Substring(1, childAges.Length - 1);
-            }
-
-            sb.AppendFormat("<adults>{0}</adults>", room.Adults);
-            sb.AppendFormat("<children>{0}</children>", room.Children + room.Infants);
-            sb.AppendFormat("<childrenage>{0}</childrenage>", childAges);
-            sb.AppendFormat("<displaypolicy>Y</displaypolicy>");
-            sb.AppendFormat("</searchseg>");
-            sb.AppendFormat("</message>");
-
-            // Add the request body
-
-            return sb.ToSafeString();
-        }
-
-        private List<TransformedResult> GetResultFromResponse(JonViewSearchResponse response)
-        {
-            var transformedResults = new List<TransformedResult>();
-
-            foreach (var room in response.Response.Rooms)
-            {
-                var transformedResult = new TransformedResult
+                ActionSeg = "CT",
+                SearchSeg = 
                 {
-                    TPKey = room.suppliercode,
-                    CurrencyCode = room.currencycode,
-                    RoomTypeCode = GetRoomType(room.productname),
-                    MealBasisCode = "RO",
-                    Amount = GetPrice(room.dayprice),
-                    PropertyRoomBookingID = 1,
-                    TPReference = room.prodcode + "_" + room.dayprice,
-                    NonRefundableRates = room.cancellationPolicy.item.fromdays.Equals("999"),
-                    RoomType = room.roomDetails.roomtype
-                };
+                    ProdTypeCode = "FIT",
+                    SearchType = "CITY",
+                    CityCode = cityCode,
+                    StartDate = searchDetails.ArrivalDate.ToString(Constant.DateFormat),
+                    Duration = searchDetails.Duration,
+                    Status = "AVAILABLE",
+                    DisplayName = "Y",
+                    DisplayNameDetails = "Y",
+                    DisplayRoomConf = "Y",
+                    DisplayPrice = "Y",
+                    DisplaySupplierCd = "Y",
+                    DisplayAvail = "Y",
+                    DisplayPolicy = "Y",
+                    DisplayRestriction = "Y",
+                    DisplayDynamicRates = "Y",
+                    Adults = room.Adults,
+                    Children = room.Children + room.Infants,
+                    ChildrenAge = string.Join("/", room.ChildAges.Concat(Enumerable.Repeat(1, room.Infants))),
+                    Rooms = searchDetails.Rooms
+                }
+            };
 
-                transformedResults.Add(transformedResult);
-            }
+            var message = JonView.CreateSoapRequest(_serializer, searchDetails, _settings, availRQ);
 
-            return transformedResults;
+            return message.OuterXml;
         }
 
-        private string GetRoomType(string productName)
+        private static Cancellation GetCancellation(RoomRecord room, CancelicyItem cancelItem, DateTime arrivalDate, int personCount) 
         {
-            if (productName.Split('-').Length > 1)
-            {
-                return productName.Split('-')[productName.Split('-').Length - 1].Trim();
-            }
-            else
-            {
-                return "Standard Room";
-            }
-        }
+            var fromDaysBeforeArrival = cancelItem.FromDays.ToSafeInt();
+            var toDaysBeforeArrival = cancelItem.ToDays.ToSafeInt();
 
-        private decimal GetPrice(string dayPrice)
-        {
-            decimal price = 0m;
-            foreach (string priceString in dayPrice.Split('/'))
+            var startDate = toDaysBeforeArrival < 0
+                ? arrivalDate
+                : arrivalDate.AddDays(-fromDaysBeforeArrival);
+
+            var endDate = toDaysBeforeArrival < 0
+                ? arrivalDate
+                : arrivalDate.AddDays(-toDaysBeforeArrival);
+
+            decimal[] dayPrice = room.DayPrice.Split('/').Select(p => p.ToSafeDecimal()).ToArray();
+            decimal localCost = dayPrice.Sum();
+
+            List<decimal> baseAmounts = new();
+
+            switch (cancelItem.ChargeType) 
             {
-                price += priceString.ToSafeDecimal();
+                case ChargeType.EntireItem:
+                    baseAmounts = new List<decimal> { localCost };
+                    break;
+                case ChargeType.Daily:
+                    var match = Regex.Match(cancelItem.CanNote, @"on first (\d+) day\(s\) Price");
+                    int numberOfDays = match.Groups[1].Value.ToSafeInt();
+                    baseAmounts = dayPrice.Take(numberOfDays).ToList();
+                    break;
+                case ChargeType.PerPerson:
+                case ChargeType.NotAvailable:
+                    baseAmounts = Enumerable.Repeat(localCost / personCount, personCount).ToList();
+                    break;
             }
 
-            return price;
+            var canRate = cancelItem.Canrate.ToSafeDecimal();
+
+            var finalAmountForThisRule = baseAmounts.Sum(amount =>
+            {
+                return string.Equals(cancelItem.RateType, RateType.Percentage)
+                    ? amount * (canRate / 100.0M)
+                    : amount;
+            });
+
+            var cancellation =  new Cancellation
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Amount = finalAmountForThisRule
+            };
+
+            return cancellation;
         }
 
         #endregion
