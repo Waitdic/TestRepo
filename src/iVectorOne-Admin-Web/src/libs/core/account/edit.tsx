@@ -103,7 +103,7 @@ const AccountEdit: React.FC<Props> = () => {
   }, [activeTenant, slug]);
 
   const onSubmit: SubmitHandler<AccountFields> = async (data) => {
-    if (userIsValid) return;
+    if (!userIsValid) return;
     await updateAccount(
       {
         id: activeTenant?.tenantId as number,

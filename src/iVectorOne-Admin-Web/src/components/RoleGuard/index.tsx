@@ -21,8 +21,6 @@ const RoleGuard: React.FC<Props> = ({ children, withRedirect = false }) => {
     return !!hasValidRole && hasValidRole?.length > 0;
   }, [user]);
 
-  console.log(isAdmin, user);
-
   useEffect(() => {
     if (!isAdmin && withRedirect && !!user) {
       navigate('/');
