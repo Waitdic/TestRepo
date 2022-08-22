@@ -57,7 +57,7 @@ const AccountList: React.FC<Props> = () => {
       name,
       isActive: isActive === false, //? API not returning this field
       actions: [
-        { name: 'View', href: `/accounts/${id}` },
+        // { name: 'View', href: `/accounts/${id}` },
         { name: 'Edit', href: `/accounts/${id}/edit` },
       ],
     })
