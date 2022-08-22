@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import MainLayout from '@/layouts/Main';
 import { TextField, Button, Notification, RoleGuard } from '@/components';
 import { createTenant } from '../data-access/tenant';
 import { RootState } from '@/store';
+import { refetchUserData } from '../data-access';
 
 type Props = {};
 
@@ -42,6 +43,32 @@ const TenantCreate: React.FC<Props> = () => {
     return user?.tenants.find((tenant) => tenant.isSelected);
   }, [user]);
 
+  const refetchUser = useCallback(async () => {
+    if (!activeTenant || isLoading) return;
+    await refetchUserData(
+      userKey as string,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (freshUser) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.updateUser(freshUser);
+        setTimeout(() => {
+          navigate('/tenants');
+        }, 500);
+      },
+      (err) => {
+        console.error(err);
+        dispatch.app.setIsLoading(false);
+        setNotification({
+          status: NotificationStatus.ERROR,
+          message: 'Error while updating user data.',
+        });
+        setShowNotification(true);
+      }
+    );
+  }, []);
+
   const onSubmit: SubmitHandler<Tenant> = async (data) => {
     if (!activeTenant || isLoading) return;
     await createTenant(
@@ -58,9 +85,7 @@ const TenantCreate: React.FC<Props> = () => {
           message: 'New Tenant created successfully.',
         });
         setShowNotification(true);
-        setTimeout(() => {
-          navigate('/tenants');
-        }, 500);
+        refetchUser();
       },
       (err) => {
         dispatch.app.setIsLoading(false);

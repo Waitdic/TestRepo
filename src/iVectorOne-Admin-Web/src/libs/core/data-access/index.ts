@@ -55,3 +55,38 @@ export function useCoreFetching() {
 
   return { error };
 }
+
+//* Refetch user data
+export async function refetchUserData(
+  userKey: string,
+  onInit: () => void,
+  onSuccess: (user: User) => void,
+  onFailed: (err: string) => void
+) {
+  onInit();
+  try {
+    const userRes = await ApiCall.get(`/users/${userKey}`);
+    const userData = get(userRes, 'data', null);
+    if (!userData) {
+      throw new Error('User not found');
+    }
+    const user: User = {
+      fullName: userData.fullName,
+      tenants: userData.tenants.map((tenant: Tenant, idx: number) => ({
+        ...tenant,
+        isSelected: idx === 0,
+      })),
+      authorisations: userData.authorisations,
+      success: userData.success,
+    };
+    onSuccess(user);
+  } catch (err) {
+    if (typeof err === 'string') {
+      console.error(err.toUpperCase());
+      onFailed(err.toUpperCase());
+    } else if (err instanceof Error) {
+      console.error(err.message);
+      onFailed(err.message);
+    }
+  }
+}
