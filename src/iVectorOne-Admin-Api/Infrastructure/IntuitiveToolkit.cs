@@ -64,7 +64,7 @@ namespace iVectorOne_Admin_Api.Infrastructure
                 return builder;
 
             // Setup Auditing
-            var auditConnectionString = builder.Configuration.GetConnectionString("TelemetryDatabase");
+            var auditConnectionString = builder.Configuration.GetConnectionString("AuditDatabase");
 
             Configuration.Setup().UseSqlServer(config => config
                 .ConnectionString(auditConnectionString)
@@ -100,11 +100,17 @@ namespace iVectorOne_Admin_Api.Infrastructure
 
                     return result;
                 })
-                .WithEventType("{verb}:{url}")
+                .WithEventType("HTTP:{verb}:{url}")
                 .IncludeHeaders()
                 .IncludeResponseHeaders()
                 .IncludeRequestBody()
                 .IncludeResponseBody());
+
+            Configuration.AddCustomAction(ActionType.OnScopeCreated, scope =>
+            {
+                var activity = Activity.Current;
+                scope.Event.CustomFields["RequestId"] = activity?.GetTraceId();
+            });
 
             return app;
         }
