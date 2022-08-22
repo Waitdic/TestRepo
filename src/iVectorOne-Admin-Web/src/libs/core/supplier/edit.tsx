@@ -169,7 +169,11 @@ const SupplierEdit: React.FC<Props> = () => {
 
   return (
     <>
-      <MainLayout title={`${currentSupplier?.name || ''}`}>
+      <MainLayout
+        title={`${currentAccount?.userName || ''} ${
+          currentSupplier?.name || ''
+        }`}
+      >
         <div className='bg-white shadow-lg rounded-sm mb-8'>
           <div className='flex flex-col md:flex-row md:-mr-px'>
             <div className='min-w-60'></div>
