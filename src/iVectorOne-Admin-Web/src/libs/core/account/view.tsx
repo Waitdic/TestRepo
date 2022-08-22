@@ -131,16 +131,6 @@ const AccountView: React.FC<Props> = () => {
                       </h4>
                       <p className='text-sm'>{currentAccount.currencyCode}</p>
                     </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <div className='flex items-center justify-between'>
-                        <h4 className='block text-sm font-medium mb-1'>
-                          Log Main Search Error
-                        </h4>
-                        <YesOrNo
-                          isActive={!!currentAccount.logMainSearchError}
-                        />
-                      </div>
-                    </div>
                   </>
                 ) : (
                   <Spinner />

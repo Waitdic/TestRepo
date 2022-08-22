@@ -294,17 +294,6 @@ const AccountEdit: React.FC<Props> = () => {
                     ]}
                   />
                 </div>
-                <div className='flex-1 md:w-1/2'>
-                  <Toggle
-                    id='logMainSearchError'
-                    {...register('logMainSearchError')}
-                    labelText='Log Main Search Error'
-                    isDirty={!!errors.logMainSearchError}
-                    errorMsg={errors.logMainSearchError?.message}
-                    defaultValue={currentAccount?.logMainSearchError as boolean}
-                    readOnly
-                  />
-                </div>
               </div>
               <div className='flex justify-end mt-5 pt-5'>
                 <Button
