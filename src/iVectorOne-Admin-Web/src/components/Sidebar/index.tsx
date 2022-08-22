@@ -155,7 +155,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                   />
                 </RoleGuard>
                 {/* Settings */}
-                <SidebarLinkGroup
+                {/* <SidebarLinkGroup
                   activecondition={
                     pathname === '/settings' || pathname.includes('settings')
                   }
@@ -173,7 +173,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                       to: '/settings/feedback',
                     },
                   ]}
-                />
+                /> */}
                 {/* Support */}
                 <SidebarLinkGroup
                   activecondition={
