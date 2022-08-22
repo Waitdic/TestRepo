@@ -68,9 +68,9 @@
         {
             bool success = false;
             string hotelBookRuleURL = JuniperHelper.ConstructUrl(
-                _settings.BaseURL(propertyDetails, propertyDetails.Source),
-                _settings.HotelBookingRuleURL(propertyDetails, propertyDetails.Source));
-            string soapAction = _settings.HotelBookingRuleSOAPAction(propertyDetails, propertyDetails.Source);
+                _settings.GenericURL(propertyDetails, propertyDetails.Source),
+                _settings.PrebookURL(propertyDetails, propertyDetails.Source));
+            string soapAction = _settings.SOAPHotelReservation(propertyDetails, propertyDetails.Source);
             bool useGzip = _settings.UseGZip(propertyDetails, propertyDetails.Source);
 
             foreach (var room in propertyDetails.Rooms)
@@ -200,10 +200,10 @@
                     request = new Request
                     {
                         EndPoint = JuniperHelper.ConstructUrl(
-                            _settings.BaseURL(propertyDetails, propertyDetails.Source),
-                            _settings.HotelBookURL(propertyDetails, propertyDetails.Source)),
+                            _settings.GenericURL(propertyDetails, propertyDetails.Source),
+                            _settings.BookingURL(propertyDetails, propertyDetails.Source)),
                         SOAP = true,
-                        SoapAction = _settings.HotelBookSOAPAction(propertyDetails, propertyDetails.Source),
+                        SoapAction = _settings.SOAPReservationConfirmation(propertyDetails, propertyDetails.Source),
                         Method = RequestMethod.POST,
                         Source = propertyDetails.Source,
                         LogFileName = Constant.BookLogFile,
@@ -279,7 +279,7 @@
                     PrimaryLangID = _settings.LanguageCode(propertyDetails, propertyDetails.Source),
                     SequenceNmbr = room.ThirdPartyReference.Split('|')[0],
                     Pos = JuniperHelper.BuildPosNode(
-                        _settings.AgentDutyCode(propertyDetails, propertyDetails.Source),
+                        _settings.OperatorCode(propertyDetails, propertyDetails.Source),
                         _settings.Password(propertyDetails, propertyDetails.Source)),
                     HotelReservations =
                     {
@@ -338,7 +338,7 @@
                                             Min = "0",
                                             Max = room.LocalCost.ToString()
                                         },
-                                        PaxCountry = _settings.PaxCountry(propertyDetails, propertyDetails.Source)
+                                        PaxCountry = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source)
                                     },
                                      Comments = propertyDetails.Rooms.Where(x => !string.IsNullOrWhiteSpace(x.SpecialRequest)).Select(x => new Comment
                                     {
@@ -382,8 +382,8 @@
                             },
                             HotelReservationExtension =
                             {
-                                PaxCountry = _settings.PaxCountry(propertyDetails, propertyDetails.Source),
-                                ForceCurrency = _settings.CurrencyCode(propertyDetails, propertyDetails.Source)
+                                PaxCountry = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source),
+                                ForceCurrency = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source)
                             }
                         }
                     }
@@ -416,9 +416,9 @@
 
                     request = JuniperHelper.BuildWebRequest(
                             JuniperHelper.ConstructUrl(
-                                _settings.BaseURL(propertyDetails, propertyDetails.Source),
-                                _settings.HotelCancelURL(propertyDetails, propertyDetails.Source)),
-                            _settings.HotelCancelSOAPAction(propertyDetails, propertyDetails.Source),
+                                _settings.GenericURL(propertyDetails, propertyDetails.Source),
+                                _settings.CancellationURL(propertyDetails, propertyDetails.Source)),
+                            _settings.SOAPCancelBooking(propertyDetails, propertyDetails.Source),
                             cancellationRequest,
                             Constant.CancelLogFile,
                             propertyDetails.Source,
@@ -465,7 +465,7 @@
                 {
                     PrimaryLangId = _settings.LanguageCode(propertyDetails, propertyDetails.Source),
                     Pos = JuniperHelper.BuildPosNode(
-                        _settings.AgentDutyCode(propertyDetails, propertyDetails.Source),
+                        _settings.OperatorCode(propertyDetails, propertyDetails.Source),
                         _settings.Password(propertyDetails, propertyDetails.Source)),
                     UniqueId =
                     {
@@ -496,7 +496,7 @@
                     PrimaryLangId = _settings.LanguageCode(propertyDetails, propertyDetails.Source),
                     SequenceNmbr = tpReference.Split('|')[0],
                     Pos = JuniperHelper.BuildPosNode(
-                        _settings.AgentDutyCode(propertyDetails, propertyDetails.Source),
+                        _settings.OperatorCode(propertyDetails, propertyDetails.Source),
                         _settings.Password(propertyDetails, propertyDetails.Source)),
                     RuleMessage =
                     {
@@ -509,9 +509,9 @@
                         },
                         TpaExtension =
                         {
-                            ForceCurrency = _settings.CurrencyCode(propertyDetails, propertyDetails.Source),
+                            ForceCurrency = _settings.Currency(propertyDetails, propertyDetails.Source),
                             ShowSupplements = "0",
-                            PaxCountry = _settings.PaxCountry(propertyDetails, propertyDetails.Source)
+                            PaxCountry = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source)
                         }
                     }
                 }

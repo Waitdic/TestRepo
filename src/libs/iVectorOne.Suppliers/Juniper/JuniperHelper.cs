@@ -61,6 +61,7 @@
             {
                 requestStr = requestStr.Replace(bodyContentClass, bodyContentElementName);
             }
+            requestStr = requestStr.Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "");
 
             requestStr = requestStr.Replace($"<{bodyContentElementName}>",
                                             $"<{bodyContentElementName} xmlns=\"http://www.opentravel.org/OTA/2003/05\">");
