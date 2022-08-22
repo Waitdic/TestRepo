@@ -31,12 +31,11 @@
             _context.Authorisations.Add(new Data.Models.Authorisation
             {
                 User = $"userid:{request.UserId}",
-                Relationship = request.Relationship,
-                Object = $"tenantid: {request.TenantId}"
+                Relationship = request.Relationship.ToLower(),
+                Object = $"tenantid:{request.TenantId}"
             });
 
             await _context.SaveChangesAsync();
-
 
             response.Default(new ResponseModel { Success = true, TenantId = request.TenantId });
 

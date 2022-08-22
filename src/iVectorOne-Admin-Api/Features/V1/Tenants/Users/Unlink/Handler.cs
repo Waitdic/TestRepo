@@ -29,7 +29,7 @@
             await _context.SaveChangesAsync();
 
             var authorisation = await _context.Authorisations
-                .Where(a => a.User == $"userid:{request.UserId}" && a.Object == $"tenantid: {request.TenantId}")
+                .Where(a => a.User == $"userid:{request.UserId}" && a.Object == $"tenantid:{request.TenantId}")
                 .FirstOrDefaultAsync();
 
             if (authorisation == null)
