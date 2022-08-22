@@ -7,6 +7,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Users.Info
         [JsonPropertyName("fullName")]
         public string UserName { get; set; } = string.Empty;
 
+        public int UserId { get; set; }
+
         public List<TenantDto> Tenants { get; set; } = new List<TenantDto>();
 
         public List<AuthorisationDto> Authorisations { get; set; } = new List<AuthorisationDto>();
