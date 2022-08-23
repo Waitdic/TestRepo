@@ -109,44 +109,47 @@
                 {
                     var message = JonView.ExtractEnvelopeContent<SearchResponse>(request, _serializer);
 
-                    //increasing performance, transform requested hotels only
-                    var roomRecords = TPKeys.Any()
-                        ? message.AlternateList.RoomRecords.Where(x => TPKeys.Contains(x.SupplierCode)).ToList()
-                        : message.AlternateList.RoomRecords;
-
-                    var transformedRooms = roomRecords.SelectMany(room =>
+                    if (message.AlternateList != null)
                     {
-                        decimal localCost = room.DayPrice.Split('/').Sum(x => x.ToSafeDecimal());
+                        //increasing performance, transform requested hotels only
+                        var roomRecords = TPKeys.Any()
+                            ? message.AlternateList.RoomRecords.Where(x => TPKeys.Contains(x.SupplierCode)).ToList()
+                            : message.AlternateList.RoomRecords;
 
-                        var cancellations = room.CancellationPolicy.Select(cancelItem =>
-                                GetCancellation(room, cancelItem, searchDetails.ArrivalDate,
-                                    searchDetails.TotalAdults + searchDetails.TotalChildren)).ToList();
-
-                        var cancellationSet = new Cancellations();
-                        cancellationSet.AddRange(cancellations);
-                        cancellationSet.Solidify(SolidifyType.Max, new DateTime(2009, 12, 31), localCost);
-
-                        string roomTypeCode = room.ProductName.Contains("-")
-                                                ? room.ProductName.Split('-').Last().Trim()
-                                                : "Standard Room";
-
-                        bool nfr = room.CancellationPolicy.All(c => string.Equals(c.FromDays, "999"));
-
-                        return Enumerable.Range(1, searchDetails.Rooms).Select(prbid => new TransformedResult
+                        var transformedRooms = roomRecords.SelectMany(room =>
                         {
-                            TPKey = room.SupplierCode,
-                            CurrencyCode = room.CurrencyCode,
-                            RoomTypeCode = roomTypeCode,
-                            MealBasisCode = room.ProductDetails.Board,
-                            Amount = localCost,
-                            PropertyRoomBookingID = prbid,
-                            TPReference = room.ProdCode,
-                            NonRefundableRates = nfr,
-                            RoomType = room.ProductDetails.RoomType,
-                            Cancellations = cancellationSet
+                            decimal localCost = room.DayPrice.Split('/').Sum(x => x.ToSafeDecimal());
+
+                            var cancellations = room.CancellationPolicy.Select(cancelItem =>
+                                    GetCancellation(room, cancelItem, searchDetails.ArrivalDate,
+                                        searchDetails.TotalAdults + searchDetails.TotalChildren)).ToList();
+
+                            var cancellationSet = new Cancellations();
+                            cancellationSet.AddRange(cancellations);
+                            cancellationSet.Solidify(SolidifyType.Max, new DateTime(2009, 12, 31), localCost);
+
+                            string roomTypeCode = room.ProductName.Contains("-")
+                                                    ? room.ProductName.Split('-').Last().Trim()
+                                                    : "Standard Room";
+
+                            bool nfr = room.CancellationPolicy.All(c => string.Equals(c.FromDays, "999"));
+
+                            return Enumerable.Range(1, searchDetails.Rooms).Select(prbid => new TransformedResult
+                            {
+                                TPKey = room.SupplierCode,
+                                CurrencyCode = room.CurrencyCode,
+                                RoomTypeCode = roomTypeCode,
+                                MealBasisCode = room.ProductDetails.Board,
+                                Amount = localCost,
+                                PropertyRoomBookingID = prbid,
+                                TPReference = room.ProdCode,
+                                NonRefundableRates = nfr,
+                                RoomType = room.ProductDetails.RoomType,
+                                Cancellations = cancellationSet
+                            });
                         });
-                    });
-                    transformedResults.TransformedResults.AddRange(transformedRooms);
+                        transformedResults.TransformedResults.AddRange(transformedRooms);
+                    }
                 }
             }
 

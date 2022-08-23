@@ -14,22 +14,22 @@ Timeout: 100
       <OTA_HotelAvailRQ PrimaryLangID="en">
         <POS>
           <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
-            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F"></RequestorID>
           </Source>
         </POS>
         <AvailRequestSegments>
           <AvailRequestSegment>
-            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange>
             <RoomStayCandidates>
               <RoomStayCandidate Quantity="1">
                 <GuestCounts>
-                  <GuestCount Age="40" Count="1" />
+                  <GuestCount Age="40" Count="1"></GuestCount>
                 </GuestCounts>
               </RoomStayCandidate>
             </RoomStayCandidates>
             <HotelSearchCriteria>
               <Criterion>
-                <HotelRef HotelCode="102245" />
+                <HotelRef HotelCode="102245"></HotelRef>
                 <TPA_Extensions>
                   <ShowCatalogueData>1</ShowCatalogueData>
                   <ForceCurrency>USD</ForceCurrency>
@@ -63,22 +63,22 @@ Timeout: 100
       <OTA_HotelAvailRQ PrimaryLangID="en">
         <POS>
           <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
-            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F"></RequestorID>
           </Source>
         </POS>
         <AvailRequestSegments>
           <AvailRequestSegment>
-            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange>
             <RoomStayCandidates>
               <RoomStayCandidate Quantity="1">
                 <GuestCounts>
-                  <GuestCount Age="40" Count="2" />
+                  <GuestCount Age="40" Count="2"></GuestCount>
                 </GuestCounts>
               </RoomStayCandidate>
             </RoomStayCandidates>
             <HotelSearchCriteria>
               <Criterion>
-                <HotelRef HotelCode="102245" />
+                <HotelRef HotelCode="102245"></HotelRef>
                 <TPA_Extensions>
                   <ShowCatalogueData>1</ShowCatalogueData>
                   <ForceCurrency>USD</ForceCurrency>
@@ -112,23 +112,23 @@ Timeout: 100
       <OTA_HotelAvailRQ PrimaryLangID="en">
         <POS>
           <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
-            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F"></RequestorID>
           </Source>
         </POS>
         <AvailRequestSegments>
           <AvailRequestSegment>
-            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange>
             <RoomStayCandidates>
               <RoomStayCandidate Quantity="1">
                 <GuestCounts>
-                  <GuestCount Age="40" Count="1" />
-                  <GuestCount Age="8" Count="1" />
+                  <GuestCount Age="40" Count="1"></GuestCount>
+                  <GuestCount Age="8" Count="1"></GuestCount>
                 </GuestCounts>
               </RoomStayCandidate>
             </RoomStayCandidates>
             <HotelSearchCriteria>
               <Criterion>
-                <HotelRef HotelCode="102245" />
+                <HotelRef HotelCode="102245"></HotelRef>
                 <TPA_Extensions>
                   <ShowCatalogueData>1</ShowCatalogueData>
                   <ForceCurrency>USD</ForceCurrency>
@@ -162,23 +162,23 @@ Timeout: 100
       <OTA_HotelAvailRQ PrimaryLangID="en">
         <POS>
           <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
-            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F"></RequestorID>
           </Source>
         </POS>
         <AvailRequestSegments>
           <AvailRequestSegment>
-            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange>
             <RoomStayCandidates>
               <RoomStayCandidate Quantity="1">
                 <GuestCounts>
-                  <GuestCount Age="40" Count="1" />
-                  <GuestCount Age="0" Count="1" />
+                  <GuestCount Age="40" Count="1"></GuestCount>
+                  <GuestCount Age="0" Count="1"></GuestCount>
                 </GuestCounts>
               </RoomStayCandidate>
             </RoomStayCandidates>
             <HotelSearchCriteria>
               <Criterion>
-                <HotelRef HotelCode="102245" />
+                <HotelRef HotelCode="102245"></HotelRef>
                 <TPA_Extensions>
                   <ShowCatalogueData>1</ShowCatalogueData>
                   <ForceCurrency>USD</ForceCurrency>
@@ -212,24 +212,24 @@ Timeout: 100
       <OTA_HotelAvailRQ PrimaryLangID="en">
         <POS>
           <Source AgentDutyCode="XML_IntuitiveSystems-iVector">
-            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F" />
+            <RequestorID Type="1" MessagePassword="H'LGw.m(6CVzdj{F"></RequestorID>
           </Source>
         </POS>
         <AvailRequestSegments>
           <AvailRequestSegment>
-            <StayDateRange Start="2021-09-01" End="2021-09-06" />
+            <StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange>
             <RoomStayCandidates>
               <RoomStayCandidate Quantity="1">
                 <GuestCounts>
-                  <GuestCount Age="40" Count="1" />
-                  <GuestCount Age="0" Count="1" />
-                  <GuestCount Age="8" Count="1" />
+                  <GuestCount Age="40" Count="1"></GuestCount>
+                  <GuestCount Age="0" Count="1"></GuestCount>
+                  <GuestCount Age="8" Count="1"></GuestCount>
                 </GuestCounts>
               </RoomStayCandidate>
             </RoomStayCandidates>
             <HotelSearchCriteria>
               <Criterion>
-                <HotelRef HotelCode="102245" />
+                <HotelRef HotelCode="102245"></HotelRef>
                 <TPA_Extensions>
                   <ShowCatalogueData>1</ShowCatalogueData>
                   <ForceCurrency>USD</ForceCurrency>

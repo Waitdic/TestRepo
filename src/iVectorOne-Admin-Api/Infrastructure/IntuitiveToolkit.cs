@@ -69,7 +69,7 @@ namespace iVectorOne_Admin_Api.Infrastructure
             Configuration.Setup().UseSqlServer(config => config
                 .ConnectionString(auditConnectionString)
                 .Schema("dbo")
-                .TableName("Event")
+                .TableName("admin_audit")
                 .IdColumnName("EventId")
                 .JsonColumnName("JsonData")
                 .LastUpdatedColumnName("LastUpdatedDate")

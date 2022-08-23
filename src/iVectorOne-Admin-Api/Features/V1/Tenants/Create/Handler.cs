@@ -42,7 +42,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
             {
                 User = $"userid:{user.UserId}",
                 Relationship = "owner",
-                Object = $"tenantid: {tenant.TenantId}"
+                Object = $"tenantid:{tenant.TenantId}"
             });
 
             await _context.SaveChangesAsync();

@@ -1,45 +1,27 @@
 {
   "data": [
     {
-      "title": "2022 Q2",
-      "status": "Completed",
-      "list": [
-        {
-          "title": "Search API V2",
-          "description": "We will improve the stability and performance of the Search API.",
-          "completed": true
-        }
-      ]
-    },
-    {
       "title": "2022 Q3",
       "status": "Working on",
       "list": [
         {
-          "title": "Portal V1",
+          "title": "UI - Portal V1",
           "description": "We will build a portal so that users can add, delete and update their subscriptions and suppliers for themselves.",
           "completed": false
-        }
-      ]
-    },
-    {
-      "title": "2022 Q3",
-      "status": "Working on",
-      "list": [
+        },
         {
-          "title": "Search Testing",
-          "description": "Provide the ability to test a supplier search in the portal. Users can execute a search and then analyse the related response, logs and audit information.",
+          "title": "API - Search Store",
+          "description": "The first iteration of the product has a very limited store of data. We will build a store of search activity. Initially we need these data to analyse our own performance, the supplier performance and eventually the data will drive reports and dashboards in the portal.",
           "completed": false
-        }
-      ]
-    },
-    {
-      "title": "2022 Q3",
-      "status": "Planned",
-      "list": [
+        },
         {
-          "title": "SEarch Reporting",
-          "description": "Provide information and statistics about searches in the portal.",
+          "title": "API - Enhanced logging of prebook and book calls",
+          "description": "We currently store a limited amount of information with respect to prebook and book calls.  This needs to be extended to allow us to provide better support, and eventually for customers to self-serve.",
+          "completed": false
+        },
+        {
+          "title": "UI - Test Supplier",
+          "description": "We have built a portal that enables us (and soon our customers) to configure their credentials for a new supplier.  However, the only way to test is to manually fire requests at the iVectorOne API and see if any search results come back. Instead, we would like to automate this capability by adding a “Test Supplier” button to the portal - where the suppliers are configured.",
           "completed": false
         }
       ]

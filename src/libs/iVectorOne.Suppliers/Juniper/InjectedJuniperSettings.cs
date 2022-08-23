@@ -8,69 +8,49 @@
     {
         protected override string Source => string.Empty;
 
-        public string AgentDutyCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("AgentDutyCode", tpAttributeSearch, source);
-        }
-
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string BaseURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("BaseURL", tpAttributeSearch, source);
+            return Get_Value("BookingURL", tpAttributeSearch, source);
         }
 
-        public string CurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("CurrencyCode", tpAttributeSearch, source);
+            return Get_Value("CancellationURL", tpAttributeSearch, source);
         }
 
-        public bool ExcludeNonRefundableRates(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("ExcludeNonRefundableRates", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("Currency", tpAttributeSearch, source);
         }
 
-        public string HotelAvailURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string CustomerCountryCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelAvailURL", tpAttributeSearch, source);
+            return Get_Value("CustomerCountryCode", tpAttributeSearch, source);
         }
 
-        public string HotelAvailURLSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelAvailURLSOAPAction", tpAttributeSearch, source);
+            return Get_Value("EnableMultiRoomSearch", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string HotelBookingRuleSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelBookingRuleSOAPAction", tpAttributeSearch, source);
+            return Get_Value("ExcludeNRF", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public string HotelBookingRuleURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelBookingRuleURL", tpAttributeSearch, source);
+            return Get_Value("GenericURL", tpAttributeSearch, source);
         }
 
-        public string HotelBookSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("HotelBookSOAPAction", tpAttributeSearch, source);
-        }
-
-        public string HotelBookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("HotelBookURL", tpAttributeSearch, source);
-        }
-
-        public string HotelCancelSOAPAction(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("HotelCancelSOAPAction", tpAttributeSearch, source);
-        }
-
-        public string HotelCancelURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("HotelCancelURL", tpAttributeSearch, source);
+            return Get_Value("HotelBatchLimit", tpAttributeSearch, source).ToSafeInt();
         }
 
         public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -78,14 +58,14 @@
             return Get_Value("LanguageCode", tpAttributeSearch, source);
         }
 
-        public int MaxHotelsPerSearchRequest(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("MaxHotelsPerSearchRequest", tpAttributeSearch, source).ToSafeInt();
-        }
-
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("OffsetCancellationDays", tpAttributeSearch, source).ToSafeInt();
+        }
+
+        public string OperatorCode(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("OperatorCode", tpAttributeSearch, source);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -93,9 +73,34 @@
             return Get_Value("Password", tpAttributeSearch, source);
         }
 
-        public string PaxCountry(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("PaxCountry", tpAttributeSearch, source);
+            return Get_Value("PrebookURL", tpAttributeSearch, source);
+        }
+
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("SearchURL", tpAttributeSearch, source);
+        }
+
+        public string SOAPAvailableHotels(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("SOAPAvailableHotels", tpAttributeSearch, source);
+        }
+
+        public string SOAPCancelBooking(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("SOAPCancelBooking", tpAttributeSearch, source);
+        }
+
+        public string SOAPHotelReservation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("SOAPHotelReservation", tpAttributeSearch, source);
+        }
+
+        public string SOAPReservationConfirmation(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("AgentDutyCode", tpAttributeSearch, source);
         }
 
         public bool ShowCatalogueData(IThirdPartyAttributeSearch tpAttributeSearch, string source)
@@ -103,14 +108,9 @@
             return Get_Value("ShowCatalogueData", tpAttributeSearch, source).ToSafeBoolean();
         }
 
-        public bool SplitMultiroom(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("SplitMultiroom", tpAttributeSearch, source).ToSafeBoolean();
-        }
-
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("UseGZip", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("AgentDutyCode", tpAttributeSearch, source).ToSafeBoolean();
         }
     }
 }

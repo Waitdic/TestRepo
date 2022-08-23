@@ -46,6 +46,7 @@
                 case ThirdParties.JUNIPERELEVATE:
                 case ThirdParties.JUNIPERFASTPAYHOTELS:
                 case ThirdParties.OWNSTOCK:
+                case ThirdParties.PORTIMAR:
                 case ThirdParties.TRAVELGATEARABIANA:
                 case ThirdParties.TRAVELGATEBOOKOHOTEL:
                 case ThirdParties.TRAVELGATEDARINA:
@@ -122,6 +123,7 @@
                 case ThirdParties.JUNIPERFASTPAYHOTELS:
                 case ThirdParties.MTS:
                 case ThirdParties.OWNSTOCK:
+                case ThirdParties.PORTIMAR:
                 case ThirdParties.STUBA:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.TEAMAMERICA:

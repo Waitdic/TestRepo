@@ -1,4 +1,6 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink
 {
     public static class Endpoints
     {
