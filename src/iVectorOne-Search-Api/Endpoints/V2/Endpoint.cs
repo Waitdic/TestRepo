@@ -7,6 +7,7 @@
     using iVectorOne.Factories;
     using iVectorOne.SDK.V2.PropertySearch;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Search.Enums;
 
     public static class Endpoint
     {
@@ -40,7 +41,7 @@
                         [FromQuery] bool? log, // todo - move to config
                         [FromQuery] string? suppliers,
                         [FromQuery] string? emailLogsTo,
-                        [FromQuery] bool? dedupe)
+                        [FromQuery] Dedupe? dedupeMethod)
                     =>
                     {
                         var request = new Request
@@ -58,7 +59,7 @@
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
                             EmailLogsToAddress = emailLogsTo ?? string.Empty,
-                            Dedupe = dedupe ?? true
+                            DedupeMethod = dedupeMethod ?? Dedupe.cheapestleadin
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);

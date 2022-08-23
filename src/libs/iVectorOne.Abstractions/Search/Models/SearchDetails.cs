@@ -8,6 +8,7 @@
     using iVector.Search.Property;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Search.Enums;
 
     /// <summary>
     /// A search details object
@@ -96,7 +97,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether we want to de-dupes.
         /// </summary>
-        public bool DedupeResults { get; set; } = true;
+        public Dedupe DedupeResults { get; set; } = Dedupe.cheapestleadin;
 
         /// <summary>
         /// Gets or sets the total passengers.

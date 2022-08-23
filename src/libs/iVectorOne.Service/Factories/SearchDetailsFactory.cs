@@ -30,7 +30,7 @@
                 OpaqueSearch = searchRequest.OpaqueRates,
                 SellingCountry = searchRequest.SellingCountry,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
-                DedupeResults = searchRequest.Dedupe
+                DedupeResults = searchRequest.DedupeMethod
             };
 
             if (searchRequest.ArrivalDate.HasValue)

@@ -7,6 +7,7 @@
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Models;
     using iVectorOne.Repositories;
+    using iVectorOne.Search.Enums;
     using iVectorOne.Search.Models;
 
     /// <summary>
@@ -47,43 +48,38 @@
                 decimal exchangeRate = await _currencyRepository.GetExchangeRateFromISOCurrencyIDAsync(currencyID);
                 decimal checkLeadInPrice = dedupeResult.LeadInPrice * exchangeRate;
 
-                if (!searchDetails.DedupeResults)
-                {
-                    if (checkCentralPropertyID > 0)
-                    {
-                        // any unique key will do but the first split "_" needs to be property reference id
-                        int keyCount = searchDetails.ConcurrentResults.Keys.Count;
-                        string checkHashCode = $"{checkCentralPropertyID}_{checkMealBasisID}_{(checkNonRefundable ? 1 : 0)}_{keyCount}";
-
-                        // todo - loop until this is added
-                        searchDetails.ConcurrentResults.TryAdd(checkHashCode, dedupeResult);
-                    }
-                }
-                else
+                if (searchDetails.DedupeResults.HasFlag(Dedupe.cheapestleadin) && checkCentralPropertyID > 0)
                 {
                     string checkHashCode = $"{checkCentralPropertyID}_{checkMealBasisID}_{(checkNonRefundable ? 1 : 0)}";
-                    if (checkCentralPropertyID > 0)
-                    {
-                        searchDetails.ConcurrentResults.AddOrUpdate(
-                            checkHashCode,
-                            dedupeResult,
-                            (key, currentProperty) =>
-                            {
-                                int currentCurrencyID = currentProperty.RoomResults.OrderBy(r => r.PriceData.Total).First().PriceData.CurrencyID;
-                                decimal currentExchangeRate = _currencyRepository.GetExchangeRateFromISOCurrencyIDAsync(currentCurrencyID).Result;
-                                decimal currentLeadinPrice = currentProperty.LeadInPrice * currentExchangeRate;
 
-                                // if we have cheaper lead in price, or the same price either a lower priority number or lower propertyid
-                                if (currentLeadinPrice > checkLeadInPrice)
-                                {
-                                    return dedupeResult;
-                                }
-                                else
-                                {
-                                    return currentProperty;
-                                }
-                            });
-                    }
+                    searchDetails.ConcurrentResults.AddOrUpdate(
+                        checkHashCode,
+                        dedupeResult,
+                        (key, currentProperty) =>
+                        {
+                            int currentCurrencyID = currentProperty.RoomResults.OrderBy(r => r.PriceData.Total).First().PriceData.CurrencyID;
+                            decimal currentExchangeRate = _currencyRepository.GetExchangeRateFromISOCurrencyIDAsync(currentCurrencyID).Result;
+                            decimal currentLeadinPrice = currentProperty.LeadInPrice * currentExchangeRate;
+
+                            // if we have cheaper lead in price, or the same price either a lower priority number or lower propertyid
+                            if (currentLeadinPrice > checkLeadInPrice)
+                            {
+                                return dedupeResult;
+                            }
+                            else
+                            {
+                                return currentProperty;
+                            }
+                        });
+                }
+                else if (searchDetails.DedupeResults.HasFlag(Dedupe.none))
+                {
+                    // any unique key will do but the first split "_" needs to be property reference id
+                    int keyCount = searchDetails.ConcurrentResults.Keys.Count;
+                    string checkHashCode = $"{checkCentralPropertyID}_{checkMealBasisID}_{(checkNonRefundable ? 1 : 0)}_{keyCount}";
+
+                    // todo - loop until this is added
+                    searchDetails.ConcurrentResults.TryAdd(checkHashCode, dedupeResult);
                 }
             }
 
@@ -110,10 +106,10 @@
                 int propertyId = result.PropertyData.PropertyID;
                 foreach (var room in result.RoomResults)
                 {
-                    string mealBasis = !searchDetails.DedupeResults || dedupeMethod == DedupeMethod.CheapestLeadin ? string.Empty : room.RoomData.MealBasisCode;
+                    string mealBasis = searchDetails.DedupeResults.HasFlag(Dedupe.none) || dedupeMethod == DedupeMethod.CheapestLeadin ? string.Empty : room.RoomData.MealBasisCode;
 
                     int nonRefundable = 0;
-                    if (searchDetails.DedupeResults && dedupeByNonRefundable)
+                    if (searchDetails.DedupeResults.HasFlag(Dedupe.cheapestleadin) && dedupeByNonRefundable)
                     {
                         if (room.PriceData.NonRefundableRates.HasValue)
                         {
