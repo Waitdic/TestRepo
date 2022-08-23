@@ -17,7 +17,7 @@
 
             var userTenant = await _context.UserTenants
                 .Where(t => t.TenantId == request.TenantId && t.UserId == request.UserId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (userTenant == null)
             {
@@ -26,19 +26,21 @@
             }
 
             _context.Remove(userTenant);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             var authorisation = await _context.Authorisations
                 .Where(a => a.User == $"userid:{request.UserId}" && a.Object == $"tenantid:{request.TenantId}")
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (authorisation == null)
             {
                 response.Default(new ResponseModel { Success = true, TenantId = request.TenantId });
             }
-
-            _context.Remove(authorisation);
-            await _context.SaveChangesAsync();
+            else
+            {
+                _context.Remove(authorisation);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
 
             response.Default(new ResponseModel { Success = true, TenantId = request.TenantId });
 
