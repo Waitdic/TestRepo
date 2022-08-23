@@ -54,7 +54,7 @@
         public static string BuildSoap<T>(T request, ISerializer serializer)
         {
             string elementName = "";
-            var requestStr = serializer.Serialize(request).OuterXml;
+            var requestStr = serializer.SerializeWithoutNamespaces(request).OuterXml;
             var bodyContentClass = request.GetType().Name;
             var bodyContentElementName = !string.IsNullOrEmpty(elementName) ? elementName : bodyContentClass;
             if (!string.Equals(bodyContentClass, bodyContentElementName))

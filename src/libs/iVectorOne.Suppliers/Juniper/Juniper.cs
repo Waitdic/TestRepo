@@ -383,7 +383,7 @@
                             HotelReservationExtension =
                             {
                                 PaxCountry = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source),
-                                ForceCurrency = _settings.CustomerCountryCode(propertyDetails, propertyDetails.Source)
+                                ForceCurrency = _settings.Currency(propertyDetails, propertyDetails.Source)
                             }
                         }
                     }
