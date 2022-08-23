@@ -1,4 +1,6 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink
 {
     public static class Endpoints
     {
@@ -9,7 +11,8 @@
                 async (
                     IMediator mediator,
                     int tenantId,
-                    int userId
+                    int userId,
+                    [FromBody] RequestDto requestDto
                     ) =>
             {
                 var response = await mediator.Send(new Request { TenantId = tenantId, UserId = userId });
