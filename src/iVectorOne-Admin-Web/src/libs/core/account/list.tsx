@@ -64,7 +64,7 @@ const AccountList: React.FC<Props> = () => {
   );
 
   const fetchData = useCallback(async () => {
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant || isLoading) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,

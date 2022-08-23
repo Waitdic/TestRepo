@@ -111,7 +111,6 @@ const TenantList: React.FC<Props> = () => {
   const fetchTenants = useCallback(async () => {
     if (!activeTenant) return;
     await getTenants(
-      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
       () => {
         dispatch.app.setIsLoading(true);

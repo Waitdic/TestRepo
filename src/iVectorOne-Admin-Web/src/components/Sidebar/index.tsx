@@ -148,7 +148,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                     activecondition={
                       pathname === '/users' || pathname.includes('users')
                     }
-                    to='/users/create' //! Temporary while not ready the list page
+                    to='/users'
                     title='Users'
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}

@@ -162,9 +162,7 @@ const SupplierList: React.FC<Props> = () => {
                   emptyState={tableEmptyState}
                 />
               ) : (
-                filteredSuppliersList !== null && (
-                  <EmptyState {...tableEmptyState} />
-                )
+                <EmptyState {...tableEmptyState} />
               )}
             </div>
           </div>

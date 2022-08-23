@@ -17,6 +17,7 @@ export type Tenant = {
   isDeleted: boolean;
 };
 export type User = {
+  userId: number;
   fullName: string;
   tenants: Tenant[];
   authorisations: {
@@ -26,6 +27,11 @@ export type User = {
   }[];
   success: boolean;
 } | null;
+export type UserResponse = {
+  userId: number;
+  userName: string;
+  key: string;
+};
 export type Role = {
   name: string;
 };

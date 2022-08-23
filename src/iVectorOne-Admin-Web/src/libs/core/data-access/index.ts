@@ -20,6 +20,7 @@ export function useCoreFetching() {
         throw new Error('User not found');
       }
       const user: User = {
+        userId: userData.userId,
         fullName: userData.fullName,
         tenants: userData.tenants.map((tenant: Tenant, idx: number) => ({
           ...tenant,
@@ -71,6 +72,7 @@ export async function refetchUserData(
       throw new Error('User not found');
     }
     const user: User = {
+      userId: userData.userId,
       fullName: userData.fullName,
       tenants: userData.tenants.map((tenant: Tenant, idx: number) => ({
         ...tenant,

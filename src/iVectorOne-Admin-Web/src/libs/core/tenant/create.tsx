@@ -27,7 +27,6 @@ const TenantCreate: React.FC<Props> = () => {
     formState: { errors },
   } = useForm<Tenant>();
 
-  const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
@@ -39,12 +38,13 @@ const TenantCreate: React.FC<Props> = () => {
   });
   const [showNotification, setShowNotification] = useState(false);
 
-  const activeTenant = useMemo(() => {
-    return user?.tenants.find((tenant) => tenant.isSelected);
-  }, [user]);
+  const isValidUser = useMemo(
+    () => !!userKey || isLoading,
+    [userKey, isLoading]
+  );
 
   const refetchUser = useCallback(async () => {
-    if (!activeTenant || isLoading) return;
+    if (!isValidUser) return;
     await refetchUserData(
       userKey as string,
       () => {
@@ -69,35 +69,37 @@ const TenantCreate: React.FC<Props> = () => {
     );
   }, []);
 
-  const onSubmit: SubmitHandler<Tenant> = async (data) => {
-    if (!activeTenant || isLoading) return;
-    await createTenant(
-      activeTenant?.tenantKey,
-      userKey as string,
-      data,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: 'New Tenant created successfully.',
-        });
-        setShowNotification(true);
-        refetchUser();
-      },
-      (err) => {
-        dispatch.app.setIsLoading(false);
-        console.error(err);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: 'Tenant creation failed.',
-        });
-        setShowNotification(true);
-      }
-    );
-  };
+  const onSubmit: SubmitHandler<Tenant> = useCallback(
+    async (data) => {
+      if (!isValidUser) return;
+      await createTenant(
+        userKey as string,
+        data,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: 'New Tenant created successfully.',
+          });
+          setShowNotification(true);
+          refetchUser();
+        },
+        (err) => {
+          dispatch.app.setIsLoading(false);
+          console.error(err);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'Tenant creation failed.',
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [isValidUser]
+  );
 
   return (
     <>

@@ -5,7 +5,6 @@ import type { Tenant } from '@/types';
 
 //* Fetch tenant list
 export async function getTenants(
-  tenant: { id: number; key: string },
   userKey: string,
   onInit: () => void,
   onSuccess: (tenants: Tenant[]) => void,
@@ -15,7 +14,7 @@ export async function getTenants(
   try {
     const res = await ApiCall.get(`/tenants`, {
       headers: {
-        Tenantkey: tenant.key,
+        Tenantkey: userKey,
         UserKey: userKey,
       },
     });
@@ -161,7 +160,6 @@ export async function deleteTenant(
 
 //* Create tenant
 export async function createTenant(
-  userTenantKey: string,
   userKey: string,
   data: Tenant,
   onInit: () => void,
@@ -175,7 +173,7 @@ export async function createTenant(
       url: `/tenants`,
       headers: {
         Accept: 'application/json',
-        Tenantkey: userTenantKey,
+        Tenantkey: userKey,
         UserKey: userKey,
       },
       data,
