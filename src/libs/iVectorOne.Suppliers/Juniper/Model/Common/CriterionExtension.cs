@@ -10,8 +10,12 @@
 
         [XmlElement("ForceCurrency")]
         public string ForceCurrency { get; set; } = string.Empty;
+        public bool ShouldSerializeForceCurrency() => !string.IsNullOrEmpty(ForceCurrency);
+
         [XmlElement("PaxCountry")]
         public string PaxCountry { get; set; } = string.Empty;
+        public bool ShouldSerializePaxCountry() => !string.IsNullOrEmpty(PaxCountry);
+
         [XmlElement("ShowBasicInfo")]
         public string ShowBasicInfo { get; set; } = "0";
         [XmlElement("ShowPromotions")]

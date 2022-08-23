@@ -28,6 +28,7 @@
             ThirdParties.JUNIPERECTRAVEL,
             ThirdParties.JUNIPERELEVATE,
             ThirdParties.JUNIPERFASTPAYHOTELS,
+            ThirdParties.PORTIMAR,
         };
     }
 }

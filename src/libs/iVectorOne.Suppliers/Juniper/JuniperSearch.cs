@@ -41,24 +41,16 @@
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             string source = resortSplits.First().ThirdPartySupplier;
-            var hotelList = new List<string>();
-            int maxHotelsPerRequest = _settings.MaxHotelsPerSearchRequest(searchDetails, source);
+            int iMaxHotelsPerRequest = _settings.HotelBatchLimit(searchDetails, source);
 
-            var searchRequests = searchDetails.RoomDetails
-                .SelectMany((oRoom, roomCnt) =>
-                    {
-                        return resortSplits.SelectMany(resortSplit =>
-                        {
-                            return resortSplit.Hotels
-                                .Select((h, idx) => new { oHotel = h.TPKey, grIdx = idx / maxHotelsPerRequest })
-                                .GroupBy(x => x.grIdx)
-                                .Select(gr => new { hotels = gr.Select(x => x.oHotel), room = oRoom, prbid = roomCnt + 1 })
-                                .ToList();
-                        });
-                    })
-                .Take(Constant.SearchWebRequestLimit)
-                .Select((x, iUniqueReqID) => BuildSearchWebRequest(searchDetails, source, x.hotels, x.room, x.prbid, iUniqueReqID))
-                .ToList();
+            var hotelRoomBatches = resortSplits.SelectMany(resortSplit => resortSplit.Hotels.Select(h => h.TPKey))
+                .Batch(iMaxHotelsPerRequest)
+                .SelectMany(tpKeys => searchDetails.RoomDetails.Select((oRoom, roomIdx) =>
+                                new { hotels = tpKeys, room = oRoom, prbid = roomIdx + 1 }))
+                .Take(Constant.SearchWebRequestLimit);
+
+            var searchRequests = hotelRoomBatches.Select(x =>
+                    BuildSearchWebRequest(searchDetails, source, x.hotels, x.room, x.prbid)).ToList();
 
             return Task.FromResult(searchRequests);
         }
@@ -68,14 +60,13 @@
             string source,
             IEnumerable<string> HotelList,
             RoomDetail oRoom,
-            int prbid,
-            int iUniqueReqID)
+            int prbid)
         {
-            string soapAction = _settings.HotelAvailURLSOAPAction(SearchDetails, source);
-            bool useGZip = _settings.UseGZip(SearchDetails, source);
+            string soapAction = _settings.SOAPAvailableHotels(SearchDetails, source);
+            bool useGZip = _settings.UseGZip(SearchDetails,source);
             string hotelAvailUrl = JuniperHelper.ConstructUrl(
-                _settings.BaseURL(SearchDetails, source),
-                _settings.HotelAvailURL(SearchDetails, source));
+                _settings.GenericURL(SearchDetails, source), 
+                _settings.SearchURL(SearchDetails, source));
 
             var searchRequestBody = BuildSearchRequest(SearchDetails, source, HotelList.ToList(), oRoom);
             var searchRequestSoap = JuniperHelper.BuildSoap(searchRequestBody, _serializer);
@@ -98,7 +89,7 @@
                 HotelAvailRequest = {
                     PrimaryLangId = _settings.LanguageCode(searchDetails, source),
                     Pos = JuniperHelper.BuildPosNode(
-                        _settings.AgentDutyCode(searchDetails, source),
+                        _settings.OperatorCode(searchDetails, source), 
                         _settings.Password(searchDetails, source)),
                     AvailRequestSegmets = new()
                     {
@@ -128,8 +119,8 @@
                                 HotelRef = { HotelCode = sTPKey },
                                 Extensions = i > 0 ? new(): new () {
                                     ShowCatalogueData = _settings.ShowCatalogueData(searchDetails, source)?"1":"0",
-                                    ForceCurrency = _settings.CurrencyCode(searchDetails, source)??string.Empty,
-                                    PaxCountry = _settings.PaxCountry(searchDetails, source)??string.Empty,
+                                    ForceCurrency = _settings.Currency(searchDetails, source)??string.Empty,
+                                    PaxCountry = _settings.CustomerCountryCode(searchDetails, source)??string.Empty,
                                     ShowBasicInfo = "0",
                                     ShowPromotions = "0",
                                     ShowOnlyAvailable = "1"
@@ -151,7 +142,7 @@
         {
             string source = resortSplits.First().ThirdPartySupplier;
             var transformedResults = new TransformedResultCollection();
-            var excludeNonRefundableRates = _settings.ExcludeNonRefundableRates(searchDetails, source);
+            var excludeNonRefundableRates = _settings.ExcludeNRF(searchDetails, source);
 
             foreach (var request in requests)
             {
@@ -209,7 +200,7 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return searchDetails.Rooms > 1 && !_settings.SplitMultiroom(searchDetails, source);
+            return searchDetails.Rooms > 1 && !_settings.EnableMultiRoomSearch(searchDetails, source);
         }
     }
 }
