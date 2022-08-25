@@ -93,7 +93,7 @@
                     var sbCancelPolicy = new StringBuilder();
                     var cancelPolicyResponseXml = new XmlDocument();
                     sbCancelPolicy.AppendFormat("{0}{1}", _settings.CancellationPolicyURL(propertyDetails), "?");
-                    sbCancelPolicy.AppendFormat("token={0}", roomDetails.ThirdPartyReference.Split('_')[2]);
+                    sbCancelPolicy.AppendFormat("token={0}", roomDetails.ThirdPartyReference.Split('¦')[2]);
 
                     var cancellationPolicyWebRequest = new Request
                     {

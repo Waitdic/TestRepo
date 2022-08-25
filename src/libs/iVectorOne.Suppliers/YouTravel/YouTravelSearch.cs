@@ -193,7 +193,7 @@
                     MealBasisCode = room.Board,
                     Amount = room.Rates.Final_Rate,
                     NonRefundableRates = !room.Refundable.ToSafeBoolean(),
-                    TPReference = $"{sessionId}_{room.Id}_{room.CanxPolicy.token}"
+                    TPReference = $"{sessionId}¦{room.Id}¦{room.CanxPolicy.token}"
                 };
                 results.Add(result);
             }
