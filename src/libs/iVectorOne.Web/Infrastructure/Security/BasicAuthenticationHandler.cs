@@ -46,11 +46,11 @@
                     string? credentialstring = Encoding.UTF8.GetString(Convert.FromBase64String(token));
                     string[]? credentials = credentialstring.Split(':');
 
-                    var user = await _loginService.Authenticate(credentials[0], credentials[1]);
+                    var account = await _loginService.Authenticate(credentials[0], credentials[1]);
 
-                    if (user != null)
+                    if (account != null)
                     {
-                        var authenticationIdentity = new AuthenticationIdentity(user);
+                        var authenticationIdentity = new AuthenticationIdentity(account);
                         var claimsPrincipal = new ClaimsPrincipal(authenticationIdentity);
                         ticket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
                     }

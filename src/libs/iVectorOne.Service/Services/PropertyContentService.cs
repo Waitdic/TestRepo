@@ -24,16 +24,16 @@
         }
 
         /// <inheritdoc/>
-        public async Task<PropertyList.Response> PropertyListAsync(DateTime? lastModified, string suppliers, Subscription user)
+        public async Task<PropertyList.Response> PropertyListAsync(DateTime? lastModified, string suppliers, Account account)
         {
             if (!lastModified.HasValue)
             {
                 lastModified = new DateTime(2000, 01, 01);
             }
 
-            suppliers = this.GetValidSuppliers(suppliers, user);
+            suppliers = this.GetValidSuppliers(suppliers, account);
 
-            var propertyIDs = await _contentRepo.GetPropertyIDsAsync(lastModified.Value, suppliers, user);
+            var propertyIDs = await _contentRepo.GetPropertyIDsAsync(lastModified.Value, suppliers, account);
 
             var response = new PropertyList.Response()
             {
@@ -44,25 +44,25 @@
         }
 
         /// <inheritdoc/>
-        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Subscription user)
+        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Account account)
         {
-            string suppliers = this.GetValidSuppliers(string.Empty, user);
+            string suppliers = this.GetValidSuppliers(string.Empty, account);
 
-            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers, user);
+            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers, account);
         }
 
         /// <summary>Validate suppliers, only returning suppliers that are configured</summary>
         /// <param name="suppliers">The suppliers.</param>
-        /// <param name="user">The user.</param>
+        /// <param name="account">The account.</param>
         /// <returns>a list of validated suppliers</returns>
-        private string GetValidSuppliers(string suppliers, Subscription user)
+        private string GetValidSuppliers(string suppliers, Account account)
         {
             var validatedSuppliers = new List<string>();
 
-            // 1. the configuration contains the suppliers the user has set up
-            var configuredSuppliers = user.Configurations.Select(c => c.Supplier).ToList();
+            // 1. the configuration contains the suppliers the account has set up
+            var configuredSuppliers = account.Configurations.Select(c => c.Supplier).ToList();
 
-            // 2. Loop through the suppliers the user is trying to filter by, and ensure they are all suppliers that they have set up
+            // 2. Loop through the suppliers the account is trying to filter by, and ensure they are all suppliers that they have set up
             if (!string.IsNullOrEmpty(suppliers))
             {
                 string[] supplierList = suppliers.Split(',');

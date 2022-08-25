@@ -15,9 +15,9 @@
     public class  PropertyDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
-        /// Gets or sets the subscription identifier
+        /// Gets or sets the account identifier
         /// </summary>
-        public int SubscriptionID { get; set; }
+        public int AccountID { get; set; }
 
         /// <summary>
         /// Gets or sets The property identifier

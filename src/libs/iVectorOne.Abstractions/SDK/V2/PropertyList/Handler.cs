@@ -18,7 +18,7 @@
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _service.PropertyListAsync(request.LastModified, request.Suppliers, request.User);
+            return await _service.PropertyListAsync(request.LastModified, request.Suppliers, request.Account);
         }
     }
 }

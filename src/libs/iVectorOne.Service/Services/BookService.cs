@@ -73,7 +73,7 @@
                 {
                     var thirdParty = _thirdPartyFactory.CreateFromSource(
                                         propertyDetails.Source,
-                                        bookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                                        bookRequest.Account.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -107,7 +107,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await _logRepository.LogBookAsync(bookRequest, response!, bookRequest.User, exceptionString);
+                await _logRepository.LogBookAsync(bookRequest, response!, bookRequest.Account, exceptionString);
             }
 
             return response!;

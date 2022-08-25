@@ -54,18 +54,18 @@ try
 
     app.AddFeatures();
 
-    app.MapGet("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int subscriptionid, int supplierid) =>
+    app.MapGet("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int accountid, int supplierid) =>
     {
         if (httpContext.User.Identity is not TenantIdentity identity)
         {
             return Results.Challenge();
         }
 
-        SupplierResponse response = default;
+        SupplierResponse response = null!;
 
         try
         {
-            var request = new SupplierRequest(tenantid) { SubscriptionId = subscriptionid, SupplierId = supplierid };
+            var request = new SupplierRequest(tenantid) { AccountId = accountid, SupplierId = supplierid };
             response = await mediator.Send(request);
         }
         catch (Exception e)
@@ -77,12 +77,12 @@ try
     }).RequireAuthorization();
 
     app.MapPut(
-            "v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}/suppliersubscriptionattributes",
+            "v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}/accountsupplierattributes",
             async (IMediator mediator,
             HttpContext httpContext,
             [FromHeader(Name = "TenantKey")] Guid tenantKey,
             int tenantid,
-            int subscriptionid,
+            int accountid,
             int supplierid,
             [FromBody] SupplierAttributeUpdateDTO updateRequest) =>
         {
@@ -91,13 +91,13 @@ try
                 return Results.Challenge();
             }
 
-            SupplierAttributeUpdateResponse response = default;
+            SupplierAttributeUpdateResponse response = null!;
 
             try
             {
                 var request = new SupplierAttributeUpdateRequest(tenantid)
                 {
-                    SubscriptionId = subscriptionid,
+                    AccountId = accountid,
                     SupplierId = supplierid,
                     Attributes = updateRequest
                 };
@@ -110,28 +110,28 @@ try
             return Results.Ok(response);
         }).RequireAuthorization();
 
-    app.MapPut("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}",
+    app.MapPut("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}",
         async (IMediator mediator,
                 HttpContext httpContext,
                 [FromHeader(Name = "TenantKey")] Guid tenantKey,
                 int tenantid,
-                int subscriptionid,
+                int accountid,
                 int supplierid,
-                [FromBody] SupplierSubscriptionUpdateDTO updateRequest) =>
+                [FromBody] AccountSupplierUpdateDTO updateRequest) =>
         {
             if (httpContext.User.Identity is not TenantIdentity identity)
             {
                 return Results.Challenge();
             }
 
-            SupplierSubscriptionUpdateResponse response = default;
+            AccountSupplierUpdateResponse response = null!;
 
             try
             {
-                var request = new SupplierSubscriptionUpdateRequest(tenantid)
+                var request = new AccountSupplierUpdateRequest(tenantid)
                 {
                     TenantId = tenantid,
-                    SubscriptionId = subscriptionid,
+                    AccountId = accountid,
                     SupplierId = supplierid,
                     Enabled = updateRequest.Enabled
                 };
@@ -151,7 +151,7 @@ try
             return Results.Challenge();
         }
 
-        SupplierListResponse response = default;
+        SupplierListResponse response = null!;
 
         try
         {
@@ -173,7 +173,7 @@ try
             return Results.Challenge();
         }
 
-        SupplierAttributeResponse response = default;
+        SupplierAttributeResponse response = null!;
 
         try
         {
@@ -188,27 +188,27 @@ try
         return Results.Ok(response);
     }).RequireAuthorization();
 
-    app.MapPost("v1/tenants/{tenantid}/subscriptions/{subscriptionid}/suppliers/{supplierid}",
+    app.MapPost("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}",
         async (IMediator mediator,
             HttpContext httpContext,
             [FromHeader(Name = "TenantKey")] Guid tenantKey,
             int tenantid,
-            int subscriptionid,
+            int accountid,
             int supplierid,
-            [FromBody] SupplierSubscriptionCreateDTO createRequest) =>
+            [FromBody] AccountSupplierCreateDTO createRequest) =>
         {
             if (httpContext.User.Identity is not TenantIdentity identity)
             {
                 return Results.Challenge();
             }
-            SupplierSubscriptionCreateResponse response = default;
+            AccountSupplierCreateResponse response = null!;
 
             try
             {
-                var request = new SupplierSubscriptionCreateRequest(tenantid)
+                var request = new AccountSupplierCreateRequest(tenantid)
                 {
                     TenantId = tenantid,
-                    SubscriptionId = subscriptionid,
+                    AccountId = accountid,
                     SupplierId = supplierid,
                     SupplierAttributes = createRequest
                 };
@@ -232,6 +232,3 @@ finally
     Log.Information($"Shut down complete {AssemblyInfo}");
     Log.CloseAndFlush();
 }
-
-
-

@@ -54,13 +54,13 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (propertyToken is not null)
             {
                 propertyDetails = new PropertyDetails()
                 {
-                    SubscriptionID = request.User.SubscriptionID,
+                    AccountID = request.Account.AccountID,
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
                     Source = propertyToken.Source,
@@ -71,7 +71,7 @@
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
-                    ThirdPartyConfigurations = request.User.Configurations,
+                    ThirdPartyConfigurations = request.Account.Configurations,
                     ResortCode = propertyToken.GeographyCode,
                 };
 
@@ -95,7 +95,7 @@
                             MealBasisCode = await _mealbasisRepository.GetMealBasisCodefromTPMealbasisIDAsync(
                                 propertyToken.Source,
                                 mealbasisId,
-                                propertyDetails.SubscriptionID)
+                                propertyDetails.AccountID)
                         };
                         propertyDetails.LocalCost += localCost;
                         propertyDetails.Rooms.Add(roomDetails);
@@ -179,13 +179,13 @@
             var propertyDetails = new PropertyDetails();
 
             var leadCustomer = request.LeadCustomer;
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (propertyToken is not null)
             {
                 propertyDetails = new PropertyDetails()
                 {
-                    SubscriptionID = request.User.SubscriptionID,
+                    AccountID = request.Account.AccountID,
                     LeadGuestTitle = leadCustomer.CustomerTitle,
                     LeadGuestFirstName = leadCustomer.CustomerFirstName,
                     LeadGuestLastName = leadCustomer.CustomerLastName,
@@ -213,7 +213,7 @@
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
-                    ThirdPartyConfigurations = request.User.Configurations,
+                    ThirdPartyConfigurations = request.Account.Configurations,
                 };
 
                 int roomNumber = 0;
@@ -253,7 +253,7 @@
                     MealBasisCode = await _mealbasisRepository.GetMealBasisCodefromTPMealbasisIDAsync(
                         propertyToken.Source,
                         mealbasisId,
-                        propertyDetails.SubscriptionID)
+                        propertyDetails.AccountID)
                 };
 
                 foreach (var guestDetail in roomBooking.GuestDetails)
@@ -305,19 +305,19 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.User);
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {
                 propertyDetails = new PropertyDetails()
                 {
-                    SubscriptionID = request.User.SubscriptionID,
+                    AccountID = request.Account.AccountID,
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
                     TPKey = propertyToken.TPKey,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
-                    ThirdPartyConfigurations = request.User.Configurations,
+                    ThirdPartyConfigurations = request.Account.Configurations,
                 };
 
                 SetSupplierReference1(propertyDetails, request.SupplierReference1);
@@ -336,19 +336,19 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.User);
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.User);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account);
+            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
             {
                 propertyDetails = new PropertyDetails()
                 {
-                    SubscriptionID = request.User.SubscriptionID,
+                    AccountID = request.Account.AccountID,
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
                     TPKey = propertyToken.TPKey,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
-                    ThirdPartyConfigurations = request.User.Configurations,
+                    ThirdPartyConfigurations = request.Account.Configurations,
                 };
 
                 SetSupplierReference1(propertyDetails, request.SupplierReference1);

@@ -16,9 +16,9 @@
     public class SearchDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
-        /// Gets or sets the subscription id
+        /// Gets or sets the account identifier
         /// </summary>
-        public int SubscriptionID { get; set; }
+        public int AccountID { get; set; }
 
         /// <summary>Gets or sets the settings.</summary>
         public Settings Settings { get; set; } = new();

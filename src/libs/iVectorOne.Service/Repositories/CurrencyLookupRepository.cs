@@ -73,27 +73,27 @@
         }
 
         /// <inheritdoc />
-        public async Task<int> SubscriptionCurrencyLookupAsync(int subscriptionId, string currencyCode)
+        public async Task<int> AccountCurrencyLookupAsync(int accountId, string currencyCode)
         {
-            string cacheKey = "SubscriptionCurrencyLookup";
+            string cacheKey = "AccountCurrencyLookup";
 
             async Task<Dictionary<(int, string), int>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select SubscriptionID, CurrencyCode, ISOCurrencyID from SubscriptionCurrency",
-                    async r => (await r.ReadAllAsync<SubscriptionCurrency>())
-                        .ToDictionary(x => (x.SubscriptionID, x.CurrencyCode), x => x.ISOCurrencyID));
+                    "select AccountID, CurrencyCode, ISOCurrencyID from AccountCurrency",
+                    async r => (await r.ReadAllAsync<AccountCurrency>())
+                        .ToDictionary(x => (x.AccountID, x.CurrencyCode), x => x.ISOCurrencyID));
             }
 
             var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
-            cache.TryGetValue((subscriptionId, currencyCode), out int isoCurrencyID);
+            cache.TryGetValue((accountId, currencyCode), out int isoCurrencyID);
 
             return isoCurrencyID;
         }
 
-        public class SubscriptionCurrency
+        public class AccountCurrency
         {
-            public int SubscriptionID { get; set; }
+            public int AccountID { get; set; }
             public string CurrencyCode { get; set; } = string.Empty;
             public int ISOCurrencyID { get; set; }
         }

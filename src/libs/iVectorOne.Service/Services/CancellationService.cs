@@ -72,7 +72,7 @@
                 {
                     var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
-                        cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                        cancelRequest.Account.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -105,7 +105,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await _logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.User, exceptionString);
+                await _logRepository.LogCancelAsync(cancelRequest, response!, cancelRequest.Account, exceptionString);
             }
 
             return response!;
@@ -135,7 +135,7 @@
                 {
                     var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
-                        cancelRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                        cancelRequest.Account.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {

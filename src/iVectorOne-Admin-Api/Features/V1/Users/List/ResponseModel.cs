@@ -2,6 +2,6 @@
 {
     public record ResponseModel : ResponseModelBase
     {
-        public List<UserDto> Users { get; set; } = new List<UserDto>();
+        public List<UserDto> Users { get; set; } = new();
     }
 }

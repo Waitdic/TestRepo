@@ -49,11 +49,11 @@ const SupplierCreate: React.FC<Props> = () => {
 
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [draftSupplier, setDraftSupplier] = useState<{
-    subscriptionId: number;
+    accountId: number;
     supplierId: number;
     configurations: SupplierConfiguration[];
   }>({
-    subscriptionId: -1,
+    accountId: -1,
     supplierId: -1,
     configurations: [],
   });
@@ -74,7 +74,7 @@ const SupplierCreate: React.FC<Props> = () => {
   );
 
   const sortedSuppliers = useMemo(() => {
-    if (draftSupplier.subscriptionId === -1) {
+    if (draftSupplier.accountId === -1) {
       return [];
     } else {
       return sortBy(suppliers, [
@@ -93,7 +93,7 @@ const SupplierCreate: React.FC<Props> = () => {
         key: activeTenant.tenantKey,
       },
       userKey as string,
-      draftSupplier.subscriptionId,
+      draftSupplier.accountId,
       draftSupplier.supplierId,
       data,
       () => {
@@ -115,7 +115,7 @@ const SupplierCreate: React.FC<Props> = () => {
 
   const handleAccountChange = (optionId: number) => {
     const selectedSub = accounts.find(
-      (account) => account.subscriptionId === optionId
+      (account) => account.accountId === optionId
     );
     if (selectedSub) {
       const supplierIds = selectedSub?.suppliers?.map(
@@ -127,14 +127,14 @@ const SupplierCreate: React.FC<Props> = () => {
       setSuppliers(selectableSuppliers);
       setDraftSupplier({
         ...draftSupplier,
-        subscriptionId: optionId,
+        accountId: optionId,
       });
     } else {
       setValue('account', 0);
       setValue('supplier', 0);
       setDraftSupplier({
         ...draftSupplier,
-        subscriptionId: -1,
+        accountId: -1,
         supplierId: -1,
         configurations: [],
       });
@@ -220,7 +220,7 @@ const SupplierCreate: React.FC<Props> = () => {
       setValue('supplier', 0);
       setSuppliers([]);
       setDraftSupplier({
-        subscriptionId: -1,
+        accountId: -1,
         supplierId: -1,
         configurations: [],
       });
@@ -247,8 +247,8 @@ const SupplierCreate: React.FC<Props> = () => {
                     })}
                     labelText='Account'
                     options={sortedAccounts?.map(
-                      ({ subscriptionId, userName }) => ({
-                        id: subscriptionId,
+                      ({ accountId, userName }) => ({
+                        id: accountId,
                         name: userName,
                       })
                     )}

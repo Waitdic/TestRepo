@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-
-namespace iVectorOne_Admin_Api.Security
+﻿namespace iVectorOne_Admin_Api.Security
 {
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.Extensions.Options;
+    using System.Security.Claims;
+    using System.Text.Encodings.Web;
+
     public class TenantAuthorisationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly ILogger<TenantAuthorisationHandler> _logger;

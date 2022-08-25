@@ -110,7 +110,7 @@
             return bits;
         }
 
-        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Subscription user)
+        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account)
         {
             BookToken? token = null;
             try
@@ -125,7 +125,7 @@
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                 };
 
-                await PopulateBookTokenFieldsAsync(token, user);
+                await PopulateBookTokenFieldsAsync(token, account);
             }
             catch (Exception ex)
             {
@@ -136,7 +136,7 @@
             return token;
         }
 
-        public async Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Subscription user)
+        public async Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Account account)
         {
             PropertyToken? token = null;
 
@@ -170,7 +170,7 @@
                     token.ArrivalDate = new DateTime(year, month, day);
                 }
 
-                await PopulatePropertyTokenFieldsAsync(token, user);
+                await PopulatePropertyTokenFieldsAsync(token, account);
             }
             catch (Exception ex)
             {
@@ -245,9 +245,9 @@
             return token;
         }
 
-        private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Subscription user)
+        private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, user);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account);
 
             if (propertyContent != null)
             {
@@ -259,9 +259,9 @@
             }
         }
 
-        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Subscription user)
+        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, user);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account);
 
             if (propertyContent != null)
             {

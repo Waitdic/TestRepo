@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Property_GetPropertyContent]
 	@centralPropertyIds varchar(max),
 	@suppliers varchar(max),
-	@subscriptionId int = 0
+	@accountId int = 0
 as
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
@@ -44,11 +44,11 @@ select Property.Name,
 		'' Region,
 		'' Resort
 	from Property
-		inner join SubscriptionProperty
-			on SubscriptionProperty.PropertyID = Property.PropertyID
-				and SubscriptionProperty.SubscriptionID = @subscriptionId
+		inner join AccountProperty
+			on AccountProperty.PropertyID = Property.PropertyID
+				and AccountProperty.AccountID = @AccountId
 		inner join #centralproperty
-			on #centralproperty.CentralPropertyID = SubscriptionProperty.CentralPropertyID
+			on #centralproperty.CentralPropertyID = AccountProperty.CentralPropertyID
 		inner join #Suppliers
 			on #Suppliers.Supplier = Property.Source
 

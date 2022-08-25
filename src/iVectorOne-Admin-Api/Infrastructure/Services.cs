@@ -1,12 +1,10 @@
-﻿using FluentValidation;
-using iVectorOne_Admin_Api.Config.Validation;
-using iVectorOne_Admin_Api.Data;
-using iVectorOne_Admin_Api.Security;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-
-namespace iVectorOne_Admin_Api.Infrastructure
+﻿namespace iVectorOne_Admin_Api.Infrastructure
 {
+    using FluentValidation;
+    using iVectorOne_Admin_Api.Config.Validation;
+    using iVectorOne_Admin_Api.Security;
+    using System.Reflection;
+
     public static class Services
     {
         public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)

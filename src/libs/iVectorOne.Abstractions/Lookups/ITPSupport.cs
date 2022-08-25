@@ -13,22 +13,22 @@
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="isoCode">The iso country code.</param>
-        /// <param name="subscriptionId">The subscription identifier</param>
+        /// <param name="accountId">The account identifier</param>
         /// <returns>
         /// The third party country code
         /// </returns>
-        Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int subscriptionId);
+        Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int accountId);
 
         /// <summary>
         /// The country lookup.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="isoCode">The iso country code.</param>
-        /// <param name="subscriptionId">The subscription identifier</param>
+        /// <param name="accountId">The account identifier</param>
         /// <returns>
         /// The third party country name
         /// </returns>
-        Task<string> TPCountryLookupAsync(string source, string isoCode, int subscriptionId);
+        Task<string> TPCountryLookupAsync(string source, string isoCode, int accountId);
 
         /// <summary>
         /// The credit card lookup.

@@ -8,7 +8,7 @@
     /// </summary>
     public class Property
     {
-        /// <summary>Gets or sets The Central Property Identifier, returned to the user as Property Identifier as they dont need to know our Database schema</summary>
+        /// <summary>Gets or sets The Central Property Identifier, returned to the caller as Property Identifier as they dont need to know our Database schema</summary>
         [JsonPropertyName("PropertyID")]
         public int CentralPropertyID { get; set; }
 

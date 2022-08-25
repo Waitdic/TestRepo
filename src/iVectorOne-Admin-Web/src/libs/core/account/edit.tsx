@@ -151,7 +151,7 @@ const AccountEdit: React.FC<Props> = () => {
         key: activeTenant?.tenantKey as string,
       },
       userKey as string,
-      currentAccount?.subscriptionId as number,
+      currentAccount?.accountId as number,
       () => {
         dispatch.app.setIsLoading(true);
       },

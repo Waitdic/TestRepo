@@ -13,14 +13,14 @@ insert into #iVectorOneProps
 			Property.PropertyID,
 			row_number()
 				over (partition by PropertyDedupe.CentralPropertyID 
-						order by SupplierSubscription.Priority, Property.PropertyID desc) [Priority]
+						order by AccountSupplier.Priority, Property.PropertyID desc) [Priority]
 		from Customer
-			inner join Subscription
-				on Subscription.CustomerID = Customer.CustomerID
-			inner join SupplierSubscription
-				on SupplierSubscription.SubscriptionID = Subscription.SubscriptionID
+			inner join Account
+				on Account.CustomerID = Customer.CustomerID
+			inner join AccountSupplier
+				on AccountSupplier.AccountID = Account.AccountID
 			inner join Supplier
-				on SupplierSubscription.SupplierID = Supplier.SupplierID
+				on AccountSupplier.SupplierID = Supplier.SupplierID
 			inner join Property
 				on Property.Source = Supplier.SupplierName
 			inner join PropertyDedupe
