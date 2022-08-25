@@ -80,22 +80,25 @@ const UserView: React.FC<Props> = () => {
   );
   const tableBodyList = useMemo(
     () =>
-      userTenants?.map(({ tenantId, tenantKey, name, isActive }) => ({
-        id: `${tenantId}+${tenantKey}`,
-        name,
-        isActive,
-        actions: [
-          {
-            name: 'Unlink',
-            onClick: () =>
-              attemptUnlinkTenant(
-                tenantId,
-                currentUser?.userId as number,
-                name
-              ),
-          },
-        ],
-      })),
+      sortBy(
+        userTenants?.map(({ tenantId, tenantKey, name, isActive }) => ({
+          id: `${tenantId}+${tenantKey}`,
+          name,
+          isActive,
+          actions: [
+            {
+              name: 'Unlink',
+              onClick: () =>
+                attemptUnlinkTenant(
+                  tenantId,
+                  currentUser?.userId as number,
+                  name
+                ),
+            },
+          ],
+        })),
+        'name'
+      ),
     [userTenants, currentUser]
   );
   const selectableTenantsOptions = useMemo(() => {
@@ -263,26 +266,10 @@ const UserView: React.FC<Props> = () => {
               <div className='w-full divide-y divide-gray-200 p-6'>
                 <div className='mb-8 flex flex-col gap-5 md:w-1/2'>
                   <div>
-                    <h2 className='text-2xl font-bold mb-3 text-dark'>
-                      Tenants
-                    </h2>
-                    {currentUser && (
-                      <TableList
-                        headerList={headerList}
-                        bodyList={tableBodyList}
-                        emptyState={{
-                          title: 'No tenants found',
-                          description: [
-                            'You have not linked any tenants to this user',
-                          ],
-                        }}
-                        isLoading={isLoading}
-                      />
-                    )}
                     {tenantsOptions.length > 0 && (
-                      <div className='mt-5'>
+                      <div className='mb-5'>
                         <h2 className='text-2xl font-bold mb-3 text-dark'>
-                          Link new tenant
+                          Link Tenant
                         </h2>
                         <div className='flex items-end w-full'>
                           <div className='flex-1'>
@@ -308,11 +295,27 @@ const UserView: React.FC<Props> = () => {
                         </div>
                       </div>
                     )}
+                    <h2 className='text-2xl font-bold mb-3 text-dark'>
+                      Tenants
+                    </h2>
+                    {currentUser && (
+                      <TableList
+                        headerList={headerList}
+                        bodyList={tableBodyList}
+                        emptyState={{
+                          title: 'No tenants found',
+                          description: [
+                            'You have not linked any tenants to this user',
+                          ],
+                        }}
+                        isLoading={isLoading}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className='flex justify-end mt-5 pt-5'>
                   <Button
-                    text='Cancel'
+                    text='Close'
                     color={ButtonColors.OUTLINE}
                     className='ml-4'
                     onClick={() => navigate('/users')}
