@@ -71,8 +71,13 @@ const WelcomeBanner: React.FC<Props> = () => {
       {/* Content */}
       <div className='relative'>
         <h1 className='text-2xl md:text-3xl text-dark-heading font-bold mb-1'>
-          Here is what’s happening with your iVectorOne today
+          Welcome to iVectorOne
         </h1>
+        <p className='xl:max-w-[60%]'>
+          Our team are just getting your account setup, please check back later.
+          If you are still seeing this message after a few hours please contact
+          our support team.
+        </p>
       </div>
     </div>
   );

@@ -13,7 +13,9 @@ type Props = {
 const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
   const { pathname } = useLocation();
 
-  const user = useSelector((state: RootState) => state.app.user);
+  const isIncompleteSetup = useSelector(
+    (state: RootState) => state.app.incompleteSetup
+  );
 
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -99,63 +101,67 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Links */}
         <div className='space-y-8 flex flex-col h-full'>
           {/* Pages group */}
-          {!!user?.fullName && (
-            <div>
-              <ul className='mt-3'>
-                {/* Dashboard */}
-                <SidebarLinkGroup
-                  activecondition={
-                    pathname === '/' || pathname.includes('dashboard')
-                  }
-                  to='/'
-                  title='Dashboard'
-                  sidebarExpanded={sidebarExpanded}
-                  setSidebarExpanded={setSidebarExpanded}
-                />
-                {/* Accounts */}
-                <SidebarLinkGroup
-                  activecondition={
-                    pathname === '/accounts' || pathname.includes('accounts')
-                  }
-                  to='/accounts'
-                  title='Accounts'
-                  sidebarExpanded={sidebarExpanded}
-                  setSidebarExpanded={setSidebarExpanded}
-                />
-                {/* Suppliers */}
-                <SidebarLinkGroup
-                  activecondition={
-                    pathname === '/suppliers' || pathname.includes('suppliers')
-                  }
-                  to='/suppliers'
-                  title='Suppliers'
-                  sidebarExpanded={sidebarExpanded}
-                  setSidebarExpanded={setSidebarExpanded}
-                />
-                <RoleGuard>
-                  {/* Tenants */}
+          <div>
+            <ul className='mt-3'>
+              {!isIncompleteSetup && (
+                <>
+                  {/* Dashboard */}
                   <SidebarLinkGroup
                     activecondition={
-                      pathname === '/tenants' || pathname.includes('tenants')
+                      pathname === '/' || pathname.includes('dashboard')
                     }
-                    to='/tenants'
-                    title='Tenants'
+                    to='/'
+                    title='Dashboard'
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}
                   />
-                  {/* Users */}
+                  {/* Accounts */}
                   <SidebarLinkGroup
                     activecondition={
-                      pathname === '/users' || pathname.includes('users')
+                      pathname === '/accounts' || pathname.includes('accounts')
                     }
-                    to='/users'
-                    title='Users'
+                    to='/accounts'
+                    title='Accounts'
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}
                   />
-                </RoleGuard>
-                {/* Settings */}
-                {/* <SidebarLinkGroup
+                  {/* Suppliers */}
+                  <SidebarLinkGroup
+                    activecondition={
+                      pathname === '/suppliers' ||
+                      pathname.includes('suppliers')
+                    }
+                    to='/suppliers'
+                    title='Suppliers'
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarExpanded={setSidebarExpanded}
+                  />
+                </>
+              )}
+              <RoleGuard>
+                {/* Tenants */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/tenants' || pathname.includes('tenants')
+                  }
+                  to='/tenants'
+                  title='Tenants'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                />
+                {/* Users */}
+                <SidebarLinkGroup
+                  activecondition={
+                    pathname === '/users' || pathname.includes('users')
+                  }
+                  to='/users'
+                  title='Users'
+                  sidebarExpanded={sidebarExpanded}
+                  setSidebarExpanded={setSidebarExpanded}
+                />
+              </RoleGuard>
+              {/* Settings */}
+              {/* <SidebarLinkGroup
                   activecondition={
                     pathname === '/settings' || pathname.includes('settings')
                   }
@@ -174,33 +180,32 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                     },
                   ]}
                 /> */}
-                {/* Support */}
-                <SidebarLinkGroup
-                  activecondition={
-                    pathname === '/support' || pathname.includes('support')
-                  }
-                  to='/support'
-                  title='Support'
-                  sidebarExpanded={sidebarExpanded}
-                  setSidebarExpanded={setSidebarExpanded}
-                  links={[
-                    {
-                      title: 'Knowledge base',
-                      to: '/support/knowledge-base',
-                    },
-                    {
-                      title: 'Change log',
-                      to: '/support/change-log',
-                    },
-                    {
-                      title: 'Road map',
-                      to: '/support/road-map',
-                    },
-                  ]}
-                />
-              </ul>
-            </div>
-          )}
+              {/* Support */}
+              <SidebarLinkGroup
+                activecondition={
+                  pathname === '/support' || pathname.includes('support')
+                }
+                to='/support'
+                title='Support'
+                sidebarExpanded={sidebarExpanded}
+                setSidebarExpanded={setSidebarExpanded}
+                links={[
+                  {
+                    title: 'Knowledge base',
+                    to: '/support/knowledge-base',
+                  },
+                  {
+                    title: 'Change log',
+                    to: '/support/change-log',
+                  },
+                  {
+                    title: 'Road map',
+                    to: '/support/road-map',
+                  },
+                ]}
+              />
+            </ul>
+          </div>
         </div>
       </div>
     </div>

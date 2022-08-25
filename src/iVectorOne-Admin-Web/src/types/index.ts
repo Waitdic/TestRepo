@@ -133,4 +133,5 @@ export type AppState = {
   accounts: Account[];
   isLoading: boolean;
   error: null | string | Error;
+  incompleteSetup: boolean;
 };
