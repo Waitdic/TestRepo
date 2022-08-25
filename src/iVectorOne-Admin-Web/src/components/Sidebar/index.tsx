@@ -11,6 +11,8 @@ type Props = {
 };
 
 const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
+  const version = import.meta.env.VITE_PUBLIC_APP_VERSION;
+
   const { pathname } = useLocation();
 
   const isIncompleteSetup = useSelector(
@@ -207,6 +209,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
             </ul>
           </div>
         </div>
+        <p className='text-white text-sm px-3'>Version: {version}</p>
       </div>
     </div>
   );
