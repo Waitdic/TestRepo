@@ -30,8 +30,11 @@ export function useCoreFetching() {
         success: userData.success,
       };
       dispatch.app.updateUser(user);
+      console.log(userData);
+
       const isValidUser =
-        user.tenants.length > 0 || userData.authorisations.length > 0;
+        (user.tenants.length > 0 || userData.authorisations.length > 0) &&
+        userData !== null;
       if (isValidUser) {
         setError(null);
         dispatch.app.setIncompleteSetup(false);
@@ -41,6 +44,7 @@ export function useCoreFetching() {
       }
       dispatch.app.setIsLoading(false);
     } catch (err) {
+      dispatch.app.setIncompleteSetup(true);
       if (typeof err === 'string') {
         console.error(err.toUpperCase());
         setError(err.toUpperCase());
