@@ -32,7 +32,7 @@ export const renderConfigurationFormFields = (
   const renderConfigurationFormField = (
     type: ConfigurationFormFieldTypes,
     fieldConfig: {
-      supplierAccountAttributeID: number;
+      accountSupplierAttributeID: number;
       supplierAttributeID?: number;
       idx: number;
       key: string;
@@ -55,7 +55,7 @@ export const renderConfigurationFormFields = (
     }
   ) => {
     const {
-      supplierAccountAttributeID,
+      accountSupplierAttributeID,
       supplierAttributeID,
       idx: _idx,
       key: _key,
@@ -77,7 +77,7 @@ export const renderConfigurationFormFields = (
       defaultValue,
     } = fieldConfig;
 
-    const supplierID = supplierAttributeID ?? supplierAccountAttributeID;
+    const supplierID = supplierAttributeID ?? accountSupplierAttributeID;
 
     switch (type) {
       case ConfigurationFormFieldTypes.BOOLEAN:
@@ -292,7 +292,7 @@ export const renderConfigurationFormFields = (
         patternErrorMessage,
         format: _format,
         required,
-        supplierAccountAttributeID,
+        accountSupplierAttributeID,
         supplierAttributeID,
       },
       idx
@@ -307,10 +307,10 @@ export const renderConfigurationFormFields = (
         const itemWithError = computedErrors?.find(
           (err) =>
             Number(err[0]) ===
-            (supplierAttributeID || supplierAccountAttributeID)
+            (supplierAttributeID || accountSupplierAttributeID)
         );
         if (itemWithError) {
-          error.id = supplierAccountAttributeID;
+          error.id = accountSupplierAttributeID;
           error.type = itemWithError[1].type;
           error.message = itemWithError[1].message;
         }
@@ -319,7 +319,7 @@ export const renderConfigurationFormFields = (
       return (
         <div key={idx}>
           {renderConfigurationFormField(type, {
-            supplierAccountAttributeID,
+            accountSupplierAttributeID,
             supplierAttributeID,
             idx,
             key,

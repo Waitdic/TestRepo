@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -61,41 +61,44 @@ const SupplierEdit: React.FC<Props> = () => {
     [user]
   );
 
-  const onSubmit: SubmitHandler<SupplierFormFields> = (data, event) => {
-    event?.preventDefault();
-    if (!activeTenant) return;
-    updateSupplier(
-      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-      userKey as string,
-      Number(currentAccount?.accountId),
-      Number(currentSupplier?.supplierID),
-      data,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: MESSAGES.onSuccess.update,
-        });
-        setShowNotification(true);
-        setTimeout(() => {
-          navigate('/suppliers');
-        }, 500);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.update,
-        });
-        setShowNotification(true);
-      }
-    );
-  };
+  const onSubmit: SubmitHandler<SupplierFormFields> = useCallback(
+    (data, event) => {
+      event?.preventDefault();
+      if (!activeTenant) return;
+      updateSupplier(
+        { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey as string,
+        Number(currentAccount?.accountId),
+        Number(currentSupplier?.supplierID),
+        data,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: MESSAGES.onSuccess.update,
+          });
+          setShowNotification(true);
+          setTimeout(() => {
+            navigate('/suppliers');
+          }, 500);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: MESSAGES.onFailed.update,
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [activeTenant, currentAccount, currentSupplier, userKey]
+  );
 
-  const handleDeleteSupplier = async () => {
+  const handleDeleteSupplier = useCallback(async () => {
     if (!activeTenant) return;
     await deleteSupplier(
       { id: activeTenant?.tenantId, key: activeTenant?.tenantKey },
@@ -126,7 +129,7 @@ const SupplierEdit: React.FC<Props> = () => {
         setShowNotification(true);
       }
     );
-  };
+  }, [activeTenant, currentAccount, currentSupplier, userKey]);
 
   const fetchData = async () => {
     if (!activeTenant) return;

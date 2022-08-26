@@ -23,7 +23,7 @@ export async function getSuppliersByAccount(
         },
       }
     );
-    const data = get(res, 'data.supplierSubscriptions', null);
+    const data = get(res, 'data.accountSuppliers', null);
     onSuccess(data);
   } catch (err) {
     if (typeof err === 'string') {
@@ -141,14 +141,14 @@ export async function updateSupplier(
   const filteredConfigurations = Object.entries(configurations)
     .filter((config) => typeof config[1] !== 'object' && config)
     .map((config) => ({
-      supplierAccountAttributeId: Number(config[0]),
+      accountSupplierAttributeID: Number(config[0]),
       value: config[1].toString(),
     }));
 
   try {
     const updatedSupplierRes = await ApiCall.request({
       method: 'PUT',
-      url: `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}/supplieraccountattributes`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}/accountsupplierattributes`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,
