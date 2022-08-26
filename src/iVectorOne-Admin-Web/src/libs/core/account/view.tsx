@@ -42,7 +42,7 @@ const AccountView: React.FC<Props> = () => {
   const loadAccount = useCallback(() => {
     if (accounts.length > 0) {
       const currAccount = accounts.find(
-        (acc) => acc.subscriptionId === Number(slug)
+        (acc) => acc.accountId === Number(slug)
       );
 
       if (!currAccount) {

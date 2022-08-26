@@ -48,7 +48,7 @@ export type Module = {
   consoles: Console[];
 };
 export type Account = {
-  subscriptionId: number;
+  accountId: number;
   userName: string;
   password: string;
   dummyResponses: boolean;
@@ -66,14 +66,14 @@ export type Supplier = {
   name?: string;
   supplierName?: string;
   supplierID?: number;
-  supplierSubscriptionID?: number;
+  supplierAccountID?: number;
   configurations?: SupplierConfiguration[];
   isSelected?: boolean;
   enabled?: boolean;
 };
 export type SupplierConfiguration = {
   supplierAttributeID?: number;
-  supplierSubscriptionAttributeID: number;
+  supplierAccountAttributeID: number;
   key: string;
   name?: string;
   order: number;

@@ -91,9 +91,9 @@ const AccountList: React.FC<Props> = () => {
   useEffect(() => {
     if (!!accounts?.length) {
       setFilteredAccountList(
-        sortBy(accounts, 'userName').map(({ userName, subscriptionId }) => ({
+        sortBy(accounts, 'userName').map(({ userName, accountId }) => ({
           name: userName,
-          id: subscriptionId,
+          id: accountId,
           isActive: false,
         }))
       );
