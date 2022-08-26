@@ -33,7 +33,7 @@ const MESSAGES = {
 const SupplierEdit: React.FC<Props> = () => {
   const { pathname, search } = useLocation();
 
-  const subscriptionId = search.split('=')[1];
+  const accountId = search.split('=')[1];
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const SupplierEdit: React.FC<Props> = () => {
     updateSupplier(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
-      Number(currentAccount?.subscriptionId),
+      Number(currentAccount?.accountId),
       Number(currentSupplier?.supplierID),
       data,
       () => {
@@ -100,7 +100,7 @@ const SupplierEdit: React.FC<Props> = () => {
     await deleteSupplier(
       { id: activeTenant?.tenantId, key: activeTenant?.tenantKey },
       userKey as string,
-      Number(currentAccount?.subscriptionId),
+      Number(currentAccount?.accountId),
       Number(currentSupplier?.supplierID),
       () => {
         dispatch.app.setIsLoading(true);
@@ -133,7 +133,7 @@ const SupplierEdit: React.FC<Props> = () => {
     await getAccountWithSupplierAndConfigurations(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
-      Number(subscriptionId),
+      Number(accountId),
       Number(supplierId),
       () => {
         dispatch.app.setIsLoading(true);
@@ -162,7 +162,7 @@ const SupplierEdit: React.FC<Props> = () => {
 
   useEffect(() => {
     if (!!currentSupplier && !!currentAccount) {
-      setValue('account', currentAccount.subscriptionId);
+      setValue('account', currentAccount.accountId);
       setValue('supplier', currentSupplier.supplierID as number);
     }
   }, [currentSupplier, currentAccount, setValue]);

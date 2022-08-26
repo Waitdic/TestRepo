@@ -1,14 +1,14 @@
-﻿using Audit.Core;
-using Audit.WebApi;
-using iVectorOne_Admin_Api.Infrastructure.Extensions;
-using iVectorOne_Admin_Api.Security;
-using Microsoft.AspNetCore.Authentication;
-using Serilog;
-using Serilog.Enrichers.Span;
-using System.Diagnostics;
-
-namespace iVectorOne_Admin_Api.Infrastructure
+﻿namespace iVectorOne_Admin_Api.Infrastructure
 {
+    using Audit.Core;
+    using Audit.WebApi;
+    using iVectorOne_Admin_Api.Infrastructure.Extensions;
+    using iVectorOne_Admin_Api.Security;
+    using Microsoft.AspNetCore.Authentication;
+    using Serilog;
+    using Serilog.Enrichers.Span;
+    using System.Diagnostics;
+
     public static class IntuitiveToolkit
     {
         #region Logging
@@ -190,5 +190,4 @@ namespace iVectorOne_Admin_Api.Infrastructure
 
         #endregion
     }
-
 }

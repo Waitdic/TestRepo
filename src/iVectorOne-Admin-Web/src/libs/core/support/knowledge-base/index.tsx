@@ -218,7 +218,7 @@ const KnowledgeBase: React.FC<Props> = () => {
                     <a
                       className='text-sm font-medium text-indigo-500 hover:text-indigo-600'
                       target='_blank'
-                      href='https://app.swaggerhub.com/apis-docs/Intuitivelimited/iVectorOne/v1'
+                      href='https://app.swaggerhub.com/apis/Intuitivelimited/iVectorOnev2/2.0'
                     >
                       View
                     </a>

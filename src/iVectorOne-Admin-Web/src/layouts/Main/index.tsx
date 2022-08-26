@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 //
 import { Sidebar, Header, Spinner, Button } from '@/components';
 import { RootState } from '@/store';
@@ -26,8 +27,24 @@ const Dashboard: React.FC<Props> = ({
   minHeight = 'min-h-initial',
   maxWidth = 'max-w-9xl',
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
+  const isIncompleteSetup = useSelector(
+    (state: RootState) => state.app.incompleteSetup
+  );
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const { pathname } = location;
+    if (isIncompleteSetup && pathname !== '/') {
+      if (!pathname.includes('support')) {
+        navigate('/');
+      }
+    }
+  }, [isIncompleteSetup, location]);
 
   return (
     <div className='flex h-screen overflow-hidden w-full z-[0]'>

@@ -1,8 +1,7 @@
-﻿using iVectorOne_Admin_Api.Features.V1.Tenants.Create;
-using Microsoft.AspNetCore.Mvc;
-
-namespace iVectorOne_Admin_Api.Features.V1.Users.Create
+﻿namespace iVectorOne_Admin_Api.Features.V1.Users.Create
 {
+    using Microsoft.AspNetCore.Mvc;
+
     public static class Endpoints
     {
         public static IEndpointRouteBuilder MapUsersCreateV1Endpoint(this IEndpointRouteBuilder endpoints)

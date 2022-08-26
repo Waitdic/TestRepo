@@ -63,20 +63,20 @@ const SupplierList: React.FC<Props> = () => {
   const handleSetActiveAcc = useCallback(
     async (accId: number) => {
       if (!accounts?.length || !activeTenant) return;
-      const selectedAcc = accounts.find((acc) => acc.subscriptionId === accId);
+      const selectedAcc = accounts.find((acc) => acc.accountId === accId);
       if (!selectedAcc) return;
       setActiveAcc(selectedAcc);
       await getSuppliersByAccount(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
         userKey as string,
-        selectedAcc.subscriptionId,
+        selectedAcc.accountId,
         () => {
           dispatch.app.setIsLoading(true);
         },
         (fetchedSuppliers) => {
           dispatch.app.updateAccounts(
             accounts.map((acc) => {
-              if (acc.subscriptionId === selectedAcc.subscriptionId) {
+              if (acc.accountId === selectedAcc.accountId) {
                 return { ...acc, suppliers: fetchedSuppliers };
               }
               return acc;
@@ -113,21 +113,21 @@ const SupplierList: React.FC<Props> = () => {
                     function (o) {
                       return o.userName?.toLowerCase?.();
                     },
-                  ])?.map(({ subscriptionId, userName }) => (
+                  ])?.map(({ accountId, userName }) => (
                     <li
-                      key={subscriptionId}
+                      key={accountId}
                       className={classNames(
                         'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
                         {
                           'bg-indigo-50':
-                            activeAcc?.subscriptionId === subscriptionId,
+                            activeAcc?.accountId === accountId,
                         }
                       )}
-                      onClick={() => handleSetActiveAcc(subscriptionId)}
+                      onClick={() => handleSetActiveAcc(accountId)}
                     >
                       <span
                         className={`text-sm font-medium ${
-                          activeAcc?.subscriptionId === subscriptionId
+                          activeAcc?.accountId === accountId
                             ? 'text-indigo-500'
                             : 'hover:text-dark'
                         }`}
@@ -151,7 +151,7 @@ const SupplierList: React.FC<Props> = () => {
                         actions: [
                           {
                             name: 'Edit',
-                            href: `/suppliers/${supplierID}/edit?subscriptionId=${activeAcc?.subscriptionId}`,
+                            href: `/suppliers/${supplierID}/edit?accountId=${activeAcc?.accountId}`,
                           },
                         ],
                       })
@@ -162,9 +162,7 @@ const SupplierList: React.FC<Props> = () => {
                   emptyState={tableEmptyState}
                 />
               ) : (
-                filteredSuppliersList !== null && (
-                  <EmptyState {...tableEmptyState} />
-                )
+                <EmptyState {...tableEmptyState} />
               )}
             </div>
           </div>

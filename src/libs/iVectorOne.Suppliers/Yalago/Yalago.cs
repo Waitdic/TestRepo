@@ -214,7 +214,7 @@
             var request = new Request();
             try
             {
-                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.SubscriptionID);
+                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.AccountID);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
                     sourceMarket = _settings.SourceMarket(propertyDetails);
@@ -396,7 +396,7 @@
                     PostCode = propertyDetails.LeadGuestPostcode
                 };
 
-                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.SubscriptionID);
+                string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, propertyDetails.SellingCountry, propertyDetails.AccountID);
                 if (string.IsNullOrEmpty(sourceMarket))
                 {
                     sourceMarket = _settings.SourceMarket(propertyDetails);

@@ -22,7 +22,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<List<int>> GetPropertyIDsAsync(DateTime lastModified, string suppliers, Subscription user)
+        public async Task<List<int>> GetPropertyIDsAsync(DateTime lastModified, string suppliers, Account account)
         {
             return (await _sql.ReadAllAsync<int>(
                     "Property_List",
@@ -32,13 +32,13 @@
                         {
                             lastModified = lastModified,
                             suppliers = suppliers,
-                            subscriptionId = user.SubscriptionID
+                            accountId = account.AccountID
                         })))
                 .ToList();
         }
 
         /// <inheritdoc/>
-        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Subscription user)
+        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Account account)
         {
             var centralPropertyIDs = new List<int>();
 
@@ -50,7 +50,7 @@
                         {
                             centralPropertyIDs = string.Join(",", propertyIDs),
                             suppliers = suppliers,
-                            subscriptionId = user.SubscriptionID
+                            accountId = account.AccountID
                         }));
 
             var response = new Content.Response();
@@ -140,7 +140,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Subscription user)
+        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account)
         {
             return await _sql.ReadSingleAsync<PropertyContent>(
                     "Property_SingleProperty",
@@ -149,7 +149,7 @@
                         .WithParameters(new
                         {
                             propertyId = propertyId,
-                            subscriptionId = user.SubscriptionID
+                            accountId = account.AccountID
                         }));
         }
 

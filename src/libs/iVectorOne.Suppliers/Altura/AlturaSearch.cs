@@ -123,7 +123,7 @@
 
         private async Task<XmlDocument> GetSearchRequestXmlAsync(SearchDetails searchDetails, string hotelList, RoomDetail room)
         {
-            var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.SubscriptionID);
+            var sellingCountry = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
             var sourceMarket = !string.IsNullOrEmpty(sellingCountry) ? sellingCountry : _settings.SourceMarket(searchDetails);
 
             var nationalityLookupValue = await _support.TPNationalityLookupAsync(Source, searchDetails.ISONationalityCode);

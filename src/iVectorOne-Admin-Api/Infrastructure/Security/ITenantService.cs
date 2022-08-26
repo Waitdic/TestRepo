@@ -2,6 +2,6 @@
 {
     public interface ITenantService
     {
-        public Task<Tenant> GetTenant(Guid tenantKey);
+        public Task<Tenant?> GetTenant(Guid tenantKey);
     }
 }

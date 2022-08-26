@@ -2,10 +2,10 @@
 {
     public class AuthorisationDto
     {
-        public string User { get; set; } = "";
+        public string User { get; set; } = string.Empty;
 
-        public string Relationship { get; set; } = "";
+        public string Relationship { get; set; } = string.Empty;
 
-        public string Object { get; set; } = "";
+        public string Object { get; set; } = string.Empty;
     }
 }

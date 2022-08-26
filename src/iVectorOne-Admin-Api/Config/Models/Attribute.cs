@@ -2,17 +2,12 @@
 {
     public partial class Attribute
     {
-        public Attribute()
-        {
-            SupplierAttributes = new HashSet<SupplierAttribute>();
-        }
-
         public int AttributeId { get; set; }
         public string AttributeName { get; set; } = null!;
         public string? DefaultValue { get; set; }
 
-        public virtual ICollection<SupplierAttribute> SupplierAttributes { get; set; }
+        public virtual ICollection<SupplierAttribute> SupplierAttributes { get; set; } = new HashSet<SupplierAttribute>();
 
-        public string Schema { get; set; } = String.Empty;
+        public string Schema { get; set; } = string.Empty;
     }
 }

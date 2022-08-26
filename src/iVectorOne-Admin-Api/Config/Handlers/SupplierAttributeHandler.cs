@@ -1,15 +1,11 @@
-﻿using AutoMapper;
-using Intuitive.Helpers.Extensions;
-using iVectorOne_Admin_Api.Config.Models;
-using iVectorOne_Admin_Api.Config.Requests;
-using iVectorOne_Admin_Api.Config.Responses;
-using iVectorOne_Admin_Api.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-
-namespace iVectorOne_Admin_Api.Config.Handlers
+﻿namespace iVectorOne_Admin_Api.Config.Handlers
 {
+    using System.Text.Json;
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne_Admin_Api.Config.Models;
+    using iVectorOne_Admin_Api.Config.Requests;
+    using iVectorOne_Admin_Api.Config.Responses;
+
     public class SupplierAttributeHandler : IRequestHandler<SupplierAttributeRequest, SupplierAttributeResponse>
     {
         private readonly ConfigContext _context;
@@ -53,11 +49,11 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                         }
                         if (config != null)
                         {
-                            configItem.Name = config.Name != null ? config.Name : item.Attribute.AttributeName;
+                            configItem.Name = config.Name ?? item.Attribute.AttributeName;
                             configItem.Type = config.Type.ToSafeEnum<ConfigurationType>().Value;
-                            configItem.Key = config.Key != null ? config.Key : "";
+                            configItem.Key = config.Key ?? "";
                             configItem.Order = config.Order.HasValue ? config.Order.Value : 999;
-                            configItem.Description = config.Description != null ? config.Description : "";
+                            configItem.Description = config.Description ?? "";
                             configItem.Maximum = config.Maximum;
                             configItem.MaxLength = config.MaxLength;
                             configItem.Minimum = config.Minimum;

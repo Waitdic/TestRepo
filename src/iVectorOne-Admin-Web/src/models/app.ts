@@ -19,6 +19,7 @@ export const app = createModel<RootModel>()({
         : 'light',
     error: null,
     isLoading: false,
+    incompleteSetup: false,
   } as AppState,
   reducers: {
     updateLang(state, payload: string) {
@@ -64,6 +65,9 @@ export const app = createModel<RootModel>()({
     },
     setError(state, payload: null | string | Error) {
       return { ...state, error: payload };
+    },
+    setIncompleteSetup(state, payload: boolean) {
+      return { ...state, incompleteSetup: payload };
     },
   },
   effects: (dispatch) => ({

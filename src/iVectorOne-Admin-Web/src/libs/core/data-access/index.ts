@@ -20,6 +20,7 @@ export function useCoreFetching() {
         throw new Error('User not found');
       }
       const user: User = {
+        userId: userData.userId,
         fullName: userData.fullName,
         tenants: userData.tenants.map((tenant: Tenant, idx: number) => ({
           ...tenant,
@@ -29,13 +30,20 @@ export function useCoreFetching() {
         success: userData.success,
       };
       dispatch.app.updateUser(user);
-      if (user?.tenants.length > 0) {
+
+      const isValidUser =
+        (user.tenants.length > 0 || userData.authorisations.length > 0) &&
+        userData !== null;
+      if (isValidUser) {
         setError(null);
+        dispatch.app.setIncompleteSetup(false);
       } else {
-        setError('Contact support to complete the setup of your account');
+        setError('Contact support to complete the setup of your account.');
+        dispatch.app.setIncompleteSetup(true);
       }
       dispatch.app.setIsLoading(false);
     } catch (err) {
+      dispatch.app.setIncompleteSetup(true);
       if (typeof err === 'string') {
         console.error(err.toUpperCase());
         setError(err.toUpperCase());
@@ -71,6 +79,7 @@ export async function refetchUserData(
       throw new Error('User not found');
     }
     const user: User = {
+      userId: userData.userId,
       fullName: userData.fullName,
       tenants: userData.tenants.map((tenant: Tenant, idx: number) => ({
         ...tenant,

@@ -66,7 +66,7 @@
                 {
                     var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
-                        prebookRequest.User.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
+                        prebookRequest.Account.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
 
                     if (thirdParty != null)
                     {
@@ -98,7 +98,7 @@
                     exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
                 }
 
-                await _logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.User, exceptionString);
+                await _logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.Account, exceptionString);
             }
 
             return response;

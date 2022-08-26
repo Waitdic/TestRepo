@@ -64,7 +64,7 @@ const AccountList: React.FC<Props> = () => {
   );
 
   const fetchData = useCallback(async () => {
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant || isLoading) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
@@ -91,9 +91,9 @@ const AccountList: React.FC<Props> = () => {
   useEffect(() => {
     if (!!accounts?.length) {
       setFilteredAccountList(
-        sortBy(accounts, 'userName').map(({ userName, subscriptionId }) => ({
+        sortBy(accounts, 'userName').map(({ userName, accountId }) => ({
           name: userName,
-          id: subscriptionId,
+            id: accountId,
           isActive: false,
         }))
       );

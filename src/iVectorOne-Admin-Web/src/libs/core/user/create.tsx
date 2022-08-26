@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,7 +26,6 @@ const UserCreate: React.FC<Props> = () => {
     formState: { errors },
   } = useForm<UserFormFields>();
 
-  const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
@@ -35,41 +34,44 @@ const UserCreate: React.FC<Props> = () => {
   const [notification, setNotification] = useState<NotificationState>();
   const [showNotification, setShowNotification] = useState(false);
 
-  const activeTenant = useMemo(() => {
-    return user?.tenants.find((tenant) => tenant.isSelected);
-  }, [user]);
+  const isValidUser = useMemo(() => {
+    return !!userKey && !isLoading;
+  }, [userKey, isLoading]);
 
-  const onSubmit: SubmitHandler<UserFormFields> = async (data) => {
-    if (!activeTenant || isLoading) return;
-    await createUser(
-      activeTenant?.tenantKey,
-      userKey as string,
-      data,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: 'New User created successfully.',
-        });
-        setShowNotification(true);
-        setTimeout(() => {
-          navigate('/');
-        }, 500);
-      },
-      (err) => {
-        dispatch.app.setIsLoading(false);
-        console.error(err);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: 'User creation failed.',
-        });
-        setShowNotification(true);
-      }
-    );
-  };
+  const onSubmit: SubmitHandler<UserFormFields> = useCallback(
+    async (data) => {
+      if (!isValidUser) return;
+      await createUser(
+        userKey as string,
+        userKey as string,
+        data,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: 'New User created successfully.',
+          });
+          setShowNotification(true);
+          setTimeout(() => {
+            navigate('/');
+          }, 500);
+        },
+        (err) => {
+          dispatch.app.setIsLoading(false);
+          console.error(err);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'User creation failed.',
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [isValidUser]
+  );
 
   return (
     <>
