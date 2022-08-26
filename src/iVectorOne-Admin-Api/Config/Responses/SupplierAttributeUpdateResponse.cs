@@ -3,6 +3,6 @@
     public class SupplierAttributeUpdateResponse
     {
         public bool Success { get; set; }
-        public List<string> Warnings { get; set; } = new List<string>();
+        public List<string> Warnings { get; set; } = new();
     }
 }

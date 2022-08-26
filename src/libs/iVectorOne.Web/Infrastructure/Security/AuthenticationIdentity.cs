@@ -5,11 +5,11 @@
 
     public class AuthenticationIdentity : GenericIdentity
     {
-        public AuthenticationIdentity(Subscription user) : base(user.Login, "Basic")
+        public AuthenticationIdentity(Account account) : base(account.Login, "Basic")
         {
-            User = user;
+            Account = account;
         }
 
-        public Subscription User { get; set; }
+        public Account Account { get; set; }
     }
 }

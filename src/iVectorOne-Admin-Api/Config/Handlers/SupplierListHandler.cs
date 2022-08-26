@@ -1,15 +1,9 @@
-﻿using AutoMapper;
-using Intuitive.Helpers.Extensions;
-using iVectorOne_Admin_Api.Config.Models;
-using iVectorOne_Admin_Api.Config.Requests;
-using iVectorOne_Admin_Api.Config.Responses;
-using iVectorOne_Admin_Api.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-
-namespace iVectorOne_Admin_Api.Config.Handlers
+﻿namespace iVectorOne_Admin_Api.Config.Handlers
 {
+    using iVectorOne_Admin_Api.Config.Models;
+    using iVectorOne_Admin_Api.Config.Requests;
+    using iVectorOne_Admin_Api.Config.Responses;
+
     public class SupplierListHandler : IRequestHandler<SupplierListRequest, SupplierListResponse>
     {
         private readonly ConfigContext _context;

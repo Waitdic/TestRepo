@@ -6,7 +6,7 @@
       "list": [
         {
           "title": "UI - Portal V1",
-          "description": "We will build a portal so that users can add, delete and update their subscriptions and suppliers for themselves.",
+          "description": "We will build a portal so that users can add, delete and update their accounts and suppliers for themselves.",
           "completed": false
         },
         {

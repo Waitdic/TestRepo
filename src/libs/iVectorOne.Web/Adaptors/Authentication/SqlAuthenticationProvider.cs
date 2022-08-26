@@ -25,7 +25,7 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-        public async Task<Subscription> Authenticate(string username, string password)
+        public async Task<Account> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -33,45 +33,45 @@
             }
 
             var hashedPassword = GetHash(password);
-            string cacheKey = "User_" + username + "_" + hashedPassword;
+            string cacheKey = "Account_" + username + "_" + hashedPassword;
             
-            async Task<List<Subscription>> cacheBuilder()
+            async Task<List<Account>> cacheBuilder()
             {
                 var json = await _sql.ReadScalarAsync<string>("exec Get_Configurations");
-                var sqlSubscriptions = JsonConvert.DeserializeObject<List<SqlSubscription>>(json);
+                var sqlAccounts = JsonConvert.DeserializeObject<List<SqlAccount>>(json);
 
-                return MapSqlUser(sqlSubscriptions).ToList();
+                return MapSqlAccount(sqlAccounts).ToList();
             }
 
-            var users = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var accounts = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
 
-            return users.FirstOrDefault((o) => o.Login == username && o.Password == hashedPassword)!;
+            return accounts.FirstOrDefault(o => o.Login == username && o.Password == hashedPassword)!;
         }
 
         /// <summary>
         /// Maps user details returned from databse with the user model
         /// </summary>
-        /// <param name="sqlSubscriptions"> A list of user details returned from database</param>
+        /// <param name="sqlAccounts"> A list of user details returned from database</param>
         /// <returns>A list of users</returns>
-        private IEnumerable<Subscription> MapSqlUser(List<SqlSubscription>? sqlSubscriptions)
+        private IEnumerable<Account> MapSqlAccount(List<SqlAccount>? sqlAccounts)
         {
-            if (sqlSubscriptions == null)
+            if (sqlAccounts == null)
             {
                 yield break;
             }
 
-            foreach (var sqlSubscription in sqlSubscriptions)
+            foreach (var sqlAccount in sqlAccounts)
             {
-                var subscription = new Subscription()
+                var account = new Account()
                 {
-                    SubscriptionID = sqlSubscription.SubscriptionID,
-                    Login = sqlSubscription.Login,
-                    Password = sqlSubscription.Password,
-                    Environment = sqlSubscription.Environment.ToSafeEnum<SubscriptionEnvironment>() ?? SubscriptionEnvironment.Test,
-                    TPSettings = sqlSubscription.TPSettings!,
+                    AccountID = sqlAccount.AccountID,
+                    Login = sqlAccount.Login,
+                    Password = sqlAccount.Password,
+                    Environment = sqlAccount.Environment.ToSafeEnum<AccountEnvironment>() ?? AccountEnvironment.Test,
+                    TPSettings = sqlAccount.TPSettings!,
                 };
 
-                var configs = sqlSubscription.Configurations
+                var configs = sqlAccount.Configurations
                     .Select(x => new ThirdPartyConfiguration
                         {
                             Supplier = x.Supplier!,
@@ -80,8 +80,8 @@
                         })
                     .ToList();
 
-                subscription.Configurations = configs;
-                yield return subscription;
+                account.Configurations = configs;
+                yield return account;
             }
         }
 

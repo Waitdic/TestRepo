@@ -1,11 +1,11 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Config.Models
 {
+    using System.Text.Json.Serialization;
+
     public class ConfigurationDTO
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int SupplierSubscriptionAttributeID { get; set; }
+        public int AccountSupplierAttributeID { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int SupplierAttributeID { get; set; }
         public string Key { get; set; } = string.Empty;

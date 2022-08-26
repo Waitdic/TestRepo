@@ -1,9 +1,9 @@
-﻿using iVectorOne_Admin_Api.Config.Models;
-using iVectorOne_Admin_Api.Config.Responses;
-using MediatR;
-
-namespace iVectorOne_Admin_Api.Config.Requests
+﻿namespace iVectorOne_Admin_Api.Config.Requests
 {
+    using iVectorOne_Admin_Api.Config.Models;
+    using iVectorOne_Admin_Api.Config.Responses;
+    using MediatR;
+
     public class SupplierAttributeUpdateRequest : IRequest<SupplierAttributeUpdateResponse>
     {
         public SupplierAttributeUpdateRequest(int tenantid)
@@ -12,8 +12,8 @@ namespace iVectorOne_Admin_Api.Config.Requests
         }
 
         public int TenantId { get; set; }
-        public int SubscriptionId { get; set; }
+        public int AccountId { get; set; }
         public int SupplierId { get; set; }
-        public List<SupplierSubscriptionAttributeItem> Attributes { get; set; } = new List<SupplierSubscriptionAttributeItem>();
+        public List<AccountSupplierAttributeItem> Attributes { get; set; } = new();
     }
 }

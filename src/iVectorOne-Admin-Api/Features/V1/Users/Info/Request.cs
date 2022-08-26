@@ -2,6 +2,6 @@
 {
     public class Request : IRequest<Response>
     {
-        public string Key { get; set; }
+        public string Key { get; set; } = string.Empty;
     }
 }

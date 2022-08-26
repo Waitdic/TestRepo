@@ -13,14 +13,17 @@ export async function getAccounts(
 ) {
   onInit?.();
   try {
-    const accountsRes = await ApiCall.get(`/tenants/${tenant.id}/accounts`, {
-      headers: {
-        Accept: 'application/json',
-        Tenantkey: tenant.key,
-        UserKey: userKey,
-      },
-    });
-    const accounts: Account[] = get(accountsRes, 'data.accounts', []);
+    const accountsRes = await ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+          UserKey: userKey,
+        },
+      }
+    );
+    const accounts: Account[] = get(accountsRes, 'data.subscriptions', []);
     onSuccess?.(accounts);
   } catch (err) {
     if (typeof err === 'string') {
@@ -65,7 +68,7 @@ export async function getAccountsWithSuppliers(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.supplierAccounts',
+        'data.supplierSubscriptions',
         []
       );
       account.suppliers = suppliersData;
@@ -114,7 +117,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.supplierAccounts',
+        'data.supplierSubscriptions',
         []
       );
       suppliersData.forEach(async (supplier) => {
@@ -159,13 +162,16 @@ export async function getAccountWithSupplierAndConfigurations(
 ) {
   onInit?.();
   try {
-    const subRes = ApiCall.get(`/tenants/${tenant.id}/accounts/${accountId}`, {
-      headers: {
-        Accept: 'application/json',
-        Tenantkey: tenant.key,
-        UserKey: userKey,
-      },
-    });
+    const subRes = ApiCall.get(
+      `/tenants/${tenant.id}/subscriptions/${accountId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Tenantkey: tenant.key,
+          UserKey: userKey,
+        },
+      }
+    );
     const supplierRes = ApiCall.get(
       `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
       {
@@ -194,10 +200,10 @@ export async function getAccountWithSupplierAndConfigurations(
     ]);
     const account = get(fetchedDataRes[0], 'data', null);
     const suppliers: {
-      accountId: number;
-      supplierAccounts: Supplier[];
+      subscriptionId: number;
+      supplierSubscriptions: Supplier[];
     } = get(fetchedDataRes[1], 'data', null);
-    const supplier = suppliers?.supplierAccounts?.find(
+    const supplier = suppliers?.supplierSubscriptions?.find(
       (supp) => supp?.supplierID === supplierId
     );
     const configurations = get(fetchedDataRes[2], 'data.configurations', []);

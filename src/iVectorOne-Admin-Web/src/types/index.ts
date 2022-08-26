@@ -66,7 +66,7 @@ export type Supplier = {
   name?: string;
   supplierName?: string;
   supplierID?: number;
-  supplierAccountID?: number;
+  supplierSubscriptionID?: number;
   configurations?: SupplierConfiguration[];
   isSelected?: boolean;
   enabled?: boolean;

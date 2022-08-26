@@ -1,7 +1,7 @@
-﻿using iVectorOne_Admin_Api.Features.Shared;
-
-namespace iVectorOne_Admin_Api.Features.V1.Users.List
+﻿namespace iVectorOne_Admin_Api.Features.V1.Users.List
 {
+    using iVectorOne_Admin_Api.Features.Shared;
+
     public record Response : ResponseBase
     {
         public void Default(ResponseModel model)

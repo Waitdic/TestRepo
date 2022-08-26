@@ -95,7 +95,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
         /// <returns>A thirdparty configurations object</returns>
         public static ThirdPartyConfiguration CreateThirdPartyConfiguration(string supplier)
         {
-            var users = JsonConvert.DeserializeObject<List<Subscription>>(helpers.Users);
+            var users = JsonConvert.DeserializeObject<List<Account>>(helpers.Users);
             return users?.FirstOrDefault()?.Configurations?.FirstOrDefault(o => o.Supplier == supplier) ?? null!;
         }
 

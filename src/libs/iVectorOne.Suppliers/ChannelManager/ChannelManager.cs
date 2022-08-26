@@ -322,7 +322,7 @@
             bookRequest.LeadGuestDetails.Country = await _support.TPCountryLookupAsync(
                 propertyDetails.Source,
                 propertyDetails.LeadGuestCountryCode,
-                propertyDetails.SubscriptionID);
+                propertyDetails.AccountID);
             bookRequest.LeadGuestDetails.Email = propertyDetails.LeadGuestEmail;
 
             return _serializer.Serialize(bookRequest);

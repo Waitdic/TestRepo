@@ -9,7 +9,7 @@
             _context = context;
         }
 
-        public async Task<Tenant> GetTenant(Guid tenantKey)
+        public async Task<Tenant?> GetTenant(Guid tenantKey)
         {
             var tenant = await _context.Tenants.Where(t => t.TenantKey == tenantKey).FirstOrDefaultAsync();
             return tenant;

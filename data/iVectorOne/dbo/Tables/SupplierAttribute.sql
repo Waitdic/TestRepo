@@ -2,10 +2,7 @@ CREATE TABLE [dbo].[SupplierAttribute](
 	[SupplierAttributeID] [int] IDENTITY(1,1) NOT NULL,
 	[SupplierID] [smallint] NOT NULL,
 	[AttributeID] [int] NOT NULL,
- CONSTRAINT [PK_SupplierSubscription] PRIMARY KEY NONCLUSTERED 
-(
-	[SupplierAttributeID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+	CONSTRAINT [PK_SupplierAttribute] PRIMARY KEY NONCLUSTERED ([SupplierAttributeID] ASC)
 ) ON [PRIMARY]
 GO
 

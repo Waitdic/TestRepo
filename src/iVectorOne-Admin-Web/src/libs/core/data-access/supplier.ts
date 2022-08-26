@@ -23,7 +23,7 @@ export async function getSuppliersByAccount(
         },
       }
     );
-    const data = get(res, 'data.supplierAccounts', null);
+    const data = get(res, 'data.supplierSubscriptions', null);
     onSuccess(data);
   } catch (err) {
     if (typeof err === 'string') {

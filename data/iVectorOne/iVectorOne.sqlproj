@@ -75,22 +75,23 @@
     <Build Include="dbo\Tables\ISOCurrency.sql" />
     <Build Include="dbo\Stored Procedures\Get_TPMealBasisCache.sql" />
     <Build Include="dbo\Tables\Supplier.sql" />
-    <Build Include="dbo\Tables\Subscription.sql" />
+    <Build Include="dbo\Tables\Account.sql" />
     <Build Include="dbo\Tables\SupplierAttribute.sql" />
-    <Build Include="dbo\Tables\SupplierSubscriptionAttribute.sql" />
+    <Build Include="dbo\Tables\AccountSupplierAttribute.sql" />
     <Build Include="dbo\Tables\Attribute.sql" />
-    <Build Include="dbo\Tables\SupplierSubscription.sql" />
+    <Build Include="dbo\Tables\AccountSupplier.sql" />
     <Build Include="dbo\Tables\ExchangeRates.sql" />
     <Build Include="dbo\Tables\Tenant.sql" />
     <Build Include="dbo\Tables\User.sql" />
     <Build Include="dbo\Tables\UserTenant.sql" />
-    <Build Include="dbo\Tables\SubscriptionCurrency.sql" />
-    <Build Include="dbo\Tables\SubscriptionMealBasis.sql" />
-    <Build Include="dbo\Tables\SubscriptionProperty.sql" />
-    <Build Include="dbo\Tables\SubscriptionCountry.sql" />
+    <Build Include="dbo\Tables\AccountCurrency.sql" />
+    <Build Include="dbo\Tables\AccountMealBasis.sql" />
+    <Build Include="dbo\Tables\AccountProperty.sql" />
+    <Build Include="dbo\Tables\AccountCountry.sql" />
     <Build Include="dbo\Stored Procedures\Customer_GetSingleTenantCustomers.sql" />
     <Build Include="dbo\Stored Procedures\IVectorOne_ImportProperties.sql" />
-    <Build Include="dbo\Stored Procedures\Property_AddSubscriptionProperty.sql" />
-    <Build Include="dbo\Stored Procedures\Property_UpdateSubscriptionProperty.sql" />
+    <Build Include="dbo\Stored Procedures\Property_AddAccountProperty.sql" />
+    <Build Include="dbo\Stored Procedures\Property_UpdateAccountProperty.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Configurations.sql" />
   </ItemGroup>
 </Project>

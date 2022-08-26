@@ -59,7 +59,7 @@
             {
                 return Results.Challenge();
             }
-            request.User = identity.User;
+            request.Account = identity.Account;
             var response = new TResponse();
 
             try
