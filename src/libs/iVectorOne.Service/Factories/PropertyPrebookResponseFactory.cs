@@ -75,7 +75,7 @@
                 int mealbasisId = await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(
                     propertyDetails.Source,
                     room.MealBasisCode,
-                    propertyDetails.SubscriptionID);
+                    propertyDetails.AccountID);
 
                 var roomToken = new RoomToken()
                 {

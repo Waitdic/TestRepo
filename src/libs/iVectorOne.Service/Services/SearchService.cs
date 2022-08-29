@@ -56,10 +56,10 @@
         public async Task<Response> SearchAsync(Request searchRequest, bool log, IRequestTracker requestTracker)
         {
             // 1.Convert Request to Search details object
-            var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.User, log);
+            var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
 
             // 2.Check which suppliers to search
-            var suppliers = searchRequest.User.Configurations
+            var suppliers = searchRequest.Account.Configurations
                 .Select(c => c.Supplier)
                 .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
                 .ToList();
@@ -68,7 +68,7 @@
             var resortSplits = await _searchRepository.GetResortSplitsAsync(
                 string.Join(",", searchRequest.Properties),
                 string.Join(",", suppliers),
-                searchRequest.User);
+                searchRequest.Account);
 
             // 4.Run TP search
             await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);

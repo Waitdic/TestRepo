@@ -1,30 +1,29 @@
-﻿using iVectorOne_Admin_Api.Data.Models;
-using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
-
-namespace iVectorOne_Admin_Api.Data
+﻿namespace iVectorOne_Admin_Api.Data
 {
+    using iVectorOne_Admin_Api.Data.Models;
+    using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
+
     public partial class ConfigContext : DbContext
     {
         public ConfigContext()
         {
         }
 
-        public ConfigContext(DbContextOptions<ConfigContext> options) : base(options) { }
+        public ConfigContext(DbContextOptions<ConfigContext> options) : base(options)
+        {
+        }
 
         public virtual DbSet<User> Users { get; set; } = null!;
 
         public virtual DbSet<Authorisation> Authorisations { get; set; } = null!;
 
-
         public virtual DbSet<Attribute> Attributes { get; set; } = null!;
-        public virtual DbSet<Subscription> Subscriptions { get; set; } = null!;
+        public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
         public virtual DbSet<SupplierAttribute> SupplierAttributes { get; set; } = null!;
-        public virtual DbSet<SupplierSubscription> SupplierSubscriptions { get; set; } = null!;
-        public virtual DbSet<SupplierSubscriptionAttribute> SupplierSubscriptionAttributes { get; set; } = null!;
+        public virtual DbSet<AccountSupplier> AccountSuppliers { get; set; } = null!;
+        public virtual DbSet<AccountSupplierAttribute> AccountSupplierAttributes { get; set; } = null!;
         public virtual DbSet<Tenant> Tenants { get; set; } = null!;
-
-
 
         public virtual DbSet<UserTenant> UserTenants { get; set; } = null!;
 
@@ -72,19 +71,19 @@ namespace iVectorOne_Admin_Api.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Subscription>(entity =>
+            modelBuilder.Entity<Account>(entity =>
             {
-                entity.HasKey(e => e.SubscriptionId)
+                entity.HasKey(e => e.AccountId)
                     .IsClustered(false);
 
-                entity.ToTable("Subscription");
+                entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Login, "CK_Unique_SubscriptionLogin")
+                entity.HasIndex(e => e.Login, "CK_Unique_AccountLogin")
                     .IsUnique();
 
-                entity.HasIndex(e => e.TenantId, "IX_Subscription_TenantID");
+                entity.HasIndex(e => e.TenantId, "FK_Account_TenantID");
 
-                entity.Property(e => e.SubscriptionId).HasColumnName("SubscriptionID");
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.CurrencyCode)
                     .HasMaxLength(3)
@@ -102,16 +101,16 @@ namespace iVectorOne_Admin_Api.Data
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PropertyTprequestLimit).HasColumnName("PropertyTPRequestLimit");
+                entity.Property(e => e.PropertyTpRequestLimit).HasColumnName("PropertyTPRequestLimit");
 
                 entity.Property(e => e.TenantId)
                     .HasColumnName("TenantID")
                     .HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Tenant)
-                    .WithMany(p => p.Subscriptions)
+                    .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.TenantId)
-                    .HasConstraintName("FK_Subscription_Tenant");
+                    .HasConstraintName("FK_Account_Tenant");
 
                 entity.Property(e => e.Status)
                     .HasDefaultValueSql("'active'")
@@ -137,7 +136,7 @@ namespace iVectorOne_Admin_Api.Data
             modelBuilder.Entity<SupplierAttribute>(entity =>
             {
                 entity.HasKey(e => e.SupplierAttributeId)
-                    .HasName("PK_SupplierSubscription")
+                    .HasName("PK_AccountSupplier")
                     .IsClustered(false);
 
                 entity.ToTable("SupplierAttribute");
@@ -166,69 +165,69 @@ namespace iVectorOne_Admin_Api.Data
                     .HasConstraintName("FK_Supplier_SupplierAttribute");
             });
 
-            modelBuilder.Entity<SupplierSubscription>(entity =>
+            modelBuilder.Entity<AccountSupplier>(entity =>
             {
-                entity.HasKey(e => e.SupplierSubscriptionId)
-                    .HasName("PK_SupplierSubscription_1")
+                entity.HasKey(e => e.AccountSupplierId)
+                    .HasName("PK_AccountSupplier")
                     .IsClustered(false);
 
-                entity.ToTable("SupplierSubscription");
+                entity.ToTable("AccountSupplier");
 
-                entity.HasIndex(e => e.SubscriptionId, "IX_SupplierSubscription_SubscriptionID");
+                entity.HasIndex(e => e.AccountId, "IX_AccountSupplier_AccountID");
 
-                entity.HasIndex(e => e.SupplierId, "IX_SupplierSubscription_SupplierID");
+                entity.HasIndex(e => e.SupplierId, "IX_AccountSupplier_SupplierID");
 
-                entity.HasIndex(e => new { e.SupplierId, e.SubscriptionId }, "UN_SupplierIDSubscriptionID")
+                entity.HasIndex(e => new { e.SupplierId, e.AccountId }, "UN_AccountIDSupplierID")
                     .IsUnique();
 
-                entity.Property(e => e.SupplierSubscriptionId).HasColumnName("SupplierSubscriptionID");
+                entity.Property(e => e.AccountSupplierId).HasColumnName("AccountSupplierID");
 
-                entity.Property(e => e.SubscriptionId).HasColumnName("SubscriptionID");
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
                 entity.Property(e => e.Enabled).HasDefaultValue(false);
 
-                entity.HasOne(d => d.Subscription)
-                    .WithMany(p => p.SupplierSubscriptions)
-                    .HasForeignKey(d => d.SubscriptionId)
-                    .HasConstraintName("FK_Subscription_SupplierSubscription");
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.AccountSuppliers)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_Account_AccountSupplier");
 
                 entity.HasOne(d => d.Supplier)
-                    .WithMany(p => p.SupplierSubscriptions)
+                    .WithMany(p => p.AccountSuppliers)
                     .HasForeignKey(d => d.SupplierId)
-                    .HasConstraintName("FK_Supplier_SupplierSubscription");
+                    .HasConstraintName("FK_Supplier_AccountSupplier");
             });
 
-            modelBuilder.Entity<SupplierSubscriptionAttribute>(entity =>
+            modelBuilder.Entity<AccountSupplierAttribute>(entity =>
             {
-                entity.HasKey(e => e.SupplierSubscriptionAttributeId)
+                entity.HasKey(e => e.AccountSupplierAttributeId)
                     .IsClustered(false);
 
-                entity.ToTable("SupplierSubscriptionAttribute");
+                entity.ToTable("AccountSupplierAttribute");
 
-                entity.HasIndex(e => e.SubscriptionId, "IX_SupplierSubscriptionAttribute_SubscriptionID");
+                entity.HasIndex(e => e.AccountId, "IX_AccountSupplierAttribute_AccountID");
 
-                entity.HasIndex(e => e.SupplierAttributeId, "IX_SupplierSubscriptionAttribute_SupplierAttributeID");
+                entity.HasIndex(e => e.SupplierAttributeId, "IX_AccountSupplierAttribute_SupplierAttributeID");
 
-                entity.HasIndex(e => new { e.SubscriptionId, e.SupplierAttributeId }, "UN_SubscriptionIDSupplierAttributeID")
+                entity.HasIndex(e => new { e.AccountId, e.SupplierAttributeId }, "UN_AccountIDSupplierAttributeID")
                     .IsUnique();
 
-                entity.Property(e => e.SupplierSubscriptionAttributeId).HasColumnName("SupplierSubscriptionAttributeID");
+                entity.Property(e => e.AccountSupplierAttributeId).HasColumnName("AccountSupplierAttributeID");
 
-                entity.Property(e => e.SubscriptionId).HasColumnName("SubscriptionID");
+                entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
                 entity.Property(e => e.SupplierAttributeId).HasColumnName("SupplierAttributeID");
 
-                entity.HasOne(d => d.Subscription)
-                    .WithMany(p => p.SupplierSubscriptionAttributes)
-                    .HasForeignKey(d => d.SubscriptionId)
-                    .HasConstraintName("FK_SupplierSubscriptionAttribute_Subscription");
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.AccountSupplierAttributes)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_AccountSupplierAttribute_Account");
 
                 entity.HasOne(d => d.SupplierAttribute)
-                    .WithMany(p => p.SupplierSubscriptionAttributes)
+                    .WithMany(p => p.AccountSupplierAttributes)
                     .HasForeignKey(d => d.SupplierAttributeId)
-                    .HasConstraintName("FK_SupplierSubscriptionAttribute_SupplierAttribute");
+                    .HasConstraintName("FK_AccountSupplierAttribute_SupplierAttribute");
             });
 
             modelBuilder.Entity<Tenant>(entity =>

@@ -57,6 +57,13 @@ stages:
         command: 'install'
         workingDir: 'src/$(project)'
 
+    - task: PowerShell@2
+      displayName: 'Create .ENV file'
+      inputs:
+        targetType: 'inline'
+        script: |
+          New-Item -Path "src/$(project)" -Name ".env" -ItemType "file" -Value "VITE_PUBLIC_APP_VERSION=$(appVersion)"
+
     - task: Npm@1
       displayName: 'npm build'
       inputs:

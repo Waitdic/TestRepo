@@ -1,9 +1,9 @@
-﻿using iVectorOne_Admin_Api.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace iVectorOne_Admin_Api.Features.Shared
+﻿namespace iVectorOne_Admin_Api.Features.Shared
 {
+    using iVectorOne_Admin_Api.Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+
     public abstract record ResponseBase
     {
         public ResponseBase()

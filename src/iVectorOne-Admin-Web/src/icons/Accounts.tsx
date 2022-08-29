@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Subscription: React.FC<{ className: string }> = ({ className }) => {
+const Account: React.FC<{ className: string }> = ({ className }) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -17,4 +17,4 @@ const Subscription: React.FC<{ className: string }> = ({ className }) => {
   );
 };
 
-export default React.memo(Subscription);
+export default React.memo(Account);

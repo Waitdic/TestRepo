@@ -17,6 +17,7 @@ export type Tenant = {
   isDeleted: boolean;
 };
 export type User = {
+  userId: number;
   fullName: string;
   tenants: Tenant[];
   authorisations: {
@@ -26,6 +27,11 @@ export type User = {
   }[];
   success: boolean;
 } | null;
+export type UserResponse = {
+  userId: number;
+  userName: string;
+  key: string;
+};
 export type Role = {
   name: string;
 };
@@ -42,7 +48,7 @@ export type Module = {
   consoles: Console[];
 };
 export type Account = {
-  subscriptionId: number;
+  accountId: number;
   userName: string;
   password: string;
   dummyResponses: boolean;
@@ -60,14 +66,14 @@ export type Supplier = {
   name?: string;
   supplierName?: string;
   supplierID?: number;
-  supplierSubscriptionID?: number;
+  supplierAccountID?: number;
   configurations?: SupplierConfiguration[];
   isSelected?: boolean;
   enabled?: boolean;
 };
 export type SupplierConfiguration = {
   supplierAttributeID?: number;
-  supplierSubscriptionAttributeID: number;
+  accountSupplierAttributeID: number;
   key: string;
   name?: string;
   order: number;
@@ -127,4 +133,5 @@ export type AppState = {
   accounts: Account[];
   isLoading: boolean;
   error: null | string | Error;
+  incompleteSetup: boolean;
 };

@@ -1,14 +1,16 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Features.V1.Users.Info
+﻿namespace iVectorOne_Admin_Api.Features.V1.Users.Info
 {
+    using System.Text.Json.Serialization;
+
     public record ResponseModel : ResponseModelBase
     {
         [JsonPropertyName("fullName")]
         public string UserName { get; set; } = string.Empty;
 
-        public List<TenantDto> Tenants { get; set; } = new List<TenantDto>();
+        public int UserId { get; set; }
 
-        public List<AuthorisationDto> Authorisations { get; set; } = new List<AuthorisationDto>();
+        public List<TenantDto> Tenants { get; set; } = new();
+
+        public List<AuthorisationDto> Authorisations { get; set; } = new();
     }
 }

@@ -34,9 +34,9 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="subscriptionId"></param>
+        /// <param name="accountId"></param>
         /// <param name="currencyCode"></param>
         /// <returns></returns>
-        Task<int> SubscriptionCurrencyLookupAsync(int subscriptionId, string currencyCode);
+        Task<int> AccountCurrencyLookupAsync(int accountId, string currencyCode);
     }
 }

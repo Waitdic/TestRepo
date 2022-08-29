@@ -402,7 +402,7 @@
                 var address = await Address.SetupAddressAsync(
                     _settings.AgentAddress(propertyDetails, propertyDetails.Source),
                     propertyDetails.Source,
-                    propertyDetails.SubscriptionID,
+                    propertyDetails.AccountID,
                     _support);
                 bookRequest.LeadCustomer.CustomerAddress1 = address.Line1;
                 bookRequest.LeadCustomer.CustomerAddress2 = address.Line2;
@@ -422,7 +422,7 @@
                 bookRequest.LeadCustomer.CustomerBookingCountryID = (await _support.TPCountryCodeLookupAsync(
                     propertyDetails.Source,
                     propertyDetails.LeadGuestCountryCode,
-                    propertyDetails.SubscriptionID)).ToSafeInt();
+                    propertyDetails.AccountID)).ToSafeInt();
                 bookRequest.LeadCustomer.CustomerEmail = propertyDetails.LeadGuestEmail;
             }
 
@@ -495,7 +495,7 @@
 
             public int BookingCountryID { get; set; }
 
-            public static async Task<Address> SetupAddressAsync(string config, string source, int subscriptionId, ITPSupport support)
+            public static async Task<Address> SetupAddressAsync(string config, string source, int accountId, ITPSupport support)
             {
                 string[] items = config.Split('|');
 
@@ -506,7 +506,7 @@
                     City = items[2],
                     County = items[3],
                     PostCode = items[4],
-                    BookingCountryID = (await support.TPCountryCodeLookupAsync(source, items[5], subscriptionId)).ToSafeInt(),
+                    BookingCountryID = (await support.TPCountryCodeLookupAsync(source, items[5], accountId)).ToSafeInt(),
                 };
             }
         }

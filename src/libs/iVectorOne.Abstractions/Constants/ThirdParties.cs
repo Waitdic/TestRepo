@@ -161,6 +161,11 @@
         public const string OWNSTOCK = "Own";
 
         /// <summary>
+        /// The third party Portimar
+        /// </summary>
+        public const string PORTIMAR = "Portimar";
+
+        /// <summary>
         /// The third party Restel
         /// </summary>
         public const string RESTEL = "Restel";

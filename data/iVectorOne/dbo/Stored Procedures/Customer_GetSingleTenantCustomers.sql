@@ -10,25 +10,25 @@ set nocount on
 select Customer.CustomerID,
 		Customer.Name,
 		Customer.BaseUrl,
-		Subscription.SubscriptionID,
+		Account.AccountID,
 		string_agg(Supplier.SupplierName, ',') Suppliers,
 		isnull(p.PropertyIDs, '') PropertyIDs
 	from Customer
-		inner join Subscription
-			on Subscription.CustomerID = Customer.CustomerID
-		inner join SupplierSubscription
-			on SupplierSubscription.SubscriptionID = Subscription.SubscriptionID
+		inner join Account
+			on Account.CustomerID = Customer.CustomerID
+		inner join AccountSupplier
+			on AccountSupplier.AccountID = Account.AccountID
 		inner join Supplier
-			on SupplierSubscription.SupplierID = Supplier.SupplierID
+			on AccountSupplier.SupplierID = Supplier.SupplierID
 				and Supplier.SupplierName in ('Own', 'ChannelManager')
 		outer apply
 			(select string_agg(convert(varchar(max), Property.TPKey), ',') PropertyIDs
-				from SubscriptionProperty
+				from AccountProperty
 					inner join Property
-						on SubscriptionProperty.PropertyID = Property.PropertyID
-				where SubscriptionProperty.SubscriptionID = Subscription.SubscriptionID) p
+						on AccountProperty.PropertyID = Property.PropertyID
+				where AccountProperty.AccountID = Account.AccountID) p
 	group by Customer.CustomerID,
 		Customer.Name,
 		Customer.BaseUrl,
-		Subscription.SubscriptionID,
+		Account.AccountID,
 		p.PropertyIDs

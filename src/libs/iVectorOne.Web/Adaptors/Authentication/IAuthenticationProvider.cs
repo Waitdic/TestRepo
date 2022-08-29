@@ -5,6 +5,6 @@
 
     public interface IAuthenticationProvider
     {
-        Task<Subscription> Authenticate(string username, string password);
+        Task<Account> Authenticate(string username, string password);
     }
 }

@@ -13,17 +13,14 @@ export async function getAccounts(
 ) {
   onInit?.();
   try {
-    const accountsRes = await ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenant.key,
-          UserKey: userKey,
-        },
-      }
-    );
-    const accounts: Account[] = get(accountsRes, 'data.subscriptions', []);
+    const accountsRes = await ApiCall.get(`/tenants/${tenant.id}/accounts`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
+    const accounts: Account[] = get(accountsRes, 'data.accounts', []);
     onSuccess?.(accounts);
   } catch (err) {
     if (typeof err === 'string') {
@@ -46,18 +43,18 @@ export async function getAccountsWithSuppliers(
 ) {
   onInit?.();
   try {
-    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
+    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/accounts`, {
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
         UserKey: userKey,
       },
     });
-    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    const accounts: Account[] = get(subsRes, 'data.accounts', []);
     accounts.forEach(async (account) => {
-      const { subscriptionId } = account;
+      const { accountId } = account;
       const supplierRes = await ApiCall.get(
-        `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+        `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
         {
           headers: {
             Accept: 'application/json',
@@ -68,7 +65,7 @@ export async function getAccountsWithSuppliers(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.supplierSubscriptions',
+        'data.supplierAccounts',
         []
       );
       account.suppliers = suppliersData;
@@ -95,18 +92,18 @@ export async function getAccountsWithSuppliersAndConfigurations(
 ) {
   onInit?.();
   try {
-    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/subscriptions`, {
+    const subsRes = await ApiCall.get(`/tenants/${tenant.id}/accounts`, {
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
         UserKey: userKey,
       },
     });
-    const accounts: Account[] = get(subsRes, 'data.subscriptions', []);
+    const accounts: Account[] = get(subsRes, 'data.accounts', []);
     accounts.forEach(async (account) => {
-      const { subscriptionId } = account;
+      const { accountId } = account;
       const supplierRes = await ApiCall.get(
-        `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+        `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
         {
           headers: {
             Accept: 'application/json',
@@ -117,12 +114,12 @@ export async function getAccountsWithSuppliersAndConfigurations(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.supplierSubscriptions',
+        'data.supplierAccounts',
         []
       );
       suppliersData.forEach(async (supplier) => {
         const { data } = await ApiCall.get(
-          `/tenants/${tenant.id}/subscriptions/${account.subscriptionId}/suppliers/${supplier?.supplierID}`,
+          `/tenants/${tenant.id}/accounts/${account.accountId}/suppliers/${supplier?.supplierID}`,
           {
             headers: {
               Accept: 'application/json',
@@ -150,7 +147,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
 export async function getAccountWithSupplierAndConfigurations(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   supplierId: number,
   onInit?: () => void,
   onSuccess?: (
@@ -162,18 +159,15 @@ export async function getAccountWithSupplierAndConfigurations(
 ) {
   onInit?.();
   try {
-    const subRes = ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenant.key,
-          UserKey: userKey,
-        },
-      }
-    );
+    const subRes = ApiCall.get(`/tenants/${tenant.id}/accounts/${accountId}`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
     const supplierRes = ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+      `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
       {
         headers: {
           Accept: 'application/json',
@@ -183,7 +177,7 @@ export async function getAccountWithSupplierAndConfigurations(
       }
     );
     const configurationsRes = ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}`,
       {
         headers: {
           Accept: 'application/json',
@@ -198,12 +192,13 @@ export async function getAccountWithSupplierAndConfigurations(
       supplierRes,
       configurationsRes,
     ]);
+
     const account = get(fetchedDataRes[0], 'data', null);
     const suppliers: {
-      subscriptionId: number;
-      supplierSubscriptions: Supplier[];
+      accountId: number;
+      accountSuppliers: Supplier[];
     } = get(fetchedDataRes[1], 'data', null);
-    const supplier = suppliers?.supplierSubscriptions?.find(
+    const supplier = suppliers?.accountSuppliers?.find(
       (supp) => supp?.supplierID === supplierId
     );
     const configurations = get(fetchedDataRes[2], 'data.configurations', []);
@@ -223,7 +218,7 @@ export async function getAccountWithSupplierAndConfigurations(
 export async function getAccountById(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   onInit: () => void,
   onSuccess: (account: Account) => void,
   onFailed: (error: string | null) => void
@@ -231,7 +226,7 @@ export async function getAccountById(
   onInit();
   try {
     const res = await ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      `/tenants/${tenant.id}/accounts/${accountId}`,
       {
         headers: {
           Accept: 'application/json',
@@ -269,7 +264,7 @@ export async function createAccount(
   try {
     await ApiCall.request({
       method: 'POST',
-      url: `/tenants/${tenant.id}/subscriptions`,
+      url: `/tenants/${tenant.id}/accounts`,
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
@@ -291,7 +286,7 @@ export async function createAccount(
 export async function updateAccount(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   data: {
     UserName: string;
     Password: string;
@@ -307,7 +302,7 @@ export async function updateAccount(
   try {
     await ApiCall.request({
       method: 'PUT',
-      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}`,
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,
@@ -329,7 +324,7 @@ export async function updateAccount(
 export async function deleteAccount(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   onInit: () => void,
   onSuccess: () => void,
   onFailed: (error: string | null) => void
@@ -338,7 +333,7 @@ export async function deleteAccount(
   try {
     await ApiCall.request({
       method: 'DELETE',
-      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}`,
       headers: {
         Accept: 'application/json',
         Tenantkey: tenant.key,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -33,7 +33,7 @@ const MESSAGES = {
 const SupplierEdit: React.FC<Props> = () => {
   const { pathname, search } = useLocation();
 
-  const subscriptionId = search.split('=')[1];
+  const accountId = search.split('=')[1];
   const supplierId = pathname.split('/')[2];
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -61,46 +61,49 @@ const SupplierEdit: React.FC<Props> = () => {
     [user]
   );
 
-  const onSubmit: SubmitHandler<SupplierFormFields> = (data, event) => {
-    event?.preventDefault();
-    if (!activeTenant) return;
-    updateSupplier(
-      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-      userKey as string,
-      Number(currentAccount?.subscriptionId),
-      Number(currentSupplier?.supplierID),
-      data,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: MESSAGES.onSuccess.update,
-        });
-        setShowNotification(true);
-        setTimeout(() => {
-          navigate('/suppliers');
-        }, 500);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.update,
-        });
-        setShowNotification(true);
-      }
-    );
-  };
+  const onSubmit: SubmitHandler<SupplierFormFields> = useCallback(
+    (data, event) => {
+      event?.preventDefault();
+      if (!activeTenant) return;
+      updateSupplier(
+        { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey as string,
+        Number(currentAccount?.accountId),
+        Number(currentSupplier?.supplierID),
+        data,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: MESSAGES.onSuccess.update,
+          });
+          setShowNotification(true);
+          setTimeout(() => {
+            navigate('/suppliers');
+          }, 500);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: MESSAGES.onFailed.update,
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [activeTenant, currentAccount, currentSupplier, userKey]
+  );
 
-  const handleDeleteSupplier = async () => {
+  const handleDeleteSupplier = useCallback(async () => {
     if (!activeTenant) return;
     await deleteSupplier(
       { id: activeTenant?.tenantId, key: activeTenant?.tenantKey },
       userKey as string,
-      Number(currentAccount?.subscriptionId),
+      Number(currentAccount?.accountId),
       Number(currentSupplier?.supplierID),
       () => {
         dispatch.app.setIsLoading(true);
@@ -126,14 +129,14 @@ const SupplierEdit: React.FC<Props> = () => {
         setShowNotification(true);
       }
     );
-  };
+  }, [activeTenant, currentAccount, currentSupplier, userKey]);
 
   const fetchData = async () => {
     if (!activeTenant) return;
     await getAccountWithSupplierAndConfigurations(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
-      Number(subscriptionId),
+      Number(accountId),
       Number(supplierId),
       () => {
         dispatch.app.setIsLoading(true);
@@ -162,7 +165,7 @@ const SupplierEdit: React.FC<Props> = () => {
 
   useEffect(() => {
     if (!!currentSupplier && !!currentAccount) {
-      setValue('account', currentAccount.subscriptionId);
+      setValue('account', currentAccount.accountId);
       setValue('supplier', currentSupplier.supplierID as number);
     }
   }, [currentSupplier, currentAccount, setValue]);

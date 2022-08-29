@@ -1,15 +1,11 @@
-﻿using AutoMapper;
-using Intuitive.Helpers.Extensions;
-using iVectorOne_Admin_Api.Config.Models;
-using iVectorOne_Admin_Api.Config.Requests;
-using iVectorOne_Admin_Api.Config.Responses;
-using iVectorOne_Admin_Api.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
-
-namespace iVectorOne_Admin_Api.Config.Handlers
+﻿namespace iVectorOne_Admin_Api.Config.Handlers
 {
+    using System.Text.Json;
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne_Admin_Api.Config.Models;
+    using iVectorOne_Admin_Api.Config.Requests;
+    using iVectorOne_Admin_Api.Config.Responses;
+
     public class SupplierHandler : IRequestHandler<SupplierRequest, SupplierResponse>
     {
         private readonly ConfigContext _context;
@@ -25,25 +21,25 @@ namespace iVectorOne_Admin_Api.Config.Handlers
             var warnings = new List<string>();
             var supplierName = string.Empty;
             var success = false;
-            var subscription = _context.Subscriptions.Where(s => s.TenantId == request.TenantId && s.SubscriptionId == request.SubscriptionId)
-                                                        .Include(s => s.SupplierSubscriptionAttributes
+            var account = _context.Accounts.Where(s => s.TenantId == request.TenantId && s.AccountId == request.AccountId)
+                                                        .Include(s => s.AccountSupplierAttributes
                                                             .Where(ssa => ssa.SupplierAttribute.SupplierId == request.SupplierId))
                                                         .ThenInclude(ssa => ssa.SupplierAttribute)
                                                         .ThenInclude(sa => sa.Attribute).FirstOrDefault();
-            if (subscription != null)
+            if (account != null)
             {
                 var supplier = _context.Suppliers.FirstOrDefault(s => s.SupplierId == request.SupplierId);
                 if (supplier != null)
                 {
                     supplierName = supplier?.SupplierName;
-                    if (subscription.SupplierSubscriptionAttributes != null && subscription.SupplierSubscriptionAttributes.Any())
+                    if (account.AccountSupplierAttributes != null && account.AccountSupplierAttributes.Any())
                     {
                         success = true;
-                        foreach (var item in subscription.SupplierSubscriptionAttributes)
+                        foreach (var item in account.AccountSupplierAttributes)
                         {
                             var configItem = new ConfigurationDTO()
                             {
-                                SupplierSubscriptionAttributeID = item.SupplierSubscriptionAttributeId,
+                                AccountSupplierAttributeID = item.AccountSupplierAttributeId,
                                 Value = item.Value,
                                 DefaultValue = item.SupplierAttribute.Attribute.DefaultValue,
                             };

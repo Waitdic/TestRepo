@@ -1,8 +1,7 @@
-﻿using iVectorOne_Admin_Api.Config.Responses;
-using MediatR;
-
-namespace iVectorOne_Admin_Api.Config.Requests
+﻿namespace iVectorOne_Admin_Api.Config.Requests
 {
+    using iVectorOne_Admin_Api.Config.Responses;
+
     public class SupplierRequest : IRequest<SupplierResponse>
     {
         public SupplierRequest(int tenantId)
@@ -12,6 +11,6 @@ namespace iVectorOne_Admin_Api.Config.Requests
 
         public int TenantId { get; set; }
         public int SupplierId { get; set; }
-        public int SubscriptionId { get; set; }
+        public int AccountId { get; set; }
     }
 }

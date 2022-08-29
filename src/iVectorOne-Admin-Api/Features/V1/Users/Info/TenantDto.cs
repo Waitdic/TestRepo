@@ -1,7 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Features.V1.Users.Info
+﻿namespace iVectorOne_Admin_Api.Features.V1.Users.Info
 {
+    using System.Text.Json.Serialization;
+
     public class TenantDto
     {
         public int TenantId { get; set; }

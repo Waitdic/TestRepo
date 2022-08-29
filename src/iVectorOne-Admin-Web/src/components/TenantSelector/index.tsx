@@ -1,10 +1,11 @@
-import { Fragment, FC, memo } from 'react';
+import { Fragment, FC, memo, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
+import { sortBy } from 'lodash';
 //
-import { Tenant } from '@/types';
+import type { Tenant } from '@/types';
 import { RootState } from '@/store';
 import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
 
@@ -18,6 +19,8 @@ const TenantSelector: FC<Props> = () => {
   const activeTenant = user?.tenants?.find((tenant) => tenant.isSelected);
 
   const dispatch = useDispatch();
+
+  const tenantList = useMemo(() => sortBy(user?.tenants, 'name'), [user]);
 
   const handleChangeTenant = (tenantId: number) => {
     if (!user) return;
@@ -34,7 +37,7 @@ const TenantSelector: FC<Props> = () => {
     navigate('/');
   };
 
-  if (user?.tenants?.length === 0) {
+  if (!tenantList) {
     return null;
   }
 
@@ -67,23 +70,22 @@ const TenantSelector: FC<Props> = () => {
             'origin-top-right top-full right-0 absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50'
           )}
         >
-          {user?.tenants &&
-            user?.tenants.map(({ tenantId, name, isSelected }) => (
-              <Menu.Item key={tenantId}>
-                {({ active }) => (
-                  <span
-                    className={classNames(
-                      active ? 'bg-gray-100' : '',
-                      isSelected ? 'bg-gray-100' : '',
-                      'block px-4 py-2 text-sm text-dark cursor-pointer'
-                    )}
-                    onClick={() => handleChangeTenant(tenantId)}
-                  >
-                    {name}
-                  </span>
-                )}
-              </Menu.Item>
-            ))}
+          {tenantList?.map(({ tenantId, name, isSelected }) => (
+            <Menu.Item key={tenantId}>
+              {({ active }) => (
+                <span
+                  className={classNames(
+                    active ? 'bg-gray-100' : '',
+                    isSelected ? 'bg-gray-100' : '',
+                    'block px-4 py-2 text-sm text-dark cursor-pointer'
+                  )}
+                  onClick={() => handleChangeTenant(tenantId)}
+                >
+                  {name}
+                </span>
+              )}
+            </Menu.Item>
+          ))}
         </Menu.Items>
       </Transition>
     </Menu>

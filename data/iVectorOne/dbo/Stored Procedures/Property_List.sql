@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Property_List]
 	@lastModified datetime,
 	@suppliers varchar(max),
-	@subscriptionId int = 0
+	@accountId int = 0
 as
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED 
@@ -29,13 +29,13 @@ select distinct CentralProperty.CentralPropertyID
 			on #Suppliers.supplier = PropertyDedupe.Source
 	where Import.Queue_EndDateTime > @lastModified
 union all
-select SubscriptionProperty.CentralPropertyID
-	from SubscriptionProperty
+select AccountProperty.CentralPropertyID
+	from AccountProperty
 		inner join Property
-			on SubscriptionProperty.PropertyID = Property.PropertyID
+			on AccountProperty.PropertyID = Property.PropertyID
 		inner join #Suppliers
 			on #Suppliers.supplier = Property.Source
-	where SubscriptionProperty.SubscriptionID = @subscriptionId
+	where AccountProperty.AccountID = @accountId
 	order by 1
 
 drop table #Suppliers

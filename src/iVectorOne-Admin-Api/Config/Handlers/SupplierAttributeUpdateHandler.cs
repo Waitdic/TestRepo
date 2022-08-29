@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using iVectorOne_Admin_Api.Config.Requests;
-using iVectorOne_Admin_Api.Config.Responses;
-using iVectorOne_Admin_Api.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-
-namespace iVectorOne_Admin_Api.Config.Handlers
+﻿namespace iVectorOne_Admin_Api.Config.Handlers
 {
+    using iVectorOne_Admin_Api.Config.Requests;
+    using iVectorOne_Admin_Api.Config.Responses;
+
     public class SupplierAttributeUpdateHandler : IRequestHandler<SupplierAttributeUpdateRequest, SupplierAttributeUpdateResponse>
     {
         private readonly ConfigContext _context;
@@ -20,23 +16,23 @@ namespace iVectorOne_Admin_Api.Config.Handlers
         {
             var warnings = new List<string>();
             bool success = false;
-            var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId)
-                                            .Include(t => t.Subscriptions.Where(s => s.SubscriptionId == request.SubscriptionId))
-                                            .ThenInclude(s => s.SupplierSubscriptionAttributes
-                                                            .Where(ssa => ssa.SupplierAttribute.SupplierId == request.SupplierId))
-                                            .FirstOrDefault();
+            var tenant = _context.Tenants
+                    .Where(t => t.TenantId == request.TenantId)
+                    .Include(t => t.Accounts.Where(s => s.AccountId == request.AccountId))
+                    .ThenInclude(s => s.AccountSupplierAttributes.Where(ssa => ssa.SupplierAttribute.SupplierId == request.SupplierId))
+                    .FirstOrDefault();
 
             if (tenant is null)
             {
                 warnings.Add(Warnings.ConfigWarnings.NoTenantWarning);
             }
 
-            if (!warnings.Any() && tenant?.Subscriptions.FirstOrDefault() is null)
+            if (!warnings.Any() && tenant?.Accounts.FirstOrDefault() is null)
             {
-                warnings.Add(Warnings.ConfigWarnings.NoSubscriptionWarning);
+                warnings.Add(Warnings.ConfigWarnings.NoAccountWarning);
             }
 
-            if (!warnings.Any() && tenant?.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault() is null)
+            if (!warnings.Any() && tenant?.Accounts.FirstOrDefault()?.AccountSupplierAttributes.FirstOrDefault() is null)
             {
                 warnings.Add(Warnings.ConfigWarnings.SingleNoSupplierAttributeWarning);
             }
@@ -47,10 +43,10 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 {
                     try
                     {
-                        var supplierSubAttribute = tenant.Subscriptions.FirstOrDefault()?.SupplierSubscriptionAttributes.FirstOrDefault(x => x.SupplierSubscriptionAttributeId == attribute.SupplierSubscriptionAttributeID)!;
+                        var supplierSubAttribute = tenant?.Accounts.FirstOrDefault()?.AccountSupplierAttributes.FirstOrDefault(x => x.AccountSupplierAttributeId == attribute.AccountSupplierAttributeID)!;
                         if (supplierSubAttribute is null)
                         {
-                            warnings.Add($"Could not find SupplierSubscriptionAttribute with ID {attribute.SupplierSubscriptionAttributeID}");
+                            warnings.Add($"Could not find AccountSupplierAttribute with ID {attribute.AccountSupplierAttributeID}");
                         }
                         else
                         {
@@ -58,10 +54,10 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                             success = true;
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         success = false;
-                        warnings.Add($"Could not update value for attribute {attribute.SupplierSubscriptionAttributeID}");
+                        warnings.Add($"Could not update value for attribute {attribute.AccountSupplierAttributeID}");
                     }
                 }
                 if (_context.ChangeTracker.HasChanges())
@@ -70,7 +66,11 @@ namespace iVectorOne_Admin_Api.Config.Handlers
                 }
             }
 
-            return new SupplierAttributeUpdateResponse() { Warnings = warnings, Success = success };
+            return new SupplierAttributeUpdateResponse()
+            {
+                Warnings = warnings,
+                Success = success
+            };
         }
     }
 }
