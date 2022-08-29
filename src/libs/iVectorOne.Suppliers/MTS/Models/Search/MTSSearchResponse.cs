@@ -1,7 +1,8 @@
-﻿namespace iVectorOne.Suppliers.MTS.Models
+﻿namespace iVectorOne.Suppliers.MTS.Models.Search
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;
+    using Common;
 
     [System.Serializable()]
     [XmlRoot("OTA_HotelAvailRS", IsNullable = false, Namespace = "http://www.opentravel.org/OTA/2003/05")]
@@ -82,23 +83,6 @@
         {
             [XmlElement("Description")]
             public List<Description> Descriptions = new();
-        }
-
-        public class Description
-        {
-            [XmlElement()]
-            public string Text = string.Empty;
-            [XmlAttribute()]
-            public string Name = string.Empty;
-        }
-
-        public class RoomType
-        {
-            [XmlElement()]
-            public Description RoomDescription = new();
-
-            [XmlAttribute("RoomTypeCode")]
-            public string Code = string.Empty;
         }
 
         public class Area
