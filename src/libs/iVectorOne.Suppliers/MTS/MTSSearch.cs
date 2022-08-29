@@ -280,6 +280,7 @@
                 {
                     if (hotel.Info.HotelCode == room.Info.HotelCode)
                     {
+                        string ratePlan = room.RatePlans.Count > 0 ? room.RatePlans.First().RatePlanCode : string.Empty;
                         foreach (var area in response.Areas)
                         {
                             if (area.AreaID == hotel.Info.AreaID)
@@ -307,7 +308,7 @@
                                             RoomType = roomType.RoomDescription.Text,
                                             MealBasisCode = roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text,
                                             Amount = amount,
-                                            TPReference = roomType.Code + "|" + roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text + "|" + country,
+                                            TPReference = $"{roomType.Code}|{roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text}|{country}|{ratePlan}",
                                             RoomTypeCode = roomRate.RoomTypeCode
                                         });
                                     }

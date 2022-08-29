@@ -47,6 +47,8 @@
             [XmlArray()]
             public List<RoomType> RoomTypes = new();
 
+            [XmlArray()]
+            public List<RatePlan> RatePlans = new();
         }
 
         [XmlType()]

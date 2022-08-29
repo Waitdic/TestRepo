@@ -529,32 +529,36 @@
                     resGuestRPHs.Add(new ResGuestRPH { RPH = count });
                 }
 
+                string ratePlan = roomDetails.ThirdPartyReference.Split("|")[3];
                 roomStays.Add(new RoomStay
                 {
                     RoomTypes = new[]
                     {
-                            new RoomType
-                            {
-                                Code = roomDetails.ThirdPartyReference.Split("|")[0]
-                            }
-                        },
+                        new RoomType
+                        {
+                            Code = roomDetails.ThirdPartyReference.Split("|")[0]
+                        }
+                    },
+                    RatePlans = !string.IsNullOrEmpty(ratePlan) 
+                        ? new []{new RatePlan { RatePlanCode = ratePlan } } 
+                        : Array.Empty<RatePlan>(),
                     TimeSpan =
-                        {
-                            End = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
-                            Start = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")
-                        },
+                    {
+                        End = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
+                        Start = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")
+                    },
                     BasicPropertyInfo =
-                        {
-                            HotelCode = propertyDetails.TPKey
-                        },
+                    {
+                        HotelCode = propertyDetails.TPKey
+                    },
                     ResGuestRPHs = resGuestRPHs.ToArray(),
                     ServiceRPHs = new[]
                     {
-                            new ServiceRPH
-                            {
-                                RPH = roomCount
-                            }
+                        new ServiceRPH
+                        {
+                            RPH = roomCount
                         }
+                    }
                 });
 
                 roomCount++;

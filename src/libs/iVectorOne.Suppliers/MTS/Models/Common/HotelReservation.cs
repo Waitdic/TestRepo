@@ -56,6 +56,11 @@
         [XmlArrayItem("RoomType")]
         public RoomType[] RoomTypes { get; set; } = Array.Empty<RoomType>();
 
+        [XmlArray("RatePlans")]
+        [XmlArrayItem("RatePlan")]
+        public RatePlan[] RatePlans { get; set; } = Array.Empty<RatePlan>();
+        public bool ShouldSerializeRatePlans() => RatePlans.Length != 0;
+
         [XmlElement]
         public TimeSpanLocal TimeSpan { get; set; } = new();
 
