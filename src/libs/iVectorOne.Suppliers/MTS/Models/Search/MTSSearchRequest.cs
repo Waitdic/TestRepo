@@ -8,7 +8,10 @@
     [XmlRoot("OTA_HotelAvailRQ", Namespace = "http://www.opentravel.org/OTA/2003/05")]
     public class MTSSearchRequest
     {
-        public POS Pos { get; set; } = new();
+        [XmlAttribute]
+        public string Version { get; set; } = string.Empty;
+
+        public POS POS { get; set; } = new();
 
         [XmlArray("AvailRequestSegments")]
         [XmlArrayItem("AvailRequestSegment")]

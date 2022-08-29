@@ -159,7 +159,8 @@
                 // build the request
                 var request = new MTSSearchRequest
                 {
-                    Pos = { Source = new[]
+                    Version = "0.1",
+                    POS = { Source = new[]
                     {
                         new Source
                         {
