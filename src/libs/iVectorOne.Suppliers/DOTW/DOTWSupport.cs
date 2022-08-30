@@ -131,7 +131,7 @@
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(ThirdParties.DOTW, isoCurrencyCode);
 
             var currencyCache = await GetCurrencyCacheAsync(searchDetails);
-            if (currencyCache.ContainsKey(currencyCode))
+            if (currencyCode != null && currencyCache.ContainsKey(currencyCode))
             {
                 return currencyCache[currencyCode];
             }
