@@ -5,9 +5,11 @@
     public class Token
     {
         public Token() { }
-        [XmlAttribute("TokenName")]
-        public string TokenName { get; set; } = string.Empty;
+
         [XmlAttribute("TokenCode")]
         public string TokenCode { get; set; } = string.Empty;
+
+        [XmlAttribute("TokenName")]
+        public string TokenName { get; set; } = string.Empty;
     }
 }
