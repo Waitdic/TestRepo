@@ -141,7 +141,7 @@ export async function updateSupplier(
   const filteredConfigurations = Object.entries(configurations)
     .filter((config) => typeof config[1] !== 'object' && config)
     .map((config) => ({
-      accountSupplierAttributeId: Number(config[0]),
+      accountSupplierAttributeID: Number(config[0]),
       value: config[1].toString(),
     }));
 

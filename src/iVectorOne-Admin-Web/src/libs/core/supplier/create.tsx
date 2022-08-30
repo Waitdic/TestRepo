@@ -246,12 +246,10 @@ const SupplierCreate: React.FC<Props> = () => {
                       required: 'This field is required.',
                     })}
                     labelText='Account'
-                    options={sortedAccounts?.map(
-                      ({ accountId, userName }) => ({
-                        id: accountId,
-                        name: userName,
-                      })
-                    )}
+                    options={sortedAccounts?.map(({ accountId, userName }) => ({
+                      id: accountId,
+                      name: userName,
+                    }))}
                     isFirstOptionEmpty
                     onUncontrolledChange={handleAccountChange}
                   />

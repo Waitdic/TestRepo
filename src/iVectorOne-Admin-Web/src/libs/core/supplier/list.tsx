@@ -119,8 +119,7 @@ const SupplierList: React.FC<Props> = () => {
                       className={classNames(
                         'mr-0.5 md:mr-0 md:mb-0.5 flex items-center px-2.5 py-2 rounded whitespace-nowrap cursor-pointer',
                         {
-                          'bg-indigo-50':
-                            activeAcc?.accountId === accountId,
+                          'bg-indigo-50': activeAcc?.accountId === accountId,
                         }
                       )}
                       onClick={() => handleSetActiveAcc(accountId)}

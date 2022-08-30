@@ -64,7 +64,7 @@ const AccountList: React.FC<Props> = () => {
   );
 
   const fetchData = useCallback(async () => {
-    if (!activeTenant || isLoading) return;
+    if (!activeTenant) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
@@ -93,7 +93,7 @@ const AccountList: React.FC<Props> = () => {
       setFilteredAccountList(
         sortBy(accounts, 'userName').map(({ userName, accountId }) => ({
           name: userName,
-            id: accountId,
+          id: accountId,
           isActive: false,
         }))
       );

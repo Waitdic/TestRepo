@@ -13,16 +13,13 @@ export async function getAccounts(
 ) {
   onInit?.();
   try {
-    const accountsRes = await ApiCall.get(
-      `/tenants/${tenant.id}/accounts`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenant.key,
-          UserKey: userKey,
-        },
-      }
-    );
+    const accountsRes = await ApiCall.get(`/tenants/${tenant.id}/accounts`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
     const accounts: Account[] = get(accountsRes, 'data.accounts', []);
     onSuccess?.(accounts);
   } catch (err) {
@@ -68,7 +65,7 @@ export async function getAccountsWithSuppliers(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.accountSuppliers',
+        'data.supplierAccounts',
         []
       );
       account.suppliers = suppliersData;
@@ -117,7 +114,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
       );
       const suppliersData: Supplier[] = get(
         supplierRes,
-        'data.accountSuppliers',
+        'data.supplierAccounts',
         []
       );
       suppliersData.forEach(async (supplier) => {
@@ -162,16 +159,13 @@ export async function getAccountWithSupplierAndConfigurations(
 ) {
   onInit?.();
   try {
-    const subRes = ApiCall.get(
-      `/tenants/${tenant.id}/accounts/${accountId}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          Tenantkey: tenant.key,
-          UserKey: userKey,
-        },
-      }
-    );
+    const subRes = ApiCall.get(`/tenants/${tenant.id}/accounts/${accountId}`, {
+      headers: {
+        Accept: 'application/json',
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
     const supplierRes = ApiCall.get(
       `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
       {
@@ -198,6 +192,7 @@ export async function getAccountWithSupplierAndConfigurations(
       supplierRes,
       configurationsRes,
     ]);
+
     const account = get(fetchedDataRes[0], 'data', null);
     const suppliers: {
       accountId: number;
