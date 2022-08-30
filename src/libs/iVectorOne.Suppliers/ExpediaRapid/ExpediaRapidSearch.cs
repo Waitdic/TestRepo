@@ -77,7 +77,7 @@
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
-            string countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.SubscriptionID);
+            string countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
