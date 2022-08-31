@@ -148,9 +148,12 @@
                 }
 
                 // Grab the Errata
-                foreach (var errataNode in response.HotelReservations.SelectMany(x => x.ResGlobalInfo.BasicPropertyInfo.VendorMessages))
+                if (response.HotelReservations.Any(x => x.ResGlobalInfo.BasicPropertyInfo != null))
                 {
-                    propertyDetails.Errata.AddNew(errataNode.Title, errataNode.SubSection.Paragraph.Text);
+                    foreach (var errataNode in response.HotelReservations.SelectMany(x => x.ResGlobalInfo.BasicPropertyInfo.VendorMessages))
+                    {
+                        propertyDetails.Errata.AddNew(errataNode.Title, errataNode.SubSection.Paragraph.Text);
+                    }
                 }
             }
             catch (Exception ex)
@@ -178,7 +181,7 @@
 
             try
             {
-                var hotelReservation = CreateHotelReservation(propertyDetails);
+                var hotelReservation = CreateHotelReservation(propertyDetails, true);
 
                 if (!string.IsNullOrEmpty(propertyDetails.BookingReference) || propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)))
                 {
@@ -232,11 +235,11 @@
                 };
                 webRequest.SetRequest(_serializer.Serialize(request));
                 await webRequest.Send(_httpClient, _logger);
-                var response = _serializer.DeSerialize<MTSBookResponse>(webRequest.ResponseString);
+                var response = _serializer.DeSerialize<MTSBookResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseString));
 
                 // check for any errors and save the booking code
                 // p63 of documentation
-                if (response.Errors.Length == 0)
+                if (response.Errors.Length != 0)
                 {
                     reference = "failed";
                 }
@@ -244,7 +247,7 @@
                 {
                     reference = response.HotelReservations
                         .SelectMany(x => x.ResGlobalInfo.HotelReservationIDs)
-                        .First(r => r.ResIDSource == "OST")
+                        .First(r => r.ResIDSource == "OTS")
                         .ResIDValue;
                 }
             }
@@ -363,7 +366,7 @@
                                     ? (0.01d * percentage * (double)dailyAmount * numberOfNights).ToSafeMoney() 
                                     : (0.01d * percentage * (double)totalAmount).ToSafeMoney();
                             }
-                            else if (node.AmountPercent.Amount != null)
+                            else if (node.AmountPercent.Amount != 0)
                             {
                                 cancellation.Amount = (decimal)node.AmountPercent.Amount;
                             }
@@ -378,8 +381,7 @@
                                 cancellation.StartDate = cancellation.EndDate.AddDays(-days);
 
                                 // If 'afterbooking' overlaps 'beforearrival', start beforearrival day after afterbooking finishes
-                                //if (node.SelectSingleNode("Deadline/@OffsetDropTime[AfterBooking]") is not null)
-                                if (!string.IsNullOrEmpty(node.Deadline.OffsetDropTime))
+                                if (node.Deadline.OffsetDropTime == "AfterBooking")
                                 {
                                     var afterBookingEndDate = DateTime.Now.AddDays(node.Deadline.OffsetMultiplier);
 
@@ -515,7 +517,7 @@
 
         #region Request Components
 
-        private HotelReservation CreateHotelReservation(PropertyDetails propertyDetails)
+        private HotelReservation CreateHotelReservation(PropertyDetails propertyDetails, bool isBook = false)
         {
             var count = 0;
             var roomCount = 1;
@@ -581,25 +583,24 @@
                     PassengerType.Adult => 10,
                     PassengerType.Child => 8,
                     PassengerType.Infant => 7,
-                    _ => default(int)
+                    _ => default
                 };
+
+                var guestCounts = new List<GuestCount>();
+                switch (ageQualifyingCode)
+                {
+                    case 8: guestCounts.Add(new GuestCount { Age = passenger.Age });
+                        break;
+                    case 7: guestCounts.Add(new GuestCount { Age = 1 }); 
+                        break;
+                }
 
                 resGuests.Add(new ResGuest
                 {
                     AgeQualifyingCode = ageQualifyingCode,
                     ResGuestRPH = guestCounter,
-                    GuestCounts = new[]
-                    {
-                            new GuestCount
-                            {
-                                Age = ageQualifyingCode switch
-                                {
-                                    8 => passenger.Age,
-                                    7 => 1,
-                                    _ => 0
-                                },
-                            }
-                        }
+                    Profiles = isBook ? CreateProfiles(passenger) : null,
+                    GuestCounts = guestCounts.ToArray()
                 });
             }
 
@@ -658,6 +659,28 @@
                             Type = _settings.AuthenticationType(propertyDetails),
                             ID = _settings.AuthenticationID(propertyDetails),
                             MessagePassword = _settings.Password(propertyDetails)
+                        }
+                    }
+                }
+            };
+        }
+
+        private Profiles CreateProfiles(Passenger passenger)
+        {
+            return new Profiles
+            {
+                ProfileInfo =
+                {
+                    Profile =
+                    {
+                        Customer =
+                        {
+                            PersonName =
+                            {
+                                NamePrefix = passenger.Title,
+                                GivenName = passenger.FirstName,
+                                Surname = passenger.LastName
+                            }
                         }
                     }
                 }

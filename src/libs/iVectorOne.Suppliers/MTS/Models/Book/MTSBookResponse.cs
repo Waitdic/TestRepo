@@ -5,10 +5,11 @@
     using Common;
 
     [Serializable()]
-    [XmlRoot("OTA_HotelResRS", IsNullable = false, Namespace = "http://www.opentravel.org/OTA/2003/05")]
+    [XmlRoot("OTA_HotelResRS")]
     public class MTSBookResponse
     {
-        [XmlElement("HotelReservations")]
+        [XmlArray("HotelReservations")]
+        [XmlArrayItem("HotelReservation")]
         public HotelReservation[] HotelReservations { get; set; } = Array.Empty<HotelReservation>();
 
         [XmlArray("Errors")]

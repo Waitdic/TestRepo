@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.MTS.Models.Common
 {
     using System.Xml.Serialization;
+
     public class GuestCount
     {
         [XmlAttribute]

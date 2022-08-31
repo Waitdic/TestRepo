@@ -8,7 +8,8 @@
     [XmlRoot("OTA_HotelResRS", IsNullable = false, Namespace = "http://www.opentravel.org/OTA/2003/05")]
     public class MTSPrebookResponse
     {
-        [XmlElement("HotelReservations")]
+        [XmlArray("HotelReservations")]
+        [XmlArrayItem("HotelReservation")]
         public HotelReservation[] HotelReservations { get; set; } = Array.Empty<HotelReservation>();
     }
 }

@@ -17,6 +17,7 @@
         [XmlArrayItem("ResGuest")]
         public ResGuest[] ResGuests { get; set; } = Array.Empty<ResGuest>();
 
+        [XmlElement("ResGlobalInfo")]
         public ResGlobalInfo? ResGlobalInfo { get; set; }
         public bool ShouldSerializeResGlobalInfo() => ResGlobalInfo != null;
     }
@@ -47,6 +48,7 @@
 
     public class Total
     {
+        [XmlAttribute]
         public decimal AmountAfterTax { get; set; }
     }
 
@@ -113,9 +115,13 @@
         [XmlAttribute]
         public int ResGuestRPH { get; set; }
 
+        public Profiles? Profiles { get; set; }
+        public bool ShouldSerializeProfiles() => Profiles != null;
+
         [XmlArray("GuestCounts")]
         [XmlArrayItem("GuestCount")]
         public GuestCount[] GuestCounts { get; set; } = Array.Empty<GuestCount>();
+        public bool ShouldSerializeGuestCounts() => GuestCounts.Length != 0;
     }
 
     public class CancelPenalty
@@ -134,7 +140,7 @@
         public int NmbrOfNights { get; set; }
 
         [XmlAttribute]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 
     public class Deadline
@@ -171,5 +177,34 @@
 
         [XmlElement("Text")]
         public string Text { get; set; } = string.Empty;
+    }
+
+    public class Profiles
+    {
+        public ProfileInfo ProfileInfo { get; set; } = new();
+    }
+
+    public class ProfileInfo
+    {
+        public Profile Profile { get; set; } = new();
+    }
+
+    public class Profile
+    {
+        public Customer Customer { get; set; } = new();
+    }
+
+    public class Customer
+    {
+        public PersonName PersonName { get; set; } = new();
+    }
+
+    public class PersonName
+    {
+        public string NamePrefix { get; set; } = string.Empty;
+
+        public string GivenName { get; set; } = string.Empty;
+
+        public string Surname { get; set; } = string.Empty;
     }
 }
