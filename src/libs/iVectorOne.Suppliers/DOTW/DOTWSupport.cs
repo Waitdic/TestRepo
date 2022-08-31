@@ -131,9 +131,9 @@
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(ThirdParties.DOTW, isoCurrencyCode);
 
             var currencyCache = await GetCurrencyCacheAsync(searchDetails);
-            if (currencyCode != null && currencyCache.ContainsKey(currencyCode))
+            if (currencyCode != null && currencyCache.ContainsKey(currencyCode.ToSafeInt()))
             {
-                return currencyCache[currencyCode];
+                return currencyCode.ToSafeInt();
             }
             else
             {
@@ -171,11 +171,11 @@
             return Regex.Replace(text.Normalize(NormalizationForm.FormD), "[^A-Za-z]*", string.Empty).Trim();
         }
 
-        private async Task<Dictionary<string, int>> GetCurrencyCacheAsync(IThirdPartyAttributeSearch searchDetails)
+        private async Task<Dictionary<int, string>> GetCurrencyCacheAsync(IThirdPartyAttributeSearch searchDetails)
         {
-            async Task<Dictionary<string, int>> cacheBuilder()
+            async Task<Dictionary<int, string>> cacheBuilder()
             {
-                var currencies = new Dictionary<string, int>();
+                var currencies = new Dictionary<int, string>();
 
                 var sb = new StringBuilder();
 
@@ -218,8 +218,8 @@
 
                 foreach (XmlNode node in responseXml.SelectNodes("result/currency/option"))
                 {
-                    string key = node.SelectSingleNode("@shortcut").Value;
-                    int value = node.SelectSingleNode("@value").Value.ToSafeInt();
+                    int key = node.SelectSingleNode("@value").Value.ToSafeInt();
+                    string value = node.SelectSingleNode("@shortcut").Value; 
 
                     if (!currencies.ContainsKey(key))
                     {
