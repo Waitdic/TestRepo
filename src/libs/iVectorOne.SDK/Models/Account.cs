@@ -1,7 +1,6 @@
 ﻿namespace iVectorOne.Models
 {
     using System.Collections.Generic;
-    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// The api account object

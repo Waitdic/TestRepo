@@ -10,7 +10,6 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
     using Newtonsoft.Json;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Settings;
     using iVectorOne.Tests.Helpers;
 
     //using MoreLinq;

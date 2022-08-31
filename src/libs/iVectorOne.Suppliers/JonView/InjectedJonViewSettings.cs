@@ -2,7 +2,6 @@
 {
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Constants;
-    using iVectorOne.Search.Settings;
     using iVectorOne.Support;
 
     public class InjectedJonViewSettings : SettingsBase, IJonViewSettings

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Search.Results.Enums
+﻿namespace iVectorOne.Models
 {
     /// <summary>The de-duplicating strategy for property results</summary>
     public enum DedupeMethod

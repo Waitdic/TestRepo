@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// A booking search details object

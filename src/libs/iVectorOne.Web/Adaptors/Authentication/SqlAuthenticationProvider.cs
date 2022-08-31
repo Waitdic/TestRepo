@@ -12,7 +12,6 @@
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json;
     using iVectorOne.Models;
-    using iVectorOne.Search.Settings;
 
     public class SqlAuthenticationProvider : IAuthenticationProvider
     {

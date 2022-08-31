@@ -1,7 +1,5 @@
-﻿namespace iVectorOne.Search.Settings
+﻿namespace iVectorOne.Models
 {
-    using iVectorOne.Search.Results.Enums;
-
     /// <summary>
     /// Settings used to configure the search
     /// </summary>

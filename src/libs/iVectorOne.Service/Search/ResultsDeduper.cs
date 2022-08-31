@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Models;
     using iVectorOne.Repositories;
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Results.Enums;
 
     /// <summary>
     ///   <br />
