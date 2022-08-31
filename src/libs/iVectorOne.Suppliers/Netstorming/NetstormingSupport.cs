@@ -185,8 +185,6 @@
         public static XmlDocument Serialize(EnvelopeBase request, ISerializer serializer)
         {
             var xmlRequest = serializer.Serialize(request);
-            var xmlDeclaration = xmlRequest.CreateXmlDeclaration("1.0", "UTF-8", string.Empty);
-            xmlRequest.InsertBefore(xmlDeclaration, xmlRequest.DocumentElement);
             return xmlRequest;
         }
 
