@@ -84,24 +84,20 @@
                         .RoomStays
                         .First(x => x
                             .RoomTypes
-                            .Any(roomType => roomType.RoomTypeCode == $"{propertyDetails.TPKey}-{roomBooking.ThirdPartyReference}"));
+                            .Any(roomType => roomType.RoomTypeCode == $"{propertyDetails.TPKey}-{roomBooking.ThirdPartyReference.Split("|")[0]}"));
 
                     decimal roomCost = roomStay.Total.AmountAfterTax / 100;
                     cost += roomCost;
 
-                    string absoluteDeadline = roomStay.CancelPenalties.First().Deadline.AbsoluteDeadline;
-                    bool hasCancellationDate = DateTime.TryParse(absoluteDeadline, out var cancellationDeadline);
+                    var absoluteDeadline = roomStay.CancelPenalties.First().Deadline.AbsoluteDeadline;
+                    var cancellationDeadline = absoluteDeadline;
 
-                    if (absoluteDeadline == "This reservation cannot be cancelled.")
+                    if (absoluteDeadline.Date == propertyDetails.ArrivalDate.Date)
                     {
-                        hasCancellationDate = true;
                         cancellationDeadline = DateTime.Now;
                     }
 
-                    if (hasCancellationDate)
-                    {
-                        cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
-                    }
+                    cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
 
                     var errata = GetErrata(roomStay);
                     propertyDetails.Errata.AddRange(errata);
@@ -194,9 +190,10 @@
                                 },
                                 BasicPropertyInfo = new BasicPropertyInfo
                                 {
-                                    HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference,
+                                    HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference.Split("|")[0],
                                     Comments = bookingRequests.ToArray(),
-                                }
+                                }, 
+                                CancelPenalties = new[] {new CancelPenalty{Deadline = {AbsoluteDeadline = propertyDetails.Rooms[0].ThirdPartyReference.Split("|")[1].ToSafeDate() }}}
                             }).ToArray(),
                             ResGuests = new []
                             {

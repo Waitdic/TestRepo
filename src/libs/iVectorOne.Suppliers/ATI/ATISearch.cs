@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Suppliers.ATI
+﻿using iVectorOne.Models.Property.Booking;
+
+namespace iVectorOne.Suppliers.ATI
 {
     using System;
     using System.Collections.Generic;
@@ -207,14 +209,20 @@
                         decimal amount = CalculateAmount(mergedResponses, property, propertyRoomBooking, roomType);
                         var adjustments = GetAdjustments(roomStays, propertyRoomBooking, roomType);
 
-                        bool nrf = roomStays
+                        var absoluteDeadline = roomStays
                             .Where(x =>
                             {
                                 return x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID)
                                        && x.RoomTypes.Any(t => t.RoomTypeCode.Substring(t.RoomTypeCode.IndexOf('-') + 1) == roomType.RoomTypeCode);
                             })
                             .SelectMany(x => x.CancelPenalties)
-                            .Any(p => p.Deadline.AbsoluteDeadline == "This reservation cannot be cancelled.");
+                            .Select(p => p.Deadline.AbsoluteDeadline)
+                            .FirstOrDefault();
+
+                        bool nrf = absoluteDeadline.Date == searchDetails.ArrivalDate.Date;
+
+                        var cancellations = new Cancellations();
+                        cancellations.AddNew(absoluteDeadline, searchDetails.ArrivalDate, amount);
 
                         var transformedResult =new TransformedResult
                         {
@@ -229,9 +237,10 @@
                             Infants = occupancyInfo.Infants,
                             ChildAgeCSV = occupancyInfo.hlpChildAgeCSV,
                             Amount = amount,
-                            TPReference = roomType.RoomTypeCode,
+                            TPReference = $"{roomType.RoomTypeCode}|{absoluteDeadline}",
                             NonRefundableRates = nrf,
                             Adjustments = adjustments,
+                            Cancellations = cancellations
                         };
 
                         if (settings.ExcludeNRF(searchDetails, false))
