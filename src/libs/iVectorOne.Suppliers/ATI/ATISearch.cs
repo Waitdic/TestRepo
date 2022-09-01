@@ -1,6 +1,4 @@
-﻿using iVectorOne.Models.Property.Booking;
-
-namespace iVectorOne.Suppliers.ATI
+﻿namespace iVectorOne.Suppliers.ATI
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +17,7 @@ namespace iVectorOne.Suppliers.ATI
     using iVectorOne.Suppliers.ATI.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 
