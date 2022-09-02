@@ -227,6 +227,7 @@
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             decimal amount = 0m;
+            string? currencyCode = null;
             bool success = true;
 
             try
@@ -248,7 +249,7 @@
                 if (cancelPenalties.Any())
                 {
                     amount += cancelPenalties.Where(cp => cp.CancelStartDate < DateTime.Now && cp.CancelEndDate > DateTime.Now).Sum(cp => cp.Amount);
-
+                    currencyCode = cancelPenalties.Where(cp => cp.CurrencyCode != null).Select(cp => cp.CurrencyCode).First();
                 }
             }
 
@@ -261,7 +262,7 @@
             return new ThirdPartyCancellationFeeResult()
             {
                 Amount = amount,
-                CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
+                CurrencyCode = currencyCode ?? await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
                 Success = success
             };
         }
@@ -564,9 +565,10 @@
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
+            string countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
+            return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, countryCode, occupancies);
         }
 
         private Request BuildRequest(

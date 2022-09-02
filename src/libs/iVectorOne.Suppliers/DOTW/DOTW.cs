@@ -406,7 +406,7 @@
                 {
                     var fromDateNode = ruleNode.SelectSingleNode("fromDate");
                     var toDateNode = ruleNode.SelectSingleNode("toDate");
-                    var amountNode = ruleNode.SelectSingleNode("charge");
+                    var amountNode = ruleNode.SelectSingleNode("charge/formatted");
 
                     bool nonRefundable = false;
                     if (ruleNode.SelectSingleNode("cancelRestricted") is not null)

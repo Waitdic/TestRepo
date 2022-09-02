@@ -173,7 +173,6 @@
     <Folder Include="amplify-old\backend\auth\ivectoradminwebvite4e908efd" />
     <Folder Include="amplify-old\backend\types" />
     <Folder Include="amplify-old\hooks" />
-    <Folder Include="iVectorOne-Admin-Web" />
     <Folder Include="public" />
     <Folder Include="public\images" />
     <Folder Include="src" />
@@ -259,7 +258,6 @@
     <Folder Include="src\temp" />
     <Folder Include="src\types" />
     <Folder Include="src\utils" />
-    <Folder Include="VectorOne-Admin-Web" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

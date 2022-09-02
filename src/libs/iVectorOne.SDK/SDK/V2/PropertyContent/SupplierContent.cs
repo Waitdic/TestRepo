@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyContent
 {
     using System.Collections.Generic;
-    using Newtonsoft.Json;
+    using System.Text.Json.Serialization;
 
     /// <summary>The supplier content e.g. images facilities and descriptions for a property.</summary>
     public class SupplierContent

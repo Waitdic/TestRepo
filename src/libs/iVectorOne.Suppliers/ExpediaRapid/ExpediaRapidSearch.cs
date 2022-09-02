@@ -20,6 +20,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property.Booking;
 
     public class ExpediaRapidSearch : IThirdPartySearch, ISingleSource
     {
@@ -76,11 +77,12 @@
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
 
+            string countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, occupancies);
+            return BuildSearchURL(tpKeys, _settings, searchDetails, arrivalDate, departureDate, currencyCode, countryCode, occupancies);
         }
 
         public static RequestHeader CreateAuthorizationHeader(string apiKey, string secret)
@@ -140,6 +142,7 @@
             DateTime arrivalDate,
             DateTime departureDate,
             string currencyCode,
+            string countryCode,
             IEnumerable<ExpediaRapidOccupancy> occupancies)
         {
             var nvc = new NameValueCollection()
@@ -148,7 +151,7 @@
                 { SearchQueryKeys.CheckOut, departureDate.ToString("yyyy-MM-dd") },
                 { SearchQueryKeys.Currency, currencyCode },
                 { SearchQueryKeys.Language, settings.LanguageCode(tpAttributeSearch) },
-                { SearchQueryKeys.CountryCode, settings.SourceMarket(tpAttributeSearch) },
+                { SearchQueryKeys.CountryCode, countryCode },
                 { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) },
                 { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) },
                 { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) },
@@ -269,10 +272,11 @@
         {
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return occupancies.Select((occupancy, i) => BuildResultFromOccupancy(tpKey, room, rate, bedGroup, occupancy, i + 1, tpSessionID, mealBases));
+            return occupancies.Select((occupancy, i) => BuildResultFromOccupancy(searchDetails, tpKey, room, rate, bedGroup, occupancy, i + 1, tpSessionID, mealBases));
         }
 
         private TransformedResult BuildResultFromOccupancy(
+            SearchDetails searchDetails,
             string tpKey,
             SearchResponseRoom room,
             RoomRate rate,
@@ -299,6 +303,8 @@
             string mealBasisCode = GetMealBasisCode(rate.Amenities.Keys, lookupMealBasisCodes);
 
             var specialOffers = GetSpecialOffers(rate, lookupMealBasisCodes);
+
+            var cancellations = GetCancellations(searchDetails, rate, occupancyRoomRate);
 
             var result = new TransformedResult();
 
@@ -328,6 +334,7 @@
                 result.Adjustments = adjustments;
                 result.PayLocalRequired = rate.MerchantOfRecord == "property";
                 result.TPReference = $"{tpSessionID}|{bedGroup.Links.PriceCheckLink.HRef}";
+                result.Cancellations = cancellations;
             }
 
             result.Validate();
@@ -429,6 +436,52 @@
             }
             public string TaxName { get; set; }
             public decimal TaxAmount { get; set; }
+        }
+
+        private Cancellations GetCancellations(SearchDetails searchDetails, RoomRate roomRate, OccupancyRoomRate occupancyRoomRate)
+        {
+            var cancellations = new Cancellations();
+
+            if (!roomRate.IsRefundable && !roomRate.CancelPenalities.Any())
+            {
+                decimal roomAmount = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount;
+                cancellations.Add(new Cancellation(DateTime.Now.Date, searchDetails.ArrivalDate, roomAmount));
+            }
+
+            cancellations.AddRange(roomRate.CancelPenalities.Select(cp => BuildCancellation(occupancyRoomRate, cp)));
+
+            return cancellations;
+        }
+
+        private Cancellation BuildCancellation(OccupancyRoomRate occupancyRoomRate, CancelPenalty cancelPenalty)
+        {
+            decimal amount = 0m;
+
+            if (cancelPenalty.Amount != 0m)
+            {
+                amount += cancelPenalty.Amount;
+            }
+
+            if (!string.IsNullOrEmpty(cancelPenalty.Percent))
+            {
+                decimal percent = cancelPenalty.Percent.Replace("%", "").ToSafeDecimal();
+                decimal roomAmount = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount;
+                amount += Math.Round(roomAmount / 100m * percent, 2, MidpointRounding.AwayFromZero);
+            }
+
+            if (cancelPenalty.Nights > 0)
+            {
+                var nightCancellations = occupancyRoomRate.NightlyRates.Take(cancelPenalty.Nights).ToList();
+                foreach (List<Rate> night in nightCancellations)
+                {
+                    foreach (Rate rate in night)
+                        amount += rate.Amount;
+                }
+            }
+
+            var cancellation = new Cancellation(cancelPenalty.CancelStartDate, cancelPenalty.CancelEndDate, amount);
+
+            return cancellation;
         }
     }
 }

@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Moq;
-    using iVectorOne.Search.Settings;
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Factories;
     using iVectorOne.Models;

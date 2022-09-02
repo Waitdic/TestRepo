@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Search.Settings
+﻿namespace iVectorOne.Models
 {
     using System.Collections.Generic;
 

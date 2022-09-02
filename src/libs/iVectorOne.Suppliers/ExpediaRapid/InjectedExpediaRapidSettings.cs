@@ -97,9 +97,10 @@
         {
             return Get_Value("UserAgent", tpAttributeSearch);
         }
+
         public string BillingTerms(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Password", tpAttributeSearch);
+            return Get_Value("BillingTerms", tpAttributeSearch);
         }
 
         public string PlatformName(IThirdPartyAttributeSearch tpAttributeSearch)

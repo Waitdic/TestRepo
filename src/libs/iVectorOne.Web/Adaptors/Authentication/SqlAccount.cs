@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Web.Adaptors.Authentication
 {
     using System.Collections.Generic;
-    using iVectorOne.Search.Settings;
+    using iVectorOne.Models;
 
     public class SqlAccount
     {

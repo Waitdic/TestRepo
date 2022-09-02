@@ -136,7 +136,7 @@
             {
                 return await _sql.ReadSingleMappedAsync(
                     "select ThirdPartyCurrencyCode, CurrencyCode from Currency where Source = @source",
-                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.CurrencyCode, x => x.ThirdPartyCurrencyCode),
+                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.ThirdPartyCurrencyCode, x => x.CurrencyCode),
                     new CommandSettings().WithParameters(new { source }));
             }
 

@@ -7,7 +7,7 @@
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using iVectorOne.Interfaces;
-    using iVectorOne.Search.Settings;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A search details object

@@ -6,7 +6,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.VirtualCreditCards;
-    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// The property details passed into book and pre books
