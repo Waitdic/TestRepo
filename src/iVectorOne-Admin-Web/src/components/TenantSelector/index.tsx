@@ -1,17 +1,9 @@
-import {
-  Fragment,
-  FC,
-  memo,
-  useMemo,
-  useState,
-  useEffect,
-  useRef,
-} from 'react';
+import { Fragment, FC, memo, useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { sortBy, uniqBy } from 'lodash';
+import { sortBy } from 'lodash';
 //
 import type { Tenant } from '@/types';
 import { RootState } from '@/store';
@@ -27,6 +19,7 @@ const TenantSelector: FC<Props> = () => {
   const user = useSelector((state: RootState) => state.app.user);
 
   const [filteredTenants, setFilteredTenants] = useState<Tenant[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const dispatch = useDispatch();
 
@@ -60,7 +53,6 @@ const TenantSelector: FC<Props> = () => {
     } else {
       list = tenantList;
     }
-
     return list?.filter((i) => i.tenantId !== Number(activeTenant.tenantId));
   }, [lastUsedTenants, tenantList, filteredTenants, activeTenant]);
 
@@ -92,8 +84,9 @@ const TenantSelector: FC<Props> = () => {
 
   const handleTenantSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
+    setSearchQuery(query);
     if (query.length < 3) {
-      setFilteredTenants([]);
+      setFilteredTenants(tenantList);
       return;
     }
 
@@ -141,6 +134,7 @@ const TenantSelector: FC<Props> = () => {
               <div className='px-2'>
                 <UncontrolledTextField
                   name='tenantSearch'
+                  value={searchQuery}
                   onChange={handleTenantSearch}
                 />
               </div>

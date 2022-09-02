@@ -7,10 +7,14 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   ref?: React.Ref<HTMLInputElement>;
+  value?: string | number;
 };
 
 const UncontrolledTextField: React.FC<Props> = forwardRef(
-  ({ label = '', name, type = 'text', onChange, required = false }, ref) => {
+  (
+    { label = '', name, type = 'text', onChange, required = false, value = '' },
+    ref
+  ) => {
     return (
       <>
         {!!label && (
@@ -24,6 +28,7 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
           type={type}
           id={name}
           name={name}
+          value={value}
           className='form-input w-full'
           onChange={onChange}
           onBlur={onChange}
