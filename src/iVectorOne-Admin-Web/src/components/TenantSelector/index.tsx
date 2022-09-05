@@ -79,6 +79,7 @@ const TenantSelector: FC<Props> = () => {
     });
     dispatch.app.resetModuleList();
     setFilteredTenants([]);
+    setSearchQuery('');
     navigate('/');
   };
 
