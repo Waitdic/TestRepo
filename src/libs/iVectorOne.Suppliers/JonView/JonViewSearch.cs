@@ -142,7 +142,7 @@
                                 MealBasisCode = room.ProductDetails.Board,
                                 Amount = localCost,
                                 PropertyRoomBookingID = prbid,
-                                TPReference = room.ProdCode,
+                                TPReference = $"{room.ProdCode}_{room.DayPrice}",
                                 NonRefundableRates = nfr,
                                 RoomType = room.ProductDetails.RoomType,
                                 Cancellations = cancellationSet
