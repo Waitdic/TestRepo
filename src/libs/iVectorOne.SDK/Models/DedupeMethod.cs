@@ -4,9 +4,9 @@
     public enum DedupeMethod
     {
         /// <summary> Selects property results from the supplier with the cheapest room cost for that property</summary>
-        None = 0,
+        none = 0,
 
         /// <summary>Selects property results for each meal basis from the supplier with the cheapest room cost for that property and meal basis</summary>
-        CheapestLeadIn = 1
+        cheapestleadin = 1
     }
 }

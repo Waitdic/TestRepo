@@ -27,6 +27,6 @@
 
         public string EmailLogsToAddress { get; set; } = string.Empty;
 
-        public DedupeMethod DedupeMethod { get; set; } = DedupeMethod.CheapestLeadIn;
+        public DedupeMethod DedupeMethod { get; set; } = DedupeMethod.cheapestleadin;
     }
 }

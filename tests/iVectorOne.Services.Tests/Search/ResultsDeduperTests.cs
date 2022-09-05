@@ -16,7 +16,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.CheapestLeadIn);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.cheapestleadin);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -71,7 +71,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.CheapestLeadIn);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.cheapestleadin);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -230,7 +230,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.None);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.none);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -293,7 +293,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.None);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.none);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -477,7 +477,7 @@
             {
                 Settings = new Settings
                 {
-                    SingleRoomDedupingAlgorithm = DedupeMethod.CheapestLeadIn
+                    SingleRoomDedupingAlgorithm = DedupeMethod.cheapestleadin
                 },
                 DedupeResults = dedupe
             };

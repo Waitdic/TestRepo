@@ -47,7 +47,7 @@
                 decimal exchangeRate = await _currencyRepository.GetExchangeRateFromISOCurrencyIDAsync(currencyID);
                 decimal checkLeadInPrice = dedupeResult.LeadInPrice * exchangeRate;
 
-                if (searchDetails.DedupeResults.HasFlag(DedupeMethod.CheapestLeadIn) && checkCentralPropertyID > 0)
+                if (searchDetails.DedupeResults.HasFlag(DedupeMethod.cheapestleadin) && checkCentralPropertyID > 0)
                 {
                     string checkHashCode = $"{checkCentralPropertyID}_{checkMealBasisID}_{(checkNonRefundable ? 1 : 0)}";
 
@@ -71,7 +71,7 @@
                             }
                         });
                 }
-                else if (searchDetails.DedupeResults.HasFlag(DedupeMethod.None))
+                else if (searchDetails.DedupeResults.HasFlag(DedupeMethod.none))
                 {
                     // any unique key will do but the first split "_" needs to be property reference id
                     int keyCount = searchDetails.ConcurrentResults.Keys.Count;
@@ -105,10 +105,10 @@
                 int propertyId = result.PropertyData.PropertyID;
                 foreach (var room in result.RoomResults)
                 {
-                    string mealBasis = searchDetails.DedupeResults.HasFlag(DedupeMethod.None) || dedupeMethod == DedupeMethod.CheapestLeadIn ? string.Empty : room.RoomData.MealBasisCode;
+                    string mealBasis = searchDetails.DedupeResults.HasFlag(DedupeMethod.none) || dedupeMethod == DedupeMethod.cheapestleadin ? string.Empty : room.RoomData.MealBasisCode;
 
                     int nonRefundable = 0;
-                    if (searchDetails.DedupeResults.HasFlag(DedupeMethod.CheapestLeadIn) && dedupeByNonRefundable)
+                    if (searchDetails.DedupeResults.HasFlag(DedupeMethod.cheapestleadin) && dedupeByNonRefundable)
                     {
                         if (room.PriceData.NonRefundableRates.HasValue)
                         {

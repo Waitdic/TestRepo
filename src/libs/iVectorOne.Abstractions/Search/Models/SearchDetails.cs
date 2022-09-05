@@ -96,7 +96,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether we want to de-dupes.
         /// </summary>
-        public DedupeMethod DedupeResults { get; set; } = DedupeMethod.CheapestLeadIn;
+        public DedupeMethod DedupeResults { get; set; } = DedupeMethod.cheapestleadin;
 
         /// <summary>
         /// Gets or sets the total passengers.

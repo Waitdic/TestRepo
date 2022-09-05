@@ -59,7 +59,7 @@
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
                             EmailLogsToAddress = emailLogsTo ?? string.Empty,
-                            DedupeMethod = dedupeMethod ?? DedupeMethod.CheapestLeadIn
+                            DedupeMethod = dedupeMethod ?? DedupeMethod.cheapestleadin
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);
