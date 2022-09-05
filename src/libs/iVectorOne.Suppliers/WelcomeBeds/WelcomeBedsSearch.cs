@@ -177,7 +177,7 @@
                             new Credential { CredentialCode = settings.Password(searchDetails), CredentialName = "Password" },
                             new Credential { CredentialCode = settings.System(searchDetails), CredentialName = "System" },
                             new Credential { CredentialCode = settings.SalesChannel(searchDetails), CredentialName = "SalesChannel" },
-                            new Credential { CredentialCode = settings.LanguageCode(searchDetails), CredentialName = "LanguageCode" },
+                            new Credential { CredentialCode = settings.LanguageCode(searchDetails), CredentialName = "Language" },
                             new Credential { CredentialCode = settings.ConnectionString(searchDetails), CredentialName = "ConnectionString" },
                         };
         }
