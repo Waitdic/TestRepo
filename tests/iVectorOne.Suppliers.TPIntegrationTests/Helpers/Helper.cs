@@ -48,7 +48,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
                 Duration = 5,
                 RoomDetails = roomDetails,
                 ThirdPartyConfigurations = new List<ThirdPartyConfiguration> { CreateThirdPartyConfiguration(supplier) },
-                DedupeResults = Search.Enums.Dedupe.cheapestleadin,
+                DedupeResults = DedupeMethod.CheapestLeadIn,
                 LoggingType = "All",
                 ISOCurrencyCode = "GBP"
             };

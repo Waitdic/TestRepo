@@ -1,8 +1,8 @@
 ﻿namespace iVectorOne.Search
 {
     using iVector.Search.Property;
+    using iVectorOne.Models;
     using iVectorOne.Repositories;
-    using iVectorOne.Search.Enums;
     using iVectorOne.Search.Models;
     using Moq;
 
@@ -16,7 +16,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(Dedupe.cheapestleadin);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.CheapestLeadIn);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -71,7 +71,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(Dedupe.cheapestleadin);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.CheapestLeadIn);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -230,7 +230,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(Dedupe.none);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.None);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -293,7 +293,7 @@
             var mealBasisID = 0;
             var nonRefundable = false;
 
-            SearchDetails searchDetails = BuildSearchDetails(Dedupe.none);
+            SearchDetails searchDetails = BuildSearchDetails(DedupeMethod.None);
 
             var firstSearchResults = new List<PropertySearchResult>
             {
@@ -471,13 +471,13 @@
             };
         }
 
-        private static SearchDetails BuildSearchDetails(Dedupe dedupe)
+        private static SearchDetails BuildSearchDetails(DedupeMethod dedupe)
         {
             return new SearchDetails
             {
-                Settings = new Settings.Settings
+                Settings = new Settings
                 {
-                    SingleRoomDedupingAlgorithm = Results.Enums.DedupeMethod.CheapestLeadin
+                    SingleRoomDedupingAlgorithm = DedupeMethod.CheapestLeadIn
                 },
                 DedupeResults = dedupe
             };

@@ -15,7 +15,7 @@
         public string CurrencyCode { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the single room de-duplicating algorithm.</summary>
-        public DedupeMethod SingleRoomDedupingAlgorithm { get; set; } = DedupeMethod.CheapestLeadin;
+        public DedupeMethod SingleRoomDedupingAlgorithm { get; set; } = DedupeMethod.CheapestLeadIn;
 
         /// <summary>Gets or sets a value indicating whether [de-duplicated by non refundable].</summary>
         public bool DedupeByNonRefundable { get; set; }
