@@ -1,6 +1,5 @@
-import { Fragment, FC, memo, useMemo, useState, useEffect } from 'react';
+import { FC, memo, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortBy } from 'lodash';
@@ -8,6 +7,7 @@ import { sortBy } from 'lodash';
 import type { Tenant } from '@/types';
 import { RootState } from '@/store';
 import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
+import useOnClickOutside from '@/utils/useOnClickOutside';
 import UncontrolledTextField from '../Fields/UncontrolledTextField';
 
 type Props = {
@@ -15,13 +15,17 @@ type Props = {
 };
 
 const TenantSelector: FC<Props> = () => {
+  const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.app.user);
 
   const [filteredTenants, setFilteredTenants] = useState<Tenant[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showItems, setShowItems] = useState(false);
 
   const dispatch = useDispatch();
+
+  useOnClickOutside(ref, () => setShowItems(false));
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((tenant) => tenant.isSelected),
@@ -80,6 +84,7 @@ const TenantSelector: FC<Props> = () => {
     dispatch.app.resetModuleList();
     setFilteredTenants([]);
     setSearchQuery('');
+    setShowItems(false);
     navigate('/');
   };
 
@@ -102,31 +107,24 @@ const TenantSelector: FC<Props> = () => {
   }
 
   return (
-    <Menu as='div' className='relative'>
+    <div className='relative' ref={ref}>
       <div>
-        <Menu.Button
+        <button
           className={classNames(
             'group flex items-center max-w-xs text-sm focus:outline-none'
           )}
           title='Change Tenant'
+          onClick={() => setShowItems(!showItems)}
         >
           <div className='flex gap-1'>
             <p className='ml-2 text-sm'>{activeTenant?.name}</p>
             {getStaticSVGIcon('chevronDown', 'w-5 h-5')}
           </div>
-        </Menu.Button>
+        </button>
       </div>
-      <Transition
-        as={Fragment}
-        enter='transition ease-out duration-100'
-        enterFrom='transform opacity-0 scale-95'
-        enterTo='transform opacity-100 scale-100'
-        leave='transition ease-in duration-75'
-        leaveFrom='transform opacity-100 scale-100'
-        leaveTo='transform opacity-0 scale-95'
-      >
+      {showItems && (
         <div>
-          <Menu.Items
+          <div
             className={classNames(
               'origin-top-right top-full right-0 absolute mt-2 w-48 rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none bg-white z-50'
             )}
@@ -148,23 +146,21 @@ const TenantSelector: FC<Props> = () => {
               {activeTenant?.name}
             </span>
             {filterableTenants?.slice(0, 4)?.map(({ tenantId, name }) => (
-              <Menu.Item key={tenantId}>
-                {() => (
-                  <span
-                    className={classNames(
-                      'block px-4 py-2 text-sm text-dark cursor-pointer'
-                    )}
-                    onClick={() => handleChangeTenant(tenantId)}
-                  >
-                    {name}
-                  </span>
-                )}
-              </Menu.Item>
+              <p key={tenantId}>
+                <span
+                  className={classNames(
+                    'block px-4 py-2 text-sm text-dark cursor-pointer'
+                  )}
+                  onClick={() => handleChangeTenant(tenantId)}
+                >
+                  {name}
+                </span>
+              </p>
             ))}
-          </Menu.Items>
+          </div>
         </div>
-      </Transition>
-    </Menu>
+      )}
+    </div>
   );
 };
 
