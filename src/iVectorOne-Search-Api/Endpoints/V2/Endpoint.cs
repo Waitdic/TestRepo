@@ -41,7 +41,7 @@
                         [FromQuery] bool? log, // todo - move to config
                         [FromQuery] string? suppliers,
                         [FromQuery] string? emailLogsTo,
-                        [FromQuery] DedupeMethod? dedupeMethod)
+                        [FromQuery] string? dedupeMethod)
                     =>
                     {
                         var request = new Request
@@ -59,7 +59,7 @@
                             SellingCountry = sellingcountry ?? string.Empty,
                             Suppliers = suppliers?.Split(",").ToList() ?? new(),
                             EmailLogsToAddress = emailLogsTo ?? string.Empty,
-                            DedupeMethod = dedupeMethod ?? DedupeMethod.cheapestleadin
+                            DedupeMethod = dedupeMethod.ToSafeEnum<DedupeMethod>() ?? DedupeMethod.cheapestleadin
                         };
 
                         return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);

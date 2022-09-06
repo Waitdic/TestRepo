@@ -16,6 +16,7 @@
             RuleFor(x => x.Properties).NotNull().NotEmpty().WithMessage(WarningMessages.PropertyNotSpecified);
             RuleFor(x => x.Properties.Count).LessThanOrEqualTo(500).WithMessage(WarningMessages.PropertiesOverLimit);
             RuleFor(x => x.RoomRequests).NotEmpty().WithMessage(WarningMessages.RoomsNotSpecified);
+            RuleFor(x => x.DedupeMethod).NotEmpty().WithMessage(WarningMessages.InvalidDedupeMethod);
             RuleForEach(x => x.RoomRequests)
                 .Must(x => x.Adults > 0).WithMessage(WarningMessages.AdultsNotSpecifiedInAllRooms)
                 .Must(x => x.Adults <= 15).WithMessage(WarningMessages.Only15AdultsAllowed)
