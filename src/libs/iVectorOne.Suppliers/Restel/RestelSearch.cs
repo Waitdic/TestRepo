@@ -40,7 +40,7 @@
         {
             var requests = new List<Request>();
 
-            string codusu = _settings.UserAgent(searchDetails);
+            string codusu = _settings.Codusu(searchDetails);
 
             foreach (var resortSplit in resortSplits)
             {
