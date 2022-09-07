@@ -220,17 +220,6 @@ const UserView: React.FC<Props> = () => {
         dispatch.app.setIsLoading(false);
         setCurrentUser(fetchedUser);
         setUserTenants(fetchedUser?.tenants || []);
-        dispatch.app.updateUser({
-          ...fetchedUser,
-          tenants:
-            fetchedUser?.tenants?.map((t) => {
-              if (t.tenantId === activeTenant?.tenantId) {
-                return { ...t, isSelected: true };
-              } else {
-                return t;
-              }
-            }) || [],
-        });
       },
       () => {
         dispatch.app.setIsLoading(false);
