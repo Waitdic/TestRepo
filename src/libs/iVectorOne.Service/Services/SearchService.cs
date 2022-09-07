@@ -1,8 +1,9 @@
 ﻿namespace iVectorOne.Services
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using Intuitive;
@@ -19,6 +20,8 @@
     /// <seealso cref="ISearchService" />
     public class SearchService : ISearchService
     {
+        private readonly ISearchStoreService _searchStoreService;
+
         /// <summary>The search repository</summary>
         private readonly ISearchRepository _searchRepository;
 
@@ -43,20 +46,26 @@
             ISearchDetailsFactory searchDetailsFactory,
             IPropertySearchResponseFactory propertySearchResponseFactory,
             IThirdPartyFactory thirdPartyFactory,
-            IThirdPartyPropertySearchRunner searchRunner)
+            IThirdPartyPropertySearchRunner searchRunner,
+            ISearchStoreService searchStoreService)
         {
             _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
             _propertySearchResponseFactory = Ensure.IsNotNull(propertySearchResponseFactory, nameof(propertySearchResponseFactory));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _searchRunner = Ensure.IsNotNull(searchRunner, nameof(searchRunner));
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
         }
 
         /// <inheritdoc />
         public async Task<Response> SearchAsync(Request searchRequest, bool log, IRequestTracker requestTracker)
         {
+            var totalTime = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
+
             // 1.Convert Request to Search details object
             var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
+            searchDetails.SearchStoreItem.SearchDateAndTime = DateTime.Now;
 
             // 2.Check which suppliers to search
             var suppliers = searchRequest.Account.Configurations
@@ -70,11 +79,23 @@
                 string.Join(",", suppliers),
                 searchRequest.Account);
 
+            var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
+
             // 4.Run TP search
             await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);
 
+            stopwatch.Restart();
+
             // 5.Build response and return
             var response = await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+
+            var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
+
+            searchDetails.SearchStoreItem.PropertiesReturned = response.PropertyResults.Count;
+            searchDetails.SearchStoreItem.PreProcessTime = preprocessTime;
+            searchDetails.SearchStoreItem.PostProcessTime += postProcessTime;
+            searchDetails.SearchStoreItem.TotalTime = (int)totalTime.ElapsedMilliseconds;
+            await _searchStoreService.AddAsync(searchDetails.SearchStoreItem);
 
             return response;
         }

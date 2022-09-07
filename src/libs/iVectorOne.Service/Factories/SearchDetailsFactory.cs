@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Factories
+﻿using System;
+
+namespace iVectorOne.Factories
 {
     using iVector.Search.Property;
     using iVectorOne.Models;
@@ -30,7 +32,15 @@
                 OpaqueSearch = searchRequest.OpaqueRates,
                 SellingCountry = searchRequest.SellingCountry,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
-                DedupeResults = searchRequest.DedupeMethod
+                DedupeResults = searchRequest.DedupeMethod,
+                SearchStoreItem =
+                {
+                    AccountName = account.Login,
+                    AccountId = account.AccountID,
+                    System = account.Environment.ToString(),
+                    SearchDateAndTime = DateTime.Now,
+                    PropertiesRequested = searchRequest.Properties.Count
+                }
             };
 
             if (searchRequest.ArrivalDate.HasValue)
