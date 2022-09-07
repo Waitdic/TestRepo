@@ -237,5 +237,10 @@
         ///   <para>The booking reference cannot exceed the supplier permitted length</para>
         /// </summary>
         public const string InvalidBookingReferenceLength = "The booking reference exceeds the supplier permitted length, the maximum allowed length is ";
+
+        /// <summary>
+        /// <para>The dedupe method specified must be supported</para>
+        /// </summary>
+        public const string InvalidDedupeMethod = "The dedupe method in the request is unknown";
     }
 }
