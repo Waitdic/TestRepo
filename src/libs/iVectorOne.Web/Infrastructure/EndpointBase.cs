@@ -77,7 +77,10 @@
             }
             catch (ValidationException ex)
             {
-                return Results.ValidationProblem(ex.Errors.ToDictionary(e => e.ErrorCode, e => new string[] { e.ErrorMessage }));
+                return Results.ValidationProblem(
+                    ex.Errors
+                        .GroupBy(e => e.ErrorCode)
+                        .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray()));
             }
 
             return Results.Ok(response);
