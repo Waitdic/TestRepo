@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-
-namespace iVectorOne.Service
+﻿namespace iVectorOne.Service
 {
     using System.Security.Cryptography;
     using Intuitive;
@@ -9,7 +6,9 @@ namespace iVectorOne.Service
     using Intuitive.DependencyInjection;
     using Intuitive.Helpers.Security;
     using Intuitive.Modules;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Suppliers;
     using iVectorOne.Suppliers.AbreuV2;
@@ -129,7 +128,8 @@ namespace iVectorOne.Service
                     .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
 
             services.AddSingleton<ISearchStoreService>(s =>
-                new SearchStoreService(s.GetRequiredService<ILogger<SearchStoreService>>(),
+                new SearchStoreService(
+                    s.GetRequiredService<ILogger<SearchStoreService>>(),
                     s.GetRequiredService<ISearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }

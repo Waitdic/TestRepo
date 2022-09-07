@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using Intuitive;
-using iVectorOne.Models.SearchStore;
-using iVectorOne.Repositories;
-using Microsoft.Extensions.Logging;
-
 namespace iVectorOne.Services
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Threading.Tasks;
+    using Intuitive;
+    using iVectorOne.Models.SearchStore;
+    using iVectorOne.Repositories;
+    using Microsoft.Extensions.Logging;
+
     public class SearchStoreService : ISearchStoreService, IAsyncDisposable
     {
         private readonly ILogger<SearchStoreService> _logger;
@@ -60,7 +60,6 @@ namespace iVectorOne.Services
 
         private async Task FlushSearchStoreAsync(int bulkInsertSize)
         {
-
             ConcurrentBag<SearchStoreItem> items = null!;
 
             lock (_searchStoreItems)
