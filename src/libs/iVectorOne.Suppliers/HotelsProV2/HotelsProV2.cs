@@ -54,7 +54,7 @@
                 string[] refs = propertyDetails.Rooms.First().ThirdPartyReference.Split('|');
                 string code = refs[1];
                 string httpGetQuery = $"?search_code={refs[2]}&hotel_code={refs[0]}";
-                string endpoint = $"{_settings.HotelAvailabilityURL(propertyDetails)}{httpGetQuery}";
+                string endpoint = $"{_settings.AvailabilityURL(propertyDetails)}{httpGetQuery}";
 
                 //'Call the hotel availability request to check if the rooms are still available
                 request = await SendGetRequestAsync(propertyDetails, endpoint, "HotelAvailability");
@@ -70,7 +70,7 @@
 
                 provisionRequest = await SendPostRequestAsync(
                         propertyDetails,
-                        $"{_settings.ProvisionURL(propertyDetails)}{code}",
+                        $"{_settings.PrebookURL(propertyDetails)}{code}",
                         "Prebook", "");
 
                 var prebookResponse = JsonConvert.DeserializeObject<ProvisionResponse>(provisionRequest.ResponseString, GetJsonSerializerSettings());
@@ -151,7 +151,7 @@
 
                 string sParams = string.Join("&", paxParamList);
 
-                string endpoint = $"{_settings.BookURL(propertyDetails)}{propertyDetails.TPRef1}";
+                string endpoint = $"{_settings.BookingURL(propertyDetails)}{propertyDetails.TPRef1}";
                 request = await SendPostRequestAsync(propertyDetails, endpoint, "Book", sParams);
 
                 var oBookResponse = JsonConvert.DeserializeObject<BookResponse>(request.ResponseString, GetJsonSerializerSettings());
@@ -191,7 +191,7 @@
 
             try
             {
-                string endpoint = $"{_settings.CancelURL(propertyDetails)}{propertyDetails.SourceReference}";
+                string endpoint = $"{_settings.CancellationURL(propertyDetails)}{propertyDetails.SourceReference}";
                 request = await SendPostRequestAsync(propertyDetails, endpoint, "Cancel", "");
                 var response = JsonConvert.DeserializeObject<CancellationResponse>(request.ResponseString, GetJsonSerializerSettings());
                 if (!string.IsNullOrEmpty(response.Code))
@@ -318,7 +318,7 @@
                 Source = Source,
                 LogFileName = logFileName,
                 AuthenticationMode = AuthenticationMode.Basic,
-                UserName = _settings.UserName(propertyDetails),
+                UserName = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
                 ExtraInfo = propertyDetails,
                 CreateLog = true,
@@ -338,7 +338,7 @@
                 Source = Source,
                 LogFileName = logFileName,
                 AuthenticationMode = AuthenticationMode.Basic,
-                UserName = _settings.UserName(propertyDetails),
+                UserName = _settings.User(propertyDetails),
                 Password = _settings.Password(propertyDetails),
                 ExtraInfo = propertyDetails,
                 CreateLog = true,
