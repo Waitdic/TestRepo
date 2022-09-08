@@ -71,7 +71,7 @@
         public static Envelope<AtiAvailabilityRequest> GetSearchRequestXml(
             DateTime arrivalDate,
             int duration,
-            RoomDetails roomDetails,
+            iVector.Search.Property.RoomDetails roomDetails,
             List<Criterion> criteria,
             string version,
             string userId)
