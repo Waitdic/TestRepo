@@ -306,8 +306,8 @@
                                         {
                                             new Token
                                             {
-                                                TokenCode = Constant.PaxType,
-                                                TokenName = (passenger.PassengerType == PassengerType.Adult ||
+                                                TokenName = Constant.PaxType,
+                                                TokenCode = (passenger.PassengerType == PassengerType.Adult ||
                                                     (passenger.PassengerType == PassengerType.Child && passenger.Age >= 12))
                                                     ? Constant.ADULT
                                                     : Constant.CHILD
@@ -326,7 +326,13 @@
                     ResGuests = resGuests,
                     ResGlobalInfo = new ResGlobalInfo
                     {
-                        Comments = propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Select(x => new Comment { Text = x.SpecialRequest }).ToList()
+                        HotelReservationIds = new List<HotelReservationId>
+                        {
+                            new() { ResIdValue = propertyDetails.TPRef1 }
+                        },
+                        Comments = propertyDetails.BookingComments.Count > 0 
+                            ? propertyDetails.BookingComments.Select(x => new Comment { Text = x.Text }).ToList() 
+                            : new List<Comment>()
                     },
                     TpaExtensions = new TpaExtensions
                     {

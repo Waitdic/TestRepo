@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using iVectorOne.Models;
     using MediatR;
 
     public record Request : RequestBase, IRequest<Response>
@@ -26,6 +27,6 @@
 
         public string EmailLogsToAddress { get; set; } = string.Empty;
 
-        public bool Dedupe { get; set; } = true;
+        public DedupeMethod DedupeMethod { get; set; } = DedupeMethod.cheapestleadin;
     }
 }

@@ -19,6 +19,8 @@
         /// <summary>The cache key</summary>
         private const string CacheKey = "APIMealBasisRepo";
 
+        private const int _timeout = 2;
+
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
 
@@ -95,7 +97,7 @@
                         .ToDictionary(x => (x.AccountID, x.MealBasisCode), x => x));
             }
 
-            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
 
             return cache;
         }
@@ -134,7 +136,7 @@
                         .ToDictionary(x => (x.Source, x.MealBasisCode), x => x.ToMealBasis()));
             }
 
-            return await _cache.GetOrCreateAsync(CacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(CacheKey, cacheBuilder, _timeout);
         }
 
         private class MealBasisResult

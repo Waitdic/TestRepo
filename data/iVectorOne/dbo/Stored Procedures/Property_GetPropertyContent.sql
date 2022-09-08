@@ -18,6 +18,7 @@ insert into #Suppliers
 	exec CSVToTableString @suppliers, ','
 
 select Property.Name,
+		Property.TPKey,
 		Property.TTICode,
 		Property.Source,
 		Property.PropertyDetails,
@@ -36,6 +37,7 @@ select Property.Name,
 			on Property.GeographyID = Geography.GeographyID
 union all
 select Property.Name,
+		Property.TPKey,
 		Property.TTICode,
 		Property.Source,
 		Property.PropertyDetails,

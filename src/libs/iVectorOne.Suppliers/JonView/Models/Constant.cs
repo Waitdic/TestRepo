@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iVectorOne.Suppliers.JonView.Models
+﻿namespace iVectorOne.Suppliers.JonView.Models
 {
     internal static class Constant
     {

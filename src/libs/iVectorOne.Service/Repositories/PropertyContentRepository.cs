@@ -76,6 +76,7 @@
                     var supplierContent = new Content.SupplierContent()
                     {
                         PropertyName = content.Name,
+                        SupplierPropertyReference = content.TPKey,
                         TPKey = details.TPKey!,
                         Address = new Content.Address()
                         {
@@ -130,6 +131,7 @@
         public class PropertyContentItem
         {
             public string Name { get; set; } = string.Empty;
+            public string TPKey { get; set; } = string.Empty;
             public string TTICode { get; set; } = string.Empty;
             public string Source { get; set; } = string.Empty;
             public string PropertyDetails { get; set; } = string.Empty;

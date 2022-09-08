@@ -12,6 +12,9 @@
         /// <summary>Gets or sets the supplier of the property.</summary>
         public string Supplier { get; set; } = string.Empty;
 
+        /// <summary>Gets or sets the supplier of the property property reference, TPKey in the database.</summary>
+        public string SupplierPropertyReference { get; set; } = string.Empty;
+
         /// <summary>Gets or sets the address.</summary>
         public Address Address { get; set; } = new Address();
 

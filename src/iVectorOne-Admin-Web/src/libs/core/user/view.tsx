@@ -148,9 +148,20 @@ const UserView: React.FC<Props> = () => {
     [isValidUser, isLoading]
   );
 
+  const handleRemoveStoredLastUsedTenant = (tenantId: number) => {
+    const storedTenants: Tenant[] = JSON.parse(
+      localStorage.getItem('lastUsedTenants') || '[]'
+    );
+    const newStoredTenants = storedTenants.filter(
+      (t) => t.tenantId !== tenantId
+    );
+    localStorage.setItem('lastUsedTenants', JSON.stringify(newStoredTenants));
+  };
+
   const handleTenantUnlink = () => {
     setIsUnlinking(false);
     handleUnlinkUserTenant(draftTenant.tenantId, draftTenant.userId);
+    handleRemoveStoredLastUsedTenant(draftTenant.tenantId);
   };
 
   const handleTenantSelect = useCallback(

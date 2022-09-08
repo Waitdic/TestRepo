@@ -18,6 +18,8 @@
         /// <summary>The cache key</summary>
         private const string _cacheKey = "APICurencyRepo";
 
+        private const int _timeout = 2;
+
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
 
@@ -35,7 +37,7 @@
                 return (await _sql.ReadAllAsync<Currency>("Currency_List")).ToList();
             }
 
-            return await _cache.GetOrCreateAsync(_cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(_cacheKey, cacheBuilder, _timeout);
         }
 
         /// <inheritdoc />
@@ -85,7 +87,7 @@
                         .ToDictionary(x => (x.AccountID, x.CurrencyCode), x => x.ISOCurrencyID));
             }
 
-            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
             cache.TryGetValue((accountId, currencyCode), out int isoCurrencyID);
 
             return isoCurrencyID;

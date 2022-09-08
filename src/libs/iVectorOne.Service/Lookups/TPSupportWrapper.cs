@@ -17,6 +17,8 @@
     /// <seealso cref="ITPSupport" />
     public class TPSupportWrapper : ITPSupport
     {
+        private const int _timeout = 2;
+
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
 
@@ -122,7 +124,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>Third party currency lookup.</summary>
@@ -136,11 +138,11 @@
             {
                 return await _sql.ReadSingleMappedAsync(
                     "select ThirdPartyCurrencyCode, CurrencyCode from Currency where Source = @source",
-                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.CurrencyCode, x => x.ThirdPartyCurrencyCode),
+                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.ThirdPartyCurrencyCode, x => x.CurrencyCode),
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>Nationality lookup</summary>
@@ -158,7 +160,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>ISO currency code lookup</summary>
@@ -173,7 +175,7 @@
                     new CommandSettings());
             }
 
-            return await _cache.GetOrCreateAsync("ISOCurrencyCache", cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync("ISOCurrencyCache", cacheBuilder, _timeout);
         }
 
         /// <summary>Country code lookup</summary>
@@ -191,7 +193,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         private async Task<Dictionary<(int, string), AccountCountry>> AccountCountryAsync()
@@ -206,7 +208,7 @@
                         .ToDictionary(x => (x.AccountID, x.ISOCountryCode), x => x));
             }
 
-            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
 
             return cache;
         }
