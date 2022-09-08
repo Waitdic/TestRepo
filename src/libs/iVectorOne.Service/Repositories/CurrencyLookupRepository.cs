@@ -17,6 +17,7 @@
     {
         /// <summary>The cache key</summary>
         private const string _cacheKey = "APICurencyRepo";
+
         private const int _timeout = 2;
 
         private readonly IMemoryCache _cache;
