@@ -1,4 +1,4 @@
-﻿URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1&hotel_code=102245&client_nationality=US&currency=EUR
+﻿URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1&hotel_code=102245&client_nationality=US&currency=EUR
 
 **HEADERS**
 
@@ -9,7 +9,7 @@ Timeout: 1
 
 
 
-URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=2&hotel_code=102245&client_nationality=US&currency=EUR
+URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=2&hotel_code=102245&client_nationality=US&currency=EUR
 
 **HEADERS**
 
@@ -20,7 +20,7 @@ Timeout: 1
 
 
 
-URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,8&hotel_code=102245&client_nationality=US&currency=EUR
+URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,8&hotel_code=102245&client_nationality=US&currency=EUR
 
 **HEADERS**
 
@@ -31,7 +31,7 @@ Timeout: 1
 
 
 
-URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,0&hotel_code=102245&client_nationality=US&currency=EUR
+URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,0&hotel_code=102245&client_nationality=US&currency=EUR
 
 **HEADERS**
 
@@ -42,7 +42,7 @@ Timeout: 1
 
 
 
-URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,8,0&hotel_code=102245&client_nationality=US&currency=EUR
+URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&checkin=2021-09-01&pax=1,8,0&hotel_code=102245&client_nationality=US&currency=EUR
 
 **HEADERS**
 

@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.TPIntegrationTests.HotelsProV2
 {
     using System.Collections.Generic;
-    using iVectorOne.Lookups;
+    using iVectorOne.Tests.HotelsProV2;
     using iVectorOne.Search.Models;
     using Helpers;
     using iVectorOne.Suppliers.HotelsProV2;
