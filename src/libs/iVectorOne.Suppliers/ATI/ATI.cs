@@ -98,7 +98,7 @@
                         cancellationDeadline = DateTime.Now;
                     }
 
-                    cancellations.AddNew(cancellationDeadline, DateTime.Now, cost);
+                    cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
 
                     var errata = GetErrata(roomStay);
                     propertyDetails.Errata.AddRange(errata);
@@ -194,7 +194,16 @@
                                     HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference.Split("|")[0],
                                     Comments = bookingRequests.ToArray(),
                                 }, 
-                                CancelPenalties = new[] {new CancelPenalty{Deadline = {AbsoluteDeadline = propertyDetails.Rooms[0].ThirdPartyReference.Split("|")[1].ToSafeDate() }}}
+                                CancelPenalties = new[]
+                                {
+                                    new CancelPenalty
+                                    {
+                                        Deadline =
+                                        {
+                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1].ToSafeDate()
+                                        }
+                                    }
+                                }
                             }).ToArray(),
                             ResGuests = new []
                             {
