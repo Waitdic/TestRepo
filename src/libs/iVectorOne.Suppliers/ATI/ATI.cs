@@ -20,6 +20,7 @@
     using iVectorOne.Models.Property.Booking;
     using Erratum = iVectorOne.Models.Property.Booking.Erratum;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Search.Models;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -92,12 +93,12 @@
                     var absoluteDeadline = roomStay.CancelPenalties.First().Deadline.AbsoluteDeadline;
                     var cancellationDeadline = absoluteDeadline;
 
-                    if (absoluteDeadline.Date == propertyDetails.ArrivalDate.Date)
+                    if (absoluteDeadline.Date == DateTime.Now.Date)
                     {
                         cancellationDeadline = DateTime.Now;
                     }
 
-                    cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
+                    cancellations.AddNew(cancellationDeadline, DateTime.Now, cost);
 
                     var errata = GetErrata(roomStay);
                     propertyDetails.Errata.AddRange(errata);

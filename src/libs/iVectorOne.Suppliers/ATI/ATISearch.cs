@@ -131,7 +131,6 @@
         {
             var transformed = new TransformedResultCollection();
             var response = _serializer.DeSerialize<Envelope<AtiAvailabilitySearch>>(requests[0].ResponseXML);
-
             var mergedResponses = new Results { Envelope = response };
 
             var groupings = new Groupings();
@@ -218,10 +217,10 @@
                             .Select(p => p.Deadline.AbsoluteDeadline)
                             .FirstOrDefault();
 
-                        bool nrf = absoluteDeadline.Date == searchDetails.ArrivalDate.Date;
+                        bool nrf = absoluteDeadline.Date == searchDetails.BookingDate.Date;
 
                         var cancellations = new Cancellations();
-                        cancellations.AddNew(absoluteDeadline, searchDetails.ArrivalDate, amount);
+                        cancellations.AddNew(absoluteDeadline, searchDetails.BookingDate, amount);
 
                         var transformedResult =new TransformedResult
                         {
