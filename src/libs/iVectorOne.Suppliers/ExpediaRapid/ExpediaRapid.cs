@@ -478,7 +478,7 @@
             if (mandatoryFees.Any())
                 errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
             if (resortFees.Any())
-                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
+                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInBillableCurrency.Amount), resortFees.FirstOrDefault().TotalInBillableCurrency.CurrencyCode));
             if (mandatoryTaxes.Any())
                 errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
             if (taxAndServiceFee > 0m)
