@@ -31,6 +31,7 @@
             //Assert
             Assert.Equal("testREf", response.SupplierBookingReference);
             Assert.Equal("TestToken", response.BookToken);
+            Assert.Equal("TestToken", response.BookingToken);
             Assert.Equal("TestsecondaryRef", response.SupplierReference1);
             Assert.Equal("testTpREf1", response.SupplierReference2);
         }

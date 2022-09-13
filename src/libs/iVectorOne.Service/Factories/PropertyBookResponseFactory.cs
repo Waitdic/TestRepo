@@ -40,6 +40,7 @@
             {
                 SupplierBookingReference = propertyDetails.SupplierSourceReference,
                 BookToken = _tokenService.EncodeBookToken(token),
+                BookingToken = _tokenService.EncodeBookToken(token),
                 SupplierReference1 = this.GetSupplierReference1(propertyDetails),
                 SupplierReference2 = this.GetSupplierReference2(propertyDetails)
             };
