@@ -6,13 +6,13 @@ Content-Type: application/json
 Host: intesb.axisdata.net:54321
 Content-Length: 798
 Expect: 100-continue
-Connection: Close
+Connection: Close">
 Timeout: 58
 
 
 **REQUEST**
 
-<OTA_HotelAvailRQ xmlns = "http://www.opentravel.org/OTA/2003/05" Version = "0.1"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID Type="88" ID="TEST" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource='1*2*4*5*'><StayDateRange End="2021-09-06" Start="2021-09-01"></StayDateRange><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1" ></GuestCount></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"></HotelRef></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
+<?xml version="1.0" encoding="utf-8"?><OTA_HotelAvailRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1" xmlns="http://www.opentravel.org/OTA/2003/05"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID ID="TEST" Type="88" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource="1*2*4*5*"><StayDateRange End="2021-09-06" Start="2021-09-01"/><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1"/></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"/></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
 
 URL: http://intesb.axisdata.net:54321/apu-test/ota
 
@@ -28,7 +28,7 @@ Timeout: 58
 
 **REQUEST**
 
-<OTA_HotelAvailRQ xmlns = "http://www.opentravel.org/OTA/2003/05" Version = "0.1"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID Type="88" ID="TEST" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource='1*2*4*5*'><StayDateRange End="2021-09-06" Start="2021-09-01"></StayDateRange><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="2" ></GuestCount></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"></HotelRef></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
+<?xml version="1.0" encoding="utf-8"?><OTA_HotelAvailRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1" xmlns="http://www.opentravel.org/OTA/2003/05"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID ID="TEST" Type="88" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource="1*2*4*5*"><StayDateRange End="2021-09-06" Start="2021-09-01"/><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="2"/></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"/></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
 
 URL: http://intesb.axisdata.net:54321/apu-test/ota
 
@@ -44,7 +44,7 @@ Timeout: 58
 
 **REQUEST**
 
-<OTA_HotelAvailRQ xmlns = "http://www.opentravel.org/OTA/2003/05" Version = "0.1"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID Type="88" ID="TEST" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource='1*2*4*5*'><StayDateRange End="2021-09-06" Start="2021-09-01"></StayDateRange><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1" ></GuestCount><GuestCount AgeQualifyingCode="8" Age="8" Count="1"></GuestCount></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"></HotelRef></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
+<?xml version="1.0" encoding="utf-8"?><OTA_HotelAvailRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1" xmlns="http://www.opentravel.org/OTA/2003/05"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID ID="TEST" Type="88" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource="1*2*4*5*"><StayDateRange End="2021-09-06" Start="2021-09-01"/><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1"/><GuestCount AgeQualifyingCode="8" Count="1" Age="8"/></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"/></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
 
 URL: http://intesb.axisdata.net:54321/apu-test/ota
 
@@ -60,7 +60,7 @@ Timeout: 58
 
 **REQUEST**
 
-<OTA_HotelAvailRQ xmlns = "http://www.opentravel.org/OTA/2003/05" Version = "0.1"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID Type="88" ID="TEST" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource='1*2*4*5*'><StayDateRange End="2021-09-06" Start="2021-09-01"></StayDateRange><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1" ></GuestCount><GuestCount AgeQualifyingCode="7" Age="1" Count="1"></GuestCount></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"></HotelRef></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
+<?xml version="1.0" encoding="utf-8"?><OTA_HotelAvailRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1" xmlns="http://www.opentravel.org/OTA/2003/05"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID ID="TEST" Type="88" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource="1*2*4*5*"><StayDateRange End="2021-09-06" Start="2021-09-01"/><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1"/><GuestCount AgeQualifyingCode="7" Count="1" Age="1"/></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"/></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
 
 URL: http://intesb.axisdata.net:54321/apu-test/ota
 
@@ -76,4 +76,4 @@ Timeout: 58
 
 **REQUEST**
 
-<OTA_HotelAvailRQ xmlns = "http://www.opentravel.org/OTA/2003/05" Version = "0.1"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID Type="88" ID="TEST" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource='1*2*4*5*'><StayDateRange End="2021-09-06" Start="2021-09-01"></StayDateRange><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1" ></GuestCount><GuestCount AgeQualifyingCode="8" Age="8" Count="1"></GuestCount><GuestCount AgeQualifyingCode="7" Age="1" Count="1"></GuestCount></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"></HotelRef></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>
+<?xml version="1.0" encoding="utf-8"?><OTA_HotelAvailRQ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.1" xmlns="http://www.opentravel.org/OTA/2003/05"><POS><Source><RequestorID Instance = "MF001" ID_Context = "AxisData" ID = "TEST" Type = "22"/><BookingChannel Type = "2"/></Source><Source><RequestorID ID="TEST" Type="88" MessagePassword="testpass"/></Source></POS><AvailRequestSegments><AvailRequestSegment InfoSource="1*2*4*5*"><StayDateRange End="2021-09-06" Start="2021-09-01"/><RoomStayCandidates><RoomStayCandidate RPH="1"><GuestCounts><GuestCount AgeQualifyingCode="10"  Count="1"/><GuestCount AgeQualifyingCode="8" Count="1" Age="8"/><GuestCount AgeQualifyingCode="7" Count="1" Age="1"/></GuestCounts></RoomStayCandidate></RoomStayCandidates><HotelSearchCriteria><Criterion ExactMatch = "true"><HotelRef HotelCode="102245"/></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ>

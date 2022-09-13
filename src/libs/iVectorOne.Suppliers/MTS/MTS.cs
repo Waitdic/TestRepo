@@ -10,12 +10,17 @@
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Serialization;
     using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.MTS.Models.Common;
+    using iVectorOne.Suppliers.MTS.Models.Prebook;
+    using iVectorOne.Suppliers.MTS.Models.Book;
+    using iVectorOne.Suppliers.MTS.Models.Cancel;
 
     public partial class MTS : IThirdParty, ISingleSource
     {
@@ -24,12 +29,14 @@
         private readonly IMTSSettings _settings;
         private readonly HttpClient _httpClient;
         private readonly ILogger<MTS> _logger;
+        private readonly ISerializer _serializer;
 
-        public MTS(IMTSSettings settings, HttpClient httpClient, ILogger<MTS> logger)
+        public MTS(IMTSSettings settings, HttpClient httpClient, ILogger<MTS> logger, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
         #endregion
@@ -88,106 +95,23 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            bool success = true;
-
-            var sbVerifyCart = new StringBuilder();
-            var response = new XmlDocument();
+            var success = true;
             var webRequest = new Request();
 
             try
             {
-                sbVerifyCart.Append("<OTA_HotelResRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" EchoToken=\"12866195988106211282233751\" ResStatus=\"Quote\" Version=\"0.1\" schemaLocation=\"OTA_HotelResRQ.xsd\">");
-                sbVerifyCart.Append(GeneratePosTag(propertyDetails));
-                sbVerifyCart.Append("<HotelReservations>");
-                sbVerifyCart.Append("<HotelReservation>");
-                sbVerifyCart.Append("<RoomStays>");
-
-                int count = 0;
-                int roomCount = 1;
-                foreach (var roomDetails in propertyDetails.Rooms)
+                var request = new MTSPrebookRequest
                 {
-                    sbVerifyCart.Append("<RoomStay>");
-                    sbVerifyCart.Append("<RoomTypes>");
-                    sbVerifyCart.AppendFormat("<RoomType RoomTypeCode = \"{0}\"></RoomType>", roomDetails.ThirdPartyReference.Split('|')[0]);
-                    sbVerifyCart.Append("</RoomTypes>");
-                    sbVerifyCart.AppendFormat("<TimeSpan End = \"{0}\" Start = \"{1}\"></TimeSpan>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"), propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
-                    sbVerifyCart.AppendFormat("<BasicPropertyInfo HotelCode = \"{0}\"></BasicPropertyInfo>", propertyDetails.TPKey);
-                    sbVerifyCart.Append("<ResGuestRPHs>");
-
-                    // need a new RPH for each guest; loop to add 1 for each new guest
-                    foreach (var passenger in roomDetails.Passengers)
-                    {
-                        count++;
-                        sbVerifyCart.AppendFormat("<ResGuestRPH RPH = \"{0}\"></ResGuestRPH>", count);
-                    }
-
-                    sbVerifyCart.Append("</ResGuestRPHs>");
-                    sbVerifyCart.Append("<ServiceRPHs>");
-                    sbVerifyCart.AppendFormat("<ServiceRPH RPH = \"{0}\"></ServiceRPH>", roomCount);
-                    sbVerifyCart.Append("</ServiceRPHs>");
-                    sbVerifyCart.Append("</RoomStay>");
-                    roomCount += 1;
-                }
-
-                roomCount = 1;
-                sbVerifyCart.Append("</RoomStays>");
-                sbVerifyCart.Append("<Services>");
-
-                foreach (var roomDetails in propertyDetails.Rooms)
-                {
-                    sbVerifyCart.AppendFormat("<Service ServiceInventoryCode=\"{0}\" ServiceRPH=\"{1}\"></Service>", roomDetails.ThirdPartyReference.Split('|')[1], roomCount);
-                    roomCount += 1;
-                }
-
-                sbVerifyCart.Append("</Services>");
-                sbVerifyCart.Append("<ResGuests>");
-
-                // need to loop for each person
-                int guestCounter = 0;
-                foreach (var roomDetails in propertyDetails.Rooms)
-                {
-                    foreach (var passenger in roomDetails.Passengers)
-                    {
-                        guestCounter += 1;
-
-                        var ageQualifyingCode = default(int);
-                        if (passenger.PassengerType == PassengerType.Adult)
-                        {
-                            ageQualifyingCode = 10;
-                        }
-                        if (passenger.PassengerType == PassengerType.Child)
-                        {
-                            ageQualifyingCode = 8;
-                        }
-                        if (passenger.PassengerType == PassengerType.Infant)
-                        {
-                            ageQualifyingCode = 7;
-                        }
-
-                        sbVerifyCart.AppendFormat("<ResGuest AgeQualifyingCode = \"{0}\" ResGuestRPH = \"{1}\">", ageQualifyingCode, guestCounter);
-
-                        if (ageQualifyingCode == 8)
-                        {
-                            sbVerifyCart.AppendFormat("<GuestCounts><GuestCount Age=\"{0}\"/></GuestCounts>", passenger.Age);
-                        }
-
-                        if (ageQualifyingCode == 7)
-                        {
-                            sbVerifyCart.AppendFormat("<GuestCounts><GuestCount Age=\"1\"/></GuestCounts>");
-                        }
-
-                        sbVerifyCart.Append("</ResGuest>");
-                    }
-                }
-
-                sbVerifyCart.Append("</ResGuests>");
-                sbVerifyCart.Append("</HotelReservation>");
-                sbVerifyCart.Append("</HotelReservations>");
-
-                sbVerifyCart.Append("</OTA_HotelResRQ>");
+                    EchoToken = "12866195988106211282233751",
+                    ResStatus = "Quote",
+                    Version = "0.1",
+                    SchemaLocation = "OTA_HotelResRQ.xsd",
+                    POS = GeneratePosTag(propertyDetails),
+                    HotelReservations = new []{ CreateHotelReservation(propertyDetails) }
+                };
 
                 // get the add response 
-                webRequest = new Request()
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
@@ -196,18 +120,17 @@
                     LogFileName = "PreBook",
                     CreateLog = true,
                 };
-                webRequest.SetRequest(sbVerifyCart.ToString());
+                webRequest.SetRequest(_serializer.Serialize(request));
                 await webRequest.Send(_httpClient, _logger);
 
-                response.LoadXml(webRequest.ResponseXML.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
+                var response = _serializer.DeSerialize<MTSPrebookResponse>(webRequest.ResponseString);
 
                 // get the costs from the response
-                var costs = response.SelectNodes("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/Total/@AmountAfterTax");
-
-                if (costs[0].InnerText.ToSafeMoney() != propertyDetails.LocalCost.ToSafeMoney())
+                var costs = response.HotelReservations.Select(x => x.ResGlobalInfo.Total.AmountAfterTax).ToArray();
+                if (costs[0].ToSafeMoney() != propertyDetails.LocalCost.ToSafeMoney())
                 {
                     // Only returns total cost so divide by number of rooms
-                    decimal cost = costs[0].InnerText.ToSafeMoney() / propertyDetails.Rooms.Count;
+                    var cost = costs[0].ToSafeMoney() / propertyDetails.Rooms.Count;
 
                     foreach (var room in propertyDetails.Rooms)
                     {
@@ -225,9 +148,12 @@
                 }
 
                 // Grab the Errata
-                foreach (XmlNode errataNode in response.SelectNodes("/OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/BasicPropertyInfo/VendorMessages/VendorMessage"))
+                if (response.HotelReservations.Any(x => x.ResGlobalInfo.BasicPropertyInfo != null))
                 {
-                    propertyDetails.Errata.AddNew(errataNode.SelectSingleNode("@Title").InnerText, errataNode.SelectSingleNode("SubSection/Paragraph/Text").InnerText);
+                    foreach (var errataNode in response.HotelReservations.SelectMany(x => x.ResGlobalInfo.BasicPropertyInfo.VendorMessages))
+                    {
+                        propertyDetails.Errata.AddNew(errataNode.Title, errataNode.SubSection.Paragraph.Text);
+                    }
                 }
             }
             catch (Exception ex)
@@ -249,145 +175,56 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var sbRequest = new StringBuilder();
-            var response = new XmlDocument();
-            string reference = "";
+            var reference = "";
             var overrideCountries = GetOverrideCountries(propertyDetails);
             var webRequest = new Request();
 
             try
             {
-                sbRequest.Append("<OTA_HotelResRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" EchoToken=\"12866195988106211282233751\" ResStatus=\"Commit\" Version=\"0.1\" schemaLocation=\"OTA_HotelResRQ.xsd\">");
-                sbRequest.Append(GeneratePosTag(propertyDetails));
-                sbRequest.Append("<HotelReservations>");
-                sbRequest.Append("<HotelReservation>");
-                sbRequest.Append("<RoomStays>");
+                var hotelReservation = CreateHotelReservation(propertyDetails, true);
 
-                int count = 0;
-                int roomCount = 1;
-
-                foreach (var roomDetails in propertyDetails.Rooms)
+                if (!string.IsNullOrEmpty(propertyDetails.BookingReference) || propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)))
                 {
-                    sbRequest.Append("<RoomStay>");
-                    sbRequest.Append("<RoomTypes>");
-                    sbRequest.AppendFormat("<RoomType RoomTypeCode = \"{0}\"></RoomType>", roomDetails.ThirdPartyReference.Split('|')[0]);
-                    sbRequest.Append("</RoomTypes>");
-                    sbRequest.AppendFormat("<TimeSpan End = \"{0}\" Start = \"{1}\"></TimeSpan>", propertyDetails.DepartureDate.ToString("yyyy-MM-dd"), propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"));
-                    sbRequest.AppendFormat("<BasicPropertyInfo HotelCode = \"{0}\"></BasicPropertyInfo>", propertyDetails.TPKey);
-                    sbRequest.Append("<ResGuestRPHs>");
+                    hotelReservation.ResGlobalInfo = new ResGlobalInfo();
 
-                    // need a new RPH for each guest; loop to add 1 for each new guest
-                    foreach (var passenger in roomDetails.Passengers)
-                    {
-                        count++;
-                        sbRequest.AppendFormat("<ResGuestRPH RPH = \"{0}\"></ResGuestRPH>", count);
-                    }
-
-                    sbRequest.Append("</ResGuestRPHs>");
-                    sbRequest.Append("<ServiceRPHs>");
-                    sbRequest.AppendFormat("<ServiceRPH RPH = \"{0}\"></ServiceRPH>", roomCount);
-                    sbRequest.Append("</ServiceRPHs>");
-                    sbRequest.Append("</RoomStay>");
-                    roomCount++;
-                }
-
-                sbRequest.Append("</RoomStays>");
-                sbRequest.Append("<Services>");
-                roomCount = 1;
-
-                foreach (var roomDetails in propertyDetails.Rooms)
-                {
-                    sbRequest.AppendFormat("<Service ServiceInventoryCode=\"{0}\" ServiceRPH=\"{1}\"></Service>", roomDetails.ThirdPartyReference.Split('|')[1], roomCount);
-                    roomCount += 1;
-                }
-
-                sbRequest.Append("</Services>");
-                sbRequest.Append("<ResGuests>");
-
-                // need to loop for each person
-                int guestCounter = 0;
-                foreach (var roomDetails in propertyDetails.Rooms)
-                {
-                    foreach (var passenger in roomDetails.Passengers)
-                    {
-                        guestCounter += 1;
-
-                        var ageQualifyingCode = default(int);
-                        if (passenger.PassengerType == PassengerType.Adult)
-                        {
-                            ageQualifyingCode = 10;
-                        }
-                        if (passenger.PassengerType == PassengerType.Child)
-                        {
-                            ageQualifyingCode = 8;
-                        }
-                        if (passenger.PassengerType == PassengerType.Infant)
-                        {
-                            ageQualifyingCode = 7;
-                        }
-
-                        sbRequest.AppendFormat("<ResGuest AgeQualifyingCode = \"{0}\" ResGuestRPH = \"{1}\">", ageQualifyingCode, guestCounter);
-
-                        sbRequest.Append("<Profiles><ProfileInfo><Profile><Customer><PersonName>");
-                        sbRequest.AppendFormat("<NamePrefix>{0}</NamePrefix>", passenger.Title);
-                        sbRequest.AppendFormat("<GivenName>{0}</GivenName>", passenger.FirstName);
-                        sbRequest.AppendFormat("<Surname>{0}</Surname>", passenger.LastName);
-                        sbRequest.Append("</PersonName></Customer></Profile></ProfileInfo></Profiles>");
-
-                        if (ageQualifyingCode == 8)
-                        {
-                            sbRequest.AppendFormat("<GuestCounts><GuestCount Age=\"{0}\"/></GuestCounts>", passenger.Age);
-                        }
-
-                        if (ageQualifyingCode == 7)
-                        {
-                            sbRequest.AppendFormat("<GuestCounts><GuestCount Age=\"1\"/></GuestCounts>");
-                        }
-
-                        sbRequest.Append("</ResGuest>");
-                    }
-                }
-
-                sbRequest.Append("</ResGuests>");
-
-                if (propertyDetails.BookingReference != "" || propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
-                {
-                    sbRequest.Append("<ResGlobalInfo>");
-
-                    if (propertyDetails.BookingReference != "")
+                    if (!string.IsNullOrEmpty(propertyDetails.BookingReference))
                     {
                         if (overrideCountries.Contains(propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[2]))
                         {
-                            string sID = _settings.OverRideID(propertyDetails);
-                            sbRequest.Append("<HotelReservationIDs>");
-                            sbRequest.AppendFormat("<HotelReservationID ResID_SourceContext=\"Client\" ResID_Source=\"{0}\" ResID_Value=\"{1}\" />", sID, propertyDetails.BookingReference.Replace(" ", ""));
-                            sbRequest.Append("</HotelReservationIDs>");
+                            hotelReservation.ResGlobalInfo.HotelReservationIDs = new[]
+                            {
+                                new HotelReservationID
+                                {
+                                    ResIDSourceContext = "Client",
+                                    ResIDSource = _settings.OverRideID(propertyDetails),
+                                    ResIDValue = propertyDetails.BookingReference.Replace(" ", "")
+                                }
+                            };
                         }
                     }
 
-                    if (propertyDetails.Rooms.Where(x => !string.IsNullOrEmpty(x.SpecialRequest)).Any())
+                    if (propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)))
                     {
-                        sbRequest.Append("<Comments>");
-
-                        foreach (var room in propertyDetails.Rooms)
+                        hotelReservation.ResGlobalInfo.Comments = propertyDetails.Rooms.Select(room => new Comment
                         {
-                            sbRequest.Append("<Comment Name = \"Applicant Notice\">");
-                            sbRequest.AppendFormat("<Text>{0}</Text>", room.SpecialRequest);
-                            sbRequest.Append("</Comment>");
-                        }
-
-                        sbRequest.Append("</Comments>");
+                            Name = "Applicant Notice",
+                            Text = room.SpecialRequest
+                        }).ToArray();
                     }
-
-                    sbRequest.Append("</ResGlobalInfo>");
                 }
 
-                sbRequest.Append("</HotelReservation>");
-                sbRequest.Append("</HotelReservations>");
-                sbRequest.Append("</OTA_HotelResRQ>");
+                var request = new MTSBookRequest
+                {
+                    EchoToken = "12866195988106211282233751",
+                    ResStatus = "Commit",
+                    Version = "0.1",
+                    SchemaLocation = "OTA_HotelResRQ.xsd",
+                    POS = GeneratePosTag(propertyDetails),
+                    HotelReservations = new []{ hotelReservation }
+                };
 
                 // get the response 
-                webRequest = new Request()
+                webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
@@ -396,21 +233,22 @@
                     LogFileName = "Book",
                     CreateLog = true,
                 };
-                webRequest.SetRequest(sbRequest.ToString());
+                webRequest.SetRequest(_serializer.Serialize(request));
                 await webRequest.Send(_httpClient, _logger);
-
-                response = webRequest.ResponseXML;
-                response.LoadXml(response.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
+                var response = _serializer.DeSerialize<MTSBookResponse>(_serializer.CleanXmlNamespaces(webRequest.ResponseString));
 
                 // check for any errors and save the booking code
                 // p63 of documentation
-                if (response.SelectSingleNode("OTA_HotelResRS/Errors/Error") is not null)
+                if (response.Errors.Length != 0)
                 {
                     reference = "failed";
                 }
                 else
                 {
-                    reference = response.SelectSingleNode("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/HotelReservationIDs/HotelReservationID[@ResID_Source=\"OTS\"]/@ResID_Value").InnerText;
+                    reference = response.HotelReservations
+                        .SelectMany(x => x.ResGlobalInfo.HotelReservationIDs)
+                        .First(r => r.ResIDSource == "OTS")
+                        .ResIDValue;
                 }
             }
             catch (Exception ex)
@@ -432,14 +270,11 @@
 
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            var sbRequest = new StringBuilder();
-            var cancellationRequest = new XmlDocument();
-            var cancellationResponse = new XmlDocument();
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
             var webRequest = new Request();
 
             string sourceReference;
-            if (propertyDetails.SourceReference is not null)
+            if (!string.IsNullOrEmpty(propertyDetails.SourceReference))
             {
                 sourceReference = propertyDetails.SourceReference;
             }
@@ -451,14 +286,18 @@
             try
             {
                 // build the cancellation request
-                sbRequest.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                sbRequest.Append("<OTA_CancelRQ xmlns=\"http://www.opentravel.org/OTA/2003/05\" Version=\"0.1\" CancelType=\"Commit\">");
-                sbRequest.Append(GeneratePosTag(propertyDetails));
-                sbRequest.AppendFormat("<UniqueID Type=\"14\" ID=\"{0}\" ID_Context=\"Internal\"/>", sourceReference);
-                sbRequest.Append("</OTA_CancelRQ>");
-
-                // send the request
-                cancellationRequest.LoadXml(sbRequest.ToString());
+                var request = new MTSCancelRequest
+                {
+                    Version = "0.1",
+                    CancelType = "Commit",
+                    POS = GeneratePosTag(propertyDetails),
+                    UniqueID =
+                    {
+                        Type = "14",
+                        ID = sourceReference,
+                        ID_Context = "Internal"
+                    }
+                };
 
                 // get the response
                 webRequest = new Request()
@@ -470,24 +309,18 @@
                     LogFileName = "Cancel",
                     CreateLog = true,
                 };
-                webRequest.SetRequest(cancellationRequest);
+                webRequest.SetRequest(_serializer.Serialize(request));
                 await webRequest.Send(_httpClient, _logger);
 
-                cancellationResponse = webRequest.ResponseXML;
-                cancellationResponse.LoadXml(cancellationResponse.InnerXml.Replace(" xmlns=\"http://www.opentravel.org/OTA/2003/05\"", ""));
-
-                if (cancellationResponse.SelectNodes("Errors").Count > 0)
+                var response = _serializer.DeSerialize<MTSCancelResponse>(webRequest.ResponseString);
+                if (response.Errors.Length > 0 || response.Status != "Committed")
                 {
                     throw new Exception("Cancellation request did not return success");
-                }
-                else if (!(cancellationResponse.SelectSingleNode("/OTA_CancelRS/@Status").InnerText == "Committed"))
-                {
-                    throw new Exception("Cancellation request did not return success");
-                }
-                else
+                } 
+                else 
                 {
                     // Get a reference
-                    thirdPartyCancellationResponse.TPCancellationReference = cancellationResponse.SelectSingleNode("/OTA_CancelRS/UniqueID/@ID").InnerText;
+                    thirdPartyCancellationResponse.TPCancellationReference = response.UniqueID.ID;
                     thirdPartyCancellationResponse.Success = true;
                 }
             }
@@ -506,58 +339,51 @@
             return thirdPartyCancellationResponse;
         }
 
-        public Cancellations GetCancellations(PropertyDetails propertyDetails, XmlDocument xml)
+        public Cancellations GetCancellations(PropertyDetails propertyDetails, MTSPrebookResponse response)
         {
             var cancellations = new Cancellations();
 
             try
             {
-                if (xml.SelectSingleNode("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/CancelPenalties/CancelPenalty/AmountPercent") is not null)
+                if (response.HotelReservations.FirstOrDefault()?.ResGlobalInfo.CancelPenalties.FirstOrDefault()?.AmountPercent != null)
                 {
                     // get cancellations in list so can sort them by release period
-                    foreach (XmlNode xmlNode in xml.SelectNodes("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/CancelPenalties/CancelPenalty"))
+                    foreach (var node in response.HotelReservations.SelectMany(x => x.ResGlobalInfo.CancelPenalties))
                     {
                         var cancellation = new Cancellation();
 
-                        decimal totalAmount = (xml.SelectSingleNode("OTA_HotelResRS/HotelReservations/HotelReservation/ResGlobalInfo/Total/@AmountAfterTax").InnerText).ToSafeMoney();
-                        decimal dailyAmount = totalAmount / propertyDetails.Duration;
-                        int percentage = xmlNode.SelectSingleNode("AmountPercent/@Percent").InnerText.ToSafeInt();
-                        int numberOfNights = xmlNode.SafeNodeValue("AmountPercent/@NmbrOfNights").ToSafeInt();
+                        var totalAmount = response.HotelReservations.First().ResGlobalInfo.Total.AmountAfterTax;
+                        var dailyAmount = totalAmount / propertyDetails.Duration;
+                        var percentage = node.AmountPercent?.Percent;
+                        var numberOfNights = node.AmountPercent.NmbrOfNights;
 
-                        if (xmlNode.SelectSingleNode("Deadline/@OffsetDropTime").InnerText == "BeforeArrival" == true)
+                        if (node.Deadline.OffsetDropTime == "BeforeArrival")
                         {
                             // Get amount
-                            if (xmlNode.SelectSingleNode("AmountPercent/@Percent") is not null)
+                            if (percentage != null)
                             {
-                                if (numberOfNights > 0)
-                                {
-                                    cancellation.Amount = (0.01d * percentage * (double)dailyAmount * numberOfNights).ToSafeMoney();
-                                }
-                                else
-                                {
-                                    // full basis
-                                    cancellation.Amount = (0.01d * percentage * (double)totalAmount).ToSafeMoney();
-                                }
+                                cancellation.Amount = numberOfNights > 0
+                                    ? (0.01d * percentage * (double)dailyAmount * numberOfNights).ToSafeMoney() 
+                                    : (0.01d * percentage * (double)totalAmount).ToSafeMoney();
                             }
-                            else if (xmlNode.SelectSingleNode("AmountPercent/@Amount") is not null)
+                            else if (node.AmountPercent.Amount != 0)
                             {
-                                cancellation.Amount = xmlNode.SelectSingleNode("AmountPercent/@Amount").InnerText.ToSafeMoney();
+                                cancellation.Amount = (decimal)node.AmountPercent.Amount;
                             }
 
                             // get end date of cancelpenalty
                             cancellation.EndDate = propertyDetails.ArrivalDate;
 
                             // get start date of cancelpenalty
-                            if (xmlNode.SelectSingleNode("Deadline/@OffsetTimeUnit").InnerText == "Day")
+                            if (node.Deadline.OffsetTimeUnit == "Day")
                             {
-                                int days = xmlNode.SelectSingleNode("Deadline/@OffsetUnitMultiplier").InnerText.ToSafeInt();
-
+                                var days = node.Deadline.OffsetUnitMultiplier;
                                 cancellation.StartDate = cancellation.EndDate.AddDays(-days);
 
                                 // If 'afterbooking' overlaps 'beforearrival', start beforearrival day after afterbooking finishes
-                                if (xmlNode.SelectSingleNode("Deadline/@OffsetDropTime[AfterBooking]") is not null)
+                                if (node.Deadline.OffsetDropTime == "AfterBooking")
                                 {
-                                    var afterBookingEndDate = DateTime.Now.AddDays(xmlNode.SelectSingleNode("Deadline/@OffsetMultiplier").InnerText.ToSafeInt());
+                                    var afterBookingEndDate = DateTime.Now.AddDays(node.Deadline.OffsetMultiplier);
 
                                     if (afterBookingEndDate >= cancellation.StartDate)
                                     {
@@ -571,14 +397,12 @@
                     }
 
                     // need to make it so do not overlap; if they do, put end date as being start date of next
-                    for (int i = 0; i <= cancellations.Count - 1; i++)
+                    for (var i = 0; i <= cancellations.Count - 1; i++)
                     {
-                        if (i != 0)
+                        if (i == 0) continue;
+                        if (cancellations[i - 1].EndDate >= cancellations[i].StartDate)
                         {
-                            if (cancellations[i - 1].EndDate >= cancellations[i].StartDate)
-                            {
-                                cancellations[i - 1].EndDate = cancellations[i].StartDate.AddDays(-1);
-                            }
+                            cancellations[i - 1].EndDate = cancellations[i].StartDate.AddDays(-1);
                         }
                     }
                 }
@@ -693,10 +517,104 @@
 
         #region Request Components
 
-        private string GeneratePosTag(PropertyDetails propertyDetails, string country = "")
+        private HotelReservation CreateHotelReservation(PropertyDetails propertyDetails, bool isBook = false)
+        {
+            var count = 0;
+            var roomCount = 1;
+            var roomStays = new List<RoomStay>();
+            foreach (var roomDetails in propertyDetails.Rooms)
+            {
+                var resGuestRPHs = new List<ResGuestRPH>();
+                foreach (var passenger in roomDetails.Passengers)
+                {
+                    count++;
+                    resGuestRPHs.Add(new ResGuestRPH { RPH = count });
+                }
+
+                string ratePlan = roomDetails.ThirdPartyReference.Split("|")[3];
+                roomStays.Add(new RoomStay
+                {
+                    RoomTypes = new[]
+                    {
+                        new RoomType
+                        {
+                            Code = roomDetails.ThirdPartyReference.Split("|")[0]
+                        }
+                    },
+                    RatePlans = !string.IsNullOrEmpty(ratePlan) 
+                        ? new []{new RatePlan { RatePlanCode = ratePlan } } 
+                        : Array.Empty<RatePlan>(),
+                    TimeSpan =
+                    {
+                        End = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
+                        Start = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")
+                    },
+                    BasicPropertyInfo =
+                    {
+                        HotelCode = propertyDetails.TPKey
+                    },
+                    ResGuestRPHs = resGuestRPHs.ToArray(),
+                    ServiceRPHs = new[]
+                    {
+                        new ServiceRPH
+                        {
+                            RPH = roomCount
+                        }
+                    }
+                });
+
+                roomCount++;
+            }
+
+            var services = propertyDetails.Rooms.Select((roomDetails, roomCount) => new Service
+            {
+                ServiceInventoryCode = roomDetails.ThirdPartyReference.Split('|')[1],
+                ServiceRPH = roomCount + 1,
+            });
+
+            // need to loop for each person
+            var resGuests = new List<ResGuest>();
+            var guestCounter = 0;
+            foreach (var passenger in propertyDetails.Rooms.SelectMany(roomDetails => roomDetails.Passengers))
+            {
+                guestCounter++;
+                var ageQualifyingCode = passenger.PassengerType switch
+                {
+                    PassengerType.Adult => 10,
+                    PassengerType.Child => 8,
+                    PassengerType.Infant => 7,
+                    _ => default
+                };
+
+                var guestCounts = new List<GuestCount>();
+                switch (ageQualifyingCode)
+                {
+                    case 8: guestCounts.Add(new GuestCount { Age = passenger.Age });
+                        break;
+                    case 7: guestCounts.Add(new GuestCount { Age = 1 }); 
+                        break;
+                }
+
+                resGuests.Add(new ResGuest
+                {
+                    AgeQualifyingCode = ageQualifyingCode,
+                    ResGuestRPH = guestCounter,
+                    Profiles = isBook ? CreateProfiles(passenger) : null,
+                    GuestCounts = guestCounts.ToArray()
+                });
+            }
+
+            return new HotelReservation
+            {
+                RoomStays = roomStays.ToArray(),
+                Services = services.ToArray(),
+                ResGuests = resGuests.ToArray(),
+            };
+        }
+
+        private POS GeneratePosTag(PropertyDetails propertyDetails, string country = "")
         {
             var overrideCountries = GetOverrideCountries(propertyDetails);
-            var sbPosTag = new StringBuilder();
             string id;
 
             if (string.IsNullOrEmpty(country))
@@ -720,17 +638,53 @@
                 id = _settings.User(propertyDetails);
             }
 
-            sbPosTag.Append("<POS>");
-            sbPosTag.Append("<Source>");
-            sbPosTag.AppendFormat("<RequestorID ID_Context = \"{0}\" ID = \"{1}\" Type = \"{2}\"/>", _settings.ID_Context(propertyDetails), id, _settings.Type(propertyDetails));
-            sbPosTag.Append("<BookingChannel Type = \"2\"/>");
-            sbPosTag.Append("</Source>");
-            sbPosTag.Append("<Source>");
-            sbPosTag.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(propertyDetails), _settings.AuthenticationID(propertyDetails), _settings.Password(propertyDetails));
-            sbPosTag.Append("</Source>");
-            sbPosTag.Append("</POS>");
+            return new POS
+            {
+                Source = new[]
+                {
+                    new Source
+                    {
+                        RequestorID =
+                        {
+                            ID_Context = _settings.ID_Context(propertyDetails),
+                            ID = id,
+                            Type = _settings.Type(propertyDetails)
+                        },
+                        BookingChannel = new BookingChannel { Type = 2 }
+                    },
+                    new Source
+                    {
+                        RequestorID =
+                        {
+                            Type = _settings.AuthenticationType(propertyDetails),
+                            ID = _settings.AuthenticationID(propertyDetails),
+                            MessagePassword = _settings.Password(propertyDetails)
+                        }
+                    }
+                }
+            };
+        }
 
-            return sbPosTag.ToString();
+        private Profiles CreateProfiles(Passenger passenger)
+        {
+            return new Profiles
+            {
+                ProfileInfo =
+                {
+                    Profile =
+                    {
+                        Customer =
+                        {
+                            PersonName =
+                            {
+                                NamePrefix = passenger.Title,
+                                GivenName = passenger.FirstName,
+                                Surname = passenger.LastName
+                            }
+                        }
+                    }
+                }
+            };
         }
 
         #endregion
