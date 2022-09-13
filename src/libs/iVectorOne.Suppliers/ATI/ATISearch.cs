@@ -220,7 +220,7 @@
                         bool nrf = absoluteDeadline.Date == searchDetails.BookingDate.Date;
 
                         var cancellations = new Cancellations();
-                        cancellations.AddNew(absoluteDeadline, searchDetails.BookingDate, amount);
+                        cancellations.AddNew(absoluteDeadline, searchDetails.ArrivalDate, amount);
 
                         var transformedResult =new TransformedResult
                         {
