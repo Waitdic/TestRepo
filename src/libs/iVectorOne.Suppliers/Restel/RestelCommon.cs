@@ -44,10 +44,10 @@
 
         public static Request CreateRequest(IRestelSettings settings, IThirdPartyAttributeSearch propertyDetails, string logFileName)
         {
-            string userAgent = settings.UserAgent(propertyDetails);
-            string user = settings.User(propertyDetails);
-            string password = settings.Password(propertyDetails);
-            string token = settings.AccessToken(propertyDetails);
+            string userAgent = settings.Codusu(propertyDetails);
+            string user = settings.Codigousu(propertyDetails);
+            string password = settings.Clausu(propertyDetails);
+            string token = settings.Secacc(propertyDetails);
             string URL = settings.GenericURL(propertyDetails);
 
             return new Request
