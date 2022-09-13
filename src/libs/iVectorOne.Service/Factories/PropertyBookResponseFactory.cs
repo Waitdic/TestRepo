@@ -39,8 +39,8 @@
             var response = new Response()
             {
                 SupplierBookingReference = propertyDetails.SupplierSourceReference,
-                BookToken = _tokenService.EncodeBookToken(token),
-                BookingToken = _tokenService.EncodeBookToken(token),
+                BookToken = _tokenService.EncodeBookingToken(token),
+                BookingToken = _tokenService.EncodeBookingToken(token),
                 SupplierReference1 = this.GetSupplierReference1(propertyDetails),
                 SupplierReference2 = this.GetSupplierReference2(propertyDetails)
             };

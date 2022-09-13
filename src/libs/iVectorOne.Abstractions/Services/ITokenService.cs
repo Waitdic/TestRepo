@@ -25,7 +25,7 @@
         /// <summary>Encodes the property token.</summary>
         /// <param name="bookToken">The book token.</param>
         /// <returns>An encoded book token.</returns>
-        string EncodeBookToken(BookToken bookToken);
+        string EncodeBookingToken(BookToken bookToken);
 
         /// <summary>Encodes the property token.</summary>
         /// <param name="propertyToken">The property token.</param>

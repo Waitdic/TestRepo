@@ -24,7 +24,7 @@
             var user = new Account();
 
             // Act
-            var encoded = tokenService.EncodeBookToken(bookToken);
+            var encoded = tokenService.EncodeBookingToken(bookToken);
 
             var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user);
 

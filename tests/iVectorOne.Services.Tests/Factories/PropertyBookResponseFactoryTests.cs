@@ -13,7 +13,7 @@
         {
             // Arrange
             var tokenServiceMock = new Mock<ITokenService>();
-            tokenServiceMock.Setup(ts => ts.EncodeBookToken(It.IsAny<BookToken>())).Returns("TestToken");
+            tokenServiceMock.Setup(ts => ts.EncodeBookingToken(It.IsAny<BookToken>())).Returns("TestToken");
 
             var factory = new PropertyBookResponseFactory(tokenServiceMock.Object);
 

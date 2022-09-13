@@ -37,7 +37,7 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        public string EncodeBookToken(BookToken bookToken)
+        public string EncodeBookingToken(BookToken bookToken)
         {
             _tokenValues.Clear();
             _tokenValues.AddValue(TokenValueType.PropertyID, bookToken.PropertyID);
