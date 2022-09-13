@@ -565,7 +565,17 @@
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
-            string countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
+            string countryCode = string.Empty;
+
+            if (propertyDetails.SellingCountry != string.Empty)
+            {
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
+            }
+            else
+            {
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, _settings.SourceMarket(propertyDetails), propertyDetails.AccountID);
+            }
+            
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, countryCode, occupancies);
