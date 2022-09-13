@@ -76,15 +76,11 @@
         {
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
-            var countryCode = string.Empty;
+            var countryCode = _settings.SourceMarket(searchDetails);
 
             if (searchDetails.SellingCountry != string.Empty)
             {
                 countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
-            }
-            else
-            {
-                countryCode = await _support.TPCountryCodeLookupAsync(Source, _settings.SourceMarket(searchDetails), searchDetails.AccountID);
             }
 
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
