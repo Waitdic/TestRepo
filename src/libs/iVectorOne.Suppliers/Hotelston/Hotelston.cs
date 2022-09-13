@@ -99,7 +99,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.EndPointUrl(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = ThirdParties.HOTELSTON,
                     LogFileName = "checkAvailability",
@@ -381,7 +381,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.EndPointUrl(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = ThirdParties.HOTELSTON,
                     LogFileName = "BookingTermsRequest",
@@ -439,7 +439,7 @@
             string title = propertyDetails.LeadGuestTitle.ToUpper();
             string firstName = propertyDetails.LeadGuestFirstName;
             string lastName = propertyDetails.LeadGuestLastName;
-            string email = _settings.Email(propertyDetails);
+            string email = _settings.ContactEmail(propertyDetails);
             string phone = propertyDetails.LeadGuestPhone;
             string leadGuestEmail = propertyDetails.LeadGuestEmail;
             bool useDefaultEmail = _settings.AlwaysUseDefaultEmail(propertyDetails);
@@ -456,7 +456,7 @@
             }
 
             if (string.IsNullOrWhiteSpace(phone))
-                phone = _settings.DefaultPhoneNumber(propertyDetails);
+                phone = _settings.ContactPhoneNumber(propertyDetails);
             try
             {
                 var envelope = HotelstonHelper.CreateEnvelope<BookHotelRequest>(_settings, propertyDetails);
@@ -515,7 +515,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.EndPointUrl(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = ThirdParties.HOTELSTON,
                     LogFileName = "Book",
@@ -571,7 +571,7 @@
 
                 webRequest = new Request
                 {
-                    EndPoint = _settings.EndPointUrl(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = ThirdParties.HOTELSTON,
                     LogFileName = "CancelHotelBookingRequest",

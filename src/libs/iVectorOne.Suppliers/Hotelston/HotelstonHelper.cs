@@ -16,7 +16,7 @@
 
         public static Envelope<T> CreateEnvelope<T>(IHotelstonSettings settings, IThirdPartyAttributeSearch tpAttributeSearch) where T : RequestBase, new()
         {
-            return new Envelope<T>(settings.SoapRequestUrl(tpAttributeSearch), settings.SoapTypesUrl(tpAttributeSearch))
+            return new Envelope<T>(settings.SOAPRequestURL(tpAttributeSearch), settings.SOAPTypesURL(tpAttributeSearch))
             {
                 Body =
                 {
@@ -25,7 +25,7 @@
                         Locale = settings.LanguageCode(tpAttributeSearch),
                         LoginDetails =
                         {
-                            Email = settings.Email(tpAttributeSearch),
+                            Email = settings.ContactEmail(tpAttributeSearch),
                             Password = settings.Password(tpAttributeSearch),
                         },
                         Currency = settings.Currency(tpAttributeSearch),

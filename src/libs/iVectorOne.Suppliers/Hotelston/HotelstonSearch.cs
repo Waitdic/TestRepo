@@ -129,7 +129,7 @@
 
             var webRequest = new Request
             {
-                EndPoint = _settings.EndPointUrl(searchDetails),
+                EndPoint = _settings.GenericURL(searchDetails),
                 Method = RequestMethod.POST,
                 SoapAction = "urn:searchHotels",
                 SOAP = true
