@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Intuitive.Modules;
+using iVectorOne.Book.Api.Endpoints.V1;
 using iVectorOne.Book.Api.Endpoints.V2;
 using iVectorOne.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,7 @@ try
     var app = builder.Build();
 
     //Load application specific endpoints
+    app.MapEndpointsV1();
     app.MapEndpoints();
 
     app.UseExceptionHandler("/error");
