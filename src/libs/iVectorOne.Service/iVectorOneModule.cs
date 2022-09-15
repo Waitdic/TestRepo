@@ -129,7 +129,7 @@ namespace iVectorOne.Service
                     .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
 
             services.AddSingleton<ISearchStoreService>(s =>
-                new SearchStoreService(s.GetRequiredService<ILogger<BookingLogRepository>>(),
+                new SearchStoreService(s.GetRequiredService<ILogger<SearchStoreService>>(),
                     s.GetRequiredService<ISearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }
