@@ -1,47 +1,66 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using Intuitive;
 using iVectorOne.Models.SearchStore;
 using iVectorOne.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace iVectorOne.Services
 {
     public class SearchStoreService : ISearchStoreService, IAsyncDisposable
     {
+        private readonly ILogger<BookingLogRepository> _logger;
         private readonly int _bulkInsertSize;
         private ConcurrentBag<SearchStoreItem> _searchStoreItems = new();
         private ConcurrentBag<SearchStoreSupplierItem> _searchStoreSupplierItems = new();
 
         private readonly ISearchStoreRepository _searchStoreRepository;
 
-        public SearchStoreService(ISearchStoreRepository searchStoreRepository, int bulkInsertSize)
+        public SearchStoreService(ILogger<BookingLogRepository> logger, ISearchStoreRepository searchStoreRepository, int bulkInsertSize)
         {
-            _searchStoreRepository = searchStoreRepository;
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _searchStoreRepository = Ensure.IsNotNull(searchStoreRepository, nameof(searchStoreRepository)); ;
             _bulkInsertSize = bulkInsertSize;
         }
 
         public async Task AddAsync(SearchStoreItem item)
         {
-            _searchStoreItems.Add(item);
-
-            if (_searchStoreItems.Count >= _bulkInsertSize)
+            try
             {
-                await Task.Run(async () => await FlushSearchStoreAsync(_bulkInsertSize));
+                _searchStoreItems.Add(item);
+
+                if (_searchStoreItems.Count >= _bulkInsertSize)
+                {
+                    await Task.Run(async () => await FlushSearchStoreAsync(_bulkInsertSize));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding the entry SearchStoreItem");
             }
         }
 
         public async Task AddAsync(SearchStoreSupplierItem item)
         {
-            _searchStoreSupplierItems.Add(item);
-
-            if (_searchStoreSupplierItems.Count >= _bulkInsertSize)
+            try
             {
-                await Task.Run(async () => await FlushSearchStoreSupplierAsync(_bulkInsertSize));
+                _searchStoreSupplierItems.Add(item);
+
+                if (_searchStoreSupplierItems.Count >= _bulkInsertSize)
+                {
+                    await Task.Run(async () => await FlushSearchStoreSupplierAsync(_bulkInsertSize));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while adding the entry SearchStoreSupplierItem");
             }
         }
 
         private async Task FlushSearchStoreAsync(int bulkInsertSize)
         {
+
             ConcurrentBag<SearchStoreItem> items = null!;
 
             lock (_searchStoreItems)
@@ -80,8 +99,8 @@ namespace iVectorOne.Services
 
         public async ValueTask DisposeAsync()
         {
-            await FlushSearchStoreAsync(0);
-            await FlushSearchStoreSupplierAsync(0);
+            await FlushSearchStoreAsync(1);
+            await FlushSearchStoreSupplierAsync(1);
         }
     }
 }
