@@ -20,6 +20,11 @@
     <Compile Remove="C:\ProjectsStash\thirdparty.api\build\src\Common.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="ATI\ATIRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ATIRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="Netstorming\Resources\NetstormingRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -37,6 +42,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="ATI\ATIRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ATIRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Netstorming\Resources\NetstormingRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>

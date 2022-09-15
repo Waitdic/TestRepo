@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.ATI {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.ATI.ATIRes", typeof(ATIRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Suppliers.ATI.ATIRes", typeof(ATIRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
