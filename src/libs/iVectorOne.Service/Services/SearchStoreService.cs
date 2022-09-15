@@ -1,11 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using iVectorOne.Models.SearchStore;
 using iVectorOne.Repositories;
 
 namespace iVectorOne.Services
 {
-    public class SearchStoreService : ISearchStoreService
+    public class SearchStoreService : ISearchStoreService, IAsyncDisposable
     {
         private readonly int _bulkInsertSize;
         private ConcurrentBag<SearchStoreItem> _searchStoreItems = new();
@@ -25,21 +26,7 @@ namespace iVectorOne.Services
 
             if (_searchStoreItems.Count >= _bulkInsertSize)
             {
-                ConcurrentBag<SearchStoreItem> items = null!;
-
-                lock (_searchStoreItems)
-                {
-                    if (_searchStoreItems.Count >= _bulkInsertSize)
-                    {
-                        items = _searchStoreItems;
-                        _searchStoreItems = new ConcurrentBag<SearchStoreItem>();
-                    }
-                }
-
-                if (items != null)
-                {
-                    await _searchStoreRepository.BulkInsertAsync(items);
-                }
+                await Task.Run(async () => await FlushSearchStoreAsync(_bulkInsertSize));
             }
         }
 
@@ -49,22 +36,52 @@ namespace iVectorOne.Services
 
             if (_searchStoreSupplierItems.Count >= _bulkInsertSize)
             {
-                ConcurrentBag<SearchStoreSupplierItem> items = null!;
+                await Task.Run(async () => await FlushSearchStoreSupplierAsync(_bulkInsertSize));
+            }
+        }
 
-                lock (_searchStoreSupplierItems)
-                {
-                    if (_searchStoreSupplierItems.Count >= _bulkInsertSize)
-                    {
-                        items = _searchStoreSupplierItems;
-                        _searchStoreSupplierItems = new ConcurrentBag<SearchStoreSupplierItem>();
-                    }
-                }
+        private async Task FlushSearchStoreAsync(int bulkInsertSize)
+        {
+            ConcurrentBag<SearchStoreItem> items = null!;
 
-                if (items != null)
+            lock (_searchStoreItems)
+            {
+                if (_searchStoreItems.Count >= bulkInsertSize)
                 {
-                    await _searchStoreRepository.BulkInsertAsync(items);
+                    items = _searchStoreItems;
+                    _searchStoreItems = new ConcurrentBag<SearchStoreItem>();
                 }
             }
+
+            if (items != null)
+            {
+                await _searchStoreRepository.BulkInsertAsync(items);
+            }
+        }
+
+        private async Task FlushSearchStoreSupplierAsync(int bulkInsertSize)
+        {
+            ConcurrentBag<SearchStoreSupplierItem> items = null!;
+
+            lock (_searchStoreSupplierItems)
+            {
+                if (_searchStoreSupplierItems.Count >= bulkInsertSize)
+                {
+                    items = _searchStoreSupplierItems;
+                    _searchStoreSupplierItems = new ConcurrentBag<SearchStoreSupplierItem>();
+                }
+            }
+
+            if (items != null)
+            {
+                await _searchStoreRepository.BulkInsertAsync(items);
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await FlushSearchStoreAsync(0);
+            await FlushSearchStoreSupplierAsync(0);
         }
     }
 }

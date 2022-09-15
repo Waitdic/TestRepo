@@ -167,7 +167,7 @@
 
                     searchDetails.SearchStoreItem.PostProcessTime += dedupeTime;
 
-                    await _searchStoreService.AddAsync(searchStoreSupplierItem);
+                    _ = _searchStoreService.AddAsync(searchStoreSupplierItem);
                 }
             }
             catch (Exception ex)

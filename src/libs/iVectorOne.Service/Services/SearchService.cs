@@ -95,7 +95,7 @@
             searchDetails.SearchStoreItem.PreProcessTime = preprocessTime;
             searchDetails.SearchStoreItem.PostProcessTime += postProcessTime;
             searchDetails.SearchStoreItem.TotalTime = (int)totalTime.ElapsedMilliseconds;
-            await _searchStoreService.AddAsync(searchDetails.SearchStoreItem);
+            _ = _searchStoreService.AddAsync(searchDetails.SearchStoreItem);
 
             return response;
         }

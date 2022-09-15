@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[SearchStore]
+﻿CREATE TABLE [dbo].[SearchStoreApi]
 (
 	[SearchStoreID] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
 	[AccountName] VARCHAR(255) NOT NULL,

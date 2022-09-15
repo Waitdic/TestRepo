@@ -61,7 +61,7 @@
     <Folder Include="dbo\Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\SearchStore.sql" />
     <Build Include="dbo\Tables\SearchStoreSupplier.sql" />
+    <Build Include="dbo\Tables\SearchStoreApi.sql" />
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@ namespace iVectorOne.Repositories
         public async Task BulkInsertAsync(IEnumerable<SearchStoreItem> searchStoreItems)
         {
             using var sqlBulkCopy = new SqlBulkCopy(_connectionString);
-            sqlBulkCopy.DestinationTableName = "dbo.SearchStore";
+            sqlBulkCopy.DestinationTableName = "dbo.SearchStoreApi";
             sqlBulkCopy.ColumnMappings.Add(nameof(SearchStoreItem.SearchStoreId), "SearchStoreID");
             sqlBulkCopy.ColumnMappings.Add(nameof(SearchStoreItem.AccountName), "AccountName");
             sqlBulkCopy.ColumnMappings.Add(nameof(SearchStoreItem.AccountId), "AccountID");
