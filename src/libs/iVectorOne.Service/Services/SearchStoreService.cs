@@ -10,14 +10,14 @@ namespace iVectorOne.Services
 {
     public class SearchStoreService : ISearchStoreService, IAsyncDisposable
     {
-        private readonly ILogger<BookingLogRepository> _logger;
+        private readonly ILogger<SearchStoreService> _logger;
         private readonly int _bulkInsertSize;
         private ConcurrentBag<SearchStoreItem> _searchStoreItems = new();
         private ConcurrentBag<SearchStoreSupplierItem> _searchStoreSupplierItems = new();
 
         private readonly ISearchStoreRepository _searchStoreRepository;
 
-        public SearchStoreService(ILogger<BookingLogRepository> logger, ISearchStoreRepository searchStoreRepository, int bulkInsertSize)
+        public SearchStoreService(ILogger<SearchStoreService> logger, ISearchStoreRepository searchStoreRepository, int bulkInsertSize)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _searchStoreRepository = Ensure.IsNotNull(searchStoreRepository, nameof(searchStoreRepository)); ;
