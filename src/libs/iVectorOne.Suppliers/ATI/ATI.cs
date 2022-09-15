@@ -90,15 +90,24 @@
                     decimal roomCost = roomStay.Total.AmountAfterTax / 100;
                     cost += roomCost;
 
-                    var absoluteDeadline = roomStay.CancelPenalties.First().Deadline.AbsoluteDeadline;
-                    var cancellationDeadline = absoluteDeadline;
+                    string absoluteDeadline = roomStay.CancelPenalties.First().Deadline.AbsoluteDeadline;
+                    bool hasCancellationDate = DateTime.TryParse(absoluteDeadline, out var cancellationDeadline);
 
-                    if (absoluteDeadline.Date == DateTime.Now.Date)
+                    if (absoluteDeadline == "This reservation cannot be cancelled.")
                     {
+                        hasCancellationDate = true;
                         cancellationDeadline = DateTime.Now;
                     }
 
-                    cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
+                    if (hasCancellationDate)
+                    {
+                        if (cancellationDeadline.Date != DateTime.Now.Date)
+                        {
+                            cancellations.AddNew(DateTime.Now, cancellationDeadline, 0);
+                        }
+
+                        cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
+                    }
 
                     var errata = GetErrata(roomStay);
                     propertyDetails.Errata.AddRange(errata);
@@ -200,7 +209,7 @@
                                     {
                                         Deadline =
                                         {
-                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1].ToSafeDate()
+                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1]
                                         }
                                     }
                                 }

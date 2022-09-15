@@ -6,6 +6,6 @@
     public class Deadline
     {
         [XmlAttribute("AbsoluteDeadline")]
-        public DateTime AbsoluteDeadline { get; set; }
+        public string AbsoluteDeadline { get; set; } = string.Empty;
     }
 }

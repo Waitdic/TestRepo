@@ -217,10 +217,26 @@
                             .Select(p => p.Deadline.AbsoluteDeadline)
                             .FirstOrDefault();
 
-                        bool nrf = absoluteDeadline.Date == searchDetails.BookingDate.Date;
+                        DateTime.TryParse(absoluteDeadline, out var cancellationDeadline);
+
+                        bool nrf = false;
+                        if (absoluteDeadline == "This reservation cannot be cancelled.")
+                        {
+                            cancellationDeadline = DateTime.Now;
+                            nrf = true;
+                        } 
+                        else if (cancellationDeadline.Date == searchDetails.BookingDate.Date)
+                        {
+                            nrf = true;
+                        }
 
                         var cancellations = new Cancellations();
-                        cancellations.AddNew(absoluteDeadline, searchDetails.ArrivalDate, amount);
+                        if (!nrf)
+                        {
+                            cancellations.AddNew(searchDetails.BookingDate, cancellationDeadline, 0);
+                        }
+
+                        cancellations.AddNew(cancellationDeadline, searchDetails.ArrivalDate, amount);
 
                         var transformedResult =new TransformedResult
                         {
@@ -235,7 +251,7 @@
                             Infants = occupancyInfo.Infants,
                             ChildAgeCSV = occupancyInfo.hlpChildAgeCSV,
                             Amount = amount,
-                            TPReference = $"{roomType.RoomTypeCode}|{absoluteDeadline}",
+                            TPReference = $"{roomType.RoomTypeCode}|{cancellationDeadline}",
                             NonRefundableRates = nrf,
                             Adjustments = adjustments,
                             Cancellations = cancellations
