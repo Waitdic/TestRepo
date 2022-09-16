@@ -1,14 +1,21 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Update
 {
+    using Intuitive;
+    using Intuitive.Helpers.Security;
+    using System.Security.Cryptography;
+
     public class Handler : IRequestHandler<Request, Response>
     {
         private readonly ConfigContext _context;
         private readonly IMapper _mapper;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(ConfigContext context, IMapper mapper, ISecretKeeperFactory secretKeeperFactory)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = Ensure.IsNotNull(context, nameof(context));
+            _mapper = Ensure.IsNotNull(mapper, nameof(mapper));
+            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
+                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
         }
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -34,6 +41,9 @@
             }
 
             _mapper.Map(request.Account, account);
+
+            account.EncryptedPassword = _secretKeeper.Encrypt(request.Account.Password);
+
             await _context.SaveChangesAsync(cancellationToken);
 
             response.Default();

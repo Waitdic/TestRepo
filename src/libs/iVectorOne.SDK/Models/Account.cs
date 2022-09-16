@@ -24,5 +24,8 @@
 
         /// <summary>Gets or sets the third party settings.</summary>
         public Settings TPSettings { get; set; } = new();
+        
+        /// <summary>Gets or sets the encrypted password.</summary>
+        public string EncryptedPassword { get; set; } = string.Empty;
     }
 }

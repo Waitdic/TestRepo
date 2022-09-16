@@ -12,6 +12,7 @@ using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Info;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.List;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Delete;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.List;
+using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Update;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Users.Link;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink;
@@ -58,6 +59,7 @@ namespace iVectorOne_Admin_Api.Features
             //Supplier
             app.MapTenantAccountSupplierListV1Endpoint();
             app.MapTenantAccountSupplierDeleteV1Endpoint();
+            app.MapTenantAccountSupplierTestV1Endpoint();
 
             return app;
         }

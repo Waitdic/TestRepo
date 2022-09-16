@@ -1,18 +1,21 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Create
 {
-    using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+    using Intuitive;
+    using Intuitive.Helpers.Security;
     using System.Security.Cryptography;
-    using System.Text;
 
     public class Handler : IRequestHandler<Request, Response>
     {
         private readonly ConfigContext _context;
         private readonly IMapper _mapper;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(ConfigContext context, IMapper mapper, ISecretKeeperFactory secretKeeperFactory)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = Ensure.IsNotNull(context, nameof(context));
+            _mapper = Ensure.IsNotNull(mapper, nameof(mapper));
+            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
+                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
         }
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -27,25 +30,6 @@
                 return response;
             }
 
-            string GeneratePassword(int length)
-            {
-                const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-                StringBuilder res = new StringBuilder();
-                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-                {
-                    byte[] uintBuffer = new byte[sizeof(uint)];
-
-                    while (length-- > 0)
-                    {
-                        rng.GetBytes(uintBuffer);
-                        uint num = BitConverter.ToUInt32(uintBuffer, 0);
-                        res.Append(valid[(int)(num % (uint)valid.Length)]);
-                    }
-                }
-
-                return res.ToString();
-              }
-
             Account CreateAccount(bool isLive)
             {
                 var account = _mapper.Map<AccountDto, Account>(request.Account);
@@ -56,7 +40,7 @@
                 account.LogMainSearchError = true;
                 account.Environment = environment.ToLower();
                 account.Login = $"{account.Login.Replace(' ', '_')}_{environment}";
-                account.Password = GeneratePassword(20);
+                account.EncryptedPassword = _secretKeeper.Encrypt(account.Login); // default password to login
                 return account;
             }
 

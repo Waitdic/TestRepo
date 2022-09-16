@@ -12,16 +12,20 @@
     using Microsoft.Extensions.Caching.Memory;
     using Newtonsoft.Json;
     using iVectorOne.Models;
+    using Intuitive.Helpers.Security;
 
     public class SqlAuthenticationProvider : IAuthenticationProvider
     {
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public SqlAuthenticationProvider(IMemoryCache cache, ISql sql)
+        public SqlAuthenticationProvider(IMemoryCache cache, ISql sql, ISecretKeeperFactory secretKeeperFactory)
         {
             _cache = Ensure.IsNotNull(cache, nameof(cache));
             _sql = Ensure.IsNotNull(sql, nameof(sql));
+            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
+                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
         }
 
         public async Task<Account> Authenticate(string username, string password)
@@ -32,6 +36,7 @@
             }
 
             var hashedPassword = GetHash(password);
+            var encryptedPassword = _secretKeeper.Encrypt(password);
             string cacheKey = "Account_" + username + "_" + hashedPassword;
             
             async Task<List<Account>> cacheBuilder()
@@ -44,7 +49,17 @@
 
             var accounts = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
 
-            return accounts.FirstOrDefault(o => o.Login == username && o.Password == hashedPassword)!;
+            var validAccount = accounts.FirstOrDefault(o => o.Login == username && o.EncryptedPassword == encryptedPassword)!;
+
+            if (validAccount != null)
+            {
+                return validAccount;
+            }
+            else
+            {
+                return accounts.FirstOrDefault(o => o.Login == username && o.Password == hashedPassword)!;
+            }
+
         }
 
         /// <summary>
@@ -68,6 +83,7 @@
                     Password = sqlAccount.Password,
                     Environment = sqlAccount.Environment.ToSafeEnum<AccountEnvironment>() ?? AccountEnvironment.Test,
                     TPSettings = sqlAccount.TPSettings!,
+                    EncryptedPassword = sqlAccount.EncryptedPassword
                 };
 
                 var configs = sqlAccount.Configurations

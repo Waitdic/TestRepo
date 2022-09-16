@@ -5,7 +5,8 @@
         public Mappers()
         {
             CreateMap<Account, AccountDto>()
-                .ForMember(dest => dest.UserName, act => act.MapFrom(src => src.Login));
+                .ForMember(dest => dest.UserName, act => act.MapFrom(src => src.Login))
+                .ForMember(dest => dest.Password, act => act.MapFrom(src => src.EncryptedPassword));
         }
     }
 }

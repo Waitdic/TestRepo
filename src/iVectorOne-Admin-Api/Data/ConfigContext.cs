@@ -116,6 +116,10 @@
                     .HasDefaultValueSql("'active'")
                     .HasMaxLength(8)
                     .IsUnicode(false);
+
+                entity.Property(e => e.EncryptedPassword)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Supplier>(entity =>
@@ -131,6 +135,8 @@
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
                 entity.Property(e => e.SupplierName).HasMaxLength(200);
+
+                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
             });
 
             modelBuilder.Entity<SupplierAttribute>(entity =>

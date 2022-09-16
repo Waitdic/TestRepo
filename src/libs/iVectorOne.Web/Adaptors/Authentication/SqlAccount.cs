@@ -12,6 +12,7 @@
         public bool DummyResponses { get; set; }
         public Settings? TPSettings { get; set; }
         public List<Configuration> Configurations { get; set; } = new();
+        public string EncryptedPassword { get; set; } = string.Empty;
     }
 
     public class Configuration
