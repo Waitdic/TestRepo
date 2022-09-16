@@ -11,7 +11,8 @@
                     int accountId, int supplierId) =>
                 {
                     var response = await mediator.Send(new Request
-                        { AccountID = accountId, SupplierID = supplierId });
+                        { AccountID = accountId,
+                        SupplierID = supplierId });
 
                     return response.Result;
 

@@ -17,6 +17,7 @@
             builder.Services.AddHelperServices(builder.Configuration);
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            builder.Services.AddHttpClient();
 
             builder.Services.AddScoped<ITenantService, TenantService>();
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
