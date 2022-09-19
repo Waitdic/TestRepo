@@ -27,21 +27,27 @@
         /// <summary>The factory responsible for building the pre book response</summary>
         private readonly IPropertyPrebookResponseFactory _responseFactory;
 
+        /// <summary>The supplier log repository</summary>
+        private readonly ISupplierLogRepository _supplierLogRepository;
+
         /// <summary>Initializes a new instance of the <see cref="PrebookService" /> class.</summary>
         /// <param name="propertyDetailsFactory">The property details factory.</param>
         /// <param name="logRepository">Repository for saving pre book logs to the database</param>
         /// <param name="thirdPartyFactory">Factory that creates the correct third party class</param>
         /// <param name="responseFactory">The factory responsible for building the pre book response</param>
+        /// <param name="supplierLogRepository">Repository for saving supplier pre book logs to the database</param>
         public PrebookService(
             IPropertyDetailsFactory propertyDetailsFactory,
             IBookingLogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
-            IPropertyPrebookResponseFactory responseFactory)
+            IPropertyPrebookResponseFactory responseFactory,
+            ISupplierLogRepository supplierLogRepository)
         {
             _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
         }
 
         /// <inheritdoc/>
@@ -51,6 +57,7 @@
             bool requestValid = true;
             bool success = false;
             var propertyDetails = new PropertyDetails();
+            var prebookDateAndTime = DateTime.Now;
 
             try
             {
@@ -73,7 +80,9 @@
 
                     if (thirdParty != null)
                     {
+                        prebookDateAndTime = DateTime.Now;
                         success = await thirdParty.PreBookAsync(propertyDetails);
+
                         if (success)
                         {
                             response = await _responseFactory.CreateAsync(propertyDetails);
@@ -95,6 +104,7 @@
             finally
             {
                 await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
+                await _supplierLogRepository.LogPrebookAsync(propertyDetails.SupplierLogs, prebookRequest.Account, prebookDateAndTime);
 
                 if (requestValid && !success)
                 {

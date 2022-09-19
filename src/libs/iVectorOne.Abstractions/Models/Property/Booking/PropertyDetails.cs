@@ -6,6 +6,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.VirtualCreditCards;
+    using iVectorOne.Models.SupplierLog;
 
     /// <summary>
     /// The property details passed into book and pre books
@@ -83,6 +84,11 @@
         /// Gets or sets The logs
         /// </summary>
         public Logs Logs { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets The supplier logs
+        /// </summary>
+        public SupplierLogs SupplierLogs { get; set; } = new();
 
         /// <summary>
         /// Gets or sets The warnings
@@ -262,6 +268,7 @@
         public void AddLog(string title, Request request)
         {
             Logs.AddNew(this.Source, title, request.RequestLog, request.ResponseLog);
+            SupplierLogs.AddNew(Source, title, request);
         }
     }
 }

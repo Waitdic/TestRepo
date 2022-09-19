@@ -102,6 +102,11 @@
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
             services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("SearchStoreDatabase")));
+            services.AddSingleton<ISupplierLogRepository>(s =>
+                new SupplierLogRepository(context.Configuration.GetConnectionString("LogDatabase"),
+                    s.GetRequiredService<ICurrencyLookupRepository>(),
+                    s.GetRequiredService<ITPSupport>(),
+                    s.GetRequiredService<ILogger<SupplierLogRepository>>()));
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)

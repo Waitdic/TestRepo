@@ -28,24 +28,30 @@
         /// <summary>The reference validator</summary>
         private readonly ISuppierReferenceValidator _referenceValidator;
 
+        /// <summary>The supplier log repository</summary>
+        private readonly ISupplierLogRepository _supplierLogRepository;
+
         /// <summary>Initializes a new instance of the <see cref="BookService" /> class.</summary>
         /// <param name="propertyDetailsFactory">The property details factory.</param>
         /// <param name="logRepository">Repository for saving pre book logs to the database</param>
         /// <param name="thirdPartyFactory">Factory that creates the correct third party class</param>
         /// <param name="responseFactory">Creates a book response using information from the property details</param>
         /// <param name="referenceValidator">Validates if the right supplier references have been sent for the supplier</param>
+        /// <param name="supplierLogRepository">Repository for saving supplier pre book logs to the database</param>
         public BookService(
             IPropertyDetailsFactory propertyDetailsFactory,
             IBookingLogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
             IPropertyBookResponseFactory responseFactory,
-            ISuppierReferenceValidator referenceValidator)
+            ISuppierReferenceValidator referenceValidator,
+            ISupplierLogRepository supplierLogRepository)
         {
             _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
             _referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
         }
 
         /// <inheritdoc/>
@@ -55,6 +61,7 @@
             bool requestValid = true;
             bool success = false;
             var propertyDetails = new PropertyDetails();
+            var bookDateAndTime = DateTime.Now;
 
             try
             {
@@ -78,6 +85,7 @@
 
                     if (thirdParty != null)
                     {
+                        bookDateAndTime = DateTime.Now;
                         var supplierReference = await thirdParty.BookAsync(propertyDetails);
                         propertyDetails.SupplierSourceReference = supplierReference;
                         success = supplierReference.ToLower() != "failed";
@@ -103,6 +111,7 @@
             finally
             {
                 await _logRepository.LogBookAsync(bookRequest, response!, success);
+                await _supplierLogRepository.LogBookAsync(propertyDetails.SupplierLogs, bookRequest.Account, bookDateAndTime, propertyDetails, response, success);
 
                 if (requestValid && !success)
                 {
