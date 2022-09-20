@@ -9,6 +9,7 @@
     using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models;
+    using iVectorOne.Models.SearchStore;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Search;
@@ -62,42 +63,66 @@
         {
             var totalTime = Stopwatch.StartNew();
             var stopwatch = Stopwatch.StartNew();
+            SearchStoreItem searchStoreItem = null!;
 
-            // 1.Convert Request to Search details object
-            var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
-            searchDetails.SearchStoreItem.SearchDateAndTime = DateTime.Now;
+            try
+            {
+                // 1.Convert Request to Search details object
+                var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
+                searchStoreItem = searchDetails.SearchStoreItem;
+                searchStoreItem.SearchDateAndTime = DateTime.Now;
 
-            // 2.Check which suppliers to search
-            var suppliers = searchRequest.Account.Configurations
-                .Select(c => c.Supplier)
-                .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
-                .ToList();
+                // 2.Check which suppliers to search
+                var suppliers = searchRequest.Account.Configurations
+                    .Select(c => c.Supplier)
+                    .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
+                    .ToList();
 
-            // 3.Call db to get resort splits from central propery ids
-            var resortSplits = await _searchRepository.GetResortSplitsAsync(
-                string.Join(",", searchRequest.Properties),
-                string.Join(",", suppliers),
-                searchRequest.Account);
+                // 3.Call db to get resort splits from central propery ids
+                var resortSplits = await _searchRepository.GetResortSplitsAsync(
+                    string.Join(",", searchRequest.Properties),
+                    string.Join(",", suppliers),
+                    searchRequest.Account);
 
-            var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
+                searchStoreItem.PreProcessTime = (int) stopwatch.ElapsedMilliseconds;
 
-            // 4.Run TP search
-            await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);
+                // 4.Run TP search
+                await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);
 
-            stopwatch.Restart();
+                stopwatch.Restart();
 
-            // 5.Build response and return
-            var response = await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+                // 5.Build response and return
+                var response =
+                    await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
 
-            var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
+                searchStoreItem.PostProcessTime += (int) stopwatch.ElapsedMilliseconds;
+                searchStoreItem.PropertiesReturned = response.PropertyResults.Count;
+                searchStoreItem.Successful = true;
 
-            searchDetails.SearchStoreItem.PropertiesReturned = response.PropertyResults.Count;
-            searchDetails.SearchStoreItem.PreProcessTime = preprocessTime;
-            searchDetails.SearchStoreItem.PostProcessTime += postProcessTime;
-            searchDetails.SearchStoreItem.TotalTime = (int)totalTime.ElapsedMilliseconds;
-            _ = _searchStoreService.AddAsync(searchDetails.SearchStoreItem);
+                return response;
+            }
+            finally
+            {
+                if (searchStoreItem == null!)
+                {
+                    searchStoreItem = new SearchStoreItem
+                    {
+                        SearchStoreId = Guid.NewGuid(),
+                        SearchDateAndTime = DateTime.Now
+                    };
 
-            return response;
+                    if (searchRequest?.Account != null)
+                    {
+                        searchStoreItem.AccountName = searchRequest.Account.Login;
+                        searchStoreItem.AccountId = searchRequest.Account.AccountID;
+                        searchStoreItem.System = searchRequest.Account.Environment.ToString();
+                    }
+                }
+
+                searchStoreItem.TotalTime = (int) totalTime.ElapsedMilliseconds;
+
+                _ = _searchStoreService.AddAsync(searchStoreItem);
+            }
         }
 
         public async Task GetThirdPartySearchesAsync(List<SupplierResortSplit> supplierSplits, SearchDetails searchDetails, IRequestTracker requestTracker)
