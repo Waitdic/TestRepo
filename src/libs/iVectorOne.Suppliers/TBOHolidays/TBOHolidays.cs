@@ -76,7 +76,7 @@
                 var availabilityRequest = BuildAvailabilityRequest(propertyDetails);
                 availabilityRequest.Header = BuildHeader("AvailabilityAndPricing", propertyDetails, _settings);
 
-                var requestXml = _serializer.Serialize(availabilityRequest);
+                var requestXml = Helper.CleanRequest(_serializer.Serialize(availabilityRequest).OuterXml);
                 request = CreateRequest("AvailabilityAndPricing", url);
                 request.SetRequest(requestXml);
                 await request.Send(_httpClient, _logger);
@@ -163,7 +163,7 @@
                                 };
                             }
 
-                            priceDetails += $"{_serializer.Serialize(roomPriceDetails).InnerXml}|";
+                            priceDetails += $"{Helper.CleanRequest(_serializer.Serialize(roomPriceDetails).InnerXml)}|";
                         }
 
                         propertyDetails.TPRef1 = priceDetails.Chop();
@@ -195,7 +195,7 @@
                     var policyRequestObj = BuildPolicyRequest(propertyDetails);
                     policyRequestObj.Header = BuildHeader("HotelCancellationPolicy", propertyDetails, _settings);
 
-                    var policyRequestXml = _serializer.Serialize(policyRequestObj);
+                    var policyRequestXml = Helper.CleanRequest(_serializer.Serialize(policyRequestObj).OuterXml);
                     policyRequest = CreateRequest("HotelCancellationPolicies", url);
                     policyRequest.SetRequest(policyRequestXml);
                     await policyRequest.Send(_httpClient, _logger);
@@ -314,7 +314,7 @@
                 var bookRequest = await BuildBookRequestAsync(propertyDetails);
                 bookRequest.Header = BuildHeader("HotelBook", propertyDetails, _settings);
 
-                var bookRequestXml = _serializer.Serialize(bookRequest);
+                var bookRequestXml = Helper.CleanRequest(_serializer.Serialize(bookRequest).OuterXml);
                 request = CreateRequest("HotelBook", url);
                 request.SetRequest(bookRequestXml);
                 await request.Send(_httpClient, _logger);
@@ -362,7 +362,7 @@
                 bookingDetailRequest.Header = BuildHeader("HotelBookingDetail", propertyDetails, _settings);
 
                 var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.GenericURL(propertyDetails));
-                bookingDetailWebRequest.SetRequest(_serializer.Serialize(bookingDetailRequest));
+                bookingDetailWebRequest.SetRequest(Helper.CleanRequest(_serializer.Serialize(bookingDetailRequest).OuterXml));
                 await bookingDetailWebRequest.Send(_httpClient, _logger);
 
                 var bookingDetailResponse = _serializer.DeSerialize<Envelope<HotelBookingDetailResponse>>(bookingDetailWebRequest.ResponseXML).Body.Content;
@@ -386,7 +386,7 @@
                     var cancelRequestObj = BuildCancelRequest(propertyDetails);
                     cancelRequestObj.Header = BuildHeader("HotelCancel", propertyDetails, _settings);
 
-                    var cancelRequestXml = _serializer.Serialize(cancelRequestObj);
+                    var cancelRequestXml = Helper.CleanRequest(_serializer.Serialize(cancelRequestObj).OuterXml);
                     request = CreateRequest("HotelCancel", _settings.GenericURL(propertyDetails));
                     request.SetRequest(cancelRequestXml);
                     await request.Send(_httpClient, _logger);

@@ -50,7 +50,7 @@
                     ContentType = ContentTypes.Application_SOAP_XML,
                 };
 
-                webRequest.SetRequest(_serializer.Serialize(request));
+                webRequest.SetRequest(Helper.CleanRequest(_serializer.Serialize(request).OuterXml));
                 requests.Add(webRequest);
             }
 
