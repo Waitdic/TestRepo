@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AbreuV2\AbreuV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AbreuV2Res.resx</DependentUpon>
+    </Compile>
     <Compile Update="Acerooms\AceroomsRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -168,6 +173,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AbreuV2\AbreuV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AbreuV2Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Acerooms\AceroomsRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AceroomsRes.Designer.cs</LastGenOutput>

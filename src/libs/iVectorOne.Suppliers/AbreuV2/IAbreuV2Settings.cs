@@ -4,7 +4,7 @@
 
     public interface IAbreuV2Settings
     {
-        string SearchHotelAvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
         string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
