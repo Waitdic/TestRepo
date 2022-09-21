@@ -110,6 +110,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MTSRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="TBOHolidays\TBOHolidaysRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TBOHolidaysRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="TeamAmerica\TeamAmericaRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -235,6 +240,10 @@
     <EmbeddedResource Update="MTS\MTSRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MTSRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TBOHolidays\TBOHolidaysRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TBOHolidaysRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="TeamAmerica\TeamAmericaRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

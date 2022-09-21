@@ -66,7 +66,7 @@
             bool success = false;
             bool priceChanged = false;
             bool cancellationPoliciesAvailable = false;
-            string url = _settings.URL(propertyDetails);
+            string url = _settings.GenericURL(propertyDetails);
             var request = new Request();
             var policyRequest = new Request();
 
@@ -306,7 +306,7 @@
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
-            string url = _settings.URL(propertyDetails);
+            string url = _settings.GenericURL(propertyDetails);
             var request = new Request();
 
             try
@@ -361,7 +361,7 @@
                 bookingDetailRequest.Body.Content.BookingId = propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt();
                 bookingDetailRequest.Header = BuildHeader("HotelBookingDetail", propertyDetails, _settings);
 
-                var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.URL(propertyDetails));
+                var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.GenericURL(propertyDetails));
                 bookingDetailWebRequest.SetRequest(_serializer.Serialize(bookingDetailRequest));
                 await bookingDetailWebRequest.Send(_httpClient, _logger);
 
@@ -387,7 +387,7 @@
                     cancelRequestObj.Header = BuildHeader("HotelCancel", propertyDetails, _settings);
 
                     var cancelRequestXml = _serializer.Serialize(cancelRequestObj);
-                    request = CreateRequest("HotelCancel", _settings.URL(propertyDetails));
+                    request = CreateRequest("HotelCancel", _settings.GenericURL(propertyDetails));
                     request.SetRequest(cancelRequestXml);
                     await request.Send(_httpClient, _logger);
 
@@ -521,7 +521,7 @@
 
             int resultIndex = referenceValues.ResultIndex;
             string sessionId = referenceValues.SessionId;
-            string clientCode = _settings.ClientReferenceNumber(propertyDetails);
+            string clientCode = _settings.ClientCode(propertyDetails);
 
             string guestNationality = string.Empty;
 
@@ -532,7 +532,7 @@
 
             if (string.IsNullOrEmpty(guestNationality))
             {
-                guestNationality = _settings.DefaultGuestNationality(propertyDetails);
+                guestNationality = _settings.LeadGuestNationality(propertyDetails);
             }
 
             int passengerIndex = 1;
@@ -683,11 +683,11 @@
             {
                 Credentials = new Credentials
                 {
-                    UserName = settings.UserName(searchDetails),
+                    UserName = settings.User(searchDetails),
                     Password = settings.Password(searchDetails),
                 },
                 Action = $"http://TekTravel/HotelBookingApi/{type}",
-                To = settings.URL(searchDetails)
+                To = settings.GenericURL(searchDetails)
             };
         }
 

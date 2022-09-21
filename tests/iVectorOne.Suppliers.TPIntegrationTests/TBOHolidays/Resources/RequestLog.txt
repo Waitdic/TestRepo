@@ -7,7 +7,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
   <soap:Header>
     <hot:Credentials UserName="testuser" Password="testpwd" />
@@ -42,7 +42,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
   <soap:Header>
     <hot:Credentials UserName="testuser" Password="testpwd" />
@@ -77,7 +77,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
   <soap:Header>
     <hot:Credentials UserName="testuser" Password="testpwd" />
@@ -116,7 +116,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
   <soap:Header>
     <hot:Credentials UserName="testuser" Password="testpwd" />
@@ -155,7 +155,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
   <soap:Header>
     <hot:Credentials UserName="testuser" Password="testpwd" />

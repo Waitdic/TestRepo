@@ -45,7 +45,7 @@
                 var webRequest = new Request
                 {
                     UseGZip = true,
-                    EndPoint = _settings.URL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_SOAP_XML,
                 };
@@ -69,7 +69,7 @@
 
             if (string.IsNullOrEmpty(guestNationality))
             {
-                guestNationality = _settings.DefaultGuestNationality(searchDetails);
+                guestNationality = _settings.LeadGuestNationality(searchDetails);
             }
 
             var envelope = new Envelope<HotelSearchWithRoomsRequest>
@@ -87,7 +87,7 @@
                         IsNearBySearchAllowed = "false",
                         NoOfRooms = searchDetails.RoomDetails.Count,
                         GuestNationality = guestNationality,
-                        PreferredCurrencyCode = _settings.CurrencyCode(searchDetails),
+                        PreferredCurrencyCode = _settings.Currency(searchDetails),
                         ResultCount = _settings.ResultCount(searchDetails).ToSafeString()
                     }
                 }

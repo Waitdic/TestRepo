@@ -473,6 +473,21 @@
         }
       },
       {
+        "Supplier": "TBOHolidays",
+        "Configurations": {
+          "GenericURL": "http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc",
+          "Password": "testpwd",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0",
+          "LeadGuestNationality": "GB",
+          "User": "testuser",
+          "PaymentModeType": "Limit",
+          "ClientCode": "1",
+          "Currency": "GBP",
+          "ResultCount": "0"
+        }
+       },
+      {
         "Supplier": "JuniperElevate",
         "Configurations": {
           "OperatorCode": "XML_IntuitiveSystems-iVector",
