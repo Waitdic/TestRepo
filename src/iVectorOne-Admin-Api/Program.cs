@@ -50,7 +50,7 @@ try
        .UseExceptionHandler("/error")
        .UseIntuitiveMiddleware();
 
-    app.MapHealthChecks("/healthz").WithMetadata(new AllowAnonymousAttribute());
+    app.MapHealthChecks("/healthcheck").WithMetadata(new AllowAnonymousAttribute());
 
     app.AddFeatures();
 

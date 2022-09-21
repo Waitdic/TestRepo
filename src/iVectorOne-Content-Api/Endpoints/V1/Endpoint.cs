@@ -12,8 +12,8 @@
 	{
 		public static IEndpointRouteBuilder MapEndpointsV1(this IEndpointRouteBuilder endpoints)
 		{
-			RegisterContentEndpointsForDomain(endpoints, "content/property/list"); // v1 call
-			RegisterContentEndpointsForDomain(endpoints, "content/property"); // v1 call
+			RegisterContentEndpointsForDomain(endpoints, "/content/property/list"); // v1 call
+			RegisterContentEndpointsForDomain(endpoints, "/content/property"); // v1 call
 
 			return endpoints;
 		}
@@ -22,7 +22,7 @@
 		{
 			_ = endpoints
 				.MapGet(
-					$"/{domain}",
+					domain,
 					async (
 						HttpContext httpContext,
 						[FromServices] IMediator mediator,
