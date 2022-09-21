@@ -16,7 +16,7 @@
             RegisterSearchEndpointsForDomain(endpoints, EndpointBase.Domain);
             RegisterSearchEndpointsForDomain(endpoints, "property"); // temporary - until Travelgenix have switched to the new domain
 
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!");
+            _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
 
             return endpoints;
         }
