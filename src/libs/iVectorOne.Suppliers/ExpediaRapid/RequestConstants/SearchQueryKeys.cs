@@ -10,7 +10,6 @@
         public const string CountryCode = "country_code";
         public const string SalesChannel = "sales_channel";
         public const string SalesEnvironment = "sales_environment";
-        public const string SortType = "sort_type";
         public const string RatePlanCount = "rate_plan_count";
         public const string PaymentTerms = "payment_terms";
         public const string PartnerPointOfSale = "partner_point_of_sale";
