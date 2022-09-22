@@ -120,6 +120,25 @@
                             }
                         }
 
+                        foreach (var errata in searchResponse.PropertyResults
+                                     .Where(propertyResult => propertyResult.PropertyId == propertyDetails.TPKey)
+                                     .SelectMany(propertyResult => propertyResult.Errata))
+                        {
+                            var text = errata.Description;
+
+                            if (!string.IsNullOrEmpty(errata.EndDate))
+                            {
+                                text = $"End Date: {errata.EndDate}, {text}";
+                            }
+
+                            if (!string.IsNullOrEmpty(errata.StartDate))
+                            {
+                                text = $"Start Date: {errata.StartDate}, {text}";
+                            }
+
+                            text += errata.EndDate;
+                            propertyDetails.Errata.AddNew("Important Information", text);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -331,7 +350,8 @@
                     Duration = propertyDetails.Duration,
                     LeadGuest =leadGuest,
                     TradeReference = propertyDetails.BookingReference,
-                    RoomBookings = roomBookings
+                    RoomBookings = roomBookings,
+                    Request = propertyDetails.BookingComments.ToString()
                 }
             };
             return _serializer.Serialize(bookRequest).OuterXml;
