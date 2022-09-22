@@ -159,7 +159,6 @@
                 { SearchQueryKeys.CountryCode, countryCode },
                 { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) },
                 { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) },
-                { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) },
                 { SearchQueryKeys.RatePlanCount, settings.RatePlanCount(tpAttributeSearch).ToString() },
                 { SearchQueryKeys.PaymentTerms, settings.PaymentTerms(tpAttributeSearch) },
                 { SearchQueryKeys.PartnerPointOfSale, settings.PartnerPointOfSale(tpAttributeSearch) },
