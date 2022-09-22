@@ -477,11 +477,11 @@
             static string GetCurrency(IEnumerable<OccupancyRateFee> items) => items.First().TotalInBillableCurrency.CurrencyCode;
 
             if (mandatoryFees.Any())
-                errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInRequestCurrency.Amount), GetCurrency(mandatoryFees)));
+                errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(mandatoryFees)));
             if (resortFees.Any())
                 errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(resortFees)));
             if (mandatoryTaxes.Any())
-                errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInRequestCurrency.Amount), GetCurrency(mandatoryTaxes)));
+                errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(mandatoryTaxes)));
             if (taxAndServiceFee > 0m)
                 errata.Add(BuildErrata("Tax and Service Fee", taxAndServiceFee, currencyCode, "Included"));
             if (salesTax > 0m)
