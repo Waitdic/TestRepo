@@ -151,7 +151,7 @@ const AccountEdit: React.FC<Props> = () => {
         key: activeTenant?.tenantKey as string,
       },
       userKey as string,
-      currentAccount?.subscriptionId as number,
+      currentAccount?.accountId as number,
       () => {
         dispatch.app.setIsLoading(true);
       },
@@ -292,17 +292,6 @@ const AccountEdit: React.FC<Props> = () => {
                         name: 'EUR',
                       },
                     ]}
-                  />
-                </div>
-                <div className='flex-1 md:w-1/2'>
-                  <Toggle
-                    id='logMainSearchError'
-                    {...register('logMainSearchError')}
-                    labelText='Log Main Search Error'
-                    isDirty={!!errors.logMainSearchError}
-                    errorMsg={errors.logMainSearchError?.message}
-                    defaultValue={currentAccount?.logMainSearchError as boolean}
-                    readOnly
                   />
                 </div>
               </div>

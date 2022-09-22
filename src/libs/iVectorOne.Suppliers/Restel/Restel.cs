@@ -70,7 +70,7 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            string codusu = _settings.UserAgent(propertyDetails);
+            string codusu = _settings.Codusu(propertyDetails);
 
             bool preBookSuccess = false;
             var request = new Request();
@@ -586,7 +586,7 @@
 
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            string codusu = _settings.UserAgent(propertyDetails);
+            string codusu = _settings.Codusu(propertyDetails);
             var webRequest = new Request();
 
             try

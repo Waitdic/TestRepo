@@ -1,7 +1,6 @@
 ﻿namespace iVectorOne.Models.Property.Booking
 {
     using System.Collections.Generic;
-    using iVectorOne.Search.Settings;
 
     /// <summary>
     /// The virtual card info

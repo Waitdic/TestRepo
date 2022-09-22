@@ -42,7 +42,7 @@ const AccountView: React.FC<Props> = () => {
   const loadAccount = useCallback(() => {
     if (accounts.length > 0) {
       const currAccount = accounts.find(
-        (acc) => acc.subscriptionId === Number(slug)
+        (acc) => acc.accountId === Number(slug)
       );
 
       if (!currAccount) {
@@ -130,16 +130,6 @@ const AccountView: React.FC<Props> = () => {
                         Currency Code
                       </h4>
                       <p className='text-sm'>{currentAccount.currencyCode}</p>
-                    </div>
-                    <div className='flex-1 md:w-1/2'>
-                      <div className='flex items-center justify-between'>
-                        <h4 className='block text-sm font-medium mb-1'>
-                          Log Main Search Error
-                        </h4>
-                        <YesOrNo
-                          isActive={!!currentAccount.logMainSearchError}
-                        />
-                      </div>
                     </div>
                   </>
                 ) : (

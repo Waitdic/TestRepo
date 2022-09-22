@@ -17,6 +17,8 @@
     /// <seealso cref="ITPSupport" />
     public class TPSupportWrapper : ITPSupport
     {
+        private const int _timeout = 2;
+
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
 
@@ -29,12 +31,12 @@
         #region Lookups
 
         /// <inheritdoc />
-        public async Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int subscriptionId)
+        public async Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int accountId)
         {
             string countryCode;
             if (IsSingleTenant(source))
             {
-                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out var country);
+                (await this.AccountCountryAsync()).TryGetValue((accountId, isoCode), out var country);
                 countryCode = country.CountryCode;
             }
             else
@@ -46,12 +48,12 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> TPCountryLookupAsync(string source, string isoCode, int subscriptionId)
+        public async Task<string> TPCountryLookupAsync(string source, string isoCode, int accountId)
         {
             string countryName;
             if (IsSingleTenant(source))
             {
-                (await this.SubscriptionCountryAsync()).TryGetValue((subscriptionId, isoCode), out var country);
+                (await this.AccountCountryAsync()).TryGetValue((accountId, isoCode), out var country);
                 countryName = country.Country;
             }
             else
@@ -122,7 +124,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>Third party currency lookup.</summary>
@@ -136,11 +138,11 @@
             {
                 return await _sql.ReadSingleMappedAsync(
                     "select ThirdPartyCurrencyCode, CurrencyCode from Currency where Source = @source",
-                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.CurrencyCode, x => x.ThirdPartyCurrencyCode),
+                    async r => (await r.ReadAllAsync<Currency>()).ToDictionary(x => x.ThirdPartyCurrencyCode, x => x.CurrencyCode),
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>Nationality lookup</summary>
@@ -158,7 +160,7 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
         /// <summary>ISO currency code lookup</summary>
@@ -173,7 +175,7 @@
                     new CommandSettings());
             }
 
-            return await _cache.GetOrCreateAsync("ISOCurrencyCache", cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync("ISOCurrencyCache", cacheBuilder, _timeout);
         }
 
         /// <summary>Country code lookup</summary>
@@ -191,22 +193,22 @@
                     new CommandSettings().WithParameters(new { source }));
             }
 
-            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
-        private async Task<Dictionary<(int, string), SubscriptionCountry>> SubscriptionCountryAsync()
+        private async Task<Dictionary<(int, string), AccountCountry>> AccountCountryAsync()
         {
-            string cacheKey = "SubscriptionCountryLookup";
+            string cacheKey = "AccountCountryLookup";
 
-            async Task<Dictionary<(int, string), SubscriptionCountry>> cacheBuilder()
+            async Task<Dictionary<(int, string), AccountCountry>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select SubscriptionID, CountryCode, ISOCountryCode, Country from SubscriptionCountry",
-                    async r => (await r.ReadAllAsync<SubscriptionCountry>())
-                        .ToDictionary(x => (x.SubscriptionID, x.ISOCountryCode), x => x));
+                    "select AccountID, CountryCode, ISOCountryCode, Country from AccountCountry",
+                    async r => (await r.ReadAllAsync<AccountCountry>())
+                        .ToDictionary(x => (x.AccountID, x.ISOCountryCode), x => x));
             }
 
-            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
 
             return cache;
         }
@@ -252,9 +254,9 @@
             public string Country { get; set; } = string.Empty;
         }
 
-        private class SubscriptionCountry
+        private class AccountCountry
         {
-            public int SubscriptionID { get; set; }
+            public int AccountID { get; set; }
             public string CountryCode { get; set; } = string.Empty;
             public string ISOCountryCode { get; set; } = string.Empty;
             public string Country { get; set; } = string.Empty;

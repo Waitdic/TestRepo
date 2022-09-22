@@ -10,7 +10,6 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
     using Newtonsoft.Json;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Settings;
     using iVectorOne.Tests.Helpers;
 
     //using MoreLinq;
@@ -49,7 +48,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
                 Duration = 5,
                 RoomDetails = roomDetails,
                 ThirdPartyConfigurations = new List<ThirdPartyConfiguration> { CreateThirdPartyConfiguration(supplier) },
-                DedupeResults = true,
+                DedupeResults = DedupeMethod.cheapestleadin,
                 LoggingType = "All",
                 ISOCurrencyCode = "GBP"
             };
@@ -95,7 +94,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
         /// <returns>A thirdparty configurations object</returns>
         public static ThirdPartyConfiguration CreateThirdPartyConfiguration(string supplier)
         {
-            var users = JsonConvert.DeserializeObject<List<Subscription>>(helpers.Users);
+            var users = JsonConvert.DeserializeObject<List<Account>>(helpers.Users);
             return users?.FirstOrDefault()?.Configurations?.FirstOrDefault(o => o.Supplier == supplier) ?? null!;
         }
 

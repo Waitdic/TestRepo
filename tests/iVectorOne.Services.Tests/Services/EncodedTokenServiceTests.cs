@@ -21,10 +21,10 @@
             {
                 PropertyID = 5526100,
             };
-            var user = new Subscription();
+            var user = new Account();
 
             // Act
-            var encoded = tokenService.EncodeBookToken(bookToken);
+            var encoded = tokenService.EncodeBookingToken(bookToken);
 
             var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user);
 
@@ -45,7 +45,7 @@
                 Rooms = 3,
                 CurrencyID = 52
             };
-            var user = new Subscription();
+            var user = new Account();
 
             // Act
             var encoded = tokenService.EncodePropertyToken(propertyToken);
@@ -73,7 +73,7 @@
                 Duration = 40,
                 PropertyID = 5526246
             };
-            var user = new Subscription();
+            var user = new Account();
 
             // Act
             var encoded = tokenService.EncodePropertyToken(propertyToken);
@@ -180,7 +180,7 @@
             mockValues.SetupGet(r => r.Values).Returns(new List<TokenValue>());
             mockValues.Setup(r => r.GetValue(It.IsAny<TokenValueType>())).Returns(1);
             var tokenService = SetupTokenService(mockValues.Object, 36434, "153535", "ExpediaRapid");
-            var user = new Subscription();
+            var user = new Account();
 
             // Act
             var decodedToken = await tokenService.DecodePropertyTokenAsync("0Pc]I0!", user);
@@ -199,7 +199,7 @@
             mockValues.SetupGet(r => r.Values).Returns(new List<TokenValue>());
             mockValues.Setup(r => r.GetValue(It.IsAny<TokenValueType>())).Returns(1);
             var tokenService = SetupTokenService(mockValues.Object, 36434, "153535", "ExpediaRapid");
-            var user = new Subscription();
+            var user = new Account();
 
             // Act
             var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user);
@@ -254,7 +254,7 @@
 
             if (centralPropertyId > 0)
             {
-                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Subscription>()))
+                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Account>()))
                 .Returns(Task.FromResult(new PropertyContent()
                 {
                     CentralPropertyID = centralPropertyId,

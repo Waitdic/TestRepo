@@ -17,6 +17,7 @@
     using iVectorOne.Suppliers.ATI.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 
@@ -70,7 +71,7 @@
         public static Envelope<AtiAvailabilityRequest> GetSearchRequestXml(
             DateTime arrivalDate,
             int duration,
-            RoomDetails roomDetails,
+            iVector.Search.Property.RoomDetails roomDetails,
             List<Criterion> criteria,
             string version,
             string userId)
@@ -130,7 +131,6 @@
         {
             var transformed = new TransformedResultCollection();
             var response = _serializer.DeSerialize<Envelope<AtiAvailabilitySearch>>(requests[0].ResponseXML);
-
             var mergedResponses = new Results { Envelope = response };
 
             var groupings = new Groupings();
@@ -207,14 +207,36 @@
                         decimal amount = CalculateAmount(mergedResponses, property, propertyRoomBooking, roomType);
                         var adjustments = GetAdjustments(roomStays, propertyRoomBooking, roomType);
 
-                        bool nrf = roomStays
+                        var absoluteDeadline = roomStays
                             .Where(x =>
                             {
                                 return x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID)
                                        && x.RoomTypes.Any(t => t.RoomTypeCode.Substring(t.RoomTypeCode.IndexOf('-') + 1) == roomType.RoomTypeCode);
                             })
                             .SelectMany(x => x.CancelPenalties)
-                            .Any(p => p.Deadline.AbsoluteDeadline == "This reservation cannot be cancelled.");
+                            .Select(p => p.Deadline.AbsoluteDeadline)
+                            .FirstOrDefault();
+
+                        DateTime.TryParse(absoluteDeadline, out var cancellationDeadline);
+
+                        bool nrf = false;
+                        if (absoluteDeadline == "This reservation cannot be cancelled.")
+                        {
+                            cancellationDeadline = DateTime.Now;
+                            nrf = true;
+                        } 
+                        else if (cancellationDeadline.Date == searchDetails.BookingDate.Date)
+                        {
+                            nrf = true;
+                        }
+
+                        var cancellations = new Cancellations();
+                        if (!nrf)
+                        {
+                            cancellations.AddNew(searchDetails.BookingDate, cancellationDeadline, 0);
+                        }
+
+                        cancellations.AddNew(cancellationDeadline, searchDetails.ArrivalDate, amount);
 
                         var transformedResult =new TransformedResult
                         {
@@ -229,9 +251,10 @@
                             Infants = occupancyInfo.Infants,
                             ChildAgeCSV = occupancyInfo.hlpChildAgeCSV,
                             Amount = amount,
-                            TPReference = roomType.RoomTypeCode,
+                            TPReference = $"{roomType.RoomTypeCode}|{cancellationDeadline}",
                             NonRefundableRates = nrf,
                             Adjustments = adjustments,
+                            Cancellations = cancellations
                         };
 
                         if (settings.ExcludeNRF(searchDetails, false))

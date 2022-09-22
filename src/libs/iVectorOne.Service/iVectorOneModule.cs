@@ -1,4 +1,7 @@
-﻿namespace iVectorOne.Service
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
+namespace iVectorOne.Service
 {
     using System.Security.Cryptography;
     using Intuitive;
@@ -70,7 +73,7 @@
         public void BuildServices(ServicesBuilderContext context, IServiceCollection services)
         {
             RegisterFactories(services);
-            RegisterRepositories(services);
+            RegisterRepositories(context, services);
             RegisterServices(context, services);
             RegisterMediators(services);
             RegsiterThirdPartyConfigs(services);
@@ -92,13 +95,14 @@
             services.AddSingleton<IThirdPartyFactory, ThirdPartyFactory>();
         }
 
-        private static void RegisterRepositories(IServiceCollection services)
+        private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
         {
             services.AddSingleton<IBookingLogRepository, BookingLogRepository>();
             services.AddSingleton<ICurrencyLookupRepository, CurrencyLookupRepository>();
             services.AddSingleton<IMealBasisLookupRepository, MealBasisLookupRepository>();
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
+            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("SearchStoreDatabase")));
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -123,6 +127,11 @@
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
                     .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
+
+            services.AddSingleton<ISearchStoreService>(s =>
+                new SearchStoreService(s.GetRequiredService<ILogger<SearchStoreService>>(),
+                    s.GetRequiredService<ISearchStoreRepository>(),
+                    context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }
 
         private static void RegisterMediators(IServiceCollection services)

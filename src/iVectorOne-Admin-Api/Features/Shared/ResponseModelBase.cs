@@ -3,6 +3,5 @@
     public record ResponseModelBase
     {
         public bool Success { get; set; }
-
     }
 }

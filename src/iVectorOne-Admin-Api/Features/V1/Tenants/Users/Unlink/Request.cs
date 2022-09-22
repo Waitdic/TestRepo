@@ -5,7 +5,5 @@
         public int TenantId { get; set; }
 
         public int UserId { get; set; }
-
-        public string Relationship { get; set; } = "";
     }
 }

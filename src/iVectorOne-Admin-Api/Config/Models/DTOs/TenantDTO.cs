@@ -1,7 +1,7 @@
-﻿using System.Text.Json.Serialization;
-
-namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Config.Models
 {
+    using System.Text.Json.Serialization;
+
     public class TenantDTO
     {
         public int TenantId { get; set; }

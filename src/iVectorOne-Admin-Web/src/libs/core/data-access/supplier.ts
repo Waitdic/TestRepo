@@ -6,7 +6,7 @@ import { get } from 'lodash';
 export async function getSuppliersByAccount(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
   onFailed: (error: string | null) => void
@@ -14,7 +14,7 @@ export async function getSuppliersByAccount(
   onInit();
   try {
     const res = await ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers`,
+      `/tenants/${tenant.id}/accounts/${accountId}/suppliers`,
       {
         headers: {
           Accept: 'application/json',
@@ -23,7 +23,7 @@ export async function getSuppliersByAccount(
         },
       }
     );
-    const data = get(res, 'data.supplierSubscriptions', null);
+    const data = get(res, 'data.accountSuppliers', null);
     onSuccess(data);
   } catch (err) {
     if (typeof err === 'string') {
@@ -66,7 +66,7 @@ export async function getSuppliers(
 export async function getSupplierById(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   supplierId: number,
   onInit: () => void,
   onSuccess: (supplier: Supplier) => void,
@@ -75,7 +75,7 @@ export async function getSupplierById(
   onInit();
   try {
     const res = await ApiCall.get(
-      `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}`,
       {
         headers: {
           Accept: 'application/json',
@@ -128,7 +128,7 @@ export async function getConfigurationsBySupplier(
 export async function updateSupplier(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   supplierId: number,
   data: SupplierFormFields,
   onInit: () => void,
@@ -141,14 +141,14 @@ export async function updateSupplier(
   const filteredConfigurations = Object.entries(configurations)
     .filter((config) => typeof config[1] !== 'object' && config)
     .map((config) => ({
-      supplierSubscriptionAttributeId: Number(config[0]),
+      accountSupplierAttributeID: Number(config[0]),
       value: config[1].toString(),
     }));
 
   try {
     const updatedSupplierRes = await ApiCall.request({
       method: 'PUT',
-      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}/suppliersubscriptionattributes`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}/accountsupplierattributes`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,
@@ -172,7 +172,7 @@ export async function updateSupplier(
 export async function createSupplier(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   supplierId: number,
   data: SupplierFormFields,
   onInit: () => void,
@@ -192,7 +192,7 @@ export async function createSupplier(
   try {
     const newSupplierRes = await ApiCall.request({
       method: 'POST',
-      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,
@@ -216,7 +216,7 @@ export async function createSupplier(
 export async function deleteSupplier(
   tenant: { id: number; key: string },
   userKey: string,
-  subscriptionId: number,
+  accountId: number,
   supplierId: number,
   onInit: () => void,
   onSuccess: () => void,
@@ -227,7 +227,7 @@ export async function deleteSupplier(
   try {
     await ApiCall.request({
       method: 'DELETE',
-      url: `/tenants/${tenant.id}/subscriptions/${subscriptionId}/suppliers/${supplierId}`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}/suppliers/${supplierId}`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,

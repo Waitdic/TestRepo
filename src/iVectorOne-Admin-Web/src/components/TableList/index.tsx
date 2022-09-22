@@ -15,14 +15,16 @@ type Props = {
     isActive?: boolean;
     actions?: {
       name: string;
-      href: string;
+      href?: string;
+      onClick?: () => void;
     }[];
   }[];
   emptyState: {
     title: string;
     description: string[];
-    href: string;
-    buttonText: string;
+    buttonText?: string;
+    href?: string;
+    onClick?: () => void;
   };
   isLoading?: boolean;
 };
@@ -42,7 +44,6 @@ const TableList: FC<Props> = ({
   }
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {bodyList.length > 0 ? (
         <div className='align-middle inline-block w-full shadow'>
@@ -86,15 +87,29 @@ const TableList: FC<Props> = ({
                     <td className='px-6 py-4 text-right whitespace-nowrap text-sm'>
                       {actions &&
                         actions.length > 0 &&
-                        actions.map(({ name, href }) => (
-                          <Link
-                            to={href}
-                            className='text-primary hover:text-primaryHover'
-                            key={href}
-                          >
-                            {name}
-                          </Link>
-                        ))}
+                        actions.map(({ name: actionName, href, onClick }) => {
+                          if (!!href) {
+                            return (
+                              <Link
+                                to={href}
+                                className='text-primary hover:text-primaryHover'
+                                key={href}
+                              >
+                                {actionName}
+                              </Link>
+                            );
+                          } else {
+                            return (
+                              <button
+                                key={actionName}
+                                className='text-red-400 hover:text-primaryHover'
+                                onClick={() => onClick?.()}
+                              >
+                                {actionName}
+                              </button>
+                            );
+                          }
+                        })}
                     </td>
                   </tr>
                 ))}

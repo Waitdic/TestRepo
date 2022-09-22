@@ -20,6 +20,7 @@
     using iVectorOne.Models.Property.Booking;
     using Erratum = iVectorOne.Models.Property.Booking.Erratum;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Search.Models;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -84,7 +85,7 @@
                         .RoomStays
                         .First(x => x
                             .RoomTypes
-                            .Any(roomType => roomType.RoomTypeCode == $"{propertyDetails.TPKey}-{roomBooking.ThirdPartyReference}"));
+                            .Any(roomType => roomType.RoomTypeCode == $"{propertyDetails.TPKey}-{roomBooking.ThirdPartyReference.Split("|")[0]}"));
 
                     decimal roomCost = roomStay.Total.AmountAfterTax / 100;
                     cost += roomCost;
@@ -100,6 +101,11 @@
 
                     if (hasCancellationDate)
                     {
+                        if (cancellationDeadline.Date != DateTime.Now.Date)
+                        {
+                            cancellations.AddNew(DateTime.Now, cancellationDeadline, 0);
+                        }
+
                         cancellations.AddNew(cancellationDeadline, propertyDetails.ArrivalDate, cost);
                     }
 
@@ -194,8 +200,18 @@
                                 },
                                 BasicPropertyInfo = new BasicPropertyInfo
                                 {
-                                    HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference,
+                                    HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference.Split("|")[0],
                                     Comments = bookingRequests.ToArray(),
+                                }, 
+                                CancelPenalties = new[]
+                                {
+                                    new CancelPenalty
+                                    {
+                                        Deadline =
+                                        {
+                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1]
+                                        }
+                                    }
                                 }
                             }).ToArray(),
                             ResGuests = new []

@@ -24,6 +24,8 @@ import KnowledgeBase from '@/libs/core/support/knowledge-base';
 import ChangeLog from '@/libs/core/support/change-log';
 import RoadMap from '@/libs/core/support/road-map';
 import UserCreate from '@/libs/core/user/create';
+import UserList from '@/libs/core/user/list';
+import UserView from '@/libs/core/user/view';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -81,7 +83,9 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           </Route>
           {/* User Routes */}
           <Route path='/users'>
+            <Route index element={<UserList />} />
             <Route path='create' element={<UserCreate />} />
+            <Route path=':slug' element={<UserView />} />
           </Route>
           {/* Settings */}
           <Route path='/settings'>

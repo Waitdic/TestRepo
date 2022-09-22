@@ -10,6 +10,8 @@ type Props = {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   onConfirm: () => void;
+  confirmButtonText?: string;
+  onCancel?: () => void;
 };
 
 const ConfirmModal: React.FC<Props> = ({
@@ -18,7 +20,14 @@ const ConfirmModal: React.FC<Props> = ({
   show,
   setShow,
   onConfirm,
+  onCancel,
+  confirmButtonText = 'Delete',
 }) => {
+  const handleCancel = () => {
+    setShow(false);
+    onCancel?.();
+  };
+
   return (
     <>
       {show && (
@@ -48,10 +57,10 @@ const ConfirmModal: React.FC<Props> = ({
                       text='Cancel'
                       color={ButtonColors.OUTLINE}
                       className='ml-4'
-                      onClick={() => setShow(false)}
+                      onClick={handleCancel}
                     />
                     <Button
-                      text='Delete'
+                      text={confirmButtonText}
                       color={ButtonColors.DANGER}
                       className='ml-4'
                       onClick={onConfirm}

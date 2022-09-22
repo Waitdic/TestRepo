@@ -42,9 +42,9 @@ const CardList: FC<Props> = ({
 
   return (
     <>
-      {bodyList.length > 0 ? (
+      {bodyList?.length > 0 ? (
         <div className='grid grid-cols-12 gap-6'>
-          {bodyList.map(({ id, name, isActive = undefined, actions }) => (
+          {bodyList?.map(({ id, name, isActive = undefined, actions }) => (
             <div
               key={id}
               className={classNames(

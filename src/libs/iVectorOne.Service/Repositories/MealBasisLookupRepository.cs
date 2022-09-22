@@ -19,6 +19,8 @@
         /// <summary>The cache key</summary>
         private const string CacheKey = "APIMealBasisRepo";
 
+        private const int _timeout = 2;
+
         private readonly IMemoryCache _cache;
         private readonly ISql _sql;
 
@@ -29,11 +31,11 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> GetMealBasisfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int subscriptionId)
+        public async Task<string> GetMealBasisfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int accountId)
         {
             if (IsSingleTenant(source))
             {
-                return (await SubscriptionMealBasisLookupAsync(subscriptionId, thirdPartyMealBasis))?.MealBasis ?? string.Empty;
+                return (await AccountMealBasisLookupAsync(accountId, thirdPartyMealBasis))?.MealBasis ?? string.Empty;
             }
             else
             {
@@ -42,11 +44,11 @@
         }
 
         /// <inheritdoc />
-        public async Task<int> GetMealBasisIDfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int subscriptionId)
+        public async Task<int> GetMealBasisIDfromTPMealbasisCodeAsync(string source, string thirdPartyMealBasis, int accountId)
         {
             if (IsSingleTenant(source))
             {
-                return (await SubscriptionMealBasisLookupAsync(subscriptionId, thirdPartyMealBasis))?.SubscriptionMealBasisID ?? 0;
+                return (await AccountMealBasisLookupAsync(accountId, thirdPartyMealBasis))?.AccountMealBasisID ?? 0;
             }
             else
             {
@@ -55,13 +57,13 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> GetMealBasisCodefromTPMealbasisIDAsync(string source, int MealBasisID, int subscriptionId)
+        public async Task<string> GetMealBasisCodefromTPMealbasisIDAsync(string source, int MealBasisID, int accountId)
         {
             if (IsSingleTenant(source))
             {
-                var mealBasis = (await SubscriptionMealBasisAsync())
-                    .FirstOrDefault(x => x.Value.SubscriptionID == subscriptionId &&
-                        x.Value.SubscriptionMealBasisID == MealBasisID).Value;
+                var mealBasis = (await AccountMealBasisAsync())
+                    .FirstOrDefault(x => x.Value.AccountID == accountId &&
+                        x.Value.AccountMealBasisID == MealBasisID).Value;
 
                 return mealBasis?.MealBasisCode ?? string.Empty;
             }
@@ -75,37 +77,37 @@
             }
         }
 
-        private async Task<SubscriptionMealBasis> SubscriptionMealBasisLookupAsync(int subscriptionId, string mealBasisCode)
+        private async Task<AccountMealBasis> AccountMealBasisLookupAsync(int accountId, string mealBasisCode)
         {
-            var cache = await SubscriptionMealBasisAsync();
-            cache.TryGetValue((subscriptionId, mealBasisCode), out var subscriptionMealBasis);
+            var cache = await AccountMealBasisAsync();
+            cache.TryGetValue((accountId, mealBasisCode), out var accountMealBasis);
 
-            return subscriptionMealBasis;
+            return accountMealBasis;
         }
 
-        private async Task<Dictionary<(int, string), SubscriptionMealBasis>> SubscriptionMealBasisAsync()
+        private async Task<Dictionary<(int, string), AccountMealBasis>> AccountMealBasisAsync()
         {
-            string cacheKey = "SubscriptionMealBasisLookup";
+            string cacheKey = "AccountMealBasisLookup";
 
-            async Task<Dictionary<(int, string), SubscriptionMealBasis>> cacheBuilder()
+            async Task<Dictionary<(int, string), AccountMealBasis>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select SubscriptionID, MealBasisCode, MealBasis, SubscriptionMealBasisID from SubscriptionMealBasis",
-                    async r => (await r.ReadAllAsync<SubscriptionMealBasis>())
-                        .ToDictionary(x => (x.SubscriptionID, x.MealBasisCode), x => x));
+                    "select AccountID, MealBasisCode, MealBasis, AccountMealBasisID from AccountMealBasis",
+                    async r => (await r.ReadAllAsync<AccountMealBasis>())
+                        .ToDictionary(x => (x.AccountID, x.MealBasisCode), x => x));
             }
 
-            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
 
             return cache;
         }
 
-        private class SubscriptionMealBasis
+        private class AccountMealBasis
         {
-            public int SubscriptionID { get; set; }
+            public int AccountID { get; set; }
             public string MealBasisCode { get; set; } = string.Empty;
             public string MealBasis { get; set; } = string.Empty;
-            public int SubscriptionMealBasisID { get; set; }
+            public int AccountMealBasisID { get; set; }
         }
 
         private bool IsSingleTenant(string source)
@@ -134,7 +136,7 @@
                         .ToDictionary(x => (x.Source, x.MealBasisCode), x => x.ToMealBasis()));
             }
 
-            return await _cache.GetOrCreateAsync(CacheKey, cacheBuilder, 60);
+            return await _cache.GetOrCreateAsync(CacheKey, cacheBuilder, _timeout);
         }
 
         private class MealBasisResult

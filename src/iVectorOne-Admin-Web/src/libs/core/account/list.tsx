@@ -57,14 +57,14 @@ const AccountList: React.FC<Props> = () => {
       name,
       isActive: isActive === false, //? API not returning this field
       actions: [
-        { name: 'View', href: `/accounts/${id}` },
+        // { name: 'View', href: `/accounts/${id}` },
         { name: 'Edit', href: `/accounts/${id}/edit` },
       ],
     })
   );
 
   const fetchData = useCallback(async () => {
-    if (!activeTenant || activeTenant == null) return;
+    if (!activeTenant) return;
     await getAccounts(
       { id: activeTenant.tenantId, key: activeTenant.tenantKey },
       userKey as string,
@@ -91,9 +91,9 @@ const AccountList: React.FC<Props> = () => {
   useEffect(() => {
     if (!!accounts?.length) {
       setFilteredAccountList(
-        sortBy(accounts, 'userName').map(({ userName, subscriptionId }) => ({
+        sortBy(accounts, 'userName').map(({ userName, accountId }) => ({
           name: userName,
-          id: subscriptionId,
+          id: accountId,
           isActive: false,
         }))
       );

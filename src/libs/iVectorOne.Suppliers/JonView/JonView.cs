@@ -1,11 +1,13 @@
 ﻿namespace iVectorOne.Suppliers.JonView
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
@@ -13,6 +15,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.JonView.Models;
+    using iVectorOne.Suppliers.JonView.Models.Prebook;
     using Intuitive.Helpers.Serialization;
 
     public class JonView : IThirdParty, ISingleSource
@@ -64,9 +67,19 @@
 
         #region PreBook
 
-        public Task<bool> PreBookAsync(PropertyDetails propertyDetails)
+        public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            return Task.FromResult(true);
+            try
+            {
+                await GetCancellationPolicyAsync(propertyDetails);
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
@@ -75,13 +88,13 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            string bookingReference = "";
+            var bookingReference = "";
             var webRequest = new Request();
 
             try
             {
                 // build request
-                BookRequest bookRequest = BuildBookingRequest(propertyDetails);
+                var bookRequest = BuildBookingRequest(propertyDetails);
 
                 // send the request
                 webRequest = await SendWebRequestAsync(propertyDetails, "Book", bookRequest);
@@ -202,9 +215,8 @@
                 CommitLevel = "1",
                 ResInfo =
                 {
-                    RefItem = DateTime.Now.ToString(Constant.DateFormat),
-                    AttItem = "host",
-                    ResItem = propertyDetails.BookingReference
+                    RefItem = propertyDetails.BookingReference,
+                    AttItem = "host"
                 },
                 PaxSegment = guests.Select(pax =>
                 {
@@ -236,7 +248,7 @@
                 {
                     BookNum = $"{roomIdx + 1}",
                     BookSeq = "",
-                    ProdCode = oRoomDetails.ThirdPartyReference,
+                    ProdCode = oRoomDetails.ThirdPartyReference.Split("_")[0],
                     StartDate = propertyDetails.ArrivalDate.ToString(Constant.DateFormat),
                     Duration = $"{propertyDetails.Duration}",
                     Note = oRoomDetails.SpecialRequest,
@@ -309,6 +321,166 @@
             return xmlEnvelope;
         }
 
+        public async Task GetCancellationPolicyAsync(PropertyDetails propertyDetails)
+        {
+            // create an array variable to hold the policy for each room
+            var policies = new Cancellations[propertyDetails.Rooms.Count];
+
+            // we'll need this regular expression too (declared here for efficiency)
+            var dailyRegEx =
+                new System.Text.RegularExpressions.Regex(@"on (?<type>\S+) (?<numberofdays>[0-9]+) day(\(s\))?");
+
+            // loop through the rooms
+            var loop = 0;
+            foreach (var roomDetails in propertyDetails.Rooms)
+            {
+                // build request
+                var cancellationMessage = BuildCancellationURL(propertyDetails, roomDetails);
+
+                // Send the request
+                var webRequest = await SendWebRequestAsync(propertyDetails, "CancellationPolicy", cancellationMessage);
+
+                // get response
+                var cancellationResponse = ExtractEnvelopeContent<CancellationPolicyResponse>(webRequest, _serializer);
+
+                // make sure we initialize the final policy for this room
+                policies[loop] = new Cancellations();
+
+                // check the status
+                if (cancellationResponse.ActionSeg.Status == "C")
+                {
+                    // we need to get the end date and amount for each cancellation item, and add them to the final cancellation policy for this room
+                    foreach (var cancellationNode in cancellationResponse.ProductListSeg.ListRecord.Select(x =>
+                                 x.Cancellation.CanItem))
+                    {
+                        var note = cancellationNode.CanNote != string.Empty ? cancellationNode.CanNote : string.Empty;
+
+                        // get start date
+                        var startDate = cancellationNode.ToDays < 0
+                            ? propertyDetails.ArrivalDate
+                            : propertyDetails.ArrivalDate.AddDays(-cancellationNode.FromDays);
+
+                        // get end date
+                        var endDate = cancellationNode.ToDays < 0
+                            ? propertyDetails.ArrivalDate
+                            : propertyDetails.ArrivalDate.AddDays(-cancellationNode.ToDays);
+
+                        // calculate the base amounts (the amounts we're going to use to get the final amount from)
+                        var baseAmounts = new List<decimal>();
+                        switch (cancellationNode.ChargeType ?? "")
+                        {
+                            case "EI":
+                            case "ENTIRE ITEM":
+                                {
+                                    baseAmounts.Add(roomDetails.LocalCost);
+                                    break;
+                                }
+
+                            case "P":
+                            case "PER PERSON"
+                                : // unfortunately we have to guess these as we are using the wrong search request (CT instead of CU)
+                                {
+                                    for (var i = 1; i <= roomDetails.Adults + roomDetails.Children; i++)
+                                    {
+                                        baseAmounts.Add(roomDetails.LocalCost / roomDetails.Adults + roomDetails.Children);
+                                    }
+
+                                    break;
+                                }
+
+                            case "DAILY":
+                                {
+                                    var dailyRegMatch = dailyRegEx.Match(note);
+                                    var type = dailyRegMatch.Groups["type"].Value.ToLower();
+                                    var numberOfDays = dailyRegMatch.Groups["numberofdays"].Value.ToSafeInt();
+
+                                    // make sure we don't get zero rates (we have to be careful of this because if there is a 'stay X pay Y' special offer,
+                                    // often the first night will be zero - and the cancellation fee should be based on the second night instead)
+                                    var rates = Array.FindAll(roomDetails.ThirdPartyReference.Split('_')[1].Split('/'),
+                                        (sRate) => sRate.ToSafeDecimal() != 0m);
+
+                                    var ratesWeWant = new string[numberOfDays];
+
+                                    var sourceIndex = type switch
+                                    {
+                                        // I'm not sure the type is ever anything other than 'first' but I thought I'd check here just in case
+                                        "first" => 0,
+                                        "last" => rates.Length - numberOfDays,
+                                        _ => default
+                                    };
+
+                                    if (rates.Length > sourceIndex)
+                                    {
+                                        Array.ConstrainedCopy(rates, sourceIndex, ratesWeWant, 0, numberOfDays);
+                                    }
+
+                                    baseAmounts.AddRange(ratesWeWant.Select(rate => rate.ToSafeDecimal()));
+
+                                    break;
+                                }
+                        }
+
+                        // now, for each base amount, we're going to either add a value or a percentage to the final amount
+                        var finalAmountForThisRule = 0d;
+                        foreach (var amount in baseAmounts)
+                        {
+                            switch (cancellationNode.RateType ?? "")
+                            {
+                                case "D": // fixed amount in dollars
+                                    {
+                                        finalAmountForThisRule += (double)amount;
+                                        break;
+                                    }
+
+                                case "P": // percentage of base amount
+                                    {
+                                        finalAmountForThisRule +=
+                                            (double)amount * ((double)cancellationNode.CanRate / 100.0d);
+                                        break;
+                                    }
+                            }
+                        }
+
+                        // we've got everything we need (finally) - now lets add it to the policy
+                        policies[loop].AddNew(startDate, endDate, finalAmountForThisRule.ToSafeDecimal());
+                    }
+
+                    // solidify the policy(turns our random collection of rules into a proper(continuous) policy ready for merging)
+                    policies[loop].Solidify(SolidifyType.Max, new DateTime(2099, 12, 31), roomDetails.LocalCost);
+                }
+
+                // increment the loop counter 
+                loop++;
+                propertyDetails.AddLog("Cancellation Costs", webRequest);
+            }
+
+            // merge the policies and add it to the booking
+            propertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(policies);
+        }
+
+        private CancellationPolicyRequest BuildCancellationURL(PropertyDetails propertyDetails, RoomDetails roomDetails)
+        {
+            return new CancellationPolicyRequest
+            {
+                ActionSeg = "DP",
+                SearchSeg =
+                {
+                    FromDate = propertyDetails.ArrivalDate.ToString("dd-MMM-yyyy"),
+                    ToDate = propertyDetails.DepartureDate.ToString("dd-MMM-yyyy"),
+                    ProdTypeCode = "All",
+                    SearchType = "PROD",
+                    ProductListSeg = { CodeItem = { ProductCode = roomDetails.ThirdPartyReference.Split('_')[0] } },
+                    DisplayRestriction = "N",
+                    DisplayPolicy = "Y",
+                    DisplaySchDate = "N",
+                    DisplayNameDetails = "Y",
+                    DisplayUsage = "Y",
+                    DisplayGeoCode = "Y",
+                    DisplayDynamicRates = "Y",
+                },
+            };
+        }
+
         #endregion
 
         #region End session
@@ -318,6 +490,5 @@
         }
 
         #endregion
-
     }
 }

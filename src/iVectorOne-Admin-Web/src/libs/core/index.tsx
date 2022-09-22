@@ -10,17 +10,18 @@ type Props = {
 const Dashboard: React.FC<Props> = ({ error }) => {
   return (
     <MainLayout>
-      {error && (
+      {error ? (
         <div className='mb-12 flex flex-col justify-center items-center'>
-          <h1 className='text-4xl font-semibold text-red-500 mb-2'>
-            Incomplete Setup
-          </h1>
+          <h1 className='text-4xl font-semibold mb-2'>Welcome to iVectorOne</h1>
           <p className='text-lg text-center'>
-            Contact support to complete the setup of your account.
+            Our team are just getting your account setup, please check back
+            later. <br /> If you are still seeing this message after a few hours
+            please contact our support team.
           </p>
         </div>
+      ) : (
+        <WelcomeBanner />
       )}
-      <WelcomeBanner />
     </MainLayout>
   );
 };

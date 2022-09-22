@@ -6,11 +6,18 @@ import { Button } from '@/components';
 type Props = {
   title: string;
   description?: string[];
-  href: string;
-  buttonText: string;
+  href?: string;
+  onClick?: () => void;
+  buttonText?: string;
 };
 
-const EmptyState: FC<Props> = ({ title, description, href, buttonText }) => {
+const EmptyState: FC<Props> = ({
+  title,
+  description,
+  href,
+  buttonText,
+  onClick,
+}) => {
   return (
     <div className='max-w-2xl m-auto mt-16'>
       <div className='text-center px-4'>
@@ -35,16 +42,19 @@ const EmptyState: FC<Props> = ({ title, description, href, buttonText }) => {
           {description?.map((desc, idx) => (
             <p key={idx}>{desc}</p>
           ))}
-          <div className='mt-6'>
-            <Button
-              isLink
-              href={href}
-              text={buttonText}
-              icon={
-                <PlusIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
-              }
-            />
-          </div>
+          {!!buttonText && (
+            <div className='mt-6'>
+              <Button
+                isLink={!!href}
+                href={href}
+                text={buttonText}
+                icon={
+                  <PlusIcon className='-ml-1 mr-2 h-5 w-5' aria-hidden='true' />
+                }
+                onClick={() => onClick?.()}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

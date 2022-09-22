@@ -2,8 +2,8 @@
 {
     public record Request : IRequest<Response>
     {
-        public string UserName { get; set; } = "";
+        public string UserName { get; set; } = string.Empty;
 
-        public string Subject { get; set; } = "";
+        public string Subject { get; set; } = string.Empty;
     }
 }

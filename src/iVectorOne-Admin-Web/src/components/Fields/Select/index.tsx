@@ -8,8 +8,8 @@ import { SelectOption } from '@/types';
 type Props = {
   id: string;
   name: string;
-  onChange: ChangeHandler;
-  onBlur: ChangeHandler;
+  onChange?: ChangeHandler;
+  onBlur?: ChangeHandler;
   labelText: string;
   options: SelectOption[];
   defaultValue?: SelectOption;
@@ -47,7 +47,7 @@ const Select: FC<Props> = forwardRef(
     const slicedOptions = options.slice(0, maxItems);
 
     const handleChange = (event: { target: any; type: any }) => {
-      onChange(event);
+      onChange?.(event);
       onUncontrolledChange?.(Number(event.target.value));
 
       if (onChangeCallback) {

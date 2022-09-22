@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import MainLayout from '@/layouts/Main';
 import { TextField, Button, Notification, RoleGuard } from '@/components';
 import { createTenant } from '../data-access/tenant';
 import { RootState } from '@/store';
+import { refetchUserData } from '../data-access';
 
 type Props = {};
 
@@ -26,7 +27,6 @@ const TenantCreate: React.FC<Props> = () => {
     formState: { errors },
   } = useForm<Tenant>();
 
-  const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
@@ -38,41 +38,68 @@ const TenantCreate: React.FC<Props> = () => {
   });
   const [showNotification, setShowNotification] = useState(false);
 
-  const activeTenant = useMemo(() => {
-    return user?.tenants.find((tenant) => tenant.isSelected);
-  }, [user]);
+  const isValidUser = useMemo(
+    () => !!userKey || isLoading,
+    [userKey, isLoading]
+  );
 
-  const onSubmit: SubmitHandler<Tenant> = async (data) => {
-    if (!activeTenant || isLoading) return;
-    await createTenant(
-      activeTenant?.tenantKey,
+  const refetchUser = useCallback(async () => {
+    if (!isValidUser) return;
+    await refetchUserData(
       userKey as string,
-      data,
       () => {
         dispatch.app.setIsLoading(true);
       },
-      () => {
+      (freshUser) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: 'New Tenant created successfully.',
-        });
-        setShowNotification(true);
+        dispatch.app.updateUser(freshUser);
         setTimeout(() => {
           navigate('/tenants');
         }, 500);
       },
       (err) => {
-        dispatch.app.setIsLoading(false);
         console.error(err);
+        dispatch.app.setIsLoading(false);
         setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Tenant creation failed.',
+          message: 'Error while updating user data.',
         });
         setShowNotification(true);
       }
     );
-  };
+  }, []);
+
+  const onSubmit: SubmitHandler<Tenant> = useCallback(
+    async (data) => {
+      if (!isValidUser) return;
+      await createTenant(
+        userKey as string,
+        data,
+        () => {
+          dispatch.app.setIsLoading(true);
+        },
+        () => {
+          dispatch.app.setIsLoading(false);
+          setNotification({
+            status: NotificationStatus.SUCCESS,
+            message: 'New Tenant created successfully.',
+          });
+          setShowNotification(true);
+          refetchUser();
+        },
+        (err) => {
+          dispatch.app.setIsLoading(false);
+          console.error(err);
+          setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'Tenant creation failed.',
+          });
+          setShowNotification(true);
+        }
+      );
+    },
+    [isValidUser]
+  );
 
   return (
     <>

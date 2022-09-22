@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a8c45af8-c84b-4594-ac14-76b28705f7cc}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <StartupFile>vite.config.ts</StartupFile>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <EnableTypeScript>true</EnableTypeScript>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">17.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="index.html" />
+    <Content Include="package-lock.json" />
+    <Content Include="package.json" />
+    <None Include="tsconfig.json" />
+    <Content Include="tsconfig.node.json" />
+    <None Include="vite.config.ts" />
+    <Content Include="amplify\cli.json" />
+    <Content Include="amplify\team-provider-info.json" />
+    <Content Include="amplify\README.md" />
+    <Content Include="amplify-old\cli.json" />
+    <Content Include="amplify-old\team-provider-info.json" />
+    <Content Include="amplify-old\README.md" />
+    <Content Include="public\logo-black.png" />
+    <Content Include="public\logo.png" />
+    <Content Include="src\favicon.ico" />
+    <None Include="src\aws-exports.ts" />
+    <None Include="src\store.ts" />
+    <None Include="src\vite-env.d.ts" />
+    <None Include="src\App.tsx" />
+    <None Include="src\main.tsx" />
+    <Content Include="amplify\backend\backend-config.json" />
+    <Content Include="amplify\backend\tags.json" />
+    <Content Include="amplify\hooks\README.md" />
+    <None Include="amplify\backend\types\amplify-dependent-resources-ref.d.ts" />
+    <Content Include="amplify\backend\auth\ivectoroneadminweb974a9d87\parameters.json" />
+    <Content Include="amplify-old\backend\backend-config.json" />
+    <Content Include="amplify-old\backend\tags.json" />
+    <Content Include="amplify-old\hooks\README.md" />
+    <None Include="amplify-old\backend\types\amplify-dependent-resources-ref.d.ts" />
+    <Content Include="amplify-old\backend\auth\ivectoradminwebvite4e908efd\cli-inputs.json" />
+    <Content Include="public\images\user-avatar-32.png" />
+    <Content Include="public\images\user-avatar-80.png" />
+    <None Include="src\axios\index.ts" />
+    <None Include="src\components\index.ts" />
+    <None Include="src\constants\index.ts" />
+    <None Include="src\i18n\index.ts" />
+    <None Include="src\i18n\locales.ts" />
+    <None Include="src\icons\Accounts.tsx" />
+    <None Include="src\icons\ChevronDown.tsx" />
+    <None Include="src\icons\Dashboard.tsx" />
+    <None Include="src\icons\Settings.tsx" />
+    <None Include="src\icons\Suppliers.tsx" />
+    <None Include="src\icons\Support.tsx" />
+    <None Include="src\icons\Tenant.tsx" />
+    <None Include="src\models\app.ts" />
+    <None Include="src\models\index.ts" />
+    <Content Include="src\static-json\change-log.json" />
+    <Content Include="src\static-json\road-map.json" />
+    <None Include="src\temp\index.ts" />
+    <None Include="src\types\index.ts" />
+    <None Include="src\utils\getAwsJwtToken.ts" />
+    <None Include="src\utils\Utils.ts" />
+    <None Include="src\utils\getStaticSVGIcon.tsx" />
+    <None Include="src\utils\render-configuration-form-fields.tsx" />
+    <None Include="src\utils\set-active-module.tsx" />
+    <None Include="src\utils\set-default-configuration-form-fields.tsx" />
+    <None Include="src\utils\Transition.tsx" />
+    <None Include="src\utils\translate-message.tsx" />
+    <None Include="src\utils\use-query.tsx" />
+    <None Include="src\utils\use-slug.tsx" />
+    <Content Include="src\assets\images\icon-provider.svg" />
+    <Content Include="src\assets\images\icon-account.svg" />
+    <Content Include="src\assets\images\icon-tenant.svg" />
+    <None Include="src\components\AccountPanel\index.tsx" />
+    <None Include="src\components\AppProvider\index.tsx" />
+    <None Include="src\components\Button\index.tsx" />
+    <None Include="src\components\CardList\index.tsx" />
+    <None Include="src\components\ConfirmModal\index.tsx" />
+    <None Include="src\components\Datepicker\index.tsx" />
+    <None Include="src\components\DropdownEditMenu\index.tsx" />
+    <None Include="src\components\DropdownFilter\index.tsx" />
+    <None Include="src\components\DropdownHelp\index.tsx" />
+    <None Include="src\components\DropdownMenu\index.tsx" />
+    <None Include="src\components\DropdownNotifications\index.tsx" />
+    <None Include="src\components\DropdownProfile\index.tsx" />
+    <None Include="src\components\EmptyState\index.tsx" />
+    <None Include="src\components\ErrorBoundary\index.tsx" />
+    <None Include="src\components\FeedbackPanel\index.tsx" />
+    <None Include="src\components\Fields\index.ts" />
+    <None Include="src\components\Header\index.tsx" />
+    <None Include="src\components\LanguageSelector\index.tsx" />
+    <None Include="src\components\Modal\index.tsx" />
+    <None Include="src\components\ModalSearch\index.tsx" />
+    <None Include="src\components\ModuleSelector\index.tsx" />
+    <None Include="src\components\Navigation\index.tsx" />
+    <None Include="src\components\Notification\index.tsx" />
+    <None Include="src\components\PaginationClassic\index.tsx" />
+    <None Include="src\components\RoleGuard\index.tsx" />
+    <None Include="src\components\SearchField\index.tsx" />
+    <None Include="src\components\SectionTitle\index.tsx" />
+    <None Include="src\components\SettingsSidebar\index.tsx" />
+    <None Include="src\components\Sidebar\index.tsx" />
+    <None Include="src\components\SidebarLinkGroup\index.tsx" />
+    <None Include="src\components\Skeleton\SkeletonText.tsx" />
+    <None Include="src\components\Spinner\index.tsx" />
+    <None Include="src\components\TableList\index.tsx" />
+    <None Include="src\components\TenantSelector\index.tsx" />
+    <None Include="src\components\ToggleThemeColor\index.tsx" />
+    <None Include="src\components\WelcomeBanner\index.tsx" />
+    <None Include="src\components\YesOrNo\index.tsx" />
+    <None Include="src\components\Amplify\Footer\index.tsx" />
+    <None Include="src\components\Amplify\Header\index.tsx" />
+    <None Include="src\components\Amplify\SignIn\Footer\index.tsx" />
+    <None Include="src\components\Amplify\SignIn\Header\index.tsx" />
+    <None Include="src\components\Fields\Checkbox\index.tsx" />
+    <None Include="src\components\Fields\CopyField\index.tsx" />
+    <None Include="src\components\Fields\Radio\index.tsx" />
+    <None Include="src\components\Fields\Select\index.tsx" />
+    <None Include="src\components\Fields\TextArea\index.tsx" />
+    <None Include="src\components\Fields\TextField\index.tsx" />
+    <None Include="src\components\Fields\Toggle\index.tsx" />
+    <None Include="src\components\Fields\UncontrolledTextField\index.tsx" />
+    <None Include="src\i18n\messages\de-DE.ts" />
+    <None Include="src\i18n\messages\en-US.ts" />
+    <None Include="src\i18n\messages\hu-HU.ts" />
+    <None Include="src\i18n\messages\index.ts" />
+    <None Include="src\layouts\Main\index.tsx" />
+    <None Include="src\layouts\NotFound\index.tsx" />
+    <None Include="src\libs\core\index.tsx" />
+    <None Include="src\libs\core\account\create.tsx" />
+    <None Include="src\libs\core\account\edit.tsx" />
+    <None Include="src\libs\core\account\list.tsx" />
+    <None Include="src\libs\core\account\view.tsx" />
+    <None Include="src\libs\core\data-access\account.ts" />
+    <None Include="src\libs\core\data-access\index.ts" />
+    <None Include="src\libs\core\data-access\supplier.ts" />
+    <None Include="src\libs\core\data-access\tenant.ts" />
+    <None Include="src\libs\core\data-access\user.ts" />
+    <None Include="src\libs\core\supplier\create.tsx" />
+    <None Include="src\libs\core\supplier\edit.tsx" />
+    <None Include="src\libs\core\supplier\list.tsx" />
+    <None Include="src\libs\core\tenant\create.tsx" />
+    <None Include="src\libs\core\tenant\edit.tsx" />
+    <None Include="src\libs\core\tenant\list.tsx" />
+    <None Include="src\libs\core\user\create.tsx" />
+    <None Include="src\libs\core\user\list.tsx" />
+    <None Include="src\libs\core\user\view.tsx" />
+    <None Include="src\libs\core\settings\contact\index.tsx" />
+    <None Include="src\libs\core\settings\feedback\index.tsx" />
+    <None Include="src\libs\core\support\change-log\index.tsx" />
+    <None Include="src\libs\core\support\knowledge-base\index.tsx" />
+    <None Include="src\libs\core\support\road-map\index.tsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="amplify" />
+    <Folder Include="amplify\backend" />
+    <Folder Include="amplify\backend\auth" />
+    <Folder Include="amplify\backend\auth\ivectoroneadminweb974a9d87" />
+    <Folder Include="amplify\backend\types" />
+    <Folder Include="amplify\hooks" />
+    <Folder Include="amplify-old" />
+    <Folder Include="amplify-old\backend" />
+    <Folder Include="amplify-old\backend\auth" />
+    <Folder Include="amplify-old\backend\auth\ivectoradminwebvite4e908efd" />
+    <Folder Include="amplify-old\backend\types" />
+    <Folder Include="amplify-old\hooks" />
+    <Folder Include="public" />
+    <Folder Include="public\images" />
+    <Folder Include="src" />
+    <Folder Include="src\additional-styles" />
+    <Folder Include="src\assets" />
+    <Folder Include="src\assets\images" />
+    <Folder Include="src\axios" />
+    <Folder Include="src\components" />
+    <Folder Include="src\components\AccountPanel" />
+    <Folder Include="src\components\Amplify" />
+    <Folder Include="src\components\Amplify\Footer" />
+    <Folder Include="src\components\Amplify\Header" />
+    <Folder Include="src\components\Amplify\SignIn" />
+    <Folder Include="src\components\Amplify\SignIn\Footer" />
+    <Folder Include="src\components\Amplify\SignIn\Header" />
+    <Folder Include="src\components\AppProvider" />
+    <Folder Include="src\components\Button" />
+    <Folder Include="src\components\CardList" />
+    <Folder Include="src\components\ConfirmModal" />
+    <Folder Include="src\components\Datepicker" />
+    <Folder Include="src\components\DropdownEditMenu" />
+    <Folder Include="src\components\DropdownFilter" />
+    <Folder Include="src\components\DropdownHelp" />
+    <Folder Include="src\components\DropdownMenu" />
+    <Folder Include="src\components\DropdownNotifications" />
+    <Folder Include="src\components\DropdownProfile" />
+    <Folder Include="src\components\EmptyState" />
+    <Folder Include="src\components\ErrorBoundary" />
+    <Folder Include="src\components\FeedbackPanel" />
+    <Folder Include="src\components\Fields" />
+    <Folder Include="src\components\Fields\Checkbox" />
+    <Folder Include="src\components\Fields\CopyField" />
+    <Folder Include="src\components\Fields\Radio" />
+    <Folder Include="src\components\Fields\Select" />
+    <Folder Include="src\components\Fields\TextArea" />
+    <Folder Include="src\components\Fields\TextField" />
+    <Folder Include="src\components\Fields\Toggle" />
+    <Folder Include="src\components\Fields\UncontrolledTextField" />
+    <Folder Include="src\components\Header" />
+    <Folder Include="src\components\LanguageSelector" />
+    <Folder Include="src\components\Modal" />
+    <Folder Include="src\components\ModalSearch" />
+    <Folder Include="src\components\ModuleSelector" />
+    <Folder Include="src\components\Navigation" />
+    <Folder Include="src\components\Notification" />
+    <Folder Include="src\components\PaginationClassic" />
+    <Folder Include="src\components\RoleGuard" />
+    <Folder Include="src\components\SearchField" />
+    <Folder Include="src\components\SectionTitle" />
+    <Folder Include="src\components\SettingsSidebar" />
+    <Folder Include="src\components\Sidebar" />
+    <Folder Include="src\components\SidebarLinkGroup" />
+    <Folder Include="src\components\Skeleton" />
+    <Folder Include="src\components\Spinner" />
+    <Folder Include="src\components\TableList" />
+    <Folder Include="src\components\TenantSelector" />
+    <Folder Include="src\components\ToggleThemeColor" />
+    <Folder Include="src\components\WelcomeBanner" />
+    <Folder Include="src\components\YesOrNo" />
+    <Folder Include="src\constants" />
+    <Folder Include="src\i18n" />
+    <Folder Include="src\i18n\messages" />
+    <Folder Include="src\icons" />
+    <Folder Include="src\layouts" />
+    <Folder Include="src\layouts\Main" />
+    <Folder Include="src\layouts\NotFound" />
+    <Folder Include="src\libs" />
+    <Folder Include="src\libs\core" />
+    <Folder Include="src\libs\core\account" />
+    <Folder Include="src\libs\core\data-access" />
+    <Folder Include="src\libs\core\settings" />
+    <Folder Include="src\libs\core\settings\contact" />
+    <Folder Include="src\libs\core\settings\feedback" />
+    <Folder Include="src\libs\core\supplier" />
+    <Folder Include="src\libs\core\support" />
+    <Folder Include="src\libs\core\support\change-log" />
+    <Folder Include="src\libs\core\support\knowledge-base" />
+    <Folder Include="src\libs\core\support\road-map" />
+    <Folder Include="src\libs\core\tenant" />
+    <Folder Include="src\libs\core\user" />
+    <Folder Include="src\models" />
+    <Folder Include="src\static-json" />
+    <Folder Include="src\temp" />
+    <Folder Include="src\types" />
+    <Folder Include="src\utils" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

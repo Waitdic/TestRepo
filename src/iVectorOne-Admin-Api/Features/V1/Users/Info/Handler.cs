@@ -44,6 +44,7 @@
             {
                 Success = true,
                 UserName = user.UserName,
+                UserId = user.UserId,
                 Tenants = tenants,
                 Authorisations = authoriationsDto
             });

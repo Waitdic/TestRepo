@@ -1,6 +1,4 @@
-﻿using iVectorOne_Admin_Api.Config.Models;
-
-namespace iVectorOne_Admin_Api.Features.V1.Users.List
+﻿namespace iVectorOne_Admin_Api.Features.V1.Users.List
 {
     public class Handler : IRequestHandler<Request, Response>
     {

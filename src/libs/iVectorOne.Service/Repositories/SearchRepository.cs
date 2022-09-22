@@ -31,7 +31,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers, Subscription user)
+        public async Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers, Account account)
         {
             var results = await _sql.ReadAllAsync<CentralProperty>(
                 "Search_GetThirdPartyData",
@@ -39,9 +39,9 @@
                     .IsStoredProcedure()
                     .WithParameters(new
                     {
-                        sCentralPropertyIDs = properties,
-                        sSources = suppliers,
-                        subscriptionId = user.SubscriptionID,
+                        centralPropertyIDs = properties,
+                        sources = suppliers,
+                        accountId = account.AccountID,
                     }));
 
             var resortSplits = _resortSplitFactory.Create(results.ToList());

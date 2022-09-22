@@ -33,9 +33,9 @@
         /// <summary>Logs the pre book.</summary>
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>
-        /// <param name="user">The user making the request</param>
+        /// <param name="account">The account making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public async Task LogPrebookAsync(Prebook.Request request, Prebook.Response response, Subscription user, string exception = "")
+        public async Task LogPrebookAsync(Prebook.Request request, Prebook.Response response, Account account, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -43,7 +43,7 @@
                 responseObject = response.Warnings;
             }
 
-            await this.InsertLogsAsync(request, responseObject, LogType.Prebook, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Prebook, account, exception);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>
-        /// <param name="user">The user making the request</param>
+        /// <param name="account">The account making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public async Task LogBookAsync(Book.Request request, Book.Response response, Subscription user, string exception = "")
+        public async Task LogBookAsync(Book.Request request, Book.Response response, Account account, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -61,7 +61,7 @@
                 responseObject = response.Warnings;
             }
 
-            await this.InsertLogsAsync(request, responseObject, LogType.Book, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Book, account, exception);
         }
 
         /// <summary>
@@ -69,9 +69,9 @@
         /// </summary>
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>
-        /// <param name="user">The user making the request</param>
+        /// <param name="account">The account making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        public async Task LogCancelAsync(Cancel.Request request, Cancel.Response response, Subscription user, string exception = "")
+        public async Task LogCancelAsync(Cancel.Request request, Cancel.Response response, Account account, string exception = "")
         {
             object responseObject = response;
             if (response != null && response.Warnings.Any())
@@ -79,7 +79,7 @@
                 responseObject = response.Warnings;
             }
 
-            await this.InsertLogsAsync(request, responseObject, LogType.Cancel, user, exception);
+            await this.InsertLogsAsync(request, responseObject, LogType.Cancel, account, exception);
         }
 
         /// <summary>
@@ -88,9 +88,9 @@
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>
         /// <param name="logType">The log type.</param>
-        /// <param name="user">The user making the request</param>
+        /// <param name="account">The account making the request</param>
         /// <param name="exception">An exception thrown in the process, will be stored instead of the response in the logging</param>
-        private async Task InsertLogsAsync(object request, object response, LogType logType, Subscription user, string exception = "")
+        private async Task InsertLogsAsync(object request, object response, LogType logType, Account account, string exception = "")
         {
             try
             {
@@ -115,7 +115,7 @@
                             @time = DateTime.Now,
                             @requestLog = requestString,
                             @responseLog = responseString,
-                            @login = user.Login,
+                            @login = account.Login,
                         }));
             }
             catch (Exception ex)

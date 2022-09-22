@@ -67,7 +67,6 @@
 
         private XmlDocument BuildAvailableRequest(string sessionId, SearchDetails searchDetails, string resortCode)
         {
-            string operatorCode = _settings.OperatorCode(searchDetails);
             var roomDetails = searchDetails.RoomDetails;
 
             var envelope = new Envelope<HotelAvailabilityRequest>
@@ -91,9 +90,6 @@
             };
 
             var request = envelope.Body.Content;
-
-            if (!string.IsNullOrEmpty(operatorCode))
-                request.Operators = new[] { operatorCode };
 
             int roomIndex = 0;
             foreach (var room in roomDetails)

@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[Search_GetThirdPartyData]
 	@centralPropertyIDs varchar(max),
 	@sources varchar(max),
-	@subscriptionId int = 0
+	@accountId int = 0
 as
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED 
@@ -41,11 +41,11 @@ select #centralproperty.CentralPropertyID,
 		Property.Name,
 		'' Code
 	from #centralproperty
-		inner join SubscriptionProperty
-			on SubscriptionProperty.CentralPropertyID = #centralproperty.CentralPropertyID
-				and SubscriptionProperty.SubscriptionID = @subscriptionId
+		inner join AccountProperty
+			on AccountProperty.CentralPropertyID = #centralproperty.CentralPropertyID
+				and AccountProperty.AccountID = @accountId
 		inner join Property
-			on SubscriptionProperty.PropertyID = Property.PropertyID
+			on AccountProperty.PropertyID = Property.PropertyID
 		inner join #Sources
 			on #Sources.Source = Property.Source
 

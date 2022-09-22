@@ -17,7 +17,6 @@ import {
   TextField,
   Notification,
   Button,
-  Toggle,
   ConfirmModal,
   RoleGuard,
 } from '@/components';
@@ -25,7 +24,6 @@ import {
   deleteTenant,
   getTenantById,
   updateTenant,
-  updateTenantStatus,
 } from '../data-access/tenant';
 
 type NotificationState = {
@@ -138,40 +136,6 @@ const TenantEdit: React.FC<Props> = () => {
         setNotification({
           status: NotificationStatus.ERROR,
           message: MESSAGES.onFailed.update,
-        });
-        setShowNotification(true);
-      }
-    );
-  };
-
-  const handleToggleTenantStatus = async () => {
-    if (!userIsValid) return;
-    await updateTenantStatus(
-      activeUserTenant?.tenantKey as string,
-      userKey as string,
-      Number(slug),
-      !tenant?.isActive,
-      () => {
-        dispatch.app.setIsLoading(true);
-      },
-      () => {
-        dispatch.app.setIsLoading(false);
-        setTenant({
-          ...(tenant as Tenant),
-          isActive: !tenant?.isActive,
-        });
-        setNotification({
-          status: NotificationStatus.SUCCESS,
-          message: MESSAGES.onSuccess.status,
-        });
-        setShowNotification(true);
-      },
-      (err) => {
-        console.error(err);
-        dispatch.app.setIsLoading(false);
-        setNotification({
-          status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.status,
         });
         setShowNotification(true);
       }
@@ -297,15 +261,14 @@ const TenantEdit: React.FC<Props> = () => {
                       required
                     />
                   </div>
-                  <Toggle
-                    id='isActive'
-                    name='isActive'
-                    labelText='Status'
-                    defaultValue={tenant?.isActive}
-                    onChange={handleToggleTenantStatus}
-                    onBlur={handleToggleTenantStatus}
-                    readOnly
-                  />
+                  <div className='flex justify-between items-center'>
+                    <label className='text-sm font-medium text-dark'>
+                      Status
+                    </label>
+                    <p className='text-sm font-medium text-dark'>
+                      {tenant?.isActive ? 'Active' : 'Inactive'}
+                    </p>
+                  </div>
                 </div>
                 <div className='flex justify-end mt-5 pt-5'>
                   <Button

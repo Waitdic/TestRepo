@@ -227,6 +227,7 @@
         public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
             decimal amount = 0m;
+            string? currencyCode = null;
             bool success = true;
 
             try
@@ -248,7 +249,7 @@
                 if (cancelPenalties.Any())
                 {
                     amount += cancelPenalties.Where(cp => cp.CancelStartDate < DateTime.Now && cp.CancelEndDate > DateTime.Now).Sum(cp => cp.Amount);
-
+                    currencyCode = cancelPenalties.Where(cp => cp.CurrencyCode != null).Select(cp => cp.CurrencyCode).First();
                 }
             }
 
@@ -261,7 +262,7 @@
             return new ThirdPartyCancellationFeeResult()
             {
                 Amount = amount,
-                CurrencyCode = await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
+                CurrencyCode = currencyCode ?? await _support.TPCurrencyCodeLookupAsync(propertyDetails.Source, propertyDetails.ISOCurrencyCode),
                 Success = success
             };
         }
@@ -477,7 +478,7 @@
             if (mandatoryFees.Any())
                 errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
             if (resortFees.Any())
-                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
+                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInBillableCurrency.Amount), resortFees.FirstOrDefault().TotalInBillableCurrency.CurrencyCode));
             if (mandatoryTaxes.Any())
                 errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
             if (taxAndServiceFee > 0m)
@@ -564,9 +565,16 @@
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
+            var countryCode = _settings.SourceMarket(propertyDetails);
+
+            if (propertyDetails.SellingCountry != string.Empty)
+            {
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
+            }
+            
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
-            return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, occupancies);
+            return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, countryCode, occupancies);
         }
 
         private Request BuildRequest(
@@ -624,7 +632,7 @@
                                 City = propertyDetails.LeadGuestTownCity,
                                 StateProvinceCode = propertyDetails.LeadGuestCounty,
                                 PostalCode = propertyDetails.LeadGuestPostcode,
-                                CountryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.LeadGuestCountryCode, propertyDetails.SubscriptionID)
+                                CountryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.LeadGuestCountryCode, propertyDetails.AccountID)
                             }
                         }
                     }

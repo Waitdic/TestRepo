@@ -7,13 +7,14 @@
     {
         public ResGlobalInfo() { }
 
-        [XmlArray("HotelReservationIDs")]
-        [XmlArrayItem("HotelReservationID")]
-        public List<HotelReservationId> HotelReservationIds { get; set; } = new();
-
         [XmlArray("Comments")]
         [XmlArrayItem("Comment")]
         public List<Comment> Comments { get; set; } = new();
+        public bool ShouldSerializeComments() => Comments.Count != 0;
+
+        [XmlArray("HotelReservationIDs")]
+        [XmlArrayItem("HotelReservationID")]
+        public List<HotelReservationId> HotelReservationIds { get; set; } = new();
     }
 
     public class Comment

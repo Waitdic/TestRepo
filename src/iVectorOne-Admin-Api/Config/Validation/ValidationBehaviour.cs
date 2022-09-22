@@ -1,8 +1,7 @@
-﻿using FluentValidation;
-using MediatR;
-
-namespace iVectorOne_Admin_Api.Config.Validation
+﻿namespace iVectorOne_Admin_Api.Config.Validation
 {
+    using FluentValidation;
+
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;

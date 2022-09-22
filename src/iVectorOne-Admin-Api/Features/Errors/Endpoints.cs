@@ -1,9 +1,9 @@
-﻿using iVectorOne_Admin_Api.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-
-namespace iVectorOne_Admin_Api.Features.Errors
+﻿namespace iVectorOne_Admin_Api.Features.Errors
 {
+    using iVectorOne_Admin_Api.Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+
     public static class Endpoints
     {
         public static IEndpointRouteBuilder MapErrorRoutes(this IEndpointRouteBuilder endpoints)

@@ -13,7 +13,7 @@
         {
             // Arrange
             var tokenServiceMock = new Mock<ITokenService>();
-            tokenServiceMock.Setup(ts => ts.EncodeBookToken(It.IsAny<BookToken>())).Returns("TestToken");
+            tokenServiceMock.Setup(ts => ts.EncodeBookingToken(It.IsAny<BookToken>())).Returns("TestToken");
 
             var factory = new PropertyBookResponseFactory(tokenServiceMock.Object);
 
@@ -31,6 +31,7 @@
             //Assert
             Assert.Equal("testREf", response.SupplierBookingReference);
             Assert.Equal("TestToken", response.BookToken);
+            Assert.Equal("TestToken", response.BookingToken);
             Assert.Equal("TestsecondaryRef", response.SupplierReference1);
             Assert.Equal("testTpREf1", response.SupplierReference2);
         }

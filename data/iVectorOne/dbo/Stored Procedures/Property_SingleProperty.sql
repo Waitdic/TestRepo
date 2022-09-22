@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[Property_SingleProperty]
 	@propertyId int,
-	@subscriptionId int = 0
+	@accountId int = 0
 as
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED 
@@ -14,9 +14,9 @@ select Property.PropertyID, PropertyDedupe.CentralPropertyID, Property.Source, P
 			on Property.GeographyID = Geography.GeographyID
 	where Property.PropertyID = @propertyId
 union all
-select Property.PropertyID, SubscriptionProperty.CentralPropertyID, Property.Source, Property.TPKey, Property.Name, '' GeographyCode
+select Property.PropertyID, AccountProperty.CentralPropertyID, Property.Source, Property.TPKey, Property.Name, '' GeographyCode
 	from Property
-		inner join SubscriptionProperty
-			on SubscriptionProperty.PropertyID = Property.PropertyID
-				and SubscriptionProperty.SubscriptionID = @subscriptionId
-				and SubscriptionProperty.PropertyID = @propertyId
+		inner join AccountProperty
+			on AccountProperty.PropertyID = Property.PropertyID
+				and AccountProperty.AccountID = @accountId
+				and AccountProperty.PropertyID = @propertyId

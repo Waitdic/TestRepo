@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Search.Models
+﻿using iVectorOne.Models.SearchStore;
+
+namespace iVectorOne.Search.Models
 {
     using System;
     using System.Collections.Concurrent;
@@ -7,7 +9,7 @@
     using Intuitive.Helpers.Extensions;
     using iVector.Search.Property;
     using iVectorOne.Interfaces;
-    using iVectorOne.Search.Settings;
+    using iVectorOne.Models;
 
     /// <summary>
     /// A search details object
@@ -16,9 +18,9 @@
     public class SearchDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
-        /// Gets or sets the subscription id
+        /// Gets or sets the account identifier
         /// </summary>
-        public int SubscriptionID { get; set; }
+        public int AccountID { get; set; }
 
         /// <summary>Gets or sets the settings.</summary>
         public Settings Settings { get; set; } = new();
@@ -96,7 +98,7 @@
         /// <summary>
         /// Gets or sets a value indicating whether we want to de-dupes.
         /// </summary>
-        public bool DedupeResults { get; set; } = true;
+        public DedupeMethod DedupeResults { get; set; } = DedupeMethod.cheapestleadin;
 
         /// <summary>
         /// Gets or sets the total passengers.
@@ -165,5 +167,10 @@
         /// Gets or sets the paging token collector
         /// </summary>
         public IPagingTokenCollector? PagingTokenCollector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search store item
+        /// </summary>
+        public SearchStoreItem SearchStoreItem { get; set; } = new() { SearchStoreId = Guid.NewGuid() };
     }
 }
