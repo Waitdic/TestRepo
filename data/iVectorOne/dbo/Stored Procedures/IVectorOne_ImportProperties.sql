@@ -24,6 +24,32 @@ insert into #iVectorOneProps
 			inner join Property
 				on Property.Source = Supplier.SupplierName
 			inner join PropertyDedupe
+				on PropertyDedupe.PropertyID = Property.PropertyID
+			left join CustomerSpecificSource
+				on CustomerSpecificSource.CustomerID = Customer.CustomerID
+					and CustomerSpecificSource.Source = Supplier.SupplierName
+		where CustomerSpecificSource.CustomerSpecificSourceID is null 
+	union all
+	select CustomerSpecificSource.CustomerID,
+			PropertyDedupe.CentralPropertyID,
+			Property.PropertyID,
+			row_number()
+				over (partition by PropertyDedupe.CentralPropertyID 
+						order by AccountSupplier.Priority, Property.PropertyID desc) [Priority]
+		from CustomerSpecificSource
+			inner join Account
+				on Account.CustomerID = CustomerSpecificSource.CustomerID
+			inner join AccountSupplier
+				on AccountSupplier.AccountID = Account.AccountID
+			inner join Supplier
+				on AccountSupplier.SupplierID = Supplier.SupplierID
+					and CustomerSpecificSource.Source = Supplier.SupplierName
+			inner join Property
+				on Property.Source = Supplier.SupplierName
+			inner join CustomerSpecificProperty
+				on CustomerSpecificProperty.CustomerID = CustomerSpecificSource.CustomerID
+					and CustomerSpecificProperty.PropertyID = Property.PropertyID
+			inner join PropertyDedupe
 				on PropertyDedupe.PropertyID = Property.PropertyID;
 
 merge into IVectorOneProperty target
