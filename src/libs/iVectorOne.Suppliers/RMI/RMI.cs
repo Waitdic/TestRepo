@@ -351,7 +351,9 @@
                     LeadGuest =leadGuest,
                     TradeReference = propertyDetails.BookingReference,
                     RoomBookings = roomBookings,
-                    Request = propertyDetails.BookingComments.ToString()
+                    Request = propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)) ?
+                        string.Join(Environment.NewLine, propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                        string.Empty
                 }
             };
             return _serializer.Serialize(bookRequest).OuterXml;
