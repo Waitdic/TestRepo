@@ -40,7 +40,7 @@ namespace iVectorOne.Repositories
                     @"INSERT INTO [PrebookLog] (
                              [AccountName]
                             ,[AccountID]
-                            ,[System],
+                            ,[System]
                             ,[SupplierName]
                             ,[SupplierID]
                             ,[PrebookDateAndTime]
@@ -56,7 +56,7 @@ namespace iVectorOne.Repositories
                             ,@SupplierID
                             ,@PrebookDateAndTime
                             ,@ResponseTime
-                            ,@Successful,
+                            ,@Successful
                             ,@RequestPayload
                             ,@ResponsePayload)",
                     new
@@ -97,7 +97,7 @@ namespace iVectorOne.Repositories
                     @"INSERT INTO [BookLog] (
                              [AccountName]
                             ,[AccountID]
-                            ,[System],
+                            ,[System]
                             ,[SupplierName]
                             ,[SupplierID]
                             ,[PropertyID]
