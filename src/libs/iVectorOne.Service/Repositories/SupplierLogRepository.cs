@@ -67,7 +67,7 @@ namespace iVectorOne.Repositories
                         log.SupplierName,
                         log.SupplierId,
                         PrebookDateAndTime = prebookDateAndTime,
-                        ResponseTime = log.Request.RequestDuration,
+                        ResponseTime = log.Request.RequestDuration * 1000,
                         Successful = log.Request.Success,
                         RequestPayload = log.Request.RequestString,
                         ResponsePayload = log.Request.ResponseString
@@ -123,7 +123,7 @@ namespace iVectorOne.Repositories
                             ,@PropertyID
                             ,@BookDateAndTime
                             ,@ResponseTime
-                            ,@Successful,
+                            ,@Successful
                             ,@RequestPayload
                             ,@ResponsePayload
                             ,@BookingReference
@@ -143,13 +143,13 @@ namespace iVectorOne.Repositories
                         log.SupplierId,
                         propertyDetails.PropertyID,
                         BookDateAndTime = bookDateAndTime,
-                        ResponseTime = log.Request.RequestDuration,
+                        ResponseTime = log.Request.RequestDuration * 1000,
                         Successful = success,
                         RequestPayload = log.Request.RequestString,
                         ResponsePayload = log.Request.ResponseString,
                         propertyDetails.BookingReference,
                         response.SupplierBookingReference,
-                        LeadGuestFirstName = $"{propertyDetails.LeadGuestFirstName} {propertyDetails.LeadGuestLastName}",
+                        LeadGuestName = $"{propertyDetails.LeadGuestFirstName} {propertyDetails.LeadGuestLastName}",
                         propertyDetails.DepartureDate,
                         propertyDetails.Duration,
                         TotalPrice = propertyDetails.LocalCost,
