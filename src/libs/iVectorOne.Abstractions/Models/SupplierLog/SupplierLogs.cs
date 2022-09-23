@@ -9,6 +9,8 @@ namespace iVectorOne.Models.SupplierLog
         {
             switch (title)
             {
+                case "PreBook":
+                case "Prebook":
                 case "Pre-Book":
                 case "Pre-Book Availability":
                     Add(new SupplierPrebookLog
