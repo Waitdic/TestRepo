@@ -105,7 +105,8 @@
             public string Transaction { get; set; } = string.Empty;
         }
 
-        public static XmlDocument Serialize(ISerializer serializer, T envelopBodyContent, IHBSiSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, string id, string transaction, string requestId)
+        public static XmlDocument Serialize(ISerializer serializer, T envelopBodyContent, IHBSiSettings settings, IThirdPartyAttributeSearch tpAttributeSearch, 
+                    string id, string transaction, string requestId, string source)
         {
             var soapEnvelope = new Envelope<T>
             {
@@ -113,14 +114,14 @@
                 {
                     Interface =
                     {
-                        ChannelIdentifierId = settings.SalesChannel(tpAttributeSearch),
+                        ChannelIdentifierId = settings.SalesChannel(tpAttributeSearch, source),
                         Version = "2005A",
                         InterfaceAttr = "HBSI XML 4 OTA",
                         ComponentInfo =
                         {
                             Id = id,
-                            User = settings.User(tpAttributeSearch),
-                            Pwd = settings.Password(tpAttributeSearch),
+                            User = settings.User(tpAttributeSearch, source),
+                            Pwd = settings.Password(tpAttributeSearch, source),
                             ComponentType = "Hotel"
                         }
                     }
@@ -132,12 +133,12 @@
                     Content = envelopBodyContent
                 }
             };
-            return serializer.Serialize(soapEnvelope); //todo clear xml
+            return serializer.Serialize(soapEnvelope);
         }
 
         public static T DeSerialize(ISerializer serializer, XmlDocument xmlBody)
         {
-            var envelope = serializer.DeSerialize<Envelope<T>>(xmlBody); //todo clear xml
+            var envelope = serializer.DeSerialize<Envelope<T>>(xmlBody);
             return envelope.Body.Content;
         }
     }

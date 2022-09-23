@@ -155,7 +155,7 @@
             return $"{roomTypeCode}|{ratePlanCode}|{mealPlanCode}|{iAdults}|{iChild}|{iInfants}|{currencyCode}";
         }
 
-        public static List<RoomStayCandidate> GetRoomStayCandidates(SearchDetails oSearchDetails, IHBSiSettings oSettings)
+        public static List<RoomStayCandidate> GetRoomStayCandidates(SearchDetails oSearchDetails, IHBSiSettings oSettings, string source)
         {
             //'if we have multiple room details then only add the ones with distinct guest counts
             var roomStayCandidates = oSearchDetails.RoomDetails.GroupBy(GuestCountedRoomIdenty)
@@ -168,7 +168,7 @@
                         RPH = iRoomIndex + 1,
                         RatePlanCandidateRPH = 1,
                         Quantity = grRoomDetails.Count(),
-                        GuestCounts = GetGuestCounts(oSettings.UsePassengerAge(oSearchDetails), oRoomDetail)
+                        GuestCounts = GetGuestCounts(oSettings.UsePassengerAge(oSearchDetails, source), oRoomDetail)
                     };
                     return oRoomStayCandidate;
                 }).ToList();
@@ -184,7 +184,7 @@
             return equals;
         }
 
-        public static Pos GetPos(IThirdPartyAttributeSearch TPAttributeSearch, IHBSiSettings settings)
+        public static Pos GetPos(IThirdPartyAttributeSearch TPAttributeSearch, IHBSiSettings settings, string source)
         {
             return new Pos
             {
@@ -199,7 +199,7 @@
                         {
                             ChannelType = "2",
                             Primary = "true",
-                            CompanyName = settings.PartnerName(TPAttributeSearch)
+                            CompanyName = settings.PartnerName(TPAttributeSearch, source)
                         }
                     }
             };

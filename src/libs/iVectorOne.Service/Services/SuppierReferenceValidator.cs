@@ -41,6 +41,13 @@
                 case ThirdParties.YOUTRAVEL:
                     break; // neither required
                 case ThirdParties.BOOKABED:
+                case ThirdParties.HBSISANDALS:
+                case ThirdParties.HBSIBESTWESTERN:
+                case ThirdParties.HBSICET:
+                case ThirdParties.HBSISTARWOOD:
+                case ThirdParties.HBSISTATIONCASINOS:
+                case ThirdParties.HBSIUNIVERSAL:
+                case ThirdParties.HBSIVENETIAN:
                 case ThirdParties.IMPERATORE:
                 case ThirdParties.JUNIPERECTRAVEL:
                 case ThirdParties.JUNIPERELEVATE:
