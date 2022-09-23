@@ -18,10 +18,7 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
-        .ReadFrom.Configuration(ctx.Configuration));
+    builder.Host.SetupLogging();
 
     // Add services to the container.
     builder.Services.RegisterWebServices(builder.Configuration);

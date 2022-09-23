@@ -14,11 +14,25 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using iVectorOne.SDK.V2;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+    using Serilog.Filters;
 
     public static class EndpointBase
     {
         public const string Version = "v2";
         public const string Domain = "properties";
+
+        public static IHostBuilder SetupLogging(this IHostBuilder host)
+        {
+            host.UseSerilog((ctx, lc) => lc
+                .WriteTo.Console()
+                .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
+                .Filter.ByExcluding(Matching.WithProperty("RequestPath", "/healthcheck"))
+                .ReadFrom.Configuration(ctx.Configuration));
+
+            return host;
+        }
 
         public static IServiceCollection RegisterWebServices(this IServiceCollection services, ConfigurationManager config)
         {
@@ -36,6 +50,12 @@
                 options.SerializerOptions.PropertyNamingPolicy = null;
                 options.SerializerOptions.WriteIndented = true;
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
+            });
+
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             });
 
             services.Configure<KestrelServerOptions>(options =>
