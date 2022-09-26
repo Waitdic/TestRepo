@@ -71,7 +71,7 @@
                 provisionRequest = await SendPostRequestAsync(
                         propertyDetails,
                         $"{_settings.PrebookURL(propertyDetails)}{code}",
-                        "Prebook", "");
+                        "Prebook", " ");
 
                 var prebookResponse = JsonConvert.DeserializeObject<ProvisionResponse>(provisionRequest.ResponseString, GetJsonSerializerSettings());
 
@@ -192,7 +192,7 @@
             try
             {
                 string endpoint = $"{_settings.CancellationURL(propertyDetails)}{propertyDetails.SourceReference}";
-                request = await SendPostRequestAsync(propertyDetails, endpoint, "Cancel", "");
+                request = await SendPostRequestAsync(propertyDetails, endpoint, "Cancel", " ");
                 var response = JsonConvert.DeserializeObject<CancellationResponse>(request.ResponseString, GetJsonSerializerSettings());
                 if (!string.IsNullOrEmpty(response.Code))
                 {
