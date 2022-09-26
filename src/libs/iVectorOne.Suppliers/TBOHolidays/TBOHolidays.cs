@@ -697,7 +697,7 @@
             {
                 Source = ThirdParties.TBOHOLIDAYS,
                 LogFileName = type,
-                UseGZip = true,
+                UseGZip = false,
                 EndPoint = url,
                 CreateLog = true,
                 Method = RequestMethod.POST,

@@ -44,7 +44,7 @@
 
                 var webRequest = new Request
                 {
-                    UseGZip = true,
+                    UseGZip = false,
                     EndPoint = _settings.GenericURL(searchDetails),
                     Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_SOAP_XML,
