@@ -1,12 +1,13 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
 {
-    using Intuitive;
-    using Intuitive.Helpers.Security;
-    using System.Security.Cryptography;
+    using System.Net.Http.Headers;
     using System.Text;
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
+    using Intuitive;
+    using Intuitive.Helpers.Security;
+    using Search = iVectorOne.SDK.V2.PropertySearch;
 
     public class Handler : IRequestHandler<Request, Response>
     {
@@ -14,11 +15,10 @@
         private readonly ISecretKeeper _secretKeeper;
         private readonly HttpClient _client;
 
-        public Handler(ConfigContext context, ISecretKeeperFactory secretKeeperFactory, HttpClient client)
+        public Handler(ConfigContext context, ISecretKeeper secretKeeper, HttpClient client)
         {
             _context = Ensure.IsNotNull(context, nameof(context));
-            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
-                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
             _client = Ensure.IsNotNull(client, nameof(client));
         }
 
@@ -57,7 +57,7 @@
                                 .ThenInclude(a => a.Supplier)
                                 .FirstOrDefault();
 
-            var supplier = account.AccountSuppliers.FirstOrDefault(a => a.SupplierId == request.SupplierID).Supplier;
+            var supplier = account!.AccountSuppliers.FirstOrDefault(a => a.SupplierId == request.SupplierID)!.Supplier;
 
             var dateTimeList = new List<DateTime>
                 {
@@ -68,7 +68,7 @@
 
             var requestList = new List<HttpRequestMessage>();
 
-            var room = new iVectorOne.SDK.V2.PropertySearch.RoomRequest
+            var room = new Search.RoomRequest
             {
                 Adults = 2,
                 Children = 0,
@@ -77,7 +77,7 @@
 
             foreach (var dateTime in dateTimeList)
             {
-                var propertySearchRequest = new iVectorOne.SDK.V2.PropertySearch.Request
+                var propertySearchRequest = new Search.Request
                 {
                     ArrivalDate = dateTime,
                     Duration = 2,
@@ -86,7 +86,7 @@
                     {
                         supplier.SupplierName
                     },
-                    RoomRequests = new List<iVectorOne.SDK.V2.PropertySearch.RoomRequest>()
+                    RoomRequests = new ()
                     {
                         room
                     }
@@ -94,10 +94,9 @@
 
                 var propertySearchRequestString = JsonSerializer.Serialize(propertySearchRequest);
 
-                HttpRequestMessage requestMessage = new()
+                HttpRequestMessage requestMessage = new(HttpMethod.Post, "/v2/properties/search")
                 {
-                    Method = HttpMethod.Post,
-                    Content = new StringContent(propertySearchRequestString)
+                    Content = new StringContent(propertySearchRequestString, Encoding.UTF8, "application/json")
                 };
                 requestList.Add(requestMessage);
             }
@@ -105,9 +104,7 @@
             var authenticationString = $"{account.Login}:{_secretKeeper.Decrypt(account.EncryptedPassword)}";
             var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
 
-            _client.BaseAddress = new Uri("https://api.ivectorone.com/v2/properties/search");
-            _client.DefaultRequestHeaders.Authorization = 
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
 
             return requestList;
         }

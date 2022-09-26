@@ -10,12 +10,11 @@
         private readonly IMapper _mapper;
         private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper, ISecretKeeperFactory secretKeeperFactory)
+        public Handler(ConfigContext context, IMapper mapper, ISecretKeeper secretKeeper)
         {
             _context = Ensure.IsNotNull(context, nameof(context));
             _mapper = Ensure.IsNotNull(mapper, nameof(mapper));
-            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
-                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)

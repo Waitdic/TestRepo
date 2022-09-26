@@ -75,7 +75,7 @@
                 CustomerTitle = title,
                 CustomerFirstName = firstName,
                 CustomerLastName = lastName,
-                DateOfBirth = DateTime.Parse(dob),
+                DateOfBirthSerialised = dob,
                 CustomerAddress1 = addres1,
                 CustomerTownCity = city,
                 CustomerCounty = country,

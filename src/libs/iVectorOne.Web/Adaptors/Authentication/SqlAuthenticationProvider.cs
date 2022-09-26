@@ -20,12 +20,11 @@
         private readonly ISql _sql;
         private readonly ISecretKeeper _secretKeeper;
 
-        public SqlAuthenticationProvider(IMemoryCache cache, ISql sql, ISecretKeeperFactory secretKeeperFactory)
+        public SqlAuthenticationProvider(IMemoryCache cache, ISql sql, ISecretKeeper secretKeeper)
         {
             _cache = Ensure.IsNotNull(cache, nameof(cache));
             _sql = Ensure.IsNotNull(sql, nameof(sql));
-            _secretKeeper = Ensure.IsNotNull(secretKeeperFactory, nameof(secretKeeperFactory))
-                .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB);
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public async Task<Account> Authenticate(string username, string password)

@@ -13,6 +13,8 @@
             Description = description;
         }
 
+        public Adjustment() { }
+
         /// <summary>
         /// Gets or sets the adjustment type.
         /// </summary>
