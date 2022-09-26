@@ -12,7 +12,7 @@ insert into #iVectorOneProps
 			PropertyDedupe.CentralPropertyID,
 			Property.PropertyID,
 			row_number()
-				over (partition by PropertyDedupe.CentralPropertyID 
+				over (partition by Customer.CustomerID, PropertyDedupe.CentralPropertyID 
 						order by AccountSupplier.Priority, Property.PropertyID desc) [Priority]
 		from Customer
 			inner join Account
@@ -34,7 +34,7 @@ insert into #iVectorOneProps
 			PropertyDedupe.CentralPropertyID,
 			Property.PropertyID,
 			row_number()
-				over (partition by PropertyDedupe.CentralPropertyID 
+				over (partition by CustomerSpecificSource.CustomerID, PropertyDedupe.CentralPropertyID 
 						order by AccountSupplier.Priority, Property.PropertyID desc) [Priority]
 		from CustomerSpecificSource
 			inner join Account
