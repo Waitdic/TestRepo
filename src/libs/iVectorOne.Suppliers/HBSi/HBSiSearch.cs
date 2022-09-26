@@ -4,6 +4,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
@@ -50,7 +51,27 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return false;
+            var isRestricted = false;
+            switch (source) 
+            {
+                case ThirdParties.HBSIBESTWESTERN:
+                    if (searchDetails.Rooms > 3) 
+                    {
+                        isRestricted = true;
+                    }
+                    break;
+                case ThirdParties.HBSISTARWOOD:
+                    if (searchDetails.Rooms > 1)
+                    {
+                        // 'If multi rooms and contain different guets per room - restrict
+                        var firstRoom = searchDetails.RoomDetails.First();
+                        int iFirstRoomGuestCount = firstRoom.Adults + firstRoom.Children + firstRoom.Infants;
+                        isRestricted = searchDetails.RoomDetails.Any(oRoom
+                            => (oRoom.Adults + oRoom.Children + oRoom.Infants) != iFirstRoomGuestCount);
+                    }
+                    break;
+            }
+            return isRestricted;
         }
 
         #endregion
