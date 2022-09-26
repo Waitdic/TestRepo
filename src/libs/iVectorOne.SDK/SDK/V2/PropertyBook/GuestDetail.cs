@@ -1,6 +1,8 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
+    using Intuitive.Helpers.Extensions;
     using System;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     ///  The guest details
@@ -28,8 +30,16 @@
         public string LastName { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the date of birth for serialisation.
+        /// </summary>
+        [JsonPropertyName("DateOfBirth")]
+        public string DateOfBirthSerialised { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the date of birth.
         /// </summary>
-        public DateTime DateOfBirth { get; set; }
+        [JsonIgnore]
+        public DateTime DateOfBirth
+            => string.IsNullOrEmpty(DateOfBirthSerialised) ? DateTimeExtensions.EmptyDate : DateOfBirthSerialised.ToSafeDate();
     }
 }
