@@ -1,7 +1,7 @@
 using Intuitive.Modules;
 using iVectorOne.Search.Api.Endpoints.V1;
 using iVectorOne.Search.Api.Endpoints.V2;
-using iVectorOne.Web.Infrastructure;
+using iVectorOne.Web.Infrastructure.V2;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Diagnostics;

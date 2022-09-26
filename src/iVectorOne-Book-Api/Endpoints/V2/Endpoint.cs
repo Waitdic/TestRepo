@@ -1,13 +1,13 @@
 ﻿namespace iVectorOne.Book.Api.Endpoints.V2
 {
     using FluentValidation;
-    using iVectorOne.Web.Infrastructure;
+    using iVectorOne.Web.Infrastructure.V2;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using Prebook = SDK.V2.PropertyPrebook;
     using Book = SDK.V2.PropertyBook;
-    using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using Prebook = SDK.V2.PropertyPrebook;
+    using Precancel = SDK.V2.PropertyPrecancel;
 
     public static class Endpoint
     {

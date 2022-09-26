@@ -1,19 +1,19 @@
 ﻿namespace iVectorOne.Content.Api.Endpoints.V1
 {
-	using FluentValidation;
-	using MediatR;
-	using iVectorOne.Web.Infrastructure;
-	using Microsoft.AspNetCore.Mvc;
-	using List = SDK.V2.PropertyList;
-	using Content = SDK.V2.PropertyContent;
-	using Intuitive.Helpers.Extensions;
+    using FluentValidation;
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Web.Infrastructure.V1;
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
+    using Content = SDK.V2.PropertyContent;
+    using List = SDK.V2.PropertyList;
 
-	public static class Endpoint
+    public static class Endpoint
 	{
 		public static IEndpointRouteBuilder MapEndpointsV1(this IEndpointRouteBuilder endpoints)
 		{
-			RegisterContentEndpointsForDomain(endpoints, "/content/property/list"); // v1 call
-			RegisterContentEndpointsForDomain(endpoints, "/content/property"); // v1 call
+			RegisterContentEndpointsForDomain(endpoints, $"/content/{EndpointBase.Domain}/list");
+			RegisterContentEndpointsForDomain(endpoints, $"/content/{EndpointBase.Domain}");
 
 			return endpoints;
 		}

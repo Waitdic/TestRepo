@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Intuitive.Modules;
 using iVectorOne.Book.Api.Endpoints.V1;
 using iVectorOne.Book.Api.Endpoints.V2;
-using iVectorOne.Web.Infrastructure;
+using iVectorOne.Web.Infrastructure.V2;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 

@@ -1,11 +1,11 @@
 ﻿namespace iVectorOne.Content.Api.Endpoints.V2
 {
     using FluentValidation;
+    using iVectorOne.Web.Infrastructure.V2;
     using MediatR;
-    using iVectorOne.Web.Infrastructure;
     using Microsoft.AspNetCore.Mvc;
-    using List = SDK.V2.PropertyList;
     using Content = SDK.V2.PropertyContent;
+    using List = SDK.V2.PropertyList;
 
     public static class Endpoint
     {

@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Web.Infrastructure
+﻿namespace iVectorOne.Web.Infrastructure.V2
 {
     using System.Linq;
     using System.Text.Json.Serialization;

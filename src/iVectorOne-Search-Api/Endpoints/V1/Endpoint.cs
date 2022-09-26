@@ -1,21 +1,21 @@
 ﻿namespace iVectorOne.Search.Api.Endpoints.V1
 {
-	using FluentValidation;
-	using iVectorOne.Web.Infrastructure;
-	using MediatR;
-	using Microsoft.AspNetCore.Mvc;
-	using iVectorOne.Factories;
-	using iVectorOne.SDK.V2.PropertySearch;
-	using Intuitive.Helpers.Extensions;
-	using iVectorOne.Models;
+    using FluentValidation;
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Factories;
+    using iVectorOne.Models;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Web.Infrastructure.V1;
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
 
-	public static class Endpoint
+    public static class Endpoint
 	{
 		public static IEndpointRouteBuilder MapEndpointsV1(this IEndpointRouteBuilder endpoints)
 		{
 			_ = endpoints
 				.MapGet(
-					"/property/search",
+					$"/{EndpointBase.Domain}/search",
 					async (
 						HttpContext httpContext,
 						[FromServices] IMediator mediator,
@@ -49,7 +49,7 @@
 							SellingCountry = sellingcountry ?? string.Empty,
 							Suppliers = suppliers?.Split(",").ToList() ?? new(),
 							EmailLogsToAddress = emailLogsTo ?? string.Empty,
-							DedupeMethod = dedupeMethod.ToSafeEnum<DedupeMethod>() ?? DedupeMethod.cheapestleadin
+							DedupeMethod = dedupeMethod?.ToSafeEnum<DedupeMethod>() ?? DedupeMethod.cheapestleadin
 						};
 
 						return await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request);
@@ -61,7 +61,7 @@
 
 			_ = endpoints
 				.MapPost(
-					"/property/search",
+					$"/{EndpointBase.Domain}/search",
 					async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] Request request)
 						=> await EndpointBase.ExecuteRequest<Request, Response>(httpContext, mediator, request))
 				.RequireAuthorization()

@@ -1,13 +1,13 @@
 ﻿namespace iVectorOne.Search.Api.Endpoints.V2
 {
     using FluentValidation;
-    using iVectorOne.Web.Infrastructure;
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Factories;
+    using iVectorOne.Models;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Web.Infrastructure.V2;
     using MediatR;
     using Microsoft.AspNetCore.Mvc;
-    using iVectorOne.Factories;
-    using iVectorOne.SDK.V2.PropertySearch;
-    using Intuitive.Helpers.Extensions;
-    using iVectorOne.Models;
 
     public static class Endpoint
     {
