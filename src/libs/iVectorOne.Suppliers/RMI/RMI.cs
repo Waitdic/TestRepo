@@ -126,25 +126,21 @@
                                      .SelectMany(propertyResult => propertyResult.Errata)
                                      .Where(errata => !string.IsNullOrEmpty(errata.Description));
 
-                        if (errataItems.Any())
+                        foreach (var errata in errataItems)
                         {
                             var sb = new StringBuilder();
-
-                            foreach (var errata in errataItems)
+                            if (!string.IsNullOrEmpty(errata.StartDate))
                             {
-                                if (!string.IsNullOrEmpty(errata.StartDate))
-                                {
-                                    sb.AppendLine($"Start Date: {errata.StartDate}, ");
-                                }
-
-                                if (!string.IsNullOrEmpty(errata.EndDate))
-                                {
-                                    sb.AppendLine($"End Date: {errata.EndDate}, ");
-                                }
-
-                                sb.AppendLine(errata.Description);
-                                propertyDetails.Errata.AddNew("Important Information", sb.ToString());
+                                sb.AppendLine($"Start Date: {errata.StartDate}, ");
                             }
+
+                            if (!string.IsNullOrEmpty(errata.EndDate))
+                            {
+                                sb.AppendLine($"End Date: {errata.EndDate}, ");
+                            }
+
+                            sb.AppendLine(errata.Description);
+                            propertyDetails.Errata.AddNew("Important Information", sb.ToString());
                         }
                     }
                 }
