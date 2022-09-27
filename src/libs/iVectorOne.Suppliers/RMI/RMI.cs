@@ -16,6 +16,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using System.Text;
 
     public class RMI : IThirdParty, ISingleSource
     {
@@ -120,24 +121,30 @@
                             }
                         }
 
-                        foreach (var errata in searchResponse.PropertyResults
+                        var errataItems = searchResponse.PropertyResults
                                      .Where(propertyResult => propertyResult.PropertyId == propertyDetails.TPKey)
-                                     .SelectMany(propertyResult => propertyResult.Errata))
+                                     .SelectMany(propertyResult => propertyResult.Errata)
+                                     .Where(errata => !string.IsNullOrEmpty(errata.Description));
+
+                        if (errataItems.Any())
                         {
-                            var text = errata.Description;
+                            var sb = new StringBuilder();
 
-                            if (!string.IsNullOrEmpty(errata.EndDate))
+                            foreach (var errata in errataItems)
                             {
-                                text = $"End Date: {errata.EndDate}, {text}";
-                            }
+                                if (!string.IsNullOrEmpty(errata.StartDate))
+                                {
+                                    sb.AppendLine($"Start Date: {errata.StartDate}, ");
+                                }
 
-                            if (!string.IsNullOrEmpty(errata.StartDate))
-                            {
-                                text = $"Start Date: {errata.StartDate}, {text}";
-                            }
+                                if (!string.IsNullOrEmpty(errata.EndDate))
+                                {
+                                    sb.AppendLine($"End Date: {errata.EndDate}, ");
+                                }
 
-                            text += errata.EndDate;
-                            propertyDetails.Errata.AddNew("Important Information", text);
+                                sb.AppendLine(errata.Description);
+                                propertyDetails.Errata.AddNew("Important Information", sb.ToString());
+                            }
                         }
                     }
                 }
