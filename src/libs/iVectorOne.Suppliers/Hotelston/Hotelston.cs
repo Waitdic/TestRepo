@@ -588,6 +588,7 @@
 
                 thirdPartyCancellationResponse.Amount = response.CancellationFee;
                 thirdPartyCancellationResponse.Success = response.Success;
+                thirdPartyCancellationResponse.TPCancellationReference = propertyDetails.SourceReference;
             }
             catch (Exception ex)
             {
