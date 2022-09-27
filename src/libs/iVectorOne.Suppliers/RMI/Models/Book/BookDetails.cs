@@ -17,6 +17,7 @@
         [XmlArrayItem("RoomBooking")]
         public List<RoomBooking> RoomBookings { get; set; } = new();
 
-
+        public string Request { get; set; } = string.Empty;
+        public bool ShouldSerializeRequest() => !string.IsNullOrEmpty(Request);
     }
 }
