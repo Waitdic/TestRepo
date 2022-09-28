@@ -26,23 +26,17 @@
         public List<string> Sources => Constant.HBSiSources;
 
         private readonly IHBSiSettings _settings;
-        private readonly ITPSupport _support;
         private readonly ISerializer _serializer;
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<HBSi> _logger;
 
         protected bool GetMealBasisCodeFromRatePlanCode => false;
 
         #endregion
 
         #region "Constructors"
-        public HBSiSearch(IHBSiSettings settings, ITPSupport support, ISerializer serializer, HttpClient httpClient, ILogger<HBSi> logger)
+        public HBSiSearch(IHBSiSettings settings, ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
-            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
-            _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
         #endregion
@@ -78,7 +72,7 @@
 
         #region "Search Functions"
 
-        private string GetSource(List<ResortSplit> resortSplits) => resortSplits.First().ThirdPartySupplier;
+        private string GetSource(List<ResortSplit> resortSplits) => resortSplits.FirstOrDefault()?.ThirdPartySupplier ?? string.Empty;
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails oSearchDetails, List<ResortSplit> oResortSplits)
         {

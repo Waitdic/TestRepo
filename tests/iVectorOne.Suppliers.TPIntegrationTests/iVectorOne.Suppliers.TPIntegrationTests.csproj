@@ -60,6 +60,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GoGlobalRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="HBSi\HBSiRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HBSiRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -196,6 +201,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="HBSi\HBSiRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HBSiRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BookABedRes.Designer.cs</LastGenOutput>
@@ -280,6 +289,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>YouTravelRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HBSi\Resources\" />
   </ItemGroup>
 
 </Project>
