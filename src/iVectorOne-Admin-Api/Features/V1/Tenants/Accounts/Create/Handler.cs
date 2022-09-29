@@ -39,6 +39,7 @@
                 account.LogMainSearchError = true;
                 account.Environment = environment.ToLower();
                 account.Login = $"{account.Login.Replace(' ', '_')}_{environment}";
+                account.Password = account.Login; //needs to be fixed in database to allow null;
                 account.EncryptedPassword = _secretKeeper.Encrypt(account.Login); // default password to login
                 return account;
             }
