@@ -21,6 +21,7 @@
     using Erratum = iVectorOne.Models.Property.Booking.Erratum;
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Search.Models;
+    using Intuitive.Helpers.Security;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -28,17 +29,20 @@
         private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<ATI> _logger;
+        private readonly ISecretKeeper _secretKeeper;
 
         public ATI(
             IATISettings settings,
             ISerializer serializer,
             HttpClient httpClient,
-            ILogger<ATI> logger)
+            ILogger<ATI> logger,
+            ISecretKeeper secretKeeper)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public string Source => ThirdParties.ATI;
@@ -117,7 +121,7 @@
                     roomBooking.GrossCost = roomCost;
                 }
 
-                propertyDetails.TPRef1 = _serializer.Serialize(new RoomRatesCollection { RoomRates = roomRates.ToArray() }).InnerXml;
+                propertyDetails.TPRef1 = _secretKeeper.Encrypt(_serializer.Serialize(new RoomRatesCollection { RoomRates = roomRates.ToArray() }).InnerXml);
 
                 if (cancellations.Count > 0)
                 {
@@ -172,7 +176,7 @@
                     bookingRequests.AddRange(propertyDetails.BookingComments.Select(c => new Comment { Text = c.Text }));
                 }
 
-                var roomRateLookup = _serializer.DeSerialize<RoomRatesCollection>(propertyDetails.TPRef1);
+                var roomRateLookup = _serializer.DeSerialize<RoomRatesCollection>(_secretKeeper.Decrypt(propertyDetails.TPRef1));
 
                 var bookRequest = new Envelope<AtiBookRequest>();
                 bookRequest.Body.Content = new AtiBookRequest
