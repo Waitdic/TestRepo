@@ -68,6 +68,11 @@
             return Get_Value("SalesEnvironment", tpAttributeSearch);
         }
 
+        public string SortType(IThirdPartyAttributeSearch tpAttributeSearch) //needed for 2.3 do not remove
+        {
+            return Get_Value("SortType", tpAttributeSearch);
+        }
+
         public int RatePlanCount(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("RatePlanCount", tpAttributeSearch).ToSafeInt();

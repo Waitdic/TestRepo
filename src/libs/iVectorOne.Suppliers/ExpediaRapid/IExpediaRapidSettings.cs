@@ -11,6 +11,7 @@
         string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch);
         string SalesChannel(IThirdPartyAttributeSearch tpAttributeSearch);
         string SalesEnvironment(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SortType(IThirdPartyAttributeSearch tpAttributeSearch); //needed for 2.3 do not remove
         int RatePlanCount(IThirdPartyAttributeSearch tpAttributeSearch);
         string PaymentTerms(IThirdPartyAttributeSearch tpAttributeSearch);
         string PartnerPointOfSale(IThirdPartyAttributeSearch tpAttributeSearch);
