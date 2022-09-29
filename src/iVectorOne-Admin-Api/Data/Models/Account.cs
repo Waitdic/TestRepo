@@ -13,7 +13,7 @@
         public string Environment { get; set; } = null!;
         public int TenantId { get; set; }
         public string Status { get; set; } = null!;
-        public string EncryptedPassword { get; set; } = null!;
+        public string? EncryptedPassword { get; set; } = null!;
 
         public Tenant? Tenant { get; set; }
         public List<AccountSupplierAttribute> AccountSupplierAttributes { get; set; } = new();
