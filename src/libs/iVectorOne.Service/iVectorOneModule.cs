@@ -125,7 +125,7 @@
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
-                    .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
+                    .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
 
             services.AddSingleton<ISearchStoreService>(s =>
                 new SearchStoreService(

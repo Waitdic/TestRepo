@@ -31,7 +31,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Info
             }
 
             var accountDto = _mapper.Map<AccountDto>(account);
-            accountDto.Password = _secretKeeper.Decrypt(account.EncryptedPassword);
+            if(account.EncryptedPassword != null)
+            {
+                accountDto.Password = _secretKeeper.Decrypt(account.EncryptedPassword);
+            }
 
             response.Default(accountDto);
 
