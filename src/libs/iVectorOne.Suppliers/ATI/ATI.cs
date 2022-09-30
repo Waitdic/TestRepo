@@ -206,16 +206,6 @@
                                 {
                                     HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference.Split("|")[0],
                                     Comments = bookingRequests.ToArray(),
-                                }, 
-                                CancelPenalties = new[]
-                                {
-                                    new CancelPenalty
-                                    {
-                                        Deadline =
-                                        {
-                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1]
-                                        }
-                                    }
                                 }
                             }).ToArray(),
                             ResGuests = new []
