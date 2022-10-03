@@ -28,6 +28,7 @@
                 case ThirdParties.DERBYSOFTSYNXIS:
                 case ThirdParties.DERBYSOFTMARRIOTT:
                 case ThirdParties.DOTW:
+                case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
                 case ThirdParties.HOTELBEDSV2:
                 case ThirdParties.JONVIEW:
@@ -113,6 +114,7 @@
                 case ThirdParties.BOOKABED:
                 case ThirdParties.CHANNELMANAGER:
                 case ThirdParties.DOTW:
+                case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
                 case ThirdParties.HOTELBEDSV2:
                 case ThirdParties.IMPERATORE:
