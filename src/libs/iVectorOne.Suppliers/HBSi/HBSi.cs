@@ -616,6 +616,12 @@ namespace iVectorOne.Suppliers.HBSi
                 payment.RequiredPayment.AcceptedPayments.Add(acceptPayment);
             }
 
+            var uniqBookingId = $"{oPropertyDetails.BookingReference}{oPropertyDetails.ComponentNumber}";
+            if (uniqBookingId.Length > Constant.BookingUniqIdMaxLength) 
+            {
+                throw new Exception($"Booking reference + component length should be equal or less than {Constant.BookingUniqIdMaxLength}");
+            } 
+
             var bookRq = new OtaHotelResRq
             {
                 Target = _settings.Target(oPropertyDetails, source),
@@ -629,13 +635,11 @@ namespace iVectorOne.Suppliers.HBSi
                     {
                         RoomStayReservation = "true",
                         CreateDateTime = dTimeStamp.ToString(Constant.TimeStampFormat),
-                        CreatorID = "Partner",
+                        CreatorID = source,
                         UniqueId =
                         {
                             Type = "14",
-                            Id = (oPropertyDetails.BookingReference.Length < 10)
-                                    ? oPropertyDetails.BookingReference
-                                    : oPropertyDetails.BookingReference.Substring(oPropertyDetails.BookingReference.Length - 10)
+                            Id = uniqBookingId
                         },
                         RoomStays = oPropertyDetails.Rooms.Select(oRoomDetails =>
                         {

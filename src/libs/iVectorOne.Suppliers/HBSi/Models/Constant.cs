@@ -17,6 +17,7 @@
         public static int ProfileType_Customer = 1;
         public const string PaymentMethod_DirectBill = "DirectBill";
         public const string Failed = "failed";
+        public const int BookingUniqIdMaxLength = 10;
 
         public static List<string> HBSiSources => new()
         {
