@@ -204,6 +204,7 @@
                     TPRef2 = request.SupplierReference2,
                     Source = propertyToken.Source,
                     BookingReference = request.BookingReference,
+                    ComponentNumber = request.ComponentNumber,
                     PropertyID = propertyToken.PropertyID,
                     PropertyName = propertyToken.PropertyName,
                     TPKey = propertyToken.TPKey,
