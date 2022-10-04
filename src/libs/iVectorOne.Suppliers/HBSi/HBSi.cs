@@ -182,7 +182,7 @@ namespace iVectorOne.Suppliers.HBSi
 
         private Cancellations GetCancellations(List<RoomStay> oRoomStays, DateTime dPropertyArrivalDate)
         {
-            string[] oPolicyCodes = { "CXP", "CFC" };
+            string[] oPolicyCodes = { "CXP", "CFC", "CNS" };
 
             var oCnxs = oRoomStays.SelectMany(oRoomStay =>
             {
@@ -210,7 +210,9 @@ namespace iVectorOne.Suppliers.HBSi
                             return Enumerable.Range(1, iUnitMultiPlier).Select(_ => dAmountAfterTax);
                         })).Take(iNights).Sum();
                     }
-                    var startDate = oPenalty.Deadline.AbsoluteDeadline.ToSafeDate();
+                    var startDate = string.Equals(oPenalty.PolicyCode, "CNS")
+                                        ? dPropertyArrivalDate
+                                        : oPenalty.Deadline.AbsoluteDeadline.ToSafeDate();
 
                     return new
                     {
