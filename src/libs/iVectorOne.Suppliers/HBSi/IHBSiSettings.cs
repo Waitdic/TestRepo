@@ -9,17 +9,14 @@ namespace iVectorOne.Suppliers.HBSi
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string User(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch, string source);
-        bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Target(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Version(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch, string source);
-        string Currency(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool ReturnOpaqueRates(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string PartnerName(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string PaymentMethod(IThirdPartyAttributeSearch tpAttributeSearch, string source);
-        string DirectBillID(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         int ConfirmationCheckRepeatInMs(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         int RequestTimeOutSeconds(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string SalesChannel(IThirdPartyAttributeSearch tpAttributeSearch, string source);

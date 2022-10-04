@@ -29,29 +29,4 @@
         [XmlArrayItem("Photo")]
         public List<Photo> Photos { get; set; } = new List<Photo>();
     }
-
-    public class Photo
-    {
-        public Photo() { }
-
-        [XmlAttribute("URL")]
-        public string Url { get; set; } = string.Empty;
-    }
-
-    public class RoomToken
-    {
-        public RoomToken() { }
-
-        [XmlAttribute("Token")]
-        public string Token { get; set; } = string.Empty;
-
-    }
-
-    public class ProviderID
-    {
-        public ProviderID() { }
-
-        [XmlAttribute("Provider")]
-        public string Provider { get; set; } = string.Empty;
-    }
 }

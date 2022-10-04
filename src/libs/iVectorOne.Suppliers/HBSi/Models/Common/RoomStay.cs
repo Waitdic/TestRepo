@@ -45,10 +45,4 @@
         public List<ResGuestRPH> ResGuestRPHs { get; set; } = new();
         public bool ShouldSerializeResGuestRPHs() => ResGuestRPHs != null && ResGuestRPHs.Any();
     }
-
-    public class ResGuestRPH
-    {
-        [XmlAttribute("RPH")]
-        public int RPH { get; set; }
-    }
 }

@@ -264,7 +264,7 @@ namespace iVectorOne.Suppliers.HBSi
                         // 'try to get the PMS id
                         string sPMSID = bookRs.HotelReservations.First().ResGlobalInfo.HotelReservationIds.First(res => string.Equals(res.ResIdType, "10")).ResIdValue;
                         //'if no PMS ID received (non-seamless transaction)
-                        if (!string.IsNullOrEmpty(sPMSID))
+                        if (string.IsNullOrEmpty(sPMSID))
                         {
                             var dStartTime = HBSiHelper.Now();
                             // 'keep trying to get the PMS ID from the DB until we either recieve it or hit a timeout
@@ -605,15 +605,10 @@ namespace iVectorOne.Suppliers.HBSi
                         ExpireDate = sExpiryDate
                     };
                 }
-                else if (string.Equals(sPaymentMethod, "directbill")) // TODO: ported from legacy. directbill has been excluded above
-                {
-                    acceptPayment.DirectBill = new DirectBill
-                    {
-                        DirectBillID = _settings.DirectBillID(oPropertyDetails, source)
-                    };
-                }
 
                 payment.RequiredPayment.AcceptedPayments.Add(acceptPayment);
+                payment.RequiredPayment.AmountPercent.Amount = oPropertyDetails.LocalCost.ToString();
+                payment.RequiredPayment.Deadline.AbsoluteDeadline = oPropertyDetails.DepartureDate.ToString(Constant.DateFormat);
             }
 
             var uniqBookingId = $"{oPropertyDetails.BookingReference}{oPropertyDetails.ComponentNumber}";

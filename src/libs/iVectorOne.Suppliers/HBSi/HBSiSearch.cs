@@ -121,8 +121,12 @@
                 oRoomDetail.Infants,
                 oGuestCounts = HBSiHelper.GetGuestCounts(_settings.UsePassengerAge(oSearchDetails, source), oRoomDetail)
             });
+            var chainCodeFilter = _settings.ChainCode(oSearchDetails, source).Trim();
 
-            var oRoomsTransformed = oSearchResponse.RoomStays.Select((oRoomStay, iRoomStayIdx) =>
+            var oRoomsTransformed = oSearchResponse.RoomStays
+                .Where(oRoomStay => string.IsNullOrEmpty(chainCodeFilter) 
+                                 || string.Equals(chainCodeFilter, oRoomStay.BasicPropertyInfo.ChainCode))
+                .Select((oRoomStay, iRoomStayIdx) =>
             {
                 return new
                 {

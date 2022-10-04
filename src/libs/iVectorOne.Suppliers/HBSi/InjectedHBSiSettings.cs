@@ -58,21 +58,6 @@
             return Get_Value("ConfirmationCheckRepeatInMs", tpAttributeSearch, source).ToSafeInt();
         }
 
-        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("Currency", tpAttributeSearch, source);
-        }
-
-        public string DirectBillID(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("DirectBillID", tpAttributeSearch, source);
-        }
-
-        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("ExcludeNRF", tpAttributeSearch, source).ToSafeBoolean();
-        }
-
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("GenericURL", tpAttributeSearch, source);
