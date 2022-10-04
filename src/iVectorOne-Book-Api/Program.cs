@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using Intuitive.Modules;
 using iVectorOne.Book.Api.Endpoints.V1;
 using iVectorOne.Book.Api.Endpoints.V2;
 using iVectorOne.Web.Infrastructure.V2;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -30,29 +28,7 @@ try
     app.MapEndpointsV1();
     app.MapEndpoints();
 
-    app.UseExceptionHandler("/error");
-
-    app.MapGet("/error", () =>
-    {
-        var problemDetails = new ProblemDetails
-        {
-            Title = "An unexpected error occurred processing your request.",
-        };
-
-        problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
-
-        return Results.Problem(problemDetails);
-    })
-    .ExcludeFromDescription();
-
-    app.UseSerilogRequestLogging();
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    app.UseHttpsRedirection();
-
-    app.Run();
+    app.BuildAndRun();
 }
 catch (Exception ex)
 {

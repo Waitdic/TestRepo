@@ -13,7 +13,11 @@
             Description = description;
         }
 
-        public Adjustment() { }
+        public Adjustment()
+        {
+            AdjustmentName = string.Empty;
+            Description = string.Empty;
+        }
 
         /// <summary>
         /// Gets or sets the adjustment type.

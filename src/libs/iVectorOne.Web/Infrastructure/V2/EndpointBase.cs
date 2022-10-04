@@ -17,6 +17,10 @@
     using Microsoft.Extensions.Hosting;
     using Serilog;
     using Serilog.Filters;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Net;
 
     public static class EndpointBase
     {
@@ -69,6 +73,41 @@
             });
 
             return services;
+        }
+
+        public static void BuildAndRun(this WebApplication app)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+            app.UseExceptionHandler("/error");
+
+            app.MapGet("/error", () =>
+            {
+                var problemDetails = new ProblemDetails
+                {
+                    Title = "An unexpected error occurred processing your request.",
+                };
+
+                problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
+
+                return Results.Problem(problemDetails);
+            })
+            .ExcludeFromDescription();
+
+            app.UseSerilogRequestLogging();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseHttpsRedirection();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.Run();
         }
 
         public static async Task<IResult> ExecuteRequest<TRequest, TResponse>(HttpContext httpContext, IMediator mediator, TRequest request)

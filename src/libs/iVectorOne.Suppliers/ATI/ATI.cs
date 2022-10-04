@@ -8,20 +8,19 @@
     using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
-    using Intuitive.Helpers.Serialization;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.Suppliers.ATI.Models;
-    using iVectorOne.Suppliers.ATI.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.ATI.Models;
+    using iVectorOne.Suppliers.ATI.Models.Common;
+    using Microsoft.Extensions.Logging;
     using Erratum = iVectorOne.Models.Property.Booking.Erratum;
-    using Intuitive.Helpers.Extensions;
-    using iVectorOne.Search.Models;
-    using Intuitive.Helpers.Security;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -257,7 +256,7 @@
                 var response = _serializer.DeSerialize<Envelope<AtiBookResponse>>(webRequest.ResponseXML);
                 var hotelReservations = response.Body.Content.HotelReservations;
 
-                bookingReference = hotelReservations.Select(x => x.UniqueID.ID).First();
+                bookingReference = hotelReservations.Select(x => x.UniqueID.ID).FirstOrDefault();
 
                 bool failed = hotelReservations.Any(x => x.ResStatus != "CONFIRMED");
 
