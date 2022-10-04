@@ -364,5 +364,10 @@
         /// The third party YouTravel
         /// </summary>
         public const string YOUTRAVEL = "YouTravel";
+
+        /// <summary>
+        /// The third party Italcamel
+        /// </summary>
+        public const string ITALCAMEL = "Italcamel";
     }
 }
