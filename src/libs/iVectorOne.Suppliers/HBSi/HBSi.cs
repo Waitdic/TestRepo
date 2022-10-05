@@ -322,7 +322,7 @@ namespace iVectorOne.Suppliers.HBSi
             catch (Exception ex)
             {
                 oPropertyDetails.Warnings.AddNew("BookException", ex.Message);
-                sReference = "";
+                sReference = Constant.Failed;
             }
             finally
             {
