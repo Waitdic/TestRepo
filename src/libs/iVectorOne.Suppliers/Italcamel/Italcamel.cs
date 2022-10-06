@@ -154,9 +154,52 @@ namespace iVectorOne.Suppliers.Italcamel
 
         #region Book
 
-        public Task<string> BookAsync(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            Request request = null;
+            var reference = string.Empty;
+
+            try
+            {
+                var bookingRequest = BuildRequest(propertyDetails, "BOOKING");
+                request = new Request
+                {
+                    EndPoint = _settings.URL(propertyDetails),
+                    Source = Source,
+                    SOAP = true,
+                    SoapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE",
+                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
+                };
+                request.SetRequest(bookingRequest);
+                await request.Send(_httpClient, _logger);
+
+                var response = _serializer.DeSerialize<BookingEstimateResponse>(request.ResponseXML).BookingEstimateResult;
+
+                // check for error
+                if (response.ErrorCode > 0 || response.Status != 0 || response.Booking.Status != 30)
+                {
+                    reference = "failed";
+                }
+
+                // store bookinguid - required for cancellation
+                propertyDetails.SourceSecondaryReference = response.Booking.UID;
+                reference = response.Booking.Number;
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("PreBook Exception", ex.ToString());
+                reference = "failed";
+            }
+            finally
+            {
+                // store the request and response xml on the property booking
+                if (request != null)
+                {
+                    propertyDetails.AddLog("Book", request);
+                }
+            }
+
+            return reference;
         }
 
         #endregion
