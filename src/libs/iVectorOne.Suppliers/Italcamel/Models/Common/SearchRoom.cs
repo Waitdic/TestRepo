@@ -3,7 +3,7 @@
     using System;
     using System.Xml.Serialization;
 
-    public class Room
+    public class SearchRoom
     {
         [XmlElement("ADULTS")]
         public int Adults { get; set; }

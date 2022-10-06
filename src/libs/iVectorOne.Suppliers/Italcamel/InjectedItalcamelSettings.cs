@@ -2,7 +2,7 @@
 {
     public class InjectedItalcamelSettings : IItalcamelSettings
     {
-        public string AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             throw new System.NotImplementedException();
         }
@@ -12,7 +12,7 @@
             throw new System.NotImplementedException();
         }
 
-        public string OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             throw new System.NotImplementedException();
         }

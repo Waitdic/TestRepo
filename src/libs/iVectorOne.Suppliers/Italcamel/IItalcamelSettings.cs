@@ -6,8 +6,8 @@
         string Username(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
         string LanguageID(IThirdPartyAttributeSearch tpAttributeSearch);
-        string AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        string OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }
 

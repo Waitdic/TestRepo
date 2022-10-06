@@ -1,6 +1,5 @@
 ﻿namespace iVectorOne.Suppliers.Italcamel
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Intuitive;
@@ -11,11 +10,9 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
-    using iVectorOne.Interfaces;
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Interfaces;
     using System.Linq;
-    using System.Xml;
     using iVectorOne.Suppliers.Italcamel.Models.Search;
 
     public class ItalcamelSearch : IThirdPartySearch, ISingleSource
@@ -31,12 +28,22 @@
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
-        
+
+        public bool SearchRestrictions(SearchDetails searchDetails, string source)
+        {
+            return false;
+        }
+
+        public bool ResponseHasExceptions(Intuitive.Helpers.Net.Request request)
+        {
+            return false;
+        }
+
         #endregion
-        
+
         #region SearchFunctions
-        
-        public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+
+        public Task<List<Intuitive.Helpers.Net.Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var requests = new List<Intuitive.Helpers.Net.Request>();
             
@@ -47,7 +54,7 @@
             foreach (var searchId in searchIds)
             {
                 // work out whether to search by city or macro region
-                var searchRequest = BuildSearchRequest(searchDetails, searchId.Key, searchId.Value);
+                var searchRequest = ItalcamelHelper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
                 var soapAction = _settings.URL(searchDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
                 
                 // get response
@@ -70,7 +77,7 @@
             return Task.FromResult(requests);
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Intuitive.Helpers.Net.Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformedResults = new TransformedResultCollection();
 
@@ -126,124 +133,34 @@
 
         #endregion
 
-        public bool SearchRestrictions(SearchDetails searchDetails, string source)
-        {
-            return false;
-        }
+        #region Helpers
 
-        public bool ResponseHasExceptions(Request request)
+        private static Dictionary<string, ItalcamelHelper.SearchType> GetSearchIDs(List<ResortSplit> resortSplits)
         {
-            return false;
-        }
-        
-        private static Dictionary<string, SearchType> GetSearchIDs(List<ResortSplit> resortSplits)
-        {
-            var searchIds = new Dictionary<string, SearchType>();
+            var searchIds = new Dictionary<string, ItalcamelHelper.SearchType>();
             
             if (resortSplits.Count == 1 && resortSplits[0].Hotels.Count == 1)
-                searchIds.Add(resortSplits[0].Hotels[0].TPKey, SearchType.Hotel);
+                searchIds.Add(resortSplits[0].Hotels[0].TPKey, ItalcamelHelper.SearchType.Hotel);
             else
                 foreach (var resortSplit in resortSplits)
                 {
                     if (resortSplit.ResortCode.Split('|').Length > 1)
                     {
                         if (!searchIds.ContainsKey(resortSplit.ResortCode.Split('|')[1]))
-                            searchIds.Add(resortSplit.ResortCode.Split('|')[1], SearchType.City);
+                            searchIds.Add(resortSplit.ResortCode.Split('|')[1], ItalcamelHelper.SearchType.City);
                     }
                     else if (!searchIds.ContainsKey(resortSplit.ResortCode))
-                        searchIds.Add(resortSplit.ResortCode, SearchType.City);
+                        searchIds.Add(resortSplit.ResortCode, ItalcamelHelper.SearchType.City);
                 }
 
             return searchIds;
-        }
-
-        private XmlDocument BuildSearchRequest(
-            IThirdPartyAttributeSearch searchDetails,
-            string searchCode,
-            SearchType searchType,
-            DateTime arrivalDate,
-            DateTime departureDate,
-            iVector.Search.Property.RoomDetails roomDetails)
-        {
-            var request = new Envelope<GetAvailabilitySplitted>
-            {
-                Body =
-                {
-                    Content =
-                    {
-                        Request =
-                        {
-                            Username = _settings.Username(searchDetails),
-                            Password = _settings.Password(searchDetails),
-                            LanguageuId = _settings.LanguageID(searchDetails),
-                            AccomodationuId = searchType == SearchType.Hotel ? searchCode : string.Empty,
-                            MacroregionuId = searchType == SearchType.MacroRegion ? searchCode : string.Empty,
-                            CityuId =  searchType != SearchType.Hotel && searchType != SearchType.MacroRegion ? searchCode : string.Empty,
-                            CheckIn = arrivalDate.ToString("yyyy-MM-dd"),
-                            CheckOut = departureDate.ToString("yyyy-MM-dd"),
-                            Rooms = roomDetails.Select(room => new Room
-                            {
-                                Adults = room.Adults,
-                                Children = room.Children,
-                                ChildAge1 = room.Children > 0 ? room.ChildAges[0] : 0,
-                                ChildAge2 = room.Children > 1 ? room.ChildAges[1] : 0,
-                            }).ToArray(),
-                        }
-                    }
-                }
-            };
-
-            return _serializer.Serialize(request);
-        }
-
-        private XmlDocument BuildSearchRequest(SearchDetails searchDetails, string searchCode, SearchType searchType = SearchType.City)
-        {
-            return BuildSearchRequest(
-                searchDetails,
-                searchCode,
-                searchType,
-                searchDetails.ArrivalDate,
-                searchDetails.DepartureDate,
-                searchDetails.RoomDetails);
-        }
-
-        private XmlDocument BuildSearchRequest(PropertyDetails propertyDetails, string searchCode, SearchType searchType = SearchType.City)
-        {
-            return BuildSearchRequest(
-                propertyDetails,
-                searchCode,
-                searchType,
-                propertyDetails.ArrivalDate,
-                propertyDetails.DepartureDate,
-                GetRoomDetailsFromThirdPartyRoomDetails(propertyDetails.Rooms));
-        }
-
-        private iVector.Search.Property.RoomDetails GetRoomDetailsFromThirdPartyRoomDetails(List<RoomDetails> thirdPartyRoomDetails)
-        {
-            var roomDetails = new iVector.Search.Property.RoomDetails();
-
-            foreach (var propertyRoomBooking in thirdPartyRoomDetails)
-            {
-                var oRoomDetail = new iVector.Search.Property.RoomDetail
-                {
-                    Adults = propertyRoomBooking.Adults,
-                    Children = propertyRoomBooking.Children
-                };
-
-                for (var i = 0; i <= propertyRoomBooking.ChildAges.Count - 1; i++)
-                    oRoomDetail.ChildAges.Add(propertyRoomBooking.ChildAges[i]);
-
-                roomDetails.Add(oRoomDetail);
-            }
-
-            return roomDetails;
         }
 
         public Guests BuildGuests(iVector.Search.Property.RoomDetails roomDetails)
         {
             return new Guests
             {
-                Rooms = roomDetails.Select(room => new Room
+                Rooms = roomDetails.Select(room => new SearchRoom
                 {
                     Adults = room.Adults,
                     Children = room.Children,
@@ -254,12 +171,7 @@
             };
         }
 
-        private enum SearchType
-        {
-            MacroRegion,
-            City,
-            Hotel
-        }
+        #endregion
     }
 }
 

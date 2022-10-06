@@ -2,6 +2,7 @@
 {
     using System;
     using System.Xml.Serialization;
+    using iVectorOne.Suppliers.Italcamel.Models.Prebook;
     using iVectorOne.Suppliers.Italcamel.Models.Search;
 
     [XmlRoot(Namespace = SoapNamespaces.Soapenv, ElementName = "Envelope")]
@@ -25,6 +26,8 @@
         {
             [XmlElement(typeof(GetAvailabilitySplitted), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYSPLITTED")]
             [XmlElement(typeof(GetAvailabilitySplittedResponse), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYSPLITTEDResponse")]
+            [XmlElement(typeof(BookingEstimate), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATE")]
+            [XmlElement(typeof(BookingEstimateResponse), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATEResponse")]
             public SoapContent SoapContent { get; set; } = new T();
 
             [XmlIgnore]

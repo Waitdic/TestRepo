@@ -4,6 +4,6 @@
 
     public class Guests
     {
-        public List<Room> Rooms { get; set; } = new();
+        public List<SearchRoom> Rooms { get; set; } = new();
     }
 }

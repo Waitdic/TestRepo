@@ -9,6 +9,10 @@
 
         [XmlArray("ROOMS")]
         [XmlArrayItem("Room")]
-        public Room[] Rooms { get; set; } = Array.Empty<Room>();
+        public SearchRoom[] Rooms { get; set; } = Array.Empty<SearchRoom>();
+
+        [XmlArray("CANCELLATIONPOLICIES")]
+        [XmlArrayItem("CANCELLATIONPOLICY")]
+        public CancellationPolicy[] CancellationPolicies{ get; set; } = Array.Empty<CancellationPolicy>();
     }
 }
