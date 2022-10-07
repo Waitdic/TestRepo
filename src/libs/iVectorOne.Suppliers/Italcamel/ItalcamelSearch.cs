@@ -21,6 +21,8 @@
         
         private readonly IItalcamelSettings _settings;
         private readonly ISerializer _serializer;
+        private readonly ItalcamelHelper _helper = new();
+
         public string Source  => ThirdParties.ITALCAMEL;
 
         public ItalcamelSearch(IItalcamelSettings settings, ISerializer serializer)
@@ -54,7 +56,7 @@
             foreach (var searchId in searchIds)
             {
                 // work out whether to search by city or macro region
-                var searchRequest = ItalcamelHelper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
+                var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
                 var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
                 
                 // get response

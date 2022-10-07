@@ -513,6 +513,17 @@
           "LeadGuestNationality": "GB",
           "CountryOfResidence": "GB"
         }
+      },
+      {
+        "Supplier": "Italcamel",
+        "Configurations": {
+          "GenericURL": "http://webservicetest.italcamel.com/Service_5_1.asmx",
+          "Login": "test1",
+          "Password": "APIintuitive",
+          "LanguageID": "345d39f6-f05f-42c6-a61b-2bd7ffc24859",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0"
+        }
       }
     ]
   }

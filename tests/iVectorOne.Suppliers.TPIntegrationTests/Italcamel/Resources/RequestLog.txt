@@ -1,0 +1,54 @@
+﻿URL: http://webservicetest.italcamel.com/Service_5_1.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:ser="http://webservice.italcamel.com/service_3_3.asmx" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ser:GETAVAILABILITYSPLITTED><ser:REQUEST><ser:CHECKIN>2021-09-01</ser:CHECKIN><ser:CHECKOUT>2021-09-06</ser:CHECKOUT><ser:ACCOMMODATIONUID>102245</ser:ACCOMMODATIONUID><ser:USERNAME>test1</ser:USERNAME><ser:PASSWORD>APIintuitive</ser:PASSWORD><ser:LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</ser:LANGUAGEUID><ser:ROOMS><ser:ROOM><ser:ADULTS>1</ser:ADULTS><ser:CHILDREN>0</ser:CHILDREN><ser:CHILDAGE1>0</ser:CHILDAGE1><ser:CHILDAGE2>0</ser:CHILDAGE2><ser:ROOMDETAILS /></ser:ROOM></ser:ROOMS></ser:REQUEST></ser:GETAVAILABILITYSPLITTED></soapenv:Body></soapenv:Envelope>
+
+URL: http://webservicetest.italcamel.com/Service_5_1.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:ser="http://webservice.italcamel.com/service_3_3.asmx" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ser:GETAVAILABILITYSPLITTED><ser:REQUEST><ser:CHECKIN>2021-09-01</ser:CHECKIN><ser:CHECKOUT>2021-09-06</ser:CHECKOUT><ser:ACCOMMODATIONUID>102245</ser:ACCOMMODATIONUID><ser:USERNAME>test1</ser:USERNAME><ser:PASSWORD>APIintuitive</ser:PASSWORD><ser:LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</ser:LANGUAGEUID><ser:ROOMS><ser:ROOM><ser:ADULTS>2</ser:ADULTS><ser:CHILDREN>0</ser:CHILDREN><ser:CHILDAGE1>0</ser:CHILDAGE1><ser:CHILDAGE2>0</ser:CHILDAGE2><ser:ROOMDETAILS /></ser:ROOM></ser:ROOMS></ser:REQUEST></ser:GETAVAILABILITYSPLITTED></soapenv:Body></soapenv:Envelope>
+
+URL: http://webservicetest.italcamel.com/Service_5_1.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:ser="http://webservice.italcamel.com/service_3_3.asmx" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ser:GETAVAILABILITYSPLITTED><ser:REQUEST><ser:CHECKIN>2021-09-01</ser:CHECKIN><ser:CHECKOUT>2021-09-06</ser:CHECKOUT><ser:ACCOMMODATIONUID>102245</ser:ACCOMMODATIONUID><ser:USERNAME>test1</ser:USERNAME><ser:PASSWORD>APIintuitive</ser:PASSWORD><ser:LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</ser:LANGUAGEUID><ser:ROOMS><ser:ROOM><ser:ADULTS>1</ser:ADULTS><ser:CHILDREN>1</ser:CHILDREN><ser:CHILDAGE1>8</ser:CHILDAGE1><ser:CHILDAGE2>0</ser:CHILDAGE2><ser:ROOMDETAILS /></ser:ROOM></ser:ROOMS></ser:REQUEST></ser:GETAVAILABILITYSPLITTED></soapenv:Body></soapenv:Envelope>
+
+URL: http://webservicetest.italcamel.com/Service_5_1.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:ser="http://webservice.italcamel.com/service_3_3.asmx" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ser:GETAVAILABILITYSPLITTED><ser:REQUEST><ser:CHECKIN>2021-09-01</ser:CHECKIN><ser:CHECKOUT>2021-09-06</ser:CHECKOUT><ser:ACCOMMODATIONUID>102245</ser:ACCOMMODATIONUID><ser:USERNAME>test1</ser:USERNAME><ser:PASSWORD>APIintuitive</ser:PASSWORD><ser:LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</ser:LANGUAGEUID><ser:ROOMS><ser:ROOM><ser:ADULTS>1</ser:ADULTS><ser:CHILDREN>0</ser:CHILDREN><ser:CHILDAGE1>0</ser:CHILDAGE1><ser:CHILDAGE2>0</ser:CHILDAGE2><ser:ROOMDETAILS /></ser:ROOM></ser:ROOMS></ser:REQUEST></ser:GETAVAILABILITYSPLITTED></soapenv:Body></soapenv:Envelope>
+
+URL: http://webservicetest.italcamel.com/Service_5_1.asmx
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:ser="http://webservice.italcamel.com/service_3_3.asmx" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><ser:GETAVAILABILITYSPLITTED><ser:REQUEST><ser:CHECKIN>2021-09-01</ser:CHECKIN><ser:CHECKOUT>2021-09-06</ser:CHECKOUT><ser:ACCOMMODATIONUID>102245</ser:ACCOMMODATIONUID><ser:USERNAME>test1</ser:USERNAME><ser:PASSWORD>APIintuitive</ser:PASSWORD><ser:LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</ser:LANGUAGEUID><ser:ROOMS><ser:ROOM><ser:ADULTS>1</ser:ADULTS><ser:CHILDREN>1</ser:CHILDREN><ser:CHILDAGE1>8</ser:CHILDAGE1><ser:CHILDAGE2>0</ser:CHILDAGE2><ser:ROOMDETAILS /></ser:ROOM></ser:ROOMS></ser:REQUEST></ser:GETAVAILABILITYSPLITTED></soapenv:Body></soapenv:Envelope>

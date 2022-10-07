@@ -31,6 +31,7 @@
         private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<Italcamel> _logger;
+        private readonly ItalcamelHelper _helper = new();
 
         public string Source => ThirdParties.ITALCAMEL;
 
@@ -273,7 +274,7 @@
 
         #region Helpers
 
-        private XmlDocument BuildRequest(PropertyDetails propertyDetails, string type)
+        private string BuildRequest(PropertyDetails propertyDetails, string type)
         {
             var comment = propertyDetails.BookingComments.Count > 0
                 ? propertyDetails.BookingComments[0].Text
@@ -321,10 +322,10 @@
                 }
             };
 
-            return _serializer.Serialize(request);
+            return _helper.CleanRequest(_serializer.Serialize(request));
         }
 
-        private XmlDocument BuildCancelRequest(PropertyDetails propertyDetails)
+        private string BuildCancelRequest(PropertyDetails propertyDetails)
         {
             var request = new Envelope<BookingDelete>
             {
@@ -340,13 +341,13 @@
                 }
             };
 
-            return _serializer.Serialize(request);
+            return _helper.CleanRequest(_serializer.Serialize(request));
         }
 
         private async void SetCancellations(PropertyDetails propertyDetails)
         {
             // get cancellation policies
-            var cancellationsRequest = ItalcamelHelper.BuildSearchRequest(
+            var cancellationsRequest = _helper.BuildSearchRequest(
                 _settings,
                 _serializer,
                 propertyDetails,

@@ -11,7 +11,7 @@
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Search.Models;
 
-    public static class ItalcamelHelper
+    public class ItalcamelHelper
     {
         public enum SearchType
         {
@@ -20,7 +20,7 @@
             Hotel
         }
 
-        public static XmlDocument BuildSearchRequest(
+        public string BuildSearchRequest(
             IItalcamelSettings settings,
             ISerializer serializer,
             IThirdPartyAttributeSearch searchDetails,
@@ -58,10 +58,10 @@
                 }
             };
 
-            return serializer.Serialize(request);
+            return CleanRequest(serializer.Serialize(request));
         }
 
-        public static XmlDocument BuildSearchRequest(
+        public string BuildSearchRequest(
             IItalcamelSettings settings,
             ISerializer serializer,
             PropertyDetails propertyDetails,
@@ -79,7 +79,7 @@
                 GetRoomDetailsFromThirdPartyRoomDetails(propertyDetails.Rooms));
         }
 
-        public static XmlDocument BuildSearchRequest(
+        public string BuildSearchRequest(
             IItalcamelSettings settings,
             ISerializer serializer,
             SearchDetails searchDetails,
@@ -97,7 +97,7 @@
                 searchDetails.RoomDetails);
         }
 
-        public static iVector.Search.Property.RoomDetails GetRoomDetailsFromThirdPartyRoomDetails(List<RoomDetails> thirdPartyRoomDetails)
+        public iVector.Search.Property.RoomDetails GetRoomDetailsFromThirdPartyRoomDetails(List<RoomDetails> thirdPartyRoomDetails)
         {
             var roomDetails = new iVector.Search.Property.RoomDetails();
 
@@ -116,6 +116,14 @@
             }
 
             return roomDetails;
+        }
+
+        public string CleanRequest(XmlDocument request)
+        {
+            var requestString = request.OuterXml;
+            return requestString
+                .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
+                .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
         }
     }
 }

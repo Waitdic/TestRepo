@@ -29,7 +29,7 @@
             [XmlElement(typeof(GetAvailabilitySplittedResponse), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYSPLITTEDResponse")]
             [XmlElement(typeof(BookingEstimate), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATE")]
             [XmlElement(typeof(BookingEstimateResponse), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATEResponse")]
-            [XmlElement(typeof(BookingDelete), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATE")]
+            [XmlElement(typeof(BookingDelete), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGDELETE")]
             [XmlElement(typeof(BookingDeleteResponse), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGDELETEResponse")]
             public SoapContent SoapContent { get; set; } = new T();
 
