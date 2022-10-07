@@ -6,6 +6,6 @@
     public class BookingEstimateResponse : SoapContent
     {
         [XmlElement("BOOKINGESTIMATEResult")]
-        public PreebookResponse BookingEstimateResult { get; set; } = new();
+        public PrebookResponse BookingEstimateResult { get; set; } = new();
     }
 }

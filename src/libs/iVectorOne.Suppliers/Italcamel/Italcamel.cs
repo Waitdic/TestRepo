@@ -1,27 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
-using Intuitive;
-using Intuitive.Helpers.Extensions;
-using Intuitive.Helpers.Net;
-using Intuitive.Helpers.Serialization;
-using iVectorOne.Constants;
-using iVectorOne.Interfaces;
-using iVectorOne.Models;
-using iVectorOne.Models.Property.Booking;
-using iVectorOne.Suppliers.Italcamel.Models.Common;
-using iVectorOne.Suppliers.Italcamel.Models.Envelope;
-using iVectorOne.Suppliers.Italcamel.Models.Prebook;
-using iVectorOne.Suppliers.Italcamel.Models.Search;
-using Microsoft.Extensions.Logging;
-using Request = Intuitive.Helpers.Net.Request;
-
-namespace iVectorOne.Suppliers.Italcamel
+﻿namespace iVectorOne.Suppliers.Italcamel
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using System.Xml;
+    using Intuitive;
+    using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.Italcamel.Models.Cancel;
+    using iVectorOne.Suppliers.Italcamel.Models.Common;
+    using iVectorOne.Suppliers.Italcamel.Models.Envelope;
+    using iVectorOne.Suppliers.Italcamel.Models.Prebook;
+    using iVectorOne.Suppliers.Italcamel.Models.Search;
+    using Microsoft.Extensions.Logging;
+    using Request = Intuitive.Helpers.Net.Request;
+
     public class Italcamel : IThirdParty, ISingleSource
     {
         #region Properties
@@ -206,14 +207,62 @@ namespace iVectorOne.Suppliers.Italcamel
 
         #region Cancel
 
-        public Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
+            Request request = null;
+
+            try
+            {
+                // create xml for cancellation request
+                var cancelRequest = BuildCancelRequest(propertyDetails);
+
+                // send the request
+                var soapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/BOOKINGDELETE";
+
+                request = new Request
+                {
+                    EndPoint = _settings.URL(propertyDetails),
+                    Method = RequestMethod.POST,
+                    Source = Source,
+                    SOAP = true,
+                    SoapAction = soapAction,
+                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
+                    LogFileName = "Cancel",
+                    CreateLog = true,
+                };
+                request.SetRequest(cancelRequest);
+                await request.Send(_httpClient, _logger);
+
+                var response = _serializer.DeSerialize<BookingDeleteResponse>(request.ResponseXML).Response;
+
+                // check response
+                if (!string.IsNullOrEmpty(response.ErrorCode) || response.ErrorCode.ToSafeInt() == 0)
+                {
+                    thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
+                    thirdPartyCancellationResponse.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("Cancel Exception", ex.ToString());
+                thirdPartyCancellationResponse.Success = false;
+            }
+            finally
+            {
+                // store the request and response xml on the property booking
+                if (request != null)
+                {
+                    propertyDetails.AddLog("Cancellation", request);
+                }
+            }
+
+            return thirdPartyCancellationResponse;
         }
 
         public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         public void EndSession(PropertyDetails propertyDetails)
@@ -268,6 +317,25 @@ namespace iVectorOne.Suppliers.Italcamel
                                 }
                             }).ToArray()
                         }
+                    }
+                }
+            };
+
+            return _serializer.Serialize(request);
+        }
+
+        private XmlDocument BuildCancelRequest(PropertyDetails propertyDetails)
+        {
+            var request = new Envelope<BookingDelete>
+            {
+                Body =
+                {
+                    Content =
+                    {
+                        Username = _settings.Username(propertyDetails),
+                        Password = _settings.Username(propertyDetails),
+                        LanguageuId = _settings.Username(propertyDetails),
+                        BookinguId = propertyDetails.SourceSecondaryReference
                     }
                 }
             };

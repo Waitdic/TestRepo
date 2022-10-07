@@ -3,7 +3,7 @@
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
 
-    public class PreebookResponse
+    public class PrebookResponse
     {
         [XmlElement("ERRORCODE")]
         public int ErrorCode { get; set; }
