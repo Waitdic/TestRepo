@@ -38,7 +38,7 @@
                     {
                         Request =
                         {
-                            Username = settings.Username(searchDetails),
+                            Username = settings.Login(searchDetails),
                             Password = settings.Password(searchDetails),
                             LanguageuId = settings.LanguageID(searchDetails),
                             AccomodationuId = searchType == SearchType.Hotel ? searchCode : string.Empty,

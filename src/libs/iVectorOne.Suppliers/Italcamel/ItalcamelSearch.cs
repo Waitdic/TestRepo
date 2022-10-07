@@ -55,12 +55,12 @@
             {
                 // work out whether to search by city or macro region
                 var searchRequest = ItalcamelHelper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
-                var soapAction = _settings.URL(searchDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
+                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
                 
                 // get response
                 var request = new Intuitive.Helpers.Net.Request
                 {
-                    EndPoint = _settings.URL(searchDetails),
+                    EndPoint = _settings.GenericURL(searchDetails),
                     Method = RequestMethod.POST,
                     Source = Source,
                     LogFileName = "Search",

@@ -87,12 +87,12 @@
             try
             {
                 var preBookRequest = BuildRequest(propertyDetails, "ESTIMATE");
-                var soapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE";
+                var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE";
 
                 // send the request
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = Source,
                     SoapAction = soapAction,
@@ -165,10 +165,10 @@
                 var bookingRequest = BuildRequest(propertyDetails, "BOOKING");
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Source = Source,
                     SOAP = true,
-                    SoapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE",
+                    SoapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE",
                     ContentType = ContentTypes.Text_Xml_charset_utf_8,
                 };
                 request.SetRequest(bookingRequest);
@@ -218,11 +218,11 @@
                 var cancelRequest = BuildCancelRequest(propertyDetails);
 
                 // send the request
-                var soapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/BOOKINGDELETE";
+                var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGDELETE";
 
                 request = new Request
                 {
-                    EndPoint = _settings.URL(propertyDetails),
+                    EndPoint = _settings.GenericURL(propertyDetails),
                     Method = RequestMethod.POST,
                     Source = Source,
                     SOAP = true,
@@ -285,9 +285,9 @@
                 {
                     Content =
                     {
-                        Username = _settings.Username(propertyDetails),
-                        Password = _settings.Username(propertyDetails),
-                        LanguageuId = _settings.Username(propertyDetails),
+                        Username = _settings.Login(propertyDetails),
+                        Password = _settings.Login(propertyDetails),
+                        LanguageuId = _settings.Login(propertyDetails),
                         Request =
                         {
                             Type = type,
@@ -332,9 +332,9 @@
                 {
                     Content =
                     {
-                        Username = _settings.Username(propertyDetails),
-                        Password = _settings.Username(propertyDetails),
-                        LanguageuId = _settings.Username(propertyDetails),
+                        Username = _settings.Login(propertyDetails),
+                        Password = _settings.Login(propertyDetails),
+                        LanguageuId = _settings.Login(propertyDetails),
                         BookinguId = propertyDetails.SourceSecondaryReference
                     }
                 }
@@ -354,10 +354,10 @@
                 ItalcamelHelper.SearchType.Hotel);
 
             // send the request
-            var soapAction = _settings.URL(propertyDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
+            var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
             var request = new Request
             {
-                EndPoint = _settings.URL(propertyDetails),
+                EndPoint = _settings.GenericURL(propertyDetails),
                 Method = RequestMethod.POST,
                 Source = Source,
                 SOAP = true,

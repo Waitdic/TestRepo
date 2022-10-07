@@ -1,36 +1,42 @@
 ﻿namespace iVectorOne.Suppliers.Italcamel
 {
-    public class InjectedItalcamelSettings : IItalcamelSettings
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
+
+    public class InjectedItalcamelSettings : SettingsBase, IItalcamelSettings
     {
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
         public string LanguageID(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("LanguageID", tpAttributeSearch);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
-        public string Username(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Login(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("Login", tpAttributeSearch);
         }
+
+        protected override string Source => ThirdParties.ITALCAMEL;
     }
 }
 
