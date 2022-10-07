@@ -91,7 +91,7 @@
             string mealbasisToken = new string(mealBasesBits.Take(TokenLengths.MealBasis).ToArray());
             string localCostToken = new string(localCostBits.Take(TokenLengths.LocalCost).ToArray());
 
-            string tokenString = roomToken + childAgeToken + mealbasisToken + localCostToken.Trim();
+            string tokenString = roomToken + childAgeToken + mealbasisToken + localCostToken.TrimEnd();
 
             return tokenString;
         }
@@ -231,7 +231,6 @@
 
                 _tokenValues.AddValue(TokenValueType.LocalCost2);
                 _tokenValues.AddValue(TokenValueType.LocalCost1);
-
 
                 GetTokenValues(new string(tokenString.Skip(18).ToArray()));
                 token.LocalCost = GetLocalCostFromTokenValues();
