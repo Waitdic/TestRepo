@@ -632,7 +632,7 @@ namespace iVectorOne.Suppliers.HBSi
                     {
                         RoomStayReservation = "true",
                         CreateDateTime = dTimeStamp.ToString(Constant.TimeStampFormat),
-                        CreatorID = source,
+                        CreatorID = _settings.SupplierName(oPropertyDetails,source),
                         UniqueId =
                         {
                             Type = "14",

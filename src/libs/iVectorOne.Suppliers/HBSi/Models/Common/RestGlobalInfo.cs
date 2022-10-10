@@ -10,6 +10,7 @@
 
         [XmlAttribute("CreatorID")]
         public string CreatorID { get; set; } = string.Empty;
+        public bool ShouldSerializeCreatorID () => !string.IsNullOrEmpty(CreatorID);
 
         [XmlAttribute("CreateDateTime")]
         public string CreateDateTime { get; set; } = string.Empty;

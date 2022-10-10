@@ -138,6 +138,11 @@
             return Get_Value("SupplierErrata", tpAttributeSearch, source);
         }
 
+        public string SupplierName(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        {
+            return Get_Value("SupplierName", tpAttributeSearch, source);
+        }
+
         public string Target(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("Target", tpAttributeSearch, source);

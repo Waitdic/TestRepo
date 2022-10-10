@@ -10,6 +10,7 @@ namespace iVectorOne.Suppliers.HBSi
         string User(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Target(IThirdPartyAttributeSearch tpAttributeSearch, string source);
+        string SupplierName(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string Version(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, string source);
