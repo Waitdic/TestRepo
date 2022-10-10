@@ -54,12 +54,6 @@
                 options.SerializerOptions.PropertyNamingPolicy = null;
                 options.SerializerOptions.WriteIndented = true;
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-            });
-
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
             });
 
             services.Configure<KestrelServerOptions>(options =>

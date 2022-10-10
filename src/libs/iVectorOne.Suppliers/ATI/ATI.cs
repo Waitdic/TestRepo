@@ -122,17 +122,17 @@
 
                 propertyDetails.TPRef1 = _secretKeeper.Encrypt(_serializer.Serialize(new RoomRatesCollection { RoomRates = roomRates.ToArray() }).InnerXml);
 
-                if (cancellations.Count > 0)
-                {
-                    propertyDetails.Cancellations.Add(cancellations.OrderBy(canx => canx.EndDate).FirstOrDefault());
-                    propertyDetails.Cancellations[0].Amount = cost;
-                }
-
                 //Check for a price change
                 if (cost > 0 && (propertyDetails.LocalCost != cost))
                 {
                     propertyDetails.LocalCost = cost;
                     propertyDetails.GrossCost = cost;
+                }
+
+                if (cancellations.Any())
+                {
+                    propertyDetails.Cancellations = cancellations;
+                    propertyDetails.Cancellations.Solidify(SolidifyType.Max, new DateTime(2099, 12, 31), propertyDetails.LocalCost);
                 }
 
                 success = true;
