@@ -25,12 +25,12 @@
         [XmlType(Namespace = SoapNamespaces.Soapenv)]
         public class SoapBody
         {
-            [XmlElement(typeof(GetAvailabilitySplitted), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYSPLITTED")]
-            [XmlElement(typeof(GetAvailabilitySplittedResponse), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYSPLITTEDResponse")]
-            [XmlElement(typeof(BookingEstimate), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATE")]
-            [XmlElement(typeof(BookingEstimateResponse), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGESTIMATEResponse")]
-            [XmlElement(typeof(BookingDelete), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGDELETE")]
-            [XmlElement(typeof(BookingDeleteResponse), Namespace = SoapNamespaces.Ser, ElementName = "BOOKINGDELETEResponse")]
+            [XmlElement(typeof(GetAvailabilitySplitted), Namespace = SoapNamespaces.Ns, ElementName = "GETAVAILABILITYSPLITTED")]
+            [XmlElement(typeof(GetAvailabilitySplittedResponse), Namespace = SoapNamespaces.Ns, ElementName = "GETAVAILABILITYSPLITTEDResponse")]
+            [XmlElement(typeof(BookingEstimate), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGESTIMATE")]
+            [XmlElement(typeof(BookingEstimateResponse), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGESTIMATEResponse")]
+            [XmlElement(typeof(BookingDelete), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGDELETE")]
+            [XmlElement(typeof(BookingDeleteResponse), Namespace = SoapNamespaces.NS, ElementName = "BOOKINGDELETEResponse")]
             public SoapContent SoapContent { get; set; } = new T();
 
             [XmlIgnore]
