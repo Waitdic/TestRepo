@@ -10,9 +10,13 @@
     using iVectorOne.Suppliers.Italcamel.Models.Search;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Search.Models;
+    using Intuitive.Helpers.Net;
+    using iVectorOne.Constants;
 
     public class ItalcamelHelper
     {
+        public string Source => ThirdParties.ITALCAMEL;
+
         public enum SearchType
         {
             MacroRegion,
@@ -124,6 +128,21 @@
             return requestString
                 .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
                 .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
+        }
+
+        public Intuitive.Helpers.Net.Request CreateWebRequest(string url, string soapAction, bool createLog = false, string logFileName = "")
+        {
+            return new Intuitive.Helpers.Net.Request
+            {
+                EndPoint = url,
+                Method = RequestMethod.POST,
+                Source = Source,
+                SoapAction = soapAction,
+                SOAP = true,
+                ContentType = ContentTypes.Text_xml,
+                LogFileName = logFileName,
+                CreateLog = createLog,
+            };
         }
     }
 }

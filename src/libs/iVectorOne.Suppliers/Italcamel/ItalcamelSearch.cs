@@ -67,7 +67,7 @@
                     Source = Source,
                     LogFileName = "Search",
                     ExtraInfo = searchDetails,
-                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
+                    ContentType = ContentTypes.Text_xml,
                     UseGZip = true,
                     SoapAction = soapAction
                 };

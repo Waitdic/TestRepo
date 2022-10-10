@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Security.Policy;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Xml;
@@ -88,20 +89,11 @@
             try
             {
                 var preBookRequest = BuildRequest(propertyDetails, "ESTIMATE");
-                var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE";
+                var url = _settings.GenericURL(propertyDetails);
+                var soapAction = url.Replace("test.", "") + "/BOOKINGESTIMATE";
 
                 // send the request
-                request = new Request
-                {
-                    EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = RequestMethod.POST,
-                    Source = Source,
-                    SoapAction = soapAction,
-                    SOAP = true,
-                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                    LogFileName = "Prebook",
-                    CreateLog = true,
-                };
+                request = _helper.CreateWebRequest(url, soapAction, true, "Prebook");
                 request.SetRequest(preBookRequest);
                 await request.Send(_httpClient, _logger);
 
@@ -164,14 +156,10 @@
             try
             {
                 var bookingRequest = BuildRequest(propertyDetails, "BOOKING");
-                request = new Request
-                {
-                    EndPoint = _settings.GenericURL(propertyDetails),
-                    Source = Source,
-                    SOAP = true,
-                    SoapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGESTIMATE",
-                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                };
+                var url = _settings.GenericURL(propertyDetails);
+                var soapAction = url.Replace("test.", "") + "/BOOKINGESTIMATE";
+
+                request = _helper.CreateWebRequest(url, soapAction);
                 request.SetRequest(bookingRequest);
                 await request.Send(_httpClient, _logger);
 
@@ -219,19 +207,10 @@
                 var cancelRequest = BuildCancelRequest(propertyDetails);
 
                 // send the request
-                var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/BOOKINGDELETE";
+                var url = _settings.GenericURL(propertyDetails);
+                var soapAction = url.Replace("test.", "") + "/BOOKINGDELETE";
 
-                request = new Request
-                {
-                    EndPoint = _settings.GenericURL(propertyDetails),
-                    Method = RequestMethod.POST,
-                    Source = Source,
-                    SOAP = true,
-                    SoapAction = soapAction,
-                    ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                    LogFileName = "Cancel",
-                    CreateLog = true,
-                };
+                request = _helper.CreateWebRequest(url, soapAction, true, "Cancel");
                 request.SetRequest(cancelRequest);
                 await request.Send(_httpClient, _logger);
 
@@ -355,18 +334,10 @@
                 ItalcamelHelper.SearchType.Hotel);
 
             // send the request
-            var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
-            var request = new Request
-            {
-                EndPoint = _settings.GenericURL(propertyDetails),
-                Method = RequestMethod.POST,
-                Source = Source,
-                SOAP = true,
-                SoapAction = soapAction,
-                ContentType = ContentTypes.Text_Xml_charset_utf_8,
-                LogFileName = "Get Cancellation Costs",
-                CreateLog = true
-            };
+            var url = _settings.GenericURL(propertyDetails);
+            var soapAction = url.Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
+
+            var request = _helper.CreateWebRequest(url, soapAction, true, "Get Cancellation Costs");
             request.SetRequest(cancellationsRequest);
             await request.Send(_httpClient, _logger);
 
