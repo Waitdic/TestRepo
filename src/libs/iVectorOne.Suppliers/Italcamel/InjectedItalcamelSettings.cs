@@ -21,6 +21,26 @@
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
+        public int MaximumHotelSearchNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("MaximumHotelSearchNumber", tpAttributeSearch).ToSafeInt();
+        }
+
+        public int MaximumNumberOfNights(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("MaximumNumberOfNights", tpAttributeSearch).ToSafeInt();
+        }
+
+        public int MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("MaximumRoomGuestNumber", tpAttributeSearch).ToSafeInt();
+        }
+
+        public int MaximumRoomNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("MaximumRoomNumber", tpAttributeSearch).ToSafeInt();
+        }
+
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Password", tpAttributeSearch);
