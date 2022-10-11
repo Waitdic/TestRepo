@@ -41,6 +41,21 @@
             return Get_Value("MaximumRoomNumber", tpAttributeSearch).ToSafeInt();
         }
 
+        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("ExcludeNonRefundable", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public bool PackageRates(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("PackageRates", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public decimal DeltaPrice(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("DeltaPrice", tpAttributeSearch).ToSafeDecimal();
+        }
+
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Password", tpAttributeSearch);

@@ -335,13 +335,13 @@
 
             // send the request
             var url = _settings.GenericURL(propertyDetails);
-            var soapAction = url.Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
+            var soapAction = url.Replace("test.", ".") + "/GETAVAILABILITYSPLITTED";
 
             var request = _helper.CreateWebRequest(url, soapAction, true, "Get Cancellation Costs");
             request.SetRequest(cancellationsRequest);
             await request.Send(_httpClient, _logger);
 
-            var response = _serializer.DeSerialize<GetAvailabilitySplittedResponse>(request.ResponseXML).Response;
+            var response = _serializer.DeSerialize<GetAvailabilitySplittedResponse>(request.ResponseXML).GetAvaibilityResult;
 
             // get cancellation policie(s)
             var cancellations = new Cancellations();

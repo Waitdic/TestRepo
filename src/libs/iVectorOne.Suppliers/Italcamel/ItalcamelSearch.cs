@@ -57,7 +57,7 @@
             {
                 // work out whether to search by city or macro region
                 var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
-                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITYSPLITTED";
+                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITY";
                 
                 // get response
                 var request = new Intuitive.Helpers.Net.Request
@@ -99,7 +99,7 @@
             Guests guests)
         {
             var transformedResults = new List<TransformedResult>();
-            var accommodations = response.SelectMany(x => x.Body.Content.Response.Accommodations);
+            var accommodations = response.SelectMany(x => x.Body.Content.GetAvaibilityResult.Accommodations);
             foreach (var accommodation in accommodations)
             {
                 var tpkey = accommodation.UID;
@@ -107,6 +107,7 @@
                 {
                     foreach (var room in accommodations.Where(a => a.UID == tpkey).SelectMany(r => r.Rooms.Where(rm => rm.Available)))
                     {
+                        bool? nonRef = room.NotRefundable ? room.NotRefundable : null;
                         foreach (var roomDetail in room.RoomDetails.Where(rd => rd.Adults == guests.Rooms[count].Adults 
                                                   && rd.Children == guests.Rooms[count].Children
                                                   && rd.ChildAge1 == guests.Rooms[count].ChildAge1
@@ -123,7 +124,8 @@
                                 Children = guests.Rooms[count].Children,
                                 ChildAgeCSV = guests.Rooms[count].HlpChildAgeCSV,
                                 Amount = board.Amount,
-                                TPReference = $"{room.UID}|{board.UID}"
+                                TPReference = $"{room.MasterUID}|{board.UID}",
+                                NonRefundableRates = nonRef,
                             }));
                         }
                     }

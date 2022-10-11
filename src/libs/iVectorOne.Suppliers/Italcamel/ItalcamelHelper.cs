@@ -90,6 +90,13 @@
             string searchCode,
             SearchType searchType = SearchType.City)
         {
+            if ((searchDetails.DepartureDate - searchDetails.ArrivalDate).Days >
+                settings.MaximumNumberOfNights(searchDetails)
+                || searchDetails.Rooms > settings.MaximumRoomNumber(searchDetails))
+            {
+                throw new Exception("MaximumNumberOfNights or MaximumRoomGuestNumber or MaximumRoomNumber exceeded");
+            }
+
             return BuildSearchRequest(
                 settings,
                 serializer,

@@ -25,12 +25,21 @@
         public string Name { get; set; } = string.Empty;
         public bool ShouldSerializeName() => !string.IsNullOrEmpty(Name);
 
+        [XmlElement("NOTREFUNDABLE")]
+        public bool NotRefundable { get; set; }
+        public bool ShouldSerializeNotRefundable() => NotRefundable;
+
+        [XmlElement("PACKAGERATE")]
+        public bool PackageRate { get; set; }
+        public bool ShouldSerializePackageRate() => NotRefundable;
+
         [XmlElement("AVAILABLE")]
         public bool Available { get; set; }
         public bool ShouldSerializeAvailable() => Available;
 
-        public string UID { get; set; } = string.Empty;
-        public bool ShouldSerializeUID() => !string.IsNullOrEmpty(UID);
+        [XmlElement("MASTERUID")]
+        public string MasterUID { get; set; } = string.Empty;
+        public bool ShouldSerializeMasterUID() => !string.IsNullOrEmpty(MasterUID);
 
         public string HlpChildAgeCSV { get; set; } = string.Empty;
         public bool ShouldSerializeHlpChildAgeCSV() => !string.IsNullOrEmpty(HlpChildAgeCSV);

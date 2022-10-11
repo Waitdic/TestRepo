@@ -30,7 +30,7 @@
             [XmlElement(typeof(BookingEstimate), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGESTIMATE")]
             [XmlElement(typeof(BookingEstimateResponse), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGESTIMATEResponse")]
             [XmlElement(typeof(BookingDelete), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGDELETE")]
-            [XmlElement(typeof(BookingDeleteResponse), Namespace = SoapNamespaces.NS, ElementName = "BOOKINGDELETEResponse")]
+            [XmlElement(typeof(BookingDeleteResponse), Namespace = SoapNamespaces.Ns, ElementName = "BOOKINGDELETEResponse")]
             public SoapContent SoapContent { get; set; } = new T();
 
             [XmlIgnore]

@@ -5,7 +5,7 @@
 
     public class GetAvailabilitySplittedResponse : SoapContent
     {
-        [XmlElement("RESPONSE")]
-        public SearchResponse Response { get; set; } = new();
+        [XmlElement("GETAVAILABILITYResult")]
+        public SearchResponse GetAvaibilityResult { get; set; } = new();
     }
 }
