@@ -284,6 +284,14 @@
                     room.Passengers.Add(passenger);
                 }
 
+                foreach (var (child, childage) in room.Passengers.Where(x => x.PassengerType == PassengerType.Child).Zip(roomToken.ChildAges, (r1, r2) => (r1, r2)))
+                {
+                    if (child.Age == 0)
+                    {
+                        child.Age = childage;
+                    }
+                }
+
                 if (room.Passengers.TotalAdults != roomToken.Adults ||
                     room.Passengers.TotalChildren != roomToken.Children ||
                     room.Passengers.TotalInfants != roomToken.Infants)
