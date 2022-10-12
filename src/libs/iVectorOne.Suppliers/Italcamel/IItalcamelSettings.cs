@@ -12,7 +12,7 @@
         int MaximumNumberOfNights(IThirdPartyAttributeSearch tpAttributeSearch);
         int MaximumRoomGuestNumber(IThirdPartyAttributeSearch tpAttributeSearch);
         int MaximumRoomNumber(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
         bool PackageRates(IThirdPartyAttributeSearch tpAttributeSearch);
         decimal DeltaPrice(IThirdPartyAttributeSearch tpAttributeSearch);
     }

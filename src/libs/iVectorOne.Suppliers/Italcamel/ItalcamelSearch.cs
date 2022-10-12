@@ -33,7 +33,9 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return false;
+            return (searchDetails.DepartureDate - searchDetails.ArrivalDate).Days > _settings.MaximumNumberOfNights(searchDetails)
+                   || searchDetails.Rooms > _settings.MaximumRoomNumber(searchDetails)
+                   || searchDetails.RoomDetails.Any(x => (x.Adults + x.Children) > _settings.MaximumRoomGuestNumber(searchDetails));
         }
 
         public bool ResponseHasExceptions(Intuitive.Helpers.Net.Request request)
@@ -57,7 +59,7 @@
             {
                 // work out whether to search by city or macro region
                 var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
-                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITY";
+                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", ".") + "/GETAVAILABILITY";
                 
                 // get response
                 var request = new Intuitive.Helpers.Net.Request
@@ -89,17 +91,21 @@
 
             var guests = BuildGuests(searchDetails.RoomDetails);
 
-            transformedResults.TransformedResults.AddRange(GetResultFromResponse(responses, guests));
+            transformedResults.TransformedResults.AddRange(GetResultFromResponse(responses, guests, searchDetails));
 
             return transformedResults;
         }
 
         public List<TransformedResult> GetResultFromResponse(
             IEnumerable<Envelope<GetAvailabilitySplittedResponse>> response,
-            Guests guests)
+            Guests guests,
+            SearchDetails searchDetails)
         {
             var transformedResults = new List<TransformedResult>();
+            var excludeNRF = _settings.ExcludeNRF(searchDetails);
+            var packageRate = _settings.PackageRates(searchDetails);
             var accommodations = response.SelectMany(x => x.Body.Content.GetAvaibilityResult.Accommodations);
+            
             foreach (var accommodation in accommodations)
             {
                 var tpkey = accommodation.UID;
@@ -108,6 +114,13 @@
                     foreach (var room in accommodations.Where(a => a.UID == tpkey).SelectMany(r => r.Rooms.Where(rm => rm.Available)))
                     {
                         bool? nonRef = room.NotRefundable ? room.NotRefundable : null;
+                        
+                        if ((nonRef != null && excludeNRF) 
+                            || (room.PackageRate && !packageRate))
+                        {
+                            continue;
+                        }
+
                         foreach (var roomDetail in room.RoomDetails.Where(rd => rd.Adults == guests.Rooms[count].Adults 
                                                   && rd.Children == guests.Rooms[count].Children
                                                   && rd.ChildAge1 == guests.Rooms[count].ChildAge1

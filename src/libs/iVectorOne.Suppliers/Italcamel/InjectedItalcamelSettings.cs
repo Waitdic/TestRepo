@@ -41,9 +41,9 @@
             return Get_Value("MaximumRoomNumber", tpAttributeSearch).ToSafeInt();
         }
 
-        public bool ExcludeNonRefundable(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ExcludeNonRefundable", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
         }
 
         public bool PackageRates(IThirdPartyAttributeSearch tpAttributeSearch)
