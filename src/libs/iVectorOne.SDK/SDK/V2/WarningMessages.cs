@@ -21,7 +21,7 @@
         /// <summary>
         /// An Arrival Date on or after today must be specified
         /// </summary>
-        public const string ArrivalDateInThePast = "An Arrival Date on or after today must be specified";
+        public const string ArrivalDateInThePast = "An Arrival Date after today must be specified";
 
         /// <summary>
         /// An Arrival Date on or after today must be specified
