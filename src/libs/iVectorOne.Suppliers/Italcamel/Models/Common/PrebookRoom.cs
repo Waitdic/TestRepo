@@ -5,7 +5,8 @@
 
     public class PrebookRoom
     {
-        public string UID { get; set; } = string.Empty;
+        [XmlElement("MASTERUID")]
+        public string MasterUID { get; set; } = string.Empty;
 
         [XmlElement("ISWIN")]
         public bool IsWin { get; set; }

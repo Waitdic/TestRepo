@@ -3,11 +3,8 @@
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
 
-    public class PrebookResponse
+    public class Package
     {
-        [XmlElement("ERRORCODE")]
-        public int ErrorCode { get; set; }
-
         [XmlElement("STATUS")]
         public int Status { get; set; }
 

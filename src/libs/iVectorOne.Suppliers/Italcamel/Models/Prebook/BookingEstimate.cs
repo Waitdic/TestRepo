@@ -11,6 +11,9 @@
         [XmlElement("PASSWORD")]
         public string Password { get; set; } = string.Empty;
 
+        [XmlElement("CITYUID")]
+        public string CityUID { get; set; } = string.Empty;
+
         [XmlElement("LANGUAGEUID")]
         public string LanguageuId { get; set; } = string.Empty;
 

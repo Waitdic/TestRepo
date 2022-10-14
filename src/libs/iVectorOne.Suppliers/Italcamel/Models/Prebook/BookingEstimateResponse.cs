@@ -5,7 +5,13 @@
 
     public class BookingEstimateResponse : SoapContent
     {
-        [XmlElement("BOOKINGESTIMATEResult")]
-        public PrebookResponse BookingEstimateResult { get; set; } = new();
+        [XmlElement("ERRORCODE")]
+        public int ErrorCode { get; set; }
+
+        [XmlElement("STATUS")]
+        public int Status { get; set; }
+
+        [XmlElement("PACKAGE")]
+        public Package Package { get; set; } = new();
     }
 }

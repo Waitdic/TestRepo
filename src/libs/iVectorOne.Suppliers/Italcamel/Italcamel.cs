@@ -4,13 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Security.Policy;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
@@ -90,25 +87,25 @@
             {
                 var preBookRequest = BuildRequest(propertyDetails, "ESTIMATE");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", "") + "/BOOKINGESTIMATE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGESTIMATE";
 
                 // send the request
                 request = _helper.CreateWebRequest(url, soapAction, true, "Prebook");
                 request.SetRequest(preBookRequest);
                 await request.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<BookingEstimateResponse>(request.ResponseXML).BookingEstimateResult;
+                var response = _serializer.DeSerialize<BookingEstimateResponse>(request.ResponseXML);
 
                 // check for error
-                if (response.ErrorCode > 0 || response.Status != 0 || response.Booking.Status != 30 || response.Booking.Status != 20)
+                if (response.ErrorCode > 0 || response.Package.Status != 0 || response.Package.Booking.Status != 30 || response.Package.Booking.Status != 20)
                 {
                     success = false;
                 }
 
-                var rooms = response.Booking.Rooms;
-                var baseCosts = response.Booking.Rooms.Select(x => x.Amount).ToList();
-                var boardCosts = response.Booking.Rooms.Select(x => x.Board).Select(a => a.Amount).ToList();
-                var services = response.Booking.Rooms.SelectMany(x => x.Services).ToList();
+                var rooms = response.Package.Booking.Rooms;
+                var baseCosts = response.Package.Booking.Rooms.Select(x => x.Amount).ToList();
+                var boardCosts = response.Package.Booking.Rooms.Select(x => x.Board).Select(a => a.Amount).ToList();
+                var services = response.Package.Booking.Rooms.SelectMany(x => x.Services).ToList();
                 var servicesCost = services.Any() 
                     ? services.Where(s => s.Optional).Select(s => s.Amount).ToList()
                     : new List<decimal>();
@@ -126,7 +123,7 @@
                 }
 
                 // set cancellations on booking
-                SetCancellations(propertyDetails);
+                SetCancellations(propertyDetails, response.Package.Booking.InternalBooking.CancellationPolicies);
             }
             catch (Exception ex)
             {
@@ -163,17 +160,17 @@
                 request.SetRequest(bookingRequest);
                 await request.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<BookingEstimateResponse>(request.ResponseXML).BookingEstimateResult;
+                var response = _serializer.DeSerialize<BookingEstimateResponse>(request.ResponseXML);
 
                 // check for error
-                if (response.ErrorCode > 0 || response.Status != 0 || response.Booking.Status != 30)
+                if (response.ErrorCode > 0 || response.Package.Status != 0 || response.Package.Booking.Status != 30)
                 {
                     reference = "failed";
                 }
 
                 // store bookinguid - required for cancellation
-                propertyDetails.SourceSecondaryReference = response.Booking.UID;
-                reference = response.Booking.Number;
+                propertyDetails.SourceSecondaryReference = response.Package.Booking.UID;
+                reference = response.Package.Booking.Number;
             }
             catch (Exception ex)
             {
@@ -271,31 +268,36 @@
                         Request =
                         {
                             Type = type,
-                            CheckIn = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
-                            CheckOut = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
-                            AccomodationuId = propertyDetails.TPKey,
                             Notes = comment,
-                            Rooms = propertyDetails.Rooms.Select(r => new PrebookRoom
+                            ReferenceNumber = DateTime.Now.ToString("yyyyMMddhhmmss"),
+                            Booking =
                             {
-                                UID = r.ThirdPartyReference.Split('|')[0],
-                                IsWin = false,
-                                IsDus = false,
-                                Passengers = r.Passengers.Select(p => new Models.Common.Passenger
+                                CheckIn = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
+                                CheckOut = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
+                                AccomodationUID = propertyDetails.TPKey,
+                                RequestPrice = propertyDetails.LocalCost,
+                                Rooms = propertyDetails.Rooms.Select(r => new PrebookRoom
                                 {
-                                    Name = string.IsNullOrEmpty(p.FirstName) ? "TBA" : p.FirstName,
-                                    Surname = string.IsNullOrEmpty(p.LastName) ? "TBA" : p.LastName,
-                                    Birthdate = (p.PassengerType switch
+                                    MasterUID = r.ThirdPartyReference.Split('|')[0],
+                                    IsWin = false,
+                                    IsDus = false,
+                                    Passengers = r.Passengers.Select(p => new Models.Common.Passenger
                                     {
-                                        PassengerType.Adult => DateTime.Now.AddYears(-40),
-                                        PassengerType.Child => DateTime.Now.AddYears(p.Age),
-                                        _ => DateTime.Now.AddYears(-30)
-                                    }).ToString("yyyy-MM-dd")
-                                }).ToArray(),
-                                Board =
-                                {
-                                    UID = r.ThirdPartyReference.Split('|')[1]
-                                }
-                            }).ToArray()
+                                        Name = string.IsNullOrEmpty(p.FirstName) ? "TBA" : p.FirstName,
+                                        Surname = string.IsNullOrEmpty(p.LastName) ? "TBA" : p.LastName,
+                                        Birthdate = (p.PassengerType switch
+                                        {
+                                            PassengerType.Adult => DateTime.Now.AddYears(-40),
+                                            PassengerType.Child => DateTime.Now.AddYears(p.Age),
+                                            _ => DateTime.Now.AddYears(-30)
+                                        }).ToString("yyyy-MM-dd")
+                                    }).ToArray(),
+                                    Board =
+                                    {
+                                        UID = r.ThirdPartyReference.Split('|')[1]
+                                    }
+                                }).ToArray()
+                            }
                         }
                     }
                 }
@@ -323,31 +325,30 @@
             return _helper.CleanRequest(_serializer.Serialize(request));
         }
 
-        private async void SetCancellations(PropertyDetails propertyDetails)
+        private async void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies)
         {
-            // get cancellation policies
-            var cancellationsRequest = _helper.BuildSearchRequest(
-                _settings,
-                _serializer,
-                propertyDetails,
-                propertyDetails.TPKey,
-                ItalcamelHelper.SearchType.Hotel);
+            //// get cancellation policies
+            //var cancellationsRequest = _helper.BuildSearchRequest(
+            //    _settings,
+            //    _serializer,
+            //    propertyDetails,
+            //    propertyDetails.TPKey,
+            //    ItalcamelHelper.SearchType.Hotel);
 
-            // send the request
-            var url = _settings.GenericURL(propertyDetails);
-            var soapAction = url.Replace("test.", ".") + "/GETAVAILABILITYSPLITTED";
+            //// send the request
+            //var url = _settings.GenericURL(propertyDetails);
+            //var soapAction = url.Replace("test.", ".") + "/GETAVAILABILITY";
 
-            var request = _helper.CreateWebRequest(url, soapAction, true, "Get Cancellation Costs");
-            request.SetRequest(cancellationsRequest);
-            await request.Send(_httpClient, _logger);
+            //var request = _helper.CreateWebRequest(url, soapAction, true, "Get Cancellation Costs");
+            //request.SetRequest(cancellationsRequest);
+            //await request.Send(_httpClient, _logger);
 
-            var response = _serializer.DeSerialize<GetAvailabilitySplittedResponse>(request.ResponseXML).GetAvaibilityResult;
+            //var response = _serializer.DeSerialize<GetAvailabilitySplittedResponse>(request.ResponseXML).GetAvaibilityResult;
 
             // get cancellation policie(s)
             var cancellations = new Cancellations();
             foreach (var room in propertyDetails.Rooms)
             {
-                var cancellationPolicies = response.Accommodations.SelectMany(x => x.CancellationPolicies).ToList();
                 var cancellationNodes =
                     cancellationPolicies.Any(c => c.RoomUID == room.ThirdPartyReference.Split('|')[0])
                         ? cancellationPolicies.Where(c => c.RoomUID == room.ThirdPartyReference.Split('|')[0]).ToList()
