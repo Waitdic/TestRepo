@@ -35,6 +35,7 @@
                 case ThirdParties.JUMBO:
                 case ThirdParties.MTS:
                 case ThirdParties.RESTEL:
+                case ThirdParties.RMI:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.STUBA:
                 case ThirdParties.TEAMAMERICA:
@@ -126,6 +127,7 @@
                 case ThirdParties.MTS:
                 case ThirdParties.OWNSTOCK:
                 case ThirdParties.PORTIMAR:
+                case ThirdParties.RMI:
                 case ThirdParties.STUBA:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.TEAMAMERICA:
