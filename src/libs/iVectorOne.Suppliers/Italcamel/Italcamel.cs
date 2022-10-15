@@ -17,7 +17,6 @@
     using iVectorOne.Suppliers.Italcamel.Models.Common;
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
     using iVectorOne.Suppliers.Italcamel.Models.Prebook;
-    using iVectorOne.Suppliers.Italcamel.Models.Search;
     using Microsoft.Extensions.Logging;
     using Request = Intuitive.Helpers.Net.Request;
 
@@ -81,7 +80,7 @@
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
             var success = true;
-            Request request = null;
+            Request? request = null;
 
             try
             {
@@ -102,24 +101,29 @@
                     success = false;
                 }
 
-                var rooms = response.Package.Booking.Rooms;
-                var baseCosts = response.Package.Booking.Rooms.Select(x => x.Amount).ToList();
-                var boardCosts = response.Package.Booking.Rooms.Select(x => x.Board).Select(a => a.Amount).ToList();
-                var services = response.Package.Booking.Rooms.SelectMany(x => x.Services).ToList();
-                var servicesCost = services.Any() 
-                    ? services.Where(s => s.Optional).Select(s => s.Amount).ToList()
-                    : new List<decimal>();
+                //var rooms = response.Package.Booking.Rooms;
+                //var baseCosts = response.Package.Booking.Rooms.Select(x => x.Amount).ToList();
+                //var boardCosts = response.Package.Booking.Rooms.Select(x => x.Board).Select(a => a.Amount).ToList();
+                //var services = response.Package.Booking.Rooms.SelectMany(x => x.Services).ToList();
+                //var servicesCost = services.Any() 
+                //    ? services.Where(s => s.Optional).Select(s => s.Amount).ToList()
+                //    : new List<decimal>();
+
+                //for (var i = 0; i < propertyDetails.Rooms.Count; i++)
+                //{
+                    //var specialOffer = rooms[i].Services.Any() ? rooms[i].Services.FirstOrDefault()!.Amount : 0;
+                    //var discounts = rooms[i].Extra.Discount.Any() ? rooms[i].Extra.Discount.Select(x => x.Amount).Sum() : 0;
+                    //var supplements = rooms[i].Extra.Supplements.Any() ? rooms[i].Extra.Supplements.Select(x => x.Amount).Sum() : 0;
+
+                    //propertyDetails.Rooms[i].LocalCost =
+                    //    baseCosts[i] + boardCosts[i] - specialOffer - discounts - supplements;
+
+                    //propertyDetails.Rooms[i].LocalCost += servicesCost.Count > i ? servicesCost[i] : 0;
+                //}
 
                 for (var i = 0; i < propertyDetails.Rooms.Count; i++)
                 {
-                    var specialOffer = rooms[i].Services.Any() ? rooms[i].Services.FirstOrDefault()!.Amount : 0;
-                    var discounts = rooms[i].Extra.Discount.Any() ? rooms[i].Extra.Discount.Select(x => x.Amount).Sum() : 0;
-                    var supplements = rooms[i].Extra.Supplements.Any() ? rooms[i].Extra.Supplements.Select(x => x.Amount).Sum() : 0;
-
-                    propertyDetails.Rooms[i].LocalCost =
-                        baseCosts[i] + boardCosts[i] - specialOffer - discounts - supplements;
-
-                    propertyDetails.Rooms[i].LocalCost += servicesCost.Count > i ? servicesCost[i] : 0;
+                    propertyDetails.Rooms[i].LocalCost += response.Package.Booking.InternalBooking.Rooms[i].TotalAmount.ToSafeDecimal();
                 }
 
                 // set cancellations on booking
@@ -174,7 +178,7 @@
             }
             catch (Exception ex)
             {
-                propertyDetails.Warnings.AddNew("PreBook Exception", ex.ToString());
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
                 reference = "failed";
             }
             finally
@@ -205,7 +209,7 @@
 
                 // send the request
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", "") + "/BOOKINGDELETE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGEDELETE";
 
                 request = _helper.CreateWebRequest(url, soapAction, true, "Cancel");
                 request.SetRequest(cancelRequest);
@@ -325,26 +329,8 @@
             return _helper.CleanRequest(_serializer.Serialize(request));
         }
 
-        private async void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies)
+        private void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies)
         {
-            //// get cancellation policies
-            //var cancellationsRequest = _helper.BuildSearchRequest(
-            //    _settings,
-            //    _serializer,
-            //    propertyDetails,
-            //    propertyDetails.TPKey,
-            //    ItalcamelHelper.SearchType.Hotel);
-
-            //// send the request
-            //var url = _settings.GenericURL(propertyDetails);
-            //var soapAction = url.Replace("test.", ".") + "/GETAVAILABILITY";
-
-            //var request = _helper.CreateWebRequest(url, soapAction, true, "Get Cancellation Costs");
-            //request.SetRequest(cancellationsRequest);
-            //await request.Send(_httpClient, _logger);
-
-            //var response = _serializer.DeSerialize<GetAvailabilitySplittedResponse>(request.ResponseXML).GetAvaibilityResult;
-
             // get cancellation policie(s)
             var cancellations = new Cancellations();
             foreach (var room in propertyDetails.Rooms)
@@ -356,23 +342,14 @@
 
                 foreach (var cancellationPolicy in cancellationNodes)
                 {
-                    var date = ConvertItalcamelDate(cancellationPolicy.ReleaseDate).AddDays(1);
+                    var date = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayFrom);
                     var amount = GetCancellationAmount(
                         cancellationPolicy.Type,
                         cancellationPolicy.Value,
                         room.LocalCost,
                         propertyDetails.Duration);
 
-                    var lastDate = new DateTime(2099, 12, 31);
-                    var description = cancellationPolicy.Description;
-
-                    if (Regex.IsMatch(description, "^For cancellation from [0-9]+ to [0-9]+ days before"))
-                    {
-                        var startIndex = description.IndexOf("to ") + 3;
-                        var daysBefore = description.Substring(startIndex, description.IndexOf(" days") - startIndex).ToSafeInt();
-                        lastDate = propertyDetails.ArrivalDate.AddDays(-daysBefore);
-                    }
-
+                    var lastDate = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayTo);
                     cancellations.AddNew(date, lastDate, amount);
                 }
             }
@@ -391,8 +368,6 @@
 
             cancellations.Solidify(SolidifyType.Sum);
             propertyDetails.Cancellations = cancellations;
-
-            propertyDetails.AddLog("ItalCamel Cancellation Costs", request);
         }
 
         private DateTime ConvertItalcamelDate(string date)

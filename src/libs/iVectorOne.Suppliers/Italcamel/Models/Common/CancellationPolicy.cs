@@ -4,11 +4,14 @@
 
     public class CancellationPolicy
     {
+        [XmlElement("DAYFROM")]
+        public int DayFrom { get; set; }
+        
+        [XmlElement("DAYTO")]
+        public int DayTo { get; set; }
+        
         [XmlElement("ROOMUID")]
         public string RoomUID { get; set; } = string.Empty;
-
-        [XmlElement("RELEASEDATE")]
-        public string ReleaseDate { get; set; } = string.Empty;
 
         [XmlElement("TYPE")]
         public string Type { get; set; } = string.Empty;

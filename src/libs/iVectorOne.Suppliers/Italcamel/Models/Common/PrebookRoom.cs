@@ -36,5 +36,9 @@
         [XmlElement("EXTRA")]
         public Extra? Extra { get; set; }
         public bool ShouldSerializeExtra() => Extra != null;
+
+        [XmlElement("TOTAL_AMOUNT")]
+        public decimal? TotalAmount { get; set; }
+        public bool ShouldSerializeTotalAmount() => TotalAmount != null;
     }
 }
