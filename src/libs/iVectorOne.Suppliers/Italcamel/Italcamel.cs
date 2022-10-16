@@ -198,7 +198,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
-            Request request = null;
+            Request? request = null;
 
             try
             {
@@ -207,7 +207,7 @@
 
                 // send the request
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGEDELETE";
+                var soapAction = url.Replace("test.", ".") + "/ITEMDELETE";
 
                 request = _helper.CreateWebRequest(url, soapAction, true, "Cancel");
                 request.SetRequest(cancelRequest);
@@ -318,8 +318,9 @@
                     {
                         Username = _settings.Login(propertyDetails),
                         Password = _settings.Login(propertyDetails),
-                        LanguageuId = _settings.Login(propertyDetails),
-                        BookinguId = propertyDetails.SourceSecondaryReference
+                        LanguageUID = _settings.Login(propertyDetails),
+                        PackageUID = propertyDetails.SourceSecondaryReference.Split('|')[0],
+                        ItemUID = propertyDetails.SourceSecondaryReference.Split('|')[1]
                     }
                 }
             };

@@ -10,11 +10,14 @@
 
         [XmlElement("PASSWORD")]
         public string Password { get; set; } = string.Empty;
-
-        [XmlElement("BOOKINGUID")]
-        public string BookinguId { get; set; } = string.Empty;
-
+        
         [XmlElement("LANGUAGEUID")]
-        public string LanguageuId { get; set; } = string.Empty;
+        public string LanguageUID { get; set; } = string.Empty;
+
+        [XmlElement("PACKAGEUID")]
+        public string PackageUID { get; set; } = string.Empty;
+        
+        [XmlElement("ITEMUID")]
+        public string ItemUID { get; set; } = string.Empty;
     }
 }
