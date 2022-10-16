@@ -1,10 +1,8 @@
 ﻿namespace iVectorOne.Suppliers.Italcamel
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -151,14 +149,14 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            Request request = null;
+            Request? request = null;
             var reference = string.Empty;
 
             try
             {
-                var bookingRequest = BuildRequest(propertyDetails, "BOOKING");
+                var bookingRequest = BuildRequest(propertyDetails, "BOOK");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", "") + "/BOOKINGESTIMATE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGESTIMATE";
 
                 request = _helper.CreateWebRequest(url, soapAction);
                 request.SetRequest(bookingRequest);
@@ -173,8 +171,8 @@
                 }
 
                 // store bookinguid - required for cancellation
-                propertyDetails.SourceSecondaryReference = response.Package.Booking.UID;
-                reference = response.Package.Booking.Number;
+                propertyDetails.SourceSecondaryReference = $"{response.Package.UID}|{response.Package.Booking.UID}";
+                reference = response.Package.Number;
             }
             catch (Exception ex)
             {
