@@ -13,15 +13,12 @@
         public string Password { get; set; } = string.Empty;
 
         [XmlElement("LANGUAGEUID")]
-        public string LanguageuId { get; set; } = string.Empty;
+        public string LanguageUID { get; set; } = string.Empty;
 
-        [XmlElement("MACROREGIONUID")]
-        public string MacroregionuId { get; set; } = string.Empty;
-        public bool ShouldSerializeMacroregionuId() => !string.IsNullOrEmpty(MacroregionuId);
-
-        [XmlElement("CITYUID")]
-        public string CityuId { get; set; } = string.Empty;
-        public bool ShouldSerializeCityuId() => !string.IsNullOrEmpty(CityuId);
+        [XmlArray("ACCOMMODATIONS")]
+        [XmlArrayItem("ACCOMMODATION")]
+        public string[] Accommodations { get; set; } = Array.Empty<string>();
+        public bool ShouldSerializeAccommodations() => Accommodations.Length != 0;
 
         [XmlArray("ROOMS")]
         [XmlArrayItem("ROOM")]

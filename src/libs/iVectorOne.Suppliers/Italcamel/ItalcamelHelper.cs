@@ -28,13 +28,12 @@
             IItalcamelSettings settings,
             ISerializer serializer,
             IThirdPartyAttributeSearch searchDetails,
-            string searchCode,
-            SearchType searchType,
+            string[] searchCodes,
             DateTime arrivalDate,
             DateTime departureDate,
             iVector.Search.Property.RoomDetails roomDetails)
         {
-            var request = new Envelope<GetAvailabilitySplitted>
+            var request = new Envelope<GetAvailability>
             {
                 Body =
                 {
@@ -44,10 +43,8 @@
                         {
                             Username = settings.Login(searchDetails),
                             Password = settings.Password(searchDetails),
-                            LanguageuId = settings.LanguageID(searchDetails),
-                            AccomodationuId = searchType == SearchType.Hotel ? searchCode : string.Empty,
-                            MacroregionuId = searchType == SearchType.MacroRegion ? searchCode : string.Empty,
-                            CityuId =  searchType != SearchType.Hotel && searchType != SearchType.MacroRegion ? searchCode : string.Empty,
+                            LanguageUID = settings.LanguageID(searchDetails),
+                            Accommodations = searchCodes.Length != 0 ? searchCodes : Array.Empty<string>(),
                             CheckIn = arrivalDate.ToString("yyyy-MM-dd"),
                             CheckOut = departureDate.ToString("yyyy-MM-dd"),
                             Rooms = roomDetails.Select(room => new SearchRoom
@@ -62,22 +59,20 @@
                 }
             };
 
-            return CleanRequest(serializer.Serialize(request));
+            return serializer.Serialize(request).OuterXml;
         }
 
         public string BuildSearchRequest(
             IItalcamelSettings settings,
             ISerializer serializer,
             PropertyDetails propertyDetails,
-            string searchCode,
-            SearchType searchType = SearchType.City)
+            string[] searchCodes)
         {
             return BuildSearchRequest(
                 settings,
                 serializer,
                 propertyDetails,
-                searchCode,
-                searchType,
+                searchCodes,
                 propertyDetails.ArrivalDate,
                 propertyDetails.DepartureDate,
                 GetRoomDetailsFromThirdPartyRoomDetails(propertyDetails.Rooms));
@@ -87,22 +82,13 @@
             IItalcamelSettings settings,
             ISerializer serializer,
             SearchDetails searchDetails,
-            string searchCode,
-            SearchType searchType = SearchType.City)
+            string[] searchCodes)
         {
-            if ((searchDetails.DepartureDate - searchDetails.ArrivalDate).Days >
-                settings.MaximumNumberOfNights(searchDetails)
-                || searchDetails.Rooms > settings.MaximumRoomNumber(searchDetails))
-            {
-                throw new Exception("MaximumNumberOfNights or MaximumRoomGuestNumber or MaximumRoomNumber exceeded");
-            }
-
             return BuildSearchRequest(
                 settings,
                 serializer,
                 searchDetails,
-                searchCode,
-                searchType,
+                searchCodes,
                 searchDetails.ArrivalDate,
                 searchDetails.DepartureDate,
                 searchDetails.RoomDetails);

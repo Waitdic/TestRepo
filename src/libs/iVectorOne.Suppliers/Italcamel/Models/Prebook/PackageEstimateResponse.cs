@@ -3,7 +3,7 @@
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
 
-    public class BookingEstimateResponse : SoapContent
+    public class PackageEstimateResponse : SoapContent
     {
         [XmlElement("ERRORCODE")]
         public int ErrorCode { get; set; }

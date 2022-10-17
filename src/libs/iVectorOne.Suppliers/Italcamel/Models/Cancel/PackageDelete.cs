@@ -3,7 +3,7 @@
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
     using System.Xml.Serialization;
 
-    public class BookingDelete : SoapContent
+    public class PackageDelete : SoapContent
     {
         [XmlElement("USERNAME")]
         public string Username { get; set; } = string.Empty;

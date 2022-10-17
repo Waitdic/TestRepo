@@ -3,7 +3,7 @@
     using System.Xml.Serialization;
     using Envelope;
 
-    public class GetAvailabilitySplitted : SoapContent
+    public class GetAvailability : SoapContent
     {
         [XmlElement("REQUEST")]
         public SearchRequest Request { get; set; } = new();

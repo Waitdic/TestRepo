@@ -14,8 +14,7 @@
         {
             Namespaces = new XmlSerializerNamespaces(
                 new XmlQualifiedName[]{
-                    new("soapenv", Soapenv),
-                    new("ns", Ns)
+                    new("soapenv", Soapenv)
                 });
         }
     }

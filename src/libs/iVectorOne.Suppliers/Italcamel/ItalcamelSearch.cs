@@ -52,13 +52,13 @@
             var requests = new List<Intuitive.Helpers.Net.Request>();
             
             // get city code or hotel code
-            var searchIds = GetSearchIDs(resortSplits);
+            var groupSearchIds = GetSearchIDs(resortSplits, _settings.MaximumHotelSearchNumber(searchDetails));
             
             // build request xml for each resort
-            foreach (var searchId in searchIds)
+            foreach (var group in groupSearchIds)
             {
                 // work out whether to search by city or macro region
-                var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, searchId.Key, searchId.Value);
+                var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, group);
                 var soapAction = _settings.GenericURL(searchDetails).Replace("test.", ".") + "/GETAVAILABILITY";
                 
                 // get response
@@ -87,7 +87,7 @@
 
             var responses = requests
                 .Where(x => x.Success)
-                .Select(r => _serializer.DeSerialize<Envelope<GetAvailabilitySplittedResponse>>(r.ResponseXML));
+                .Select(r => _serializer.DeSerialize<Envelope<GetAvailabilityResponse>>(r.ResponseXML));
 
             var guests = BuildGuests(searchDetails.RoomDetails);
 
@@ -97,7 +97,7 @@
         }
 
         public List<TransformedResult> GetResultFromResponse(
-            IEnumerable<Envelope<GetAvailabilitySplittedResponse>> response,
+            IEnumerable<Envelope<GetAvailabilityResponse>> response,
             Guests guests,
             SearchDetails searchDetails)
         {
@@ -152,25 +152,73 @@
 
         #region Helpers
 
-        private static Dictionary<string, ItalcamelHelper.SearchType> GetSearchIDs(List<ResortSplit> resortSplits)
+        private static List<string[]> GetSearchIDs(List<ResortSplit> resortSplits, int limit)
         {
-            var searchIds = new Dictionary<string, ItalcamelHelper.SearchType>();
-            
-            if (resortSplits.Count == 1 && resortSplits[0].Hotels.Count == 1)
-                searchIds.Add(resortSplits[0].Hotels[0].TPKey, ItalcamelHelper.SearchType.Hotel);
-            else
-                foreach (var resortSplit in resortSplits)
-                {
-                    if (resortSplit.ResortCode.Split('|').Length > 1)
-                    {
-                        if (!searchIds.ContainsKey(resortSplit.ResortCode.Split('|')[1]))
-                            searchIds.Add(resortSplit.ResortCode.Split('|')[1], ItalcamelHelper.SearchType.City);
-                    }
-                    else if (!searchIds.ContainsKey(resortSplit.ResortCode))
-                        searchIds.Add(resortSplit.ResortCode, ItalcamelHelper.SearchType.City);
-                }
+            //var searchIds = new Dictionary<string, ItalcamelHelper.SearchType>();
+            var searchIds = new List<string>();
+            var groupsSearchIds = new List<string[]>();
 
-            return searchIds;
+            //if (resortSplits.Count == 1 && resortSplits[0].Hotels.Count == 1)
+            //{
+            //    searchIds.Add(resortSplits[0].Hotels[0].TPKey, ItalcamelHelper.SearchType.Hotel);
+            //    groupsSearchIds.Add(searchIds);
+            //}
+            //else
+            //{
+            //    foreach (var resortSplit in resortSplits)
+            //    {
+            //        if (resortSplit.ResortCode.Split('|').Length > 1)
+            //        {
+            //            if (!searchIds.ContainsKey(resortSplit.ResortCode.Split('|')[1]))
+            //                searchIds.Add(resortSplit.ResortCode.Split('|')[1], ItalcamelHelper.SearchType.Hotel);
+            //        }
+            //        else if (!searchIds.ContainsKey(resortSplit.ResortCode))
+            //            searchIds.Add(resortSplit.ResortCode, ItalcamelHelper.SearchType.Hotel);
+            //    }
+            //}
+
+            //if (resortSplits.Count == 1 && resortSplits[0].Hotels.Count == 1)
+            //{
+            //    searchIds.Add(resortSplits[0].Hotels[0].TPKey, ItalcamelHelper.SearchType.Hotel);
+            //    groupsSearchIds.Add(searchIds);
+            //}
+
+            var count = 0;
+            foreach (var hotel in resortSplits.SelectMany(x => x.Hotels))
+            {
+                if (count < limit)
+                {
+                    searchIds.Add(hotel.TPKey);
+                    count++;
+                }
+                else
+                {
+                    groupsSearchIds.Add(searchIds.ToArray());
+                    count = 0;
+                    searchIds = new List<string> {hotel.TPKey};
+                }
+            }
+
+            if (searchIds.Count != 0)
+            {
+                groupsSearchIds.Add(searchIds.ToArray());
+            }
+            
+            //else
+            //{
+            //    foreach (var resortSplit in resortSplits)
+            //    {
+            //        if (resortSplit.ResortCode.Split('|').Length > 1)
+            //        {
+            //            if (!searchIds.ContainsKey(resortSplit.ResortCode.Split('|')[1]))
+            //                searchIds.Add(resortSplit.ResortCode.Split('|')[1], ItalcamelHelper.SearchType.Hotel);
+            //        }
+            //        else if (!searchIds.ContainsKey(resortSplit.ResortCode))
+            //            searchIds.Add(resortSplit.ResortCode, ItalcamelHelper.SearchType.Hotel);
+            //    }
+            //}
+
+            return groupsSearchIds;
         }
 
         public Guests BuildGuests(iVector.Search.Property.RoomDetails roomDetails)
