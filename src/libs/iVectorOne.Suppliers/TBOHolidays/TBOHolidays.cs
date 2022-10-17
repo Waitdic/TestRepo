@@ -359,7 +359,6 @@
 
                 var bookingDetailRequest = new Envelope<HotelBookingDetailRequest>();
                 bookingDetailRequest.Body.Content.BookingId = propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt();
-                bookingDetailRequest.Body.Content.ConfirmationNo = propertyDetails.SourceReference;
                 bookingDetailRequest.Header = BuildHeader("HotelBookingDetail", propertyDetails, _settings);
 
                 var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.GenericURL(propertyDetails));
@@ -372,13 +371,6 @@
                 var policies = bookingDetailResponse.BookingDetail.HotelCancelPolicies;
                 if (bookingDetailResponse.Status.StatusCode == "01" && policies.PolicyFormat == PolicyFormat.Nodes)
                 {
-                    if (!string.IsNullOrEmpty(bookingDetailResponse.BookingDetail.BookingId) 
-                        && propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt() == 0)
-                    {
-                        propertyDetails.SourceSecondaryReference =
-                            $"{bookingDetailResponse.BookingDetail.BookingId}-{propertyDetails.SourceSecondaryReference.Split('-')[1]}";
-                    }
-
                     foreach (var cancelPolicy in policies.CancelPolicies.OfType<CancelPolicy>().OrderBy(n => n.FromDate.ToSafeDate()))
                     {
                         if (DateTime.Now >= cancelPolicy.FromDate.ToSafeDate()
@@ -641,8 +633,7 @@
                     Email = propertyDetails.LeadGuestEmail,
                     City = propertyDetails.LeadGuestTownCity,
                     State = propertyDetails.LeadGuestCounty,
-                    //Country = await _support.TPCountryCodeLookupAsync(propertyDetails.Source, propertyDetails.LeadGuestCountryCode, propertyDetails.AccountID),
-                    Country = guestNationality,
+                    Country = await _support.TPCountryCodeLookupAsync(propertyDetails.Source, propertyDetails.LeadGuestCountryCode, propertyDetails.AccountID),
                     ZipCode = propertyDetails.LeadGuestPostcode,
                 },
                 PaymentInfo = new PaymentInfo
