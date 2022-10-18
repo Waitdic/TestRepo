@@ -16,8 +16,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Delete
         {
             var response = new ResponseBase();
 
-            var tenant = await _context.Tenants.Where(t => t.TenantId == request.TenantId)
-             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+            var tenant = await _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (tenant == null)
             {
