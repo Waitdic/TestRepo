@@ -1,6 +1,8 @@
-import ApiCall from '@/axios';
-import { User, UserResponse } from '@/types';
 import { get } from 'lodash';
+//
+import ApiCall from '@/axios';
+import { ApiError, User, UserResponse } from '@/types';
+import handleApiError from '@/utils/handleApiError';
 import { UserFormFields } from '../user/create';
 
 //* Get all users
@@ -24,14 +26,9 @@ export async function getUsers(
     });
     const users = get(usersRes, 'data.users', []);
     onSuccess(users);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -57,14 +54,9 @@ export async function getUserInfo(
     });
     const user = get(usersRes, 'data', {});
     onSuccess(user);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -89,14 +81,9 @@ export async function unlinkUserTenant(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -124,14 +111,9 @@ export async function linkUserTenant(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -157,13 +139,8 @@ export async function createUser(
       data,
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }

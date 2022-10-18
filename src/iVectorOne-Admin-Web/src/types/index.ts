@@ -122,6 +122,13 @@ export type DropdownFilterProps = {
   name: string;
   value: boolean;
 };
+export type ApiError = {
+  type: string;
+  title: string;
+  status: number;
+  detail: string;
+  instance: string;
+};
 
 //* App State
 export type AppState = {

@@ -1,7 +1,8 @@
 import { get } from 'lodash';
 //
 import ApiCall from '@/axios';
-import type { Account, Supplier } from '@/types';
+import type { Account, ApiError, Supplier } from '@/types';
+import handleApiError from '@/utils/handleApiError';
 
 //* Accounts data fetch
 export async function getAccounts(
@@ -22,14 +23,9 @@ export async function getAccounts(
     });
     const accounts: Account[] = get(accountsRes, 'data.accounts', []);
     onSuccess?.(accounts);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed?.(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed?.(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -71,14 +67,9 @@ export async function getAccountsWithSuppliers(
       account.suppliers = suppliersData;
       onSuccess?.(accounts);
     });
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed?.(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed?.(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -132,14 +123,9 @@ export async function getAccountsWithSuppliersAndConfigurations(
         onSuccess?.(accounts);
       });
     });
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed?.(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed?.(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -203,14 +189,9 @@ export async function getAccountWithSupplierAndConfigurations(
     );
     const configurations = get(fetchedDataRes[2], 'data.configurations', []);
     onSuccess?.(account, configurations, supplier);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed?.(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed?.(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -237,12 +218,9 @@ export async function getAccountById(
     );
     const data = get(res, 'data', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -273,12 +251,9 @@ export async function createAccount(
       data,
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -311,12 +286,9 @@ export async function updateAccount(
       data,
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -341,11 +313,8 @@ export async function deleteAccount(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }

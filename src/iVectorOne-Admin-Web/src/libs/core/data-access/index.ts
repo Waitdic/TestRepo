@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import ApiCall from '@/axios';
-import type { User, Tenant } from '@/types';
+import type { User, Tenant, ApiError } from '@/types';
+import handleApiError from '@/utils/handleApiError';
 
 //* User, tenant data fetch
 export function useCoreFetching() {
@@ -44,14 +45,9 @@ export function useCoreFetching() {
       dispatch.app.setIsLoading(false);
     } catch (err) {
       dispatch.app.setIncompleteSetup(true);
-      if (typeof err === 'string') {
-        console.error(err.toUpperCase());
-        setError(err.toUpperCase());
-      } else if (err instanceof Error) {
-        console.error(err.message);
-        setError(err.message);
-      }
       dispatch.app.setIsLoading(false);
+      const errorMessage = handleApiError(err as ApiError);
+      setError(errorMessage);
     }
   }, []);
 
@@ -89,13 +85,8 @@ export async function refetchUserData(
       success: userData.success,
     };
     onSuccess(user);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }

@@ -1,6 +1,13 @@
-import ApiCall from '@/axios';
-import { Supplier, SupplierConfiguration, SupplierFormFields } from '@/types';
 import { get } from 'lodash';
+//
+import ApiCall from '@/axios';
+import {
+  ApiError,
+  Supplier,
+  SupplierConfiguration,
+  SupplierFormFields,
+} from '@/types';
+import handleApiError from '@/utils/handleApiError';
 
 //* Fetch suppliers by Account
 export async function getSuppliersByAccount(
@@ -25,12 +32,9 @@ export async function getSuppliersByAccount(
     );
     const data = get(res, 'data.accountSuppliers', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -53,12 +57,9 @@ export async function getSuppliers(
     });
     const data = get(res, 'data.suppliers', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -86,12 +87,9 @@ export async function getSupplierById(
     );
     const data = get(res, 'data', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -115,12 +113,9 @@ export async function getConfigurationsBySupplier(
     });
     const configurations = get(configurationsRes, 'data.configurations', []);
     onSuccess(configurations);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -157,14 +152,9 @@ export async function updateSupplier(
     });
     const updatedSupplier = get(updatedSupplierRes, 'data', null);
     onSuccess(updatedSupplier);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -201,14 +191,9 @@ export async function createSupplier(
     });
     const newSupplier = get(newSupplierRes, 'data', null);
     onSuccess(newSupplier);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
 
@@ -234,13 +219,8 @@ export async function deleteSupplier(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const errorMessage = handleApiError(err as ApiError);
+    onFailed?.(errorMessage);
   }
 }
