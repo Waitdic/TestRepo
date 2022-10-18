@@ -237,6 +237,7 @@ const UserView: React.FC<Props> = () => {
     if (!isValidUser) return;
     await getTenants(
       userKey as string,
+      activeTenant?.tenantKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },

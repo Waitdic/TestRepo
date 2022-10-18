@@ -7,6 +7,7 @@ import handleApiError from '@/utils/handleApiError';
 //* Fetch tenant list
 export async function getTenants(
   userKey: string,
+  tenantKey: string,
   onInit: () => void,
   onSuccess: (tenants: Tenant[]) => void,
   onFailed: (error: string | null) => void
@@ -15,7 +16,7 @@ export async function getTenants(
   try {
     const res = await ApiCall.get(`/tenants`, {
       headers: {
-        Tenantkey: userKey,
+        Tenantkey: tenantKey,
         UserKey: userKey,
       },
     });
@@ -140,6 +141,7 @@ export async function deleteTenant(
 
 //* Create tenant
 export async function createTenant(
+  userTenantKey: string,
   userKey: string,
   data: Tenant,
   onInit: () => void,
@@ -153,7 +155,7 @@ export async function createTenant(
       url: `/tenants`,
       headers: {
         Accept: 'application/json',
-        Tenantkey: userKey,
+        Tenantkey: userTenantKey,
         UserKey: userKey,
       },
       data,

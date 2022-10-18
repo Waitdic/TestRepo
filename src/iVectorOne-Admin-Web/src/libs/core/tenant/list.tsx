@@ -112,6 +112,7 @@ const TenantList: React.FC<Props> = () => {
     if (!activeTenant) return;
     await getTenants(
       userKey as string,
+      activeTenant?.tenantKey,
       () => {
         dispatch.app.setIsLoading(true);
       },

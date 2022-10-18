@@ -120,16 +120,25 @@ export async function getConfigurationsBySupplier(
 }
 
 //* Update supplier data
-export async function updateSupplier(
-  tenant: { id: number; key: string },
-  userKey: string,
-  accountId: number,
-  supplierId: number,
-  data: SupplierFormFields,
-  onInit: () => void,
-  onSuccess: (updatedSupplier: Supplier) => void,
-  onFailed: (error: string) => void
-) {
+export async function updateSupplier({
+  tenant,
+  userKey,
+  accountId,
+  supplierId,
+  data,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  supplierId: number;
+  data: SupplierFormFields;
+  onInit: () => void;
+  onSuccess: (updatedSupplier: Supplier) => void;
+  onFailed: (error: string) => void;
+}) {
   const { configurations } = data;
   onInit();
 
@@ -159,16 +168,25 @@ export async function updateSupplier(
 }
 
 //* Create supplier data
-export async function createSupplier(
-  tenant: { id: number; key: string },
-  userKey: string,
-  accountId: number,
-  supplierId: number,
-  data: SupplierFormFields,
-  onInit: () => void,
-  onSuccess: (updatedSupplier: Supplier) => void,
-  onFailed: (error: string) => void
-) {
+export async function createSupplier({
+  tenant,
+  userKey,
+  accountId,
+  supplierId,
+  data,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  supplierId: number;
+  data: SupplierFormFields;
+  onInit: () => void;
+  onSuccess: (updatedSupplier: Supplier) => void;
+  onFailed: (error: string) => void;
+}) {
   const { configurations } = data;
   onInit();
 

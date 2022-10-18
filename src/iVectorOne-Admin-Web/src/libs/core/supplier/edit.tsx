@@ -65,16 +65,16 @@ const SupplierEdit: React.FC<Props> = () => {
     (data, event) => {
       event?.preventDefault();
       if (!activeTenant) return;
-      updateSupplier(
-        { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-        userKey as string,
-        Number(currentAccount?.accountId),
-        Number(currentSupplier?.supplierID),
+      updateSupplier({
+        tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey: userKey as string,
+        accountId: Number(currentAccount?.accountId),
+        supplierId: Number(currentSupplier?.supplierID),
         data,
-        () => {
+        onInit: () => {
           dispatch.app.setIsLoading(true);
         },
-        () => {
+        onSuccess: () => {
           dispatch.app.setIsLoading(false);
           setNotification({
             status: NotificationStatus.SUCCESS,
@@ -85,15 +85,15 @@ const SupplierEdit: React.FC<Props> = () => {
             navigate('/suppliers');
           }, 500);
         },
-        () => {
+        onFailed: () => {
           dispatch.app.setIsLoading(false);
           setNotification({
             status: NotificationStatus.ERROR,
             message: MESSAGES.onFailed.update,
           });
           setShowNotification(true);
-        }
-      );
+        },
+      });
     },
     [activeTenant, currentAccount, currentSupplier, userKey]
   );

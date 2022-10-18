@@ -30,6 +30,7 @@ const TenantCreate: React.FC<Props> = () => {
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
+  const user = useSelector((state: RootState) => state.app.user);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [notification, setNotification] = useState<NotificationState>({
@@ -42,6 +43,10 @@ const TenantCreate: React.FC<Props> = () => {
     () => !!userKey || isLoading,
     [userKey, isLoading]
   );
+  const activeTenantKey = useMemo(
+    () => user?.tenants?.find((u) => u?.isSelected),
+    [user]
+  )?.tenantKey;
 
   const refetchUser = useCallback(async () => {
     if (!isValidUser) return;
@@ -73,6 +78,7 @@ const TenantCreate: React.FC<Props> = () => {
     async (data) => {
       if (!isValidUser) return;
       await createTenant(
+        activeTenantKey as string,
         userKey as string,
         data,
         () => {
@@ -92,7 +98,7 @@ const TenantCreate: React.FC<Props> = () => {
           console.error(err);
           setNotification({
             status: NotificationStatus.ERROR,
-            message: 'Tenant creation failed.',
+            message: err,
           });
           setShowNotification(true);
         }

@@ -87,30 +87,30 @@ const SupplierCreate: React.FC<Props> = () => {
 
   const onSubmit: SubmitHandler<SupplierFormFields> = async (data) => {
     if (!activeTenant) return;
-    await createSupplier(
-      {
+    await createSupplier({
+      tenant: {
         id: activeTenant.tenantId,
         key: activeTenant.tenantKey,
       },
-      userKey as string,
-      draftSupplier.accountId,
-      draftSupplier.supplierId,
+      userKey: userKey as string,
+      accountId: draftSupplier.accountId,
+      supplierId: draftSupplier.supplierId,
       data,
-      () => {
+      onInit: () => {
         dispatch.app.setIsLoading(true);
       },
-      (_newSupplier) => {
+      onSuccess: (_newSupplier) => {
         dispatch.app.setIsLoading(false);
         setShowNotification(true);
         setTimeout(() => {
           navigate('/suppliers');
         }, 800);
       },
-      (err) => {
+      onFailed: (err) => {
         dispatch.app.setError(err);
         dispatch.app.setIsLoading(true);
-      }
-    );
+      },
+    });
   };
 
   const handleAccountChange = (optionId: number) => {
