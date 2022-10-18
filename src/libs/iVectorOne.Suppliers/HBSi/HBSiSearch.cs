@@ -6,17 +6,13 @@
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.HBSi.Models;
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class HBSiSearch : IThirdPartySearch, IMultiSource

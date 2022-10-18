@@ -65,16 +65,12 @@ namespace iVectorOne.Tests.HBSi {
         ///
         ///**HEADERS**
         ///
-        ///Timeout: 0
+        ///Timeout: 25
         ///
         ///
         ///**REQUEST**
         ///
-        ///&lt;soap-env:Envelope xmlns=&quot;http://www.opentravel.org/OTA/2003/05&quot; xmlns:soap-env=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-        ///  &lt;soap-env:Header&gt;
-        ///    &lt;Interface ChannelIdentifierId=&quot;Kenwood_XML4T&quot; Version=&quot;2005A&quot; Interface=&quot;HBSI XML 4 OTA&quot; xmlns=&quot;http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/&quot;&gt;
-        ///      &lt;ComponentInfo Id=&quot;102245&quot; User=&quot;kenwood&quot; Pwd=&quot;xml4t!&quot; ComponentType=&quot;Hotel&quot; /&gt;
-        ///    &lt;/Interface&gt;        /// [rest of string was truncated]&quot;;.
+        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;soap-env:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://www.opentravel.org/OTA/2003/05&quot; xmlns:soap-env=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap-env:Header&gt;&lt;Interface ChannelIdentifierId=&quot;Kenwood_XML4T&quot; Version=&quot;2005A&quot; Interface=&quot;HBSI XML 4 OTA&quot; xmlns=&quot;http://www.hbsiapi.com/Documentat [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {

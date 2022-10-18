@@ -23,6 +23,8 @@
         {
             ThirdParties.HBSIBESTWESTERN,
             ThirdParties.HBSICET,
+            ThirdParties.HBSICOUPLES,
+            ThirdParties.HBSIPALACERESORTS,
             ThirdParties.HBSISANDALS,
             ThirdParties.HBSISTARWOOD,
             ThirdParties.HBSISTATIONCASINOS,

@@ -96,6 +96,16 @@
         public const string HBSICET = "HBSiCET";
 
         /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSICOUPLES = "HBSiCouples";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSIPALACERESORTS = "HBSiPalaceResorts";
+
+        /// <summary>
         /// The third party HBSiSandals
         /// </summary>
         public const string HBSISANDALS = "HBSiSandals";
