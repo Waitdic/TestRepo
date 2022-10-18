@@ -180,8 +180,8 @@
         public static WebApplicationBuilder AddIntuitiveAuthentication(this WebApplicationBuilder builder)
         {
 
-            builder.Services.AddAuthentication("TenantAuthorisation")
-                .AddScheme<AuthenticationSchemeOptions, TenantAuthorisationHandler>("TenantAuthorisation", null);
+            builder.Services.AddAuthentication("TenantAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, TenantAuthenticationHandler>("TenantAuthentication", null);
 
             builder.Services.AddAuthorization();
 

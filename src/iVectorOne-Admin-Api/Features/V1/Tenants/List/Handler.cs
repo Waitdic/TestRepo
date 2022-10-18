@@ -1,8 +1,9 @@
 ﻿using iVectorOne_Admin_Api.Config.Models;
+using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Tenants.List
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
         private readonly ConfigContext _context;
         private readonly IMapper _mapper;
@@ -13,18 +14,15 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.List
             _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var tenantModels = await _context.Tenants.Where(t => t.Status != RecordStatus.Deleted)
-                .OrderBy(t => t.CompanyName)
-                .AsNoTracking()
+            var tenants = await _mapper.ProjectTo<TenantDto>(_context.Tenants)
+                .Where(t => t.Status != RecordStatus.Deleted)
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            var tenants = _mapper.Map<List<TenantDto>>(tenantModels);
-
-            response.Default(new ResponseModel { Success = true, Tenants = tenants });
+            response.Ok(new ResponseModel { Success = true, Tenants = tenants });
 
             return response;
         }

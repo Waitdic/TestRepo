@@ -1,6 +1,8 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Info
+﻿using iVectorOne_Admin_Api.Features.Shared;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Info
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
         private readonly ConfigContext _context;
         private readonly IMapper _mapper;
@@ -11,24 +13,22 @@
             _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var tenantModel = await _context.Tenants.Where(t => t.TenantId == request.TenantId)
+            var tenant = await _mapper.ProjectTo<TenantDto>(_context.Tenants)
+                .Where(t => t.TenantId == request.TenantId)
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
-            if (tenantModel == null)
+            if (tenant == null)
             {
-                response.NotFound();
+                response.NotFound("Tenant not found.");
                 return response;
             }
 
-            var tenant = _mapper.Map<TenantDto>(tenantModel);
-
-            response.Default(new ResponseModel { Success = true, Tenant = tenant });
-
+            response.Ok(new ResponseModel { Success = true, Tenant = tenant });
             return response;
         }
     }

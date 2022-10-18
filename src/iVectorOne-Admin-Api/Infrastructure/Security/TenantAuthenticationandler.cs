@@ -1,24 +1,24 @@
-﻿namespace iVectorOne_Admin_Api.Security
-{
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.Extensions.Options;
-    using System.Security.Claims;
-    using System.Text.Encodings.Web;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using System.Text.Encodings.Web;
 
-    public class TenantAuthorisationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+namespace iVectorOne_Admin_Api.Security
+{
+    public class TenantAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
-        private readonly ILogger<TenantAuthorisationHandler> _logger;
+        private readonly ILogger<TenantAuthenticationHandler> _logger;
         private readonly ITenantService _tenantService;
 
-        public TenantAuthorisationHandler(
+        public TenantAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
             ITenantService tenantService) : base(options, logger, encoder, clock)
         {
-            _logger = logger.CreateLogger<TenantAuthorisationHandler>();
+            _logger = logger.CreateLogger<TenantAuthenticationHandler>();
             _tenantService = tenantService;
         }
 
@@ -26,10 +26,9 @@
         {
             AuthenticationTicket? ticket = null;
             string key = Request.Headers["TenantKey"];
-            string errorMessage = "Invalid TenantKey";
 
             //Don't authenticate anonynous endpoints
-           if (Context.GetEndpoint()?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
+            if (Context.GetEndpoint()?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
             {
                 return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name));
             }
@@ -47,16 +46,11 @@
                         ticket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
                     }
                 }
-                else
-                {
-                    errorMessage = "No TenantKey provided";
-                }
             }
             catch (Exception ex)
             {
                 ticket = null;
-                errorMessage = ex.Message;
-                _logger.LogError(ex, "Authentication Error");
+                _logger.LogError(ex, "Authentication error");
             }
 
             if (ticket is not null)
@@ -66,8 +60,7 @@
             else
             {
                 Response.StatusCode = 401;
-                Response.Headers.Add("Exception", errorMessage);
-                return AuthenticateResult.Fail("Invalid TenantKey Header");
+                return AuthenticateResult.Fail("Invalid or missing TenantKey header");
             }
         }
     }

@@ -36,12 +36,12 @@ namespace iVectorOne_Admin_Api.Features
             //Users
             app.MapUsersInfoV1Endpoint();
             app.MapUsersListV1Endpoint();
-            app.MapUsersTenantsListV1Endpoint();
             app.MapUsersCreateV1Endpoint();
 
             //Tenant
+            app.MapTenantsListV1Endpoint();
             app.MapTenantInfoV1Endpoint();
-            app.MapTenantCreateV1Endpoint();
+            app.MapTenantCreateV1();
             app.MapTenantDeleteV1Endpoint();
             app.MapTenantDisableV1Endpoint();
             app.MapTenantEnableV1Endpoint();

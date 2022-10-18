@@ -1,7 +1,7 @@
-﻿namespace iVectorOne_Admin_Api.Security
-{
-    using System.Security.Principal;
+﻿using System.Security.Principal;
 
+namespace iVectorOne_Admin_Api.Security
+{
     public class TenantIdentity : GenericIdentity
     {
         public TenantIdentity(Tenant tenant) : base(tenant.CompanyName)
