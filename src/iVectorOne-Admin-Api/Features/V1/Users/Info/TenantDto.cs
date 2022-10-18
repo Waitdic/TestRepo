@@ -4,6 +4,8 @@
 
     public class TenantDto
     {
+        public string UserKey { get; set; } = "";
+
         public int TenantId { get; set; }
 
         [JsonPropertyName("name")]
