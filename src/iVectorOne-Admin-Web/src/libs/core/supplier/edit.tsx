@@ -7,15 +7,10 @@ import { deleteSupplier, updateSupplier } from '../data-access/supplier';
 import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import {
-  Supplier,
-  SupplierFormFields,
-  Account,
-  NotificationState,
-} from '@/types';
+import { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { SectionTitle, Button, Notification, ConfirmModal } from '@/components';
+import { SectionTitle, Button, ConfirmModal } from '@/components';
 
 type Props = {};
 
@@ -43,8 +38,6 @@ const SupplierEdit: React.FC<Props> = () => {
     (state: RootState) => state.app.awsAmplify.username
   );
 
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState<NotificationState>();
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -76,22 +69,22 @@ const SupplierEdit: React.FC<Props> = () => {
         },
         onSuccess: () => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: MESSAGES.onSuccess.update,
           });
-          setShowNotification(true);
+
           setTimeout(() => {
             navigate('/suppliers');
           }, 500);
         },
-        onFailed: () => {
+        onFailed: (err, instance) => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
-            message: MESSAGES.onFailed.update,
+            message: err,
+            instance,
           });
-          setShowNotification(true);
         },
       });
     },
@@ -111,22 +104,21 @@ const SupplierEdit: React.FC<Props> = () => {
       () => {
         dispatch.app.setIsLoading(false);
         setIsDeleting(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.delete,
         });
-        setShowNotification(true);
         setTimeout(() => {
           navigate('/suppliers');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.delete,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, [activeTenant, currentAccount, currentSupplier, userKey]);
@@ -146,11 +138,12 @@ const SupplierEdit: React.FC<Props> = () => {
         setCurrentSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Failed to fetch data.',
+          message: err,
+          instance,
         });
         navigate('/suppliers');
       }
@@ -218,15 +211,6 @@ const SupplierEdit: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-
-      {showNotification && (
-        <Notification
-          description={notification?.message as string}
-          status={notification?.status}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
 
       {isDeleting && (
         <ConfirmModal

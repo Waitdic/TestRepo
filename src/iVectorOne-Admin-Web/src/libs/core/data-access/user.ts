@@ -11,7 +11,7 @@ export async function getUsers(
   userKey: string,
   onInit: () => void,
   onSuccess: (users: UserResponse[]) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -27,8 +27,8 @@ export async function getUsers(
     const users = get(usersRes, 'data.users', []);
     onSuccess(users);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -39,7 +39,7 @@ export async function getUserInfo(
   userKey: string, //? User key of the user to get info for
   onInit: () => void,
   onSuccess: (user: User) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -55,8 +55,8 @@ export async function getUserInfo(
     const user = get(usersRes, 'data', {});
     onSuccess(user);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -67,7 +67,7 @@ export async function unlinkUserTenant(
   userId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -82,8 +82,8 @@ export async function unlinkUserTenant(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -94,7 +94,7 @@ export async function linkUserTenant(
   userId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -112,8 +112,8 @@ export async function linkUserTenant(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -124,7 +124,7 @@ export async function createUser(
   data: UserFormFields,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -140,7 +140,7 @@ export async function createUser(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

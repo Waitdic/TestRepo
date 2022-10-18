@@ -6,6 +6,7 @@ import { RootState } from '@/store';
 import ApiCall from '@/axios';
 import type { User, Tenant, ApiError } from '@/types';
 import handleApiError from '@/utils/handleApiError';
+import { NotificationStatus } from '@/constants';
 
 //* User, tenant data fetch
 export function useCoreFetching() {
@@ -46,8 +47,12 @@ export function useCoreFetching() {
     } catch (err) {
       dispatch.app.setIncompleteSetup(true);
       dispatch.app.setIsLoading(false);
-      const errorMessage = handleApiError(err as ApiError);
-      setError(errorMessage);
+      const { message, instance } = handleApiError(err as ApiError);
+      dispatch.app.setNotification({
+        message,
+        instance,
+        status: NotificationStatus.ERROR,
+      });
     }
   }, []);
 
@@ -65,7 +70,7 @@ export async function refetchUserData(
   userKey: string,
   onInit: () => void,
   onSuccess: (user: User) => void,
-  onFailed: (err: string) => void
+  onFailed: (err: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -86,7 +91,7 @@ export async function refetchUserData(
     };
     onSuccess(user);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

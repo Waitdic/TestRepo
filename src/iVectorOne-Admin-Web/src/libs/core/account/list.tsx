@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DropdownFilterProps } from '@/types';
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
-import { CardList, Notification } from '@/components';
+import { CardList } from '@/components';
 import { getAccounts } from '../data-access/account';
 import { NotificationStatus } from '@/constants';
 
@@ -31,11 +31,9 @@ const AccountList: React.FC<Props> = () => {
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
-  const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [showNotification, setShowNotification] = useState(false);
   const [filteredAccountList, setFilteredAccountList] = useState<
     AccountListItem[]
   >([]);
@@ -75,18 +73,16 @@ const AccountList: React.FC<Props> = () => {
         dispatch.app.updateAccounts(fetchedAccounts);
         dispatch.app.setIsLoading(false);
       },
-      (err) => {
-        dispatch.app.setError(err);
+      (err, instance) => {
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
         dispatch.app.setIsLoading(false);
       }
     );
   }, [activeTenant]);
-
-  useEffect(() => {
-    if (!!error) {
-      setShowNotification(true);
-    }
-  }, [error]);
 
   useEffect(() => {
     if (!!accounts?.length) {
@@ -115,15 +111,6 @@ const AccountList: React.FC<Props> = () => {
           emptyState={tableEmptyState}
         />
       </MainLayout>
-
-      {showNotification && (
-        <Notification
-          description={error as string}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={NotificationStatus.ERROR}
-        />
-      )}
     </>
   );
 };

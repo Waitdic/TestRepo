@@ -10,7 +10,7 @@ export async function getAccounts(
   userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
-  onFailed?: (error: string | null) => void
+  onFailed?: (error: string | null, instance?: string) => void
 ) {
   onInit?.();
   try {
@@ -24,8 +24,8 @@ export async function getAccounts(
     const accounts: Account[] = get(accountsRes, 'data.accounts', []);
     onSuccess?.(accounts);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -35,7 +35,7 @@ export async function getAccountsWithSuppliers(
   userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
-  onFailed?: (error: string | null) => void
+  onFailed?: (error: string | null, instance?: string) => void
 ) {
   onInit?.();
   try {
@@ -68,8 +68,8 @@ export async function getAccountsWithSuppliers(
       onSuccess?.(accounts);
     });
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -79,7 +79,7 @@ export async function getAccountsWithSuppliersAndConfigurations(
   userKey: string,
   onInit?: () => void,
   onSuccess?: (accounts: Account[]) => void,
-  onFailed?: (error: string | null) => void
+  onFailed?: (error: string | null, instance?: string) => void
 ) {
   onInit?.();
   try {
@@ -124,8 +124,8 @@ export async function getAccountsWithSuppliersAndConfigurations(
       });
     });
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -141,7 +141,7 @@ export async function getAccountWithSupplierAndConfigurations(
     configurations: any[],
     supplier?: Supplier
   ) => void,
-  onFailed?: (error: string | null) => void
+  onFailed?: (error: string | null, instance?: string) => void
 ) {
   onInit?.();
   try {
@@ -190,8 +190,8 @@ export async function getAccountWithSupplierAndConfigurations(
     const configurations = get(fetchedDataRes[2], 'data.configurations', []);
     onSuccess?.(account, configurations, supplier);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -202,7 +202,7 @@ export async function getAccountById(
   accountId: number,
   onInit: () => void,
   onSuccess: (account: Account) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -219,8 +219,8 @@ export async function getAccountById(
     const data = get(res, 'data', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -236,7 +236,7 @@ export async function createAccount(
   },
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -252,8 +252,8 @@ export async function createAccount(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -271,7 +271,7 @@ export async function updateAccount(
   },
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -287,8 +287,8 @@ export async function updateAccount(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -299,7 +299,7 @@ export async function deleteAccount(
   accountId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -314,7 +314,7 @@ export async function deleteAccount(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

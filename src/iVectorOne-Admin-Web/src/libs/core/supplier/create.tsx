@@ -9,13 +9,7 @@ import { renderConfigurationFormFields } from '@/utils/render-configuration-form
 import { Supplier, SupplierConfiguration, SupplierFormFields } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import {
-  SectionTitle,
-  Select,
-  Button,
-  Notification,
-  Spinner,
-} from '@/components';
+import { SectionTitle, Select, Button, Spinner } from '@/components';
 import {
   createSupplier,
   getConfigurationsBySupplier,
@@ -57,11 +51,6 @@ const SupplierCreate: React.FC<Props> = () => {
     supplierId: -1,
     configurations: [],
   });
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({
-    status: NotificationStatus.SUCCESS,
-    message: 'New Supplier created successfully.',
-  });
 
   const sortedAccounts = useMemo(
     () =>
@@ -101,13 +90,20 @@ const SupplierCreate: React.FC<Props> = () => {
       },
       onSuccess: (_newSupplier) => {
         dispatch.app.setIsLoading(false);
-        setShowNotification(true);
+        dispatch.app.setNotification({
+          status: NotificationStatus.SUCCESS,
+          message: 'Supplier created successfully',
+        });
         setTimeout(() => {
           navigate('/suppliers');
         }, 800);
       },
-      onFailed: (err) => {
-        dispatch.app.setError(err);
+      onFailed: (err, instance) => {
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
         dispatch.app.setIsLoading(true);
       },
     });
@@ -158,21 +154,20 @@ const SupplierCreate: React.FC<Props> = () => {
         });
         dispatch.app.setIsLoading(false);
       },
-      (err) => {
-        handleError(err);
+      (err, instance) => {
+        handleError(err, instance);
       }
     );
   };
 
-  const handleError = (err: string | null) => {
+  const handleError = (err: string | null, instance?: string) => {
     console.error(err);
-    dispatch.app.setError(err);
-    dispatch.app.setIsLoading(false);
-    setNotification({
+    dispatch.app.setNotification({
       status: NotificationStatus.ERROR,
-      message: 'Data fetching failed.',
+      message: err,
+      instance,
     });
-    setShowNotification(true);
+    dispatch.app.setIsLoading(false);
   };
 
   const fetchAccountsWithSuppliers = useCallback(async () => {
@@ -215,7 +210,6 @@ const SupplierCreate: React.FC<Props> = () => {
     setValue('supplier', 0);
 
     return () => {
-      setShowNotification(false);
       setValue('account', 0);
       setValue('supplier', 0);
       setSuppliers([]);
@@ -305,13 +299,6 @@ const SupplierCreate: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-
-      <Notification
-        description={notification.message}
-        status={notification.status}
-        show={showNotification}
-        setShow={setShowNotification}
-      />
     </>
   );
 };

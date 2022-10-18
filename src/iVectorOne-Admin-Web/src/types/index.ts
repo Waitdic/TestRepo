@@ -103,9 +103,10 @@ export type FormErrorMessage = {
   [key: string]: { message: string };
 };
 export type NotificationState = {
-  title?: string;
   status: NotificationStatus;
   message: string;
+  title?: string;
+  instance?: string;
 };
 export type NavigationProps = {
   name: string;
@@ -145,4 +146,5 @@ export type AppState = {
   isLoading: boolean;
   error: null | string | Error;
   incompleteSetup: boolean;
+  notification: NotificationState | null;
 };

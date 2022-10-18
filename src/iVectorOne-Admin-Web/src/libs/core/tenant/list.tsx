@@ -2,10 +2,10 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
-import type { NotificationState, Tenant } from '@/types';
+import type { Tenant } from '@/types';
 import MainLayout from '@/layouts/Main';
 import { NotificationStatus } from '@/constants';
-import { Notification, CardList, RoleGuard } from '@/components';
+import { CardList, RoleGuard } from '@/components';
 import { getTenants, updateTenantStatus } from '../data-access/tenant';
 
 type Props = {};
@@ -36,11 +36,8 @@ const TenantList: React.FC<Props> = () => {
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
-  const appError = useSelector((state: RootState) => state.app.error);
 
   const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [notification, setNotification] = useState<NotificationState>();
-  const [showNotification, setShowNotification] = useState<boolean>(false);
 
   const activeTenant = useMemo(() => {
     return user?.tenants.find((tenant) => tenant.isSelected);
@@ -71,20 +68,19 @@ const TenantList: React.FC<Props> = () => {
               return tenant;
             })
           );
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: MESSAGES.onSuccess.status,
           });
-          setShowNotification(true);
         },
-        (err) => {
+        (err, instance) => {
           console.error(err);
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
-            message: MESSAGES.onFailed.status,
+            message: err,
+            instance,
           });
-          setShowNotification(true);
         }
       );
     },
@@ -120,23 +116,16 @@ const TenantList: React.FC<Props> = () => {
         dispatch.app.setIsLoading(false);
         setTenants(_tenants);
       },
-      (err) => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        dispatch.app.setError(err);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
       }
     );
   }, [activeTenant]);
-
-  useEffect(() => {
-    if (appError) {
-      setNotification({
-        status: NotificationStatus.ERROR,
-        message: appError as string,
-        title: 'Error',
-      });
-      setShowNotification(false);
-    }
-  }, [appError]);
 
   useEffect(() => {
     if (!!activeTenant) {
@@ -157,15 +146,6 @@ const TenantList: React.FC<Props> = () => {
           </div>
         </MainLayout>
       </RoleGuard>
-
-      {showNotification && (
-        <Notification
-          description={notification?.message as string}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={notification?.status}
-        />
-      )}
     </>
   );
 };

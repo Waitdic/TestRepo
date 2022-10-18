@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
 import { NotificationStatus } from '@/constants';
-import { CardList, Notification, RoleGuard } from '@/components';
+import { CardList, RoleGuard } from '@/components';
 import { getUsers } from '../data-access/user';
-import type { NotificationState, UserResponse } from '@/types';
+import type { UserResponse } from '@/types';
 
 type Props = {};
 
@@ -25,8 +25,6 @@ const UserList: React.FC<Props> = () => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [notification, setNotification] = useState<NotificationState>();
-  const [showNotification, setShowNotification] = useState(false);
   const [users, setUsers] = useState<UserResponse[]>([]);
 
   const activeTenant = useMemo(
@@ -60,11 +58,12 @@ const UserList: React.FC<Props> = () => {
         dispatch.app.setIsLoading(false);
         setUsers(fetchedUsers);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Error fetching users',
+          message: err,
+          instance,
         });
       }
     );
@@ -85,15 +84,6 @@ const UserList: React.FC<Props> = () => {
           />
         </MainLayout>
       </RoleGuard>
-
-      {showNotification && (
-        <Notification
-          description={notification?.message as string}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={notification?.status as NotificationStatus}
-        />
-      )}
     </>
   );
 };

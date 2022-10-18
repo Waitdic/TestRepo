@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { NotificationState, Tenant } from '@/types';
+import type { Tenant } from '@/types';
 import {
   NotificationStatus,
   ButtonColors,
@@ -11,7 +11,7 @@ import {
   InputTypes,
 } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { TextField, Button, Notification, RoleGuard } from '@/components';
+import { TextField, Button, RoleGuard } from '@/components';
 import { createTenant } from '../data-access/tenant';
 import { RootState } from '@/store';
 import { refetchUserData } from '../data-access';
@@ -32,12 +32,6 @@ const TenantCreate: React.FC<Props> = () => {
   );
   const user = useSelector((state: RootState) => state.app.user);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
-
-  const [notification, setNotification] = useState<NotificationState>({
-    status: NotificationStatus.SUCCESS,
-    message: 'New Tenant created successfully.',
-  });
-  const [showNotification, setShowNotification] = useState(false);
 
   const isValidUser = useMemo(
     () => !!userKey || isLoading,
@@ -62,14 +56,14 @@ const TenantCreate: React.FC<Props> = () => {
           navigate('/tenants');
         }, 500);
       },
-      (err) => {
+      (err, instance) => {
         console.error(err);
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Error while updating user data.',
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, []);
@@ -86,21 +80,20 @@ const TenantCreate: React.FC<Props> = () => {
         },
         () => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: 'New Tenant created successfully.',
           });
-          setShowNotification(true);
           refetchUser();
         },
-        (err) => {
+        (err, instance) => {
           dispatch.app.setIsLoading(false);
           console.error(err);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
             message: err,
+            instance,
           });
-          setShowNotification(true);
         }
       );
     },
@@ -189,15 +182,6 @@ const TenantCreate: React.FC<Props> = () => {
           </div>
         </MainLayout>
       </RoleGuard>
-
-      {showNotification && (
-        <Notification
-          status={notification.status}
-          description={notification.message}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
     </>
   );
 };

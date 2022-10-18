@@ -16,7 +16,7 @@ export async function getSuppliersByAccount(
   accountId: number,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -33,8 +33,8 @@ export async function getSuppliersByAccount(
     const data = get(res, 'data.accountSuppliers', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -44,7 +44,7 @@ export async function getSuppliers(
   userKey: string,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -58,8 +58,8 @@ export async function getSuppliers(
     const data = get(res, 'data.suppliers', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -71,7 +71,7 @@ export async function getSupplierById(
   supplierId: number,
   onInit: () => void,
   onSuccess: (supplier: Supplier) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -88,8 +88,8 @@ export async function getSupplierById(
     const data = get(res, 'data', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -100,7 +100,7 @@ export async function getConfigurationsBySupplier(
   supplierId: number,
   onInit: () => void,
   onSuccess: (configurations: SupplierConfiguration[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -114,8 +114,8 @@ export async function getConfigurationsBySupplier(
     const configurations = get(configurationsRes, 'data.configurations', []);
     onSuccess(configurations);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -137,7 +137,7 @@ export async function updateSupplier({
   data: SupplierFormFields;
   onInit: () => void;
   onSuccess: (updatedSupplier: Supplier) => void;
-  onFailed: (error: string) => void;
+  onFailed: (error: string, instance?: string) => void;
 }) {
   const { configurations } = data;
   onInit();
@@ -162,8 +162,8 @@ export async function updateSupplier({
     const updatedSupplier = get(updatedSupplierRes, 'data', null);
     onSuccess(updatedSupplier);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -185,7 +185,7 @@ export async function createSupplier({
   data: SupplierFormFields;
   onInit: () => void;
   onSuccess: (updatedSupplier: Supplier) => void;
-  onFailed: (error: string) => void;
+  onFailed: (error: string, instance?: string) => void;
 }) {
   const { configurations } = data;
   onInit();
@@ -210,8 +210,8 @@ export async function createSupplier({
     const newSupplier = get(newSupplierRes, 'data', null);
     onSuccess(newSupplier);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -223,7 +223,7 @@ export async function deleteSupplier(
   supplierId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
 
@@ -238,7 +238,7 @@ export async function deleteSupplier(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

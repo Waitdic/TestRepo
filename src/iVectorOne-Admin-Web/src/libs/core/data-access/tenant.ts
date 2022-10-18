@@ -10,7 +10,7 @@ export async function getTenants(
   tenantKey: string,
   onInit: () => void,
   onSuccess: (tenants: Tenant[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -23,8 +23,8 @@ export async function getTenants(
     const data = get(res, 'data.tenants', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -35,7 +35,7 @@ export async function getTenantById(
   tenantId: number,
   onInit: () => void,
   onSuccess: (tenant: Tenant) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -48,8 +48,8 @@ export async function getTenantById(
     const data = get(res, 'data.tenant', null);
     onSuccess(data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -61,7 +61,7 @@ export async function updateTenant(
   data: Tenant,
   onInit: () => void,
   onSuccess: (updatedTenant: Tenant) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
 
@@ -79,8 +79,8 @@ export async function updateTenant(
     const updatedTenant = get(updatedTenantRes, 'data', null);
     onSuccess(updatedTenant);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -92,7 +92,7 @@ export async function updateTenantStatus(
   status: boolean,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -107,8 +107,8 @@ export async function updateTenantStatus(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -119,7 +119,7 @@ export async function deleteTenant(
   tenantId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -134,8 +134,8 @@ export async function deleteTenant(
     });
     onSuccess();
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -146,7 +146,7 @@ export async function createTenant(
   data: Tenant,
   onInit: () => void,
   onSuccess: (newTenant: { tenantId: number; success: boolean }) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -162,7 +162,7 @@ export async function createTenant(
     });
     onSuccess(newTenant.data);
   } catch (err: any) {
-    const errorMessage = handleApiError(err as ApiError);
-    onFailed?.(errorMessage);
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

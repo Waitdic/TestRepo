@@ -5,9 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
-import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList, Notification } from '@/components';
+import { EmptyState, CardList } from '@/components';
 import { getAccounts } from '../data-access/account';
 import { getSuppliersByAccount } from '../data-access/supplier';
 
@@ -23,7 +22,6 @@ const tableEmptyState = {
 const SupplierList: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
-  const error = useSelector((state: RootState) => state.app.error);
   const user = useSelector((state: RootState) => state.app.user);
   const accounts = useSelector((state: RootState) => state.app.accounts);
   const userKey = useSelector(
@@ -167,11 +165,6 @@ const SupplierList: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-      <Notification
-        description={error as string}
-        show={!!error}
-        status={NotificationStatus.ERROR}
-      />
     </>
   );
 };
