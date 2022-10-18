@@ -6,10 +6,10 @@
         {
             _ = endpoints.MapGet("v1/users", async (IMediator mediator) =>
             {
-                var response = await mediator.Send(new Request ());
+                var response = await mediator.Send(new Request());
 
                 return response.Result;
-            }).RequireAuthorization();
+            }); //.RequireAuthorization();
 
             return endpoints;
         }
