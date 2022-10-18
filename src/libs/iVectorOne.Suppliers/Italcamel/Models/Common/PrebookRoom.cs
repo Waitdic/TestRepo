@@ -24,6 +24,7 @@
         [XmlArray("SERVICES")]
         [XmlArrayItem("SERVICE")]
         public Service[] Services { get; set; } = Array.Empty<Service>();
+        public bool ShouldSerializeServices() => Services.Length != 0;
 
         [XmlElement("AMOUNT")]
         public decimal Amount { get; set; }

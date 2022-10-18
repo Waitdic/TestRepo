@@ -20,7 +20,8 @@
         [XmlArray("ROOMDETAILS")]
         [XmlArrayItem("ROOMDETAIL")]
         public RoomDetail[] RoomDetails { get; set; } = Array.Empty<RoomDetail>();
-        
+        public bool ShouldSerializeRoomDetails() => RoomDetails.Length != 0;
+
         [XmlElement("NAME")]
         public string Name { get; set; } = string.Empty;
         public bool ShouldSerializeName() => !string.IsNullOrEmpty(Name);

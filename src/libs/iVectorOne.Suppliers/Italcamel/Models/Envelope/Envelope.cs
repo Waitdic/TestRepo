@@ -9,7 +9,6 @@
     [XmlRoot(Namespace = SoapNamespaces.Soapenv, ElementName = "Envelope")]
     public class Envelope<T> where T : SoapContent, new()
     {
-        public SoapHeader Header { get; set; } = new();
         public SoapBody Body { get; set; } = new();
 
         [XmlNamespaceDeclarations]
@@ -20,17 +19,16 @@
         }
 
         [XmlType(Namespace = SoapNamespaces.Soapenv)]
-        public class SoapHeader { }
-
-        [XmlType(Namespace = SoapNamespaces.Soapenv)]
         public class SoapBody
         {
-            [XmlElement(typeof(GetAvailability), Namespace = SoapNamespaces.Ns, ElementName = "GETAVAILABILITY")]
-            [XmlElement(typeof(GetAvailabilityResponse), Namespace = SoapNamespaces.Ns, ElementName = "GETAVAILABILITYResponse")]
-            [XmlElement(typeof(PackageEstimate), Namespace = SoapNamespaces.Ns, ElementName = "PACKAGEESTIMATE")]
-            [XmlElement(typeof(PackageEstimateResponse), Namespace = SoapNamespaces.Ns, ElementName = "PACKAGEESTIMATEResponse")]
-            [XmlElement(typeof(PackageDelete), Namespace = SoapNamespaces.Ns, ElementName = "PACKAGEDELETE")]
-            [XmlElement(typeof(PackageDeleteResponse), Namespace = SoapNamespaces.Ns, ElementName = "PACKAGEDELETEResponse")]
+            [XmlElement(typeof(GetAvailability), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITY")]
+            [XmlElement(typeof(GetAvailabilityResponse), Namespace = SoapNamespaces.Ser, ElementName = "GETAVAILABILITYResponse")]
+            [XmlElement(typeof(PackageEstimate), Namespace = SoapNamespaces.Ser, ElementName = "PACKAGEESTIMATE")]
+            [XmlElement(typeof(PackageEstimateResponse), Namespace = SoapNamespaces.Ser, ElementName = "PACKAGEESTIMATEResponse")]
+            [XmlElement(typeof(PackageDelete), Namespace = SoapNamespaces.Ser, ElementName = "PACKAGEDELETE")]
+            [XmlElement(typeof(PackageDeleteResponse), Namespace = SoapNamespaces.Ser, ElementName = "PACKAGEDELETEResponse")]
+            [XmlElement(typeof(GetBookingCharge), Namespace = SoapNamespaces.Ser, ElementName = "GETBOOKINGCHARGE")]
+            [XmlElement(typeof(GetBookingChargeResponse), Namespace = SoapNamespaces.Ser, ElementName = "GETBOOKINGCHARGEResponse")]
             public SoapContent SoapContent { get; set; } = new T();
 
             [XmlIgnore]

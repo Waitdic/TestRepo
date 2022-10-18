@@ -4,7 +4,7 @@
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
 
-    public class SearchRequest : Request
+    public class SearchRequest
     {
         [XmlElement("USERNAME")]
         public string Username { get; set; } = string.Empty;
@@ -19,6 +19,12 @@
         [XmlArrayItem("ACCOMMODATION")]
         public string[] Accommodations { get; set; } = Array.Empty<string>();
         public bool ShouldSerializeAccommodations() => Accommodations.Length != 0;
+
+        [XmlElement("CHECKIN")]
+        public string CheckIn { get; set; } = string.Empty;
+
+        [XmlElement("CHECKOUT")]
+        public string CheckOut { get; set; } = string.Empty;
 
         [XmlArray("ROOMS")]
         [XmlArrayItem("ROOM")]

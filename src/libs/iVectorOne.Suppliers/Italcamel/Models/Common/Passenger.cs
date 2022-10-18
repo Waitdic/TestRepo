@@ -15,5 +15,6 @@
 
         [XmlElement("DOCUMENTNUMBER")]
         public string DocumentNumber { get; set; } = string.Empty;
+        public bool ShouldSerializeDocumentNumber() => !string.IsNullOrEmpty(DocumentNumber);
     }
 }

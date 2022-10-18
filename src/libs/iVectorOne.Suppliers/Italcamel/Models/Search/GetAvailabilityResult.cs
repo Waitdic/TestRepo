@@ -4,7 +4,7 @@
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
 
-    public class SearchResponse
+    public class GetAvailabilityResult
     {
         [XmlArray("ACCOMMODATIONS")]
         [XmlArrayItem("ACCOMMODATION")]

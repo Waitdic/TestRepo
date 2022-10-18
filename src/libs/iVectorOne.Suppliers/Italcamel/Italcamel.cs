@@ -6,11 +6,13 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.Italcamel.Models.Cancel;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
@@ -84,7 +86,7 @@
             {
                 var preBookRequest = BuildRequest(propertyDetails, "ESTIMATE");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGESTIMATE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGEESTIMATE";
 
                 // send the request
                 request = _helper.CreateWebRequest(url, soapAction, true, "Prebook");
@@ -99,33 +101,14 @@
                     success = false;
                 }
 
-                //var rooms = response.Package.Booking.Rooms;
-                //var baseCosts = response.Package.Booking.Rooms.Select(x => x.Amount).ToList();
-                //var boardCosts = response.Package.Booking.Rooms.Select(x => x.Board).Select(a => a.Amount).ToList();
-                //var services = response.Package.Booking.Rooms.SelectMany(x => x.Services).ToList();
-                //var servicesCost = services.Any() 
-                //    ? services.Where(s => s.Optional).Select(s => s.Amount).ToList()
-                //    : new List<decimal>();
-
-                //for (var i = 0; i < propertyDetails.Rooms.Count; i++)
-                //{
-                    //var specialOffer = rooms[i].Services.Any() ? rooms[i].Services.FirstOrDefault()!.Amount : 0;
-                    //var discounts = rooms[i].Extra.Discount.Any() ? rooms[i].Extra.Discount.Select(x => x.Amount).Sum() : 0;
-                    //var supplements = rooms[i].Extra.Supplements.Any() ? rooms[i].Extra.Supplements.Select(x => x.Amount).Sum() : 0;
-
-                    //propertyDetails.Rooms[i].LocalCost =
-                    //    baseCosts[i] + boardCosts[i] - specialOffer - discounts - supplements;
-
-                    //propertyDetails.Rooms[i].LocalCost += servicesCost.Count > i ? servicesCost[i] : 0;
-                //}
-
                 for (var i = 0; i < propertyDetails.Rooms.Count; i++)
                 {
                     propertyDetails.Rooms[i].LocalCost += response.Package.Booking.InternalBooking.Rooms[i].TotalAmount.ToSafeDecimal();
                 }
 
                 // set cancellations on booking
-                SetCancellations(propertyDetails, response.Package.Booking.InternalBooking.CancellationPolicies);
+                propertyDetails.Errata.Add(new Erratum("REMARKS", response.Package.Booking.InternalBooking.Remarks));
+                SetCancellations(propertyDetails, response.Package.Booking.InternalBooking.CancellationPolicies, response.Package.UID);
             }
             catch (Exception ex)
             {
@@ -156,7 +139,7 @@
             {
                 var bookingRequest = BuildRequest(propertyDetails, "BOOK");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGESTIMATE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGEESTIMATE";
 
                 request = _helper.CreateWebRequest(url, soapAction);
                 request.SetRequest(bookingRequest);
@@ -278,6 +261,7 @@
                                 CheckOut = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                                 AccomodationUID = propertyDetails.TPKey,
                                 RequestPrice = propertyDetails.LocalCost,
+                                DeltaPrice = 0,
                                 Rooms = propertyDetails.Rooms.Select(r => new PrebookRoom
                                 {
                                     MasterUID = r.ThirdPartyReference.Split('|')[0],
@@ -328,8 +312,25 @@
             return _serializer.Serialize(request).OuterXml;
         }
 
-        private void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies)
+        private async void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies, string UID)
         {
+            var searchRequest = _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, UID);
+            var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/GETBOOKINGCHARGE";
+
+            // get response
+            var request = new Intuitive.Helpers.Net.Request
+            {
+                EndPoint = _settings.GenericURL(propertyDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml,
+                SoapAction = soapAction,
+                UseGZip = false,
+            };
+            request.SetRequest(searchRequest);
+            await request.Send(_httpClient, _logger);
+
+            var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML).Body.Content.BookingCharges;
+
             // get cancellation policie(s)
             var cancellations = new Cancellations();
             foreach (var room in propertyDetails.Rooms)
@@ -339,6 +340,10 @@
                         ? cancellationPolicies.Where(c => c.RoomUID == room.ThirdPartyReference.Split('|')[0]).ToList()
                         : cancellationPolicies.Where(c => c.RoomUID == string.Empty).ToList();
 
+                var charges = bookingCharges
+                    .Where(x => x.RoomUID == room.ThirdPartyReference.Split('|')[0])
+                    .ToList();
+
                 foreach (var cancellationPolicy in cancellationNodes)
                 {
                     var date = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayFrom);
@@ -347,6 +352,13 @@
                         cancellationPolicy.Value,
                         room.LocalCost,
                         propertyDetails.Duration);
+
+                    if (charges.Any())
+                    {
+                        amount += charges.Any(x => x.ChargeDate == date)
+                            ? charges.First(x => x.ChargeDate == date).ChargeAmount
+                            : 0;
+                    } 
 
                     var lastDate = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayTo);
                     cancellations.AddNew(date, lastDate, amount);

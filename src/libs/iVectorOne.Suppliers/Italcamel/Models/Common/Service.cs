@@ -4,10 +4,9 @@
 
     public class Service
     {
-        [XmlElement("OPTIONAL")]
-        public bool Optional { get; set; }
+        public string UID { get; set; } = string.Empty;
 
-        [XmlElement("AMOUNT")]
-        public decimal Amount { get; set; }
+        [XmlElement("QUANTITY")]
+        public decimal Quantity { get; set; }
     }
 }

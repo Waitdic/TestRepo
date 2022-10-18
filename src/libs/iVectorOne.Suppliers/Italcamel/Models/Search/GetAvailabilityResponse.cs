@@ -6,6 +6,6 @@
     public class GetAvailabilityResponse : SoapContent
     {
         [XmlElement("GETAVAILABILITYResult")]
-        public SearchResponse GetAvaibilityResult { get; set; } = new();
+        public GetAvailabilityResult GetAvaibilityResult { get; set; } = new();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Suppliers.Italcamel
+﻿using iVectorOne.Suppliers.Italcamel.Models.Cancel;
+
+namespace iVectorOne.Suppliers.Italcamel
 {
     using System;
     using iVectorOne.Models.Property.Booking;
@@ -115,12 +117,23 @@
             return roomDetails;
         }
 
-        public string CleanRequest(XmlDocument request)
+        public string BuildBookingChargeRequest(IItalcamelSettings settings, ISerializer serializer, PropertyDetails propertyDetails, string UID)
         {
-            var requestString = request.OuterXml;
-            return requestString
-                .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
-                .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
+            var request = new Envelope<GetBookingCharge>
+            {
+                Body =
+                {
+                    Content =
+                    {
+                        Username = settings.Login(propertyDetails),
+                        Password = settings.Password(propertyDetails),
+                        LanguageUID = settings.LanguageID(propertyDetails),
+                        BookingUID = UID,
+                    }
+                }
+            };
+
+            return serializer.Serialize(request).OuterXml;
         }
 
         public Intuitive.Helpers.Net.Request CreateWebRequest(string url, string soapAction, bool createLog = false, string logFileName = "")

@@ -6,7 +6,7 @@
     public static class SoapNamespaces
     {
         public const string Soapenv = "http://schemas.xmlsoap.org/soap/envelope/";
-        public const string Ns = "";
+        public const string Ser = "http://webservice.italcamel.com/service_5_1.asmx";
 
         public static XmlSerializerNamespaces Namespaces { get; }
 

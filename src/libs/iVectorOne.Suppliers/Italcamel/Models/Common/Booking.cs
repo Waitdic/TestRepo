@@ -35,9 +35,6 @@
         [XmlArrayItem("ROOM")]
         public PrebookRoom[] Rooms { get; set; } = Array.Empty<PrebookRoom>();
 
-        [XmlElement("NUMBER")]
-        public string Number { get; set; } = string.Empty;
-
         [XmlElement("BOOKING")]
         public Booking? InternalBooking { get; set; }
         public bool ShouldSerializeInternalBooking() => InternalBooking != null;
