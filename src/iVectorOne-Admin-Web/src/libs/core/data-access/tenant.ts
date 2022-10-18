@@ -106,7 +106,7 @@ export async function updateTenantStatus(
   onInit();
   try {
     await ApiCall.request({
-      method: 'PUT',
+      method: 'POST',
       url: `/tenants/${tenantId}/${status ? 'enable' : 'disable'}`,
       headers: {
         Accept: 'application/json',
