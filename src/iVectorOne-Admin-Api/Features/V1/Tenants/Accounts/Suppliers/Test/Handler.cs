@@ -97,6 +97,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
                 var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestURI);
 
                 var httpClient = _httpClientFactory.CreateClient();
+                httpClient.Timeout = TimeSpan.FromMinutes(3);
 
                 var x = _secretKeeper.Decrypt(password);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{login}:{_secretKeeper.Decrypt(password)}")));

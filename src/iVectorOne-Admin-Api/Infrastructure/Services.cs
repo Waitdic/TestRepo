@@ -19,8 +19,10 @@ namespace iVectorOne_Admin_Api.Infrastructure
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            // TODO Add back the validation
+            //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
+            builder.Services.AddScoped<IValidator<Features.V1.Utilities.SearchTest.Request>, Features.V1.Utilities.SearchTest.Validator>();
 
             builder.Services.AddHttpClient();
             //builder.Services.AddHttpClient<IRequestHandler<Request, Response>, Handler>(

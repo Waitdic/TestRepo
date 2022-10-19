@@ -27,6 +27,20 @@ namespace iVectorOne_Admin_Api.Features.Shared
 
         public void BadRequest(string detail) => Result = Results.BadRequest(BuildProblemDetails(detail));
 
+        public void BadRequest(string detail, IDictionary<string, string[]> errors)
+        {
+            var activity = Activity.Current;
+
+            var problemDetails = new ValidationProblemDetails(errors)
+            {
+                Title = "An error occurred while processing your request.",
+                Instance = activity?.GetTraceId(),
+                Detail = detail
+            };
+
+            Result = Results.BadRequest(problemDetails);
+        }
+
         #region Private methods
 
         private static ProblemDetails BuildProblemDetails(string detail)
