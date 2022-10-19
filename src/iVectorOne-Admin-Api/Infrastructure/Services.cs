@@ -22,12 +22,13 @@ namespace iVectorOne_Admin_Api.Infrastructure
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
 
-            builder.Services.AddHttpClient<IRequestHandler<Request, Response>, Handler>(
-                "default",
-                client =>
-                {
-                    client.BaseAddress = new Uri(builder.Configuration.GetSection("SearchService").Value);
-                });
+            builder.Services.AddHttpClient();
+            //builder.Services.AddHttpClient<IRequestHandler<Request, Response>, Handler>(
+            //    "default",
+            //    client =>
+            //    {
+            //        client.BaseAddress = new Uri(builder.Configuration.GetSection("SearchService").Value);
+            //    });
 
             builder.Services.AddScoped<ITenantService, TenantService>();
 
