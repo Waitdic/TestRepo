@@ -16,8 +16,5 @@
 
         [XmlElement("PACKAGEUID")]
         public string PackageUID { get; set; } = string.Empty;
-        
-        [XmlElement("ITEMUID")]
-        public string ItemUID { get; set; } = string.Empty;
     }
 }

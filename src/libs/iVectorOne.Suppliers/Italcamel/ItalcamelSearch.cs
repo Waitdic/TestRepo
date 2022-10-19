@@ -112,9 +112,7 @@
                 {
                     foreach (var room in accommodations.Where(a => a.UID == tpkey).SelectMany(r => r.Rooms.Where(rm => rm.Available)))
                     {
-                        bool? nonRef = room.NotRefundable ? room.NotRefundable : null;
-                        
-                        if ((nonRef != null && excludeNRF) 
+                        if ((room.NotRefundable && excludeNRF) 
                             || (room.PackageRate && !packageRate))
                         {
                             continue;
@@ -137,7 +135,7 @@
                                 ChildAgeCSV = guests.Rooms[count].HlpChildAgeCSV,
                                 Amount = board.Amount,
                                 TPReference = $"{room.MasterUID}|{board.UID}",
-                                NonRefundableRates = nonRef,
+                                NonRefundableRates = room.NotRefundable,
                             }));
                         }
                     }

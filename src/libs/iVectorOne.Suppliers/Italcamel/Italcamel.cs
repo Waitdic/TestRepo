@@ -190,7 +190,7 @@
 
                 // send the request
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/ITEMDELETE";
+                var soapAction = url.Replace("test.", ".") + "/PACKAGEDELETE";
 
                 request = _helper.CreateWebRequest(url, soapAction, true, "Cancel");
                 request.SetRequest(cancelRequest);
@@ -303,8 +303,7 @@
                         Username = _settings.Login(propertyDetails),
                         Password = _settings.Login(propertyDetails),
                         LanguageUID = _settings.Login(propertyDetails),
-                        PackageUID = propertyDetails.SourceSecondaryReference.Split('|')[0],
-                        ItemUID = propertyDetails.SourceSecondaryReference.Split('|')[1]
+                        PackageUID = propertyDetails.SourceSecondaryReference.Split('|')[0]
                     }
                 }
             };
