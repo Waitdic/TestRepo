@@ -261,7 +261,7 @@
                                 CheckOut = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                                 AccomodationUID = propertyDetails.TPKey,
                                 RequestPrice = propertyDetails.LocalCost,
-                                DeltaPrice = 0,
+                                DeltaPrice = _settings.DeltaPrice(propertyDetails),
                                 Rooms = propertyDetails.Rooms.Select(r => new PrebookRoom
                                 {
                                     MasterUID = r.ThirdPartyReference.Split('|')[0],
