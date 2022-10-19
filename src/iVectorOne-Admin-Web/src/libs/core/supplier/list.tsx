@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList, Modal } from '@/components';
+import { EmptyState, CardList, Modal, Button } from '@/components';
 import { getAccounts } from '../data-access/account';
 import { getSuppliersByAccount, testSupplier } from '../data-access/supplier';
-import { NotificationStatus } from '@/constants';
+import { ButtonColors, NotificationStatus } from '@/constants';
 
 type Props = {};
 
@@ -223,25 +223,22 @@ const SupplierList: React.FC<Props> = () => {
                 <div className='font-semibold text-slate-800'>
                   {testDetails.name}
                 </div>
-                <button
-                  className='text-slate-400 hover:text-slate-500'
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setTestDetails({
-                      name: '',
-                      isTesting: false,
-                      status: '',
-                    });
-                  }}
-                >
-                  <div className='sr-only'>Close</div>
-                  <svg className='w-4 h-4 fill-current'>
-                    <path d='M7.95 6.536l4.242-4.243a1 1 0 111.415 1.414L9.364 7.95l4.243 4.242a1 1 0 11-1.415 1.415L7.95 9.364l-4.243 4.243a1 1 0 01-1.414-1.415L6.536 7.95 2.293 3.707a1 1 0 011.414-1.414L7.95 6.536z' />
-                  </svg>
-                </button>
               </div>
             </div>
             <p className='p-5'>{testDetails.status}</p>
+            <div className='flex justify-end px-5 pb-5'>
+              <Button
+                text='Close'
+                onClick={() => {
+                  setTestDetails({
+                    name: '',
+                    isTesting: false,
+                    status: '',
+                  });
+                }}
+                color={ButtonColors.PRIMARY}
+              />
+            </div>
           </div>
         </Modal>
       )}
