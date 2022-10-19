@@ -242,3 +242,31 @@ export async function deleteSupplier(
     onFailed?.(message, instance);
   }
 }
+
+//* Test supplier
+export async function testSupplier(
+  tenantKey: string,
+  userKey: string,
+  tenantId: number,
+  accountId: number,
+  supplierId: number,
+  onSuccess: (status: string) => void,
+  onFailed: (message: string, instance?: string) => void
+) {
+  try {
+    const { data } = await ApiCall.request({
+      method: 'POST',
+      url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test`,
+      headers: {
+        Tenantkey: tenantKey,
+        UserKey: userKey,
+      },
+    });
+    if (data.success) {
+      onSuccess(data.status);
+    }
+  } catch (error: any) {
+    const { message, instance } = handleApiError(error);
+    onFailed(message, instance);
+  }
+}

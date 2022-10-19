@@ -2,13 +2,15 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 //
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList } from '@/components';
+import { EmptyState, CardList, Modal } from '@/components';
 import { getAccounts } from '../data-access/account';
-import { getSuppliersByAccount } from '../data-access/supplier';
+import { getSuppliersByAccount, testSupplier } from '../data-access/supplier';
+import { NotificationStatus } from '@/constants';
 
 type Props = {};
 
@@ -33,6 +35,10 @@ const SupplierList: React.FC<Props> = () => {
     Supplier[] | null
   >(null);
   const [activeAcc, setActiveAcc] = useState<Account | null>(null);
+  const [testDetails, setTestDetails] = useState({
+    isTesting: false,
+    status: '',
+  });
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((tenant) => tenant.isSelected),
@@ -90,6 +96,38 @@ const SupplierList: React.FC<Props> = () => {
       );
     },
     [accounts, activeTenant]
+  );
+
+  const handleTesting = useCallback(
+    async (supplierId: number, accountId: number) => {
+      if (!activeTenant || !userKey) return;
+      setTestDetails({ isTesting: true, status: 'Running test...' });
+      await testSupplier(
+        activeTenant?.tenantKey,
+        userKey,
+        activeTenant.tenantId,
+        accountId,
+        supplierId,
+        (status) => {
+          setTestDetails({
+            isTesting: true,
+            status: status,
+          });
+        },
+        (err, instance) => {
+          setTestDetails({
+            isTesting: true,
+            status: err,
+          });
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: err,
+            instance,
+          });
+        }
+      );
+    },
+    []
   );
 
   useEffect(() => {
@@ -150,6 +188,14 @@ const SupplierList: React.FC<Props> = () => {
                             name: 'Edit',
                             href: `/suppliers/${supplierID}/edit?accountId=${activeAcc?.accountId}`,
                           },
+                          {
+                            name: 'Test',
+                            onClick: () =>
+                              handleTesting(
+                                supplierID as number,
+                                activeAcc?.accountId as number
+                              ),
+                          },
                         ],
                       })
                     ),
@@ -165,6 +211,25 @@ const SupplierList: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
+
+      {testDetails.isTesting && (
+        <Modal transparent flex>
+          <div className='relative bg-white max-w-[640px] m-auto p-4'>
+            <button
+              className='absolute -top-2 -right-2 bg-white rounded-full'
+              onClick={() =>
+                setTestDetails({
+                  isTesting: false,
+                  status: '',
+                })
+              }
+            >
+              <AiOutlineCloseCircle className='w-6 h-6' />
+            </button>
+            <p>{testDetails.status}</p>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

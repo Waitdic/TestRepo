@@ -2,15 +2,20 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 //
-import { deleteSupplier, updateSupplier } from '../data-access/supplier';
+import {
+  deleteSupplier,
+  testSupplier,
+  updateSupplier,
+} from '../data-access/supplier';
 import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { Supplier, SupplierFormFields, Account } from '@/types';
+import type { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { SectionTitle, Button, ConfirmModal } from '@/components';
+import { SectionTitle, Button, ConfirmModal, Modal } from '@/components';
 
 type Props = {};
 
@@ -40,12 +45,20 @@ const SupplierEdit: React.FC<Props> = () => {
 
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
+  const [originalSupplier, setOriginalSupplier] = useState<Supplier | null>(
+    null
+  );
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [testDetails, setTestDetails] = useState({
+    isTesting: false,
+    status: '',
+  });
 
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
@@ -123,6 +136,48 @@ const SupplierEdit: React.FC<Props> = () => {
     );
   }, [activeTenant, currentAccount, currentSupplier, userKey]);
 
+  const handleTesting = useCallback(async () => {
+    const originalConfigurationsValues = originalSupplier?.configurations
+      ?.map((c) => c.value)
+      .join('');
+    const currentConfigurationsValues = getValues('configurations').join('');
+
+    if (originalConfigurationsValues !== currentConfigurationsValues) {
+      dispatch.app.setNotification({
+        status: NotificationStatus.ERROR,
+        message: 'Please save the configurations before testing',
+      });
+      return;
+    }
+    if (!activeTenant || !userKey) return;
+
+    setTestDetails({ isTesting: true, status: 'Running test...' });
+    await testSupplier(
+      activeTenant?.tenantKey,
+      userKey,
+      activeTenant.tenantId,
+      currentAccount?.accountId as number,
+      currentSupplier?.supplierID as number,
+      (status) => {
+        setTestDetails({
+          isTesting: true,
+          status: status,
+        });
+      },
+      (err, instance) => {
+        setTestDetails({
+          isTesting: true,
+          status: err,
+        });
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
+      }
+    );
+  }, [originalSupplier, currentSupplier]);
+
   const fetchData = async () => {
     if (!activeTenant) return;
     await getAccountWithSupplierAndConfigurations(
@@ -136,6 +191,7 @@ const SupplierEdit: React.FC<Props> = () => {
       (account, configurations, supplier) => {
         setCurrentAccount(account);
         setCurrentSupplier({ ...supplier, configurations });
+        setOriginalSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
       (err, instance) => {
@@ -154,6 +210,12 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!!user) {
       fetchData();
     }
+    return () => {
+      setCurrentAccount(null);
+      setCurrentSupplier(null);
+      setOriginalSupplier(null);
+      dispatch.app.resetNotification();
+    };
   }, [user]);
 
   useEffect(() => {
@@ -161,6 +223,10 @@ const SupplierEdit: React.FC<Props> = () => {
       setValue('account', currentAccount.accountId);
       setValue('supplier', currentSupplier.supplierID as number);
     }
+    return () => {
+      setValue('account', 0);
+      setValue('supplier', 0);
+    };
   }, [currentSupplier, currentAccount, setValue]);
 
   return (
@@ -189,6 +255,12 @@ const SupplierEdit: React.FC<Props> = () => {
                 </div>
               </div>
               <div className='flex justify-end mt-5 pt-5'>
+                <Button
+                  text='Test'
+                  color={ButtonColors.OUTLINE}
+                  className='ml-4'
+                  onClick={handleTesting}
+                />
                 <Button
                   text='Cancel'
                   color={ButtonColors.OUTLINE}
@@ -225,6 +297,25 @@ const SupplierEdit: React.FC<Props> = () => {
           setShow={setIsDeleting}
           onConfirm={handleDeleteSupplier}
         />
+      )}
+
+      {testDetails.isTesting && (
+        <Modal transparent flex>
+          <div className='relative bg-white max-w-[640px] m-auto p-4'>
+            <button
+              className='absolute -top-2 -right-2 bg-white rounded-full'
+              onClick={() =>
+                setTestDetails({
+                  isTesting: false,
+                  status: '',
+                })
+              }
+            >
+              <AiOutlineCloseCircle className='w-6 h-6' />
+            </button>
+            <p>{testDetails.status}</p>
+          </div>
+        </Modal>
       )}
     </>
   );
