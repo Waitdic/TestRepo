@@ -1,4 +1,4 @@
-﻿namespace iVectorOne_Admin_Api.Config.Validation
+﻿namespace iVectorOne_Admin_Api.Infrastructure
 {
     using FluentValidation;
 

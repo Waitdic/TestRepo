@@ -4,10 +4,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Users.List
 {
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

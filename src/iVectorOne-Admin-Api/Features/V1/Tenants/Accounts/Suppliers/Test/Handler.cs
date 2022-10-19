@@ -11,11 +11,11 @@
 
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly ISecretKeeper _secretKeeper;
         private readonly HttpClient _client;
 
-        public Handler(ConfigContext context, ISecretKeeper secretKeeper, HttpClient client)
+        public Handler(AdminContext context, ISecretKeeper secretKeeper, HttpClient client)
         {
             _context = Ensure.IsNotNull(context, nameof(context));
             _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
