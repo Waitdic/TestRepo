@@ -6,10 +6,10 @@
 
     public class SupplierListHandler : IRequestHandler<SupplierListRequest, SupplierListResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
 
-        public SupplierListHandler(ConfigContext context, IMapper mapper)
+        public SupplierListHandler(AdminContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

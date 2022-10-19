@@ -4,9 +4,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Users.Create
 {
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context)
+        public Handler(AdminContext context)
         {
             _context = context;
         }

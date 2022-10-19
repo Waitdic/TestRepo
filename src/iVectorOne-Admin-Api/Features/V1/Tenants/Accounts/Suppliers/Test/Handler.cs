@@ -1,127 +1,141 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
+﻿using Intuitive;
+using Intuitive.Helpers.Security;
+using iVectorOne_Admin_Api.Features.Shared;
+using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using Search = iVectorOne.SDK.V2.PropertySearch;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
 {
-    using System.Net.Http.Headers;
-    using System.Text;
-    using System.Text.Json;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Intuitive;
-    using Intuitive.Helpers.Security;
-    using Search = iVectorOne.SDK.V2.PropertySearch;
-
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        internal enum SearchStatusEnum { Ok, NoResults, Exception, NotOk };
+        private readonly AdminContext _context;
         private readonly ISecretKeeper _secretKeeper;
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public Handler(ConfigContext context, ISecretKeeper secretKeeper, HttpClient client)
+        public Handler(AdminContext context, ISecretKeeper secretKeeper, IHttpClientFactory httpClientFactory)
         {
             _context = Ensure.IsNotNull(context, nameof(context));
             _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
-            _client = Ensure.IsNotNull(client, nameof(client));
+            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
-            string label = "Sorry, there are no tests configured for this supplier";
+            var response = new ResponseBase();
 
-            try
-            {
-                var requests = BuildRequest(request);
-
-                foreach (var searchRequest in requests)
-                {
-                    var result = await _client.SendAsync(searchRequest);
-                    ProcessResult(response, result);
-                };
-
-                return response;
-            }
-            catch (Exception)
-            {
-                response.Default(new SupplierTestResponse
-                {
-                    Label = label,
-                });
-
-                return response;
-            }
-        }
-
-        private List<HttpRequestMessage> BuildRequest(Request request)
-        {
             var account = _context.Accounts.Where(a => a.AccountId == request.AccountID)
-                                .Include(a => a.AccountSuppliers)
-                                .ThenInclude(a => a.Supplier)
-                                .FirstOrDefault();
+                    .Include(a => a.AccountSuppliers)
+                    .ThenInclude(a => a.Supplier)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+
+            if (account == null)
+            {
+                response.NotFound("Account not found.");
+                return response;
+            }
 
             var supplier = account!.AccountSuppliers.FirstOrDefault(a => a.SupplierId == request.SupplierID)!.Supplier;
 
-            var dateTimeList = new List<DateTime>
-                {
-                    DateTime.Today.AddMonths(1),
-                    DateTime.Today.AddMonths(3),
-                    DateTime.Today.AddMonths(6),
-                };
-
-            var requestList = new List<HttpRequestMessage>();
-
-            var room = new Search.RoomRequest
+            if (supplier == null)
             {
-                Adults = 2,
-                Children = 0,
-                Infants = 0,
-            };
-
-            foreach (var dateTime in dateTimeList)
-            {
-                var propertySearchRequest = new Search.Request
-                {
-                    ArrivalDate = dateTime,
-                    Duration = 2,
-                    Properties = supplier.TestPropertyIDs.Split(',').Select(int.Parse).ToList(),
-                    Suppliers = new List<string>()
-                    {
-                        supplier.SupplierName
-                    },
-                    RoomRequests = new ()
-                    {
-                        room
-                    }
-                };
-
-                var propertySearchRequestString = JsonSerializer.Serialize(propertySearchRequest);
-
-                HttpRequestMessage requestMessage = new(HttpMethod.Post, "/v2/properties/search")
-                {
-                    Content = new StringContent(propertySearchRequestString, Encoding.UTF8, "application/json")
-                };
-                requestList.Add(requestMessage);
+                response.NotFound("Supplier not found.");
+                return response;
             }
 
-            var authenticationString = $"{account.Login}:{_secretKeeper.Decrypt(account.EncryptedPassword)}";
-            var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
+            if (string.IsNullOrEmpty(supplier.TestPropertyIDs) || string.IsNullOrEmpty(account.EncryptedPassword))
+            {
+                response.Ok(new ResponseModel { Success = true, Status = "Sorry, there are no tests configured for this supplier." });
+                return response;
+            }
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
 
-            return requestList;
+            var status = "Sorry, no results could be found.";
+            var searchDate = DateTime.Today.AddDays(1);
+
+            for (int i = 0; i < 3; i++)
+            {
+                var cancelSearch = false;
+                var result = await ExecuteSearch(supplier.TestPropertyIDs, searchDate.AddMonths(i * 3), account.Login, account.EncryptedPassword);
+                switch (result.SearchStatus)
+                {
+                    case SearchStatusEnum.Ok:
+                        status = "Success. The supplier is returning results.";
+                        break;
+                    case SearchStatusEnum.Exception:
+                        status = $"Failed with unexpected error: {result.Message}";
+                        cancelSearch = true;
+                        break;
+                    case SearchStatusEnum.NotOk:
+                        status = $"Failed with error: {result.Message}";
+                        cancelSearch = true;
+                        break;
+                };
+
+                if (cancelSearch)
+                {
+                    break;
+                }
+            }
+
+            response.Ok(new ResponseModel { Success = true, Status = status });
+            return response;
         }
 
-        private static async void ProcessResult(Response response, HttpResponseMessage result)
+        private async Task<SearchResult> ExecuteSearch(string properties, DateTime searchdate, string login, string password)
         {
-            var searchResult = await result.Content.ReadAsStringAsync();
-            var resultClass = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
+            var response = new SearchResult();
 
-            if (resultClass != null && resultClass.PropertyResults.Count > 0)
+            try
             {
-                response.Default(new SupplierTestResponse { Label = "Success. The supplier is returning results" });
+                var requestURI = $"https://api.ivectorone.com/v2/properties/search?ArrivalDate={searchdate.ToString("yyyy-MM-dd")}&duration=7&properties={properties}&rooms=(2,0,0)";
+
+                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestURI);
+
+                var httpClient = _httpClientFactory.CreateClient();
+
+                var x = _secretKeeper.Decrypt(password);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{login}:{_secretKeeper.Decrypt(password)}")));
+                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+
+                var searchResult = await httpResponseMessage.Content.ReadAsStringAsync();
+
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var result = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
+                    if (result != null && result.PropertyResults.Count > 0)
+                    {
+                        response.SearchStatus = SearchStatusEnum.Ok;
+                    }
+                    else
+                    {
+                        response.SearchStatus = SearchStatusEnum.NoResults;
+                    }
+                }
+                else
+                {
+                    response.Message = $"{httpResponseMessage.StatusCode} {searchResult}";
+                    response.SearchStatus = SearchStatusEnum.NotOk;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                response.Default(new SupplierTestResponse { Label = "Sorry, no results could be found" });
+                response.Message = ex.Message;
+                response.SearchStatus = SearchStatusEnum.Exception;
             }
+
+            return response;
+        }
+
+        internal record SearchResult
+        {
+            internal SearchStatusEnum SearchStatus { get; set; }
+
+            internal string Message { get; set; } = "";
         }
     }
 }

@@ -5,9 +5,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Delete
 {
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context, IMapper mapper)
         {
             _context = context;
         }
