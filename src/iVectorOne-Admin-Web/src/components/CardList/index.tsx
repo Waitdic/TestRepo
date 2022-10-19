@@ -1,4 +1,4 @@
-import { FC, memo, useMemo } from 'react';
+import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //

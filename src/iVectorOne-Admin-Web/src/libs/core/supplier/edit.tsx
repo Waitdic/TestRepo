@@ -2,15 +2,20 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 //
-import { deleteSupplier, updateSupplier } from '../data-access/supplier';
+import {
+  deleteSupplier,
+  testSupplier,
+  updateSupplier,
+} from '../data-access/supplier';
 import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { Supplier, SupplierFormFields, Account } from '@/types';
+import type { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { SectionTitle, Button, ConfirmModal } from '@/components';
+import { SectionTitle, Button, ConfirmModal, Modal } from '@/components';
 
 type Props = {};
 
@@ -40,12 +45,21 @@ const SupplierEdit: React.FC<Props> = () => {
 
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
+  const [originalSupplier, setOriginalSupplier] = useState<Supplier | null>(
+    null
+  );
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [testDetails, setTestDetails] = useState({
+    name: '',
+    isTesting: false,
+    status: '',
+  });
 
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
@@ -123,6 +137,54 @@ const SupplierEdit: React.FC<Props> = () => {
     );
   }, [activeTenant, currentAccount, currentSupplier, userKey]);
 
+  const handleTesting = useCallback(async () => {
+    const originalConfigurationsValues = originalSupplier?.configurations
+      ?.map((c) => c.value)
+      .join('');
+    const currentConfigurationsValues = getValues('configurations').join('');
+
+    if (originalConfigurationsValues !== currentConfigurationsValues) {
+      dispatch.app.setNotification({
+        status: NotificationStatus.ERROR,
+        message: 'Please save the configurations before testing',
+      });
+      return;
+    }
+    if (!activeTenant || !userKey) return;
+
+    setTestDetails({
+      name: currentSupplier?.name as string,
+      isTesting: true,
+      status: 'Running test...',
+    });
+    await testSupplier(
+      activeTenant?.tenantKey,
+      userKey,
+      activeTenant.tenantId,
+      currentAccount?.accountId as number,
+      currentSupplier?.supplierID as number,
+      (status) => {
+        setTestDetails({
+          name: currentSupplier?.name as string,
+          isTesting: true,
+          status: status,
+        });
+      },
+      (err, instance) => {
+        setTestDetails({
+          name: currentSupplier?.name as string,
+          isTesting: true,
+          status: err,
+        });
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
+      }
+    );
+  }, [originalSupplier, currentSupplier]);
+
   const fetchData = async () => {
     if (!activeTenant) return;
     await getAccountWithSupplierAndConfigurations(
@@ -136,6 +198,7 @@ const SupplierEdit: React.FC<Props> = () => {
       (account, configurations, supplier) => {
         setCurrentAccount(account);
         setCurrentSupplier({ ...supplier, configurations });
+        setOriginalSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
       (err, instance) => {
@@ -154,6 +217,12 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!!user) {
       fetchData();
     }
+    return () => {
+      setCurrentAccount(null);
+      setCurrentSupplier(null);
+      setOriginalSupplier(null);
+      dispatch.app.resetNotification();
+    };
   }, [user]);
 
   useEffect(() => {
@@ -161,6 +230,10 @@ const SupplierEdit: React.FC<Props> = () => {
       setValue('account', currentAccount.accountId);
       setValue('supplier', currentSupplier.supplierID as number);
     }
+    return () => {
+      setValue('account', 0);
+      setValue('supplier', 0);
+    };
   }, [currentSupplier, currentAccount, setValue]);
 
   return (
@@ -189,6 +262,12 @@ const SupplierEdit: React.FC<Props> = () => {
                 </div>
               </div>
               <div className='flex justify-end mt-5 pt-5'>
+                <Button
+                  text='Test'
+                  color={ButtonColors.OUTLINE}
+                  className='ml-4'
+                  onClick={handleTesting}
+                />
                 <Button
                   text='Cancel'
                   color={ButtonColors.OUTLINE}
@@ -225,6 +304,34 @@ const SupplierEdit: React.FC<Props> = () => {
           setShow={setIsDeleting}
           onConfirm={handleDeleteSupplier}
         />
+      )}
+
+      {testDetails.isTesting && (
+        <Modal transparent flex>
+          <div className='bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full'>
+            <div className='px-5 py-3 border-b border-slate-200'>
+              <div className='flex justify-between items-center'>
+                <div className='font-semibold text-slate-800'>
+                  {testDetails.name}
+                </div>
+              </div>
+            </div>
+            <p className='p-5'>{testDetails.status}</p>
+            <div className='flex justify-end px-5 pb-5'>
+              <Button
+                text='Close'
+                onClick={() => {
+                  setTestDetails({
+                    name: '',
+                    isTesting: false,
+                    status: '',
+                  });
+                }}
+                color={ButtonColors.PRIMARY}
+              />
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   );

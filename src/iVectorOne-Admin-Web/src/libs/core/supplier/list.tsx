@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
 import MainLayout from '@/layouts/Main';
-import { EmptyState, CardList } from '@/components';
+import { EmptyState, CardList, Modal, Button } from '@/components';
 import { getAccounts } from '../data-access/account';
-import { getSuppliersByAccount } from '../data-access/supplier';
+import { getSuppliersByAccount, testSupplier } from '../data-access/supplier';
+import { ButtonColors, NotificationStatus } from '@/constants';
 
 type Props = {};
 
@@ -33,6 +34,11 @@ const SupplierList: React.FC<Props> = () => {
     Supplier[] | null
   >(null);
   const [activeAcc, setActiveAcc] = useState<Account | null>(null);
+  const [testDetails, setTestDetails] = useState({
+    name: '',
+    isTesting: false,
+    status: '',
+  });
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((tenant) => tenant.isSelected),
@@ -90,6 +96,40 @@ const SupplierList: React.FC<Props> = () => {
       );
     },
     [accounts, activeTenant]
+  );
+
+  const handleTesting = useCallback(
+    async (name: string, supplierId: number, accountId: number) => {
+      if (!activeTenant || !userKey) return;
+      setTestDetails({ name, isTesting: true, status: 'Running test...' });
+      await testSupplier(
+        activeTenant?.tenantKey,
+        userKey,
+        activeTenant.tenantId,
+        accountId,
+        supplierId,
+        (status) => {
+          setTestDetails({
+            name,
+            isTesting: true,
+            status: status,
+          });
+        },
+        (err, instance) => {
+          setTestDetails({
+            name,
+            isTesting: true,
+            status: err,
+          });
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: err,
+            instance,
+          });
+        }
+      );
+    },
+    []
   );
 
   useEffect(() => {
@@ -150,6 +190,15 @@ const SupplierList: React.FC<Props> = () => {
                             name: 'Edit',
                             href: `/suppliers/${supplierID}/edit?accountId=${activeAcc?.accountId}`,
                           },
+                          {
+                            name: 'Test',
+                            onClick: () =>
+                              handleTesting(
+                                name as string,
+                                supplierID as number,
+                                activeAcc?.accountId as number
+                              ),
+                          },
                         ],
                       })
                     ),
@@ -165,6 +214,34 @@ const SupplierList: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
+
+      {testDetails.isTesting && (
+        <Modal transparent flex>
+          <div className='bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full'>
+            <div className='px-5 py-3 border-b border-slate-200'>
+              <div className='flex justify-between items-center'>
+                <div className='font-semibold text-slate-800'>
+                  {testDetails.name}
+                </div>
+              </div>
+            </div>
+            <p className='p-5'>{testDetails.status}</p>
+            <div className='flex justify-end px-5 pb-5'>
+              <Button
+                text='Close'
+                onClick={() => {
+                  setTestDetails({
+                    name: '',
+                    isTesting: false,
+                    status: '',
+                  });
+                }}
+                color={ButtonColors.PRIMARY}
+              />
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
