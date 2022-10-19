@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
 //
 import { RootState } from '@/store';
 import { Supplier, Account } from '@/types';
@@ -36,6 +35,7 @@ const SupplierList: React.FC<Props> = () => {
   >(null);
   const [activeAcc, setActiveAcc] = useState<Account | null>(null);
   const [testDetails, setTestDetails] = useState({
+    name: '',
     isTesting: false,
     status: '',
   });
@@ -99,9 +99,9 @@ const SupplierList: React.FC<Props> = () => {
   );
 
   const handleTesting = useCallback(
-    async (supplierId: number, accountId: number) => {
+    async (name: string, supplierId: number, accountId: number) => {
       if (!activeTenant || !userKey) return;
-      setTestDetails({ isTesting: true, status: 'Running test...' });
+      setTestDetails({ name, isTesting: true, status: 'Running test...' });
       await testSupplier(
         activeTenant?.tenantKey,
         userKey,
@@ -110,12 +110,14 @@ const SupplierList: React.FC<Props> = () => {
         supplierId,
         (status) => {
           setTestDetails({
+            name,
             isTesting: true,
             status: status,
           });
         },
         (err, instance) => {
           setTestDetails({
+            name,
             isTesting: true,
             status: err,
           });
@@ -192,6 +194,7 @@ const SupplierList: React.FC<Props> = () => {
                             name: 'Test',
                             onClick: () =>
                               handleTesting(
+                                name as string,
                                 supplierID as number,
                                 activeAcc?.accountId as number
                               ),
@@ -214,19 +217,31 @@ const SupplierList: React.FC<Props> = () => {
 
       {testDetails.isTesting && (
         <Modal transparent flex>
-          <div className='relative bg-white max-w-[640px] m-auto p-4'>
-            <button
-              className='absolute -top-2 -right-2 bg-white rounded-full'
-              onClick={() =>
-                setTestDetails({
-                  isTesting: false,
-                  status: '',
-                })
-              }
-            >
-              <AiOutlineCloseCircle className='w-6 h-6' />
-            </button>
-            <p>{testDetails.status}</p>
+          <div className='bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full'>
+            <div className='px-5 py-3 border-b border-slate-200'>
+              <div className='flex justify-between items-center'>
+                <div className='font-semibold text-slate-800'>
+                  {testDetails.name}
+                </div>
+                <button
+                  className='text-slate-400 hover:text-slate-500'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setTestDetails({
+                      name: '',
+                      isTesting: false,
+                      status: '',
+                    });
+                  }}
+                >
+                  <div className='sr-only'>Close</div>
+                  <svg className='w-4 h-4 fill-current'>
+                    <path d='M7.95 6.536l4.242-4.243a1 1 0 111.415 1.414L9.364 7.95l4.243 4.242a1 1 0 11-1.415 1.415L7.95 9.364l-4.243 4.243a1 1 0 01-1.414-1.415L6.536 7.95 2.293 3.707a1 1 0 011.414-1.414L7.95 6.536z' />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <p className='p-5'>{testDetails.status}</p>
           </div>
         </Modal>
       )}
