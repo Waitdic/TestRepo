@@ -8,6 +8,6 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
 
         public int SupplierID { get; set; }
 
-        public SearchCriteria SearchCriteria { get; set; }
+        public SearchRequest SearchRequest { get; set; }
     }
 }

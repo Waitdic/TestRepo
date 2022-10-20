@@ -8,13 +8,13 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
         {
             _ = endpoints.MapPost("v1/tenants/{tenantid}/accounts/{accountid}/search", async (
                 IMediator mediator,
-                [FromBody] SearchCriteria requestBody,
+                [FromBody] SearchRequest requestBody,
                 int tenantId, int accountId) =>
             {
                 var request = new Request
                 {
                     AccountID = accountId,
-                    SearchCriteria = requestBody
+                    SearchRequest = requestBody
                 };
 
                 var response = await mediator.Send(request);

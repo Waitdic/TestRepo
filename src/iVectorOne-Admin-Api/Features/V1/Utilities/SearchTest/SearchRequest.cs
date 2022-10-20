@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
 {
-    public record SearchCriteria
+    public record SearchRequest
     {
         public DateTime ArrivalDate { get; set; }
 

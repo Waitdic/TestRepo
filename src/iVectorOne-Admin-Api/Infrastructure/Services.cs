@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using Intuitive.Helpers;
 using Intuitive.Helpers.Security;
+using iVectorOne_Admin_Api.Adaptors;
+using iVectorOne_Admin_Api.Adaptors.Search;
 using iVectorOne_Admin_Api.Config.Validation;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test;
 using iVectorOne_Admin_Api.Security;
@@ -36,6 +38,9 @@ namespace iVectorOne_Admin_Api.Infrastructure
 
             builder.Services.AddHelperServices(builder.Configuration);
             builder.Services.AddTransient(c => c.GetRequiredService<ISecretKeeperFactory>().CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+
+            //Adaptors
+            builder.Services.AddScoped<IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response>, SearchAdaptor>();
 
             return builder;
         }
