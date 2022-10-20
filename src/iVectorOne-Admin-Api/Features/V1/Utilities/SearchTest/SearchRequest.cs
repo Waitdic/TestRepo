@@ -10,6 +10,23 @@
 
         public List<RoomRequest> RoomRequests { get; set; } = new();
 
+        public string RoomRequestsToString()
+        {
+            var roomRequests = "";
+
+            foreach (var roomRequest in RoomRequests)
+            {
+                roomRequests += $"|({roomRequest.Adults},{roomRequest.Children},{roomRequest.Infants})";
+
+                if (roomRequest.Children > 0)
+                {
+                    roomRequests += $"~{string.Join(",", roomRequest.ChildAges)}";
+                }
+            }
+
+            return roomRequests.Substring(1, roomRequests.Length-1);
+        }
+
         //public string NationalityID { get; set; } = "";
 
         //public string CurrencyCode { get; set; } = "";

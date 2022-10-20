@@ -58,7 +58,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
                 Login = account.Login,
                 Password = account.EncryptedPassword,
                 DedupeMethod = "none",
-                RoomRequest = "(2,0,0)"
+                RoomRequest = request.SearchRequest.RoomRequestsToString()
             };
 
             var result = await _searchAdaptor.Execute(searchRequest, cancellationToken);
