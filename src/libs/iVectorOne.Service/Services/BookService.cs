@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
@@ -51,8 +52,8 @@
         public async Task<Response> BookAsync(Request bookRequest)
         {
             Response response = null!;
-            var exceptionString = string.Empty;
-            bool success = true;
+            bool requestValid = true;
+            bool success = false;
             var propertyDetails = new PropertyDetails();
 
             try
@@ -67,7 +68,7 @@
                         Warnings = propertyDetails.Warnings.Select(w => w.Text).ToList()
                     };
 
-                    success = false;
+                    requestValid = false;
                 }
                 else
                 {
@@ -80,34 +81,37 @@
                         var supplierReference = await thirdParty.BookAsync(propertyDetails);
                         propertyDetails.SupplierSourceReference = supplierReference;
                         success = supplierReference.ToLower() != "failed";
-                    }
 
-                    if (success)
-                    {
-                        response = _responseFactory.Create(propertyDetails);
-                    }
-                    else
-                    {
-                        exceptionString = "Suppplier book failed";
-                        response = new Response()
+                        if (success)
                         {
-                            Warnings = new System.Collections.Generic.List<string>() { exceptionString }
-                        };
+                            response = _responseFactory.Create(propertyDetails);
+                        }
+                        else
+                        {
+                            response = new Response()
+                            {
+                                Warnings = propertyDetails.Warnings.Select(w => $"{w.Title}, {w.Text}").ToList()
+                            };
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                exceptionString = ex.ToString();
+                response.Warnings.Add(ex.ToString());
             }
             finally
             {
-                if (!success && propertyDetails.Warnings.Any())
-                {
-                    exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
-                }
+                await _logRepository.LogBookAsync(bookRequest, response!, success);
 
-                await _logRepository.LogBookAsync(bookRequest, response!, bookRequest.Account, exceptionString);
+                if (requestValid && !success)
+                {
+                    response.Warnings = new List<string>() { "Suppplier book failed" };
+                }
+                else if (requestValid)
+                {
+                    response.Warnings = null!;
+                }
             }
 
             return response!;
