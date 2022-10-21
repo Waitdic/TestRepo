@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
 {
-    public record Property
+    public record PropertyDto
     {
         public int PropertyId { get; set; } 
 

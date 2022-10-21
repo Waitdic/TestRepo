@@ -2,6 +2,6 @@
 {
     public record ResponseModel : ResponseModelBase
     {
-        public List<Property> Properties { get; set; } = new List<Property>();
+        public List<PropertyDto> Properties { get; set; } = new List<PropertyDto>();
     }
 }

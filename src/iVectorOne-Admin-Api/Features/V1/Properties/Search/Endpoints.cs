@@ -8,20 +8,20 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
         {
             _ = endpoints.MapGet("v1/tenants/{tenantid}/accounts/{accountid}/properties", async (
                 IMediator mediator,
-                int tenantId, 
+                int tenantId,
                 int accountId,
                 [FromQuery] string? query) =>
             {
-                 var request = new Request
+                var request = new Request
                 {
-                     AccountID = accountId,
-                     Query = query
-                 };
+                    AccountID = accountId,
+                    Query = query
+                };
 
                 var response = await mediator.Send(request);
 
                 return response.Result;
-            }).RequireAuthorization();
+            });//.RequireAuthorization();
 
             return endpoints;
         }

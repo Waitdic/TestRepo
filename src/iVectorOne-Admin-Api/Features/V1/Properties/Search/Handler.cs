@@ -1,6 +1,6 @@
-﻿using FluentValidation;
-using FluentValidation.Results;
-using iVectorOne_Admin_Api.Adaptors;
+﻿using AutoMapper.QueryableExtensions;
+using FluentValidation;
+using iVectorOne_Admin_Api.Data;
 using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
@@ -9,11 +9,13 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
     {
         private readonly AdminContext _context;
         private readonly IValidator<Request> _validator;
+        private readonly IMapper _mapper;
 
-        public Handler(AdminContext context, IValidator<Request> validator)
+        public Handler(AdminContext context, IValidator<Request> validator, IMapper mapper)
         {
             _context = context;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
@@ -40,15 +42,12 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
                 return response;
             }
 
-            //SELECT DISTINCT TOP 20 T1.Name, T2.CentralPropertyID
-            //FROM Property T1
-            //INNER JOIN PropertyDedupe T2 ON T2.PropertyID = T1.PropertyID
-            //INNER JOIN Supplier T3 ON T3.SupplierName = T2.Source
-            //INNER JOIN AccountSupplier T4 ON T4.SupplierID = T3.SupplierID
-            //WHERE Name LIKE 'Centara %'
-            //AND T4.AccountID = 2
+            var queryText = $"Portal_PropertySearch '{request.Query}', {request.AccountID}";
+            var properties = _context.Properties.FromSqlRaw(queryText).ToList();
 
-            response.Ok(new ResponseModel() { Success = true });
+            var propertyList = _mapper.Map<List<PropertyDto>>(properties);
+
+            response.Ok(new ResponseModel() { Success = true, Properties = propertyList });
             return response;
         }
     }
