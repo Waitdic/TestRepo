@@ -66,6 +66,12 @@
                 options.AllowSynchronousIO = true;
             });
 
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(type => type.ToString());
+            });
+
             return services;
         }
 
@@ -95,11 +101,11 @@
 
             app.UseHttpsRedirection();
 
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseSwagger();
-            //    app.UseSwaggerUI();
-            //}
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.Run();
         }
@@ -123,7 +129,7 @@
                 {
                     return Results.UnprocessableEntity();
                 }
-                else if (response.Warnings.Any())
+                else if (response.Warnings?.Any() ?? false)
                 {
                     return Results.BadRequest(response.Warnings);
                 }

@@ -104,6 +104,43 @@
           "AuthenticationID": "TEST"
         }
       },
+       {
+        "Supplier": "AbreuV2",
+        "Configurations": {
+          "SearchURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact",
+          "BookingURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelres/OTA2014Compact",
+          "CancellationURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelcancel/OTA2014Compact",
+          "LanguageID": "1",
+          "User": "17468",
+          "DatabaseName": "abreu_tr",
+          "OffsetCancellationDays": "0",
+          "Target": "",
+          "AllowCancellations": "true",
+          "CurrencyCode": "EUR",
+          "UseGZip": "false",
+          "Password": "bookabedxml"
+        }
+      },
+      {
+        "Supplier": "Hotelston",
+        "Configurations": {
+         "Currency" : "EUR",
+         "LanguageCode" : "en",
+         "ContactEmail" : "booking@imperatours.com",
+         "Password" : "ImperaTours2017",
+         "NetRates" : "true",
+         "GenericURL" : "http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/",
+         "OffsetCancellationDays" : "0",
+         "AllowCancellations" : "TRUE",
+         "SOAPRequestURL" : "http://request.ws.hotelston.com/xsd",
+         "SOAPTypesURL" : "http://types.ws.hotelston.com/xsd",
+         "AlwaysUseDefaultEmail" : "TRUE",
+         "DefaultFirstName" : "ImperaTours",
+         "DefaultLastName" : "Reservations",
+         "ContactPhoneNumber" : "390813339345",
+         "UseGZip" : "TRUE"
+        }
+      },
       {
         "Supplier": "YouTravel",
         "Configurations": {

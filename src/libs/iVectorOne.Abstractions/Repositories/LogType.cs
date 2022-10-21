@@ -10,6 +10,9 @@
         Book = 1,
 
         /// <summary>A log for a cancel request/response</summary>
-        Cancel = 2
+        Cancel = 2,
+
+        /// <summary>A log for a pre cancel request/response</summary>
+        Precancel = 3
     }
 }

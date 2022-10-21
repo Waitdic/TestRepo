@@ -21,7 +21,10 @@
         {
             var response = new Response();
 
-            var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId).Include(t => t.Accounts).FirstOrDefault();
+            var tenant = _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .Include(t => t.Accounts)
+                .FirstOrDefault();
 
             if (tenant is null)
             {

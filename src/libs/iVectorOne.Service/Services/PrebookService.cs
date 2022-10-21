@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
@@ -47,8 +48,8 @@
         public async Task<Response> PrebookAsync(Request prebookRequest)
         {
             Response response = null!;
-            string exceptionString = string.Empty;
-            bool success = true;
+            bool requestValid = true;
+            bool success = false;
             var propertyDetails = new PropertyDetails();
 
             try
@@ -61,6 +62,8 @@
                     {
                         Warnings = propertyDetails.Warnings.Select(w => w.Text).ToList()
                     };
+
+                    requestValid = false;
                 }
                 else
                 {
@@ -71,34 +74,36 @@
                     if (thirdParty != null)
                     {
                         success = await thirdParty.PreBookAsync(propertyDetails);
-                    }
-
-                    if (success)
-                    {
-                        response = await _responseFactory.CreateAsync(propertyDetails);
-                    }
-                    else
-                    {
-                        exceptionString = "Suppplier prebook failed";
-                        response = new Response()
+                        if (success)
                         {
-                            Warnings = new System.Collections.Generic.List<string>() { exceptionString }
-                        };
+                            response = await _responseFactory.CreateAsync(propertyDetails);
+                        }
+                        else
+                        {
+                            response = new Response()
+                            {
+                                Warnings = propertyDetails.Warnings.Select(w => $"{w.Title}, {w.Text}").ToList()
+                            };
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                exceptionString = ex.ToString();
+                response.Warnings.Add(ex.ToString());
             }
             finally
             {
-                if(!success && propertyDetails.Warnings.Any())
-                {
-                    exceptionString += string.Join(Environment.NewLine, propertyDetails.Warnings);
-                }
+                await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
 
-                await _logRepository.LogPrebookAsync(prebookRequest, response!, prebookRequest.Account, exceptionString);
+                if (requestValid && !success)
+                {
+                    response.Warnings = new List<string>() { "Suppplier prebook failed" };
+                }
+                else if (requestValid)
+                {
+                    response.Warnings = null!;
+                }
             }
 
             return response;

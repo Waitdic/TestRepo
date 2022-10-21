@@ -1,4 +1,5 @@
 ﻿using iVectorOne_Admin_Api.Features.Errors;
+using iVectorOne_Admin_Api.Features.V1.Properties.Search;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Create;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Delete;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Info;
@@ -19,6 +20,9 @@ using iVectorOne_Admin_Api.Features.V1.Tenants.Users.Unlink;
 using iVectorOne_Admin_Api.Features.V1.Users.Create;
 using iVectorOne_Admin_Api.Features.V1.Users.Info;
 using iVectorOne_Admin_Api.Features.V1.Users.List;
+using iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer;
+using iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer;
+using iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest;
 
 namespace iVectorOne_Admin_Api.Features
 {
@@ -60,6 +64,12 @@ namespace iVectorOne_Admin_Api.Features
             app.MapTenantAccountSupplierListV1Endpoint();
             app.MapTenantAccountSupplierDeleteV1Endpoint();
             app.MapTenantAccountSupplierTestV1Endpoint();
+
+            //Utilities
+            app.MapSearchTestV1Endpoint();
+            app.MapLogViewerV1Endpoint();
+            app.MapBookingViewerV1Endpoint();
+            app.MapPropertiesSearchV1Endpoint();
 
             return app;
         }

@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using Intuitive.Helpers;
 using Intuitive.Helpers.Security;
+using iVectorOne_Admin_Api.Adaptors;
+using iVectorOne_Admin_Api.Adaptors.Search;
 using iVectorOne_Admin_Api.Config.Validation;
 using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test;
 using iVectorOne_Admin_Api.Security;
@@ -19,8 +21,10 @@ namespace iVectorOne_Admin_Api.Infrastructure
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            // TODO Add back the validation
+            //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
+            builder.Services.AddScoped<IValidator<Features.V1.Utilities.SearchTest.Request>, Features.V1.Utilities.SearchTest.Validator>();
 
             builder.Services.AddHttpClient();
             //builder.Services.AddHttpClient<IRequestHandler<Request, Response>, Handler>(
@@ -34,6 +38,9 @@ namespace iVectorOne_Admin_Api.Infrastructure
 
             builder.Services.AddHelperServices(builder.Configuration);
             builder.Services.AddTransient(c => c.GetRequiredService<ISecretKeeperFactory>().CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+
+            //Adaptors
+            builder.Services.AddScoped<IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response>, SearchAdaptor>();
 
             return builder;
         }
