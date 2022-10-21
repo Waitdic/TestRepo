@@ -493,6 +493,23 @@
         }
       },
       {
+        "Supplier": "AbreuV2",
+        "Configurations": {
+          "SearchURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact",
+          "BookingURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelres/OTA2014Compact",
+          "CancellationURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelcancel/OTA2014Compact",
+          "LanguageID": "1",
+          "User": "17468",
+          "DatabaseName": "abreu_tr",
+          "OffsetCancellationDays": "0",
+          "Target": "",
+          "AllowCancellations": "true",
+          "CurrencyCode": "EUR",
+          "UseGZip": "false",
+          "Password": "bookabedxml"
+        }
+      },
+      {
         "Supplier": "JuniperElevate",
         "Configurations": {
           "OperatorCode": "XML_IntuitiveSystems-iVector",

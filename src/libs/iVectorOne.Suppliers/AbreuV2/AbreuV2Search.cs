@@ -59,7 +59,7 @@
             string databaseName = _settings.DatabaseName(searchDetails);
             string target = _settings.Target(searchDetails);
             string dateStamp = AbreuV2.Now();
-            var xmlRequest = new XmlDocument();
+            string xmlRequest;
 
             foreach (var resort in resortSplits)
             {
@@ -112,12 +112,12 @@
                     }
                 };
 
-                xmlRequest = _serializer.Serialize(soapEnvelope);
+                xmlRequest = XmlHelper.CleanRequest(_serializer.Serialize(soapEnvelope));
 
                 //'Build Request Object
                 var request = new Request
                 {
-                    EndPoint = _settings.SearchHotelAvailabilityURL(searchDetails),
+                    EndPoint = _settings.SearchURL(searchDetails),
                     Method = RequestMethod.POST,
                     UseGZip = true
                 };
