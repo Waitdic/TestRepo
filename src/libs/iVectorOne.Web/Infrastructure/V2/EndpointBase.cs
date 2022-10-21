@@ -129,7 +129,7 @@
                 {
                     return Results.UnprocessableEntity();
                 }
-                else if (response.Warnings.Any())
+                else if (response.Warnings?.Any() ?? false)
                 {
                     return Results.BadRequest(response.Warnings);
                 }
