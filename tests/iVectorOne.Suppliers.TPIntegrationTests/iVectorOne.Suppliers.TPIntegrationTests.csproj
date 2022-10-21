@@ -60,6 +60,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GoGlobalRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="Hotelston\HotelstonRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HotelstonRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -195,6 +200,10 @@
     <EmbeddedResource Update="GoGlobal\GoGlobalRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Hotelston\HotelstonRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
