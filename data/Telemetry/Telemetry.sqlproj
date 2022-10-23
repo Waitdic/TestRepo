@@ -63,7 +63,7 @@
   <ItemGroup>
     <Build Include="dbo\Tables\SearchStoreSupplier.sql" />
     <Build Include="dbo\Tables\SearchStoreApi.sql" />
-    <Build Include="dbo\Tables\PrebookLog.sql" />
-    <Build Include="dbo\Tables\BookLog.sql" />
+    <Build Include="dbo\Tables\SupplierAPILog.sql" />
+    <Build Include="dbo\Tables\APILog.sql" />
   </ItemGroup>
 </Project>

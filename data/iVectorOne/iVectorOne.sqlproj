@@ -93,5 +93,7 @@
     <Build Include="dbo\Stored Procedures\Property_AddAccountProperty.sql" />
     <Build Include="dbo\Stored Procedures\Property_UpdateAccountProperty.sql" />
     <Build Include="dbo\Stored Procedures\Get_Configurations.sql" />
+    <Build Include="dbo\Tables\Booking.sql" />
+    <Build Include="dbo\Stored Procedures\Booking_Upsert.sql" />
   </ItemGroup>
 </Project>

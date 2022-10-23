@@ -19,7 +19,7 @@
         private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
         /// <summary>The log repository</summary>
-        private readonly IBookingLogRepository _logRepository;
+        private readonly IAPILogRepository _logRepository;
 
         /// <summary>Factory that creates the third party class</summary>
         private readonly IThirdPartyFactory _thirdPartyFactory;
@@ -35,10 +35,10 @@
         /// <param name="logRepository">Repository for saving pre book logs to the database</param>
         /// <param name="thirdPartyFactory">Factory that creates the correct third party class</param>
         /// <param name="responseFactory">The factory responsible for building the pre book response</param>
-        /// <param name="supplierLogRepository">Repository for saving supplier pre book logs to the database</param>
+        /// <param name="supplierLogRepository">Repository for saving supplier logs to the database</param>
         public PrebookService(
             IPropertyDetailsFactory propertyDetailsFactory,
-            IBookingLogRepository logRepository,
+            IAPILogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
             IPropertyPrebookResponseFactory responseFactory,
             ISupplierLogRepository supplierLogRepository)
@@ -104,7 +104,7 @@
             finally
             {
                 await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
-                await _supplierLogRepository.LogPrebookAsync(propertyDetails.SupplierLogs, prebookRequest.Account, prebookDateAndTime);
+                await _supplierLogRepository.LogPrebookRequestsAsync(propertyDetails);
 
                 if (requestValid && !success)
                 {

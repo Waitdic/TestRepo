@@ -7,5 +7,8 @@
     {
         [JsonIgnore]
         public Account Account { get; set; } = new();
+
+        [JsonIgnore]
+        public int BookingID { get; set; }
     }
 }

@@ -15,17 +15,17 @@
     /// <summary>
     /// A repository responsible for logging book, pre book and cancellation logs to the database
     /// </summary>
-    /// <seealso cref="IBookingLogRepository" />
-    public class BookingLogRepository : IBookingLogRepository
+    /// <seealso cref="IAPILogRepository" />
+    public class APILogRepository : IAPILogRepository
     {
         /// <summary>The log writer</summary>
-        private readonly ILogger<BookingLogRepository> _logger;
+        private readonly ILogger<APILogRepository> _logger;
 
         private readonly ISql _sql;
 
-        /// <summary>Initializes a new instance of the <see cref="BookingLogRepository" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="APILogRepository" /> class.</summary>
         /// <param name="logger">The log writer.</param>
-        public BookingLogRepository(ILogger<BookingLogRepository> logger, ISql sql)
+        public APILogRepository(ILogger<APILogRepository> logger, ISql sql)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _sql = Ensure.IsNotNull(sql, nameof(sql));
@@ -61,8 +61,8 @@
                 string responseLog = JsonSerializer.Serialize((object)response);
 
                 await _sql.ExecuteAsync(
-                    "Insert into APILog (Type, Time, RequestLog, ResponseLog, AccountID, Success) " +
-                        "values (@logType,@time,@requestLog,@responseLog,@accountId,@success)",
+                    "Insert into APILog (Type, Time, RequestLog, ResponseLog, AccountID, Success, BookingID) " +
+                        "values (@logType,@time,@requestLog,@responseLog,@accountId,@success,@bookingId)",
                     new CommandSettings()
                         .WithParameters(new
                         {
@@ -71,7 +71,8 @@
                             @requestLog = requestLog,
                             @responseLog = responseLog,
                             @accountId = request.Account.AccountID,
-                            @success = success
+                            @success = success,
+                            @bookingId = request.BookingID,
                         }));
             }
             catch (Exception ex)

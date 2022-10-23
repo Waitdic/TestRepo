@@ -96,17 +96,14 @@
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
         {
-            services.AddSingleton<IBookingLogRepository, BookingLogRepository>();
+            services.AddSingleton<IAPILogRepository, APILogRepository>();
             services.AddSingleton<ICurrencyLookupRepository, CurrencyLookupRepository>();
             services.AddSingleton<IMealBasisLookupRepository, MealBasisLookupRepository>();
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
-            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("SearchStoreDatabase")));
-            services.AddSingleton<ISupplierLogRepository>(s =>
-                new SupplierLogRepository(context.Configuration.GetConnectionString("LogDatabase"),
-                    s.GetRequiredService<ICurrencyLookupRepository>(),
-                    s.GetRequiredService<ITPSupport>(),
-                    s.GetRequiredService<ILogger<SupplierLogRepository>>()));
+            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
+            services.AddSingleton<IBookingRepository, BookingRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)

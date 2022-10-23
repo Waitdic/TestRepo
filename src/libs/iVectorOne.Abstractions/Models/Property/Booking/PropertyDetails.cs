@@ -49,7 +49,6 @@
         /// </summary>
         public DateTime ArrivalDate { get; set; }
 
-        // todo - replace with TP currency code as this is what the interfaces are expecting, currently set to ISO code
         /// <summary>
         /// Gets or sets The ISO currency code
         /// </summary>
@@ -88,7 +87,7 @@
         /// <summary>
         /// Gets or sets The supplier logs
         /// </summary>
-        public SupplierLogs SupplierLogs { get; set; } = new();
+        public List<SupplierLog> SupplierLogs { get; set; } = new();
 
         /// <summary>
         /// Gets or sets The warnings
@@ -109,6 +108,11 @@
         /// Gets or sets The source
         /// </summary>
         public string Source { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The supplier identifier
+        /// </summary>
+        public int SupplierID { get; set; }
 
         /// <summary>
         /// Gets or sets The source reference
@@ -256,9 +260,14 @@
         public string SellingCountry { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the 
+        /// Gets or sets the third party configurations
         /// </summary>
         public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the booking identifier
+        /// </summary>
+        public int BookingID { get; set; }
 
         /// <summary>
         /// Adds the log.
@@ -267,8 +276,13 @@
         /// <param name="request">The web request.</param>
         public void AddLog(string title, Request request)
         {
+            // todo - remove legacy log collection (merge with supplier logs)
             Logs.AddNew(this.Source, title, request.RequestLog, request.ResponseLog);
-            SupplierLogs.AddNew(Source, title, request);
+            SupplierLogs.Add(new SupplierLog()
+            {
+                Title = title,
+                Request = request,
+            });
         }
     }
 }
