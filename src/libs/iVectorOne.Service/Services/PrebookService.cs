@@ -99,14 +99,18 @@
 
                         if (success)
                         {
+                            _logger.LogInformation("** PrebookAsync before CreateAsync");
                             response = await _responseFactory.CreateAsync(propertyDetails);
+                            _logger.LogInformation("** PrebookAsync after CreateAsync");
                         }
                         else
                         {
+                            _logger.LogInformation("** PrebookAsync before success false");
                             response = new Response()
                             {
                                 Warnings = propertyDetails.Warnings.Select(w => $"{w.Title}, {w.Text}").ToList()
                             };
+                            _logger.LogInformation("** PrebookAsync after success true");
                         }
                     }
                 }
