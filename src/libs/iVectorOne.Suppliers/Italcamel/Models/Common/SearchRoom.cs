@@ -44,5 +44,10 @@
 
         public string HlpChildAgeCSV { get; set; } = string.Empty;
         public bool ShouldSerializeHlpChildAgeCSV() => !string.IsNullOrEmpty(HlpChildAgeCSV);
+
+        [XmlArray("BOARDS")]
+        [XmlArrayItem("BOARD")]
+        public Board[] Boards { get; set; } = Array.Empty<Board>();
+        public bool ShouldSerializeBoards() => Boards.Length != 0;
     }
 }

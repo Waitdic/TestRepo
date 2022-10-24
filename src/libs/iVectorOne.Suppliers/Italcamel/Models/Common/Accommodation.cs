@@ -8,7 +8,7 @@
         public string UID { get; set; } = string.Empty;
 
         [XmlArray("ROOMS")]
-        [XmlArrayItem("Room")]
+        [XmlArrayItem("ROOM")]
         public SearchRoom[] Rooms { get; set; } = Array.Empty<SearchRoom>();
 
         [XmlArray("CANCELLATIONPOLICIES")]

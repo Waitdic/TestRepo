@@ -108,7 +108,7 @@
             foreach (var accommodation in accommodations)
             {
                 var tpkey = accommodation.UID;
-                for (var count = 1; count <= guests.Rooms.Count; count++)
+                for (var count = 0; count < guests.Rooms.Count; count++)
                 {
                     foreach (var room in accommodations.Where(a => a.UID == tpkey).SelectMany(r => r.Rooms.Where(rm => rm.Available)))
                     {
