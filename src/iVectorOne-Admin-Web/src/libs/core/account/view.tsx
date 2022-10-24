@@ -6,14 +6,7 @@ import { Account } from '@/types';
 import { useSlug } from '@/utils/use-slug';
 import { ButtonColors, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import {
-  SectionTitle,
-  Button,
-  Spinner,
-  YesOrNo,
-  Notification,
-  CopyField,
-} from '@/components';
+import { SectionTitle, Button, Spinner, CopyField } from '@/components';
 import { RootState } from '@/store';
 import { getAccountById } from '../data-access/account';
 
@@ -24,7 +17,6 @@ const AccountView: React.FC<Props> = () => {
   const navigate = useNavigate();
   const { slug } = useSlug();
 
-  const error = useSelector((state: RootState) => state.app.error);
   const accounts = useSelector((state: RootState) => state.app.accounts);
   const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
@@ -36,7 +28,6 @@ const AccountView: React.FC<Props> = () => {
     [user]
   );
 
-  const [showNotification, setShowNotification] = useState(false);
   const [currentAccount, setCurrentAccount] = useState(null as Account | null);
 
   const loadAccount = useCallback(() => {
@@ -66,8 +57,12 @@ const AccountView: React.FC<Props> = () => {
         setCurrentAccount(acc);
         dispatch.app.setIsLoading(false);
       },
-      (err) => {
-        dispatch.app.setError(err);
+      (err, instance) => {
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
         dispatch.app.setIsLoading(false);
       }
     );
@@ -148,15 +143,6 @@ const AccountView: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-
-      {showNotification && (
-        <Notification
-          description={error as string}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={NotificationStatus.ERROR}
-        />
-      )}
     </>
   );
 };

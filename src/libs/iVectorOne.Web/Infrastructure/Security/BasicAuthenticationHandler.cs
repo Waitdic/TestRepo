@@ -9,6 +9,8 @@
     using Intuitive;
     using iVectorOne.Web.Adaptors.Authentication;
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -37,6 +39,12 @@
 
             try
             {
+                var endpoint = Context.GetEndpoint();
+                if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() is object)
+                {
+                    return AuthenticateResult.NoResult();
+                }
+
                 string? authHeader = Request.Headers["Authorization"].ToString();
 
                 if (authHeader != null && authHeader.StartsWith("basic", StringComparison.OrdinalIgnoreCase))

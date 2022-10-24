@@ -26,7 +26,9 @@
         /// <summary>Takes in a property identifier and looks up the content for that property.</summary>
         /// <param name="propertyId">The property identifier (this will be the property identifier not the central property identifier that the other calls use).</param>
         /// <param name="account">The api login</param>
+        /// <param name="supplierBookingReference">The supplier booking reference</param>
         /// <returns>a property content object</returns>
-        Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account);
+        /// <remarks>propertyId and account are only needed for backwards compatibility for bookings made before the booking store</remarks>
+        Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account, string supplierBookingReference);
     }
 }

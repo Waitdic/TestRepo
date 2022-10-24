@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { IntlProvider } from 'react-intl';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -48,7 +47,6 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
 
   return (
     <>
-      <Helmet htmlAttributes={{ lang }} />
       <IntlProvider
         locale={lang}
         textComponent={Fragment}

@@ -1,12 +1,11 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { NotificationState } from '@/types';
 import { NotificationStatus, ButtonColors, ButtonVariants } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { TextField, Button, Notification, RoleGuard } from '@/components';
+import { TextField, Button, RoleGuard } from '@/components';
 import { RootState } from '@/store';
 import { createUser } from '../data-access/user';
 
@@ -31,9 +30,6 @@ const UserCreate: React.FC<Props> = () => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [notification, setNotification] = useState<NotificationState>();
-  const [showNotification, setShowNotification] = useState(false);
-
   const isValidUser = useMemo(() => {
     return !!userKey && !isLoading;
   }, [userKey, isLoading]);
@@ -50,23 +46,23 @@ const UserCreate: React.FC<Props> = () => {
         },
         () => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: 'New User created successfully.',
           });
-          setShowNotification(true);
+
           setTimeout(() => {
             navigate('/');
           }, 500);
         },
-        (err) => {
+        (err, instance) => {
           dispatch.app.setIsLoading(false);
           console.error(err);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
-            message: 'User creation failed.',
+            message: err,
+            instance,
           });
-          setShowNotification(true);
         }
       );
     },
@@ -129,15 +125,6 @@ const UserCreate: React.FC<Props> = () => {
           </div>
         </MainLayout>
       </RoleGuard>
-
-      {showNotification && (
-        <Notification
-          status={notification?.status}
-          description={notification?.message as string}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
     </>
   );
 };

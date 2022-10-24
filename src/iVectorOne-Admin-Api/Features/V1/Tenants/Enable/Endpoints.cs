@@ -4,13 +4,11 @@
     {
         public static IEndpointRouteBuilder MapTenantEnableV1Endpoint(this IEndpointRouteBuilder endpoints)
         {
-
-            _ = endpoints.MapPut("v1/tenants/{tenantId}/enable", async (IMediator mediator, int tenantId) =>
+            _ = endpoints.MapPost("v1/tenants/{tenantId}/enable", async (IMediator mediator, int tenantId) =>
             {
                 var response = await mediator.Send(new Request { TenantId = tenantId });
-
                 return response.Result;
-            });
+            }).RequireAuthorization();
 
             return endpoints;
         }

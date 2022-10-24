@@ -101,7 +101,7 @@
                 var bookResponse = ExtractEnvelopeContent<BookResponse>(webRequest, _serializer);
 
                 // get booking reference
-                if (string.Equals(bookResponse.ActionSeg.Status, "C")) 
+                if (string.Equals(bookResponse.ActionSeg.Status, "C"))
                 {
                     bookingReference = bookResponse.ActionSeg.ResNumber;
                 }
@@ -151,7 +151,7 @@
                 var cancelResponse = ExtractEnvelopeContent<CancelResponse>(webRequest, _serializer);
 
                 // get reference
-                if (string.Equals(cancelResponse.ActionSeg.Status, "D")) 
+                if (string.Equals(cancelResponse.ActionSeg.Status, "D"))
                 {
                     thirdPartyCancellationResponse.TPCancellationReference = cancelResponse.ActionSeg.ResNumber;
                     thirdPartyCancellationResponse.Success = true;
@@ -202,9 +202,9 @@
 
         #region Support
 
-        private BookRequest BuildBookingRequest(PropertyDetails propertyDetails) 
+        private BookRequest BuildBookingRequest(PropertyDetails propertyDetails)
         {
-            var guests = propertyDetails.Rooms.SelectMany((room, roomIdx) => room.Passengers.Select(pass => new { Guest = pass, RoomIdx = roomIdx}))
+            var guests = propertyDetails.Rooms.SelectMany((room, roomIdx) => room.Passengers.Select(pass => new { Guest = pass, RoomIdx = roomIdx }))
                 .Select((guest, guestIdx) => new { GuestIdx = guestIdx, guest.Guest, GuestRoomIdx = guest.RoomIdx });
 
             var titles = Constant.Titles.Split(',');
@@ -221,14 +221,14 @@
                 PaxSegment = guests.Select(pax =>
                 {
                     var guest = pax.Guest;
-                    string sAge = "";
-                    if (guest.PassengerType == PassengerType.Child) 
+                    string age = "";
+                    if (guest.PassengerType == PassengerType.Child)
                     {
-                        sAge = $"{guest.Age}";
+                        age = $"{guest.Age}";
                     }
-                    if (guest.PassengerType == PassengerType.Infant) 
+                    if (guest.PassengerType == PassengerType.Infant)
                     {
-                        sAge = "1";
+                        age = "1";
                     }
 
                     return new PaxRecord
@@ -240,18 +240,18 @@
                                                     : Constant.DefaultGuestTitle,
                         FirstName = guest.FirstName,
                         LastName = guest.LastName,
-                        Age = sAge,
+                        Age = age,
                         Language = "EN"
                     };
                 }).ToList(),
-                BookSegment = propertyDetails.Rooms.Select((oRoomDetails, roomIdx) => new BookRecord
+                BookSegment = propertyDetails.Rooms.Select((roomDetails, roomIdx) => new BookRecord
                 {
                     BookNum = $"{roomIdx + 1}",
                     BookSeq = "",
-                    ProdCode = oRoomDetails.ThirdPartyReference.Split("_")[0],
+                    ProdCode = roomDetails.ThirdPartyReference.Split("_")[1],
                     StartDate = propertyDetails.ArrivalDate.ToString(Constant.DateFormat),
                     Duration = $"{propertyDetails.Duration}",
-                    Note = oRoomDetails.SpecialRequest,
+                    Note = roomDetails.SpecialRequest,
                     PaxArray = guests.Aggregate("", (all, x) => $"{all}{(x.GuestRoomIdx == roomIdx ? "Y" : "N")}")
                 }).ToList()
             };
@@ -259,9 +259,9 @@
             return bookRequest;
         }
 
-        internal async Task<Request> SendWebRequestAsync<T>(PropertyDetails propertyDetails, string action, T messageObject) 
+        internal async Task<Request> SendWebRequestAsync<T>(PropertyDetails propertyDetails, string action, T messageObject)
             where T : IMessageRq
-        {            
+        {
             var soapRequest = CreateSoapRequest(_serializer, propertyDetails, _settings, messageObject);
 
             // Send the request
@@ -282,7 +282,7 @@
             return webRequest;
         }
 
-        internal static T ExtractEnvelopeContent<T>(Request webRequest, ISerializer serializer) 
+        internal static T ExtractEnvelopeContent<T>(Request webRequest, ISerializer serializer)
             where T : IMessageRs
         {
             var soapResponse = serializer.DeSerialize<RsEnvelope>(
@@ -350,13 +350,14 @@
                 if (cancellationResponse.ActionSeg.Status == "C")
                 {
                     // we need to get the end date and amount for each cancellation item, and add them to the final cancellation policy for this room
-                    foreach (var cancellationNode in cancellationResponse.ProductListSeg.ListRecord.Select(x =>
-                                 x.Cancellation.CanItem))
+                    foreach (var cancellationNode in cancellationResponse.ProductListSeg.ListRecord
+                        .Where(x => x.CityCode == roomDetails.ThirdPartyReference.Split('_')[0])
+                        .Select(x => x.Cancellation.CanItem))
                     {
                         var note = cancellationNode.CanNote != string.Empty ? cancellationNode.CanNote : string.Empty;
 
                         // get start date
-                        var startDate = cancellationNode.ToDays < 0
+                        var startDate = cancellationNode.FromDays < 0
                             ? propertyDetails.ArrivalDate
                             : propertyDetails.ArrivalDate.AddDays(-cancellationNode.FromDays);
 
@@ -396,7 +397,7 @@
 
                                     // make sure we don't get zero rates (we have to be careful of this because if there is a 'stay X pay Y' special offer,
                                     // often the first night will be zero - and the cancellation fee should be based on the second night instead)
-                                    var rates = Array.FindAll(roomDetails.ThirdPartyReference.Split('_')[1].Split('/'),
+                                    var rates = Array.FindAll(roomDetails.ThirdPartyReference.Split('_')[2].Split('/'),
                                         (sRate) => sRate.ToSafeDecimal() != 0m);
 
                                     var ratesWeWant = new string[numberOfDays];
@@ -469,7 +470,13 @@
                     ToDate = propertyDetails.DepartureDate.ToString("dd-MMM-yyyy"),
                     ProdTypeCode = "All",
                     SearchType = "PROD",
-                    ProductListSeg = { CodeItem = { ProductCode = roomDetails.ThirdPartyReference.Split('_')[0] } },
+                    ProductListSeg = new()
+                    {
+                        CodeItem = new()
+                        {
+                            ProductCode = roomDetails.ThirdPartyReference.Split('_')[1]
+                        }
+                    },
                     DisplayRestriction = "N",
                     DisplayPolicy = "Y",
                     DisplaySchDate = "N",

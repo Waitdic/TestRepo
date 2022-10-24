@@ -200,7 +200,7 @@
 
         public bool SearchRestrictions(SearchDetails searchDetails, string source)
         {
-            return searchDetails.Rooms > 1 && !_settings.EnableMultiRoomSearch(searchDetails, source);
+            return searchDetails.Rooms > 1 && !_settings.SplitMultiroom(searchDetails, source);
         }
     }
 }

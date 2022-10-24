@@ -1,8 +1,10 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
+﻿using iVectorOne_Admin_Api.Features.Shared;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
 {
-    public record Request : IRequest<Response>
+    public record Request : IRequest<ResponseBase>
     {
-        public string  UserKey { get; set; }
+        public string UserKey { get; set; } = "";
 
         public string CompanyName { get; set; } = "";
 

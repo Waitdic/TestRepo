@@ -8,19 +8,19 @@
     using System.Threading.Tasks;
     using System.Xml;
     using Intuitive;
-    using Intuitive.Helpers.Serialization;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
     using iVector.Search.Property;
-    using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.Suppliers.ATI.Models;
-    using iVectorOne.Suppliers.ATI.Models.Common;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.ATI.Models;
+    using iVectorOne.Suppliers.ATI.Models.Common;
+    using Microsoft.Extensions.Logging;
     using Erratum = iVectorOne.Models.Property.Booking.Erratum;
-    using Intuitive.Helpers.Extensions;
-    using iVectorOne.Search.Models;
 
     public class ATI : IThirdParty, ISingleSource
     {
@@ -28,17 +28,20 @@
         private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<ATI> _logger;
+        private readonly ISecretKeeper _secretKeeper;
 
         public ATI(
             IATISettings settings,
             ISerializer serializer,
             HttpClient httpClient,
-            ILogger<ATI> logger)
+            ILogger<ATI> logger,
+            ISecretKeeper secretKeeper)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public string Source => ThirdParties.ATI;
@@ -117,19 +120,19 @@
                     roomBooking.GrossCost = roomCost;
                 }
 
-                propertyDetails.TPRef1 = _serializer.Serialize(new RoomRatesCollection { RoomRates = roomRates.ToArray() }).InnerXml;
-
-                if (cancellations.Count > 0)
-                {
-                    propertyDetails.Cancellations.Add(cancellations.OrderBy(canx => canx.EndDate).FirstOrDefault());
-                    propertyDetails.Cancellations[0].Amount = cost;
-                }
+                propertyDetails.TPRef1 = _secretKeeper.Encrypt(_serializer.Serialize(new RoomRatesCollection { RoomRates = roomRates.ToArray() }).InnerXml);
 
                 //Check for a price change
                 if (cost > 0 && (propertyDetails.LocalCost != cost))
                 {
                     propertyDetails.LocalCost = cost;
                     propertyDetails.GrossCost = cost;
+                }
+
+                if (cancellations.Any())
+                {
+                    propertyDetails.Cancellations = cancellations;
+                    propertyDetails.Cancellations.Solidify(SolidifyType.Max, new DateTime(2099, 12, 31), propertyDetails.LocalCost);
                 }
 
                 success = true;
@@ -172,7 +175,7 @@
                     bookingRequests.AddRange(propertyDetails.BookingComments.Select(c => new Comment { Text = c.Text }));
                 }
 
-                var roomRateLookup = _serializer.DeSerialize<RoomRatesCollection>(propertyDetails.TPRef1);
+                var roomRateLookup = _serializer.DeSerialize<RoomRatesCollection>(_secretKeeper.Decrypt(propertyDetails.TPRef1));
 
                 var bookRequest = new Envelope<AtiBookRequest>();
                 bookRequest.Body.Content = new AtiBookRequest
@@ -202,16 +205,6 @@
                                 {
                                     HotelCode = propertyDetails.TPKey + "-" + room.ThirdPartyReference.Split("|")[0],
                                     Comments = bookingRequests.ToArray(),
-                                }, 
-                                CancelPenalties = new[]
-                                {
-                                    new CancelPenalty
-                                    {
-                                        Deadline =
-                                        {
-                                            AbsoluteDeadline = room.ThirdPartyReference.Split("|")[1]
-                                        }
-                                    }
                                 }
                             }).ToArray(),
                             ResGuests = new []
@@ -263,7 +256,7 @@
                 var response = _serializer.DeSerialize<Envelope<AtiBookResponse>>(webRequest.ResponseXML);
                 var hotelReservations = response.Body.Content.HotelReservations;
 
-                bookingReference = hotelReservations.Select(x => x.UniqueID.ID).First();
+                bookingReference = hotelReservations.Select(x => x.UniqueID.ID).FirstOrDefault();
 
                 bool failed = hotelReservations.Any(x => x.ResStatus != "CONFIRMED");
 

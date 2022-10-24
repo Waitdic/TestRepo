@@ -19,9 +19,9 @@
             return Get_Value("LanguageCode", tpAttributeSearch);
         }
 
-        public string Email(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ContactEmail(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Email", tpAttributeSearch);
+            return Get_Value("ContactEmail", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -34,9 +34,9 @@
             return Get_Value("NetRates", tpAttributeSearch);
         }
 
-        public string EndPointUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("EndPointUrl", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
@@ -49,14 +49,14 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string SoapRequestUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SOAPRequestURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SoapRequestUrl", tpAttributeSearch);
+            return Get_Value("SOAPRequestURL", tpAttributeSearch);
         }
 
-        public string SoapTypesUrl(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SOAPTypesURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SoapTypesUrl", tpAttributeSearch);
+            return Get_Value("SOAPTypesURL", tpAttributeSearch);
         }
 
         public bool AlwaysUseDefaultEmail(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -74,7 +74,7 @@
             return Get_Value("DefaultLastName", tpAttributeSearch);
         }
 
-        public string DefaultPhoneNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ContactPhoneNumber(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("DefaultPhoneNumber", tpAttributeSearch);
         }
