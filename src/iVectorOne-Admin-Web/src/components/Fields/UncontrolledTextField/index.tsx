@@ -8,11 +8,20 @@ type Props = {
   required?: boolean;
   ref?: React.Ref<HTMLInputElement>;
   value?: string | number;
+  placeholder?: string;
 };
 
 const UncontrolledTextField: React.FC<Props> = forwardRef(
   (
-    { label = '', name, type = 'text', onChange, required = false, value = '' },
+    {
+      label = '',
+      name,
+      type = 'text',
+      onChange,
+      required = false,
+      value = '',
+      placeholder = '',
+    },
     ref
   ) => {
     return (
@@ -32,6 +41,7 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
           className='form-input w-full'
           onChange={onChange}
           onBlur={onChange}
+          placeholder={placeholder}
         />
       </>
     );

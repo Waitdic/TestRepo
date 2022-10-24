@@ -263,7 +263,7 @@ export async function testSupplier(
       },
     });
     if (data.success) {
-      onSuccess(data.status);
+      onSuccess(data.message);
     }
   } catch (error: any) {
     const { message, instance } = handleApiError(error);
