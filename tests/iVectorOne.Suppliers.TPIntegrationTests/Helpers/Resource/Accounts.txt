@@ -85,6 +85,25 @@
         }
       },
       {
+        "Supplier": "HotelsProV2",
+        "Configurations": {
+          "SearchURL": "https://api-test.hotelspro.com/api/v2/search/",
+          "BookingURL": "https://api-test.hotelspro.com/api/v2/book/",
+          "CancellationURL": "https://api-test.hotelspro.com/api/v2/cancel/",
+          "AvailabilityURL": "https://api-test.hotelspro.com/api/v2/hotel-availability/",
+          "PrebookURL": "https://api-test.hotelspro.com/api/v2/provision/",
+          "User": "bookabed",
+          "Password": "unPwSxJj369vCbUE",
+          "LeadGuestNationality": "US",
+          "Currency": "EUR",
+          "UseGZip": "true",
+          "UseMultiHotelCodesSearch": "true",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0",
+          "HotelSearchLimit": "200"    
+        }
+      },
+      {
         "Supplier": "MTS",
         "Configurations": {
           "User": "TEST",
@@ -140,6 +159,21 @@
          "ContactPhoneNumber" : "390813339345",
          "UseGZip" : "TRUE"
         }
+      },
+      {
+       "Supplier": "TBOHolidays",
+       "Configurations": {
+         "GenericURL": "http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc",
+         "Password": "testpwd",
+         "AllowCancellations": "true",
+         "OffsetCancellationDays": "0",
+         "LeadGuestNationality": "GB",
+         "User": "testuser",
+         "PaymentModeType": "Limit",
+         "ClientCode": "1",
+         "Currency": "GBP",
+         "ResultCount": "0"
+       }
       },
       {
         "Supplier": "YouTravel",

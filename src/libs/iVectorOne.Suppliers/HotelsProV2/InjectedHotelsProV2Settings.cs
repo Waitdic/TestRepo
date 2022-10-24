@@ -14,14 +14,14 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string BookURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BookURL", tpAttributeSearch);
+            return Get_Value("BookingURL", tpAttributeSearch);
         }
 
-        public string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CancelURL", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
         public string Currency(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -29,19 +29,19 @@
             return Get_Value("Currency", tpAttributeSearch);
         }
 
-        public string HotelAvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string AvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("HotelAvailabilityURL", tpAttributeSearch);
+            return Get_Value("AvailabilityURL", tpAttributeSearch);
         }
 
-        public int MaxHotelCodesPerRequest(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("MaxHotelCodesPerRequest", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
         }
 
-        public string Nationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Nationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -54,9 +54,9 @@
             return Get_Value("Password", tpAttributeSearch);
         }
 
-        public string ProvisionURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ProvisionURL", tpAttributeSearch);
+            return Get_Value("PrebookURL", tpAttributeSearch);
         }
 
         public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -64,9 +64,9 @@
             return Get_Value("SearchURL", tpAttributeSearch);
         }
 
-        public bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UseGZIP", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
         public bool UseMultiHotelCodesSearch(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -74,9 +74,9 @@
             return Get_Value("UseMultiHotelCodesSearch", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string UserName(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UserName", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
     }
 }
