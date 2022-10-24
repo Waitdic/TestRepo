@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.TBOHolidays {
+namespace iVectorOne.Tests.TBOHolidays {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.TBOHolidays {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.TBOHolidays.TBOHolidaysRes", typeof(TBOHolidaysRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.TBOHolidays.TBOHolidaysRes", typeof(TBOHolidaysRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -11,6 +11,13 @@
         {
             return new ReferenceValues(reference);
         }
+
+        public static string CleanRequest(string request)
+        {
+            return request
+                .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
+                .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
+        }
     }
 
     public struct ReferenceValues

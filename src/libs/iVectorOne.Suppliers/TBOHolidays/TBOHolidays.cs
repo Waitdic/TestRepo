@@ -66,7 +66,7 @@
             bool success = false;
             bool priceChanged = false;
             bool cancellationPoliciesAvailable = false;
-            string url = _settings.URL(propertyDetails);
+            string url = _settings.GenericURL(propertyDetails);
             var request = new Request();
             var policyRequest = new Request();
 
@@ -76,7 +76,7 @@
                 var availabilityRequest = BuildAvailabilityRequest(propertyDetails);
                 availabilityRequest.Header = BuildHeader("AvailabilityAndPricing", propertyDetails, _settings);
 
-                var requestXml = _serializer.Serialize(availabilityRequest);
+                var requestXml = Helper.CleanRequest(_serializer.Serialize(availabilityRequest).OuterXml);
                 request = CreateRequest("AvailabilityAndPricing", url);
                 request.SetRequest(requestXml);
                 await request.Send(_httpClient, _logger);
@@ -163,7 +163,7 @@
                                 };
                             }
 
-                            priceDetails += $"{_serializer.Serialize(roomPriceDetails).InnerXml}|";
+                            priceDetails += $"{Helper.CleanRequest(_serializer.Serialize(roomPriceDetails).InnerXml)}|";
                         }
 
                         propertyDetails.TPRef1 = priceDetails.Chop();
@@ -195,7 +195,7 @@
                     var policyRequestObj = BuildPolicyRequest(propertyDetails);
                     policyRequestObj.Header = BuildHeader("HotelCancellationPolicy", propertyDetails, _settings);
 
-                    var policyRequestXml = _serializer.Serialize(policyRequestObj);
+                    var policyRequestXml = Helper.CleanRequest(_serializer.Serialize(policyRequestObj).OuterXml);
                     policyRequest = CreateRequest("HotelCancellationPolicies", url);
                     policyRequest.SetRequest(policyRequestXml);
                     await policyRequest.Send(_httpClient, _logger);
@@ -306,7 +306,7 @@
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
-            string url = _settings.URL(propertyDetails);
+            string url = _settings.GenericURL(propertyDetails);
             var request = new Request();
 
             try
@@ -314,7 +314,7 @@
                 var bookRequest = await BuildBookRequestAsync(propertyDetails);
                 bookRequest.Header = BuildHeader("HotelBook", propertyDetails, _settings);
 
-                var bookRequestXml = _serializer.Serialize(bookRequest);
+                var bookRequestXml = Helper.CleanRequest(_serializer.Serialize(bookRequest).OuterXml);
                 request = CreateRequest("HotelBook", url);
                 request.SetRequest(bookRequestXml);
                 await request.Send(_httpClient, _logger);
@@ -361,8 +361,8 @@
                 bookingDetailRequest.Body.Content.BookingId = propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt();
                 bookingDetailRequest.Header = BuildHeader("HotelBookingDetail", propertyDetails, _settings);
 
-                var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.URL(propertyDetails));
-                bookingDetailWebRequest.SetRequest(_serializer.Serialize(bookingDetailRequest));
+                var bookingDetailWebRequest = CreateRequest("HotelBookingDetail", _settings.GenericURL(propertyDetails));
+                bookingDetailWebRequest.SetRequest(Helper.CleanRequest(_serializer.Serialize(bookingDetailRequest).OuterXml));
                 await bookingDetailWebRequest.Send(_httpClient, _logger);
 
                 var bookingDetailResponse = _serializer.DeSerialize<Envelope<HotelBookingDetailResponse>>(bookingDetailWebRequest.ResponseXML).Body.Content;
@@ -386,8 +386,8 @@
                     var cancelRequestObj = BuildCancelRequest(propertyDetails);
                     cancelRequestObj.Header = BuildHeader("HotelCancel", propertyDetails, _settings);
 
-                    var cancelRequestXml = _serializer.Serialize(cancelRequestObj);
-                    request = CreateRequest("HotelCancel", _settings.URL(propertyDetails));
+                    var cancelRequestXml = Helper.CleanRequest(_serializer.Serialize(cancelRequestObj).OuterXml);
+                    request = CreateRequest("HotelCancel", _settings.GenericURL(propertyDetails));
                     request.SetRequest(cancelRequestXml);
                     await request.Send(_httpClient, _logger);
 
@@ -521,7 +521,7 @@
 
             int resultIndex = referenceValues.ResultIndex;
             string sessionId = referenceValues.SessionId;
-            string clientCode = _settings.ClientReferenceNumber(propertyDetails);
+            string clientCode = _settings.ClientCode(propertyDetails);
 
             string guestNationality = string.Empty;
 
@@ -532,7 +532,7 @@
 
             if (string.IsNullOrEmpty(guestNationality))
             {
-                guestNationality = _settings.DefaultGuestNationality(propertyDetails);
+                guestNationality = _settings.LeadGuestNationality(propertyDetails);
             }
 
             int passengerIndex = 1;
@@ -683,11 +683,11 @@
             {
                 Credentials = new Credentials
                 {
-                    UserName = settings.UserName(searchDetails),
+                    UserName = settings.User(searchDetails),
                     Password = settings.Password(searchDetails),
                 },
                 Action = $"http://TekTravel/HotelBookingApi/{type}",
-                To = settings.URL(searchDetails)
+                To = settings.GenericURL(searchDetails)
             };
         }
 
@@ -697,7 +697,7 @@
             {
                 Source = ThirdParties.TBOHOLIDAYS,
                 LogFileName = type,
-                UseGZip = true,
+                UseGZip = false,
                 EndPoint = url,
                 CreateLog = true,
                 Method = RequestMethod.POST,
