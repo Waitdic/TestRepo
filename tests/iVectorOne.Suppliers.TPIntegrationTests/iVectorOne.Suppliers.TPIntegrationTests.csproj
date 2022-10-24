@@ -70,6 +70,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HotelstonRes.resx</DependentUpon>
     </Compile>
+	<Compile Update="HotelsProV2\HotelsProV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HotelsProV2Res.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -213,6 +218,10 @@
     <EmbeddedResource Update="Hotelston\HotelstonRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+	<EmbeddedResource Update="HotelsProV2\HotelsProV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelsProV2Res.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
