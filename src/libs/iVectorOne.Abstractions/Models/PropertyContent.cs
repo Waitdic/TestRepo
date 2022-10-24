@@ -21,5 +21,11 @@
 
         /// <summary>Gets or sets the geography code.</summary>
         public string GeographyCode { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets the supplier identifier.</summary>
+        public int SupplierID { get; set; }
+
+        /// <summary>Gets or sets the booking identifier.</summary>
+        public int BookingID { get; set; }
     }
 }

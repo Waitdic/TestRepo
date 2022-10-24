@@ -81,7 +81,7 @@
 
             app.UseExceptionHandler("/error");
 
-            app.MapGet("/error", () =>
+            app.Map("/error", () =>
             {
                 var problemDetails = new ProblemDetails
                 {

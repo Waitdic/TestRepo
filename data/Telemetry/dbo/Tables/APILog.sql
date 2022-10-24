@@ -6,5 +6,5 @@
 	[ResponseLog] varchar(max) NOT NULL,
 	[AccountID] int NOT NULL,
 	[Success] bit NOT NULL,
-	[BookingID] int NOT NULL,
+	[BookingID] INT NOT NULL default 0,
 PRIMARY KEY CLUSTERED ([APILogID] ASC));

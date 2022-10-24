@@ -7,7 +7,7 @@
     using Cancel = SDK.V2.PropertyCancel;
 
     /// <summary>Defines a repository for saving book, pre book and cancel requests and responses</summary>
-    public interface IBookingLogRepository
+    public interface IAPILogRepository
     {
         /// <summary>Logs the pre book request and response.</summary>
         /// <param name="request">The pre book request.</param>

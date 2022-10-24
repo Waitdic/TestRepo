@@ -9,9 +9,9 @@
     {
         protected override string Source => ThirdParties.TBOHOLIDAYS;
 
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            return Get_Value("GenericURL", tpAttributeSearch);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
@@ -24,9 +24,9 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public string UserName(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UserName", tpAttributeSearch);
+            return Get_Value("User", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -39,19 +39,19 @@
             return Get_Value("PaymentModeType", tpAttributeSearch);
         }
 
-        public string ClientReferenceNumber(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string ClientCode(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("ClientReferenceNumber", tpAttributeSearch);
+            return Get_Value("ClientCode", tpAttributeSearch);
         }
 
-        public string DefaultGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("DefaultGuestNationality", tpAttributeSearch);
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
 
-        public string CurrencyCode(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CurrencyCode", tpAttributeSearch);
+            return Get_Value("Currency", tpAttributeSearch);
         }
 
         public string ResultCount(IThirdPartyAttributeSearch tpAttributeSearch)

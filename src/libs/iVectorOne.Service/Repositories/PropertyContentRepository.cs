@@ -142,7 +142,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account)
+        public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account, string supplierBookingReference)
         {
             return await _sql.ReadSingleAsync<PropertyContent>(
                     "Property_SingleProperty",
@@ -151,7 +151,8 @@
                         .WithParameters(new
                         {
                             propertyId = propertyId,
-                            accountId = account.AccountID
+                            accountId = account.AccountID,
+                            supplierBookingReference = supplierBookingReference
                         }));
         }
 

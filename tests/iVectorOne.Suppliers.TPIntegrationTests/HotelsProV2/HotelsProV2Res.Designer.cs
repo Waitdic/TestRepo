@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.HotelsProV2 {
+namespace iVectorOne.Tests.HotelsProV2 {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.HotelsProV2 {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.HotelsProV2.HotelsProV2Res", typeof(HotelsProV2Res).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.HotelsProV2.HotelsProV2Res", typeof(HotelsProV2Res).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

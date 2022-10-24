@@ -18,7 +18,7 @@
         private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
         /// <summary>Repository responsible for logging</summary>
-        private readonly IBookingLogRepository _logRepository;
+        private readonly IAPILogRepository _logRepository;
 
         /// <summary>Factory responsible for creating the correct Third party class</summary>
         private readonly IThirdPartyFactory _thirdPartyFactory;
@@ -29,24 +29,30 @@
         /// <summary>The reference validator</summary>
         private readonly ISuppierReferenceValidator _referenceValidator;
 
+        /// <summary>The supplier log repository</summary>
+        private readonly ISupplierLogRepository _supplierLogRepository;
+
         /// <summary>Initializes a new instance of the <see cref="CancellationService" /> class.</summary>
         /// <param name="propertyDetailsFactory">Factory used for building a property details from the request</param>
         /// <param name="logRepository">Repository responsible for logging</param>
         /// <param name="thirdPartyFactory">Factory responsible for creating the correct Third party class.</param>
         /// <param name="responseFactory">Factory responsible for creating the response.</param>
         /// <param name="referenceValidator">Validates if the right supplier references have been sent for the supplier</param>
+        /// <param name="supplierLogRepository">Repository for saving supplier logs to the database</param>
         public CancellationService(
             IPropertyDetailsFactory propertyDetailsFactory,
-            IBookingLogRepository logRepository,
+            IAPILogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
             ICancelPropertyResponseFactory responseFactory,
-            ISuppierReferenceValidator referenceValidator)
+            ISuppierReferenceValidator referenceValidator,
+            ISupplierLogRepository supplierLogRepository)
         {
             _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
             _referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
         }
 
         /// <inheritdoc/>
@@ -103,6 +109,7 @@
             finally
             {
                 await _logRepository.LogCancelAsync(cancelRequest, response!, success);
+                await _supplierLogRepository.LogBookRequestsAsync(propertyDetails);
 
                 if (requestValid && !success)
                 {
@@ -171,6 +178,7 @@
             finally
             {
                 await _logRepository.LogPrecancelAsync(preCancelRequest, response!, success);
+                await _supplierLogRepository.LogBookRequestsAsync(propertyDetails);
 
                 if (requestValid && !success)
                 {
