@@ -84,7 +84,7 @@ const Search: React.FC = () => {
     <Main title='Search'>
       <div className='bg-white shadow-lg rounded-sm mb-8'>
         <div className='flex flex-col gap-2 min-h-[720px]'>
-          <div className='flex flex-nowrap overflow-x-scroll no-scrollbar md:block md:overflow-auto px-3 py-6 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
+          <div className='flex flex-nowrap no-scrollbar md:block px-3 py-6 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
             <div>
               <div className='text-xs font-semibold text-slate-400 uppercase mb-3'>
                 Search Details
@@ -101,7 +101,7 @@ const Search: React.FC = () => {
                     }
                   />
                 </div>
-                <div className='col-span-2'>
+                <div className='col-span-3'>
                   <UncontrolledTextField
                     name='property'
                     label='Property'
@@ -110,7 +110,7 @@ const Search: React.FC = () => {
                     value={searchDetails.property}
                   />
                 </div>
-                <div className='col-span-3'></div>
+                <div className='col-span-2'></div>
                 <div className='col-span-1'>
                   <Datepicker
                     label='Arrival Date'
