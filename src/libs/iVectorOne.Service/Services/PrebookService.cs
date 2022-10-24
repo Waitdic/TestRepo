@@ -17,8 +17,6 @@
     /// </summary>
     public class PrebookService : IPrebookService
     {
-        private readonly ILogger<PrebookService> _logger;
-
         /// <summary>The property details factory</summary>
         private readonly IPropertyDetailsFactory _propertyDetailsFactory;
 
@@ -45,15 +43,13 @@
             IAPILogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
             IPropertyPrebookResponseFactory responseFactory,
-            ISupplierLogRepository supplierLogRepository,
-            ILogger<PrebookService> logger)
+            ISupplierLogRepository supplierLogRepository)
         {
             _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
             _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
-            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -65,13 +61,10 @@
             var propertyDetails = new PropertyDetails();
             var prebookDateAndTime = DateTime.Now;
 
-            _logger.LogInformation("** PrebookAsync Start");
-
             try
             {
-                _logger.LogInformation("** PrebookAsync before propertyDetails");
                 propertyDetails = await _propertyDetailsFactory.CreateAsync(prebookRequest);
-                _logger.LogInformation("** PrebookAsync after propertyDetails");
+
                 if (propertyDetails.Warnings.Any())
                 {
                     response = new Response()
@@ -83,34 +76,26 @@
                 }
                 else
                 {
-                    _logger.LogInformation("** PrebookAsync before CreateFromSource");
                     var thirdParty = _thirdPartyFactory.CreateFromSource(
                         propertyDetails.Source,
                         prebookRequest.Account.Configurations.FirstOrDefault(c => c.Supplier == propertyDetails.Source));
-                    _logger.LogInformation("** PrebookAsync after CreateFromSource");
+
                     if (thirdParty != null)
                     {
                         prebookDateAndTime = DateTime.Now;
-                        _logger.LogInformation("** PrebookAsync before PreBookAsync");
+
                         success = await thirdParty.PreBookAsync(propertyDetails);
-
-                        _logger.LogInformation("** PrebookAsync after PreBookAsync");
-
 
                         if (success)
                         {
-                            _logger.LogInformation("** PrebookAsync before CreateAsync");
                             response = await _responseFactory.CreateAsync(propertyDetails);
-                            _logger.LogInformation("** PrebookAsync after CreateAsync");
                         }
                         else
                         {
-                            _logger.LogInformation("** PrebookAsync before success false");
                             response = new Response()
                             {
                                 Warnings = propertyDetails.Warnings.Select(w => $"{w.Title}, {w.Text}").ToList()
                             };
-                            _logger.LogInformation("** PrebookAsync after success true");
                         }
                     }
                 }
@@ -118,16 +103,11 @@
             catch (Exception ex)
             {
                 response.Warnings.Add(ex.ToString());
-                _logger.LogInformation($"** PrebookAsync Exception {ex.Message}");
             }
             finally
             {
-                _logger.LogInformation("** PrebookAsync Finally Start");
-
                 await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
                 await _supplierLogRepository.LogPrebookRequestsAsync(propertyDetails);
-
-                _logger.LogInformation("** PrebookAsync Finally End");
 
                 if (requestValid && !success)
                 {
@@ -138,8 +118,6 @@
                     //response.Warnings = null!;
                 }
             }
-
-            _logger.LogInformation("** PrebookAsync End");
 
             return response;
         }
