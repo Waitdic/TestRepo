@@ -97,7 +97,7 @@
           "LeadGuestNationality": "US",
           "Currency": "EUR",
           "UseGZip": "true",
-          "EnableHotelSearch": "true",
+          "UseMultiHotelCodesSearch": "true",
           "AllowCancellations": "true",
           "OffsetCancellationDays": "0",
           "HotelSearchLimit": "200"    

@@ -12,7 +12,7 @@
         string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
         string Currency(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool EnableHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseMultiHotelCodesSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
         int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);

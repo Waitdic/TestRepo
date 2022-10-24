@@ -49,7 +49,7 @@
             List<Request> requests = new();
 
             var hotels = resortSplits.SelectMany(split => split.Hotels);
-            var useMultiHotelCodesSearch = _settings.EnableHotelSearch(searchDetails);
+            var useMultiHotelCodesSearch = _settings.UseMultiHotelCodesSearch(searchDetails);
 
             if (hotels.Count() < _settings.HotelSearchLimit(searchDetails)
                 && useMultiHotelCodesSearch)

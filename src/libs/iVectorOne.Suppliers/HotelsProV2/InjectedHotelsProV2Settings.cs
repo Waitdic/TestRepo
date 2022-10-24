@@ -69,9 +69,9 @@
             return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public bool EnableHotelSearch(IThirdPartyAttributeSearch tpAttributeSearch)
+        public bool UseMultiHotelCodesSearch(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("EnableHotelSearch", tpAttributeSearch).ToSafeBoolean();
+            return Get_Value("UseMultiHotelCodesSearch", tpAttributeSearch).ToSafeBoolean();
         }
 
         public string User(IThirdPartyAttributeSearch tpAttributeSearch)
