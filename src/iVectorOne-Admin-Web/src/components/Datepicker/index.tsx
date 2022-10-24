@@ -7,7 +7,7 @@ type Props = {
   align?: 'left' | 'center' | 'right';
   label?: string;
   onReady?: (dateObj: Date, dateStr: string, instance: any) => void;
-  onChange?: (date: Date[]) => void;
+  onChange?: (date: Date[] | Date) => void;
   mode?: 'single' | 'multiple' | 'range' | 'time';
 };
 
@@ -48,7 +48,7 @@ const Datepicker: React.FC<Props> = ({
       )}
       <div className='relative'>
         <Flatpickr
-          className='w-full form-input cursor-pointer text-dark font-medium focus:border-slate-300 min-w-60'
+          className='w-full form-input cursor-pointer text-dark font-medium focus:border-slate-300'
           options={options as any}
         />
         <div className='absolute inset-0 left-auto flex items-center pointer-events-none'>
