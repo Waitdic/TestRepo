@@ -6,9 +6,9 @@
 
     public class AccountSupplierUpdateHandler : IRequestHandler<AccountSupplierUpdateRequest, AccountSupplierUpdateResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public AccountSupplierUpdateHandler(ConfigContext context)
+        public AccountSupplierUpdateHandler(AdminContext context)
         {
             _context = context;
         }

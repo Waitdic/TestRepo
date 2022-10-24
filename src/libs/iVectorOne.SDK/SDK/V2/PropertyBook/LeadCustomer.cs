@@ -1,6 +1,8 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
+    using Intuitive.Helpers.Extensions;
     using System;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     /// The lead customer on a booking
@@ -23,8 +25,27 @@
         public string CustomerLastName { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the date of birth for serialisation.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("DateOfBirth")]
+        public string DateOfBirthSerialised
+        {
+            get
+            {
+                return DateOfBirth.ToString();
+            }
+            private set
+            {
+                // compatibility with V1 where we allow empty strings to be deserialized
+                DateOfBirth = string.IsNullOrEmpty(value) ? DateTimeExtensions.EmptyDate : value.ToSafeDate();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the date of birth.
         /// </summary>
+        [JsonIgnore]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>

@@ -4,7 +4,6 @@ using iVectorOne_Admin_Api.Config.Responses;
 using iVectorOne_Admin_Api.Features;
 using iVectorOne_Admin_Api.Infrastructure;
 using iVectorOne_Admin_Api.Security;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
@@ -41,16 +40,16 @@ try
     var app = builder.Build();
 
     app
-       .UseIntuitiveLogging()
-       .UseIntuitiveAuditing()
-       .UseHttpsRedirection()
-       .UseAuthentication()
-       .UseAuthorization()
-       .UseIntuitiveCors()
-       .UseExceptionHandler("/error")
-       .UseIntuitiveMiddleware();
+        .UseIntuitiveLogging()
+        .UseIntuitiveAuditing()
+        .UseHttpsRedirection()
+        .UseIntuitiveMiddleware()
+        .UseAuthentication()
+        .UseAuthorization()
+        .UseIntuitiveCors()
+        .UseExceptionHandler("/Error");
 
-    app.MapHealthChecks("/healthz").WithMetadata(new AllowAnonymousAttribute());
+    app.MapHealthChecks("/healthcheck").AllowAnonymous();
 
     app.AddFeatures();
 

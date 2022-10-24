@@ -3,13 +3,13 @@
 
     public interface IRestelSettings
     {
-        string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Codusu(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string User(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Codigousu(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Clausu(IThirdPartyAttributeSearch tpAttributeSearch);
 
-        string AccessToken(IThirdPartyAttributeSearch tpAttributeSearch);
+        string Secacc(IThirdPartyAttributeSearch tpAttributeSearch);
 
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
 
@@ -18,6 +18,5 @@
         bool GuestNamesAvailable(IThirdPartyAttributeSearch tpAttributeSearch);
              
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
-
     }
 }

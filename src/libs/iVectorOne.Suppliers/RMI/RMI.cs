@@ -16,6 +16,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using System.Text;
 
     public class RMI : IThirdParty, ISingleSource
     {
@@ -120,6 +121,27 @@
                             }
                         }
 
+                        var errataItems = searchResponse.PropertyResults
+                                     .Where(propertyResult => propertyResult.PropertyId == propertyDetails.TPKey)
+                                     .SelectMany(propertyResult => propertyResult.Errata)
+                                     .Where(errata => !string.IsNullOrEmpty(errata.Description));
+
+                        foreach (var errata in errataItems)
+                        {
+                            var sb = new StringBuilder();
+                            if (!string.IsNullOrEmpty(errata.StartDate))
+                            {
+                                sb.AppendLine($"Start Date: {errata.StartDate}, ");
+                            }
+
+                            if (!string.IsNullOrEmpty(errata.EndDate))
+                            {
+                                sb.AppendLine($"End Date: {errata.EndDate}, ");
+                            }
+
+                            sb.AppendLine(errata.Description);
+                            propertyDetails.Errata.AddNew("Important Information", sb.ToString());
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -331,7 +353,10 @@
                     Duration = propertyDetails.Duration,
                     LeadGuest =leadGuest,
                     TradeReference = propertyDetails.BookingReference,
-                    RoomBookings = roomBookings
+                    RoomBookings = roomBookings,
+                    Request = propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)) ?
+                        string.Join(Environment.NewLine, propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                        string.Empty
                 }
             };
             return _serializer.Serialize(bookRequest).OuterXml;

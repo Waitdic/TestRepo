@@ -27,13 +27,10 @@
             phone = phone.TrimStart(new[] { '+', '0' });
 
             CountryCode = phone.Remove(2);
-            phone = phone.TrimStart(CountryCode.ToCharArray());
+            phone = phone[2..];
 
             AreaCode = phone.Remove(2);
-            Number = phone.TrimStart(AreaCode.ToCharArray());
-
+            Number = phone[2..];
         }
-
     }
-
 }

@@ -2,18 +2,18 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVectorOne;
     using iVectorOne.Constants;
-    using iVectorOne.Suppliers.MTS.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Suppliers.MTS.Models.Search;
+    using iVectorOne.Suppliers.MTS.Models.Common;
 
     public class MTSSearch : IThirdPartySearch, ISingleSource
     {
@@ -64,12 +64,6 @@
                         overrideCountriesList.Add(country);
                     }
                 }
-                else
-                {
-                    overrideCountriesList.Add("United Arab Emirates");
-                    overrideCountriesList.Add("Turkey");
-                    overrideCountriesList.Add("Egypt");
-                }
             }
 
             if (resortSplits.Count == 1)
@@ -91,7 +85,7 @@
                     // save resort if new
                     if (!regions.ContainsKey(resortPath))
                     {
-                        regions.Add(resortPath.ToString(), "Resort");
+                        regions.Add(resortPath, "Resort");
                     }
                 }
             }
@@ -122,114 +116,124 @@
                 // once get IPs confirmed, ie not now
                 var searchKey = search.Key.Split('|');
 
-                bool useOverrideId = overrideCountriesList.Contains(search.Key.Split('|')[0]);
+                var useOverrideId = overrideCountriesList.Contains(search.Key.Split('|')[0]);
 
-                // build the request string
-                var sbRequest = new StringBuilder();
-
-                sbRequest.Append("<OTA_HotelAvailRQ xmlns = \"http://www.opentravel.org/OTA/2003/05\" Version = \"0.1\">");
-                sbRequest.Append("<POS>");
-                sbRequest.Append("<Source>");
-
-                if (useOverrideId)
-                {
-                    // If country is Egypt, Turkey or UAE, search with second ID. This returns in contracted currency
-                    sbRequest.AppendFormat("<RequestorID Instance = \"{0}\" ID_Context = \"{1}\" ID = \"{2}\" Type = \"{3}\"/>", _settings.Instance(searchDetails), _settings.ID_Context(searchDetails), _settings.OverRideID(searchDetails), _settings.Type(searchDetails));
-                }
-                else
-                {
-                    // Anything else, search with main ID; returns in Euros
-                    sbRequest.AppendFormat("<RequestorID Instance = \"{0}\" ID_Context = \"{1}\" ID = \"{2}\" Type = \"{3}\"/>", _settings.Instance(searchDetails), _settings.ID_Context(searchDetails), _settings.User(searchDetails), _settings.Type(searchDetails));
-                }
-
-                sbRequest.Append("<BookingChannel Type = \"2\"/>");
-                sbRequest.Append("</Source>");
-
-                sbRequest.Append("<Source>");
-                sbRequest.AppendFormat("<RequestorID Type=\"{0}\" ID=\"{1}\" MessagePassword=\"{2}\"/>", _settings.AuthenticationType(searchDetails), _settings.AuthenticationID(searchDetails), _settings.Password(searchDetails));
-                sbRequest.Append("</Source>");
-
-                sbRequest.Append("</POS>");
-
-                sbRequest.Append("<AvailRequestSegments>");
-                sbRequest.Append("<AvailRequestSegment InfoSource='1*2*4*5*'>");
-                sbRequest.AppendFormat("<StayDateRange End=\"{0}\" Start=\"{1}\"></StayDateRange>", searchDetails.DepartureDate.ToString("yyyy-MM-dd"), searchDetails.ArrivalDate.ToString("yyyy-MM-dd"));
-                sbRequest.Append("<RoomStayCandidates>");
-
-                // loop through the rooms
-                int roomCount = 0;
-                foreach (var roomBooking in searchDetails.RoomDetails)
-                {
-                    sbRequest.AppendFormat("<RoomStayCandidate RPH=\"{0}\">", roomCount + 1);
-                    sbRequest.Append("<GuestCounts>");
-
-                    // Adults
-                    sbRequest.Append("<GuestCount AgeQualifyingCode=\"10\" ");
-                    sbRequest.AppendFormat(" Count=\"{0}\" ", roomBooking.Adults);
-                    sbRequest.Append("></GuestCount>");
-
-                    // Children
-                    foreach (int childAge in roomBooking.ChildAges)
-                    {
-                        sbRequest.Append("<GuestCount AgeQualifyingCode=\"8\" ");
-                        sbRequest.AppendFormat("Age=\"{0}\" ", childAge);
-                        sbRequest.AppendFormat("Count=\"1\"");
-                        sbRequest.Append("></GuestCount>");
-                    }
-
-                    // Infants
-                    if (roomBooking.Infants > 0)
-                    {
-                        sbRequest.Append("<GuestCount AgeQualifyingCode=\"7\" ");
-                        sbRequest.AppendFormat("Age=\"1\" ");
-                        sbRequest.AppendFormat("Count=\"{0}\"", roomBooking.Infants);
-                        sbRequest.Append("></GuestCount>");
-                    }
-
-                    sbRequest.Append("</GuestCounts>");
-                    sbRequest.Append("</RoomStayCandidate>");
-
-                    roomCount++;
-                }
-
-                sbRequest.Append("</RoomStayCandidates>");
-                sbRequest.Append("<HotelSearchCriteria>");
-
+                HotelSearchCriteria hotelSearchCriteria;
                 if (search.Value == "CountryAndHotelCode")
                 {
-                    sbRequest.Append("<Criterion ExactMatch = \"true\">");
-                    sbRequest.AppendFormat("<HotelRef HotelCode=\"{0}\"></HotelRef>", search.Key.Split('|')[1]);
+                    hotelSearchCriteria = new HotelSearchCriteria
+                    {
+                        Criterion = new Criterion
+                        {
+                            ExactMatch = true,
+                            HotelRef = new HotelRef { HotelCode = search.Key.Split('|')[1] }
+                        }
+                    };
                 }
                 else
                 {
-                    sbRequest.Append("<Criterion>");
-                    sbRequest.AppendFormat("<RefPoint CodeContext = \"Country\">{0}</RefPoint>", search.Key.Split('|')[0]);
-                    sbRequest.AppendFormat("<RefPoint CodeContext = \"Region\">{0}</RefPoint>", search.Key.Split('|')[1]);
+                    var refPoints = new List<RefPoint>
+                    {
+                        new() { CodeContext = "Country", RefPointValue = search.Key.Split('|')[0] },
+                        new() { CodeContext = "Region", RefPointValue = search.Key.Split('|')[1] }
+                    };
 
                     // Check if is a resort-level search
                     if (search.Value == "Resort")
                     {
-                        sbRequest.AppendFormat("<RefPoint CodeContext = \"Resort\">{0}</RefPoint>", search.Key.Split('|')[2]);
+                        refPoints.Add(new RefPoint { CodeContext = "Resort", RefPointValue = search.Key.Split('|')[2] });
                     }
+
+                    hotelSearchCriteria = new HotelSearchCriteria
+                    {
+                        Criterion = new Criterion { RefPoint = refPoints.ToArray() }
+                    };
                 }
+                
+                // build the request
+                var request = new MTSSearchRequest
+                {
+                    Version = "0.1",
+                    POS = { Source = new[]
+                    {
+                        new Source
+                        {
+                            RequestorID =
+                            {
+                                Instance = _settings.Instance(searchDetails),
+                                ID_Context =  _settings.ID_Context(searchDetails),
+                                ID = useOverrideId ? _settings.OverRideID(searchDetails) : _settings.User(searchDetails),
+                                Type =  _settings.Type(searchDetails)
+                            },
+                            BookingChannel = new BookingChannel { Type = 2 }
+                        },
+                        new Source
+                        {
+                            RequestorID =
+                            {
+                                ID = _settings.AuthenticationID(searchDetails),
+                                Type = _settings.AuthenticationType(searchDetails),
+                                MessagePassword = _settings.Password(searchDetails)
+                            }
+                        }
+                    }},
+                    AvailRequestSegments = new []
+                    {
+                        new AvailRequestSegment
+                        {
+                            InfoSource = "1*2*4*5*",
+                            StayDateRange =
+                            {
+                                End = searchDetails.DepartureDate.ToString("yyyy-MM-dd"),
+                                Start = searchDetails.ArrivalDate.ToString("yyyy-MM-dd")
+                            },
+                            // loop through the rooms
+                            RoomStayCandidates = searchDetails.RoomDetails.Select((roomBooking, roomCount) =>
+                            {
+                                // Adults
+                                var guestCounts = new List<GuestCount>
+                                {
+                                    new() { AgeQualifyingCode = "10", Count = roomBooking.Adults }
+                                };
 
-                sbRequest.Append("</Criterion>");
-                sbRequest.Append("</HotelSearchCriteria>");
-                sbRequest.Append("</AvailRequestSegment>");
-                sbRequest.Append("</AvailRequestSegments>");
+                                // Children
+                                guestCounts.AddRange(roomBooking.ChildAges.Select(childAge => new GuestCount
+                                {
+                                    AgeQualifyingCode = "8",
+                                    Age = childAge,
+                                    Count = 1
+                                }));
 
-                sbRequest.Append("</OTA_HotelAvailRQ>");
+                                // Infants
+                                if (roomBooking.Infants > 0)
+                                {
+                                    guestCounts.Add(new GuestCount
+                                    {
+                                        AgeQualifyingCode = "7",
+                                        Age = 1,
+                                        Count = roomBooking.Infants
+                                    });
+                                }
 
-                var request = new Request
+                                return new RoomStayCandidate
+                                {
+                                    RPH = roomCount + 1,
+                                    GuestCounts = guestCounts.ToArray()
+                                };
+                            }).ToArray(),
+                            HotelSearchCriteria = hotelSearchCriteria
+                        }
+                    }
+                };
+
+                var webRequest = new Request
                 {
                     EndPoint = _settings.GenericURL(searchDetails),
                     Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_json
                 };
-
-                request.SetRequest(sbRequest.ToString());
-
-                requests.Add(request);
+                webRequest.SetRequest(_serializer.Serialize(request));
+                requests.Add(webRequest);
             }
 
             return Task.FromResult(requests);
@@ -271,6 +275,7 @@
                 {
                     if (hotel.Info.HotelCode == room.Info.HotelCode)
                     {
+                        string ratePlan = room.RatePlans.Count > 0 ? room.RatePlans.First().RatePlanCode : string.Empty;
                         foreach (var area in response.Areas)
                         {
                             if (area.AreaID == hotel.Info.AreaID)
@@ -298,7 +303,7 @@
                                             RoomType = roomType.RoomDescription.Text,
                                             MealBasisCode = roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text,
                                             Amount = amount,
-                                            TPReference = roomType.Code + "|" + roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text + "|" + country,
+                                            TPReference = $"{roomType.Code}|{roomRate.Features.FirstOrDefault().Descriptions.FirstOrDefault().Text}|{country}|{ratePlan}",
                                             RoomTypeCode = roomRate.RoomTypeCode
                                         });
                                     }

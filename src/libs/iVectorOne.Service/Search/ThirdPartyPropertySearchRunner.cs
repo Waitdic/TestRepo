@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Net.Http;
     using System.Text;
@@ -15,14 +16,17 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.SearchStore;
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
+    using iVectorOne.Services;
 
     /// <summary>
     /// Third Party Property Search Runner
     /// </summary>
     public class ThirdPartyPropertySearchRunner : IThirdPartyPropertySearchRunner
     {
+        private readonly ISearchStoreService _searchStoreService;
         private readonly ILogger<ThirdPartyPropertySearchRunner> _logger;
 
         private readonly IEmailService _emailService;
@@ -35,12 +39,14 @@
             ILogger<ThirdPartyPropertySearchRunner> logger,
             IEmailService emailService,
             ISearchResultsProcessor searchResultsProcessor,
-            HttpClient httpClient)
+            HttpClient httpClient,
+            ISearchStoreService searchStoreService)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _emailService = Ensure.IsNotNull(emailService, nameof(emailService));
             _searchResultsProcessor = Ensure.IsNotNull(searchResultsProcessor, nameof(searchResultsProcessor));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService)); ;
         }
 
         /// <summary>Gets or sets a value indicating whether [exclude non refundable].</summary>
@@ -68,6 +74,7 @@
             {
                 // todo - request tracker, use mini profiler?
                 StartTime = DateTime.Now; // needed for timeouts
+                var stopwatch = Stopwatch.StartNew();
 
                 var taskList = new List<Task>();
                 string source = supplierResortSplit.Supplier;
@@ -81,6 +88,9 @@
 
                 var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, resortSplits);
 
+                var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
+                stopwatch.Restart();
+
                 foreach (var request in requests)
                 {
                     request.Source = source;
@@ -93,6 +103,9 @@
                 }
 
                 await Task.WhenAll(taskList);
+
+                var supplierTime = (int)stopwatch.ElapsedMilliseconds;
+                stopwatch.Restart();
 
                 if (requests.Any())
                 {
@@ -111,13 +124,50 @@
 
                     var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, resortSplits);
 
+                    var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
+                    stopwatch.Restart();
+
                     if (searchDetails.PagingTokenCollector is not null &&
                         searchDetails.PagingTokenCollector.CurrentPage < searchDetails.PagingTokenCollector.MaxPages)
                     {
                         await SearchAsync(searchDetails, supplierResortSplit, thirdPartySearch, cancellationTokenSource);
                     }
 
-                    await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails, resortSplits);
+                    var resultsCount = await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails, resortSplits);
+
+                    var dedupeTime = (int)stopwatch.ElapsedMilliseconds;
+                    stopwatch.Restart();
+
+                    var searchStoreSupplierItem = new SearchStoreSupplierItem
+                    {
+                        SearchStoreId = searchDetails.SearchStoreItem.SearchStoreId,
+                        AccountName = searchDetails.SearchStoreItem.AccountName,
+                        AccountId = searchDetails.SearchStoreItem.AccountId,
+                        System = searchDetails.SearchStoreItem.System,
+                        SupplierName = source,
+                        Successful = requests.All(r => r.Success),
+                        Timeout = requests.Any(r => r.TimeOut),
+                        SearchDateAndTime = searchDetails.SearchStoreItem.SearchDateAndTime,
+                        PropertiesRequested = resortSplits.Sum(r => r.Hotels.Count),
+                        PropertiesReturned = resultsCount,
+                        PreProcessTime = preprocessTime,
+                        SupplierTime = supplierTime,
+                        DedupeTime = dedupeTime,
+                        PostProcessTime = postProcessTime,
+                        TotalTime = preprocessTime + supplierTime + dedupeTime + postProcessTime
+                    };
+
+                    searchDetails.SearchStoreItem.MaxSupplierTime = Math.Max(
+                        searchStoreSupplierItem.SupplierTime,
+                        searchDetails.SearchStoreItem.MaxSupplierTime);
+
+                    searchDetails.SearchStoreItem.MaxDedupeTime = Math.Max(
+                        searchStoreSupplierItem.DedupeTime,
+                        searchDetails.SearchStoreItem.MaxDedupeTime);
+
+                    searchDetails.SearchStoreItem.PostProcessTime += dedupeTime;
+
+                    _ = _searchStoreService.AddAsync(searchStoreSupplierItem);
                 }
             }
             catch (Exception ex)

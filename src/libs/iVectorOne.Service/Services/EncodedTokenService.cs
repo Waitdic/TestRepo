@@ -23,7 +23,7 @@
         /// <summary>Initializes a new instance of the <see cref="EncodedTokenService" /> class.</summary>
         /// <param name="contentRepository">The content repository.</param>
         /// <param name="converter">The base converter.</param>
-        /// <param name="tokenValues">The colelction that stores the TOkenValues</param>
+        /// <param name="tokenValues">The colelction that stores the TokenValues</param>
         /// <param name="logger"></param>
         public EncodedTokenService(
             IPropertyContentRepository contentRepository,
@@ -37,7 +37,7 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        public string EncodeBookToken(BookToken bookToken)
+        public string EncodeBookingToken(BookToken bookToken)
         {
             _tokenValues.Clear();
             _tokenValues.AddValue(TokenValueType.PropertyID, bookToken.PropertyID);
@@ -91,7 +91,7 @@
             string mealbasisToken = new string(mealBasesBits.Take(TokenLengths.MealBasis).ToArray());
             string localCostToken = new string(localCostBits.Take(TokenLengths.LocalCost).ToArray());
 
-            string tokenString = roomToken + childAgeToken + mealbasisToken + localCostToken.Trim();
+            string tokenString = roomToken + childAgeToken + mealbasisToken + localCostToken.TrimEnd();
 
             return tokenString;
         }
@@ -110,7 +110,7 @@
             return bits;
         }
 
-        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account)
+        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account, string supplierBookingReference)
         {
             BookToken? token = null;
             try
@@ -125,7 +125,7 @@
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                 };
 
-                await PopulateBookTokenFieldsAsync(token, account);
+                await PopulateBookTokenFieldsAsync(token, account, supplierBookingReference);
             }
             catch (Exception ex)
             {
@@ -232,7 +232,6 @@
                 _tokenValues.AddValue(TokenValueType.LocalCost2);
                 _tokenValues.AddValue(TokenValueType.LocalCost1);
 
-
                 GetTokenValues(new string(tokenString.Skip(18).ToArray()));
                 token.LocalCost = GetLocalCostFromTokenValues();
             }
@@ -247,7 +246,7 @@
 
         private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account, string.Empty);
 
             if (propertyContent != null)
             {
@@ -256,16 +255,18 @@
                 propertyToken.PropertyName = propertyContent.PropertyName;
                 propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
                 propertyToken.GeographyCode = propertyContent.GeographyCode;
+                propertyToken.SupplierID = propertyContent.SupplierID;
             }
         }
 
-        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account)
+        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account, string supplierBookingReference)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account, supplierBookingReference);
 
             if (propertyContent != null)
             {
                 bookToken.Source = propertyContent.Source;
+                bookToken.BookingID = propertyContent.BookingID;
             }
         }
 

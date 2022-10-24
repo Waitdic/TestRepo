@@ -1,25 +1,60 @@
-﻿namespace iVectorOne_Admin_Api.Features.Shared
-{
-    using iVectorOne_Admin_Api.Infrastructure.Extensions;
-    using Microsoft.AspNetCore.Mvc;
-    using System.Diagnostics;
+﻿using iVectorOne_Admin_Api.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
-    public abstract record ResponseBase
+namespace iVectorOne_Admin_Api.Features.Shared
+{
+    public record ResponseBase
     {
         public ResponseBase()
         {
-            var activity = Activity.Current;
-
-            var problemDetails = new ProblemDetails
-            {
-                Title = "An unexpected error occurred processing your request.",
-            };
-
-            problemDetails.Extensions.Add(new KeyValuePair<string, object?>("Request-Id", activity?.GetTraceId()));
-
-            Result =  Results.Problem(problemDetails);
+            Result = Results.Problem(BuildProblemDetails(""));
         }
 
-        public IResult Result { get; set; } 
+        public IResult Result { get; set; }
+
+        public void NotFound()
+        {
+            Result = Results.NotFound();
+        }
+
+        public void NotFound(string detail) => Result = Results.NotFound(BuildProblemDetails(detail));
+
+        public void Ok(IResponseModel model)
+        {
+            Result = Results.Ok(model);
+        }
+
+        public void BadRequest(string detail) => Result = Results.BadRequest(BuildProblemDetails(detail));
+
+        public void BadRequest(string detail, IDictionary<string, string[]> errors)
+        {
+            var activity = Activity.Current;
+
+            var problemDetails = new ValidationProblemDetails(errors)
+            {
+                Title = "An error occurred while processing your request.",
+                Instance = activity?.GetTraceId(),
+                Detail = detail
+            };
+
+            Result = Results.BadRequest(problemDetails);
+        }
+
+        #region Private methods
+
+        private static ProblemDetails BuildProblemDetails(string detail)
+        {
+            var activity = Activity.Current;
+
+            return new ProblemDetails
+            {
+                Title = "An error occurred while processing your request.",
+                Instance = activity?.GetTraceId(),
+                Detail = detail
+            };
+        }
+
+        #endregion
     }
 }

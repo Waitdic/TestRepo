@@ -421,7 +421,7 @@
                 }
             };
 
-            var xmlDoc = _serializer.Serialize(oEnvelope);
+            var xmlDoc = XmlHelper.CleanRequest(_serializer.Serialize(oEnvelope));
 
             var oRequest = new Request
             {

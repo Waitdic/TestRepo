@@ -1,29 +1,46 @@
-﻿namespace iVectorOne_Admin_Api.Infrastructure
-{
-    using FluentValidation;
-    using iVectorOne_Admin_Api.Config.Validation;
-    using iVectorOne_Admin_Api.Security;
-    using System.Reflection;
+﻿using FluentValidation;
+using Intuitive.Helpers;
+using Intuitive.Helpers.Security;
+using iVectorOne_Admin_Api.Adaptors;
+using iVectorOne_Admin_Api.Adaptors.Search;
+using iVectorOne_Admin_Api.Config.Validation;
+using iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test;
+using iVectorOne_Admin_Api.Security;
+using System.Reflection;
+using System.Security.Cryptography;
 
+namespace iVectorOne_Admin_Api.Infrastructure
+{
     public static class Services
     {
         public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<ConfigContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConfigConnection")));
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddDbContext<AdminContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConfigConnection")));
 
-            //Automapper
             builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-            //Fluent Validation
-            builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
-
-            //Mediatr
             builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            // TODO Add back the validation
+            //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            builder.Services.AddValidatorsFromAssemblyContaining<SupplierAttributeUpdateValidator>();
+            builder.Services.AddScoped<IValidator<Features.V1.Utilities.SearchTest.Request>, Features.V1.Utilities.SearchTest.Validator>();
 
-            //Application
+            builder.Services.AddHttpClient();
+            //builder.Services.AddHttpClient<IRequestHandler<Request, Response>, Handler>(
+            //    "default",
+            //    client =>
+            //    {
+            //        client.BaseAddress = new Uri(builder.Configuration.GetSection("SearchService").Value);
+            //    });
+
             builder.Services.AddScoped<ITenantService, TenantService>();
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            builder.Services.AddHelperServices(builder.Configuration);
+            builder.Services.AddTransient(c => c.GetRequiredService<ISecretKeeperFactory>().CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+
+            //Adaptors
+            builder.Services.AddScoped<IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response>, SearchAdaptor>();
 
             return builder;
         }

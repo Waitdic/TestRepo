@@ -2,9 +2,9 @@
 {
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context)
+        public Handler(AdminContext context)
         {
             _context = context;
         }
@@ -41,6 +41,11 @@
             }
 
             _context.AccountSuppliers.Remove(accountSupplier);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var accountSupplierAttributes = _context.AccountSupplierAttributes.Where(s => s.AccountId == request.AccountId).Include(x => x.SupplierAttribute).ToList();
+            var accountSupplierAttributesDelete = accountSupplierAttributes.Where(x => x.SupplierAttribute.SupplierId == request.SupplierId);
+            _context.AccountSupplierAttributes.RemoveRange(accountSupplierAttributesDelete);
             await _context.SaveChangesAsync(cancellationToken);
 
             response.Default();

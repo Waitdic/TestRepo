@@ -55,7 +55,7 @@
 
         public string SourceMarket(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CountryCode", tpAttributeSearch);
+            return Get_Value("SourceMarket", tpAttributeSearch);
         }
 
         public string SalesChannel(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -68,7 +68,7 @@
             return Get_Value("SalesEnvironment", tpAttributeSearch);
         }
 
-        public string SortType(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SortType(IThirdPartyAttributeSearch tpAttributeSearch) //needed for 2.3 do not remove
         {
             return Get_Value("SortType", tpAttributeSearch);
         }

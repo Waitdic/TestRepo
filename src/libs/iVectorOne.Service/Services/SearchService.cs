@@ -1,13 +1,15 @@
 ﻿namespace iVectorOne.Services
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
-    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models;
+    using iVectorOne.Models.SearchStore;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Search;
@@ -19,6 +21,8 @@
     /// <seealso cref="ISearchService" />
     public class SearchService : ISearchService
     {
+        private readonly ISearchStoreService _searchStoreService;
+
         /// <summary>The search repository</summary>
         private readonly ISearchRepository _searchRepository;
 
@@ -43,40 +47,82 @@
             ISearchDetailsFactory searchDetailsFactory,
             IPropertySearchResponseFactory propertySearchResponseFactory,
             IThirdPartyFactory thirdPartyFactory,
-            IThirdPartyPropertySearchRunner searchRunner)
+            IThirdPartyPropertySearchRunner searchRunner,
+            ISearchStoreService searchStoreService)
         {
             _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
             _propertySearchResponseFactory = Ensure.IsNotNull(propertySearchResponseFactory, nameof(propertySearchResponseFactory));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _searchRunner = Ensure.IsNotNull(searchRunner, nameof(searchRunner));
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
         }
 
         /// <inheritdoc />
         public async Task<Response> SearchAsync(Request searchRequest, bool log, IRequestTracker requestTracker)
         {
-            // 1.Convert Request to Search details object
-            var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
+            var totalTime = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
+            SearchStoreItem searchStoreItem = null!;
 
-            // 2.Check which suppliers to search
-            var suppliers = searchRequest.Account.Configurations
-                .Select(c => c.Supplier)
-                .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
-                .ToList();
+            try
+            {
+                // 1.Convert Request to Search details object
+                var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
+                searchStoreItem = searchDetails.SearchStoreItem;
+                searchStoreItem.SearchDateAndTime = DateTime.Now;
 
-            // 3.Call db to get resort splits from central propery ids
-            var resortSplits = await _searchRepository.GetResortSplitsAsync(
-                string.Join(",", searchRequest.Properties),
-                string.Join(",", suppliers),
-                searchRequest.Account);
+                // 2.Check which suppliers to search
+                var suppliers = searchRequest.Account.Configurations
+                    .Select(c => c.Supplier)
+                    .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
+                    .ToList();
 
-            // 4.Run TP search
-            await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);
+                // 3.Call db to get resort splits from central propery ids
+                var resortSplits = await _searchRepository.GetResortSplitsAsync(
+                    string.Join(",", searchRequest.Properties),
+                    string.Join(",", suppliers),
+                    searchRequest.Account);
 
-            // 5.Build response and return
-            var response = await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+                searchStoreItem.PreProcessTime = (int) stopwatch.ElapsedMilliseconds;
 
-            return response;
+                // 4.Run TP search
+                await GetThirdPartySearchesAsync(resortSplits, searchDetails, requestTracker);
+
+                stopwatch.Restart();
+
+                // 5.Build response and return
+                var response =
+                    await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+
+                searchStoreItem.PostProcessTime += (int) stopwatch.ElapsedMilliseconds;
+                searchStoreItem.PropertiesReturned = response.PropertyResults.Count;
+                searchStoreItem.Successful = true;
+
+                return response;
+            }
+            finally
+            {
+                if (searchStoreItem == null!)
+                {
+                    searchStoreItem = new SearchStoreItem
+                    {
+                        SearchStoreId = Guid.NewGuid(),
+                        SearchDateAndTime = DateTime.Now
+                    };
+
+                    if (searchRequest?.Account != null)
+                    {
+                        searchStoreItem.AccountName = searchRequest.Account.Login;
+                        searchStoreItem.AccountId = searchRequest.Account.AccountID;
+                        searchStoreItem.System = searchRequest.Account.Environment.ToString();
+                    }
+                }
+
+                searchStoreItem.TotalTime = (int) totalTime.ElapsedMilliseconds;
+
+                _ = _searchStoreService.AddAsync(searchStoreItem);
+            }
         }
 
         public async Task GetThirdPartySearchesAsync(List<SupplierResortSplit> supplierSplits, SearchDetails searchDetails, IRequestTracker requestTracker)

@@ -322,7 +322,7 @@
                 var response = _serializer.DeSerialize<Envelope<HotelBookResponse>>(request.ResponseXML);
                 var bookResponse = response.Body.Content;
 
-                if (bookResponse.BookingStatus == BookingStatus.Vouchered && bookResponse.Status.StatusCode == "01")
+                if (bookResponse.BookingStatus == Models.Common.BookingStatus.Vouchered && bookResponse.Status.StatusCode == "01")
                 {
                     propertyDetails.SourceSecondaryReference = $"{bookResponse.BookingId}-{bookResponse.TripId}";
                     reference = bookResponse.ConfirmationNo;

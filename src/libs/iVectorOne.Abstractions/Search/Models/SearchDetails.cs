@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Search.Models
+﻿using iVectorOne.Models.SearchStore;
+
+namespace iVectorOne.Search.Models
 {
     using System;
     using System.Collections.Concurrent;
@@ -165,5 +167,10 @@
         /// Gets or sets the paging token collector
         /// </summary>
         public IPagingTokenCollector? PagingTokenCollector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the search store item
+        /// </summary>
+        public SearchStoreItem SearchStoreItem { get; set; } = new() { SearchStoreId = Guid.NewGuid() };
     }
 }

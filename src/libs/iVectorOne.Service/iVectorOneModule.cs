@@ -6,7 +6,9 @@
     using Intuitive.DependencyInjection;
     using Intuitive.Helpers.Security;
     using Intuitive.Modules;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using iVectorOne;
     using iVectorOne.Suppliers;
     using iVectorOne.Suppliers.AbreuV2;
@@ -70,7 +72,7 @@
         public void BuildServices(ServicesBuilderContext context, IServiceCollection services)
         {
             RegisterFactories(services);
-            RegisterRepositories(services);
+            RegisterRepositories(context, services);
             RegisterServices(context, services);
             RegisterMediators(services);
             RegsiterThirdPartyConfigs(services);
@@ -92,13 +94,16 @@
             services.AddSingleton<IThirdPartyFactory, ThirdPartyFactory>();
         }
 
-        private static void RegisterRepositories(IServiceCollection services)
+        private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
         {
-            services.AddSingleton<IBookingLogRepository, BookingLogRepository>();
+            services.AddSingleton<IAPILogRepository, APILogRepository>();
             services.AddSingleton<ICurrencyLookupRepository, CurrencyLookupRepository>();
             services.AddSingleton<IMealBasisLookupRepository, MealBasisLookupRepository>();
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
+            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
+            services.AddSingleton<IBookingRepository, BookingRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -122,7 +127,13 @@
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
-                    .CreateSecretKeeper("bobisben", EncryptionType.Des, CipherMode.CBC));
+                    .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+
+            services.AddSingleton<ISearchStoreService>(s =>
+                new SearchStoreService(
+                    s.GetRequiredService<ILogger<SearchStoreService>>(),
+                    s.GetRequiredService<ISearchStoreRepository>(),
+                    context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }
 
         private static void RegisterMediators(IServiceCollection services)

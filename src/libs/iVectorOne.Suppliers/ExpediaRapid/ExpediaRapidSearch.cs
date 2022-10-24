@@ -76,8 +76,13 @@
         {
             var arrivalDate = searchDetails.ArrivalDate;
             var departureDate = searchDetails.DepartureDate;
+            var countryCode = _settings.SourceMarket(searchDetails);
 
-            string countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
+            if (searchDetails.SellingCountry != string.Empty)
+            {
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
+            }
+
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
 
             var occupancies = searchDetails.RoomDetails.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
@@ -154,7 +159,7 @@
                 { SearchQueryKeys.CountryCode, countryCode },
                 { SearchQueryKeys.SalesChannel, settings.SalesChannel(tpAttributeSearch) },
                 { SearchQueryKeys.SalesEnvironment, settings.SalesEnvironment(tpAttributeSearch) },
-                { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) },
+                { SearchQueryKeys.SortType, settings.SortType(tpAttributeSearch) }, //needed for 2.3 do not remove
                 { SearchQueryKeys.RatePlanCount, settings.RatePlanCount(tpAttributeSearch).ToString() },
                 { SearchQueryKeys.PaymentTerms, settings.PaymentTerms(tpAttributeSearch) },
                 { SearchQueryKeys.PartnerPointOfSale, settings.PartnerPointOfSale(tpAttributeSearch) },

@@ -9,7 +9,7 @@
     <NoWarn>1701;1702;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS1591;CA1304;CA1716;CS8603;CS8604;CS1591;CA1304;CA1716;CS8629;CS8618;CS1591;CA1304;CA1716;CS8602;</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Intuitive.Helpers" Version="0.16.0" />
+    <PackageReference Include="Intuitive.Helpers" Version="0.18.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
@@ -20,6 +20,11 @@
     <Compile Remove="C:\ProjectsStash\thirdparty.api\build\src\Common.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="ATI\ATIRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ATIRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="Netstorming\Resources\NetstormingRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -37,6 +42,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Update="ATI\ATIRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ATIRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Netstorming\Resources\NetstormingRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>NetstormingRes.Designer.cs</LastGenOutput>

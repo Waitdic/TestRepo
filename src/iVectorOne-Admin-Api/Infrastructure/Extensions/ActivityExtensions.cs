@@ -1,7 +1,7 @@
-﻿namespace iVectorOne_Admin_Api.Infrastructure.Extensions
-{
-    using System.Diagnostics;
+﻿using System.Diagnostics;
 
+namespace iVectorOne_Admin_Api.Infrastructure.Extensions
+{
     public static class ActivityExtensions
     {
         public static string GetTraceId(this Activity activity)

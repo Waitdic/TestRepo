@@ -33,9 +33,9 @@
             return Get_Value("CustomerCountryCode", tpAttributeSearch, source);
         }
 
-        public bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source)
+        public bool SplitMultiroom(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
-            return Get_Value("EnableMultiRoomSearch", tpAttributeSearch, source).ToSafeBoolean();
+            return Get_Value("SplitMultiroom", tpAttributeSearch, source).ToSafeBoolean();
         }
 
         public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch, string source)

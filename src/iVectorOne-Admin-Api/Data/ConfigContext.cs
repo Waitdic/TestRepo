@@ -1,22 +1,20 @@
-﻿namespace iVectorOne_Admin_Api.Data
-{
-    using iVectorOne_Admin_Api.Data.Models;
-    using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
+﻿using iVectorOne_Admin_Api.Data.Models;
+using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
 
-    public partial class ConfigContext : DbContext
+namespace iVectorOne_Admin_Api.Data
+{
+    public partial class AdminContext : DbContext
     {
-        public ConfigContext()
+        public AdminContext()
         {
         }
 
-        public ConfigContext(DbContextOptions<ConfigContext> options) : base(options)
+        public AdminContext(DbContextOptions<AdminContext> options) : base(options)
         {
         }
 
         public virtual DbSet<User> Users { get; set; } = null!;
-
         public virtual DbSet<Authorisation> Authorisations { get; set; } = null!;
-
         public virtual DbSet<Attribute> Attributes { get; set; } = null!;
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
@@ -24,11 +22,17 @@
         public virtual DbSet<AccountSupplier> AccountSuppliers { get; set; } = null!;
         public virtual DbSet<AccountSupplierAttribute> AccountSupplierAttributes { get; set; } = null!;
         public virtual DbSet<Tenant> Tenants { get; set; } = null!;
-
         public virtual DbSet<UserTenant> UserTenants { get; set; } = null!;
+        public virtual DbSet<Property> Properties { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Property>(e =>
+            {
+                e.HasNoKey();
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
@@ -116,6 +120,10 @@
                     .HasDefaultValueSql("'active'")
                     .HasMaxLength(8)
                     .IsUnicode(false);
+
+                entity.Property(e => e.EncryptedPassword)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Supplier>(entity =>
@@ -131,6 +139,8 @@
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
                 entity.Property(e => e.SupplierName).HasMaxLength(200);
+
+                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
             });
 
             modelBuilder.Entity<SupplierAttribute>(entity =>

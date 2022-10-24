@@ -306,7 +306,7 @@
 
                 var response = JsonConvert.DeserializeObject<HotelBedsV2CreateBookingResponse>(webRequest.ResponseString);
 
-                if (!string.IsNullOrEmpty(response.booking.reference))
+                if (!string.IsNullOrEmpty(response.booking?.reference))
                 {
                     reference = response.booking.reference;
                 }

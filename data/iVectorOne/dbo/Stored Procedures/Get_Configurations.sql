@@ -9,6 +9,7 @@ select (
 			SearchTimeoutSeconds As'TPSettings.SearchTimeoutSeconds',
 			LogMainSearchError  As 'TPSettings.LogMainSearchError',
 			CurrencyCode  As 'TPSettings.CurrencyCode',
+			EncryptedPassword,
 
 			(select SupplierName As 'Supplier',
 				(select Attribute.AttributeName, isnull(AccountSupplierAttribute.Value, Attribute.DefaultValue) AttributeValue

@@ -472,15 +472,16 @@
                     salesTax += ExpediaRapidSearch.GetStayRateFromType(occupancyRoomRate, RateTypes.SalesTax);
                     extraPersonFee += ExpediaRapidSearch.GetStayRateFromType(occupancyRoomRate, RateTypes.ExtraPersonFee);
                 }
-
             }
 
+            static string GetCurrency(IEnumerable<OccupancyRateFee> items) => items.First().TotalInBillableCurrency.CurrencyCode;
+
             if (mandatoryFees.Any())
-                errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
+                errata.Add(BuildErrata("Mandatory Fee", mandatoryFees.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(mandatoryFees)));
             if (resortFees.Any())
-                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
+                errata.Add(BuildErrata("Resort Fee", resortFees.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(resortFees)));
             if (mandatoryTaxes.Any())
-                errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInRequestCurrency.Amount), currencyCode));
+                errata.Add(BuildErrata("Mandatory Tax", mandatoryTaxes.Sum(f => f.TotalInBillableCurrency.Amount), GetCurrency(mandatoryTaxes)));
             if (taxAndServiceFee > 0m)
                 errata.Add(BuildErrata("Tax and Service Fee", taxAndServiceFee, currencyCode, "Included"));
             if (salesTax > 0m)
@@ -565,7 +566,13 @@
         {
             var tpKeys = new List<string>() { propertyDetails.TPKey };
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, propertyDetails.ISOCurrencyCode);
-            string countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
+            var countryCode = _settings.SourceMarket(propertyDetails);
+
+            if (propertyDetails.SellingCountry != string.Empty)
+            {
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, propertyDetails.SellingCountry, propertyDetails.AccountID);
+            }
+            
             var occupancies = propertyDetails.Rooms.Select(r => new ExpediaRapidOccupancy(r.Adults, r.ChildAges, r.Infants));
 
             return ExpediaRapidSearch.BuildSearchURL(tpKeys, _settings, propertyDetails, propertyDetails.ArrivalDate, propertyDetails.DepartureDate, currencyCode, countryCode, occupancies);

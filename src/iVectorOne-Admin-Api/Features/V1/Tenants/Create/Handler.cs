@@ -1,27 +1,40 @@
 ﻿using iVectorOne_Admin_Api.Config.Models;
+using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
-        private readonly IMapper _mapper;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var user = await _context.Users.Where(u => u.Key == request.UserKey).FirstOrDefaultAsync();
+            var user = await _context.Users
+                .Where(u => u.Key == request.UserKey)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (user == null)
             {
-                response.NotFound();
+                response.BadRequest("User not found.");
+                return response;
+            }
+
+            var existingTenant = await _context.Tenants
+                .Where(u => u.CompanyName == request.CompanyName)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            if (existingTenant != null)
+            {
+                response.BadRequest("Tenant already exists.");
                 return response;
             }
 
@@ -35,7 +48,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
             };
 
             _context.Tenants.Add(tenant);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             _context.UserTenants.Add(new UserTenant { TenantId = tenant.TenantId, UserId = user.UserId });
             _context.Authorisations.Add(new Data.Models.Authorisation
@@ -44,10 +57,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Create
                 Relationship = "owner",
                 Object = $"tenantid:{tenant.TenantId}"
             });
+            await _context.SaveChangesAsync(cancellationToken);
 
-            await _context.SaveChangesAsync();
-
-            response.Default(new ResponseModel { Success = true, TenantId = tenant.TenantId });
+            response.Ok(new ResponseModel { Success = true, TenantId = tenant.TenantId });
 
             return response;
         }

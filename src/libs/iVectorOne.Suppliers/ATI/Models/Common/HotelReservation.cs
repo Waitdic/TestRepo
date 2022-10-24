@@ -13,6 +13,7 @@
         [XmlArrayItem("ResGuest")]
         public ResGuest[] ResGuests { get; set; } = Array.Empty<ResGuest>();
 
+        [XmlElement("UniqueID", Namespace = "")]
         public UniqueId UniqueID { get; set; } = new();
 
         [XmlAttribute("ResStatus")]

@@ -1,31 +1,30 @@
 import { get } from 'lodash';
 //
 import ApiCall from '@/axios';
-import type { Tenant } from '@/types';
+import type { ApiError, Tenant } from '@/types';
+import handleApiError from '@/utils/handleApiError';
 
 //* Fetch tenant list
 export async function getTenants(
   userKey: string,
+  tenantKey: string,
   onInit: () => void,
   onSuccess: (tenants: Tenant[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
     const res = await ApiCall.get(`/tenants`, {
       headers: {
-        Tenantkey: userKey,
+        Tenantkey: tenantKey,
         UserKey: userKey,
       },
     });
     const data = get(res, 'data.tenants', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -36,7 +35,7 @@ export async function getTenantById(
   tenantId: number,
   onInit: () => void,
   onSuccess: (tenant: Tenant) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -48,12 +47,9 @@ export async function getTenantById(
     });
     const data = get(res, 'data.tenant', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -65,7 +61,7 @@ export async function updateTenant(
   data: Tenant,
   onInit: () => void,
   onSuccess: (updatedTenant: Tenant) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
 
@@ -82,14 +78,9 @@ export async function updateTenant(
     });
     const updatedTenant = get(updatedTenantRes, 'data', null);
     onSuccess(updatedTenant);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -101,12 +92,12 @@ export async function updateTenantStatus(
   status: boolean,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
     await ApiCall.request({
-      method: 'PUT',
+      method: 'POST',
       url: `/tenants/${tenantId}/${status ? 'enable' : 'disable'}`,
       headers: {
         Accept: 'application/json',
@@ -115,14 +106,9 @@ export async function updateTenantStatus(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -133,7 +119,7 @@ export async function deleteTenant(
   tenantId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -147,24 +133,20 @@ export async function deleteTenant(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
 //* Create tenant
 export async function createTenant(
+  userTenantKey: string,
   userKey: string,
   data: Tenant,
   onInit: () => void,
   onSuccess: (newTenant: { tenantId: number; success: boolean }) => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -173,19 +155,14 @@ export async function createTenant(
       url: `/tenants`,
       headers: {
         Accept: 'application/json',
-        Tenantkey: userKey,
+        Tenantkey: userTenantKey,
         UserKey: userKey,
       },
       data,
     });
     onSuccess(newTenant.data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

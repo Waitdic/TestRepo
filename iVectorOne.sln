@@ -53,6 +53,8 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "iVectorOne-Admin-Web", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iVectorOne.SDK", "src\libs\iVectorOne.SDK\iVectorOne.SDK.csproj", "{39FB36D9-96BF-449D-8BD1-63323D25A17B}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Telemetry", "data\Telemetry\Telemetry.sqlproj", "{BA23A014-55F0-48B4-8BA3-6F1F89442F69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,12 @@ Global
 		{39FB36D9-96BF-449D-8BD1-63323D25A17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39FB36D9-96BF-449D-8BD1-63323D25A17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39FB36D9-96BF-449D-8BD1-63323D25A17B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -151,6 +159,7 @@ Global
 		{077CDE79-49BE-4338-8B2F-5AF0C59C96A2} = {E8DCDF11-7AFC-476A-8966-D4EAD0B51CB1}
 		{A8C45AF8-C84B-4594-AC14-76B28705F7CC} = {BA85A50D-1C2E-44CD-A0E6-D551B8BF5893}
 		{39FB36D9-96BF-449D-8BD1-63323D25A17B} = {59937DC5-0A8E-4962-961E-36469B11540A}
+		{BA23A014-55F0-48B4-8BA3-6F1F89442F69} = {0DBE9519-55A3-49D0-96C6-7A2307185BFF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E09F98E5-5FF9-47FE-B902-E112B0484012}

@@ -14,8 +14,6 @@ import {
 import MainLayout from '@/layouts/Main';
 import {
   SectionTitle,
-  Toggle,
-  Notification,
   Select,
   Button,
   TextField,
@@ -27,11 +25,6 @@ import {
   getAccountById,
   updateAccount,
 } from '../data-access/account';
-
-type NotificationState = {
-  status: NotificationStatus;
-  message: string;
-};
 
 type Props = {};
 
@@ -62,8 +55,6 @@ const AccountEdit: React.FC<Props> = () => {
   const { slug } = useSlug();
 
   const [currentAccount, setCurrentAccount] = useState(null as Account | null);
-  const [notification, setNotification] = useState<NotificationState>();
-  const [showNotification, setShowNotification] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const activeTenant = useMemo(
@@ -123,22 +114,22 @@ const AccountEdit: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.update,
         });
-        setShowNotification(true);
+
         setTimeout(() => {
           navigate('/accounts');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.update,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   };
@@ -157,34 +148,33 @@ const AccountEdit: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.delete,
         });
-        setShowNotification(true);
+
         setIsDeleting(false);
         setTimeout(() => {
           navigate('/accounts');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.delete,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, [activeTenant, currentAccount]);
 
   useEffect(() => {
     if (appError) {
-      setNotification({
+      dispatch.app.setNotification({
         status: NotificationStatus.ERROR,
         message: appError as string,
       });
-      setShowNotification(true);
     }
   }, [appError]);
 
@@ -318,15 +308,6 @@ const AccountEdit: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-
-      {showNotification && (
-        <Notification
-          description={notification?.message as string}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={notification?.status}
-        />
-      )}
 
       {isDeleting && (
         <ConfirmModal

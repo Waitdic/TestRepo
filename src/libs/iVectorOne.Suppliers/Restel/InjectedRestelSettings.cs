@@ -8,24 +8,24 @@
     {
         protected override string Source => ThirdParties.RESTEL;
 
-        public string UserAgent(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Codusu(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("UserAgent", tpAttributeSearch);
+            return Get_Value("Codusu", tpAttributeSearch);
         }
 
-        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Codigousu(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("User", tpAttributeSearch);
+            return Get_Value("Codigousu", tpAttributeSearch);
         }
 
-        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Clausu(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("Password", tpAttributeSearch);
+            return Get_Value("Clausu", tpAttributeSearch);
         }
 
-        public string AccessToken(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string Secacc(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("AccessToken", tpAttributeSearch);
+            return Get_Value("Secacc", tpAttributeSearch);
         }
 
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)

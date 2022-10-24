@@ -21,7 +21,7 @@
         string SOAPCancelBooking(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         string SOAPAvailableHotels(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch, string source);
-        bool EnableMultiRoomSearch(IThirdPartyAttributeSearch tpAttributeSearch, string source);
+        bool SplitMultiroom(IThirdPartyAttributeSearch tpAttributeSearch, string source);
         bool ShowCatalogueData(IThirdPartyAttributeSearch tpAttributeSearch, string source);
     }
 }

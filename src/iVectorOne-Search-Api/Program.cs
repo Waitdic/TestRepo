@@ -1,10 +1,8 @@
 using Intuitive.Modules;
+using iVectorOne.Search.Api.Endpoints.V1;
 using iVectorOne.Search.Api.Endpoints.V2;
-using iVectorOne.Web.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
+using iVectorOne.Web.Infrastructure.V2;
 using Serilog;
-using System.Diagnostics;
-using System.Net;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -18,10 +16,7 @@ try
 
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((ctx, lc) => lc
-        .WriteTo.Console()
-        .Filter.ByExcluding(c => c.Properties.Any(p => p.Value.ToString().Contains("/error")))
-        .ReadFrom.Configuration(ctx.Configuration));
+    builder.Host.SetupLogging();
 
     // Add services to the container.
     builder.Services.RegisterWebServices(builder.Configuration);
@@ -30,34 +25,10 @@ try
     var app = builder.Build();
 
     //Load application specific endpoints
+    app.MapEndpointsV1();
     app.MapEndpoints();
 
-    app.UseExceptionHandler("/error");
-
-    app.MapGet("/error", () =>
-    {
-        var problemDetails = new ProblemDetails
-        {
-            Title = "An unexpected error occurred processing your request.",
-        };
-
-        problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
-
-        return Results.Problem(problemDetails);
-    })
-    .ExcludeFromDescription();
-
-    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 |
-            SecurityProtocolType.Tls;
-
-    app.UseSerilogRequestLogging();
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    app.UseHttpsRedirection();
-
-    app.Run();
+    app.BuildAndRun();
 }
 catch (Exception ex)
 {

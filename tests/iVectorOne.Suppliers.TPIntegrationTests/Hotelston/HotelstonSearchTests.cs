@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.TPIntegrationTests.Hotelston
 {
     using System.Collections.Generic;
-    using iVectorOne.Lookups;
+    using iVectorOne.Tests.Hotelston;
     using iVectorOne.Search.Models;
     using Suppliers.Hotelston;
     using Helpers;
