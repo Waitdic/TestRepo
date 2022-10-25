@@ -10,7 +10,7 @@ type Props = {
   name: string;
   onChange?: ChangeHandler;
   onBlur?: ChangeHandler;
-  labelText: string;
+  labelText?: string;
   options: SelectOption[];
   defaultValue?: SelectOption;
   hasLabel?: boolean;
@@ -57,7 +57,7 @@ const Select: FC<Props> = forwardRef(
 
     return (
       <div>
-        {hasLabel && (
+        {hasLabel && !!labelText && (
           <label htmlFor={id} className='block text-sm font-medium text-dark'>
             {labelText}
           </label>
