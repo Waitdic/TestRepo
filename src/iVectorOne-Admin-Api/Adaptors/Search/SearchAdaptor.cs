@@ -26,7 +26,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
 
             try
             {
-                var requestURI = $"https://api.ivectorone.com/v2/properties/search" +
+                var requestURI = $"http://api.ivectorone.com:80/v2/properties/search" +
                     $"?ArrivalDate={request.Searchdate:yyyy-MM-dd}" +
                     $"&duration=7&properties={request.Properties}" +
                     $"&rooms={request.RoomRequest}" +
