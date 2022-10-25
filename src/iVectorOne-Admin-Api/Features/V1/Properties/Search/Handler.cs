@@ -42,7 +42,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
                 return response;
             }
 
-            var queryText = $"Portal_PropertySearch '{request.Query}', {request.AccountID}";
+            var queryText = $"Portal_PropertySearch '{(request.Query!.EndsWith('%') ? request.Query : $"{ request.Query}%")}', {request.AccountID}";
             var properties = await _context.Properties.FromSqlRaw(queryText).ToListAsync();
 
             var propertyList = _mapper.Map<List<PropertyDto>>(properties);
