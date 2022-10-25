@@ -70,7 +70,7 @@ namespace iVectorOne.Tests.Hotelston {
         ///
         ///**REQUEST**
         ///
-        ///&lt;soapenv:Envelope xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot; xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+        ///&lt;soapenv:Envelope xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot; xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
         ///  &lt;soapenv:Header /&gt;
         ///  &lt;soapenv:Body&gt;
         ///    &lt;xsd:SearchHotelsRequest&gt;
