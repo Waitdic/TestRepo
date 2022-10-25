@@ -24,12 +24,20 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<Tenant> Tenants { get; set; } = null!;
         public virtual DbSet<UserTenant> UserTenants { get; set; } = null!;
         public virtual DbSet<Property> Properties { get; set; } = null!;
+        public virtual DbSet<BookingLog> BookingLogs { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Property>(e =>
             {
+                e.HasNoKey();
+
+            });
+
+            modelBuilder.Entity<BookingLog>(e =>
+            {
+                //e.HasKey(e => e.BookingId);
                 e.HasNoKey();
             });
 

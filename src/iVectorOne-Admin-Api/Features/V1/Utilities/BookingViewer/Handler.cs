@@ -1,6 +1,8 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using FluentValidation.Results;
 using iVectorOne_Admin_Api.Adaptors;
+using iVectorOne_Admin_Api.Data.Models;
 using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
@@ -9,11 +11,13 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
     {
         private readonly AdminContext _context;
         private readonly IValidator<Request> _validator;
+        private readonly IMapper _mapper;
 
-        public Handler(AdminContext context, IValidator<Request> validator)
+        public Handler(AdminContext context, IValidator<Request> validator, IMapper mapper)
         {
             _context = context;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
@@ -40,7 +44,17 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
                 return response;
             }
 
-            response.Ok(new ResponseModel() { Success = true });
+            var queryText = $"Portal_BookingSearch '{request.Query}', {request.AccountID}";
+
+
+            var bookings = await _context.BookingLogs
+                 .FromSqlRaw(queryText)
+                 .AsNoTracking()
+                 .ToListAsync(cancellationToken: cancellationToken);
+
+            var LogEntryList = _mapper.Map<List<LogEntry>>(bookings);
+
+            response.Ok(new ResponseModel() { Success = true, LogEntries= LogEntryList });
             return response;
         }
     }
