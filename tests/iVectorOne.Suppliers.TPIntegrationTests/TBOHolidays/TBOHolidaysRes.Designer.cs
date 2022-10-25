@@ -70,11 +70,12 @@ namespace iVectorOne.Tests.TBOHolidays {
         ///
         ///**REQUEST**
         ///
-        ///&lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:hot=&quot;http://TekTravel/HotelBookingApi&quot; xmlns:wsa=&quot;http://www.w3.org/2005/08/addressing&quot; xmlns:soap=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
+        ///
+        ///&lt;soap:Envelope  xmlns:hot=&quot;http://TekTravel/HotelBookingApi&quot; xmlns:wsa=&quot;http://www.w3.org/2005/08/addressing&quot; xmlns:soap=&quot;http://www.w3.org/2003/05/soap-envelope&quot;&gt;
         ///  &lt;soap:Header&gt;
         ///    &lt;hot:Credentials UserName=&quot;testuser&quot; Password=&quot;testpwd&quot; /&gt;
-        ///    &lt;wsa:Action&gt;http://TekTravel [rest of string was truncated]&quot;;.
+        ///    &lt;wsa:Action&gt;http://TekTravel/HotelBookingApi/HotelSearchWithRooms&lt;/wsa:Action&gt;
+        ///    &lt;wsa:To&gt;http://api.tbotechnology.in/hotelapi_v7/hotelservice.sv [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {

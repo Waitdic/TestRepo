@@ -61,7 +61,7 @@ namespace iVectorOne.Tests.HotelsProV2 {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=1&amp;hotel_code=102245&amp;client_nationality=US&amp;currency=EUR
+        ///   Looks up a localized string similar to URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=1&amp;hotel_code=102245&amp;client_nationality=US&amp;currency=EUR
         ///
         ///**HEADERS**
         ///
@@ -72,7 +72,7 @@ namespace iVectorOne.Tests.HotelsProV2 {
         ///
         ///
         ///
-        ///URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=2&amp;hotel_code=102245&amp;client_nationality=US&amp;currency=EUR
+        ///URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=2&amp;hotel_code=102245&amp;client_nationality=US&amp;currency=EUR
         ///
         ///**HEADERS**
         ///
@@ -83,7 +83,7 @@ namespace iVectorOne.Tests.HotelsProV2 {
         ///
         ///
         ///
-        ///URL: https://api2.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=1,8&amp;hotel_code=102245&amp;clie [rest of string was truncated]&quot;;.
+        ///URL: https://api-test.hotelspro.com/api/v2/search/?checkout=2021-09-06&amp;checkin=2021-09-01&amp;pax=1,8&amp;hotel_code [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {
