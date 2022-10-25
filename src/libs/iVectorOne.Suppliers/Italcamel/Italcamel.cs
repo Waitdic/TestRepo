@@ -86,7 +86,9 @@
             {
                 var preBookRequest = BuildRequest(propertyDetails, "ESTIMATE");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGEESTIMATE";
+                var soapAction = url
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/PACKAGEESTIMATE";
 
                 // send the request
                 request = _helper.CreateWebRequest(url, soapAction, true, "Prebook");
@@ -139,7 +141,9 @@
             {
                 var bookingRequest = BuildRequest(propertyDetails, "BOOK");
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGEESTIMATE";
+                var soapAction = url
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/PACKAGEESTIMATE";
 
                 request = _helper.CreateWebRequest(url, soapAction);
                 request.SetRequest(bookingRequest);
@@ -190,7 +194,9 @@
 
                 // send the request
                 var url = _settings.GenericURL(propertyDetails);
-                var soapAction = url.Replace("test.", ".") + "/PACKAGEDELETE";
+                var soapAction = url
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/PACKAGEDELETE";
 
                 request = _helper.CreateWebRequest(url, soapAction, true, "Cancel");
                 request.SetRequest(cancelRequest);
@@ -314,7 +320,9 @@
         private async void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies, string UID)
         {
             var searchRequest = _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, UID);
-            var soapAction = _settings.GenericURL(propertyDetails).Replace("test.", "") + "/GETBOOKINGCHARGE";
+            var soapAction = _settings.GenericURL(propertyDetails)
+                .Replace("https", "http")
+                .Replace("test", "") + "/GETBOOKINGCHARGE";
 
             // get response
             var request = new Intuitive.Helpers.Net.Request

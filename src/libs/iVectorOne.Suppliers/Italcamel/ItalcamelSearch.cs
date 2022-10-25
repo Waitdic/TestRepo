@@ -60,7 +60,9 @@
             {
                 // work out whether to search by city or macro region
                 var searchRequest = _helper.BuildSearchRequest(_settings, _serializer, searchDetails, group.ToArray());
-                var soapAction = _settings.GenericURL(searchDetails).Replace("test.", "") + "/GETAVAILABILITY";
+                var soapAction = _settings.GenericURL(searchDetails)
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/GETAVAILABILITY";
 
                 // get response
                 var request = new Intuitive.Helpers.Net.Request
