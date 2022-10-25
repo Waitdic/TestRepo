@@ -34,6 +34,7 @@ export { default as WelcomeBanner } from './WelcomeBanner';
 export { default as YesOrNo } from './YesOrNo';
 export { default as ConfirmModal } from './ConfirmModal';
 export { default as RoleGuard } from './RoleGuard';
+export { default as SearchFilters } from './Search/SearchFilters';
 
 //* Form Fields
 export * from './Fields';

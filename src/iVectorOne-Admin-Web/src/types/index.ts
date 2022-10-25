@@ -134,6 +134,21 @@ export type ApiError = {
     };
   };
 };
+export type Property = {
+  propertyId: number;
+  name: string;
+};
+export type SearchDetails = {
+  properties: Property[];
+  property: Property;
+  arrivalDate: Date;
+  accountId: number;
+  duration: number;
+  adults: number;
+  children: number;
+  childrenAges: number[];
+  infants: number;
+};
 
 //* App State
 export type AppState = {

@@ -130,7 +130,7 @@ const Notification: FC<Props> = ({
           leaveTo='opacity-0'
         >
           <div
-            className={`relative px-4 py-2 rounded-sm text-sm border ${typeColor()}`}
+            className={`relative max-w-[60vw] px-4 py-2 rounded-sm text-sm border ${typeColor()}`}
           >
             {copied && (
               <div className='absolute -top-8 right-0 bg-gray-700 p-1 rounded-sm'>
@@ -140,7 +140,7 @@ const Notification: FC<Props> = ({
             <div className='flex w-full justify-between items-start'>
               <div className='flex'>
                 {typeIcon()}
-                <div>{description}</div>
+                <div className='text-center'>{description}</div>
               </div>
             </div>
           </div>
