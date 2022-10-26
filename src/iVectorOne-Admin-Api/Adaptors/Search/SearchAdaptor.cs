@@ -25,6 +25,8 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
             var response = new Response();
             _logger.LogInformation("*** Search Adaptor Start");
 
+            await Task.Delay(120000, cancellationToken);
+
             //try
             //{
             //    var requestURI = $"https://api.ivectorone.com/v2/properties/search" +
