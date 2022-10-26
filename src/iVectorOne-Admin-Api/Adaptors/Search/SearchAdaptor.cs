@@ -23,6 +23,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
         public async Task<Response> Execute(Request request, CancellationToken cancellationToken)
         {
             var response = new Response();
+            _logger.LogInformation("*** Search Adaptor Start");
 
             try
             {
@@ -37,14 +38,29 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                 var httpClient = _httpClientFactory.CreateClient();
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{request.Login}:{_secretKeeper.Decrypt(request.Password)}")));
-                
-                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-                var searchResult = await httpResponseMessage.Content.ReadAsStringAsync();
+                _logger.LogInformation("*** Search Adaptor Before Send");
+
+                var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, cancellationToken);
+
+                _logger.LogInformation("*** Search Adaptor After Send");
+
+                _logger.LogInformation("*** Search Adaptor Before Response");
+
+                var searchResult = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+
+                _logger.LogInformation("*** Search Adaptor After Response");
 
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation("*** Search Adaptor Status Success");
+
+                    _logger.LogInformation("*** Search Adaptor Before Deserialize");
+
                     var result = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
+
+                    _logger.LogInformation("*** Search Adaptor After Deserialize");
+
                     if (result != null && result.PropertyResults.Count > 0)
                     {
                         response.SearchStatus = Response.SearchStatusEnum.Ok;
@@ -52,6 +68,8 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                     }
                     else
                     {
+                        _logger.LogInformation("*** Search Adaptor Status Not Success");
+
                         response.SearchStatus = Response.SearchStatusEnum.NoResults;
                     }
                 }
@@ -69,6 +87,8 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
 
                 _logger.LogError(ex, "Unexpected error executing search request.");
             }
+
+            _logger.LogInformation("*** Search Adaptor End");
 
             return response;
         }
