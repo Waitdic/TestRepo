@@ -33,6 +33,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             }
 
             #region Create Dummy Data
+
             var stopFlag = random.Next(1, 22);
             List<Node> bookingsByHour = new List<Node>();
             for (int i = 0; i < 24; i++)

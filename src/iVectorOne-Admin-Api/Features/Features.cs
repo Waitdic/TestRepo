@@ -27,6 +27,7 @@ using iVectorOne_Admin_Api.Features.V1.Users.List;
 using iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer;
 using iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer;
 using iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest;
+using iVectorOne_Admin_Api.Features.V2.Suppliers.Info;
 using iVectorOne_Admin_Api.Features.V2.Tenants.Accounts.Suppliers.Info;
 
 namespace iVectorOne_Admin_Api.Features
@@ -73,6 +74,7 @@ namespace iVectorOne_Admin_Api.Features
             app.MapTenantAccountSupplierInfoV1Endpoint();
 
             app.MapTenantAccountSupplierInfoV2Endpoint();
+            app.MapSupplierInfoV2Endpoint();
             app.MapSupplierListV1Endpoint();
             app.MapSupplierInfoV1Endpoint();
 

@@ -129,7 +129,7 @@
                 }
                 else if (requestValid)
                 {
-                    response.Warnings = null!;
+                    //response.Warnings = null!;
                 }
             }
 
