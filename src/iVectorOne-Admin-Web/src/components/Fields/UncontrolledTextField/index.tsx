@@ -15,7 +15,6 @@ type Props = {
   autoComplete?: {
     results: Property[];
     handler: (selectedResult: number) => void;
-    cleanup: () => void;
   };
 };
 
@@ -48,11 +47,8 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
     };
 
     const handleAutoComplete = (selectedResult: number) => {
-      if (!!autoComplete) {
-        setShowAutoComplete(false);
-        autoComplete.handler(selectedResult);
-        autoComplete.cleanup();
-      }
+      autoComplete?.handler?.(selectedResult);
+      setShowAutoComplete(false);
     };
 
     return (
@@ -72,8 +68,8 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
           className='form-input w-full'
           onChange={onChange}
           onBlur={onChange}
+          onFocus={handleShowAutoComplete}
           placeholder={placeholder}
-          onClick={handleShowAutoComplete}
         />
         {showAutoComplete && !!autoComplete && autoComplete.results.length > 0 && (
           <div className='absolute z-50 top-full left-0 w-full max-h-[400px] overflow-auto bg-white border border-slate-200 rounded-sm shadow-lg'>

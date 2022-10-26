@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { sortBy } from 'lodash';
+import { capitalize, sortBy } from 'lodash';
 import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 //
@@ -221,7 +221,7 @@ const SupplierList: React.FC<Props> = () => {
             <div className='px-5 py-3 border-b border-slate-200'>
               <div className='flex justify-between items-center'>
                 <div className='font-semibold text-slate-800'>
-                  {testDetails.name}
+                  Test Supplier - {capitalize(testDetails.name)}
                 </div>
               </div>
             </div>

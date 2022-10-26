@@ -139,6 +139,7 @@ export type Property = {
   name: string;
 };
 export type SearchDetails = {
+  isActive: boolean;
   properties: Property[];
   property: Property;
   arrivalDate: Date;
@@ -148,6 +149,17 @@ export type SearchDetails = {
   children: number;
   childrenAges: number[];
   infants: number;
+};
+export type SearchRequestData = {
+  ArrivalDate: string;
+  Duration: number;
+  Properties: number[];
+  RoomRequests: {
+    Adults: number;
+    Children: number;
+    Infants: number;
+    ChildAges: number[];
+  }[];
 };
 
 //* App State

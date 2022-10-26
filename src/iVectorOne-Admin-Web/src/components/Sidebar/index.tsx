@@ -123,7 +123,7 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                       pathname === '/search' || pathname.includes('search')
                     }
                     to='/search'
-                    title='Search'
+                    title='Search Tester'
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}
                   />

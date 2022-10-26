@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 //
+import { RootState } from '@/store';
 import type { SearchDetails } from '@/types';
 import Main from '@/layouts/Main';
 import { SearchFilters, TableList } from '@/components';
@@ -36,6 +38,8 @@ const tableHeaderList = [
 ];
 
 const Search: React.FC = () => {
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
+
   const [searchDetails, setSearchDetails] = useState<SearchDetails>({
     properties: [],
     property: {
@@ -49,24 +53,32 @@ const Search: React.FC = () => {
     children: 0,
     childrenAges: [],
     infants: 0,
+    isActive: false,
   });
 
   return (
-    <Main title='Search'>
+    <Main title='Search Tester'>
       <div className='bg-white shadow-lg rounded-sm mb-8'>
         <div className='flex flex-col gap-2 min-h-[720px]'>
           <SearchFilters
             searchDetails={searchDetails}
             setSearchDetails={setSearchDetails}
           />
-          <div className='p-4 w-full'>
-            <TableList
-              headerList={tableHeaderList}
-              bodyList={[]}
-              showOnEmpty
-              initText='Please input some search details and perform a search'
-            />
-          </div>
+          {isLoading && (
+            <div className='text-center text-sm pb-4 px-4'>
+              <p className='animate-pulse'>Searching...</p>
+            </div>
+          )}
+          {searchDetails.isActive && (
+            <div className='p-4 w-full'>
+              <TableList
+                headerList={tableHeaderList}
+                bodyList={[]}
+                showOnEmpty
+                initText='Please input some search details and perform a search'
+              />
+            </div>
+          )}
         </div>
       </div>
     </Main>

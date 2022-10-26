@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { SearchDetails, Account } from '@/types';
+import type { SearchDetails, Account, SearchRequestData } from '@/types';
 import { getAccounts } from '@/libs/core/data-access/account';
 import { RootState } from '@/store';
-import ApiCall from '@/axios';
-import handleApiError from '@/utils/handleApiError';
 import { NotificationStatus } from '@/constants';
 import {
   Button,
@@ -13,6 +11,11 @@ import {
   Select,
   UncontrolledTextField,
 } from '@/components';
+import {
+  getPropertiesById,
+  searchByProperty,
+} from '@/libs/search/data-access/property';
+import { debounce } from 'lodash';
 
 type Props = {
   setSearchDetails: React.Dispatch<React.SetStateAction<SearchDetails>>;
@@ -41,45 +44,65 @@ const SearchFilters: React.FC<Props> = ({
   const handleChangeDetails = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const { name, value } = e.target;
+    if (isLoading) return;
+    const { value } = e.target;
+    setSearchDetails((prev) => ({
+      ...prev,
+      property: {
+        propertyId: 0,
+        name: value,
+      },
+    }));
 
-    if (name === 'property') {
-      setSearchDetails((prev) => ({
-        ...prev,
-        property: {
-          ...prev.property,
-          name: value,
-        },
-      }));
-      if (value.length >= 4 && !!searchDetails.accountId && !isLoading) {
-        dispatch.app.setIsLoading(true);
-        try {
-          const {
-            data: { properties },
-          } = await ApiCall.request({
-            method: 'GET',
-            url: `/tenants/${activeTenant?.tenantId}/accounts/${
-              searchDetails.accountId
-            }/properties?query=${value.toLowerCase()}`,
-            headers: {
-              Tenantkey: activeTenant?.tenantKey as string,
-              UserKey: userKey as string,
-            },
-          });
-          dispatch.app.setIsLoading(false);
-          setSearchDetails((prev) => ({ ...prev, properties }));
-        } catch (error) {
-          dispatch.app.setIsLoading(false);
-          console.log('error', error);
-        }
-      }
-    } else {
-      setSearchDetails((prev) => ({ ...prev, [name]: value }));
+    const debounced = debounce(
+      async () => {
+        await getPropertiesById({
+          userKey: userKey as string,
+          tenant: {
+            id: activeTenant?.tenantId as number,
+            key: activeTenant?.tenantKey as string,
+          },
+          accountId: searchDetails.accountId,
+          query: value,
+          onInit: () => {
+            setSearchDetails((prev) => ({ ...prev, properties: [] }));
+            dispatch.app.setIsLoading(true);
+          },
+          onSuccess: (properties) => {
+            dispatch.app.setIsLoading(false);
+            setSearchDetails((prev) => ({ ...prev, properties }));
+          },
+          onFailed: (err, instance) => {
+            dispatch.app.setIsLoading(false);
+            dispatch.app.setNotification({
+              status: NotificationStatus.ERROR,
+              message: err,
+              instance,
+            });
+          },
+        });
+      },
+      100,
+      { leading: true, trailing: true, maxWait: 1000 }
+    );
+    if (
+      value.length >= 4 &&
+      !!searchDetails.accountId &&
+      value !== searchDetails.property.name
+    ) {
+      debounced();
     }
   };
 
   const handleChangeArrivalDate = (date: Date[] | Date) => {
-    setSearchDetails((prev) => ({ ...prev, arrivalDate: date as Date }));
+    if (Array.isArray(date)) {
+      setSearchDetails((prev) => ({
+        ...prev,
+        arrivalDate: date[0],
+      }));
+    } else {
+      setSearchDetails((prev) => ({ ...prev, arrivalDate: date }));
+    }
   };
 
   const handleQuestsChange = (name: string, value: number) => {
@@ -114,7 +137,7 @@ const SearchFilters: React.FC<Props> = ({
       return;
     }
 
-    const requestData = {
+    const requestData: SearchRequestData = {
       ArrivalDate: searchDetails.arrivalDate.toISOString(),
       Duration: searchDetails.duration,
       Properties: [searchDetails.property.propertyId],
@@ -128,34 +151,39 @@ const SearchFilters: React.FC<Props> = ({
       ],
     };
 
-    dispatch.app.setIsLoading(true);
-    try {
-      const { data } = await ApiCall.request({
-        method: 'POST',
-        url: `/tenants/${activeTenant.tenantId}/accounts/${searchDetails.accountId}/search`,
-        headers: {
-          Tenantkey: activeTenant?.tenantKey,
-          UserKey: userKey,
-        },
-        data: requestData,
-      });
-      dispatch.app.setIsLoading(false);
-      if (data.results.length === 0) {
+    await searchByProperty({
+      userKey: userKey,
+      tenant: {
+        id: activeTenant?.tenantId,
+        key: activeTenant?.tenantKey,
+      },
+      accountId: searchDetails.accountId,
+      requestData,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: (data) => {
+        dispatch.app.setIsLoading(false);
+        if (data.results.length === 0) {
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: data.message !== '' ? data.message : 'No results found',
+          });
+        }
+        setSearchDetails((prev) => ({
+          ...prev,
+          isActive: true,
+        }));
+      },
+      onFailed: (message, instance) => {
+        dispatch.app.setIsLoading(false);
         dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: data.message,
+          message,
+          instance,
         });
-      }
-    } catch (error) {
-      const { message, instance } = handleApiError(error as any);
-      console.error(message);
-      dispatch.app.setIsLoading(false);
-      dispatch.app.setNotification({
-        status: NotificationStatus.ERROR,
-        message,
-        instance,
-      });
-    }
+      },
+    });
   }, [activeTenant, userKey, searchDetails, isLoading]);
 
   const fetchAccounts = useCallback(async () => {
@@ -200,16 +228,9 @@ const SearchFilters: React.FC<Props> = ({
     () => ({
       results: searchDetails.properties,
       handler: handleSetProperty,
-      cleanup: () => {
-        setSearchDetails((prev) => ({
-          ...prev,
-          properties: [],
-        }));
-      },
     }),
     [searchDetails]
   );
-  console.log(searchDetails);
 
   useEffect(() => {
     fetchAccounts();
@@ -347,8 +368,10 @@ const SearchFilters: React.FC<Props> = ({
               ))}
             </div>
           )}
-          <div className='row-start-2 col-start-6 self-end'>
-            <Button text='Search' onClick={handleSearchSubmit} />
+          <div className='row-start-4 col-span-full'>
+            {!isLoading && (
+              <Button text='Search' onClick={handleSearchSubmit} />
+            )}
           </div>
         </div>
       </div>
