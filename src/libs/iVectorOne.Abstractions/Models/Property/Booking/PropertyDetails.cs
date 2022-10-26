@@ -225,6 +225,21 @@
         public bool OpaqueRates { get; set; }
 
         /// <summary>
+        /// Gets or sets the override rate basis.
+        /// </summary>
+        public string OverrideRateBasis { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the commission percentage.
+        /// </summary>
+        public decimal CommissionPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the boolean indicates commission percentage changing.
+        /// </summary>
+        public bool CommissionPercentageChange { get; set; } = false;
+
+        /// <summary>
         /// Gets the duration.
         /// </summary>
         public int Duration => (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
