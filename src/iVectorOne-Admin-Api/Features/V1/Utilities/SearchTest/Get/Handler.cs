@@ -27,7 +27,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                 return response;
             }
 
-            var results = await _context.FireForgetSearchResponses.Where(x => x.FireForgetSearchResponseKey == request.RequestKey).ToListAsync();
+            var results = await _context.FireForgetSearchResponses
+                .Where(x => x.FireForgetSearchResponseKey == request.RequestKey)
+                .ToListAsync(cancellationToken: cancellationToken);
 
             if (results.Count == 0)
             {

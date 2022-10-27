@@ -3,7 +3,7 @@ using iVectorOne_Admin_Api.Adaptors;
 using iVectorOne_Admin_Api.Adaptors.Search.FireForget;
 using iVectorOne_Admin_Api.Features.Shared;
 
-namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Post
 {
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
