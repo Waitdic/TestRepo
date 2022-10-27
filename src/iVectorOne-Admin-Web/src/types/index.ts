@@ -61,6 +61,7 @@ export type Account = {
   isActive: boolean;
   isDeleted: boolean;
   status: 'active' | 'inactive';
+  isSelected?: boolean;
 };
 export type Supplier = {
   name?: string;
@@ -176,6 +177,49 @@ export type ChartData = {
     clip: number;
   }[];
 };
+export interface BookingsByHour {
+  time: number;
+  currentTotal: number;
+  previousTotal: number;
+}
+
+export interface SearchesByHour {
+  time: number;
+  currentTotal: number;
+  previousTotal: number;
+}
+
+export interface Summary {
+  name: string;
+  bookTotal: number;
+  bookValue: number;
+  prebookTotal: number;
+  prebookSuccess: number;
+  searchTotal: number;
+  searchSuccess: number;
+  avgResponse: number;
+  s2B: number;
+}
+
+export interface SupplierChartData {
+  name: string;
+  searchTotal: number;
+  searchSuccess: number;
+  avgResponse: number;
+  prebookTotal: number;
+  prebookSuccess: number;
+  bookTotal: number;
+  bookSuccess: number;
+  s2B: number;
+}
+
+export interface DashboardChartData {
+  bookingsByHour: BookingsByHour[];
+  searchesByHour: SearchesByHour[];
+  summary: Summary[];
+  supplier: Supplier[];
+  success: boolean;
+}
 
 //* App State
 export type AppState = {

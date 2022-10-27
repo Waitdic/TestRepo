@@ -11,7 +11,8 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-moment';
 //
-import { tailwindConfig, formatValue } from '@/utils/Utils';
+import { tailwindConfig } from '@/utils/Utils';
+import { ChartData } from '@/types';
 
 Chart.register(
   LineController,
@@ -24,12 +25,13 @@ Chart.register(
 );
 
 type Props = {
-  data: any;
+  data: ChartData;
+  title: string;
   width: number;
   height: number;
 };
 
-const LineChart02: React.FC<Props> = ({ data, width, height }) => {
+const LineChart02: React.FC<Props> = ({ data, title, width, height }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const legend = useRef<HTMLUListElement>(null);
 
@@ -47,20 +49,19 @@ const LineChart02: React.FC<Props> = ({ data, width, height }) => {
           y: {
             grid: {
               drawBorder: false,
-              // beginAtZero: true,
             },
             ticks: {
               maxTicksLimit: 5,
-              callback: (value) => formatValue(Number(value)),
+              callback: (value) => Number(value),
             },
           },
           x: {
             type: 'time',
             time: {
-              parser: 'MM-DD-YYYY',
-              unit: 'month',
+              parser: 'HH:mm',
+              unit: 'hour',
               displayFormats: {
-                month: 'MMM YY',
+                hour: 'HH:mm',
               },
             },
             grid: {
@@ -68,7 +69,7 @@ const LineChart02: React.FC<Props> = ({ data, width, height }) => {
               drawBorder: false,
             },
             ticks: {
-              autoSkipPadding: 48,
+              autoSkipPadding: 20,
               maxRotation: 0,
             },
           },
@@ -78,7 +79,7 @@ const LineChart02: React.FC<Props> = ({ data, width, height }) => {
             display: true,
             labels: {
               generateLabels(chart) {
-                const foo = chart.data.datasets.map((dataset, i) => {
+                const sets = chart.data.datasets.map((dataset, i) => {
                   return {
                     text: dataset.label,
                     fillStyle: dataset.borderColor,
@@ -88,14 +89,14 @@ const LineChart02: React.FC<Props> = ({ data, width, height }) => {
                     datasetIndex: i,
                   };
                 });
-                return foo as any;
+                return sets as any;
               },
             },
           },
           tooltip: {
             callbacks: {
               title: () => '',
-              label: (context) => formatValue(context.parsed.y),
+              label: (context) => context.parsed.y.toString(),
             },
           },
         },
@@ -172,9 +173,8 @@ const LineChart02: React.FC<Props> = ({ data, width, height }) => {
       <div className='px-5 py-3'>
         <div className='flex flex-wrap justify-between items-end'>
           <div className='flex items-start'>
-            <div className='text-3xl font-bold text-slate-800 mr-2'>$1,482</div>
-            <div className='text-sm font-semibold text-white px-1.5 bg-amber-500 rounded-full'>
-              -22%
+            <div className='text-3xl font-bold text-slate-800 mr-2'>
+              {title}
             </div>
           </div>
           <div className='grow ml-2 mb-1'>

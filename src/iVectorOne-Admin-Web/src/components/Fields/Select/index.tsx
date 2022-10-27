@@ -1,4 +1,4 @@
-import { memo, forwardRef, LegacyRef, FC } from 'react';
+import { memo, forwardRef, LegacyRef, FC, useMemo } from 'react';
 import { ChangeHandler } from 'react-hook-form';
 import { BiChevronDown } from 'react-icons/bi';
 import classnames from 'classnames';
@@ -44,7 +44,10 @@ const Select: FC<Props> = forwardRef(
     },
     ref
   ) => {
-    const slicedOptions = options.slice(0, maxItems);
+    const slicedOptions = useMemo(
+      () => (!!options?.length ? options?.slice(0, maxItems) : []),
+      [options, maxItems]
+    );
 
     const handleChange = (event: { target: any; type: any }) => {
       onChange?.(event);

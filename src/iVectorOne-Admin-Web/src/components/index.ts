@@ -37,7 +37,8 @@ export { default as RoleGuard } from './RoleGuard';
 export { default as SearchFilters } from './Search/SearchFilters';
 
 //* Charts
-export { default as LineChart02 } from './Charts/LineChart02';
+export { default as LineChart } from './Charts/LineChart';
+export { default as ChartCard } from './Charts/ChartCard';
 
 //* Form Fields
 export * from './Fields';

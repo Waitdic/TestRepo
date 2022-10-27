@@ -1,96 +1,120 @@
-import React from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 //
-import { tailwindConfig } from '@/utils/Utils';
-import type { ChartData } from '@/types';
+import type { Account, ChartData } from '@/types';
+import { RootState } from '@/store';
+import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { LineChart02, WelcomeBanner } from '@/components';
+import { ChartCard, Select, WelcomeBanner } from '@/components';
+import { getDashboardChartData } from './data-access/dashboard';
+import { getAccounts } from './data-access/account';
+import mapChartData from '@/utils/mapChartData';
 
 type Props = {
   error: string | null;
 };
 
-const chartData: ChartData = {
-  labels: [
-    '12-01-2020',
-    '01-01-2021',
-    '02-01-2021',
-    '03-01-2021',
-    '04-01-2021',
-    '05-01-2021',
-    '06-01-2021',
-    '07-01-2021',
-    '08-01-2021',
-    '09-01-2021',
-    '10-01-2021',
-    '11-01-2021',
-    '12-01-2021',
-    '01-01-2022',
-    '02-01-2022',
-    '03-01-2022',
-    '04-01-2022',
-    '05-01-2022',
-    '06-01-2022',
-    '07-01-2022',
-    '08-01-2022',
-    '09-01-2022',
-    '10-01-2022',
-    '11-01-2022',
-    '12-01-2022',
-    '01-01-2023',
-  ],
-  datasets: [
-    // Indigo line
-    {
-      label: 'Current',
-      data: [
-        73, 64, 73, 69, 104, 104, 164, 164, 120, 120, 120, 148, 142, 104, 122,
-        110, 104, 152, 166, 233, 268, 252, 284, 284, 333, 323,
-      ],
-      borderColor: tailwindConfig()?.theme?.colors?.indigo?.[500],
-      fill: false,
-      borderWidth: 2,
-      tension: 0,
-      pointRadius: 0,
-      pointHoverRadius: 3,
-      pointBackgroundColor: tailwindConfig().theme.colors.indigo[500],
-      clip: 20,
-    },
-    // Blue line
-    {
-      label: 'Previous',
-      data: [
-        184, 86, 42, 378, 42, 243, 38, 120, 0, 0, 42, 0, 84, 0, 276, 0, 124, 42,
-        124, 88, 88, 215, 156, 88, 124, 64,
-      ],
-      borderColor: tailwindConfig().theme.colors.blue[400],
-      fill: false,
-      borderWidth: 2,
-      tension: 0,
-      pointRadius: 0,
-      pointHoverRadius: 3,
-      pointBackgroundColor: tailwindConfig().theme.colors.blue[400],
-      clip: 20,
-    },
-    // yellow line
-    {
-      label: 'Average',
-      data: [
-        122, 170, 192, 86, 102, 124, 115, 115, 56, 104, 0, 72, 208, 186, 223,
-        188, 114, 162, 200, 150, 118, 118, 76, 122, 230, 268,
-      ],
-      borderColor: tailwindConfig().theme.colors.yellow[500],
-      fill: false,
-      borderWidth: 2,
-      tension: 0,
-      pointRadius: 0,
-      pointHoverRadius: 3,
-      pointBackgroundColor: tailwindConfig().theme.colors.yellow[500],
-      clip: 20,
-    },
-  ],
-};
-
 const Dashboard: React.FC<Props> = ({ error }) => {
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
+
+  const [bookingsByHoursChartData, setBookingsByHoursChartData] =
+    useState<ChartData | null>(null);
+  const [searchesByHoursChartData, setSearchesByHoursChartData] =
+    useState<ChartData | null>(null);
+  const [accounts, setAccounts] = useState<Account[] | null>(null);
+
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((t) => t.isSelected),
+    [user]
+  );
+  const selectedAccount = useMemo(
+    () => accounts?.find((a) => a.isSelected),
+    [accounts]
+  );
+
+  const handleChangeAccount = useCallback(
+    (accountId: number) => {
+      if (!accounts) return;
+      const newAccounts = accounts.map((a) => ({
+        ...a,
+        isSelected: a.accountId === accountId,
+      }));
+      setAccounts(newAccounts);
+    },
+    [accounts]
+  );
+
+  const fetchAccounts = useCallback(async () => {
+    if (!activeTenant) return;
+    await getAccounts(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey as string,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (fetchedAccounts) => {
+        setAccounts(
+          fetchedAccounts?.map((a, idx) => ({
+            ...a,
+            isSelected: idx === 0 ? true : false,
+          }))
+        );
+        dispatch.app.setIsLoading(false);
+      },
+      (err) => {
+        dispatch.app.setError(err);
+        dispatch.app.setIsLoading(false);
+      }
+    );
+  }, [activeTenant]);
+
+  const fetchChartData = useCallback(async () => {
+    if (!userKey || !activeTenant || !selectedAccount) return;
+    await getDashboardChartData({
+      userKey,
+      tenant: {
+        id: activeTenant.tenantId,
+        key: activeTenant.tenantKey,
+      },
+      accountId: selectedAccount.accountId,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: (data) => {
+        dispatch.app.setIsLoading(false);
+        const { bookingsByHour, searchesByHour } = data;
+        setBookingsByHoursChartData(
+          mapChartData(bookingsByHour, ['indigo', 'yellow'])
+        );
+        setSearchesByHoursChartData(
+          mapChartData(searchesByHour, ['red', 'blue'])
+        );
+      },
+      onFailed: (message, instance?) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+          instance,
+        });
+      },
+    });
+  }, [userKey, activeTenant, selectedAccount]);
+
+  useEffect(() => {
+    fetchChartData();
+    return () => setBookingsByHoursChartData(null);
+  }, [fetchChartData]);
+  useEffect(() => {
+    fetchAccounts();
+    return () => setAccounts(null);
+  }, [fetchAccounts]);
+
   return (
     <MainLayout>
       {error ? (
@@ -105,13 +129,35 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       ) : (
         <WelcomeBanner />
       )}
-      <div className='flex flex-col col-span-full sm:col-span-6 bg-white shadow-lg rounded-sm border border-slate-200'>
-        <header className='px-5 py-4 border-b border-slate-100 flex items-center'>
-          <h2 className='font-semibold text-slate-800'>
-            Sales Over Time (all stores)
-          </h2>
-        </header>
-        <LineChart02 data={chartData} width={200} height={200} />
+      <div className='flex flex-col xl:flex-row xl:flex-wrap gap-6'>
+        <div className='grid xl:grid-cols-4 gap-4 basis-full'>
+          <div>
+            {!!accounts?.length && (
+              <Select
+                id='account'
+                name='account'
+                labelText='Account'
+                options={accounts.map((a) => ({
+                  id: a.accountId,
+                  name: a.userName,
+                }))}
+                onUncontrolledChange={handleChangeAccount}
+              />
+            )}
+          </div>
+        </div>
+        <div className='flex-1'>
+          <ChartCard
+            title='Bookings by Hour (Today vs Last Week)'
+            chartData={bookingsByHoursChartData as ChartData}
+          />
+        </div>
+        <div className='flex-1'>
+          <ChartCard
+            title='Searches by Hour (Today vs Last Week)'
+            chartData={searchesByHoursChartData as ChartData}
+          />
+        </div>
       </div>
     </MainLayout>
   );
