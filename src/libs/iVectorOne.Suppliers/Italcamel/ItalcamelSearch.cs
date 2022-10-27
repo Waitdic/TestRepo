@@ -88,7 +88,9 @@
 
             var responses = requests
                 .Where(x => x.Success)
-                .Select(r => _serializer.DeSerialize<Envelope<GetAvailabilityResponse>>(r.ResponseXML));
+                .Select(r => _serializer.DeSerialize<Envelope<GetAvailabilityResponse>>(
+                    r.ResponseString.Replace("xsi:type=\"xmlSearchOutputBoard51Detailed\"", "")))
+                .ToList();
 
             var guests = BuildGuests(searchDetails.RoomDetails);
 

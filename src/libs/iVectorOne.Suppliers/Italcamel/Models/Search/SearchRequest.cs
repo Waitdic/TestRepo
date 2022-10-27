@@ -29,5 +29,8 @@
         [XmlArray("ROOMS")]
         [XmlArrayItem("ROOM")]
         public SearchRoom[] Rooms { get; set; } = Array.Empty<SearchRoom>();
+
+        [XmlElement("INCLUDE_PRICE_BREAKDOWN")]
+        public bool IncludePriceBreakdown { get; set; }
     }
 }

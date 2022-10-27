@@ -56,6 +56,7 @@ namespace iVectorOne.Suppliers.Italcamel
                                 ChildAge1 = room.Children > 0 ? room.ChildAges[0] : 0,
                                 ChildAge2 = room.Children > 1 ? room.ChildAges[1] : 0,
                             }).ToArray(),
+                            IncludePriceBreakdown = true
                         }
                     }
                 }
