@@ -12,7 +12,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search.FireForget
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public void Execute(Func<IFireForgetSearchOperation, Task> propertySearch)
+        public void Execute(Func<IAdaptor<Request, Response>, Task> propertySearch)
         {
             // Fire off the task, but don't await the result
             Task.Run(async () =>
@@ -21,7 +21,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search.FireForget
                 try
                 {
                     using var scope = _serviceScopeFactory.CreateScope();
-                    var adaptor = scope.ServiceProvider.GetRequiredService<IFireForgetSearchOperation>();
+                    var adaptor = scope.ServiceProvider.GetRequiredService<IAdaptor<Request, Response>>();
                     await propertySearch(adaptor);
                 }
                 catch (Exception e)

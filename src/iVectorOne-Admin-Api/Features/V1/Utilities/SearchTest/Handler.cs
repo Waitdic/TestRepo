@@ -11,19 +11,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
     {
         private readonly AdminContext _context;
         private readonly IFireForgetSearchOperation _fireForgetOperation;
-        //private readonly IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> _searchAdaptor;
+        private readonly IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> _searchAdaptor;
         private readonly IValidator<Request> _validator;
         private readonly IFireForgetSearchHandler _fireForgetSearchHandler;
 
         public Handler(AdminContext context,
             IFireForgetSearchOperation fireForgetOperation,
-            //IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> searchAdaptor,
+            IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> searchAdaptor,
             IValidator<Request> validator,
             IFireForgetSearchHandler fireForgetSearchHandler)
         {
             _context = context;
             _fireForgetOperation = fireForgetOperation;
-            //_searchAdaptor = searchAdaptor;
+            _searchAdaptor = searchAdaptor;
             _validator = validator;
             _fireForgetSearchHandler = fireForgetSearchHandler;
         }
@@ -73,7 +73,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
                 // Will receive its own scoped repository on the executing task
                 //await repository.AuditBlogUpdate(new BlogAudit(blog));
                 //await _searchAdaptor.Execute(searchRequest, cancellationToken);
-                await _fireForgetOperation.Execute(searchRequest);
+                await _searchAdaptor.Execute(searchRequest);
             });
 
             //var result = await _searchAdaptor.Execute(searchRequest, cancellationToken);
