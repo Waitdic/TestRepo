@@ -164,12 +164,6 @@ const SearchFilters: React.FC<Props> = ({
       },
       onSuccess: (data) => {
         dispatch.app.setIsLoading(false);
-        if (data.results.length === 0) {
-          dispatch.app.setNotification({
-            status: NotificationStatus.ERROR,
-            message: data.message !== '' ? data.message : 'No results found',
-          });
-        }
         setSearchDetails((prev) => ({
           ...prev,
           isActive: true,
