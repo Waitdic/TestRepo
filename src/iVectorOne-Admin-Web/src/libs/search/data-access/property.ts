@@ -60,7 +60,9 @@ export async function searchByProperty({
 }) {
   onInit();
   try {
-    const { data } = await ApiCall.request({
+    const {
+      data: { requestKey },
+    } = await ApiCall.request({
       method: 'POST',
       url: `/tenants/${tenant.id}/accounts/${accountId}/search`,
       headers: {
@@ -69,8 +71,30 @@ export async function searchByProperty({
       },
       data: requestData,
     });
-    onSuccess(data);
-    console.log(data);
+
+    let timerCount = 0;
+    const timer = setInterval(async () => {
+      const res = await ApiCall.request({
+        method: 'GET',
+        url: `/tenants/${tenant.id}/accounts/${accountId}/search?q=${requestKey}`,
+        headers: {
+          Tenantkey: tenant.key,
+          UserKey: userKey,
+        },
+        data: requestData,
+      });
+      if (res.status === 200) {
+        onSuccess(res.data);
+        console.log(res.data);
+        clearInterval(timer);
+      }
+      if (timerCount >= 24) {
+        console.error('Search timeout');
+        onFailed('Search timeout');
+        clearInterval(timer);
+      }
+      timerCount++;
+    }, 5000);
   } catch (error) {
     console.error(error);
     const { message, instance } = handleApiError(error as any);
