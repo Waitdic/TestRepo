@@ -2,6 +2,8 @@
 {
     public record Request
     {
+        public Guid RequestKey { get; set; }
+
         public string Properties { get; set; } = string.Empty;
 
         public DateTime Searchdate { get; set; }

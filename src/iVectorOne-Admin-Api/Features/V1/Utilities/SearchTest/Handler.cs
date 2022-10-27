@@ -10,10 +10,11 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
         private readonly AdminContext _context;
-        private readonly IFireForgetSearchOperation _fireForgetOperation;
+
         private readonly IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> _searchAdaptor;
         private readonly IValidator<Request> _validator;
         private readonly IFireForgetSearchHandler _fireForgetSearchHandler;
+        private readonly IFireForgetSearchOperation _fireForgetOperation;
 
         public Handler(AdminContext context,
             IFireForgetSearchOperation fireForgetOperation,
@@ -60,6 +61,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
 
             var searchRequest = new Adaptors.Search.Request
             {
+                RequestKey = Guid.NewGuid(),
                 Searchdate = request.SearchRequest.ArrivalDate,
                 Properties = string.Join(", ", request.SearchRequest.Properties),
                 Login = account.Login,
@@ -100,7 +102,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
             //    }
             //}
 
-            response.Ok(new ResponseModel { Success = true, Message = "" });
+            response.Ok(new ResponseModel { Success = true, Message = "", RequestKey = searchRequest.RequestKey });
             return response;
         }
     }

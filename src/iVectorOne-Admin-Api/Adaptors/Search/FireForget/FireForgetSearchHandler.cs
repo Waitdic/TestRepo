@@ -6,10 +6,12 @@ namespace iVectorOne_Admin_Api.Adaptors.Search.FireForget
     public class FireForgetSearchHandler : IFireForgetSearchHandler
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ILogger<FireForgetSearchHandler> _logger;
 
-        public FireForgetSearchHandler(IServiceScopeFactory serviceScopeFactory)
+        public FireForgetSearchHandler(IServiceScopeFactory serviceScopeFactory, ILogger<FireForgetSearchHandler> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _logger = logger;
         }
 
         public void Execute(Func<IAdaptor<Request, Response>, Task> propertySearch)
@@ -24,9 +26,9 @@ namespace iVectorOne_Admin_Api.Adaptors.Search.FireForget
                     var adaptor = scope.ServiceProvider.GetRequiredService<IAdaptor<Request, Response>>();
                     await propertySearch(adaptor);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e);
+                    _logger.LogError(ex, "Unexpected error executing fire and forget search request.");
                 }
             });
         }

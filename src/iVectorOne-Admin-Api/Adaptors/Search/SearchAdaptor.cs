@@ -1,5 +1,7 @@
 ﻿using Intuitive.Helpers.Security;
+using iVectorOne_Admin_Api.Data.Models;
 using iVectorOne_Admin_Api.Infrastructure.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text;
@@ -12,18 +14,19 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<SearchAdaptor> _logger;
         private readonly ISecretKeeper _secretKeeper;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public SearchAdaptor(IHttpClientFactory httpClientFactory, ILogger<SearchAdaptor> logger, ISecretKeeper secretKeeper)
+        public SearchAdaptor(IHttpClientFactory httpClientFactory, ILogger<SearchAdaptor> logger, ISecretKeeper secretKeeper, IServiceScopeFactory serviceScopeFactory)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
             _secretKeeper = secretKeeper;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task<Response> Execute(Request request)
         {
             var response = new Response();
-            _logger.LogInformation("*** Search Adaptor Start");
 
             try
             {
@@ -43,17 +46,9 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
 
                 var searchResult = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                _logger.LogInformation("*** Search Adaptor After Response");
-
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
-                    _logger.LogInformation("*** Search Adaptor Status Success");
-
-                    _logger.LogInformation("*** Search Adaptor Before Deserialize");
-
                     var result = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
-
-                    _logger.LogInformation("*** Search Adaptor After Deserialize");
 
                     if (result != null && result.PropertyResults.Count > 0)
                     {
@@ -62,8 +57,6 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                     }
                     else
                     {
-                        _logger.LogInformation("*** Search Adaptor Status Not Success");
-
                         response.SearchStatus = Response.SearchStatusEnum.NoResults;
                     }
                 }
@@ -82,10 +75,27 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                 _logger.LogError(ex, "Unexpected error executing search request.");
             }
 
-            _logger.LogInformation("*** Search Adaptor End");
+            try
+            {
+                var propertySearchResults = new FireForgetSearchResponse
+                {
+                    SearchResponse = response.SearchResult,
+                    Information = response.Information,
+                    SearchStatus = response.SearchStatus.ToString(),
+                    FireForgetSearchResponseKey = request.RequestKey.ToString()
+                };
+
+                using var scope = _serviceScopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<AdminContext>();
+                context.FireForgetSearchResponses.Add(propertySearchResults);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error saving search response.");
+            }
 
             return response;
         }
-
     }
 }
