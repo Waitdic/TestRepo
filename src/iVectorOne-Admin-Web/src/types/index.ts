@@ -189,7 +189,7 @@ export interface SearchesByHour {
   previousTotal: number;
 }
 
-export interface Summary {
+export interface SummaryTableData {
   name: string;
   bookTotal: number;
   bookValue: number;
@@ -201,7 +201,7 @@ export interface Summary {
   s2B: number;
 }
 
-export interface SupplierChartData {
+export interface SupplierTableData {
   name: string;
   searchTotal: number;
   searchSuccess: number;
@@ -216,8 +216,8 @@ export interface SupplierChartData {
 export interface DashboardChartData {
   bookingsByHour: BookingsByHour[];
   searchesByHour: SearchesByHour[];
-  summary: Summary[];
-  supplier: Supplier[];
+  summary: SummaryTableData[];
+  supplier: SupplierTableData[];
   success: boolean;
 }
 

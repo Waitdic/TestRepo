@@ -1,11 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { Account, ChartData } from '@/types';
+import type {
+  Account,
+  ChartData,
+  SummaryTableData,
+  SupplierTableData,
+} from '@/types';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { ChartCard, Select, WelcomeBanner } from '@/components';
+import {
+  ChartCard,
+  MultiLevelTable,
+  Select,
+  WelcomeBanner,
+} from '@/components';
 import { getDashboardChartData } from './data-access/dashboard';
 import { getAccounts } from './data-access/account';
 import mapChartData from '@/utils/mapChartData';
@@ -26,6 +36,12 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     useState<ChartData | null>(null);
   const [searchesByHoursChartData, setSearchesByHoursChartData] =
     useState<ChartData | null>(null);
+  const [summaryTableData, setSummaryTableData] = useState<
+    SummaryTableData[] | null
+  >(null);
+  const [supplierTableData, setSupplierTableData] = useState<
+    SupplierTableData[] | null
+  >(null);
   const [accounts, setAccounts] = useState<Account[] | null>(null);
 
   const activeTenant = useMemo(
@@ -87,13 +103,15 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       },
       onSuccess: (data) => {
         dispatch.app.setIsLoading(false);
-        const { bookingsByHour, searchesByHour } = data;
+        const { bookingsByHour, searchesByHour, summary, supplier } = data;
         setBookingsByHoursChartData(
           mapChartData(bookingsByHour, ['indigo', 'yellow'])
         );
         setSearchesByHoursChartData(
           mapChartData(searchesByHour, ['red', 'blue'])
         );
+        setSummaryTableData(summary);
+        setSupplierTableData(supplier);
       },
       onFailed: (message, instance?) => {
         dispatch.app.setIsLoading(false);
@@ -130,6 +148,12 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         <WelcomeBanner />
       )}
       <div className='flex flex-col xl:flex-row xl:flex-wrap gap-6'>
+        <div className='basis-full'>
+          {/* 
+          //! TODO: MultiLevelTable 
+          */}
+          {/* <MultiLevelTable data={summaryTableData} /> */}
+        </div>
         <div className='grid xl:grid-cols-4 gap-4 basis-full'>
           <div>
             {!!accounts?.length && (
