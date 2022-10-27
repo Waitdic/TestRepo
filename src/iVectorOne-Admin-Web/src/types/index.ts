@@ -161,6 +161,21 @@ export type SearchRequestData = {
     ChildAges: number[];
   }[];
 };
+export type ChartData = {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    fill: boolean;
+    borderColor: string;
+    borderWidth: number;
+    tension: number;
+    pointRadius: number;
+    pointHoverRadius: number;
+    pointBackgroundColor: string;
+    clip: number;
+  }[];
+};
 
 //* App State
 export type AppState = {

@@ -36,5 +36,8 @@ export { default as ConfirmModal } from './ConfirmModal';
 export { default as RoleGuard } from './RoleGuard';
 export { default as SearchFilters } from './Search/SearchFilters';
 
+//* Charts
+export { default as LineChart02 } from './Charts/LineChart02';
+
 //* Form Fields
 export * from './Fields';
