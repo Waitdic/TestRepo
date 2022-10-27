@@ -20,75 +20,67 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
             _secretKeeper = secretKeeper;
         }
 
-        public async Task<Response> Execute(Request request, CancellationToken cancellationToken)
+        public async Task<Response> Execute(Request request)
         {
             var response = new Response();
             _logger.LogInformation("*** Search Adaptor Start");
 
-            await Task.Delay(29000, cancellationToken);
+            try
+            {
+                var requestURI = $"https://api.ivectorone.com/v2/properties/search" +
+                    $"?ArrivalDate={request.Searchdate:yyyy-MM-dd}" +
+                    $"&duration=7&properties={request.Properties}" +
+                    $"&rooms={request.RoomRequest}" +
+                    $"&dedupeMethod={request.DedupeMethod}";
 
-            //try
-            //{
-            //    var requestURI = $"https://api.ivectorone.com/v2/properties/search" +
-            //        $"?ArrivalDate={request.Searchdate:yyyy-MM-dd}" +
-            //        $"&duration=7&properties={request.Properties}" +
-            //        $"&rooms={request.RoomRequest}" +
-            //        $"&dedupeMethod={request.DedupeMethod}";
+                var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestURI);
 
-            //    var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, requestURI);
+                var httpClient = _httpClientFactory.CreateClient();
 
-            //    var httpClient = _httpClientFactory.CreateClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{request.Login}:{_secretKeeper.Decrypt(request.Password)}")));
 
-            //    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{request.Login}:{_secretKeeper.Decrypt(request.Password)}")));
+                 var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
-            //    _logger.LogInformation("*** Search Adaptor Before Send");
+                var searchResult = await httpResponseMessage.Content.ReadAsStringAsync();
 
-            //    var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage, cancellationToken);
+                _logger.LogInformation("*** Search Adaptor After Response");
 
-            //    _logger.LogInformation("*** Search Adaptor After Send");
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation("*** Search Adaptor Status Success");
 
-            //    _logger.LogInformation("*** Search Adaptor Before Response");
+                    _logger.LogInformation("*** Search Adaptor Before Deserialize");
 
-            //    var searchResult = await httpResponseMessage.Content.ReadAsStringAsync(cancellationToken);
+                    var result = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
 
-            //    _logger.LogInformation("*** Search Adaptor After Response");
+                    _logger.LogInformation("*** Search Adaptor After Deserialize");
 
-            //    if (httpResponseMessage.IsSuccessStatusCode)
-            //    {
-            //        _logger.LogInformation("*** Search Adaptor Status Success");
+                    if (result != null && result.PropertyResults.Count > 0)
+                    {
+                        response.SearchStatus = Response.SearchStatusEnum.Ok;
+                        response.SearchResult = result;
+                    }
+                    else
+                    {
+                        _logger.LogInformation("*** Search Adaptor Status Not Success");
 
-            //        _logger.LogInformation("*** Search Adaptor Before Deserialize");
+                        response.SearchStatus = Response.SearchStatusEnum.NoResults;
+                    }
+                }
+                else
+                {
+                    response.Information = $"{httpResponseMessage.StatusCode} {searchResult}";
+                    response.SearchStatus = Response.SearchStatusEnum.NotOk;
+                }
+            }
+            catch (Exception ex)
+            {
+                var activity = Activity.Current;
+                response.Information = $"{ex.Message} : {activity?.GetTraceId()}";
+                response.SearchStatus = Response.SearchStatusEnum.Exception;
 
-            //        var result = JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(searchResult);
-
-            //        _logger.LogInformation("*** Search Adaptor After Deserialize");
-
-            //        if (result != null && result.PropertyResults.Count > 0)
-            //        {
-            //            response.SearchStatus = Response.SearchStatusEnum.Ok;
-            //            response.SearchResult = result;
-            //        }
-            //        else
-            //        {
-            //            _logger.LogInformation("*** Search Adaptor Status Not Success");
-
-            //            response.SearchStatus = Response.SearchStatusEnum.NoResults;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        response.Information = $"{httpResponseMessage.StatusCode} {searchResult}";
-            //        response.SearchStatus = Response.SearchStatusEnum.NotOk;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    var activity = Activity.Current;
-            //    response.Information = $"{ex.Message} : {activity?.GetTraceId()}";
-            //    response.SearchStatus = Response.SearchStatusEnum.Exception;
-
-            //    _logger.LogError(ex, "Unexpected error executing search request.");
-            //}
+                _logger.LogError(ex, "Unexpected error executing search request.");
+            }
 
             _logger.LogInformation("*** Search Adaptor End");
 

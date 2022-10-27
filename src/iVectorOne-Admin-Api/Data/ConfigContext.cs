@@ -1,4 +1,6 @@
 ﻿using iVectorOne_Admin_Api.Data.Models;
+using Newtonsoft.Json;
+using System.Text.Json;
 using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
 
 namespace iVectorOne_Admin_Api.Data
@@ -26,9 +28,23 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<Property> Properties { get; set; } = null!;
         public virtual DbSet<BookingLog> BookingLogs { get; set; } = null!;
 
+        public virtual DbSet<FireForgetSearchResponse> FireForgetSearchResponses { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<FireForgetSearchResponse>(e =>
+            {
+                e.ToTable("FireForgetSearchResponse");
+                e.HasKey(e => e.FireForgetSearchResponseId).IsClustered(false);
+
+                e.Property(e => e.SearchResponse)
+                 .HasConversion(
+                    v => System.Text.Json.JsonSerializer.Serialize(v, new JsonSerializerOptions()),
+                    v => v == null
+                         ? null
+                         : System.Text.Json.JsonSerializer.Deserialize<iVectorOne.SDK.V2.PropertySearch.Response>(v, new JsonSerializerOptions()));
+            });
+
             modelBuilder.Entity<Property>(e =>
             {
                 e.HasNoKey();

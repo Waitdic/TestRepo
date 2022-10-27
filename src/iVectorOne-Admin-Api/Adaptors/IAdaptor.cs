@@ -4,6 +4,6 @@
     //where TRequest : IRequest<TResponse>
     {
 
-        Task<TResponse> Execute(TRequest request, CancellationToken cancellationToken);
+        Task<TResponse> Execute(TRequest request);
     }
 }

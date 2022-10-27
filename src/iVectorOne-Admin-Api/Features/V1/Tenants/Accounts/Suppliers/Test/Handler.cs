@@ -49,41 +49,41 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test
             var message = "Sorry, no results could be found.";
             var searchDate = DateTime.Today.AddDays(1);
 
-            for (int i = 0; i < 3; i++)
-            {
-                var cancelSearch = false;
-                var searchRequest = new Adaptors.Search.Request
-                {
-                    Searchdate = searchDate.AddMonths(i * 3),
-                    Properties = supplier.TestPropertyIDs,
-                    Login = account.Login,
-                    Password = account.EncryptedPassword,
-                    DedupeMethod = "none",
-                    RoomRequest = "(2,0,0)"
-                };
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    var cancelSearch = false;
+            //    var searchRequest = new Adaptors.Search.Request
+            //    {
+            //        Searchdate = searchDate.AddMonths(i * 3),
+            //        Properties = supplier.TestPropertyIDs,
+            //        Login = account.Login,
+            //        Password = account.EncryptedPassword,
+            //        DedupeMethod = "none",
+            //        RoomRequest = "(2,0,0)"
+            //    };
 
-                var result = await _searchAdaptor.Execute(searchRequest, cancellationToken);
-                //var result = await ExecuteSearch(supplier.TestPropertyIDs, searchDate.AddMonths(i * 3), account.Login, account.EncryptedPassword);
-                switch (result.SearchStatus)
-                {
-                    case Adaptors.Search.Response.SearchStatusEnum.Ok:
-                        message = "Success. The supplier is returning results.";
-                        break;
-                    case Adaptors.Search.Response.SearchStatusEnum.Exception:
-                        message = $"Failed with unexpected error: {result.Information}";
-                        cancelSearch = true;
-                        break;
-                    case Adaptors.Search.Response.SearchStatusEnum.NotOk:
-                        message = $"Failed with error: {result.Information}";
-                        cancelSearch = true;
-                        break;
-                };
+            //    var result = await _searchAdaptor.Execute(searchRequest, cancellationToken);
+            //    //var result = await ExecuteSearch(supplier.TestPropertyIDs, searchDate.AddMonths(i * 3), account.Login, account.EncryptedPassword);
+            //    switch (result.SearchStatus)
+            //    {
+            //        case Adaptors.Search.Response.SearchStatusEnum.Ok:
+            //            message = "Success. The supplier is returning results.";
+            //            break;
+            //        case Adaptors.Search.Response.SearchStatusEnum.Exception:
+            //            message = $"Failed with unexpected error: {result.Information}";
+            //            cancelSearch = true;
+            //            break;
+            //        case Adaptors.Search.Response.SearchStatusEnum.NotOk:
+            //            message = $"Failed with error: {result.Information}";
+            //            cancelSearch = true;
+            //            break;
+            //    };
 
-                if (cancelSearch)
-                {
-                    break;
-                }
-            }
+            //    if (cancelSearch)
+            //    {
+            //        break;
+            //    }
+            //}
 
 
             response.Ok(new ResponseModel { Success = true, Message = message });
