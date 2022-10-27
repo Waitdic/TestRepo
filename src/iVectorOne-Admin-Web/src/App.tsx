@@ -36,9 +36,7 @@ const App: FC<Props> = ({ app }) => {
           Footer,
         }}
       >
-        {({ user }: { user: { username: string } }) => (
-          <AppProvider app={app} user={user} />
-        )}
+        {({ user }) => <AppProvider app={app} user={user as any} />}
       </Authenticator>
     </div>
   );
