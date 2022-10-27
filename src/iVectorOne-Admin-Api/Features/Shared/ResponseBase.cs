@@ -41,6 +41,14 @@ namespace iVectorOne_Admin_Api.Features.Shared
             Result = Results.BadRequest(problemDetails);
         }
 
+
+        public void NotReady() => Result = Results.NoContent();
+
+        public void Accepted(IResponseModel model)
+        {
+            Result = Results.Accepted(value: model);
+        }
+
         #region Private methods
 
         private static ProblemDetails BuildProblemDetails(string detail)

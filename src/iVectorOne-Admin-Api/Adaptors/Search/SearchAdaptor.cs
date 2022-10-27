@@ -1,7 +1,6 @@
 ﻿using Intuitive.Helpers.Security;
 using iVectorOne_Admin_Api.Data.Models;
 using iVectorOne_Admin_Api.Infrastructure.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text;
@@ -75,6 +74,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                 _logger.LogError(ex, "Unexpected error executing search request.");
             }
 
+            //Save the results.
             try
             {
                 var propertySearchResults = new FireForgetSearchResponse

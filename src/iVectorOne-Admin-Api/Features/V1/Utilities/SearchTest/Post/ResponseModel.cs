@@ -1,4 +1,4 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
+﻿namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 {
     public record ResponseModel : ResponseModelBase
     {
