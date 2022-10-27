@@ -1,4 +1,4 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
+﻿namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 {
     public record SearchRequest
     {
@@ -24,7 +24,7 @@
                 }
             }
 
-            return roomRequests.Substring(1, roomRequests.Length-1);
+            return roomRequests.Substring(1, roomRequests.Length - 1);
         }
 
         //public string NationalityID { get; set; } = "";

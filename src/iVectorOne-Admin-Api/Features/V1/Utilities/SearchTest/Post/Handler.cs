@@ -1,29 +1,26 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Intuitive;
 using iVectorOne_Admin_Api.Adaptors;
 using iVectorOne_Admin_Api.Adaptors.Search.FireForget;
 using iVectorOne_Admin_Api.Features.Shared;
 
-namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
+namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 {
     public class Handler : IRequestHandler<Request, ResponseBase>
     {
         private readonly AdminContext _context;
-        private readonly IFireForgetSearchOperation _fireForgetOperation;
-        //private readonly IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> _searchAdaptor;
+
+        private readonly IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> _searchAdaptor;
         private readonly IValidator<Request> _validator;
         private readonly IFireForgetSearchHandler _fireForgetSearchHandler;
 
         public Handler(AdminContext context,
-            IFireForgetSearchOperation fireForgetOperation,
-            //IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> searchAdaptor,
+            IAdaptor<Adaptors.Search.Request, Adaptors.Search.Response> searchAdaptor,
             IValidator<Request> validator,
             IFireForgetSearchHandler fireForgetSearchHandler)
         {
             _context = context;
-            _fireForgetOperation = fireForgetOperation;
-            //_searchAdaptor = searchAdaptor;
+            _searchAdaptor = searchAdaptor;
             _validator = validator;
             _fireForgetSearchHandler = fireForgetSearchHandler;
         }
@@ -60,6 +57,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
 
             var searchRequest = new Adaptors.Search.Request
             {
+                RequestKey = Guid.NewGuid(),
                 Searchdate = request.SearchRequest.ArrivalDate,
                 Properties = string.Join(", ", request.SearchRequest.Properties),
                 Login = account.Login,
@@ -70,37 +68,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
 
             _fireForgetSearchHandler.Execute(async repository =>
             {
-                // Will receive its own scoped repository on the executing task
-                //await repository.AuditBlogUpdate(new BlogAudit(blog));
-                //await _searchAdaptor.Execute(searchRequest, cancellationToken);
-                await _fireForgetOperation.Execute(searchRequest);
+                await _searchAdaptor.Execute(searchRequest);
             });
 
-            //var result = await _searchAdaptor.Execute(searchRequest, cancellationToken);
-
-            //var searchResults = new List<SearchResult>();
-
-            //if (result.SearchStatus == Adaptors.Search.Response.SearchStatusEnum.Ok)
-            //{
-            //    foreach (var property in result.SearchResult.PropertyResults)
-            //    {
-            //        foreach (var roomType in property.RoomTypes)
-            //        {
-            //            searchResults.Add(new SearchResult
-            //            {
-            //                Supplier = roomType.Supplier,
-            //                RoomCode = roomType.RateCode,
-            //                RoomType = roomType.SupplierRoomType,
-            //                MealBasis = roomType.MealBasisCode,
-            //                Currency = roomType.CurrencyCode,
-            //                TotalCost = roomType.TotalCost,
-            //                NonRefundable = roomType.NonRefundable
-            //            });
-            //        }
-            //    }
-            //}
-
-            response.Ok(new ResponseModel { Success = true, Message = "" });
+            response.Accepted(new ResponseModel { Success = true, Message = "", RequestKey = searchRequest.RequestKey });
             return response;
         }
     }

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using iVectorOne.SDK.V2;
 
-namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
+namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 {
     public class Validator : AbstractValidator<Request>
     {

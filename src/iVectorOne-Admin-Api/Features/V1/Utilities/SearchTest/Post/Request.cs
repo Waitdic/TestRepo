@@ -1,6 +1,6 @@
 ﻿using iVectorOne_Admin_Api.Features.Shared;
 
-namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest
+namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 {
     public record Request : IRequest<ResponseBase>
     {
