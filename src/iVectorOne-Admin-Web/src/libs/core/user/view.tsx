@@ -117,6 +117,7 @@ const UserView: React.FC<Props> = () => {
     async (tenantId: number, userId: number) => {
       if (!isValidUser || isLoading) return;
       await unlinkUserTenant(
+        activeTenant?.tenantKey as string,
         userKey as string,
         tenantId,
         userId,
@@ -178,6 +179,7 @@ const UserView: React.FC<Props> = () => {
   const handleTenantLink = useCallback(async () => {
     if (!isValidUser || isLoading) return;
     await linkUserTenant(
+      activeTenant?.tenantKey as string,
       userKey as string,
       draftTenant?.tenantId,
       draftTenant?.userId,
