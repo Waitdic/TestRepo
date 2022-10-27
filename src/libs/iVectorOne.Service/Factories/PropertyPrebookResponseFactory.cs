@@ -11,6 +11,7 @@
     using iVectorOne.Services;
     using Search = SDK.V2.PropertySearch;
     using iVectorOne.Utility;
+    using System;
 
     /// <summary>
     /// A factory that creates property pre book responses using the provided property details
@@ -91,7 +92,7 @@
                 var roomBooking = new RoomBooking()
                 {
                     TotalCost = room.LocalCost + 0.00M,                    
-                    CommissionPercentage = room.CommissionPercentage + 0.00M,
+                    CommissionPercentage = Math.Round(room.CommissionPercentage + 0.00M, 2),
                     RoomBookingToken = _tokenService.EncodeRoomToken(roomToken),
                     SupplierReference = room.ThirdPartyReference,
                     Supplier = propertyDetails.Source,
