@@ -3,7 +3,7 @@
     public record Summary
     {
         public string Name { get; set; }
-        public int BookTotal { get; set; }
+        public string BookTotal { get; set; }
         public int BookValue { get; set; }
         public int PrebookTotal { get; set; }
         public int PrebookSuccess { get; set; }
