@@ -47,6 +47,21 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
+            queryText = $"Portal_BookingsByHour {request.AccountId}";
+            var bookingsByHourData = await _context.SearchesByHour
+                .FromSqlRaw(queryText)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
+
+            currentWeekTotal = 0;
+            previousWeekTotal = 0;
+            var bookingsByHour = bookingsByHourData.Select(x => new Node
+            {
+                Time = x.Hour,
+                CurrentTotal = currentWeekTotal += x.CurrentWeek,
+                PreviousTotal = previousWeekTotal += x.PreviousWeek,
+            }).ToList();
+
             queryText = $"Portal_DashboardSummary {request.AccountId}";
             var dashboardSummaryData = await _context.DashboardSummary
                 .FromSqlRaw(queryText)
@@ -77,24 +92,24 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
 
             #region Create Dummy Data
 
-            var stopFlag = random.Next(1, 22);
-            List<Node> bookingsByHour = new List<Node>();
-            for (int i = 0; i < 24; i++)
-            {
-                bookingsByHour.Add(new Node());
-                bookingsByHour[i].Time = i;
-                bookingsByHour[i].PreviousTotal = random.Next(5);
-                if (i < stopFlag)
-                {
-                    bookingsByHour[i].CurrentTotal = random.Next(5);
-                }
-                if (i > 0)
-                {
-                    bookingsByHour[i].CurrentTotal = bookingsByHour[i].CurrentTotal + bookingsByHour[i - 1].CurrentTotal;
-                    bookingsByHour[i].PreviousTotal = bookingsByHour[i].PreviousTotal + bookingsByHour[i - 1].PreviousTotal;
-                }
+            //var stopFlag = random.Next(1, 22);
+            //List<Node> bookingsByHour = new List<Node>();
+            //for (int i = 0; i < 24; i++)
+            //{
+            //    bookingsByHour.Add(new Node());
+            //    bookingsByHour[i].Time = i;
+            //    bookingsByHour[i].PreviousTotal = random.Next(5);
+            //    if (i < stopFlag)
+            //    {
+            //        bookingsByHour[i].CurrentTotal = random.Next(5);
+            //    }
+            //    if (i > 0)
+            //    {
+            //        bookingsByHour[i].CurrentTotal = bookingsByHour[i].CurrentTotal + bookingsByHour[i - 1].CurrentTotal;
+            //        bookingsByHour[i].PreviousTotal = bookingsByHour[i].PreviousTotal + bookingsByHour[i - 1].PreviousTotal;
+            //    }
 
-            }
+            //}
 
 
 
