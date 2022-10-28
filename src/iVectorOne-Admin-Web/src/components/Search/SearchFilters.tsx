@@ -1,7 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 //
-import type { SearchDetails, Account, SearchRequestData } from '@/types';
+import type {
+  SearchDetails,
+  Account,
+  SearchRequestData,
+  SupplierSearchResults,
+} from '@/types';
 import { getAccounts } from '@/libs/core/data-access/account';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
@@ -18,13 +23,17 @@ import {
 import { debounce } from 'lodash';
 
 type Props = {
-  setSearchDetails: React.Dispatch<React.SetStateAction<SearchDetails>>;
   searchDetails: SearchDetails;
+  setSearchDetails: React.Dispatch<React.SetStateAction<SearchDetails>>;
+  setSearchResults: React.Dispatch<
+    React.SetStateAction<SupplierSearchResults[]>
+  >;
 };
 
 const SearchFilters: React.FC<Props> = ({
   searchDetails,
   setSearchDetails,
+  setSearchResults,
 }) => {
   const dispatch = useDispatch();
 
@@ -54,8 +63,12 @@ const SearchFilters: React.FC<Props> = ({
       },
     }));
 
-    const debounced = debounce(
-      async () => {
+    debounce(async () => {
+      if (
+        value.length >= 4 &&
+        !!searchDetails.accountId &&
+        value !== searchDetails.property.name
+      ) {
         await getPropertiesById({
           userKey: userKey as string,
           tenant: {
@@ -65,8 +78,8 @@ const SearchFilters: React.FC<Props> = ({
           accountId: searchDetails.accountId,
           query: value,
           onInit: () => {
-            setSearchDetails((prev) => ({ ...prev, properties: [] }));
             dispatch.app.setIsLoading(true);
+            setSearchDetails((prev) => ({ ...prev, properties: [] }));
           },
           onSuccess: (properties) => {
             dispatch.app.setIsLoading(false);
@@ -81,17 +94,8 @@ const SearchFilters: React.FC<Props> = ({
             });
           },
         });
-      },
-      100,
-      { leading: true, trailing: true, maxWait: 1000 }
-    );
-    if (
-      value.length >= 4 &&
-      !!searchDetails.accountId &&
-      value !== searchDetails.property.name
-    ) {
-      debounced();
-    }
+      }
+    }, 1500)();
   };
 
   const handleChangeArrivalDate = (date: Date[] | Date) => {
@@ -168,6 +172,7 @@ const SearchFilters: React.FC<Props> = ({
           ...prev,
           isActive: true,
         }));
+        setSearchResults(data);
       },
       onFailed: (message, instance) => {
         dispatch.app.setIsLoading(false);
@@ -265,7 +270,6 @@ const SearchFilters: React.FC<Props> = ({
               autoComplete={autoCompleteDetails}
             />
           </div>
-          <div className='col-span-2'></div>
           <div className='col-span-1'>
             <Datepicker
               label='Arrival Date'
@@ -290,82 +294,96 @@ const SearchFilters: React.FC<Props> = ({
               }
             />
           </div>
-          <div className='grid grid-cols-3 gap-2 col-span-3'>
-            <Select
-              id='adults'
-              name='adults'
-              labelText='Adults'
-              options={Array.from({ length: 6 }, (_, i) => ({
-                id: i + 1,
-                name: `${i + 1}`,
-              }))}
-              defaultValue={{
-                id: 2,
-                name: '2',
-              }}
-              onUncontrolledChange={(optionId) =>
-                handleQuestsChange('adults', optionId)
-              }
-            />
-            <Select
-              id='children'
-              name='children'
-              labelText='Children'
-              options={Array.from({ length: 5 }, (_, i) => ({
-                id: i,
-                name: `${i}`,
-              }))}
-              defaultValue={{
-                id: 0,
-                name: '0',
-              }}
-              onUncontrolledChange={(optionId) =>
-                handleQuestsChange('children', optionId)
-              }
-            />
-            <Select
-              id='infants'
-              name='infants'
-              labelText='Infants'
-              options={Array.from({ length: 4 }, (_, i) => ({
-                id: i,
-                name: `${i}`,
-              }))}
-              defaultValue={{
-                id: 0,
-                name: '0',
-              }}
-              onUncontrolledChange={(optionId) =>
-                handleQuestsChange('infants', optionId)
-              }
-            />
-          </div>
-          {searchDetails.children > 0 && (
-            <div className='grid grid-cols-4 gap-2 col-span-2'>
-              <label className='block col-span-full text-sm font-medium text-dark'>
-                Children Ages
-              </label>
-              {Array.from({ length: searchDetails.children }, (_, i) => (
-                <div key={i} className='col-span-1'>
-                  <Select
-                    id={`childrenAges-${i + 1}`}
-                    name={`childrenAges-${i + 1}`}
-                    options={Array.from({ length: 16 }, (_, i) => ({
-                      id: i + 1,
-                      name: `${i + 1}`,
-                    })).slice(2, 16)}
-                    onUncontrolledChange={(optionId) =>
-                      handleChangeChildrenAges(i, optionId)
-                    }
-                  />
-                </div>
-              ))}
+          <div className='grid grid-cols-12 gap-2 col-span-full'>
+            <div className='col-span-2'>
+              <Select
+                id='adults'
+                name='adults'
+                labelText='Adults'
+                options={Array.from({ length: 6 }, (_, i) => ({
+                  id: i + 1,
+                  name: `${i + 1}`,
+                }))}
+                defaultValue={{
+                  id: 2,
+                  name: '2',
+                }}
+                onUncontrolledChange={(optionId) =>
+                  handleQuestsChange('adults', optionId)
+                }
+              />
             </div>
-          )}
-          <div className='row-start-4 col-span-full'>
-            {!isLoading && (
-              <Button text='Search' onClick={handleSearchSubmit} />
+            <div className='col-span-2'>
+              <Select
+                id='children'
+                name='children'
+                labelText='Children'
+                options={Array.from({ length: 5 }, (_, i) => ({
+                  id: i,
+                  name: `${i}`,
+                }))}
+                defaultValue={{
+                  id: 0,
+                  name: '0',
+                }}
+                onUncontrolledChange={(optionId) =>
+                  handleQuestsChange('children', optionId)
+                }
+              />
+            </div>
+            {searchDetails.children > 0 && (
+              <div className='grid grid-cols-4 items-end gap-2 col-span-4'>
+                {Array.from({ length: searchDetails.children }, (_, i) => (
+                  <div className='flex flex-1 flex-col'>
+                    {i === 0 && (
+                      <label className='block col-span-full text-sm font-medium text-dark'>
+                        Children Ages
+                      </label>
+                    )}
+                    <div key={i} className='col-span-1'>
+                      <Select
+                        id={`childrenAges-${i + 1}`}
+                        name={`childrenAges-${i + 1}`}
+                        options={Array.from({ length: 16 }, (_, i) => ({
+                          id: i + 1,
+                          name: `${i + 1}`,
+                        })).slice(2, 16)}
+                        onUncontrolledChange={(optionId) =>
+                          handleChangeChildrenAges(i, optionId)
+                        }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
+            <div className='col-span-2'>
+              <Select
+                id='infants'
+                name='infants'
+                labelText='Infants'
+                options={Array.from({ length: 4 }, (_, i) => ({
+                  id: i,
+                  name: `${i}`,
+                }))}
+                defaultValue={{
+                  id: 0,
+                  name: '0',
+                }}
+                onUncontrolledChange={(optionId) =>
+                  handleQuestsChange('infants', optionId)
+                }
+              />
+            </div>
+            <div
+              className={`col-span-${
+                searchDetails.childrenAges.length > 0 ? 2 : 6
+              } flex items-end justify-end`}
+            >
+              {!isLoading && (
+                <Button text='Search' onClick={handleSearchSubmit} />
+              )}
+            </div>
           </div>
         </div>
       </div>

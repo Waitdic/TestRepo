@@ -17,9 +17,7 @@ const mapChartData = (
   const datasets = [
     {
       label: 'Today',
-      data: data.map((item) =>
-        item.currentTotal !== null ? item.currentTotal : 0
-      ),
+      data: data.map((item) => Number(item.currentTotal)),
       borderColor: colors[0],
       fill: false,
       borderWidth: 2,
@@ -31,9 +29,7 @@ const mapChartData = (
     },
     {
       label: 'Last Week',
-      data: data.map((item) =>
-        item.previousTotal !== null ? item.previousTotal : 0
-      ),
+      data: data.map((item) => Number(item.previousTotal)),
       borderColor: colors[1],
       fill: false,
       borderWidth: 2,

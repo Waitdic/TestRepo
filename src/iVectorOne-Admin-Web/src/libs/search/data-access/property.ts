@@ -1,5 +1,9 @@
 import ApiCall from '@/axios';
-import { Property, SearchRequestData } from '@/types';
+import type {
+  Property,
+  SearchRequestData,
+  SupplierSearchResults,
+} from '@/types';
 import handleApiError from '@/utils/handleApiError';
 
 export async function getPropertiesById({
@@ -55,7 +59,7 @@ export async function searchByProperty({
   accountId: number;
   requestData: SearchRequestData;
   onInit: () => void;
-  onSuccess: (data: any) => void;
+  onSuccess: (data: SupplierSearchResults[]) => void;
   onFailed: (error: string, instance?: string) => void;
 }) {
   onInit();
@@ -84,7 +88,7 @@ export async function searchByProperty({
         data: requestData,
       });
       if (res.status === 200) {
-        onSuccess(res.data);
+        onSuccess(res.data.results);
         console.log(res.data);
         clearInterval(timer);
       }

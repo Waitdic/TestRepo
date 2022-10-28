@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
-import type { SearchDetails } from '@/types';
+import type { SearchDetails, SupplierSearchResults } from '@/types';
 import Main from '@/layouts/Main';
 import { SearchFilters, TableList } from '@/components';
 
@@ -40,6 +40,9 @@ const tableHeaderList = [
 const Search: React.FC = () => {
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [searchResults, setSearchResults] = useState<SupplierSearchResults[]>(
+    []
+  );
   const [searchDetails, setSearchDetails] = useState<SearchDetails>({
     properties: [],
     property: {
@@ -63,6 +66,7 @@ const Search: React.FC = () => {
           <SearchFilters
             searchDetails={searchDetails}
             setSearchDetails={setSearchDetails}
+            setSearchResults={setSearchResults}
           />
           {isLoading && (
             <div className='text-center text-sm pb-4 px-4'>
@@ -73,7 +77,10 @@ const Search: React.FC = () => {
             <div className='p-4 w-full'>
               <TableList
                 headerList={tableHeaderList}
-                bodyList={[]}
+                bodyList={searchResults.map((result, idx) => ({
+                  id: idx,
+                  name: result.supplier,
+                }))}
                 showOnEmpty
                 initText='Please input some search details and perform a search'
               />

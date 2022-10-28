@@ -221,6 +221,16 @@ export interface DashboardChartData {
   success: boolean;
 }
 
+export interface SupplierSearchResults {
+  supplier: string;
+  roomCode: string;
+  roomType: string;
+  mealBasis: string;
+  currency: string;
+  totalCost: number;
+  nonRefundable: boolean;
+}
+
 //* App State
 export type AppState = {
   lang: string;

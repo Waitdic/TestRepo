@@ -122,11 +122,16 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         });
       },
     });
-  }, [userKey, activeTenant, selectedAccount]);
+  }, [userKey, activeTenant, selectedAccount, accounts]);
 
   useEffect(() => {
     fetchChartData();
-    return () => setBookingsByHoursChartData(null);
+    return () => {
+      setBookingsByHoursChartData(null);
+      setSearchesByHoursChartData(null);
+      setSummaryTableData(null);
+      setSupplierTableData(null);
+    };
   }, [fetchChartData]);
   useEffect(() => {
     fetchAccounts();
