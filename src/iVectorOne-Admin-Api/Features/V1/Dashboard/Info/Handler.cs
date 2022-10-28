@@ -16,7 +16,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
         public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
             var response = new ResponseBase();
-            Random random = new Random();
+            Random random = new();
 
             //Check the account that was supplied is valid
             var account = await _context.Accounts
@@ -79,15 +79,15 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 Prebook = new Prebook
                 {
                     Total = x.PrebookTotal.ToString(),
-                    Successful = $"{x.PrebookSuccess} %",
+                    Successful = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
                 },
                 Searches = new Searches
                 {
                     Total = x.SearchTotal.ToString(),
-                    Successful = $"{x.SearchSuccessful} %",
+                    Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccessful / x.SearchTotal) * 100} %",
                     AvgResp = $"{x.AverageSearchTime} ms",
                 },
-                S2B = x.BookingTotal == 0 ? "0" : (x.SearchTotal / x.BookingTotal).ToString(),
+                S2B = x.BookingTotal == 0 ? "0 " : (x.SearchTotal / x.BookingTotal).ToString(),
             }).ToList();
 
             #region Create Dummy Data
