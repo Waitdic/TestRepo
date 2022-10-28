@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using iVectorOne_Admin_Api.Config.Models;
+using iVectorOne_Admin_Api.Data;
 using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
@@ -60,6 +62,13 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                         }
                     }
                 }
+            }
+
+            //Delete the response once it's been processed
+            foreach (var result in results)
+            {
+                _context.FireForgetSearchResponses.Remove(result);
+                await _context.SaveChangesAsync(cancellationToken);
             }
 
             response.Ok(new ResponseModel { Success = true, Results = searchResults });

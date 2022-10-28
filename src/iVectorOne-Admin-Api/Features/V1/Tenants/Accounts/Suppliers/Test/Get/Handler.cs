@@ -37,6 +37,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
                 return response;
             }
 
+            if (results.Count < 3)
+            {
+                response.NotReady();
+                return response;
+            }
+
+            //Delete the response once it's been processed
+            foreach (var result in results)
+            {
+                _context.FireForgetSearchResponses.Remove(result);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
             if (results.Any(x => x.SearchStatus.ToLower() == "ok"))
             {
                 response.Ok(new ResponseModel { Success = true, Message = "Success. The supplier is returning results." });
