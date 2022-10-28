@@ -12,7 +12,7 @@ type Props = {
   bodyList: {
     id: number | string;
     name: string;
-    items: any[];
+    items?: any[];
     isActive?: boolean;
     actions?: {
       name: string;

@@ -165,6 +165,7 @@ const SearchFilters: React.FC<Props> = ({
       requestData,
       onInit: () => {
         dispatch.app.setIsLoading(true);
+        setSearchResults([]);
       },
       onSuccess: (data) => {
         dispatch.app.setIsLoading(false);
@@ -334,9 +335,9 @@ const SearchFilters: React.FC<Props> = ({
             {searchDetails.children > 0 && (
               <div className='grid grid-cols-4 items-end gap-2 col-span-4'>
                 {Array.from({ length: searchDetails.children }, (_, i) => (
-                  <div className='flex flex-1 flex-col'>
+                  <div className='relative flex flex-1 flex-col'>
                     {i === 0 && (
-                      <label className='block col-span-full text-sm font-medium text-dark'>
+                      <label className='block absolute bottom-full left-0 col-span-full min-w-[120px] text-sm font-medium text-dark'>
                         Children Ages
                       </label>
                     )}
