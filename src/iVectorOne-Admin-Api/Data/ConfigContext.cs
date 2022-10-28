@@ -1,4 +1,5 @@
 ﻿using iVectorOne_Admin_Api.Data.Models;
+using iVectorOne_Admin_Api.Data.Models.Dashboard;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
@@ -30,8 +31,21 @@ namespace iVectorOne_Admin_Api.Data
 
         public virtual DbSet<FireForgetSearchResponse> FireForgetSearchResponses { get; set; } = null!;
 
+        //
+        // Dashboard
+        //
+
+        public virtual DbSet<SearchesByHour> SearchesByHour { get; set; } = null!;
+
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<SearchesByHour>(e =>
+            {
+                e.HasNoKey();
+
+            });
+
             modelBuilder.Entity<FireForgetSearchResponse>(e =>
             {
                 e.ToTable("FireForgetSearchResponse");
