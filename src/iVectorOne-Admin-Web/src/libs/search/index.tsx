@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
@@ -59,6 +59,22 @@ const Search: React.FC = () => {
     isActive: false,
   });
 
+  const tableBody = useMemo(() => {
+    let rows: { id: number; name: string; items: string[] }[] = [];
+    searchResults.forEach((result, idx) => {
+      let items: any[] = [];
+      Object.entries(result).forEach(([key, value], idx) => {
+        items.push(value);
+      });
+      rows.push({
+        id: idx,
+        name: Object.keys(result)[idx],
+        items,
+      });
+    });
+    return rows;
+  }, [searchResults]);
+
   return (
     <Main title='Search Tester'>
       <div className='bg-white shadow-lg rounded-sm mb-8'>
@@ -77,10 +93,7 @@ const Search: React.FC = () => {
             <div className='p-4 w-full'>
               <TableList
                 headerList={tableHeaderList}
-                bodyList={searchResults.map((result, idx) => ({
-                  id: idx,
-                  name: result.supplier,
-                }))}
+                bodyList={tableBody}
                 showOnEmpty
                 initText='Please input some search details and perform a search'
               />

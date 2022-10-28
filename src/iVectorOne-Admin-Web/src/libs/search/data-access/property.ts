@@ -89,7 +89,6 @@ export async function searchByProperty({
       });
       if (res.status === 200) {
         onSuccess(res.data.results);
-        console.log(res.data);
         clearInterval(timer);
       }
       if (timerCount >= 24) {

@@ -12,6 +12,7 @@ type Props = {
   bodyList: {
     id: number | string;
     name: string;
+    items: any[];
     isActive?: boolean;
     actions?: {
       name: string;
@@ -74,7 +75,7 @@ const TableList: FC<Props> = ({
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {showOnEmpty && (
+                {showOnEmpty && bodyList.length === 0 && (
                   <tr>
                     <td className='px-6 py-4 whitespace-nowrap' colSpan={7}>
                       <p className='text-sm font-medium text-dark'>
@@ -83,49 +84,72 @@ const TableList: FC<Props> = ({
                     </td>
                   </tr>
                 )}
-                {bodyList.map(({ id, name, isActive = undefined, actions }) => (
-                  <tr key={id}>
-                    <td className='px-6 py-4 whitespace-nowrap'>
-                      <div className='flex flex-col justify-center'>
-                        <div className='text-sm font-medium text-dark'>
-                          {name}
-                        </div>
-                        {typeof isActive !== 'undefined' && (
-                          <div className='text-sm font-medium text-gray-500'>
-                            {isActive ? 'Active' : 'Inactive'}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className='px-6 py-4 text-right whitespace-nowrap text-sm'>
-                      {actions &&
-                        actions.length > 0 &&
-                        actions.map(({ name: actionName, href, onClick }) => {
-                          if (!!href) {
-                            return (
-                              <Link
-                                to={href}
-                                className='text-primary hover:text-primaryHover'
-                                key={href}
-                              >
-                                {actionName}
-                              </Link>
-                            );
-                          } else {
-                            return (
-                              <button
-                                key={actionName}
-                                className='text-red-400 hover:text-primaryHover'
-                                onClick={() => onClick?.()}
-                              >
-                                {actionName}
-                              </button>
-                            );
-                          }
-                        })}
-                    </td>
-                  </tr>
-                ))}
+                {bodyList.map(
+                  ({ id, name, isActive = undefined, actions, items }) => (
+                    <tr key={id}>
+                      {!!items?.length ? (
+                        <>
+                          {items.map((item, idx) => (
+                            <td
+                              key={idx}
+                              className='px-6 py-4 whitespace-nowrap'
+                            >
+                              <div className='flex flex-col justify-center'>
+                                <div className='text-sm font-medium text-dark'>
+                                  {item}
+                                </div>
+                              </div>
+                            </td>
+                          ))}
+                        </>
+                      ) : (
+                        <>
+                          <td className='px-6 py-4 whitespace-nowrap'>
+                            <div className='flex flex-col justify-center'>
+                              <div className='text-sm font-medium text-dark'>
+                                {name}
+                              </div>
+                              {typeof isActive !== 'undefined' && (
+                                <div className='text-sm font-medium text-gray-500'>
+                                  {isActive ? 'Active' : 'Inactive'}
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className='px-6 py-4 text-right whitespace-nowrap text-sm'>
+                            {actions &&
+                              actions.length > 0 &&
+                              actions.map(
+                                ({ name: actionName, href, onClick }) => {
+                                  if (!!href) {
+                                    return (
+                                      <Link
+                                        to={href}
+                                        className='text-primary hover:text-primaryHover'
+                                        key={href}
+                                      >
+                                        {actionName}
+                                      </Link>
+                                    );
+                                  } else {
+                                    return (
+                                      <button
+                                        key={actionName}
+                                        className='text-red-400 hover:text-primaryHover'
+                                        onClick={() => onClick?.()}
+                                      >
+                                        {actionName}
+                                      </button>
+                                    );
+                                  }
+                                }
+                              )}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  )
+                )}
               </tbody>
             </table>
           </div>
