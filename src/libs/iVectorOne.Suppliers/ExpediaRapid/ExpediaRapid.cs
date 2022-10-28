@@ -115,7 +115,7 @@
             {
                 propertyDetails.OverrideRateBasis = propertyDetails.Rooms.Where(o => !string.IsNullOrEmpty(o.RateBasis)).First().RateBasis;
                 decimal nCommissionPercentage = decimal.Round(propertyDetails.Rooms.Max(o => o.CommissionPercentage), 6);
-                if (decimal.Equals(nCommissionPercentage, propertyDetails.CommissionPercentage)) 
+                if (!decimal.Equals(nCommissionPercentage, propertyDetails.CommissionPercentage)) 
                 {
                     propertyDetails.CommissionPercentage = nCommissionPercentage;
                     propertyDetails.CommissionPercentageChange = true;
