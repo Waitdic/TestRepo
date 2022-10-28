@@ -2,18 +2,33 @@
 {
     public record Summary
     {
-        public string Name { get; set; }
-        public string BookTotal { get; set; }
-        public int BookValue { get; set; }
-        public int PrebookTotal { get; set; }
-        public int PrebookSuccess { get; set; }
-        public int SearchTotal { get; set; }
-        public int SearchSuccess { get; set; }
-        public int AvgResponse { get; set; }
-        public int S2B { get; set; }
+        public string Name { get; set; } = string.Empty;
 
+        public Bookings Bookings { get; set; } = new Bookings();
 
+        public Prebook Prebook { get; set; } = new Prebook();
 
-        
+        public Searches Searches { get; set; } = new Searches();
+
+        public string S2B { get; set; } = string.Empty;
+    }
+
+    public record Bookings
+    {
+        public string Total { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+    }
+
+    public record Prebook
+    {
+        public string Total { get; set; } = string.Empty;
+        public string Successful { get; set; } = string.Empty;
+    }
+
+    public record Searches
+    {
+        public string Total { get; set; } = string.Empty;
+        public string Successful { get; set; } = string.Empty;
+        public string AvgResp { get; set; } = string.Empty;
     }
 }

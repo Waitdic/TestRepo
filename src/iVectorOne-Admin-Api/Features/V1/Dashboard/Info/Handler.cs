@@ -33,7 +33,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             }
 
             var queryText = $"Portal_SearchesByHour {request.AccountId}";
-            var searchesByHourData = await _context.SearchesByHour.FromSqlRaw(queryText).ToListAsync(cancellationToken: cancellationToken);
+            var searchesByHourData = await _context.SearchesByHour
+                .FromSqlRaw(queryText)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
 
             int currentWeekTotal = 0;
             int previousWeekTotal = 0;
@@ -42,6 +45,34 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 Time = x.Hour,
                 CurrentTotal = currentWeekTotal += x.CurrentWeek,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
+            }).ToList();
+
+            queryText = $"Portal_DashboardSummary {request.AccountId}";
+            var dashboardSummaryData = await _context.DashboardSummary
+                .FromSqlRaw(queryText)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
+
+            var dashboardSummary = dashboardSummaryData.Select(x => new Summary
+            {
+                Name = x.Row,
+                Bookings = new Bookings
+                {
+                    Total = x.BookingTotal.ToString(),
+                    Value = $"£ {x.BookingValue}",
+                },
+                Prebook = new Prebook
+                {
+                    Total = x.PrebookTotal.ToString(),
+                    Successful = $"{x.PrebookSuccess} %",
+                },
+                Searches = new Searches
+                {
+                    Total = x.SearchTotal.ToString(),
+                    Successful = $"{x.SearchSuccessful} %",
+                    AvgResp = $"{x.AverageSearchTime} ms",
+                },
+                S2B = x.BookingTotal == 0 ? "0" : (x.SearchTotal / x.BookingTotal).ToString(),
             }).ToList();
 
             #region Create Dummy Data
@@ -85,38 +116,38 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             //}
 
 
-            List<Summary> summary = new List<Summary>();
-            for (int i = 0; i < 3; i++) { summary.Add(new Summary()); }
+            //List<Summary> summary = new List<Summary>();
+            //for (int i = 0; i < 3; i++) { summary.Add(new Summary()); }
 
-            summary[0].Name = "Today";
-            summary[0].BookTotal = $"${random.Next(20)}";
-            summary[0].BookValue = random.Next(500);
-            summary[0].PrebookTotal = random.Next(400);
-            summary[0].PrebookSuccess = random.Next(65, 85);
-            summary[0].SearchTotal = random.Next(10000);
-            summary[0].SearchSuccess = random.Next(65, 85);
-            summary[0].AvgResponse = random.Next(2000, 3000);
-            summary[0].S2B = summary[0].SearchTotal;
+            //summary[0].Name = "Today";
+            //summary[0].BookTotal = $"${random.Next(20)}";
+            //summary[0].BookValue = random.Next(500);
+            //summary[0].PrebookTotal = random.Next(400);
+            //summary[0].PrebookSuccess = random.Next(65, 85);
+            //summary[0].SearchTotal = random.Next(10000);
+            //summary[0].SearchSuccess = random.Next(65, 85);
+            //summary[0].AvgResponse = random.Next(2000, 3000);
+            //summary[0].S2B = summary[0].SearchTotal;
 
-            summary[1].Name = "WTD";
-            summary[1].BookTotal = $"{random.Next(20)}";
-            summary[1].BookValue = random.Next(2000, 5000);
-            summary[1].PrebookTotal = random.Next(1000, 4000);
-            summary[1].PrebookSuccess = random.Next(65, 85);
-            summary[1].SearchTotal = random.Next(10000, 70000);
-            summary[1].SearchSuccess = random.Next(65, 85);
-            summary[1].AvgResponse = random.Next(2000, 3000);
-            summary[1].S2B = summary[1].SearchTotal;
+            //summary[1].Name = "WTD";
+            //summary[1].BookTotal = $"{random.Next(20)}";
+            //summary[1].BookValue = random.Next(2000, 5000);
+            //summary[1].PrebookTotal = random.Next(1000, 4000);
+            //summary[1].PrebookSuccess = random.Next(65, 85);
+            //summary[1].SearchTotal = random.Next(10000, 70000);
+            //summary[1].SearchSuccess = random.Next(65, 85);
+            //summary[1].AvgResponse = random.Next(2000, 3000);
+            //summary[1].S2B = summary[1].SearchTotal;
 
-            summary[2].Name = "MTD";
-            summary[2].BookTotal = $"{random.Next(20)}";
-            summary[2].BookValue = random.Next(100000, 500000);
-            summary[2].PrebookTotal = random.Next(10000, 40000);
-            summary[2].PrebookSuccess = random.Next(65, 90);
-            summary[2].SearchTotal = random.Next(100000, 700000);
-            summary[2].SearchSuccess = random.Next(65, 90);
-            summary[2].AvgResponse = random.Next(2000, 3000);
-            summary[2].S2B = summary[2].SearchTotal;
+            //summary[2].Name = "MTD";
+            //summary[2].BookTotal = $"{random.Next(20)}";
+            //summary[2].BookValue = random.Next(100000, 500000);
+            //summary[2].PrebookTotal = random.Next(10000, 40000);
+            //summary[2].PrebookSuccess = random.Next(65, 90);
+            //summary[2].SearchTotal = random.Next(100000, 700000);
+            //summary[2].SearchSuccess = random.Next(65, 90);
+            //summary[2].AvgResponse = random.Next(2000, 3000);
+            //summary[2].S2B = summary[2].SearchTotal;
 
             List<Supplier> supplier = new List<Supplier>();
             for (int i = 0; i < 4; i++) { supplier.Add(new Supplier()); }
@@ -168,7 +199,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             {
                 BookingsByHour = bookingsByHour,
                 SearchesByHour = searchesByHour,
-                Summary = summary,
+                Summary = dashboardSummary,
                 Supplier = supplier,
             };
 

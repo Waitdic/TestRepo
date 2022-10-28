@@ -37,10 +37,18 @@ namespace iVectorOne_Admin_Api.Data
 
         public virtual DbSet<SearchesByHour> SearchesByHour { get; set; } = null!;
 
+        public virtual DbSet<DashboardSummary> DashboardSummary { get; set; } = null!;
         
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SearchesByHour>(e =>
+            {
+                e.HasNoKey();
+
+            });
+
+            modelBuilder.Entity<DashboardSummary>(e =>
             {
                 e.HasNoKey();
 
