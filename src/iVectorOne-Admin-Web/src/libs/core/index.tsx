@@ -152,13 +152,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       ) : (
         <WelcomeBanner />
       )}
-      <div className='flex flex-col xl:flex-row xl:flex-wrap gap-6'>
-        <div className='basis-full'>
-          {/* 
-          //! TODO: MultiLevelTable 
-          */}
-          {/* <MultiLevelTable data={summaryTableData} /> */}
-        </div>
+      <div className='flex flex-col xl:flex-row xl:flex-wrap gap-12'>
         <div className='grid xl:grid-cols-4 gap-4 basis-full'>
           <div>
             {!!accounts?.length && (
@@ -175,6 +169,9 @@ const Dashboard: React.FC<Props> = ({ error }) => {
             )}
           </div>
         </div>
+        <div className='basis-full'>
+          <MultiLevelTable data={summaryTableData} />
+        </div>
         <div className='flex-1'>
           <ChartCard
             title='Bookings by Hour (Today vs Last Week)'
@@ -186,6 +183,9 @@ const Dashboard: React.FC<Props> = ({ error }) => {
             title='Searches by Hour (Today vs Last Week)'
             chartData={searchesByHoursChartData as ChartData}
           />
+        </div>
+        <div className='basis-full'>
+          <MultiLevelTable data={supplierTableData} />
         </div>
       </div>
     </MainLayout>
