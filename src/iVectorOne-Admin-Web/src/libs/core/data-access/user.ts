@@ -62,6 +62,7 @@ export async function getUserInfo(
 
 //* Unlink tenant from user
 export async function unlinkUserTenant(
+  tenantKey: string,
   userKey: string,
   tenantId: number,
   userId: number,
@@ -72,11 +73,11 @@ export async function unlinkUserTenant(
   onInit();
   try {
     await ApiCall.request({
-      method: 'PUT',
+      method: 'POST',
       url: `/tenants/${tenantId}/users/${userId}/unlink`,
       headers: {
         Accept: 'application/json',
-        Tenantkey: userKey,
+        Tenantkey: tenantKey,
         UserKey: userKey,
       },
     });
@@ -89,6 +90,7 @@ export async function unlinkUserTenant(
 
 //* Link tenant to user
 export async function linkUserTenant(
+  tenantKey: string,
   userKey: string,
   tenantId: number,
   userId: number,
@@ -99,11 +101,11 @@ export async function linkUserTenant(
   onInit();
   try {
     await ApiCall.request({
-      method: 'PUT',
+      method: 'POST',
       url: `/tenants/${tenantId}/users/${userId}/link`,
       headers: {
         Accept: 'application/json',
-        Tenantkey: userKey,
+        Tenantkey: tenantKey,
         UserKey: userKey,
       },
       data: {

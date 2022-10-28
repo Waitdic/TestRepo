@@ -70,6 +70,7 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
           onBlur={onChange}
           onFocus={handleShowAutoComplete}
           placeholder={placeholder}
+          autoComplete={!!autoComplete ? 'off' : ''}
         />
         {showAutoComplete && !!autoComplete && autoComplete.results.length > 0 && (
           <div className='absolute z-50 top-full left-0 w-full max-h-[400px] overflow-auto bg-white border border-slate-200 rounded-sm shadow-lg'>
