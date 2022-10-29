@@ -6,9 +6,19 @@ type Props = {
   data: any;
 };
 
-const MultiLevelTable: React.FC<Props> = ({ data }) => {
-  console.log(data);
+const headerColors = [
+  'bg-blue-500',
+  'bg-green-500',
+  'bg-yellow-500',
+  'bg-red-500',
+  'bg-indigo-500',
+  'bg-pink-500',
+  'bg-purple-500',
+  'bg-gray-500',
+  'bg-orange-500',
+];
 
+const MultiLevelTable: React.FC<Props> = ({ data }) => {
   const headers = useMemo(() => {
     if (!data) return [];
 
@@ -38,10 +48,13 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
 
     return data.map((row: any, index: number) => {
       const isEven = index % 2 === 0;
-      const rowClass = classNames('flex', {
-        'bg-gray-200': isEven,
-      });
-      const cellClass = classNames('flex-1 p-1');
+      const rowClass = classNames(
+        'flex border-l border-r border-b border-slate-300',
+        {
+          'bg-gray-200': isEven,
+        }
+      );
+      const cellClass = classNames('flex-1 px-[2px] border-r border-slate-300');
 
       return (
         <div key={index} className={rowClass}>
@@ -50,8 +63,14 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
               return (
                 <div key={index} className={`flex ${cellClass}`}>
                   {Object.values(value).map((subValue, index) => (
-                    <div key={index} className={`text-center flex-1`}>
-                      {subValue}
+                    <div
+                      key={index}
+                      className={classNames('text-center flex-1', {
+                        'border-r border-slate-300':
+                          index !== Object.values(value).length - 1,
+                      })}
+                    >
+                      <p className='p-1'>{subValue}</p>
                     </div>
                   ))}
                 </div>
@@ -60,11 +79,11 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
             return (
               <div
                 className={classNames(cellClass, {
-                  'text-center': index !== 0,
-                  'border-r-0': index === 0,
+                  'text-center border-r border-slate-300': index !== 0,
+                  'bg-yellow-200': index === 0,
                 })}
               >
-                {value}
+                <p className='p-1'>{value}</p>
               </div>
             );
           })}
@@ -76,22 +95,29 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
   return (
     <div>
       <div className='flex'>
-        {headers.map((header) => (
+        {headers.map((header, idx) => (
           <div
             className={classNames(
-              'flex-1 text-center border-t border-r border-b border-slate-300',
+              `flex-1 text-center border-t border-b text-white border-slate-300 ${
+                idx !== 0 && headerColors[idx]
+              }`,
               {
-                'border-t-0 border-b-0': header === 'name',
+                'border-t-0': idx === 0,
+                'border-l': idx !== 0,
+                'border-r': idx === headers.length - 1,
               }
             )}
           >
-            <p className='p-1'>{getHeaderName(header)}</p>
-            <div className='flex'>
+            <p
+              className={classNames(`p-1 border-slate-300`, {
+                'border-b': idx !== 0,
+              })}
+            >
+              {getHeaderName(header)}
+            </p>
+            <div className='flex bg-gray-500 bg-opacity-50'>
               {getSubHeaders(header)?.map((subHeader) => (
-                <div
-                  key={subHeader}
-                  className='flex-1 border-t border-slate-300 p-1'
-                >
+                <div key={subHeader} className='flex-1 text-sm p-1'>
                   {capitalize(subHeader)}
                 </div>
               ))}
