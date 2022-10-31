@@ -21,7 +21,7 @@ export async function getPropertiesById({
   query: string;
   onInit: () => void;
   onSuccess: (data: Property[]) => void;
-  onFailed: (error: string, instance?: string) => void;
+  onFailed: (error: string, instance?: string, title?: string) => void;
 }) {
   onInit();
   try {
@@ -40,8 +40,8 @@ export async function getPropertiesById({
     onSuccess(properties);
   } catch (error) {
     console.error(error);
-    const { message, instance } = handleApiError(error as any);
-    onFailed(message, instance);
+    const { message, instance, title } = handleApiError(error as any);
+    onFailed(message, instance, title);
   }
 }
 
@@ -65,7 +65,7 @@ export async function searchByProperty({
   onInit();
   try {
     const {
-      data: { requestKey },
+      data: { requestKey, message },
     } = await ApiCall.request({
       method: 'POST',
       url: `/tenants/${tenant.id}/accounts/${accountId}/search`,
@@ -75,6 +75,12 @@ export async function searchByProperty({
       },
       data: requestData,
     });
+
+    const reqKeyInvalid = parseInt(requestKey.trim()) === 0;
+    if (reqKeyInvalid) {
+      onFailed(message);
+      return;
+    }
 
     let timerCount = 0;
     const timer = setInterval(async () => {
@@ -91,6 +97,7 @@ export async function searchByProperty({
         onSuccess(res.data.results);
         clearInterval(timer);
       }
+
       if (timerCount >= 24) {
         console.error('Search timeout');
         onFailed('Search timeout');

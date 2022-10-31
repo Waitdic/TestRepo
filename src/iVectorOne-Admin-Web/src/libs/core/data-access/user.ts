@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 //
 import ApiCall from '@/axios';
-import { ApiError, User, UserResponse } from '@/types';
+import type { ApiError, User, UserResponse } from '@/types';
 import handleApiError from '@/utils/handleApiError';
 import { UserFormFields } from '../user/create';
 

@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { sortBy } from 'lodash';
 //
-import type {
-  Account,
-  ChartData,
-  SummaryTableData,
-  SupplierTableData,
-} from '@/types';
+import type { Account, ChartData, MultiLevelTableData } from '@/types';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
@@ -32,25 +28,22 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     (state: RootState) => state.app.awsAmplify.username
   );
 
+  const [isIntermission, setIsIntermission] = useState(true);
   const [bookingsByHoursChartData, setBookingsByHoursChartData] =
     useState<ChartData | null>(null);
   const [searchesByHoursChartData, setSearchesByHoursChartData] =
     useState<ChartData | null>(null);
   const [summaryTableData, setSummaryTableData] = useState<
-    SummaryTableData[] | null
+    MultiLevelTableData[] | null
   >(null);
   const [supplierTableData, setSupplierTableData] = useState<
-    SupplierTableData[] | null
+    MultiLevelTableData[] | null
   >(null);
   const [accounts, setAccounts] = useState<Account[] | null>(null);
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((t) => t.isSelected),
     [user]
-  );
-  const selectedAccount = useMemo(
-    () => accounts?.find((a) => a.isSelected),
-    [accounts]
   );
 
   const handleChangeAccount = useCallback(
@@ -81,16 +74,22 @@ const Dashboard: React.FC<Props> = ({ error }) => {
           }))
         );
         dispatch.app.setIsLoading(false);
+        setIsIntermission(false);
       },
       (err) => {
         dispatch.app.setError(err);
         dispatch.app.setIsLoading(false);
+        setIsIntermission(false);
       }
     );
   }, [activeTenant]);
 
   const fetchChartData = useCallback(async () => {
-    if (!userKey || !activeTenant || !selectedAccount) return;
+    if (!userKey || !accounts || !activeTenant) return;
+
+    const selectedAccount = accounts.find((a) => a.isSelected);
+    if (!selectedAccount) return;
+
     await getDashboardChartData({
       userKey,
       tenant: {
@@ -105,7 +104,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         dispatch.app.setIsLoading(false);
         const { bookingsByHour, searchesByHour, summary, supplier } = data;
         setBookingsByHoursChartData(
-          mapChartData(bookingsByHour, ['indigo', 'yellow'])
+          mapChartData(bookingsByHour, ['red', 'blue'])
         );
         setSearchesByHoursChartData(
           mapChartData(searchesByHour, ['red', 'blue'])
@@ -122,21 +121,26 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         });
       },
     });
-  }, [userKey, activeTenant, selectedAccount, accounts]);
+  }, [userKey, activeTenant, accounts, isIntermission]);
 
   useEffect(() => {
-    fetchChartData();
+    fetchAccounts();
+    return () => {
+      setAccounts(null);
+    };
+  }, [fetchAccounts]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => fetchChartData(), 500);
+
     return () => {
       setBookingsByHoursChartData(null);
       setSearchesByHoursChartData(null);
       setSummaryTableData(null);
       setSupplierTableData(null);
+      clearTimeout(timer);
     };
   }, [fetchChartData]);
-  useEffect(() => {
-    fetchAccounts();
-    return () => setAccounts(null);
-  }, [fetchAccounts]);
 
   return (
     <MainLayout>
@@ -152,15 +156,19 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       ) : (
         <WelcomeBanner />
       )}
-      <div className='flex flex-col xl:flex-row xl:flex-wrap gap-12'>
-        <div className='grid xl:grid-cols-4 gap-4 basis-full'>
+      <div className='flex flex-col 2xl:flex-row 2xl:flex-wrap gap-12'>
+        <div className='grid 2xl:grid-cols-4 gap-4 basis-full'>
           <div>
             {!!accounts?.length && (
               <Select
                 id='account'
                 name='account'
                 labelText='Account'
-                options={accounts.map((a) => ({
+                options={sortBy?.(accounts, [
+                  function (o) {
+                    return o?.userName?.toLowerCase?.();
+                  },
+                ])?.map((a) => ({
                   id: a.accountId,
                   name: a.userName,
                 }))}

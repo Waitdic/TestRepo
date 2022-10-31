@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { sortBy } from 'lodash';
 //
 import type {
   SearchDetails,
@@ -20,7 +21,6 @@ import {
   getPropertiesById,
   searchByProperty,
 } from '@/libs/search/data-access/property';
-import { debounce } from 'lodash';
 
 type Props = {
   searchDetails: SearchDetails;
@@ -44,15 +44,42 @@ const SearchFilters: React.FC<Props> = ({
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((t) => t.isSelected),
     [user]
   );
 
-  const handleChangeDetails = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const onSearch = async (value: string) => {
+    await getPropertiesById({
+      userKey: userKey as string,
+      tenant: {
+        id: activeTenant?.tenantId as number,
+        key: activeTenant?.tenantKey as string,
+      },
+      accountId: searchDetails.accountId,
+      query: value,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+        setSearchDetails((prev) => ({ ...prev, properties: [] }));
+      },
+      onSuccess: (properties) => {
+        dispatch.app.setIsLoading(false);
+        setSearchDetails((prev) => ({ ...prev, properties }));
+      },
+      onFailed: (_err, instance, title) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: title,
+          instance,
+        });
+      },
+    });
+  };
+
+  const handleChangeDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isLoading) return;
     const { value } = e.target;
     setSearchDetails((prev) => ({
@@ -62,40 +89,6 @@ const SearchFilters: React.FC<Props> = ({
         name: value,
       },
     }));
-
-    debounce(async () => {
-      if (
-        value.length >= 4 &&
-        !!searchDetails.accountId &&
-        value !== searchDetails.property.name
-      ) {
-        await getPropertiesById({
-          userKey: userKey as string,
-          tenant: {
-            id: activeTenant?.tenantId as number,
-            key: activeTenant?.tenantKey as string,
-          },
-          accountId: searchDetails.accountId,
-          query: value,
-          onInit: () => {
-            dispatch.app.setIsLoading(true);
-            setSearchDetails((prev) => ({ ...prev, properties: [] }));
-          },
-          onSuccess: (properties) => {
-            dispatch.app.setIsLoading(false);
-            setSearchDetails((prev) => ({ ...prev, properties }));
-          },
-          onFailed: (err, instance) => {
-            dispatch.app.setIsLoading(false);
-            dispatch.app.setNotification({
-              status: NotificationStatus.ERROR,
-              message: err,
-              instance,
-            });
-          },
-        });
-      }
-    }, 1500)();
   };
 
   const handleChangeArrivalDate = (date: Date[] | Date) => {
@@ -168,12 +161,12 @@ const SearchFilters: React.FC<Props> = ({
         setSearchResults([]);
       },
       onSuccess: (data) => {
-        dispatch.app.setIsLoading(false);
         setSearchDetails((prev) => ({
           ...prev,
           isActive: true,
         }));
         setSearchResults(data);
+        dispatch.app.setIsLoading(false);
       },
       onFailed: (message, instance) => {
         dispatch.app.setIsLoading(false);
@@ -232,6 +225,31 @@ const SearchFilters: React.FC<Props> = ({
     [searchDetails]
   );
 
+  const handlePropertySearch = async () => {
+    const { name } = searchDetails.property;
+    if (name.length >= 4 && !!searchDetails.accountId) {
+      await onSearch(name);
+      setSearchQuery(searchDetails.property.name);
+    }
+  };
+
+  useEffect(() => {
+    if (!userKey || !activeTenant) return;
+    const timedSearch = setInterval(() => {
+      if (
+        searchDetails.property.name.length >= 4 &&
+        searchDetails.property.name !== searchQuery &&
+        !!searchDetails.accountId
+      ) {
+        handlePropertySearch();
+      }
+    }, 2000);
+
+    return () => {
+      timedSearch && clearInterval(timedSearch);
+    };
+  }, [searchDetails, userKey, activeTenant, searchQuery]);
+
   useEffect(() => {
     fetchAccounts();
 
@@ -252,7 +270,11 @@ const SearchFilters: React.FC<Props> = ({
               id='account'
               name='account'
               labelText='Account'
-              options={accounts?.map((a) => ({
+              options={sortBy?.(accounts, [
+                function (o) {
+                  return o?.userName?.toLowerCase?.();
+                },
+              ])?.map((a) => ({
                 id: a.accountId,
                 name: a.userName,
               }))}

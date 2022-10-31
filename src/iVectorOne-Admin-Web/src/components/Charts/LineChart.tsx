@@ -173,9 +173,7 @@ const LineChart02: React.FC<Props> = ({ data, title, width, height }) => {
       <div className='px-5 py-3'>
         <div className='flex flex-wrap justify-between items-end'>
           <div className='flex items-start'>
-            <div className='text-3xl font-bold text-slate-800 mr-2'>
-              {title}
-            </div>
+            <div className='text-xl font-bold text-slate-800 mr-2'>{title}</div>
           </div>
           <div className='grow ml-2 mb-1'>
             <ul ref={legend} className='flex flex-wrap justify-end'></ul>

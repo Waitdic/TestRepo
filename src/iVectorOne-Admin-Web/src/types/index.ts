@@ -189,35 +189,15 @@ export interface SearchesByHour {
   previousTotal: number;
 }
 
-export interface SummaryTableData {
-  name: string;
-  bookTotal: number;
-  bookValue: number;
-  prebookTotal: number;
-  prebookSuccess: number;
-  searchTotal: number;
-  searchSuccess: number;
-  avgResponse: number;
-  s2B: number;
-}
-
-export interface SupplierTableData {
-  name: string;
-  searchTotal: number;
-  searchSuccess: number;
-  avgResponse: number;
-  prebookTotal: number;
-  prebookSuccess: number;
-  bookTotal: number;
-  bookSuccess: number;
-  s2B: number;
+export interface MultiLevelTableData {
+  [key: string]: string | { [key: string]: string };
 }
 
 export interface DashboardChartData {
   bookingsByHour: BookingsByHour[];
   searchesByHour: SearchesByHour[];
-  summary: SummaryTableData[];
-  supplier: SupplierTableData[];
+  summary: MultiLevelTableData[];
+  supplier: MultiLevelTableData[];
   success: boolean;
 }
 
