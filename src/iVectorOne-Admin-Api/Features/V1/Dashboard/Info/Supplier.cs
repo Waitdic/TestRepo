@@ -2,15 +2,18 @@
 {
     public record Supplier
     {
-        public string Name { get; set; } 
-        public int SearchTotal { get; set; }
-        public int SearchSuccess { get; set; }
-        public int AvgResponse { get; set; }
-        public int PrebookTotal { get; set; }
-        public int PrebookSuccess { get; set; }
-        public int BookTotal { get; set; }
-        public int BookSuccess { get; set; }
-        public int S2B { get; set; }
+        public string Name { get; set; } = string.Empty;
+
+        public string QueryDate { get; set; } = string.Empty;
+
+        public string SearchTotal { get; set; } = string.Empty;
+        public string SearchSuccess { get; set; } = string.Empty;
+        public string AvgResponse { get; set; } = string.Empty;
+        public string PrebookTotal { get; set; } = string.Empty;
+        public string PrebookSuccess { get; set; } = string.Empty;
+        public string BookTotal { get; set; } = string.Empty;
+        public string BookSuccess { get; set; } = string.Empty;
+        public string S2B { get; set; } = string.Empty;
 
 
 

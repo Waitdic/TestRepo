@@ -90,60 +90,39 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 S2B = x.BookingTotal == 0 ? "0 " : (x.SearchTotal / x.BookingTotal).ToString(),
             }).ToList();
 
-            #region Create Dummy Data
+            var supplierSummary = new List<Supplier>();
 
-            List<Supplier> supplier = new List<Supplier>();
-            for (int i = 0; i < 4; i++) { supplier.Add(new Supplier()); }
+            for (int i = -4; i < 1; i++)
+            {
+                var queryDate = DateTime.Now.AddDays(i);
 
-            supplier[0].Name = "HotelBeds";
-            supplier[0].SearchTotal = random.Next(1900, 10000);
-            supplier[0].SearchSuccess = random.Next(75, 95);
-            supplier[0].AvgResponse = random.Next(2000, 3000);
-            supplier[0].PrebookTotal = random.Next(50, 400);
-            supplier[0].PrebookSuccess = random.Next(85, 99);
-            supplier[0].BookTotal = random.Next(20);
-            supplier[0].BookSuccess = random.Next(97, 100);
-            supplier[0].S2B = 0;
+                queryText = $"Portal_SupplierSummary {request.AccountId}, '{queryDate:yyyy-MM-dd}'";
+                var supplierSummaryData = await _context.SupplierSummary
+                    .FromSqlRaw(queryText)
+                    .AsNoTracking()
+                    .ToListAsync(cancellationToken: cancellationToken);
 
-            supplier[1].Name = "SunHotels";
-            supplier[1].SearchTotal = random.Next(1900, 10000);
-            supplier[1].SearchSuccess = random.Next(75, 95);
-            supplier[1].AvgResponse = random.Next(2000, 3000);
-            supplier[1].PrebookTotal = random.Next(50, 400);
-            supplier[1].PrebookSuccess = random.Next(85, 99);
-            supplier[1].BookTotal = random.Next(20);
-            supplier[1].BookSuccess = random.Next(97, 100);
-            supplier[1].S2B = 0;
-
-            supplier[2].Name = "Miki";
-            supplier[2].SearchTotal = random.Next(1900, 10000);
-            supplier[2].SearchSuccess = random.Next(75, 95);
-            supplier[2].AvgResponse = random.Next(2000, 3000);
-            supplier[2].PrebookTotal = random.Next(50, 400);
-            supplier[2].PrebookSuccess = random.Next(85, 99);
-            supplier[2].BookTotal = random.Next(20);
-            supplier[2].BookSuccess = random.Next(97, 100);
-            supplier[2].S2B = 0;
-
-            supplier[3].Name = "Stuba";
-            supplier[3].SearchTotal = random.Next(1900, 10000);
-            supplier[3].SearchSuccess = random.Next(75, 95);
-            supplier[3].AvgResponse = random.Next(2000, 3000);
-            supplier[3].PrebookTotal = random.Next(50, 400);
-            supplier[3].PrebookSuccess = random.Next(85, 99);
-            supplier[3].BookTotal = random.Next(20);
-            supplier[3].BookSuccess = random.Next(97, 100);
-            supplier[3].S2B = 0;
-
-
-            #endregion
+                supplierSummary.AddRange(supplierSummaryData.Select(x => new Supplier
+                {
+                    Name = x.SupplierName,
+                    QueryDate = queryDate.ToString("yyyy-MM-dd"),
+                    SearchTotal = x.SearchTotal.ToString(),
+                    SearchSuccess = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccess / x.SearchTotal) * 100} %",
+                    AvgResponse = $"{x.AverageSearchTime} ms",
+                    BookTotal = x.BookTotal.ToString(),
+                    BookSuccess = x.BookTotal == 0 ? "0 %" : $"{(x.BookSuccess / x.BookTotal) * 100} %",
+                    PrebookTotal = x.PrebookTotal.ToString(),
+                    PrebookSuccess = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
+                    S2B = x.BookTotal == 0 ? "0 " : (x.SearchTotal / x.BookTotal).ToString(),
+                }).ToList());
+             }
 
             var responseModel = new ResponseModel()
             {
                 BookingsByHour = bookingsByHour,
                 SearchesByHour = searchesByHour,
                 Summary = dashboardSummary,
-                Supplier = supplier,
+                Supplier = supplierSummary,
             };
 
             response.Ok(responseModel);
