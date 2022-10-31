@@ -240,12 +240,12 @@
         public string OverrideRateBasis { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the commision percentage.
+        /// Gets or sets the commission percentage.
         /// </summary>
         public decimal CommissionPercentage { get; set; }
 
         /// <summary>
-        /// Gets or sets the boolean indicates commision percentage changing.
+        /// Gets or sets the boolean indicates commission percentage changing.
         /// </summary>
         public bool CommissionPercentageChange { get; set; } = false;
 

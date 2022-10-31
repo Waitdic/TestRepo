@@ -105,9 +105,9 @@
         public string RateBasis { get; set; } = string.Empty;
 
         /// <summary>
-        ///  Gets or sets The commision percentage
+        ///  Gets or sets The commission percentage
         /// </summary>
-        public decimal CommissionPercentage { get; set; } 
+        public decimal CommissionPercentage { get; set; }
 
         /// <summary>
         /// Gets the child ages.

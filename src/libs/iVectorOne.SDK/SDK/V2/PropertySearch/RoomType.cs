@@ -101,5 +101,17 @@
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public decimal GrossCost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selling price.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public decimal SellingPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rate basis.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string RateBasis { get; set; } = string.Empty;
     }
 }

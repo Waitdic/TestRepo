@@ -117,7 +117,9 @@
                             Adjustments = GetAdjustments(roomResult.Adjustments),
                             CommissionPercentage = Math.Round(roomResult.PriceData.CommissionPercentage + 0.00M, 2),
                             OnRequest = roomResult.RoomData.OnRequest,
-                            GrossCost = GetGrossCost(roomResult)
+                            GrossCost = GetGrossCost(roomResult),
+                            SellingPrice = roomResult.PriceData.SellingPrice,
+                            RateBasis = roomResult.PriceData.RateBasis
                         };
 
                         propertyResult.RoomTypes.Add(roomType);
