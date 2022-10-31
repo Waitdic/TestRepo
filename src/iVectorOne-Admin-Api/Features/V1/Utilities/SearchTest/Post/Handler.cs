@@ -43,7 +43,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Post
 
             if (string.IsNullOrEmpty(account.EncryptedPassword))
             {
-                response.Ok(new ResponseModel { Success = true, Message = "Sorry, there are no tests configured for this supplier." });
+                response.Ok(new ResponseModel { Success = true, Message = "This Account is not configured for searches." });
                 return response;
             }
 

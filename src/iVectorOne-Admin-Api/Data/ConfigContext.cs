@@ -40,23 +40,30 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<BookingsByHour> BookingsByHour { get; set; } = null!;
 
         public virtual DbSet<DashboardSummary> DashboardSummary { get; set; } = null!;
-        
+
+        public virtual DbSet<SupplierSummary> SupplierSummary { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-        modelBuilder.Entity<BookingsByHour>(e =>
-        {
-            e.HasNoKey();
+            modelBuilder.Entity<BookingsByHour>(e =>
+            {
+                e.HasNoKey();
 
-        });
-        modelBuilder.Entity<SearchesByHour>(e =>
+            });
+            modelBuilder.Entity<SearchesByHour>(e =>
+                {
+                    e.HasNoKey();
+
+                });
+
+            modelBuilder.Entity<DashboardSummary>(e =>
             {
                 e.HasNoKey();
 
             });
 
-            modelBuilder.Entity<DashboardSummary>(e =>
+            modelBuilder.Entity<SupplierSummary>(e =>
             {
                 e.HasNoKey();
 
