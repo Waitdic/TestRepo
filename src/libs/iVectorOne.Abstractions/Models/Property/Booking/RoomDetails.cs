@@ -100,6 +100,16 @@
         public string Currency { get; set; } = string.Empty;
 
         /// <summary>
+        ///  Gets or sets The rate basis
+        /// </summary>
+        public string RateBasis { get; set; } = string.Empty;
+
+        /// <summary>
+        ///  Gets or sets The commision percentage
+        /// </summary>
+        public decimal CommissionPercentage { get; set; } 
+
+        /// <summary>
         /// Gets the child ages.
         /// </summary>
         public List<int> ChildAges => Passengers.ChildAges;

@@ -12,7 +12,7 @@
     /// The property details passed into book and pre books
     /// </summary>
     /// <seealso cref="IThirdPartyAttributeSearch" />
-    public class  PropertyDetails : IThirdPartyAttributeSearch
+    public class PropertyDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
         /// Gets or sets the account identifier
@@ -222,7 +222,7 @@
         /// <summary>
         /// Gets or sets v card
         /// </summary>
-        public VirtualCardReturn GeneratedVirtualCard { get; set; }  = new VirtualCardReturn();
+        public VirtualCardReturn GeneratedVirtualCard { get; set; } = new VirtualCardReturn();
 
         /// <summary>
         /// Get or sets the unique nationality code 
@@ -233,6 +233,21 @@
         /// Gets or sets the boolean to decide whether opaque rates are supported.
         /// </summary>
         public bool OpaqueRates { get; set; }
+
+        /// <summary>
+        /// Gets or sets the override rate basis.
+        /// </summary>
+        public string OverrideRateBasis { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the commision percentage.
+        /// </summary>
+        public decimal CommissionPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the boolean indicates commision percentage changing.
+        /// </summary>
+        public bool CommissionPercentageChange { get; set; } = false;
 
         /// <summary>
         /// Gets the duration.
