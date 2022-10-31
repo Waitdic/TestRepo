@@ -95,10 +95,12 @@
                 request.SetRequest(preBookRequest);
                 await request.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<PackageEstimateResponse>(request.ResponseXML);
+                var test = request.ResponseString.Replace("xsi:nil=\"true\"", "");
+                var response = _serializer.DeSerialize<Envelope<PackageEstimateResponse>>(
+                    request.ResponseString.Replace("xsi:nil=\"true\"", "")).Body.Content.PackageEstimateResult;
 
                 // check for error
-                if (response.ErrorCode > 0 || response.Package.Status != 0 || response.Package.Booking.Status != 30 || response.Package.Booking.Status != 20)
+                if (response.ErrorCode > 0 || response.Package.Status != 0 || (response.Package.Booking.Status != 30 && response.Package.Booking.Status != 20))
                 {
                     success = false;
                 }
@@ -149,7 +151,7 @@
                 request.SetRequest(bookingRequest);
                 await request.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<PackageEstimateResponse>(request.ResponseXML);
+                var response = _serializer.DeSerialize<Envelope<PackageEstimateResponse>>(request.ResponseXML).Body.Content.PackageEstimateResult;
 
                 // check for error
                 if (response.ErrorCode > 0 || response.Package.Status != 0 || response.Package.Booking.Status != 30)
@@ -202,7 +204,7 @@
                 request.SetRequest(cancelRequest);
                 await request.Send(_httpClient, _logger);
 
-                var response = _serializer.DeSerialize<PackageDeleteResponse>(request.ResponseXML).Response;
+                var response = _serializer.DeSerialize<Envelope<PackageDeleteResponse>>(request.ResponseXML).Body.Content.Response;
 
                 // check response
                 if (!string.IsNullOrEmpty(response.ErrorCode) || response.ErrorCode.ToSafeInt() == 0)
@@ -254,8 +256,8 @@
                     Content =
                     {
                         Username = _settings.Login(propertyDetails),
-                        Password = _settings.Login(propertyDetails),
-                        LanguageuId = _settings.Login(propertyDetails),
+                        Password = _settings.Password(propertyDetails),
+                        LanguageuId = _settings.LanguageID(propertyDetails),
                         Request =
                         {
                             Type = type,
