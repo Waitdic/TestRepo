@@ -5,9 +5,9 @@
 
     public class AccountSupplierCreateHandler : IRequestHandler<AccountSupplierCreateRequest, AccountSupplierCreateResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public AccountSupplierCreateHandler(ConfigContext context, IMapper mapper)
+        public AccountSupplierCreateHandler(AdminContext context, IMapper mapper)
         {
             _context = context;
         }

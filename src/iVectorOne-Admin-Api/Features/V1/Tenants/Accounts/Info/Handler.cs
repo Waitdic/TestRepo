@@ -5,11 +5,11 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Info
 {
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
         private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper, ISecretKeeper secretKeeper)
+        public Handler(AdminContext context, IMapper mapper, ISecretKeeper secretKeeper)
         {
             _context = context;
             _mapper = mapper;

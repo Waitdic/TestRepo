@@ -51,7 +51,7 @@
             var hotels = resortSplits.SelectMany(split => split.Hotels);
             var useMultiHotelCodesSearch = _settings.UseMultiHotelCodesSearch(searchDetails);
 
-            if (hotels.Count() < _settings.MaxHotelCodesPerRequest(searchDetails)
+            if (hotels.Count() < _settings.HotelSearchLimit(searchDetails)
                 && useMultiHotelCodesSearch)
             {
                 string resortCode = resortSplits.FirstOrDefault()?.ResortCode ?? "";
@@ -77,7 +77,7 @@
                 EndPoint = $"{_settings.SearchURL(searchDetails)}{requestString}",
                 Method = RequestMethod.GET,
                 AuthenticationMode = AuthenticationMode.Basic,
-                UserName = _settings.UserName(searchDetails),
+                UserName = _settings.User(searchDetails),
                 Password = _settings.Password(searchDetails),
                 ExtraInfo = searchDetails,
                 ContentType = ContentTypes.Application_x_www_form_urlencoded
@@ -140,7 +140,7 @@
 
         public string CreateSearchRequestString(SearchDetails searchDetails, string resortCode, IEnumerable<Hotel> hotels, bool useHotelCodes)
         {
-            string nationality = _settings.Nationality(searchDetails);
+            string nationality = _settings.LeadGuestNationality(searchDetails);
             string checkIn = searchDetails.ArrivalDate.ToString(Constant.DateFormat);
             string checkOut = searchDetails.DepartureDate.ToString(Constant.DateFormat);
             string currency = _settings.Currency(searchDetails);

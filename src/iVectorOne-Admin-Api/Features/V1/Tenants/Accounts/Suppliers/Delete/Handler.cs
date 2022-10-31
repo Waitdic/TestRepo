@@ -2,9 +2,9 @@
 {
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context)
+        public Handler(AdminContext context)
         {
             _context = context;
         }

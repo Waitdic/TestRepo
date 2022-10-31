@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AbreuV2\AbreuV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AbreuV2Res.resx</DependentUpon>
+    </Compile>
     <Compile Update="Acerooms\AceroomsRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -59,6 +64,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GoGlobalRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Hotelston\HotelstonRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HotelstonRes.resx</DependentUpon>
+    </Compile>
+	<Compile Update="HotelsProV2\HotelsProV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HotelsProV2Res.resx</DependentUpon>
     </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -109,6 +124,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MTSRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="TBOHolidays\TBOHolidaysRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TBOHolidaysRes.resx</DependentUpon>
     </Compile>
     <Compile Update="TeamAmerica\TeamAmericaRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -168,6 +188,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AbreuV2\AbreuV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AbreuV2Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Acerooms\AceroomsRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AceroomsRes.Designer.cs</LastGenOutput>
@@ -195,6 +219,14 @@
     <EmbeddedResource Update="GoGlobal\GoGlobalRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Hotelston\HotelstonRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+	<EmbeddedResource Update="HotelsProV2\HotelsProV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelsProV2Res.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -235,6 +267,10 @@
     <EmbeddedResource Update="MTS\MTSRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MTSRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TBOHolidays\TBOHolidaysRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TBOHolidaysRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="TeamAmerica\TeamAmericaRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

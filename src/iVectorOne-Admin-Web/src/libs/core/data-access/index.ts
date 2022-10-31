@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 //
 import { RootState } from '@/store';
 import ApiCall from '@/axios';
-import type { User, Tenant } from '@/types';
+import type { User, Tenant, ApiError } from '@/types';
+import handleApiError from '@/utils/handleApiError';
+import { NotificationStatus } from '@/constants';
 
 //* User, tenant data fetch
 export function useCoreFetching() {
@@ -44,14 +46,13 @@ export function useCoreFetching() {
       dispatch.app.setIsLoading(false);
     } catch (err) {
       dispatch.app.setIncompleteSetup(true);
-      if (typeof err === 'string') {
-        console.error(err.toUpperCase());
-        setError(err.toUpperCase());
-      } else if (err instanceof Error) {
-        console.error(err.message);
-        setError(err.message);
-      }
       dispatch.app.setIsLoading(false);
+      const { message, instance } = handleApiError(err as ApiError);
+      dispatch.app.setNotification({
+        message,
+        instance,
+        status: NotificationStatus.ERROR,
+      });
     }
   }, []);
 
@@ -69,7 +70,7 @@ export async function refetchUserData(
   userKey: string,
   onInit: () => void,
   onSuccess: (user: User) => void,
-  onFailed: (err: string) => void
+  onFailed: (err: string, instance?: string) => void
 ) {
   onInit();
   try {
@@ -89,13 +90,8 @@ export async function refetchUserData(
       success: userData.success,
     };
     onSuccess(user);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }

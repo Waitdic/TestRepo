@@ -1,4 +1,7 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef, useState } from 'react';
+//
+import type { Property } from '@/types';
+import useOnClickOutside from '@/utils/useOnClickOutside';
 
 type Props = {
   name: string;
@@ -8,15 +11,48 @@ type Props = {
   required?: boolean;
   ref?: React.Ref<HTMLInputElement>;
   value?: string | number;
+  placeholder?: string;
+  autoComplete?: {
+    results: Property[];
+    handler: (selectedResult: number) => void;
+  };
 };
 
 const UncontrolledTextField: React.FC<Props> = forwardRef(
   (
-    { label = '', name, type = 'text', onChange, required = false, value = '' },
+    {
+      label = '',
+      name,
+      type = 'text',
+      onChange,
+      required = false,
+      value = '',
+      placeholder = '',
+      autoComplete,
+    },
     ref
   ) => {
+    const autoCompleteRef = useRef<HTMLDivElement>(null);
+
+    const [showAutoComplete, setShowAutoComplete] = useState(false);
+
+    useOnClickOutside(autoCompleteRef, () => {
+      setShowAutoComplete(false);
+    });
+
+    const handleShowAutoComplete = () => {
+      if (!!autoComplete) {
+        setShowAutoComplete(true);
+      }
+    };
+
+    const handleAutoComplete = (selectedResult: number) => {
+      autoComplete?.handler?.(selectedResult);
+      setShowAutoComplete(false);
+    };
+
     return (
-      <>
+      <div className='relative' ref={autoCompleteRef}>
         {!!label && (
           <label className='block text-sm font-medium mb-1' htmlFor={name}>
             {label}{' '}
@@ -32,8 +68,24 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
           className='form-input w-full'
           onChange={onChange}
           onBlur={onChange}
+          onFocus={handleShowAutoComplete}
+          placeholder={placeholder}
+          autoComplete={!!autoComplete ? 'off' : ''}
         />
-      </>
+        {showAutoComplete && !!autoComplete && autoComplete.results.length > 0 && (
+          <div className='absolute z-50 top-full left-0 w-full max-h-[400px] overflow-auto bg-white border border-slate-200 rounded-sm shadow-lg'>
+            {autoComplete.results.map((result) => (
+              <div
+                key={result.propertyId}
+                className='p-2 cursor-pointer hover:bg-slate-100'
+                onClick={() => handleAutoComplete(result.propertyId)}
+              >
+                {result.name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     );
   }
 );

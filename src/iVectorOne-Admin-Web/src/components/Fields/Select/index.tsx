@@ -1,4 +1,4 @@
-import { memo, forwardRef, LegacyRef, FC } from 'react';
+import { memo, forwardRef, LegacyRef, FC, useMemo } from 'react';
 import { ChangeHandler } from 'react-hook-form';
 import { BiChevronDown } from 'react-icons/bi';
 import classnames from 'classnames';
@@ -10,7 +10,7 @@ type Props = {
   name: string;
   onChange?: ChangeHandler;
   onBlur?: ChangeHandler;
-  labelText: string;
+  labelText?: string;
   options: SelectOption[];
   defaultValue?: SelectOption;
   hasLabel?: boolean;
@@ -44,7 +44,10 @@ const Select: FC<Props> = forwardRef(
     },
     ref
   ) => {
-    const slicedOptions = options.slice(0, maxItems);
+    const slicedOptions = useMemo(
+      () => (!!options?.length ? options?.slice(0, maxItems) : []),
+      [options, maxItems]
+    );
 
     const handleChange = (event: { target: any; type: any }) => {
       onChange?.(event);
@@ -57,7 +60,7 @@ const Select: FC<Props> = forwardRef(
 
     return (
       <div>
-        {hasLabel && (
+        {hasLabel && !!labelText && (
           <label htmlFor={id} className='block text-sm font-medium text-dark'>
             {labelText}
           </label>

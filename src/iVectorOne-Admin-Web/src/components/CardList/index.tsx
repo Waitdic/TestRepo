@@ -1,8 +1,9 @@
-import { FC, memo, useMemo } from 'react';
+import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 //
 import { DropdownEditMenu, EmptyState, Spinner } from '@/components';
+import truncate from '@/utils/truncate';
 
 type Props = {
   bodyList: {
@@ -60,8 +61,11 @@ const CardList: FC<Props> = ({
                   <div className='flex flex-wrap justify-between items-start'>
                     {/* Name */}
                     <header>
-                      <h3 className='text-xl xl:text-lg 2xl:text-2xl'>
-                        {name}
+                      <h3
+                        className='text-xl xl:text-lg 2xl:text-2xl'
+                        title={name}
+                      >
+                        {truncate(name as string, 30)}
                       </h3>
                     </header>
                     <DropdownEditMenu align='right' className='relative'>

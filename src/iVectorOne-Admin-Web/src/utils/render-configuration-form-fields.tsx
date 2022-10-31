@@ -1,4 +1,4 @@
-import { UseFormRegister } from 'react-hook-form';
+import { FieldErrorsImpl, UseFormRegister } from 'react-hook-form';
 //
 import {
   SupplierConfiguration,
@@ -21,9 +21,13 @@ import {
 export const renderConfigurationFormFields = (
   configurations: SupplierConfiguration[],
   register: UseFormRegister<SupplierFormFields>,
-  errors: {
-    configurations?: any[];
-  }
+  errors: Partial<
+    FieldErrorsImpl<{
+      account: number;
+      supplier: number;
+      configurations: any[];
+    }>
+  >
 ) => {
   if (!configurations?.length) {
     return <ErrorBoundary title='Not found any configuration' />;
@@ -304,15 +308,15 @@ export const renderConfigurationFormFields = (
       };
       if (errors?.configurations) {
         const computedErrors = Object.entries(errors.configurations);
-        const itemWithError = computedErrors?.find(
+        const itemWithError: any = computedErrors?.find(
           (err) =>
             Number(err[0]) ===
             (supplierAttributeID || accountSupplierAttributeID)
         );
         if (itemWithError) {
           error.id = accountSupplierAttributeID;
-          error.type = itemWithError[1].type;
-          error.message = itemWithError[1].message;
+          error.type = itemWithError?.[1]?.type;
+          error.message = itemWithError?.[1]?.message;
         }
       }
 

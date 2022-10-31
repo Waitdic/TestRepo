@@ -85,6 +85,25 @@
         }
       },
       {
+        "Supplier": "HotelsProV2",
+        "Configurations": {
+          "SearchURL": "https://api-test.hotelspro.com/api/v2/search/",
+          "BookingURL": "https://api-test.hotelspro.com/api/v2/book/",
+          "CancellationURL": "https://api-test.hotelspro.com/api/v2/cancel/",
+          "AvailabilityURL": "https://api-test.hotelspro.com/api/v2/hotel-availability/",
+          "PrebookURL": "https://api-test.hotelspro.com/api/v2/provision/",
+          "User": "bookabed",
+          "Password": "unPwSxJj369vCbUE",
+          "LeadGuestNationality": "US",
+          "Currency": "EUR",
+          "UseGZip": "true",
+          "UseMultiHotelCodesSearch": "true",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0",
+          "HotelSearchLimit": "200"    
+        }
+      },
+      {
         "Supplier": "MTS",
         "Configurations": {
           "User": "TEST",
@@ -103,6 +122,58 @@
           "OverrideCountries": "",
           "AuthenticationID": "TEST"
         }
+      },
+       {
+        "Supplier": "AbreuV2",
+        "Configurations": {
+          "SearchURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelavail/OTA2014Compact",
+          "BookingURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelres/OTA2014Compact",
+          "CancellationURL": "http://site.tst.abreuonline.com/NewAvailabilityServlet/hotelcancel/OTA2014Compact",
+          "LanguageID": "1",
+          "User": "17468",
+          "DatabaseName": "abreu_tr",
+          "OffsetCancellationDays": "0",
+          "Target": "",
+          "AllowCancellations": "true",
+          "CurrencyCode": "EUR",
+          "UseGZip": "false",
+          "Password": "bookabedxml"
+        }
+      },
+      {
+        "Supplier": "Hotelston",
+        "Configurations": {
+         "Currency" : "EUR",
+         "LanguageCode" : "en",
+         "ContactEmail" : "booking@imperatours.com",
+         "Password" : "ImperaTours2017",
+         "NetRates" : "true",
+         "GenericURL" : "http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/",
+         "OffsetCancellationDays" : "0",
+         "AllowCancellations" : "TRUE",
+         "SOAPRequestURL" : "http://request.ws.hotelston.com/xsd",
+         "SOAPTypesURL" : "http://types.ws.hotelston.com/xsd",
+         "AlwaysUseDefaultEmail" : "TRUE",
+         "DefaultFirstName" : "ImperaTours",
+         "DefaultLastName" : "Reservations",
+         "ContactPhoneNumber" : "390813339345",
+         "UseGZip" : "TRUE"
+        }
+      },
+      {
+       "Supplier": "TBOHolidays",
+       "Configurations": {
+         "GenericURL": "http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc",
+         "Password": "testpwd",
+         "AllowCancellations": "true",
+         "OffsetCancellationDays": "0",
+         "LeadGuestNationality": "GB",
+         "User": "testuser",
+         "PaymentModeType": "Limit",
+         "ClientCode": "1",
+         "Currency": "GBP",
+         "ResultCount": "0"
+       }
       },
       {
         "Supplier": "YouTravel",

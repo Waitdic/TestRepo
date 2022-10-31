@@ -23,7 +23,7 @@
         /// <summary>Initializes a new instance of the <see cref="EncodedTokenService" /> class.</summary>
         /// <param name="contentRepository">The content repository.</param>
         /// <param name="converter">The base converter.</param>
-        /// <param name="tokenValues">The colelction that stores the TOkenValues</param>
+        /// <param name="tokenValues">The colelction that stores the TokenValues</param>
         /// <param name="logger"></param>
         public EncodedTokenService(
             IPropertyContentRepository contentRepository,
@@ -110,7 +110,7 @@
             return bits;
         }
 
-        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account)
+        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account, string supplierBookingReference)
         {
             BookToken? token = null;
             try
@@ -125,7 +125,7 @@
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                 };
 
-                await PopulateBookTokenFieldsAsync(token, account);
+                await PopulateBookTokenFieldsAsync(token, account, supplierBookingReference);
             }
             catch (Exception ex)
             {
@@ -246,7 +246,7 @@
 
         private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account, string.Empty);
 
             if (propertyContent != null)
             {
@@ -255,16 +255,18 @@
                 propertyToken.PropertyName = propertyContent.PropertyName;
                 propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
                 propertyToken.GeographyCode = propertyContent.GeographyCode;
+                propertyToken.SupplierID = propertyContent.SupplierID;
             }
         }
 
-        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account)
+        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account, string supplierBookingReference)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account);
+            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account, supplierBookingReference);
 
             if (propertyContent != null)
             {
                 bookToken.Source = propertyContent.Source;
+                bookToken.BookingID = propertyContent.BookingID;
             }
         }
 

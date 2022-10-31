@@ -2,20 +2,19 @@
 {
     public interface IHotelsProV2Settings
     {
-        string BookURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string HotelAvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string ProvisionURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string CancelURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string UserName(IThirdPartyAttributeSearch tpAttributeSearch);
+        string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string AvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch); 
+        string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Nationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
         string Currency(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool UseGZIP(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseMultiHotelCodesSearch(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
         int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
-        int MaxHotelCodesPerRequest(IThirdPartyAttributeSearch tpAttributeSearch);
-
+        int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }
