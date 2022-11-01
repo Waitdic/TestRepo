@@ -85,7 +85,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 {
                     Total = x.SearchTotal.ToString(),
                     Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccessful / x.SearchTotal) * 100} %",
-                    AvgResp = $"{x.AverageSearchTime} ms",
+                    Avg_Resp = $"{x.AverageSearchTime} ms",
                 },
                 S2B = x.BookingTotal == 0 ? "0 " : (x.SearchTotal / x.BookingTotal).ToString(),
             }).ToList();
@@ -120,7 +120,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     {
                         Total = x.SearchTotal.ToString(),
                         Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccess / x.SearchTotal) * 100} %",
-                        AvgResp = $"{x.AverageSearchTime} ms",
+                        Avg_Resp = $"{x.AverageSearchTime} ms",
                     },
                     S2B = x.BookTotal == 0 ? "0 " : (x.SearchTotal / x.BookTotal).ToString(),
                 }).ToList());
