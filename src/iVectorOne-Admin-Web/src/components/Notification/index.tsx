@@ -1,28 +1,36 @@
-import { FC, useEffect, Fragment, Dispatch, SetStateAction, memo } from 'react';
+import { FC, useEffect, Fragment, memo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Transition } from '@headlessui/react';
+import { useDispatch, useSelector } from 'react-redux';
 //
+import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
 
 type Props = {
   title?: string;
   description: string;
   status?: NotificationStatus;
-  show: boolean;
-  setShow?: Dispatch<SetStateAction<boolean>>;
   autoHide?: boolean;
   duration?: number;
+  errorInstance?: string;
 };
 
 const Notification: FC<Props> = ({
   title: _title,
   description,
   status = NotificationStatus.SUCCESS,
-  show,
-  setShow,
   autoHide = true,
   duration = 3,
+  errorInstance = null,
 }) => {
+  const dispatch = useDispatch();
+
+  const notification = useSelector(
+    (state: RootState) => state.app.notification
+  );
+
+  const [copied, setCopied] = useState(false);
+
   const notificationRoot = document.getElementById('amplify-container');
   const notificationWrap = document.createElement('div');
 
@@ -77,30 +85,42 @@ const Notification: FC<Props> = ({
     }
   };
 
+  const handleCopyErrorInstance = () => {
+    if (errorInstance === null) {
+      dispatch.app.resetNotification();
+      return;
+    }
+    setCopied(true);
+    navigator.clipboard.writeText(errorInstance);
+  };
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     notificationRoot?.appendChild(notificationWrap);
 
     if (autoHide && duration) {
       timer = setTimeout(() => {
-        setShow?.(false);
+        dispatch.app.resetNotification();
       }, duration * 1000);
     }
 
     return () => {
       clearTimeout(timer);
+      dispatch.app.resetNotification();
       notificationRoot?.removeChild(notificationWrap);
+      setCopied(false);
     };
-  }, [show, notificationRoot, notificationWrap, duration, autoHide, setShow]);
+  }, [notificationRoot, notificationWrap, duration, autoHide]);
 
   return createPortal(
     <div
       aria-live='assertive'
-      className='fixed z-50 inset-0 py-16 flex pointer-events-none sm:items-start'
+      className='fixed z-50 inset-0 pb-16 pt-20 flex sm:items-start'
+      onClick={handleCopyErrorInstance}
     >
       <div className='lg:sidebar-expanded:ml-[16rem] w-full flex flex-col items-center space-y-4'>
         <Transition
-          show={show}
+          show={notification !== null}
           as={Fragment}
           enter='transform ease-out duration-300 transition'
           enterFrom='translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2'
@@ -109,11 +129,18 @@ const Notification: FC<Props> = ({
           leaveFrom='opacity-100'
           leaveTo='opacity-0'
         >
-          <div className={`px-4 py-2 rounded-sm text-sm border ${typeColor()}`}>
+          <div
+            className={`relative max-w-[60vw] px-4 py-2 rounded-sm text-sm border ${typeColor()}`}
+          >
+            {copied && (
+              <div className='absolute -top-8 right-0 bg-gray-700 p-1 rounded-sm'>
+                <p className='text-sm text-gray-100'>Copied</p>
+              </div>
+            )}
             <div className='flex w-full justify-between items-start'>
               <div className='flex'>
                 {typeIcon()}
-                <div>{description}</div>
+                <div className='text-center'>{description}</div>
               </div>
             </div>
           </div>

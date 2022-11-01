@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,13 +12,7 @@ import {
   NotificationStatus,
 } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import {
-  SectionTitle,
-  Button,
-  TextField,
-  Select,
-  Notification,
-} from '@/components';
+import { SectionTitle, Button, TextField, Select } from '@/components';
 import { createAccount } from '../data-access/account';
 
 type Props = {};
@@ -38,12 +32,6 @@ const AccountCreate: React.FC<Props> = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<Account>();
-
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({
-    status: NotificationStatus.SUCCESS,
-    message: 'Create New Account',
-  });
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((tenant) => tenant.isSelected),
@@ -69,22 +57,21 @@ const AccountCreate: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: 'New Account Created',
         });
-        setShowNotification(true);
         setTimeout(() => {
           navigate('/accounts');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Error Creating Account',
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   };
@@ -188,15 +175,6 @@ const AccountCreate: React.FC<Props> = () => {
           </div>
         </div>
       </MainLayout>
-
-      {showNotification && (
-        <Notification
-          description={notification.message}
-          status={notification.status}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
     </>
   );
 };

@@ -1,25 +1,28 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Users.Create
-{
-    public class Handler : IRequestHandler<Request, Response>
-    {
-        private readonly ConfigContext _context;
-        private readonly IMapper _mapper;
+﻿using iVectorOne_Admin_Api.Features.Shared;
 
-        public Handler(ConfigContext context, IMapper mapper)
+namespace iVectorOne_Admin_Api.Features.V1.Users.Create
+{
+    public class Handler : IRequestHandler<Request, ResponseBase>
+    {
+        private readonly AdminContext _context;
+
+        public Handler(AdminContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var users = await _context.Users.Where(u => u.Key == request.Subject).FirstOrDefaultAsync();
+            var existingUser = await _context.Users
+                .Where(u => u.Key == request.Subject)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
-            if (users != null)
+            if (existingUser != null)
             {
-                response.BadRequest();
+                response.BadRequest("User already exists.");
                 return response;
             }
 
@@ -30,9 +33,9 @@
             };
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
-            response.Default(new ResponseModel { Success = true, UserId = user.UserId });
+            response.Ok(new ResponseModel { Success = true, UserId = user.UserId });
 
             return response;
         }

@@ -6,6 +6,7 @@
     using iVectorOne.Suppliers.AbreuV2;
     using iVectorOne.Search.Models;
     using Xunit;
+    using iVectorOne.Tests.AbreuV2;
 
     public class AbreuV2SearchTest : ThirdPartyPropertySearchBaseTest
     {

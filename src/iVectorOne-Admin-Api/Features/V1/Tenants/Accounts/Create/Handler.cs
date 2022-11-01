@@ -6,11 +6,11 @@
 
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
         private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper, ISecretKeeper secretKeeper)
+        public Handler(AdminContext context, IMapper mapper, ISecretKeeper secretKeeper)
         {
             _context = Ensure.IsNotNull(context, nameof(context));
             _mapper = Ensure.IsNotNull(mapper, nameof(mapper));
@@ -21,7 +21,10 @@
         {
             var response = new Response();
 
-            var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId).Include(t => t.Accounts).FirstOrDefault();
+            var tenant = _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .Include(t => t.Accounts)
+                .FirstOrDefault();
 
             if (tenant is null)
             {

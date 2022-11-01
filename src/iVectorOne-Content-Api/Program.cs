@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using Intuitive.Modules;
 using iVectorOne.Content.Api.Endpoints.V1;
 using iVectorOne.Content.Api.Endpoints.V2;
 using iVectorOne.Web.Infrastructure.V2;
-using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -30,56 +28,7 @@ try
     app.MapEndpointsV1();
     app.MapEndpoints();
 
-    app.UseExceptionHandler("/error");
-
-    app.MapGet("/error", () =>
-    {
-        var problemDetails = new ProblemDetails
-        {
-            Title = "An unexpected error occurred processing your request.",
-        };
-
-        problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
-
-        return Results.Problem(problemDetails);
-    })
-    .ExcludeFromDescription();
-
-    //app.UseExceptionHandler(e =>
-    //{
-    //    e.Run(context =>
-    //    {
-    //        string title = "An unexpected error occurred processing your request.";
-    //        int statusCode = 500;
-
-    //        var exception = context.Features.Get<IExceptionHandlerPathFeature>();
-
-    //        if (exception?.Error is ValidationException ex)
-    //        {
-    //            title = string.Join(Environment.NewLine, ex.Errors.Select(e=> e.ErrorMessage));
-    //            statusCode = 403;
-    //        }
-
-    //        var problemDetails = new ProblemDetails
-    //        {
-    //            Title = title,
-    //            Status = statusCode,
-    //        };
-
-    //        problemDetails.Extensions.Add(new KeyValuePair<string, object?>("TraceId", Activity.Current?.Id));
-
-    //        return Task.FromResult(Results.Problem(problemDetails));
-    //    });
-    //});
-
-    app.UseSerilogRequestLogging();
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    app.UseHttpsRedirection();
-
-    app.Run();
+    app.BuildAndRun();
 }
 catch (Exception ex)
 {

@@ -3,6 +3,7 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   darkMode: 'class', // or 'media' or 'class'
+  safelist: ['col-span-6'],
   theme: {
     extend: {
       colors: {

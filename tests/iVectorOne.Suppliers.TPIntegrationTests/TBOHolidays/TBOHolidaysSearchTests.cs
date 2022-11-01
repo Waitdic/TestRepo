@@ -8,6 +8,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Xunit;
+    using iVectorOne.Tests.TBOHolidays;
 
     public class TBOHolidaysSearchTests : ThirdPartyPropertySearchBaseTest
     {

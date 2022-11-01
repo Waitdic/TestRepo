@@ -5,6 +5,7 @@ import ChevronDownIcon from '../icons/ChevronDown';
 import DashboardIcon from '../icons/Dashboard';
 import SettingsIcon from '../icons/Settings';
 import SupportIcon from '../icons/Support';
+import SearchIcon from '../icons/Search';
 
 const getStaticSVGIcon = (name: string, className: string) => {
   switch (name) {
@@ -24,6 +25,8 @@ const getStaticSVGIcon = (name: string, className: string) => {
       return <SettingsIcon className={className} />;
     case 'support':
       return <SupportIcon className={className} />;
+    case 'search':
+      return <SearchIcon className={className} />;
     default:
       console.error(`Undefined static SVG icon name: ${name}`);
       return null;

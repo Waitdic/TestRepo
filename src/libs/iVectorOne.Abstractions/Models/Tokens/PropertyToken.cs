@@ -45,5 +45,9 @@
         /// <summary>Gets or sets the geography code</summary>
         [JsonPropertyName("GC")]
         public string GeographyCode { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets the supplier id</summary>
+        [JsonPropertyName("SI")]
+        public int SupplierID { get; set; }
     }
 }

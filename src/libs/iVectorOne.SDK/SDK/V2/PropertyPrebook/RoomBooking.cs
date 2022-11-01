@@ -18,6 +18,12 @@
         /// </summary>
         public decimal TotalCost { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the commission percentage.
+        /// </summary>
+        public decimal CommissionPercentage { get; set; }
+
         /// <summary>
         /// Gets or sets the room booking token.
         /// </summary>

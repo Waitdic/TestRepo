@@ -1,22 +1,12 @@
 ﻿namespace iVectorOne.Web.Infrastructure.V1
 {
     using System.Linq;
-    using System.Text.Json.Serialization;
     using System.Threading.Tasks;
     using FluentValidation;
-    using iVectorOne.Web.Adaptors.Authentication;
     using iVectorOne.Web.Infrastructure.Security;
     using MediatR;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Server.Kestrel.Core;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
     using iVectorOne.SDK.V2;
-    using Microsoft.Extensions.Hosting;
-    using Serilog;
-    using Serilog.Filters;
     using System;
 
     public static class EndpointBase

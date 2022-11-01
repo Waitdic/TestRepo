@@ -295,6 +295,16 @@
 
             var inclusiveRate = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInRequestCurrency;
 
+            OccupancyRateAmount? marketingFee = null;
+            OccupancyRateAmount? billableInclusiveRate = null;
+
+            if (occupancyRoomRate.OccupancyRateTotals.ContainsKey("inclusive")
+                && occupancyRoomRate.OccupancyRateTotals.ContainsKey("marketing_fee")) 
+            {
+                marketingFee = occupancyRoomRate.OccupancyRateTotals["marketing_fee"].TotalInBillableCurrency;
+                billableInclusiveRate = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInBillableCurrency;
+            }
+
             decimal baseRate = GetTotalNightlyRateFromType(occupancyRoomRate, RateTypes.BaseRate);
 
             var taxes = GetTaxes(occupancyRoomRate);
@@ -330,7 +340,6 @@
                 result.ChildAges = occupancy.ChildAges;
                 result.Children = occupancy.ChildAges.Where(i => i > 0).Count();
                 result.Infants = occupancy.ChildAges.Where(i => i == 0).Count();
-                result.Amount = inclusiveRate.Amount;
                 result.RegionalTax = totalTax.ToString();
                 result.SpecialOffer = string.Join(", ", specialOffers);
                 result.Discount = baseRate + totalTax - inclusiveRate.Amount;
@@ -340,6 +349,19 @@
                 result.PayLocalRequired = rate.MerchantOfRecord == "property";
                 result.TPReference = $"{tpSessionID}|{bedGroup.Links.PriceCheckLink.HRef}";
                 result.Cancellations = cancellations;
+
+                if (marketingFee != null && marketingFee.Amount > 0)
+                {
+                    result.SellingPrice = inclusiveRate.Amount;
+                    result.CommissionPercentage = marketingFee.Amount / billableInclusiveRate.Amount * 100;
+                    result.Amount = billableInclusiveRate.Amount;
+                    result.PackageRateBasis = "Gross NetDown";
+                }
+                else 
+                {
+                    result.Amount = inclusiveRate.Amount;
+                    result.PackageRateBasis = "Net";
+                }
             }
 
             result.Validate();

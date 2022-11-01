@@ -32,14 +32,25 @@
         /// <summary>
         /// Gets or sets the date of birth for serialisation.
         /// </summary>
+        [JsonInclude]
         [JsonPropertyName("DateOfBirth")]
-        public string DateOfBirthSerialised { get; set; } = string.Empty;
+        public string DateOfBirthSerialised
+        {
+            get
+            {
+                return DateOfBirth.ToString();
+            }
+            private set
+            {
+                // compatibility with V1 where we allow empty strings to be deserialized
+                DateOfBirth = string.IsNullOrEmpty(value) ? DateTimeExtensions.EmptyDate : value.ToSafeDate();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the date of birth.
         /// </summary>
         [JsonIgnore]
-        public DateTime DateOfBirth
-            => string.IsNullOrEmpty(DateOfBirthSerialised) ? DateTimeExtensions.EmptyDate : DateOfBirthSerialised.ToSafeDate();
+        public DateTime DateOfBirth { get; set; }
     }
 }

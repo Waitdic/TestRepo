@@ -61,6 +61,7 @@ export type Account = {
   isActive: boolean;
   isDeleted: boolean;
   status: 'active' | 'inactive';
+  isSelected?: boolean;
 };
 export type Supplier = {
   name?: string;
@@ -103,9 +104,10 @@ export type FormErrorMessage = {
   [key: string]: { message: string };
 };
 export type NotificationState = {
-  title?: string;
   status: NotificationStatus;
   message: string;
+  title?: string;
+  instance?: string;
 };
 export type NavigationProps = {
   name: string;
@@ -122,6 +124,92 @@ export type DropdownFilterProps = {
   name: string;
   value: boolean;
 };
+export type ApiError = {
+  response: {
+    data: {
+      type: string;
+      title: string;
+      status: number;
+      detail: string;
+      instance: string;
+    };
+  };
+};
+export type Property = {
+  propertyId: number;
+  name: string;
+};
+export type SearchDetails = {
+  isActive: boolean;
+  properties: Property[];
+  property: Property;
+  arrivalDate: Date;
+  accountId: number;
+  duration: number;
+  adults: number;
+  children: number;
+  childrenAges: number[];
+  infants: number;
+};
+export type SearchRequestData = {
+  ArrivalDate: string;
+  Duration: number;
+  Properties: number[];
+  RoomRequests: {
+    Adults: number;
+    Children: number;
+    Infants: number;
+    ChildAges: number[];
+  }[];
+};
+export type ChartData = {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    fill: boolean;
+    borderColor: string;
+    borderWidth: number;
+    tension: number;
+    pointRadius: number;
+    pointHoverRadius: number;
+    pointBackgroundColor: string;
+    clip: number;
+  }[];
+};
+export interface BookingsByHour {
+  time: number;
+  currentTotal: number;
+  previousTotal: number;
+}
+
+export interface SearchesByHour {
+  time: number;
+  currentTotal: number;
+  previousTotal: number;
+}
+
+export interface MultiLevelTableData {
+  [key: string]: string | { [key: string]: string };
+}
+
+export interface DashboardChartData {
+  bookingsByHour: BookingsByHour[];
+  searchesByHour: SearchesByHour[];
+  summary: MultiLevelTableData[];
+  supplier: MultiLevelTableData[];
+  success: boolean;
+}
+
+export interface SupplierSearchResults {
+  supplier: string;
+  roomCode: string;
+  roomType: string;
+  mealBasis: string;
+  currency: string;
+  totalCost: number;
+  nonRefundable: boolean;
+}
 
 //* App State
 export type AppState = {
@@ -134,4 +222,5 @@ export type AppState = {
   isLoading: boolean;
   error: null | string | Error;
   incompleteSetup: boolean;
+  notification: NotificationState | null;
 };

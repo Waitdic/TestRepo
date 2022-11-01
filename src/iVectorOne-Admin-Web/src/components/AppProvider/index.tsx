@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
 import { IntlProvider } from 'react-intl';
 import { Route, Routes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -26,6 +25,7 @@ import RoadMap from '@/libs/core/support/road-map';
 import UserCreate from '@/libs/core/user/create';
 import UserList from '@/libs/core/user/list';
 import UserView from '@/libs/core/user/view';
+import Search from '@/libs/search';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -48,7 +48,6 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
 
   return (
     <>
-      <Helmet htmlAttributes={{ lang }} />
       <IntlProvider
         locale={lang}
         textComponent={Fragment}
@@ -58,6 +57,8 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
         <Routes>
           {/* Dashboard */}
           <Route path='/' element={<Dashboard error={coreError} />} />
+          {/* Search */}
+          <Route path='/search' element={<Search />} />
           {/* Tenant Routes */}
           <Route path='/tenants'>
             <Route index element={<TenantList />} />

@@ -111,6 +111,17 @@
             propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
             propertyDetails.GrossCost = propertyDetails.Rooms.Sum(r => r.GrossCost);
 
+            if (propertyDetails.Rooms.Any(o => !string.IsNullOrEmpty(o.RateBasis))) 
+            {
+                propertyDetails.OverrideRateBasis = propertyDetails.Rooms.Where(o => !string.IsNullOrEmpty(o.RateBasis)).First().RateBasis;
+                decimal nCommissionPercentage = decimal.Round(propertyDetails.Rooms.Max(o => o.CommissionPercentage), 6);
+                if (!decimal.Equals(nCommissionPercentage, propertyDetails.CommissionPercentage)) 
+                {
+                    propertyDetails.CommissionPercentage = nCommissionPercentage;
+                    propertyDetails.CommissionPercentageChange = true;
+                }
+            }
+
             return true;
         }
 
@@ -340,9 +351,28 @@
                     throw new Exception("Couldn't find room in prebook response");
                 }
 
-                decimal inclusiveTotal = occupancyRoomRate.OccupancyRateTotals["inclusive"].TotalInRequestCurrency.Amount;
-                room.LocalCost = inclusiveTotal;
-                room.GrossCost = inclusiveTotal;
+                var inclusiveTotal = occupancyRoomRate.OccupancyRateTotals["inclusive"];
+
+                OccupancyRateTotal? marketingFee = null;
+
+                if (occupancyRoomRate.OccupancyRateTotals.ContainsKey("marketing_fee")) 
+                {
+                    marketingFee = occupancyRoomRate.OccupancyRateTotals["marketing_fee"];
+                }
+
+                if (marketingFee != null && marketingFee.TotalInBillableCurrency.Amount > 0)
+                {
+                    room.LocalCost = inclusiveTotal.TotalInBillableCurrency.Amount;
+                    room.GrossCost = inclusiveTotal.TotalInBillableCurrency.Amount;
+                    room.RateBasis = "Gross NetDown";
+                    room.CommissionPercentage = marketingFee.TotalInBillableCurrency.Amount /
+                                                    inclusiveTotal.TotalInBillableCurrency.Amount * 100;
+                }
+                else 
+                {
+                    room.LocalCost = inclusiveTotal.TotalInRequestCurrency.Amount;
+                    room.GrossCost = inclusiveTotal.TotalInRequestCurrency.Amount;
+                }
             }
         }
 

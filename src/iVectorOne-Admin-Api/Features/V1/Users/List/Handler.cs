@@ -1,28 +1,28 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Users.List
+﻿using iVectorOne_Admin_Api.Features.Shared;
+
+namespace iVectorOne_Admin_Api.Features.V1.Users.List
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var userRecords = await _context.Users
+            var users = await _mapper.ProjectTo<UserDto>(_context.Users)
                 .OrderBy(t => t.UserName)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken: cancellationToken);
 
-            var users = _mapper.Map<List<UserDto>>(userRecords);
-
-            response.Default(new ResponseModel { Success = true, Users = users });
+            response.Ok(new ResponseModel { Success = true, Users = users });
 
             return response;
         }

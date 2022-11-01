@@ -1,6 +1,6 @@
 import getStaticSVGIcon from '@/utils/getStaticSVGIcon';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 type Props = {
@@ -24,6 +24,11 @@ const SidebarLinkGroup: React.FC<Props> = ({
   links = null,
 }) => {
   const [open, setOpen] = useState(activecondition);
+
+  const iconName = useMemo(() => {
+    if (to === '/') return 'dashboard';
+    return to.toLowerCase().replace('/', '').replace(/ /g, '-');
+  }, [to]);
 
   const handleClick = () => {
     setOpen(!open);
@@ -50,7 +55,7 @@ const SidebarLinkGroup: React.FC<Props> = ({
           <div className='flex items-center justify-between'>
             <div className='flex items-center'>
               {getStaticSVGIcon(
-                title.toLowerCase().replace(/ /g, '-'),
+                iconName,
                 `duration-200 fill-white group-hover:fill-primary shrink-0 h-6 w-6`
               )}
               <span className='text-sm group-hover:text-primary font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200'>
