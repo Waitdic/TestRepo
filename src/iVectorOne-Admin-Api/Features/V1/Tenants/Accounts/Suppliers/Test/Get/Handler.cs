@@ -37,11 +37,11 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
                 return response;
             }
 
-            if (results.Count < 3)
-            {
-                response.NotReady();
-                return response;
-            }
+            //if (results.Count < 3)
+            //{
+            //    response.NotReady();
+            //    return response;
+            //}
 
             //Delete the response once it's been processed
             foreach (var result in results)
