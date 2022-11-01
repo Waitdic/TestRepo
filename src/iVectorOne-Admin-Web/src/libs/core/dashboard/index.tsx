@@ -98,7 +98,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       if (!accounts) return;
       const newAccounts = accounts.map((a) => ({
         ...a,
-        isSelected: a.accountId === accountId,
+        isSelected: a.accountId === Number(accountId),
       }));
       setAccounts(newAccounts);
     },
@@ -106,10 +106,9 @@ const Dashboard: React.FC<Props> = ({ error }) => {
   );
 
   const handleChangeSupplierFilterByDate = useCallback((id: string) => {
-    const selectedDate = supplierFilterByDate.id;
     setSupplierFilterByDate({
       id,
-      name: new Date(id as string).toDateString(),
+      name: new Date(id).toDateString(),
       isActive: true,
     });
   }, []);
@@ -249,7 +248,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
           />
         </div>
         <div className='basis-full'>
-          {supplierFilterByDateOptions && supplierTableData && (
+          {supplierFilterByDateOptions.length > 0 && supplierTableData && (
             <div className='flex justify-between mb-5'>
               <h2 className='text-2xl font-semibold'>Supplier Performance</h2>
               <div>

@@ -4,22 +4,11 @@ import React, { useMemo } from 'react';
 import { v4 as uuid } from 'uuid';
 //
 import type { MultiLevelTableData } from '@/types';
+import { replaceWithSpace } from '@/utils/format';
 
 type Props = {
   data: MultiLevelTableData[] | null;
 };
-
-const headerColors = [
-  'bg-blue-500',
-  'bg-green-500',
-  'bg-yellow-500',
-  'bg-red-500',
-  'bg-indigo-500',
-  'bg-pink-500',
-  'bg-purple-500',
-  'bg-gray-500',
-  'bg-orange-500',
-];
 
 const MultiLevelTable: React.FC<Props> = ({ data }) => {
   const headers = useMemo(() => {
@@ -46,6 +35,26 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
     return subHeaders;
   };
 
+  const getHeaderColors = (header: string) => {
+    const createColor = (colorStr: string) => {
+      return `bg-${colorStr}-500`;
+    };
+
+    switch (header.toLowerCase()) {
+      case 'searches':
+        return createColor('green');
+      case 'bookings':
+        return createColor('red');
+      case 'prebook':
+        return createColor('blue');
+      case 's2b':
+        return createColor('orange');
+
+      default:
+        return createColor('gray');
+    }
+  };
+
   return (
     <div>
       <div className='flex'>
@@ -56,7 +65,7 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
               key={idx}
               className={classNames(
                 `flex-1 text-center border-t border-b text-white border-slate-300 ${
-                  idx !== 0 && headerColors[idx]
+                  idx !== 0 && getHeaderColors(header)
                 }`,
                 {
                   'border-t-0': idx === 0,
@@ -75,7 +84,7 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
               <div className='flex bg-gray-500 bg-opacity-50'>
                 {getSubHeaders(header)?.map((subHeader) => (
                   <div key={subHeader} className='flex-1 text-sm p-1'>
-                    {capitalize(subHeader)}
+                    {replaceWithSpace(subHeader, true)}
                   </div>
                 ))}
               </div>
@@ -86,12 +95,9 @@ const MultiLevelTable: React.FC<Props> = ({ data }) => {
       {data?.map((row: any, index: number) => {
         const rowId = uuid();
         const isEven = index % 2 === 0;
-        const rowClass = classNames(
-          'flex border-l border-r border-b border-slate-300',
-          {
-            'bg-gray-200': isEven,
-          }
-        );
+        const rowClass = classNames('flex border-l border-b border-slate-300', {
+          'bg-gray-200': isEven,
+        });
         const cellClass = classNames(
           'flex-1 px-[2px] border-r border-slate-300'
         );
