@@ -244,15 +244,26 @@ export async function deleteSupplier(
 }
 
 //* Test supplier
-export async function testSupplier(
-  tenantKey: string,
-  userKey: string,
-  tenantId: number,
-  accountId: number,
-  supplierId: number,
-  onSuccess: (status: string) => void,
-  onFailed: (message: string, instance?: string) => void
-) {
+export async function testSupplier({
+  tenantKey,
+  userKey,
+  tenantId,
+  accountId,
+  supplierId,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenantKey: string;
+  userKey: string;
+  tenantId: number;
+  accountId: number;
+  supplierId: number;
+  onInit: () => void;
+  onSuccess: (data: { message: string; status: boolean }) => void;
+  onFailed: (message: string, instance?: string) => void;
+}) {
+  onInit();
   try {
     const {
       data: { requestKey, message },
@@ -282,7 +293,7 @@ export async function testSupplier(
         },
       });
       if (res.status === 200) {
-        onSuccess(res.data.results);
+        onSuccess(res.data);
         clearInterval(timer);
       }
 
