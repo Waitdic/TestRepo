@@ -84,7 +84,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         ?.map(({ id, name }) => {
           const isToday =
             new Date(id as string).toDateString() === new Date().toDateString();
-          const dateStr = moment(name).format('DD MMM YY');
+          const dateStr = moment(new Date(name)).format('DD MMM YY');
           return {
             id,
             name: isToday ? 'Today' : dateStr,
