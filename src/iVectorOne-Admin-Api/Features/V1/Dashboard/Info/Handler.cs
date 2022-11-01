@@ -106,13 +106,22 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 {
                     Name = x.SupplierName,
                     QueryDate = queryDate.ToString("yyyy-MM-dd"),
-                    SearchTotal = x.SearchTotal.ToString(),
-                    SearchSuccess = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccess / x.SearchTotal) * 100} %",
-                    AvgResponse = $"{x.AverageSearchTime} ms",
-                    BookTotal = x.BookTotal.ToString(),
-                    BookSuccess = x.BookTotal == 0 ? "0 %" : $"{(x.BookSuccess / x.BookTotal) * 100} %",
-                    PrebookTotal = x.PrebookTotal.ToString(),
-                    PrebookSuccess = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
+                    Bookings = new SupplierBookings
+                    {
+                        Total = x.BookTotal.ToString(),
+                        Successful = x.BookTotal == 0 ? "0 %" : $"{(x.BookSuccess / x.BookTotal) * 100} %",
+                    },
+                    Prebook = new SupplierPrebook
+                    {
+                        Total = x.PrebookTotal.ToString(),
+                        Successful = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
+                    },
+                    Searches = new SupplierSearches
+                    {
+                        Total = x.SearchTotal.ToString(),
+                        Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccess / x.SearchTotal) * 100} %",
+                        AvgResp = $"{x.AverageSearchTime} ms",
+                    },
                     S2B = x.BookTotal == 0 ? "0 " : (x.SearchTotal / x.BookTotal).ToString(),
                 }).ToList());
              }
