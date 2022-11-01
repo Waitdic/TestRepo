@@ -7,7 +7,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS></REQUEST></GETAVAILABILITY></soapenv:Body></soapenv:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS><INCLUDE_PRICE_BREAKDOWN>true</INCLUDE_PRICE_BREAKDOWN></REQUEST></GETAVAILABILITY></soap:Body></soap:Envelope>
 
 URL: http://webservice.test.italcamel.com/Service_5_1.asmx
 
@@ -18,7 +18,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>2</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS></REQUEST></GETAVAILABILITY></soapenv:Body></soapenv:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>2</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS><INCLUDE_PRICE_BREAKDOWN>true</INCLUDE_PRICE_BREAKDOWN></REQUEST></GETAVAILABILITY></soap:Body></soap:Envelope>
 
 URL: http://webservice.test.italcamel.com/Service_5_1.asmx
 
@@ -29,7 +29,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>1</CHILDREN><CHILDAGE1>8</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS></REQUEST></GETAVAILABILITY></soapenv:Body></soapenv:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>1</CHILDREN><CHILDAGE1>8</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS><INCLUDE_PRICE_BREAKDOWN>true</INCLUDE_PRICE_BREAKDOWN></REQUEST></GETAVAILABILITY></soap:Body></soap:Envelope>
 
 URL: http://webservice.test.italcamel.com/Service_5_1.asmx
 
@@ -40,7 +40,7 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS></REQUEST></GETAVAILABILITY></soapenv:Body></soapenv:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>0</CHILDREN><CHILDAGE1>0</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS><INCLUDE_PRICE_BREAKDOWN>true</INCLUDE_PRICE_BREAKDOWN></REQUEST></GETAVAILABILITY></soap:Body></soap:Envelope>
 
 URL: http://webservice.test.italcamel.com/Service_5_1.asmx
 
@@ -51,4 +51,4 @@ Timeout: 100
 
 **REQUEST**
 
-<?xml version="1.0" encoding="utf-8"?><soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>1</CHILDREN><CHILDAGE1>8</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS></REQUEST></GETAVAILABILITY></soapenv:Body></soapenv:Envelope>
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><GETAVAILABILITY xmlns="http://webservice.italcamel.com/service_5_1.asmx"><REQUEST><USERNAME>test1</USERNAME><PASSWORD>APIintuitive</PASSWORD><LANGUAGEUID>345d39f6-f05f-42c6-a61b-2bd7ffc24859</LANGUAGEUID><ACCOMMODATIONS><ACCOMMODATION>102245</ACCOMMODATION></ACCOMMODATIONS><CHECKIN>2021-09-01</CHECKIN><CHECKOUT>2021-09-06</CHECKOUT><ROOMS><ROOM><ADULTS>1</ADULTS><CHILDREN>1</CHILDREN><CHILDAGE1>8</CHILDAGE1><CHILDAGE2>0</CHILDAGE2></ROOM></ROOMS><INCLUDE_PRICE_BREAKDOWN>true</INCLUDE_PRICE_BREAKDOWN></REQUEST></GETAVAILABILITY></soap:Body></soap:Envelope>
