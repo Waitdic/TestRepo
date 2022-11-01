@@ -60,6 +60,8 @@ namespace iVectorOne_Admin_Api.Data
             modelBuilder.Entity<DashboardSummary>(e =>
             {
                 e.HasNoKey();
+                e.Property(p => p.BookingValue)
+                    .HasColumnType("decimal(14,2)");
 
             });
 

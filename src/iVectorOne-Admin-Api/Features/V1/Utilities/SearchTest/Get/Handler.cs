@@ -64,6 +64,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                 }
             }
 
+            var message = results.Select(x => x.Information).Aggregate((i, j) => i + ',' + j);
+
             //Delete the response once it's been processed
             foreach (var result in results)
             {
@@ -71,7 +73,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                 await _context.SaveChangesAsync(cancellationToken);
             }
 
-            response.Ok(new ResponseModel { Success = true, Results = searchResults });
+            response.Ok(new ResponseModel { Success = true, Message=message, Results = searchResults });
 
             return response;
         }
