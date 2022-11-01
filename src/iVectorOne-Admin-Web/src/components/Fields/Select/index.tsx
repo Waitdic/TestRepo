@@ -19,7 +19,7 @@ type Props = {
   description?: string;
   maxItems?: number;
   minItems?: number;
-  onUncontrolledChange?: (optionId: number) => void;
+  onUncontrolledChange?: (optionId: any) => void;
   isFirstOptionEmpty?: boolean;
 };
 
@@ -51,7 +51,7 @@ const Select: FC<Props> = forwardRef(
 
     const handleChange = (event: { target: any; type: any }) => {
       onChange?.(event);
-      onUncontrolledChange?.(Number(event.target.value));
+      onUncontrolledChange?.(event.target.value);
 
       if (onChangeCallback) {
         onChangeCallback();

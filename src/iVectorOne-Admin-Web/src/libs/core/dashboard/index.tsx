@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sortBy } from 'lodash';
+import { sortBy, uniqBy } from 'lodash';
+import moment from 'moment';
 //
 import type { Account, ChartData, MultiLevelTableData } from '@/types';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
+import mapChartData from '@/utils/mapChartData';
 import MainLayout from '@/layouts/Main';
 import {
   ChartCard,
@@ -12,9 +14,8 @@ import {
   Select,
   WelcomeBanner,
 } from '@/components';
-import { getDashboardChartData } from './data-access/dashboard';
-import { getAccounts } from './data-access/account';
-import mapChartData from '@/utils/mapChartData';
+import { getDashboardChartData } from '../data-access/dashboard';
+import { getAccounts } from '../data-access/account';
 
 type Props = {
   error: string | null;
@@ -40,11 +41,57 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     MultiLevelTableData[] | null
   >(null);
   const [accounts, setAccounts] = useState<Account[] | null>(null);
+  const [supplierFilterByDate, setSupplierFilterByDate] = useState({
+    id: moment(new Date()).format('DD MMM YY'),
+    name: 'Today',
+    isActive: true,
+  });
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((t) => t.isSelected),
     [user]
   );
+
+  const filteredSupplierTableData = useMemo(() => {
+    if (!supplierTableData) return null;
+
+    const selectedDate = moment(
+      new Date(supplierFilterByDate.id),
+      'DD MM YYYY'
+    ).format('YYYY-MM-DD');
+
+    return supplierTableData.filter((d) => d.queryDate === selectedDate);
+  }, [supplierTableData, supplierFilterByDate]);
+
+  const supplierFilterByDateOptions: { id: any; name: string }[] =
+    useMemo(() => {
+      if (!supplierTableData) return [];
+      const dateQueries = uniqBy(
+        supplierTableData.map((supplier) => {
+          return {
+            id: supplier.queryDate,
+            name: new Date(supplier.queryDate as string).toDateString(),
+          };
+        }),
+        'id'
+      );
+
+      return sortBy?.(dateQueries, [
+        function (o) {
+          return o?.id;
+        },
+      ])
+        ?.map(({ id, name }) => {
+          const isToday =
+            new Date(id as string).toDateString() === new Date().toDateString();
+          const dateStr = moment(name).format('DD MMM YY');
+          return {
+            id,
+            name: isToday ? 'Today' : dateStr,
+          };
+        })
+        .reverse();
+    }, [supplierTableData]);
 
   const handleChangeAccount = useCallback(
     (accountId: number) => {
@@ -57,6 +104,15 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     },
     [accounts]
   );
+
+  const handleChangeSupplierFilterByDate = useCallback((id: string) => {
+    const selectedDate = supplierFilterByDate.id;
+    setSupplierFilterByDate({
+      id,
+      name: new Date(id as string).toDateString(),
+      isActive: true,
+    });
+  }, []);
 
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant) return;
@@ -193,7 +249,20 @@ const Dashboard: React.FC<Props> = ({ error }) => {
           />
         </div>
         <div className='basis-full'>
-          <MultiLevelTable data={supplierTableData} />
+          {supplierFilterByDateOptions && supplierTableData && (
+            <div className='flex justify-between mb-5'>
+              <h2 className='text-2xl font-semibold'>Supplier Performance</h2>
+              <div>
+                <Select
+                  id='suppliersFilterByDate'
+                  name='suppliersFilterByDate'
+                  options={supplierFilterByDateOptions}
+                  onUncontrolledChange={handleChangeSupplierFilterByDate}
+                />
+              </div>
+            </div>
+          )}
+          <MultiLevelTable data={filteredSupplierTableData} />
         </div>
       </div>
     </MainLayout>

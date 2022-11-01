@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import { useCoreFetching } from '@/libs/core/data-access';
-import Dashboard from '@/libs/core';
+import Dashboard from '@/libs/core/dashboard';
 import NotFound from '@/layouts/NotFound';
 import TenantCreate from '@/libs/core/tenant/create';
 import TenantEdit from '@/libs/core/tenant/edit';

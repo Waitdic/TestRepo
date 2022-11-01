@@ -254,7 +254,9 @@ export async function testSupplier(
   onFailed: (message: string, instance?: string) => void
 ) {
   try {
-    const { data } = await ApiCall.request({
+    const {
+      data: { requestKey, message },
+    } = await ApiCall.request({
       method: 'POST',
       url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test`,
       headers: {
@@ -262,9 +264,35 @@ export async function testSupplier(
         UserKey: userKey,
       },
     });
-    if (data.success) {
-      onSuccess(data.message);
+
+    const reqKeyInvalid = parseInt(requestKey.trim()) === 0;
+    if (reqKeyInvalid) {
+      onFailed(message);
+      return;
     }
+
+    let timerCount = 0;
+    const timer = setInterval(async () => {
+      const res = await ApiCall.request({
+        method: 'GET',
+        url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test?q=${requestKey}`,
+        headers: {
+          Tenantkey: tenantKey,
+          UserKey: userKey,
+        },
+      });
+      if (res.status === 200) {
+        onSuccess(res.data.results);
+        clearInterval(timer);
+      }
+
+      if (timerCount >= 24) {
+        console.error('Search timeout');
+        onFailed('Search timeout');
+        clearInterval(timer);
+      }
+      timerCount++;
+    }, 5000);
   } catch (error: any) {
     const { message, instance } = handleApiError(error);
     onFailed(message, instance);
