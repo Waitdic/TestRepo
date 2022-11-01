@@ -16,5 +16,6 @@
 
         public string LeadGuestName { get; set; } = string.Empty;
 
+        public int APILogId { get; set; }
     }
 }

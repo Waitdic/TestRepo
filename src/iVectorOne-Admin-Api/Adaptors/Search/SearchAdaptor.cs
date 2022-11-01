@@ -68,7 +68,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
             catch (Exception ex)
             {
                 var activity = Activity.Current;
-                response.Information = $"{ex.Message} : {activity?.GetTraceId()}";
+                response.Information = $"Unexpected error executing search request: {activity?.GetTraceId()}";
                 response.SearchStatus = Response.SearchStatusEnum.Exception;
 
                 _logger.LogError(ex, "Unexpected error executing search request.");
