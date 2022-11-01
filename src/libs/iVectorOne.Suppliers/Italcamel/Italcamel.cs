@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
@@ -95,24 +94,38 @@
                 request.SetRequest(preBookRequest);
                 await request.Send(_httpClient, _logger);
 
-                var test = request.ResponseString.Replace("xsi:nil=\"true\"", "");
                 var response = _serializer.DeSerialize<Envelope<PackageEstimateResponse>>(
-                    request.ResponseString.Replace("xsi:nil=\"true\"", "")).Body.Content.PackageEstimateResult;
+                    request.ResponseXML).Body.Content.PackageEstimateResult;
 
                 // check for error
-                if (response.ErrorCode > 0 || response.Package.Status != 0 || (response.Package.Booking.Status != 30 && response.Package.Booking.Status != 20))
+                if (response.ErrorCode.ToSafeInt() > 0 || response.Status != 0 || (response.Package.Booking.Status != 30 && response.Package.Booking.Status != 20))
                 {
                     success = false;
                 }
 
                 for (var i = 0; i < propertyDetails.Rooms.Count; i++)
                 {
-                    propertyDetails.Rooms[i].LocalCost += response.Package.Booking.InternalBooking.Rooms[i].TotalAmount.ToSafeDecimal();
+                    propertyDetails.Rooms[i].LocalCost = response.Package.Booking.InternalBooking != null 
+                        ? response.Package.Booking.InternalBooking.Rooms[i].TotalAmount.ToSafeDecimal() 
+                        : response.Package.Booking.Rooms[i].TotalAmount.ToSafeDecimal();
                 }
 
                 // set cancellations on booking
-                propertyDetails.Errata.Add(new Erratum("REMARKS", response.Package.Booking.InternalBooking.Remarks));
-                SetCancellations(propertyDetails, response.Package.Booking.InternalBooking.CancellationPolicies, response.Package.UID);
+                string remarks;
+                CancellationPolicy[] cancellationPolicies;
+                if (response.Package.Booking.InternalBooking != null)
+                {
+                    remarks = response.Package.Booking.InternalBooking.Remarks;
+                    cancellationPolicies = response.Package.Booking.InternalBooking.Rooms.SelectMany(x => x.CancellationPolicies).ToArray();
+                }
+                else
+                {
+                    remarks = response.Package.Booking.Remarks;
+                    cancellationPolicies = response.Package.Booking.Rooms.SelectMany(x => x.CancellationPolicies).ToArray();
+                }
+
+                propertyDetails.Errata.Add(new Erratum("REMARKS", remarks));
+                SetCancellations(propertyDetails, cancellationPolicies);
             }
             catch (Exception ex)
             {
@@ -141,7 +154,7 @@
 
             try
             {
-                var bookingRequest = BuildRequest(propertyDetails, "BOOK");
+                var bookingRequest = BuildRequest(propertyDetails, "BOOKING");
                 var url = _settings.GenericURL(propertyDetails);
                 var soapAction = url
                     .Replace("https", "http")
@@ -154,14 +167,18 @@
                 var response = _serializer.DeSerialize<Envelope<PackageEstimateResponse>>(request.ResponseXML).Body.Content.PackageEstimateResult;
 
                 // check for error
-                if (response.ErrorCode > 0 || response.Package.Status != 0 || response.Package.Booking.Status != 30)
+                if (response.ErrorCode.ToSafeInt() > 0 || response.Status != 0 || (response.Package.Booking.Status != 30 && response.Package.Booking.Status != 20))
                 {
                     reference = "failed";
                 }
+                else
+                {
+                    GetBookingCharge(propertyDetails, response.Package.Booking.UID);
 
-                // store bookinguid - required for cancellation
-                propertyDetails.SourceSecondaryReference = $"{response.Package.UID}|{response.Package.Booking.UID}";
-                reference = response.Package.Number;
+                    // store bookinguid - required for cancellation
+                    propertyDetails.SourceSecondaryReference = $"{response.Package.UID}|{response.Package.Booking.UID}";
+                    reference = response.Package.Number;
+                }
             }
             catch (Exception ex)
             {
@@ -207,7 +224,7 @@
                 var response = _serializer.DeSerialize<Envelope<PackageDeleteResponse>>(request.ResponseXML).Body.Content.Response;
 
                 // check response
-                if (!string.IsNullOrEmpty(response.ErrorCode) || response.ErrorCode.ToSafeInt() == 0)
+                if (string.IsNullOrEmpty(response.ErrorCode) && response.Status.ToSafeInt() == 0 && response.ErrorCode.ToSafeInt() == 0)
                 {
                     thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
                     thirdPartyCancellationResponse.Success = true;
@@ -269,6 +286,7 @@
                                 CheckOut = propertyDetails.DepartureDate.ToString("yyyy-MM-dd"),
                                 AccomodationUID = propertyDetails.TPKey,
                                 RequestPrice = propertyDetails.LocalCost,
+                                Type = type,
                                 DeltaPrice = _settings.DeltaPrice(propertyDetails),
                                 Rooms = propertyDetails.Rooms.Select(r => new PrebookRoom
                                 {
@@ -309,8 +327,8 @@
                     Content =
                     {
                         Username = _settings.Login(propertyDetails),
-                        Password = _settings.Login(propertyDetails),
-                        LanguageUID = _settings.Login(propertyDetails),
+                        Password = _settings.Password(propertyDetails),
+                        LanguageUID = _settings.LanguageID(propertyDetails),
                         PackageUID = propertyDetails.SourceSecondaryReference.Split('|')[0]
                     }
                 }
@@ -319,26 +337,9 @@
             return _serializer.Serialize(request).OuterXml;
         }
 
-        private async void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies, string UID)
+        private void SetCancellations(PropertyDetails propertyDetails, CancellationPolicy[] cancellationPolicies)
         {
-            var searchRequest = _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, UID);
-            var soapAction = _settings.GenericURL(propertyDetails)
-                .Replace("https", "http")
-                .Replace("test", "") + "/GETBOOKINGCHARGE";
-
-            // get response
-            var request = new Intuitive.Helpers.Net.Request
-            {
-                EndPoint = _settings.GenericURL(propertyDetails),
-                Method = RequestMethod.POST,
-                ContentType = ContentTypes.Text_xml,
-                SoapAction = soapAction,
-                UseGZip = false,
-            };
-            request.SetRequest(searchRequest);
-            await request.Send(_httpClient, _logger);
-
-            var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML).Body.Content.BookingCharges;
+            
 
             // get cancellation policie(s)
             var cancellations = new Cancellations();
@@ -349,10 +350,6 @@
                         ? cancellationPolicies.Where(c => c.RoomUID == room.ThirdPartyReference.Split('|')[0]).ToList()
                         : cancellationPolicies.Where(c => c.RoomUID == string.Empty).ToList();
 
-                var charges = bookingCharges
-                    .Where(x => x.RoomUID == room.ThirdPartyReference.Split('|')[0])
-                    .ToList();
-
                 foreach (var cancellationPolicy in cancellationNodes)
                 {
                     var date = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayFrom);
@@ -361,13 +358,6 @@
                         cancellationPolicy.Value,
                         room.LocalCost,
                         propertyDetails.Duration);
-
-                    if (charges.Any())
-                    {
-                        amount += charges.Any(x => x.ChargeDate == date)
-                            ? charges.First(x => x.ChargeDate == date).ChargeAmount
-                            : 0;
-                    } 
 
                     var lastDate = propertyDetails.ArrivalDate.AddDays(-cancellationPolicy.DayTo);
                     cancellations.AddNew(date, lastDate, amount);
@@ -413,6 +403,42 @@
                     bookingCost * value / 100,
                 _ => throw new Exception("Cancellation type unknown")
             };
+        }
+
+        private async Task GetBookingCharge(PropertyDetails propertyDetails, string uid)
+        {
+            Request? request = null;
+            try
+            {
+                var bookingChargeRequest =
+                    _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, uid);
+                var soapAction = _settings.GenericURL(propertyDetails)
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/GETBOOKINGCHARGE";
+
+                request = _helper.CreateWebRequest(_settings.GenericURL(propertyDetails), soapAction);
+                request.SetRequest(bookingChargeRequest);
+                await request.Send(_httpClient, _logger);
+
+                var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML)
+                    .Body.Content;
+
+                if (bookingCharges.Status != null && bookingCharges.Status.ToSafeInt() != 0)
+                {
+                    propertyDetails.Warnings.AddNew("GetBookingCharge failed", bookingCharges.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("GetBookingCharge Exception", ex.Message);
+            }
+            finally
+            {
+                if (request != null)
+                {
+                    propertyDetails.AddLog("GetBookingCharge", request);
+                }
+            }
         }
 
         #endregion

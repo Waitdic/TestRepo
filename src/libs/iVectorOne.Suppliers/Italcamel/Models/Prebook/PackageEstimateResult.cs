@@ -4,11 +4,11 @@
 
     public class PackageEstimateResult
     {
-        [XmlElement("ERRORCODE")]
-        public int ErrorCode { get; set; }
-
         [XmlElement("STATUS")]
         public int Status { get; set; }
+
+        [XmlElement("ERRORCODE")]
+        public string ErrorCode { get; set; } = string.Empty;
 
         [XmlElement("PACKAGE")]
         public Package Package { get; set; } = new();

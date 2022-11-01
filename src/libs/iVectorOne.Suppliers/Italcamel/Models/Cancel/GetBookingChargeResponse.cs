@@ -10,5 +10,11 @@
         [XmlArray("BOOKINGCHARGES")]
         [XmlArrayItem("BOOKINGCHARGE")]
         public BookingCharge[] BookingCharges { get; set; } = Array.Empty<BookingCharge>();
+
+        [XmlElement("STATUS")]
+        public string? Status { get; set; }
+
+        [XmlElement("ERRORMESSAGE")]
+        public string ErrorMessage { get; set; } = string.Empty;
     }
 }

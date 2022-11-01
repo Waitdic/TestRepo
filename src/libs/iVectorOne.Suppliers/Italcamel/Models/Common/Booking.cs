@@ -26,10 +26,10 @@
         public bool ShouldSerializeAccomodationUID() => !string.IsNullOrEmpty(AccomodationUID);
 
         [XmlElement("REQUESTEDPRICE")]
-        public decimal RequestPrice { get; set; }
+        public decimal? RequestPrice { get; set; }
 
         [XmlElement("DELTAPRICE")]
-        public decimal DeltaPrice { get; set; }
+        public decimal? DeltaPrice { get; set; }
 
         [XmlArray("ROOMS")]
         [XmlArrayItem("ROOM")]
@@ -42,10 +42,5 @@
         [XmlElement("REMARKS")]
         public string Remarks { get; set; } = string.Empty;
         public bool ShouldSerializeRemarks() => !string.IsNullOrEmpty(Remarks);
-
-        [XmlArray("CANCELLATIONPOLICIES")]
-        [XmlArrayItem("CANCELLATIONPOLICY")]
-        public CancellationPolicy[] CancellationPolicies { get; set; } = Array.Empty<CancellationPolicy>();
-        public bool ShouldSerializeCancellationPolicies() => CancellationPolicies.Length != 0;
     }
 }

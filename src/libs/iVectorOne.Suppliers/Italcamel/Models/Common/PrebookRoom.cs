@@ -41,5 +41,10 @@
         [XmlElement("TOTAL_AMOUNT")]
         public decimal? TotalAmount { get; set; }
         public bool ShouldSerializeTotalAmount() => TotalAmount != null;
+
+        [XmlArray("CANCELLATIONPOLICIES")]
+        [XmlArrayItem("CANCELLATIONPOLICY")]
+        public CancellationPolicy[] CancellationPolicies { get; set; } = Array.Empty<CancellationPolicy>();
+        public bool ShouldSerializeCancellationPolicies() => CancellationPolicies.Length != 0;
     }
 }
