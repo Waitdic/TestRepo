@@ -42,7 +42,6 @@ try
     app
         .UseIntuitiveLogging()
         .UseIntuitiveAuditing()
-        .UseHttpsRedirection()
         .UseIntuitiveMiddleware()
         .UseAuthentication()
         .UseAuthorization()
