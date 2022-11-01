@@ -2,6 +2,8 @@
 {
     public record ResponseModel : ResponseModelBase
     {
+        public string Message { get; set; } = string.Empty;
+
         public List<SearchResult> Results { get; set; } = new List<SearchResult>();
     }
 }
