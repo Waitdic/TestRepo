@@ -92,9 +92,9 @@
         }
 
         /// <inheritdoc />
-        public async Task<string> ISOCurrencyCodeLookupAsync(int currencyId)
+        public async Task<string> ISOCurrencyCodeLookupAsync(int isoCurrencyId)
         {
-            (await ISOCurrencyAsync()).TryGetValue(currencyId, out string currencyCode);
+            (await ISOCurrencyAsync()).TryGetValue(isoCurrencyId, out string currencyCode);
             return currencyCode;
         }
 

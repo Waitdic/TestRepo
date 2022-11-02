@@ -43,7 +43,7 @@
                 Duration = 40,
                 PropertyID = 5526246,
                 Rooms = 3,
-                CurrencyID = 52
+                ISOCurrencyID = 52
             };
             var user = new Account();
 
@@ -57,7 +57,7 @@
             Assert.Equal(propertyToken.Duration, decodedToken.Duration);
             Assert.Equal(propertyToken.PropertyID, decodedToken.PropertyID);
             Assert.Equal(propertyToken.Rooms, decodedToken.Rooms);
-            Assert.Equal(propertyToken.CurrencyID, decodedToken.CurrencyID);
+            Assert.Equal(propertyToken.ISOCurrencyID, decodedToken.ISOCurrencyID);
         }
 
         [Theory]
