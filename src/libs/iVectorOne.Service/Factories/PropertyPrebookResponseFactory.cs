@@ -51,7 +51,7 @@
             var errata = new List<string>();
             var cancellationTerms = new List<Search.CancellationTerm>();
             var roomBookings = new List<RoomBooking>();
-            int currencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
+            int isoCurrencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
                 await _support.ISOCurrencyIDLookupAsync(propertyDetails.ISOCurrencyCode) :
                 0;
 
@@ -108,7 +108,7 @@
                 Duration = propertyDetails.Duration,
                 PropertyID = propertyDetails.PropertyID,
                 Rooms = propertyDetails.Rooms.Count,
-                CurrencyID = currencyId,
+                ISOCurrencyID = isoCurrencyId,
             };
 
             var response = new Response()

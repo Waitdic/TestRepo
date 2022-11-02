@@ -57,15 +57,15 @@
             var createResponseTimer = new ThirdPartyRequestTime("CreateResponse");
             createResponseTimer.StartTotalTimer();
 
-            foreach (var result in searchDetails.Results.DedupeResults)
+            foreach (var result in searchDetails.Results.GetSortedResults())
             {
-                var propertyData = result.Value.PropertyData;
+                var propertyData = result.PropertyData;
 
                 var supplierSplit = supplierSplits.FirstOrDefault(ss => ss.Supplier == propertyData.Source);
 
                 var propertyId = supplierSplit.AllHotels.FirstOrDefault(h => h.TPKey == propertyData.TPKey).PropertyID;
 
-                var currencyId = result.Value.RoomResults.First().PriceData.CurrencyID;
+                var isoCurrencyId = result.RoomResults.First().PriceData.CurrencyID;
 
                 var propertyToken = new PropertyToken()
                 {
@@ -73,7 +73,7 @@
                     Duration = searchDetails.Duration,
                     PropertyID = propertyId,
                     Rooms = searchDetails.Rooms,
-                    CurrencyID = currencyId
+                    ISOCurrencyID = isoCurrencyId
                 };
 
                 var propertyResult = new PropertyResult()
@@ -82,7 +82,7 @@
                     PropertyID = propertyData.PropertyReferenceID
                 };
 
-                foreach (var roomResult in result.Value.RoomResults)
+                foreach (var roomResult in result.RoomResults)
                 {
                     try
                     {

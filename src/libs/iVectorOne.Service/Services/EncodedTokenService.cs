@@ -58,7 +58,7 @@
             _tokenValues.AddValue(TokenValueType.Day, propertyToken.ArrivalDate.Day);
             _tokenValues.AddValue(TokenValueType.Duration, propertyToken.Duration);
             _tokenValues.AddValue(TokenValueType.Rooms, propertyToken.Rooms);
-            _tokenValues.AddValue(TokenValueType.CurrencyID, propertyToken.CurrencyID);
+            _tokenValues.AddValue(TokenValueType.CurrencyID, propertyToken.ISOCurrencyID);
 
             char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
 
@@ -158,7 +158,7 @@
                     Duration = _tokenValues.GetValue(TokenValueType.Duration),
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                     Rooms = _tokenValues.GetValue(TokenValueType.Rooms),
-                    CurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID)
+                    ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID)
                 };
 
                 int day = _tokenValues.GetValue(TokenValueType.Day);
@@ -246,16 +246,23 @@
 
         private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
         {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account, string.Empty);
-
-            if (propertyContent != null)
+            try
             {
-                propertyToken.Source = propertyContent.Source;
-                propertyToken.TPKey = propertyContent.TPKey;
-                propertyToken.PropertyName = propertyContent.PropertyName;
-                propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
-                propertyToken.GeographyCode = propertyContent.GeographyCode;
-                propertyToken.SupplierID = propertyContent.SupplierID;
+                var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account, string.Empty);
+
+                if (propertyContent != null)
+                {
+                    propertyToken.Source = propertyContent.Source;
+                    propertyToken.TPKey = propertyContent.TPKey;
+                    propertyToken.PropertyName = propertyContent.PropertyName;
+                    propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
+                    propertyToken.GeographyCode = propertyContent.GeographyCode;
+                    propertyToken.SupplierID = propertyContent.SupplierID;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
             }
         }
 
