@@ -93,6 +93,16 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         })
         .reverse();
     }, [supplierTableData]);
+  const accountsOptions = useMemo(() => {
+    return sortBy?.(accounts, [
+      function (o) {
+        return o?.userName?.toLowerCase?.();
+      },
+    ])?.map((a) => ({
+      id: a.accountId,
+      name: a.userName,
+    }));
+  }, [accounts]);
 
   const handleChangeAccount = useCallback(
     (accountId: number) => {
@@ -123,12 +133,15 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         dispatch.app.setIsLoading(true);
       },
       (fetchedAccounts) => {
-        setAccounts(
-          fetchedAccounts?.map((a, idx) => ({
-            ...a,
-            isSelected: idx === 0 ? true : false,
-          }))
-        );
+        const orderedAccounts = sortBy?.(fetchedAccounts, [
+          function (o) {
+            return o?.userName?.toLowerCase?.();
+          },
+        ])?.map((a, idx) => ({
+          ...a,
+          isSelected: idx === 0 ? true : false,
+        }));
+        setAccounts(orderedAccounts);
         dispatch.app.setIsLoading(false);
         setIsIntermission(false);
       },
@@ -220,14 +233,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
                 id='account'
                 name='account'
                 labelText='Account'
-                options={sortBy?.(accounts, [
-                  function (o) {
-                    return o?.userName?.toLowerCase?.();
-                  },
-                ])?.map((a) => ({
-                  id: a.accountId,
-                  name: a.userName,
-                }))}
+                options={accountsOptions}
                 onUncontrolledChange={handleChangeAccount}
               />
             )}
