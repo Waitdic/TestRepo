@@ -5,6 +5,9 @@
 
     public class AvailRequestSegment
     {
+        [XmlAttribute()]
+        public string AvailReqType { get; set; } = null!;
+
         public StayDateRange StayDateRange { get; set; } = new();
 
         [XmlArray("RoomStayCandidates")]
