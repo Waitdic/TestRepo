@@ -52,7 +52,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                             searchResults.Add(new SearchResult
                             {
                                 Supplier = roomType.Supplier,
-                                RoomCode = roomType.RateCode,
+                                RoomCode = roomType.Code,
                                 RoomType = roomType.SupplierRoomType,
                                 MealBasis = roomType.MealBasisCode,
                                 Currency = roomType.CurrencyCode,
