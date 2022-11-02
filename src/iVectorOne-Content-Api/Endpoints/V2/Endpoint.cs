@@ -19,7 +19,8 @@
                         [FromServices] IMediator mediator,
                         [FromQuery] string? propertyids,
                         [FromQuery] DateTime? lastModified,
-                        [FromQuery] string? suppliers)
+                        [FromQuery] string? suppliers,
+                        [FromQuery] bool? includeRoomTypes)
                         =>
                         {
                             var propertyIdList = (propertyids ?? string.Empty).Split(",", StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -29,6 +30,7 @@
                                 var request = new Content.Request
                                 {
                                     PropertyIDs = propertyIdList,
+                                    IncludeRoomTypes = includeRoomTypes ?? false,
                                 };
 
                                 return await EndpointBase.ExecuteRequest<Content.Request, Content.Response>(httpContext, mediator, request);

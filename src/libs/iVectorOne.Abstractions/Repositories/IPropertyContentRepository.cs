@@ -20,8 +20,9 @@
         /// <param name="propertyIDs">The central property identifiers for the properties the content is being requested for</param>
         /// <param name="suppliers">Filters the property ids to only those for the provided suppliers</param>
         /// <param name="account">The api login</param>
+        /// <param name="includeRoomTypes">Whether or not to return room types in the response</param>
         /// <returns>A property content response.</returns>
-        Task<Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Account account);
+        Task<Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Account account, bool includeRoomTypes);
 
         /// <summary>Takes in a property identifier and looks up the content for that property.</summary>
         /// <param name="propertyId">The property identifier (this will be the property identifier not the central property identifier that the other calls use).</param>

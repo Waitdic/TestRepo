@@ -44,11 +44,11 @@
         }
 
         /// <inheritdoc/>
-        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Account account)
+        public async Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Account account, bool includeRoomTypes)
         {
             string suppliers = this.GetValidSuppliers(string.Empty, account);
 
-            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers, account);
+            return await _contentRepo.GetPropertyContentAsync(propertyIDs, suppliers, account, includeRoomTypes);
         }
 
         /// <summary>Validate suppliers, only returning suppliers that are configured</summary>
