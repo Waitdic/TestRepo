@@ -87,12 +87,12 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     Successful = $"{x.SearchSuccessfulPrecent:n1} %",
                     Avg_Resp = $"{x.AverageSearchTime} ms",
                 },
-                S2B = x.S2B.ToString("n1")
+                S2B = x.S2B.ToString("n0")
             }).ToList();
 
             var supplierSummary = new List<Supplier>();
 
-            for (int i = -4; i < 1; i++)
+            for (int i = -6; i < 1; i++)
             {
                 var queryDate = DateTime.Now.AddDays(i);
 
@@ -122,7 +122,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                         Successful = $"{x.SearchSuccessfulPrecent:n1} %",
                         Avg_Resp = $"{x.AverageSearchTime} ms",
                     },
-                    S2B = x.S2B.ToString("n1")
+                    S2B = x.S2B.ToString("n0")
                 }).ToList());
              }
 
