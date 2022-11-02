@@ -38,7 +38,7 @@
         }
 
         /// <inheritdoc/>
-        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Account account)
+        public async Task<Content.Response> GetPropertyContentAsync(List<int> propertyIDs, string suppliers, Account account, bool includeRoomTypes)
         {
             var centralPropertyIDs = new List<int>();
 
@@ -116,6 +116,13 @@
                         {
                             supplierContent.Images = details.Images.Skip(1).Select(i => i.URL != null ? i.URL : i.SourceURL).ToList()!;
                         }
+
+                        supplierContent.FullImages.AddRange(details.Images.Select(i => new Content.Image(i.SourceURL, i.URL, i.Title, i.Sequence, i.Height, i.Width)));
+                    }
+
+                    if (includeRoomTypes && details.RoomTypes.Any())
+                    {
+                        supplierContent.RoomTypes.AddRange(details.RoomTypes.Select(rt => new Content.RoomType(rt.Name, rt.Code, rt.RateName, rt.RateId, rt.Facilities.Select(f => f.Description).ToList()!)));
                     }
 
                     if (!property.SupplierContent.Any(sc => sc.TPKey == supplierContent.TPKey && sc.Supplier == supplierContent.Supplier))
