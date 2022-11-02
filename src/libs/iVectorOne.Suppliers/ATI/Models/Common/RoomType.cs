@@ -8,6 +8,8 @@
         [XmlAttribute("RoomTypeCode")]
         public string RoomTypeCode { get; set; } = string.Empty;
 
+        public Amenity[] Amenities { get; set; } = Array.Empty<Amenity>();
+
         public RoomDescription RoomDescription { get; set; } = new();
 
         public RoomTypeDescription RoomTypeDescription { get; set; } = new();
