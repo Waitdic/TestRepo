@@ -9,6 +9,7 @@ import { NotificationStatus } from '@/constants';
 import mapChartData from '@/utils/mapChartData';
 import MainLayout from '@/layouts/Main';
 import {
+  Button,
   ChartCard,
   MultiLevelTable,
   Select,
@@ -212,8 +213,8 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         <WelcomeBanner />
       )}
       <div className='flex flex-col 2xl:flex-row 2xl:flex-wrap gap-12'>
-        <div className='grid 2xl:grid-cols-4 gap-4 basis-full'>
-          <div>
+        <div className='flex 2xl:grid 2xl:grid-cols-4 gap-4 basis-full items-end'>
+          <div className='flex-1'>
             {!!accounts?.length && (
               <Select
                 id='account'
@@ -231,6 +232,11 @@ const Dashboard: React.FC<Props> = ({ error }) => {
               />
             )}
           </div>
+          {summaryTableData && (
+            <div>
+              <Button text='Refresh' onClick={fetchChartData} />
+            </div>
+          )}
         </div>
         <div className='basis-full'>
           <MultiLevelTable data={summaryTableData} />

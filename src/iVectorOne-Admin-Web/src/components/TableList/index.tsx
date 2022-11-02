@@ -53,7 +53,7 @@ const TableList: FC<Props> = ({
       {bodyList.length > 0 || showOnEmpty ? (
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
-            <table className='table-auto divide-y divide-gray-200 w-full'>
+            <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
               <thead className='bg-gray-50'>
                 <tr>
                   {headerList.length > 0 &&
