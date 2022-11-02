@@ -2,7 +2,7 @@ import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 //
-import { EmptyState, Spinner } from '@/components';
+import { EmptyState, Spinner, YesOrNo } from '@/components';
 
 type Props = {
   headerList: {
@@ -101,7 +101,13 @@ const TableList: FC<Props> = ({
                                 key={idx}
                                 className='px-6 py-4 text-sm font-medium text-dark'
                               >
-                                {item}
+                                {typeof item === 'boolean' ? (
+                                  <div className='text-center'>
+                                    <YesOrNo isActive={item} />
+                                  </div>
+                                ) : (
+                                  <>{item}</>
+                                )}
                               </td>
                             ))}
                           </>
