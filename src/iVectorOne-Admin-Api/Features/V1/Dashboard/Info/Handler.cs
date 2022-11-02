@@ -79,20 +79,20 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 Prebook = new Prebook
                 {
                     Total = x.PrebookTotal.ToString(),
-                    Successful = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
+                    Successful = $"{x.PrebookSuccessfulPrecent:n1} %",
                 },
                 Searches = new Searches
                 {
                     Total = x.SearchTotal.ToString(),
-                    Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccessful / x.SearchTotal) * 100} %",
+                    Successful = $"{x.SearchSuccessfulPrecent:n1} %",
                     Avg_Resp = $"{x.AverageSearchTime} ms",
                 },
-                S2B = x.BookingTotal == 0 ? "0 " : (x.SearchTotal / x.BookingTotal).ToString(),
+                S2B = x.S2B.ToString("n0")
             }).ToList();
 
             var supplierSummary = new List<Supplier>();
 
-            for (int i = -4; i < 1; i++)
+            for (int i = -6; i < 1; i++)
             {
                 var queryDate = DateTime.Now.AddDays(i);
 
@@ -109,20 +109,20 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     Bookings = new SupplierBookings
                     {
                         Total = x.BookTotal.ToString(),
-                        Successful = x.BookTotal == 0 ? "0 %" : $"{(x.BookSuccess / x.BookTotal) * 100} %",
+                        Successful = $"{x.BookSuccessfulPrecent:n1} %",
                     },
                     Prebook = new SupplierPrebook
                     {
                         Total = x.PrebookTotal.ToString(),
-                        Successful = x.PrebookTotal == 0 ? "0 %" : $"{(x.PrebookSuccess / x.PrebookTotal) * 100} %",
+                        Successful = $"{x.PrebookSuccessfulPrecent:n1} %",
                     },
                     Searches = new SupplierSearches
                     {
                         Total = x.SearchTotal.ToString(),
-                        Successful = x.SearchTotal == 0 ? "0 %" : $"{(x.SearchSuccess / x.SearchTotal) * 100} %",
+                        Successful = $"{x.SearchSuccessfulPrecent:n1} %",
                         Avg_Resp = $"{x.AverageSearchTime} ms",
                     },
-                    S2B = x.BookTotal == 0 ? "0 " : (x.SearchTotal / x.BookTotal).ToString(),
+                    S2B = x.S2B.ToString("n0")
                 }).ToList());
              }
 

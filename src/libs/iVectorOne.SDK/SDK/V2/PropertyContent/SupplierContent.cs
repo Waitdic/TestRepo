@@ -39,8 +39,14 @@
         /// <summary>Gets or sets the images.</summary>
         public List<string> Images { get; set; } = new List<string>();
 
+        /// <summary>Prior to V3, the full image details are returned in this node to avoid a breaking change.</summary>
+        public List<Image> FullImages { get; set; } = new List<Image>();
+
         /// <summary>Gets or sets the content variables.</summary>
         public List<ContentVariable> ContentVariables { get; set; } = new List<ContentVariable>();
+
+        /// <summary>Gets or sets the room types.</summary>
+        public List<RoomType> RoomTypes { get; set; } = new List<RoomType>();
 
         [JsonIgnore]
         public string TPKey { get; set; } = string.Empty;

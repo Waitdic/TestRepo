@@ -6,7 +6,7 @@
     <RootNamespace>iVectorOne</RootNamespace>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Authors>Chris Thacker</Authors>
     <Company>Intuitive Limited</Company>
     <Description>SDK for integrations to iVectorOne</Description>
