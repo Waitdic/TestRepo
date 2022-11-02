@@ -14,6 +14,9 @@
         [XmlElement("NUMBER")]
         public string Number { get; set; } = string.Empty;
 
+        [XmlElement("REFERENCENUMBER")]
+        public string ReferenceNumber { get; set; } = string.Empty;
+
         [XmlElement("BOOKING")]
         public Booking Booking { get; set; } = new();
     }

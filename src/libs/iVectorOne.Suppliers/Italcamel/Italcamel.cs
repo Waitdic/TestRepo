@@ -103,6 +103,8 @@
                     success = false;
                 }
 
+                propertyDetails.TPRef1 = response.Package.ReferenceNumber;
+
                 for (var i = 0; i < propertyDetails.Rooms.Count; i++)
                 {
                     propertyDetails.Rooms[i].LocalCost = response.Package.Booking.InternalBooking != null 
@@ -173,7 +175,7 @@
                 }
                 else
                 {
-                    GetBookingCharge(propertyDetails, response.Package.Booking.UID);
+                    await GetBookingCharge(propertyDetails, response.Package.Booking.UID);
 
                     // store bookinguid - required for cancellation
                     propertyDetails.SourceSecondaryReference = $"{response.Package.UID}|{response.Package.Booking.UID}";
@@ -279,7 +281,9 @@
                         {
                             Type = type,
                             Notes = comment,
-                            ReferenceNumber = DateTime.Now.ToString("yyyyMMddhhmmss"),
+                            ReferenceNumber = !string.IsNullOrEmpty(propertyDetails.TPRef1) 
+                                ? propertyDetails.TPRef1 
+                                : DateTime.Now.ToString("yyyyMMddhhmmss"),
                             Booking =
                             {
                                 CheckIn = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd"),
