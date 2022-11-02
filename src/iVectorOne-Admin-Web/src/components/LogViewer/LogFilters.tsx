@@ -1,17 +1,8 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortBy } from 'lodash';
-import { BsFilterRight } from 'react-icons/bs';
-import { AiOutlineClose } from 'react-icons/ai';
-import { Transition } from '@headlessui/react';
 //
-import type { Account } from '@/types';
+import type { Account, LogEntries, LogViewerFilters } from '@/types';
 import { getAccounts } from '@/libs/core/data-access/account';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
@@ -19,17 +10,16 @@ import {
   Button,
   Datepicker,
   Select,
+  Tabs,
   UncontrolledTextField,
 } from '@/components';
-import classNames from 'classnames';
+import { getBookingsLogEntries } from '@/libs/log-viewer/data-access';
 
 type Props = {
-  filters: any;
-  setFilters: React.Dispatch<React.SetStateAction<any>>;
-  setResults: React.Dispatch<React.SetStateAction<any[]>>;
+  setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
 };
 
-const LogFilters: React.FC<Props> = ({ filters, setFilters, setResults }) => {
+const LogFilters: React.FC<Props> = ({ setResults }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
@@ -38,19 +28,49 @@ const LogFilters: React.FC<Props> = ({ filters, setFilters, setResults }) => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<LogViewerFilters>({
+    accountId: -1,
+    logDateRange: new Date(),
+    supplier: 'All',
+    system: 'All',
+    type: 'All',
+    responseSuccess: 'All',
+  });
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [tabs, setTabs] = useState([
+    {
+      name: 'Search',
+      href: 'search',
+      current: true,
+    },
+    {
+      name: 'Filters',
+      href: 'filters',
+      current: false,
+    },
+  ]);
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((t) => t.isSelected),
     [user]
   );
+  const isActiveTab = (name: string) => {
+    return tabs.find((t) => t.current)?.href === name;
+  };
+
+  const handleOnTabChange = (href: string) => {
+    setTabs((prev) =>
+      prev.map((t) => ({
+        ...t,
+        current: t.href === href,
+      }))
+    );
+  };
 
   const handleChangeLogDateRange = useCallback(
     (date: Date[] | Date) => {
-      //! TODO: fix any
-      setFilters((prevFilters: any) => ({
+      setFilters((prevFilters) => ({
         ...prevFilters,
         logDateRange: date,
       }));
@@ -72,9 +92,37 @@ const LogFilters: React.FC<Props> = ({ filters, setFilters, setResults }) => {
     setSearchQuery(value);
   };
 
-  const handleOnSearch = () => {
-    console.log(filters);
-  };
+  const handleOnSearch = useCallback(async () => {
+    if (isLoading || !activeTenant || !userKey) return;
+    if (searchQuery.length < 3) {
+      dispatch.app.setNotification({
+        status: NotificationStatus.ERROR,
+        message: 'Search query must be at least 3 characters long',
+      });
+      return;
+    }
+
+    await getBookingsLogEntries({
+      tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      accountId: filters.accountId,
+      searchQuery,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: (logEntries) => {
+        dispatch.app.setIsLoading(false);
+        setResults(logEntries);
+      },
+      onFailed: (message) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+        });
+      },
+    });
+  }, [isLoading, activeTenant, userKey, filters, searchQuery]);
 
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant || !userKey) return;
@@ -90,8 +138,7 @@ const LogFilters: React.FC<Props> = ({ filters, setFilters, setResults }) => {
       (accounts) => {
         dispatch.app.setIsLoading(false);
         setAccounts(accounts);
-        //! TODO: fix any
-        setFilters((prev: any) => ({
+        setFilters((prev) => ({
           ...prev,
           accountId: accounts[0].accountId,
         }));
@@ -112,140 +159,168 @@ const LogFilters: React.FC<Props> = ({ filters, setFilters, setResults }) => {
   }, [fetchAccounts]);
 
   return (
-    <div className='no-scrollbar relative px-3 py-6 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
-      <button
-        className='absolute top-2 right-2 hover:scale-105 transition-transform duration-300'
-        onClick={() => setShowFilters((prev) => !prev)}
-        title='Toggle filters'
-      >
-        {showFilters ? (
-          <AiOutlineClose className='w-6 h-6' />
-        ) : (
-          <BsFilterRight className='w-8 h-8' />
-        )}
-      </button>
+    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
+      <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
 
-      {showFilters && (
-        <>
+      {isActiveTab('filters') && (
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
           <div>
-            <div className='text-xs font-semibold text-slate-400 uppercase mb-3'>
-              Log Filters
-            </div>
+            <Select
+              id='accountId'
+              name='accountId'
+              labelText='Account'
+              options={sortBy?.(accounts, [
+                function (o) {
+                  return o?.userName?.toLowerCase?.();
+                },
+              ])?.map((a) => ({
+                id: a.accountId,
+                name: a.userName,
+              }))}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('accountId', optionId)
+              }
+            />
           </div>
-          <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
-            <div>
-              <Select
-                id='account'
-                name='account'
-                labelText='Account'
-                options={sortBy?.(accounts, [
-                  function (o) {
-                    return o?.userName?.toLowerCase?.();
-                  },
-                ])?.map((a) => ({
-                  id: a.accountId,
-                  name: a.userName,
-                }))}
-                onUncontrolledChange={(optionId) =>
-                  handleOnFilterChange('account', optionId)
-                }
-              />
-            </div>
-            <div>
-              <Datepicker
-                mode='range'
-                label='Log Date Range'
-                onChange={handleChangeLogDateRange}
-              />
-            </div>
-            <div>
-              <Select
-                id='supplier'
-                name='supplier'
-                labelText='Supplier'
-                options={[
-                  {
-                    id: 0,
-                    name: 'All',
-                  },
-                ]}
-                onUncontrolledChange={(optionId) =>
-                  handleOnFilterChange('supplier', optionId)
-                }
-              />
-            </div>
-            <div>
-              <Select
-                id='system'
-                name='system'
-                labelText='System'
-                options={[
-                  {
-                    id: 0,
-                    name: 'All',
-                  },
-                ]}
-                onUncontrolledChange={(optionId) =>
-                  handleOnFilterChange('system', optionId)
-                }
-              />
-            </div>
-            <div>
-              <Select
-                id='type'
-                name='type'
-                labelText='Type'
-                options={[
-                  {
-                    id: 0,
-                    name: 'All',
-                  },
-                ]}
-                onUncontrolledChange={(optionId) =>
-                  handleOnFilterChange('type', optionId)
-                }
-              />
-            </div>
-            <div>
-              <Select
-                id='responseSuccess'
-                name='responseSuccess'
-                labelText='Response Success'
-                options={[
-                  {
-                    id: 0,
-                    name: 'All',
-                  },
-                ]}
-                onUncontrolledChange={(optionId) =>
-                  handleOnFilterChange('responseSuccess', optionId)
-                }
-              />
-            </div>
-            <div className='col-span-full'>
-              <Button text='Refresh' />
-            </div>
+          <div>
+            <Datepicker
+              mode='range'
+              label='Log Date Range'
+              onChange={handleChangeLogDateRange}
+            />
           </div>
-        </>
+          <div>
+            <Select
+              id='supplier'
+              name='supplier'
+              labelText='Supplier'
+              options={[
+                {
+                  id: 0,
+                  name: 'All',
+                },
+              ]}
+              defaultValue={{
+                id: filters.supplier,
+                name: filters.supplier,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('supplier', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='system'
+              name='system'
+              labelText='System'
+              options={[
+                {
+                  id: 'All',
+                  name: 'All',
+                },
+                {
+                  id: 'Live Only',
+                  name: 'Live Only',
+                },
+                {
+                  id: 'Test Only',
+                  name: 'Test Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.system,
+                name: filters.system,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('system', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='type'
+              name='type'
+              labelText='Type'
+              options={[
+                {
+                  id: 'All',
+                  name: 'All',
+                },
+                {
+                  id: 'Prebook Only',
+                  name: 'Prebook Only',
+                },
+                {
+                  id: 'Book Only',
+                  name: 'Book Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.type,
+                name: filters.type,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('type', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='responseSuccess'
+              name='responseSuccess'
+              labelText='Response Success'
+              options={[
+                {
+                  id: 'All',
+                  name: 'All',
+                },
+                {
+                  id: 'Successful Only',
+                  name: 'Successful Only',
+                },
+                {
+                  id: 'Unsuccessful Only',
+                  name: 'Unsuccessful Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.responseSuccess,
+                name: filters.responseSuccess,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('responseSuccess', optionId)
+              }
+            />
+          </div>
+          <div className='col-span-2 flex justify-end items-end'>
+            <Button text='Refresh' onClick={handleOnSearch} />
+          </div>
+        </div>
       )}
-      <div className='grid lg:grid-cols-4'>
-        <h3 className='col-span-full text-3xl font-semibold'>Booking Search</h3>
-        <div className='col-span-full text-sm mb-2'>
-          <p>
-            Please input a booking reference, supplier booking reference or lead
-            quest name
-          </p>
+      {isActiveTab('search') && (
+        <div className='grid lg:grid-cols-4'>
+          <h3 className='col-span-full text-2xl font-semibold'>
+            Booking Search
+          </h3>
+          <div className='col-span-full text-sm mb-2'>
+            <p>
+              Please input a booking reference, supplier booking reference or
+              lead quest name
+            </p>
+          </div>
+          <div className='col-span-2'>
+            <UncontrolledTextField
+              name='searchQuery'
+              onChange={handleOnSearchQueryChange}
+              value={searchQuery}
+            />
+          </div>
+          <div className='col-span-full'>
+            <Button text='Search' onClick={handleOnSearch} className='mt-5' />
+          </div>
         </div>
-        <div className='col-span-2'>
-          <UncontrolledTextField
-            name='searchQuery'
-            onChange={handleOnSearchQueryChange}
-          />
-        </div>
-        <div className='col-span-full'>
-          <Button text='Search' onClick={handleOnSearch} className='mt-5' />
-        </div>
-      </div>
+      )}
     </div>
   );
 };

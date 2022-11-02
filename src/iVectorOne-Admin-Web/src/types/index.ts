@@ -211,6 +211,26 @@ export interface SupplierSearchResults {
   nonRefundable: boolean;
 }
 
+export type LogViewerFilters = {
+  accountId: number;
+  logDateRange: Date | Date[];
+  supplier: 'All';
+  system: 'All' | 'Live Only' | 'Test Only';
+  type: 'All' | 'Prebook Only' | 'Book Only';
+  responseSuccess: 'All' | 'Successful Only' | 'Unsuccessful Only';
+};
+
+export interface LogEntries {
+  environment?: string;
+  timestamp: string;
+  supplierName: string;
+  type: string;
+  responseTime: number;
+  supplierBookingReference: string;
+  leadGuestName: string;
+  apiLogId?: number;
+}
+
 //* App State
 export type AppState = {
   lang: string;

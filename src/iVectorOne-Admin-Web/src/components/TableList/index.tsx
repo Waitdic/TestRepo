@@ -1,6 +1,7 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
+import moment from 'moment';
 //
 import { EmptyState, Spinner, YesOrNo } from '@/components';
 
@@ -40,6 +41,20 @@ const TableList: FC<Props> = ({
   showOnEmpty = false,
   initText,
 }) => {
+  const renderCell = (cellData: any) => {
+    if (typeof cellData === 'boolean') {
+      return (
+        <div className='text-center'>
+          <YesOrNo isActive={cellData} />
+        </div>
+      );
+    }
+    if (typeof cellData === 'string' && cellData.includes('T')) {
+      return moment(new Date(cellData)).format('YYYY-MM-DD HH:mm:ss');
+    }
+    return cellData;
+  };
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -101,13 +116,7 @@ const TableList: FC<Props> = ({
                                 key={idx}
                                 className='px-6 py-4 text-sm font-medium text-dark'
                               >
-                                {typeof item === 'boolean' ? (
-                                  <div className='text-center'>
-                                    <YesOrNo isActive={item} />
-                                  </div>
-                                ) : (
-                                  <>{item}</>
-                                )}
+                                {renderCell(item)}
                               </td>
                             ))}
                           </>
