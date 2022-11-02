@@ -85,11 +85,11 @@ const Search: React.FC = () => {
             setSearchResults={setSearchResults}
           />
           {isLoading && (
-            <div className='text-center text-sm pb-4 px-4'>
+            <div className='text-center text-lg pb-4 px-4'>
               <p className='animate-pulse'>Searching...</p>
             </div>
           )}
-          {searchDetails.isActive && (
+          {searchDetails.isActive && !isLoading && (
             <div className='p-4 w-full'>
               <TableList
                 headerList={tableHeaderList}

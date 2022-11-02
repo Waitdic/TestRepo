@@ -43,6 +43,7 @@ const SearchFilters: React.FC<Props> = ({
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [propertyIsLoading, setPropertyIsLoading] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -63,15 +64,15 @@ const SearchFilters: React.FC<Props> = ({
         accountId: searchDetails.accountId,
         query: value,
         onInit: () => {
-          dispatch.app.setIsLoading(true);
+          setPropertyIsLoading(true);
           setSearchDetails((prev) => ({ ...prev, properties: [] }));
         },
         onSuccess: (properties) => {
-          dispatch.app.setIsLoading(false);
+          setPropertyIsLoading(false);
           setSearchDetails((prev) => ({ ...prev, properties }));
         },
         onFailed: (_err, instance, title) => {
-          dispatch.app.setIsLoading(false);
+          setPropertyIsLoading(false);
           dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
             message: title,
@@ -234,6 +235,7 @@ const SearchFilters: React.FC<Props> = ({
       (p) => p.propertyId === selectedResult
     );
     if (selectedProperty) {
+      setSearchQuery(selectedProperty.name);
       setSearchDetails((prev) => ({
         ...prev,
         property: selectedProperty,
@@ -316,6 +318,7 @@ const SearchFilters: React.FC<Props> = ({
               onChange={handleChangeDetails}
               value={searchDetails.property.name}
               autoComplete={autoCompleteDetails}
+              isLoading={propertyIsLoading}
             />
           </div>
           <div className='col-span-1'>
