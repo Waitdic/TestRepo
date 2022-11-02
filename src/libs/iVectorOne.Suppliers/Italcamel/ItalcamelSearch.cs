@@ -131,7 +131,7 @@
                             {
                                 TPKey = tpkey,
                                 CurrencyCode = "EUR",
-                                PropertyRoomBookingID = count,
+                                PropertyRoomBookingID = count + 1,
                                 RoomType = room.Name,
                                 MealBasisCode = board.Acronym,
                                 Adults = guests.Rooms[count].Adults,
