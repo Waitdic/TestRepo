@@ -121,6 +121,23 @@ const SearchFilters: React.FC<Props> = ({
         }));
       }
     }
+    if (name === 'account') {
+      setSearchDetails({
+        accountId: value,
+        properties: [],
+        property: {
+          propertyId: 0,
+          name: '',
+        },
+        arrivalDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+        duration: 7,
+        adults: 2,
+        children: 0,
+        childrenAges: [],
+        infants: 0,
+        isActive: false,
+      });
+    }
     setSearchDetails((prev) => ({ ...prev, [name]: value }));
   };
 
