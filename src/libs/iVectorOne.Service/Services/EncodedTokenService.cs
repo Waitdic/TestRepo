@@ -96,6 +96,21 @@
             return tokenString;
         }
 
+        public string EncodeTransferToken(TransferToken transferToken)
+        {
+            _tokenValues.Clear();
+            _tokenValues.AddValue(TokenValueType.Year, transferToken.DepartureDate.Year - DateTime.Now.Year);
+            _tokenValues.AddValue(TokenValueType.Month, transferToken.DepartureDate.Month);
+            _tokenValues.AddValue(TokenValueType.Day, transferToken.DepartureDate.Day);
+            _tokenValues.AddValue(TokenValueType.CurrencyID, transferToken.CurrencyID);
+
+            char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
+
+            string tokenString = new string(bits.Take(TokenLengths.Property).ToArray());
+
+            return tokenString;
+        }
+
         private char[] ConvertValuesToCharArray(List<TokenValue> values)
         {
             long totalDecimal = 0;

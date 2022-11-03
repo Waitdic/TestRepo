@@ -92,6 +92,9 @@
             services.AddSingleton<IRoomRequestsFactory, RoomRequestsFactory>();
             services.AddSingleton<ISearchDetailsFactory, SearchDetailsFactory>();
             services.AddSingleton<IThirdPartyFactory, ThirdPartyFactory>();
+            services.AddSingleton<ITransferSearchResponseFactory, TransferSearchResponseFactory>();
+            services.AddSingleton<ITransferSearchDetailsFactory, TransferSearchDetailsFactory>();
+            services.AddSingleton<ITransferThirdPartyFactory, TransferThirdPartyFactory>();
         }
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
@@ -124,6 +127,9 @@
             services.AddSingleton<ITPSupport, TPSupportWrapper>();
             services.AddSingleton<IRequestTracker, ThirdPartyRequestTracker>();
             services.AddSingleton<IThirdPartyPropertySearchRunner, ThirdPartyPropertySearchRunner>();
+            services.AddSingleton<ITransferSearchService, TransferSearchService>();
+            services.AddSingleton<ITransferSearchResultsProcessor, TransferSearchResultsProcessor>();
+            services.AddSingleton<IThirdPartyTransferSearchRunner, ThirdPartyTransferSearchRunner>();
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
@@ -145,6 +151,7 @@
             services.AddHandlerAndValidator<Book.Request, Book.Response, Book.Handler, Book.Validator>();
             services.AddHandlerAndValidator<Precancel.Request, Precancel.Response, Precancel.Handler, Precancel.Validator>();
             services.AddHandlerAndValidator<Cancel.Request, Cancel.Response, Cancel.Handler, Cancel.Validator>();
+            services.AddHandlerAndValidator<SDK.V2.TransferSearch.Request, SDK.V2.TransferSearch.Response, SDK.V2.TransferSearch.Handler, SDK.V2.TransferSearch.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
@@ -171,6 +178,7 @@
             services.AddSingleton<IJuniperSettings, InjectedJuniperSettings>();
             services.AddSingleton<INetstormingSettings, InjectedNetstormingSettings>();
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
+            services.AddSingleton<INullTestTransferSupplierSettings, InjectedNullTestTransferSupplierSettings>();
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
@@ -227,6 +235,7 @@
             services.AddSingleton<IThirdPartySearch, WelcomeBedsSearch>();
             services.AddSingleton<IThirdPartySearch, YalagoSearch>();
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
+            services.AddSingleton<IThirdPartyTransferSearch, NullTestTransferSupplierSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)

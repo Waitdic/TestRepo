@@ -40,5 +40,10 @@
         /// <param name="propertyToken">The property token.</param>
         /// <returns>an encoded room token</returns>
         string EncodeRoomToken(RoomToken propertyToken);
+
+        /// <summary>Encodes the transfer token.</summary>
+        /// <param name="transferToken">The transfer token.</param>
+        /// <returns>An encoded property token.</returns>
+        string EncodeTransferToken(TransferToken transferToken);
     }
 }

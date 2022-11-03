@@ -151,6 +151,11 @@
         public const string NULLTESTSUPPLIER = "NullTestSupplier";
 
         /// <summary>
+        /// The third party NullTestTransferProvider
+        /// </summary>
+        public const string NULLTESTTRANSFERSUPPLIER = "NullTestTransferSupplier";
+
+        /// <summary>
         /// The third party OceanBeds
         /// </summary>
         public const string OCEANBEDS = "OceanBeds";
