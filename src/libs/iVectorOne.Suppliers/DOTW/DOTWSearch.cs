@@ -9,7 +9,6 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVectorOne.Search.Models;
-    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.DOTW.Models;
     using iVectorOne.Interfaces;

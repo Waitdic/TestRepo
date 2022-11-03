@@ -8,7 +8,6 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using iVector.Search.Property;
-    using iVectorOne;
     using iVectorOne.Suppliers.Juniper.Model;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;

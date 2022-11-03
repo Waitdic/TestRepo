@@ -13,7 +13,6 @@
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Common;
-    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;

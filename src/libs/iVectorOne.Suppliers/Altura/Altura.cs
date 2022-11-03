@@ -17,6 +17,7 @@
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Interfaces;
 
     public class Altura : IThirdParty, ISingleSource
     {

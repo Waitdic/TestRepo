@@ -2,7 +2,7 @@
 {
     using Intuitive;
     using iVectorOne.Constants;
-    using iVectorOne.CSSuppliers;
+    using iVectorOne.Suppliers;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;

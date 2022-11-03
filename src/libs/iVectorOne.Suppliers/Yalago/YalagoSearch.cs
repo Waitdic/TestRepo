@@ -9,7 +9,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Newtonsoft.Json;
-    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.Models.Yalago;
     using iVectorOne.Interfaces;

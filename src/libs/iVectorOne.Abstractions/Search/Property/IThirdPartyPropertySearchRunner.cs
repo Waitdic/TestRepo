@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
 

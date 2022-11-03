@@ -11,7 +11,6 @@
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.Helpers.W2M;
     using iVectorOne.Suppliers.Xml.W2M;

@@ -7,7 +7,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.TeamAmerica.Models;
     using iVectorOne.Models;
