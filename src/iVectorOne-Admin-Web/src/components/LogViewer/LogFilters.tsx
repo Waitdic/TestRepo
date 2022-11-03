@@ -40,13 +40,13 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [tabs, setTabs] = useState([
     {
-      name: 'Search',
-      href: 'search',
+      name: 'Filter',
+      href: 'filter',
       current: true,
     },
     {
-      name: 'Filters',
-      href: 'filters',
+      name: 'Booking Search',
+      href: 'search',
       current: false,
     },
   ]);
@@ -162,7 +162,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
       <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
 
-      {isActiveTab('filters') && (
+      {isActiveTab('filter') && (
         <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
           <div>
             <Select
@@ -300,9 +300,6 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
       )}
       {isActiveTab('search') && (
         <div className='grid lg:grid-cols-4'>
-          <h3 className='col-span-full text-2xl font-semibold'>
-            Booking Search
-          </h3>
           <div className='col-span-full text-sm mb-2'>
             <p>
               Please input a booking reference, supplier booking reference or
