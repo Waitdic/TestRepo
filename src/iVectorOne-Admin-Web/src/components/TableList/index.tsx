@@ -41,7 +41,7 @@ const TableList: FC<Props> = ({
   showOnEmpty = false,
   initText,
 }) => {
-  const renderCell = (cellData: any) => {
+  const renderCell = (cellData: any, name: string) => {
     if (typeof cellData === 'boolean') {
       return (
         <div className='text-center'>
@@ -49,8 +49,13 @@ const TableList: FC<Props> = ({
         </div>
       );
     }
-    if (typeof cellData === 'string' && cellData.includes('T')) {
-      return moment(new Date(cellData)).format('YYYY-MM-DD HH:mm:ss');
+    if (
+      typeof cellData === 'string' &&
+      cellData.includes('T') &&
+      name?.includes?.('date')
+    ) {
+      const dateStr = moment(new Date(cellData)).format('YYYY-MM-DD HH:mm:ss');
+      return dateStr !== 'Invalid date' ? dateStr : cellData;
     }
     return cellData;
   };
@@ -116,7 +121,7 @@ const TableList: FC<Props> = ({
                                 key={idx}
                                 className='px-6 py-4 text-sm font-medium text-dark'
                               >
-                                {renderCell(item)}
+                                {renderCell(item, name)}
                               </td>
                             ))}
                           </>
