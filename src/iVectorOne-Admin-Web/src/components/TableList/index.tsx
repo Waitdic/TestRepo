@@ -85,7 +85,7 @@ const TableList: FC<Props> = ({
               <thead className='bg-primary'>
                 <tr>
                   {headerList.length > 0 &&
-                    headerList.map(({ name, align, original }) => (
+                    headerList.map(({ name, align, original }, idx) => (
                       <th
                         scope='col'
                         className={classNames(
@@ -109,26 +109,27 @@ const TableList: FC<Props> = ({
                         <p className='relative'>
                           {name}
                           <span className='absolute top-0'>
-                            {!!onOrderChange &&
-                              orderBy?.by === (original || name) && (
-                                <svg
-                                  className={classNames('w-4 h-4 ml-1', {
-                                    'transform rotate-180':
-                                      orderBy?.order === 'asc',
-                                  })}
-                                  fill='none'
-                                  stroke='currentColor'
-                                  viewBox='0 0 24 24'
-                                  xmlns='http://www.w3.org/2000/svg'
-                                >
-                                  <path
-                                    strokeLinecap='round'
-                                    strokeLinejoin='round'
-                                    strokeWidth={2}
-                                    d='M5 15l7-7 7 7'
-                                  />
-                                </svg>
-                              )}
+                            {((!!onOrderChange &&
+                              orderBy?.by === (original || name)) ||
+                              (idx === 0 && orderBy?.by === null)) && (
+                              <svg
+                                className={classNames('w-4 h-4 ml-1', {
+                                  'transform rotate-180':
+                                    orderBy?.order === 'asc',
+                                })}
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth={2}
+                                  d='M5 15l7-7 7 7'
+                                />
+                              </svg>
+                            )}
                           </span>
                         </p>
                       </th>
