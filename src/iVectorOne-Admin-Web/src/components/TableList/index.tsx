@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import moment from 'moment';
 //
 import { EmptyState, Spinner, YesOrNo } from '@/components';
@@ -9,6 +9,7 @@ type Props = {
   headerList: {
     name: string;
     align: string;
+    original?: string;
   }[];
   bodyList: {
     id: number | string;
@@ -31,6 +32,11 @@ type Props = {
     onClick?: () => void;
   };
   isLoading?: boolean;
+  onOrderChange?: (orderBy: string, order: 'asc' | 'desc') => void;
+  orderBy?: {
+    by: string | null;
+    order: 'asc' | 'desc';
+  };
 };
 
 const TableList: FC<Props> = ({
@@ -40,6 +46,8 @@ const TableList: FC<Props> = ({
   isLoading = false,
   showOnEmpty = false,
   initText,
+  onOrderChange,
+  orderBy,
 }) => {
   const renderCell = (cellData: any, name: string) => {
     if (typeof cellData === 'boolean') {
@@ -77,19 +85,52 @@ const TableList: FC<Props> = ({
               <thead className='bg-primary'>
                 <tr>
                   {headerList.length > 0 &&
-                    headerList.map(({ name, align }) => (
+                    headerList.map(({ name, align, original }) => (
                       <th
                         scope='col'
-                        className={classnames(
+                        className={classNames(
                           'px-6 py-3 text-xs font-medium text-white uppercase tracking-wider',
                           {
                             'text-left': align === 'left',
                             'text-right': align === 'right',
+                            'cursor-pointer': !!onOrderChange,
                           }
                         )}
                         key={name}
+                        onClick={() =>
+                          onOrderChange?.(
+                            original || name,
+                            orderBy?.order === 'asc' && orderBy?.by === original
+                              ? 'desc'
+                              : 'asc'
+                          )
+                        }
                       >
-                        {name}
+                        <p className='relative'>
+                          {name}
+                          <span className='absolute top-0'>
+                            {!!onOrderChange &&
+                              orderBy?.by === (original || name) && (
+                                <svg
+                                  className={classNames('w-4 h-4 ml-1', {
+                                    'transform rotate-180':
+                                      orderBy?.order === 'asc',
+                                  })}
+                                  fill='none'
+                                  stroke='currentColor'
+                                  viewBox='0 0 24 24'
+                                  xmlns='http://www.w3.org/2000/svg'
+                                >
+                                  <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={2}
+                                    d='M5 15l7-7 7 7'
+                                  />
+                                </svg>
+                              )}
+                          </span>
+                        </p>
                       </th>
                     ))}
                 </tr>
@@ -107,7 +148,7 @@ const TableList: FC<Props> = ({
                 {bodyList.map(
                   ({ id, name, isActive = undefined, actions, items }, idx) => {
                     const isEven = idx % 2 === 0;
-                    const rowClass = classnames(
+                    const rowClass = classNames(
                       'bg-white',
                       { 'bg-gray-50': isEven },
                       { 'bg-green-50': isActive }
