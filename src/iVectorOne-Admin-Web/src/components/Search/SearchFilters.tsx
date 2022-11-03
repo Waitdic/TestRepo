@@ -270,7 +270,7 @@ const SearchFilters: React.FC<Props> = ({
       ) {
         handlePropertySearch();
       }
-    }, 1000);
+    }, 2000);
 
     return () => {
       timedSearch && clearInterval(timedSearch);
