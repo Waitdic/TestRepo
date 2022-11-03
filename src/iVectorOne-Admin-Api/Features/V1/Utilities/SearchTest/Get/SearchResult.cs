@@ -12,7 +12,7 @@
 
         public string Currency { get; set; } = "";
 
-        public decimal TotalCost { get; set; }
+        public string TotalCost { get; set; } = "";
 
         public bool NonRefundable { get; set; }
     }

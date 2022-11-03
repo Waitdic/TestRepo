@@ -73,19 +73,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 Name = x.Row,
                 Bookings = new Bookings
                 {
-                    Total = x.BookingTotal.ToString(),
-                    Value = $"£ {x.BookingValue}",
+                    Total = string.Format("{0:#,0}", x.BookingTotal),
+                    Value = $"£{string.Format("{0:#,0}", x.BookingValue)}"
                 },
                 Prebook = new Prebook
                 {
-                    Total = x.PrebookTotal.ToString(),
-                    Successful = $"{x.PrebookSuccessfulPrecent:n1} %",
+                    Total = string.Format("{0:#,0}", x.PrebookTotal),
+                    Successful = $"{x.PrebookSuccessfulPrecent:n1}%",
                 },
                 Searches = new Searches
                 {
-                    Total = x.SearchTotal.ToString(),
-                    Successful = $"{x.SearchSuccessfulPrecent:n1} %",
-                    Avg_Resp = $"{x.AverageSearchTime} ms",
+                    Total = string.Format("{0:#,0}", x.SearchTotal),
+                    Successful = $"{x.SearchSuccessfulPrecent:n1}%",
+                    Avg_Resp = $"{string.Format("{0:#,0}", x.AverageSearchTime)}ms",
                 },
                 S2B = x.S2B.ToString("n0")
             }).ToList();
@@ -108,19 +108,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     QueryDate = queryDate.ToString("yyyy-MM-dd"),
                     Bookings = new SupplierBookings
                     {
-                        Total = x.BookTotal.ToString(),
-                        Successful = $"{x.BookSuccessfulPrecent:n1} %",
+                        Total = string.Format("{0:#,0}", x.BookTotal),
+                        Successful = $"{x.BookSuccessfulPrecent:n1}%",
                     },
                     Prebook = new SupplierPrebook
                     {
-                        Total = x.PrebookTotal.ToString(),
-                        Successful = $"{x.PrebookSuccessfulPrecent:n1} %",
+                        Total = string.Format("{0:#,0}", x.PrebookTotal),
+                        Successful = $"{x.PrebookSuccessfulPrecent:n1}%",
                     },
                     Searches = new SupplierSearches
                     {
-                        Total = x.SearchTotal.ToString(),
-                        Successful = $"{x.SearchSuccessfulPrecent:n1} %",
-                        Avg_Resp = $"{x.AverageSearchTime} ms",
+                        Total = string.Format("{0:#,0}", x.SearchTotal),
+                        Successful = $"{x.SearchSuccessfulPrecent:n1}%",
+                        Avg_Resp = $"{string.Format("{0:#,0}", x.AverageSearchTime)}ms",
                     },
                     S2B = x.S2B.ToString("n0")
                 }).ToList());
