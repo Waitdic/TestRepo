@@ -1,11 +1,7 @@
 ﻿namespace iVectorOne.Factories
 {
     using Intuitive;
-    using iVectorOne.Constants;
-    using iVectorOne.Suppliers;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
-    using iVectorOne.Models;
     using System.Collections.Generic;
     using System.Linq;
 

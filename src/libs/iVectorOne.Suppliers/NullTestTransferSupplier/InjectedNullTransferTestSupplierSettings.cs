@@ -1,19 +1,16 @@
 ﻿namespace iVectorOne.Suppliers
 {
-    using iVectorOne.Models;
-    public class InjectedNullTestTransferSupplierSettings : INullTestTransferSupplierSettings
-    {
-        private readonly ThirdPartyConfiguration configuration;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
 
-        public InjectedNullTestTransferSupplierSettings(ThirdPartyConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
+    public class InjectedNullTestTransferSupplierSettings : SettingsBase, INullTestTransferSupplierSettings
+    {
+        protected override string Source => ThirdParties.NULLTESTTRANSFERSUPPLIER;
 
         public int SearchTimeMilliseconds(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            //int.TryParse(Get_Value("SearchTimeMilliseconds", configuration), out int timeout);
-            return 500;
+            int.TryParse(Get_Value("SearchTimeMilliseconds", tpAttributeSearch), out int timeout);
+            return timeout;
         }
     }
 }
