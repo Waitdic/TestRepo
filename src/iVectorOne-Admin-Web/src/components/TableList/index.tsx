@@ -74,14 +74,14 @@ const TableList: FC<Props> = ({
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
             <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
-              <thead className='bg-gray-50'>
+              <thead className='bg-primary'>
                 <tr>
                   {headerList.length > 0 &&
                     headerList.map(({ name, align }) => (
                       <th
                         scope='col'
                         className={classnames(
-                          'px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
+                          'px-6 py-3 text-xs font-medium text-white uppercase tracking-wider',
                           {
                             'text-left': align === 'left',
                             'text-right': align === 'right',
