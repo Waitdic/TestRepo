@@ -6,6 +6,7 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
+    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;

@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne.Factories
 {
-    using iVectorOne.Interfaces;
+    using iVectorOne;
     using iVectorOne.Models;
 
     /// <summary>Factory that takes in a source or supplier and returns the correct third party search or booking class</summary>

@@ -8,6 +8,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
+    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.AbreuV2.Models;
     using iVectorOne.Interfaces;
@@ -15,7 +16,6 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using iVectorOne.Interfaces;
 
     public class AbreuV2Search : IThirdPartySearch, ISingleSource
     {

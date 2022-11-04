@@ -7,6 +7,7 @@
     using Intuitive;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
+    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.OceanBeds.Models;
     using iVectorOne.Interfaces;

@@ -11,6 +11,7 @@
     using iVector.Search.Property;
     using Newtonsoft.Json;
     using iVectorOne.Search.Models;
+    using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;

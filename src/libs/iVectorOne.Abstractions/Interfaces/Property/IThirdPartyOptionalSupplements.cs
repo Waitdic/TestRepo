@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Interfaces
+﻿namespace iVectorOne
 {
     using iVectorOne.Models.Property.Booking;
 

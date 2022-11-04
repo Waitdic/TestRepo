@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Interfaces
+﻿namespace iVectorOne
 {
     using System.Threading.Tasks;
     using iVectorOne.Models;

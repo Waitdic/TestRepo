@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Net;
+    using iVectorOne;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
