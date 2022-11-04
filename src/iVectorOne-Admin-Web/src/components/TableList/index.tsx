@@ -14,7 +14,7 @@ type Props = {
   bodyList: {
     id: number | string;
     name: string;
-    items?: any[];
+    items?: { name: string; value: any }[];
     isActive?: boolean;
     actions?: {
       name: string;
@@ -59,8 +59,7 @@ const TableList: FC<Props> = ({
     }
     if (
       typeof cellData === 'string' &&
-      cellData.includes('T') &&
-      name?.includes?.('date')
+      (name?.includes?.('date') || name?.includes?.('timestamp'))
     ) {
       const dateStr = moment(new Date(cellData)).format('YYYY-MM-DD HH:mm:ss');
       return dateStr !== 'Invalid date' ? dateStr : cellData;
@@ -163,7 +162,7 @@ const TableList: FC<Props> = ({
                                 key={idx}
                                 className='px-6 py-4 text-sm font-medium text-dark'
                               >
-                                {renderCell(item, name)}
+                                {renderCell(item.value, item.name)}
                               </td>
                             ))}
                           </>

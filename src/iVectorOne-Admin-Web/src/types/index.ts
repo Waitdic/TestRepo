@@ -213,8 +213,8 @@ export interface SupplierSearchResults {
 
 export type LogViewerFilters = {
   accountId: number;
+  supplier: number;
   logDateRange: Date | Date[];
-  supplier: 'all' | number;
   system: 'all' | 'Live Only' | 'Test Only';
   type: 'all' | 'Prebook Only' | 'Book Only';
   responseSuccess: 'all' | 'Successful Only' | 'Unsuccessful Only';

@@ -83,14 +83,12 @@ export async function getFilteredLogEntries({
 
     if (isArray(dates)) {
       const start = new Date(dates[0]);
-      const end = new Date(dates[1]);
+      const end = new Date(dates[1] || start);
       startDate = start.toISOString().split('T')[0];
-      endDate = new Date(new Date(end).setDate(new Date(end).getDate() + 1))
-        .toISOString()
-        .split('T')[0];
+      endDate = end.toISOString().split('T')[0];
     }
 
-    return `?SupplierId=${filters.supplier}&StartDate=${startDate}&endDate=${endDate}&enviroment=${filters.system}&type=${filters.system}&status=${filters.responseSuccess}`;
+    return `Supplier=${filters.supplier}&StartDate=${startDate}&endDate=${endDate}&enviroment=${filters.system}&type=${filters.system}&status=${filters.responseSuccess}`;
   };
 
   onInit();
@@ -99,7 +97,7 @@ export async function getFilteredLogEntries({
       data: { logEntries, success },
     } = await ApiCall.request({
       method: 'GET',
-      url: `/tenants/${tenant.id}/accounts/${accountId}/logs${queryParams()}`,
+      url: `/tenants/${tenant.id}/accounts/${accountId}/logs?${queryParams()}`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,

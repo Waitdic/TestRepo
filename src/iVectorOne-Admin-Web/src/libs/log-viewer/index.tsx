@@ -39,11 +39,15 @@ const LogViewer: React.FC = () => {
   const [results, setResults] = useState<LogEntries[]>([]);
 
   const tableBody = useMemo(() => {
-    let rows: { id: number; name: string; items: string[] }[] = [];
+    let rows: {
+      id: number;
+      name: string;
+      items: { name: string; value: any }[];
+    }[] = [];
     results.forEach((result, idx) => {
       let items: any[] = [];
       Object.entries(result).forEach(([key, value], idx) => {
-        items.push(value);
+        items.push({ name: key, value: value });
       });
       rows.push({
         id: idx,

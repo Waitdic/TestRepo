@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortBy } from 'lodash';
 //
-import type { Account, LogEntries, LogViewerFilters } from '@/types';
+import type { Account, LogEntries, LogViewerFilters, Supplier } from '@/types';
 import { getAccounts } from '@/libs/core/data-access/account';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
@@ -17,6 +17,7 @@ import {
   getBookingsLogEntries,
   getFilteredLogEntries,
 } from '@/libs/log-viewer/data-access';
+import { getSuppliersByAccount } from '@/libs/core/data-access/supplier';
 
 type Props = {
   setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
@@ -34,16 +35,14 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<LogViewerFilters>({
     accountId: -1,
-    logDateRange: [
-      new Date(),
-      new Date(new Date().setDate(new Date().getDate() + 1)),
-    ],
-    supplier: 'all',
+    logDateRange: [new Date(), new Date()],
+    supplier: 0,
     system: 'all',
     type: 'all',
     responseSuccess: 'all',
   });
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [tabs, setTabs] = useState([
     {
       name: 'Filter',
@@ -85,7 +84,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   );
 
   const handleOnFilterChange = (name: string, optionId: number) => {
-    setFilters((prevFilters: any) => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: optionId,
     }));
@@ -155,6 +154,30 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     });
   }, [activeTenant, userKey, filters]);
 
+  const fetchSuppliers = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1) return;
+    await getSuppliersByAccount(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      filters.accountId,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (suppliers) => {
+        dispatch.app.setIsLoading(false);
+        setSuppliers(suppliers);
+      },
+      (message, instance) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+          instance,
+        });
+      }
+    );
+  }, [activeTenant, filters.accountId, userKey]);
+
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant || !userKey) return;
     await getAccounts(
@@ -193,6 +216,10 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     handleOnLogRefresh();
   }, [handleOnLogRefresh]);
 
+  useEffect(() => {
+    fetchSuppliers();
+  }, [fetchSuppliers]);
+
   return (
     <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
       <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
@@ -222,6 +249,9 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               mode='range'
               label='Log Date Range'
               onChange={handleChangeLogDateRange}
+              maxDate={new Date()}
+              minDate={null}
+              defaultDate={filters.logDateRange}
             />
           </div>
           <div>
@@ -231,13 +261,17 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Supplier'
               options={[
                 {
-                  id: 'all',
+                  id: 0,
                   name: 'All',
                 },
+                ...suppliers?.map((s) => ({
+                  id: s.supplierID as number,
+                  name: s.name as string,
+                })),
               ]}
               defaultValue={{
                 id: filters.supplier,
-                name: filters.supplier as string,
+                name: filters.supplier.toString(),
               }}
               onUncontrolledChange={(optionId) =>
                 handleOnFilterChange('supplier', optionId)
@@ -311,11 +345,11 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
                   name: 'All',
                 },
                 {
-                  id: 'Successful Only',
+                  id: 'successful',
                   name: 'Successful Only',
                 },
                 {
-                  id: 'Unsuccessful Only',
+                  id: 'unsuccessful',
                   name: 'Unsuccessful Only',
                 },
               ]}
