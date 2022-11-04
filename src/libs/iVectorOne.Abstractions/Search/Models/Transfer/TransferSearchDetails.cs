@@ -9,6 +9,7 @@
     using System.Xml.Serialization;
     using iVectorOne.Models;
     using iVectorOne.SDK.V2.TransferSearch;
+    using iVectorOne.Search.Results.Models;
 
     /// <summary>
     /// A transfer search details object
@@ -35,12 +36,46 @@
         /// </summary>
         public string EmailLogsToAddress { get; set; } = string.Empty;
 
+
+
+
+        /// <summary>
+        /// Gets or sets the departure date.
+        /// </summary>
+        /// <value>
+        /// The departure date.
+        /// </value>
+        public DateTime DepartureDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets The departure time
+        /// </summary>
+        public string DepartureTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the departure location identifier
+        /// </summary>
+        public int DepartureLocationId { get; set; }
+
+        // <summary>
+        /// Gets or sets the arrival location identifier
+        /// </summary>
+        public int ArrivalLocationId { get; set; }
+
+
+
+
+
+
         /// <summary>
         /// Gets or sets The results
         /// </summary>
         public TransferSearchResults Results { get; set; } = new TransferSearchResults();
+        ///public List<TransformedTransferResult> Results { get; set; } = new List<TransformedTransferResult>();
 
         public string Source { get; set; } = string.Empty;
+
+        List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// delete what I don't need from below
 
@@ -63,38 +98,8 @@
         /// </value>
         public string SessionID { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets The departs type
-        /// </summary>
-        public string DepartsType { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets The departs identifier
-        /// </summary>
-        public int DepartsID { get; set; }
-
-        /// <summary>
-        /// Gets or sets The arrives type
-        /// </summary>
-        public string ArrivesType { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The arrives identifier
-        /// </summary>
-        public int ArrivesID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the departure date.
-        /// </summary>
-        /// <value>
-        /// The departure date.
-        /// </value>
-        public DateTime DepartureDate { get; set; }
-
-        /// <summary>
-        /// Gets or sets The departure time
-        /// </summary>
-        public string DepartureTime { get; set; } = string.Empty;
+        
 
         /// <summary>
         /// Gets or sets The departure secondary time
@@ -357,7 +362,7 @@
         public ArrayList Warnings { get; set; } = new ArrayList();
 
 
-        List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        
         
     }
 }

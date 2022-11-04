@@ -22,14 +22,14 @@
             {     
                 DepartureTime = searchRequest.DepartureTime,
 
-                //DepartsType = searchRequest.DepartureLocation.LocationType,
-                //DepartsID = searchRequest.DepartureLocation.LocationId,
-                //ArrivesType = searchRequest.ArrivalLocation.LocationType,
-                //ArrivesID = searchRequest.ArrivalLocation.LocationId,
+                DepartureLocationId = searchRequest.DepartureLocationID,
+                ArrivalLocationId = searchRequest.ArrivalLocationID,
+
                 Adults = searchRequest.Adults,
                 Children = searchRequest.Children,
                 Infants = searchRequest.Infants,
 
+                Source = searchRequest.Supplier,
 
                 //ISONationalityCode = searchRequest.NationalityID,
                 AccountID = account.AccountID,

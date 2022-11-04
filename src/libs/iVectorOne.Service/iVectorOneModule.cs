@@ -96,6 +96,7 @@
             services.AddSingleton<ITransferSearchResponseFactory, TransferSearchResponseFactory>();
             services.AddSingleton<ITransferSearchDetailsFactory, TransferSearchDetailsFactory>();
             services.AddSingleton<ITransferThirdPartyFactory, TransferThirdPartyFactory>();
+            services.AddSingleton<ITransferLocationMappingFactory, TransferLocationMappingFactory>();
         }
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
@@ -108,6 +109,7 @@
             services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
             services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
             services.AddSingleton<IBookingRepository, BookingRepository>();
+            services.AddSingleton<ITransferSearchRepository, TransferSearchRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)

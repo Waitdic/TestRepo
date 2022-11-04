@@ -14,11 +14,13 @@
         /// Runs the third party searches
         /// </summary>
         /// <param name="searchDetails">The transfer search details</param>
+        /// <param name="locationMapping">The transfer location mapping</param>
         /// <param name="thirdPartySearch">The third party search adapter to run</param>
         /// <param name="cancellationTokenSource">The cancellation token source</param>
         /// <returns>The Task representing the search result</returns>
         Task SearchAsync(
             TransferSearchDetails searchDetails,
+            LocationMapping locationMapping,
             IThirdPartyTransferSearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }

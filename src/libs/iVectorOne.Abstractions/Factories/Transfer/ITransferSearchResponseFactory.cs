@@ -13,9 +13,9 @@
     {
         /// <summary>Creates a search response object</summary>
         /// <param name="searchDetails">The search details, which contains the results used for building the response</param>
-        /// <param name="resortSplits">The resort splits, contains information looked up at start of search</param>
+        /// <param name="locationMapping">The transfer location mapping containing the third party location data</param>
         /// <param name="requestTracker">The request tracker, allows for analysis of response times</param>
         /// <returns>A property search responses</returns>
-        Task<Response> CreateAsync(TransferSearchDetails searchDetails, List<SupplierResortSplit> resortSplits, IRequestTracker requestTracker);
+        Task<Response> CreateAsync(TransferSearchDetails searchDetails, LocationMapping locationMapping, IRequestTracker requestTracker);
     }
 }

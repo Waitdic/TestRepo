@@ -21,25 +21,25 @@
         /// Gets or sets the departure time.
         /// </summary>
         /// <value>
-        /// The departure date.
+        /// The departure time.
         /// </value>
         public string DepartureTime { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the departure locations.
+        /// Gets or sets the departure location identifier.
         /// </summary>
         /// <value>
-        /// The departure locations.
+        /// The departure location.
         /// </value>
-        //public TransferLocation DepartureLocation { get; set; } = new TransferLocation();
+        public int DepartureLocationID { get; set; }
 
         /// <summary>
-        /// Gets or sets the arrival locations.
+        /// Gets or sets the arrival location identifier.
         /// </summary>
         /// <value>
-        /// The arrival locations.
+        /// The arrival location.
         /// </value>
-        //public TransferLocation ArrivalLocation { get; set; } = new TransferLocation();
+        public int ArrivalLocationID { get; set; }
 
         /// <summary>
         /// Gets or sets the adults.
@@ -85,7 +85,7 @@
         /// Gets or sets the supplier.
         /// </summary>
         /// <value>
-        /// The supplier name
+        /// The supplier
         /// </value>
         public string Supplier { get; set; } = String.Empty;
 

@@ -16,16 +16,18 @@
         /// Builds the search requests.
         /// </summary>
         /// <param name="searchDetails">The transfer search details.</param>
-        /// <param name="resortSplits">The resort splits.</param>
+        /// <param name="location">The location mapping.</param>
         /// <returns>A list of request</returns>
-        Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, List<ResortSplit> resortSplits);
+        Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
         /// Transforms the response.
         /// </summary>
         /// <param name="requests">The requests.</param>
+        /// /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="location">The location mapping.</param>
         /// <returns>an XML document</returns>
-        TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, List<ResortSplit> resortSplits);
+        TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
         /// Check if there are any search restrictions for the third party.
@@ -33,7 +35,7 @@
         /// </summary>
         /// <param name="searchDetails">The transfer search details.</param>
         /// <returns>If there any search restrictions for the third party.</returns>
-        bool SearchRestrictions(TransferSearchDetails searchDetails, string source);
+        bool SearchRestrictions(TransferSearchDetails searchDetails);
 
         /// <summary>
         /// Responses the has exceptions.

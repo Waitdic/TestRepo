@@ -62,6 +62,7 @@
         /// <inheritdoc />
         public async Task SearchAsync(
             TransferSearchDetails searchDetails,
+            LocationMapping locationMapping,
             IThirdPartyTransferSearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {
@@ -75,7 +76,7 @@
                 string source = searchDetails.Source;
                 //var resortSplits = supplierResortSplit.ResortSplits;
 
-                var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, new List<ResortSplit>());
+                var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, locationMapping);
 
                 var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
                 stopwatch.Restart();
@@ -85,8 +86,10 @@
                     request.Source = source;
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
-                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source);
-                    request.UseGZip = UseGZip(searchDetails, source);
+
+                    //uncomment after third party configs setup for transfer third parties
+                    //request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source); 
+                    //request.UseGZip = UseGZip(searchDetails, source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
                 }
@@ -106,12 +109,12 @@
                         }
                     }
 
-                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, new List<ResortSplit>());
+                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, locationMapping);
 
                     var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
                     stopwatch.Restart();
 
-                    var resultsCount = _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, source, searchDetails);
+                    var resultsCount = _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, searchDetails);
 
                     //var searchStoreSupplierItem = new SearchStoreSupplierItem
                     //{

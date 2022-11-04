@@ -23,7 +23,7 @@
             _settings = Ensure.IsNotNull(settings, nameof(settings));
         }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return Task.FromResult(new List<Request>() { new Request() {
@@ -37,7 +37,7 @@
             return false;
         }
 
-        public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
             var transformedResults = new TransformedTransferResultCollection();
 
@@ -72,7 +72,7 @@
             return transformedResults;
         }
 
-        public bool SearchRestrictions(TransferSearchDetails searchDetails, string source)
+        public bool SearchRestrictions(TransferSearchDetails searchDetails)
         {
             return false;
         }

@@ -8,12 +8,14 @@
     {
         public Validator()
         {
-            //RuleFor(x => x.ArrivalDate).NotNull().WithMessage(WarningMessages.ArrivalDateNotSpecified);
-            //RuleFor(x => x.ArrivalDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.ArrivalDateInThePast);
-            //RuleFor(x => x.ArrivalDate).LessThan(DateTime.Now.AddYears(3).Date).WithMessage(WarningMessages.ArrivalDateToFarInTheFuture);
+            RuleFor(x => x.DepartureDate).NotNull().WithMessage(WarningMessages.DepartureDateNotSpecified);
+            RuleFor(x => x.DepartureDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.DepartureDateInThePast);
+            RuleFor(x => x.DepartureDate).LessThan(DateTime.Now.AddYears(3).Date).WithMessage(WarningMessages.DepartureDateToFarInTheFuture);
+            RuleFor(x => x.DepartureLocationID).GreaterThanOrEqualTo(0).WithMessage(WarningMessages.InvalidDepartureLocationID);
+            RuleFor(x => x.ArrivalLocationID).GreaterThanOrEqualTo(0).WithMessage(WarningMessages.InvalidArrivalLocationID);
+            RuleFor(x => x.Supplier).NotNull().NotEmpty().WithMessage(WarningMessages.InvalidSupplier);
             //RuleFor(x => x.Duration).GreaterThanOrEqualTo(0).WithMessage(WarningMessages.DurationNotSpecified);
             //RuleFor(x => x.Duration).LessThan(63).WithMessage(WarningMessages.DurationInvalid);
-            //RuleFor(x => x.Properties).NotNull().NotEmpty().WithMessage(WarningMessages.PropertyNotSpecified);
             //RuleFor(x => x.Properties.Count).LessThanOrEqualTo(500).WithMessage(WarningMessages.PropertiesOverLimit);
             //RuleFor(x => x.RoomRequests).NotEmpty().WithMessage(WarningMessages.RoomsNotSpecified);
             //RuleFor(x => x.DedupeMethod).NotEmpty().WithMessage(WarningMessages.InvalidDedupeMethod);

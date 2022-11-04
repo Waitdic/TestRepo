@@ -27,7 +27,7 @@
                 //.Concat(servces
                 //    .Where(x => x is IMultiSource)
                 //    .SelectMany(x => (x as IMultiSource)!.Sources.Select(s => (s, x))))
-                .ToDictionary(x => x.Item1, x => x.Item2);
+                .ToDictionary(x => x.Item1.ToLower(), x => x.Item2);
         }
 
         /// <inheritdoc />
@@ -40,7 +40,7 @@
         /// <inheritdoc />
         public IThirdPartyTransferSearch CreateSearchTPFromSupplier(string source)
         {
-            _transferSearchServices.TryGetValue(source, out var supplierSearch);
+            _transferSearchServices.TryGetValue(source.ToLower(), out var supplierSearch);
             return supplierSearch;
         }
     }

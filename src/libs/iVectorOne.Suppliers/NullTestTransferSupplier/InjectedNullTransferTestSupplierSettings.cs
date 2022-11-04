@@ -9,7 +9,8 @@
 
         public int SearchTimeMilliseconds(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            int.TryParse(Get_Value("SearchTimeMilliseconds", tpAttributeSearch), out int timeout);
+            var timeout = 500;
+            //int.TryParse(Get_Value("SearchTimeMilliseconds", tpAttributeSearch), out int timeout);
             return timeout;
         }
     }

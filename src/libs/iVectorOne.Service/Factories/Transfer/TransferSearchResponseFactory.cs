@@ -45,12 +45,12 @@
 
         /// <summary>Creates the specified results.</summary>
         /// <param name="searchDetails">The search details, used to retrieve information about the search e.g. duration that is not on the results</param>
-        /// <param name="supplierSplits">The resort splits, contains information looked up at start of search</param>
+        /// <param name="locationMapping">The transfer location mapping containing the third party location data</param>
         /// <param name="requestTracker">The request tracker, allows for analysis of reponse times</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Response> CreateAsync(TransferSearchDetails searchDetails, List<SupplierResortSplit> supplierSplits, IRequestTracker requestTracker)
+        public async Task<Response> CreateAsync(TransferSearchDetails searchDetails, LocationMapping locationMapping, IRequestTracker requestTracker)
         {
             var response = new Response();
             var createResponseTimer = new ThirdPartyRequestTime("CreateResponse");

@@ -29,6 +29,21 @@
         public const string ArrivalDateToFarInTheFuture = "The arrival date can not be more than 3 years in the future";
 
         /// <summary>
+        /// An Departure Date must be specified
+        /// </summary>
+        public const string DepartureDateNotSpecified = "An Departure Date must be specified";
+
+        /// <summary>
+        /// An Departure Date on or after today must be specified
+        /// </summary>
+        public const string DepartureDateInThePast = "An Departure Date on or after today must be specified";
+
+        /// <summary>
+        /// An Departure Date on or after today must be specified
+        /// </summary>
+        public const string DepartureDateToFarInTheFuture = "The Departure date can not be more than 3 years in the future";
+
+        /// <summary>
         /// A Duration must be specified
         /// </summary>
         public const string DurationNotSpecified = "A Duration must be specified";
@@ -242,5 +257,20 @@
         /// <para>The dedupe method specified must be supported</para>
         /// </summary>
         public const string InvalidDedupeMethod = "The dedupe method in the request is unknown";
+
+        /// <summary>
+        ///   <para>The supplier is required</para>
+        /// </summary>
+        public const string InvalidSupplier = "The supplier is required";
+
+        /// <summary>
+        ///   <para>A departure location ID is required</para>
+        /// </summary>
+        public const string InvalidDepartureLocationID = "A departure location ID is required";
+
+        /// <summary>
+        ///   <para>An arrival location ID is required</para>
+        /// </summary>
+        public const string InvalidArrivalLocationID = "An arrival location ID is required";
     }
 }

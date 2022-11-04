@@ -12,6 +12,7 @@
     using System.Threading;
     using iVectorOne.Constants;
     using iVectorOne.Search;
+    using iVectorOne.Interfaces;
 
     /// <summary>
     /// The main transfer search service, responsible for doing all the searching
@@ -22,7 +23,7 @@
         /// private readonly ISearchStoreService _searchStoreService;
 
         /// <summary>The search repository</summary>
-        /// private readonly ISearchRepository _searchRepository;
+        private readonly ITransferLocationMappingFactory _locationMappingFactory;
 
         /// <summary>The transfer search details factory</summary>
         private readonly ITransferSearchDetailsFactory _searchDetailsFactory;
@@ -37,15 +38,18 @@
 
 
         /// <summary>Initializes a new instance of the <see cref="TransferSearchService" /> class.</summary>
+        /// <param name="locationMappingFactory">The location mapping factory.</param>
         /// <param name="searchDetailsFactory">The search details factory.</param>
         /// <param name="transferSearchResponseFactory">The factory that produces the response using the results returned from the results processor</param>
         /// <param name="thirdPartyFactory">Takes in a source and return the third party search class</param>
         public TransferSearchService(
+            ITransferLocationMappingFactory locationMappingFactory,
             ITransferSearchDetailsFactory searchDetailsFactory,
             ITransferSearchResponseFactory transferSearchResponseFactory,
             ITransferThirdPartyFactory thirdPartyFactory,
             IThirdPartyTransferSearchRunner searchRunner)
         {
+            _locationMappingFactory = Ensure.IsNotNull(locationMappingFactory, nameof(locationMappingFactory));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
             _transferSearchResponseFactory = Ensure.IsNotNull(transferSearchResponseFactory, nameof(transferSearchResponseFactory));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
@@ -59,6 +63,9 @@
             var stopwatch = Stopwatch.StartNew();
             //SearchStoreItem searchStoreItem = null!;
 
+            var taskList = new List<Task>();
+            var cancellationTokenSource = new CancellationTokenSource();
+
             try
             {
                 // 1.Convert Request to Search details object
@@ -66,35 +73,51 @@
                 // searchStoreItem = searchDetails.SearchStoreItem;
                 //searchStoreItem.SearchDateAndTime = DateTime.Now;
 
-                // 2.Check which suppliers to search
-                //var suppliers = searchRequest.Account.Configurations
-                //    .Select(c => c.Supplier)
-                //    .Where(s => !searchRequest.Suppliers.Any() || searchRequest.Suppliers.Contains(s))
-                //    .ToList();
-
                 // 2.Check we want to search this supplier??
-                var supplier = searchRequest.Account.Configurations
-                    .Select(c => c.Supplier)
-                    .Where(s => s == searchRequest.Supplier)
-                    .FirstOrDefault();
+                //var supplier = searchRequest.Account.Configurations
+                //    .Select(c => c.Supplier)
+                //    .Where(s => s == searchRequest.Supplier)
+                //    .FirstOrDefault();
 
-                // 3.Call db to get resort splits from central propery ids
-                var resortSplits = new List<SupplierResortSplit>();
-                //var resortSplits = await _searchRepository.GetResortSplitsAsync(
-                //    string.Join(",", searchRequest.Properties),
-                //    string.Join(",", suppliers),
-                //    searchRequest.Account);
 
                 //searchStoreItem.PreProcessTime = (int)stopwatch.ElapsedMilliseconds;
 
-                // 4.Run TP search
-                await GetThirdPartySearchesAsync(supplier, searchDetails, requestTracker);
+                // 3.Get TP search
+                //await GetThirdPartySearchesAsync(searchDetails, requestTracker);
+
+                var locationMapping = new LocationMapping();
+
+
+                // 3.Get TP search
+                var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);
+
+                if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails))
+                {
+                    //set Source casing - improve
+                    searchDetails.Source = (thirdPartySearch as ISingleSource)!.Source;
+
+                    locationMapping = _locationMappingFactory.Create(searchDetails, new Account());
+
+                    // todo - request tracker
+                    taskList.Add(
+                        _searchRunner.SearchAsync(
+                            searchDetails,
+                            locationMapping,
+                            thirdPartySearch,
+                            cancellationTokenSource));
+                }
+
+                await Task.WhenAll(taskList);
+
+
+
+
 
                 stopwatch.Restart();
 
                 // 5.Build response and return
                 var response =
-                    await _transferSearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+                    await _transferSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
 
                 //searchStoreItem.PostProcessTime += (int)stopwatch.ElapsedMilliseconds;
                 //searchStoreItem.PropertiesReturned = response.TransferResults.Count;
@@ -126,38 +149,27 @@
             }
         }
 
-        public async Task GetThirdPartySearchesAsync(string supplier, TransferSearchDetails searchDetails, IRequestTracker requestTracker)
+        public async Task GetThirdPartySearchesAsync(TransferSearchDetails searchDetails, IRequestTracker requestTracker)
         {
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
 
-            //foreach (var split in supplierSplits)
+            //var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);
+
+            //if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails))
             //{
-            //    var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(split.Supplier);
+            //    //set Source casing - improve
+            //    searchDetails.Source = (thirdPartySearch as ISingleSource)!.Source;
 
-            //    if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails, split.Supplier))
-            //    {
-            //        // todo - request tracker
-            //        taskList.Add(
-            //            _searchRunner.SearchAsync(
-            //                searchDetails,
-            //                split,
-            //                thirdPartySearch,
-            //                cancellationTokenSource));
-            //    }
+            //    var locationMappings = string.Empty;
+
+            //    // todo - request tracker
+            //    taskList.Add(
+            //        _searchRunner.SearchAsync(
+            //            searchDetails,
+            //            thirdPartySearch,
+            //            cancellationTokenSource));
             //}
-
-            var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(ThirdParties.NULLTESTTRANSFERSUPPLIER);
-
-            if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails, ThirdParties.NULLTESTTRANSFERSUPPLIER))
-            {
-                // todo - request tracker
-                taskList.Add(
-                    _searchRunner.SearchAsync(
-                        searchDetails,
-                        thirdPartySearch,
-                        cancellationTokenSource));
-            }
 
             await Task.WhenAll(taskList);
         }

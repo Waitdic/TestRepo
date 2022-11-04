@@ -2,6 +2,7 @@
 {
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// An interface that defines a class to process results
@@ -15,7 +16,7 @@
         /// <param name="source">The source.</param>
         /// <param name="searchDetails">The transfer search details.</param>
         /// <returns>A count of the results</returns>
-        int ProcessTPResultsAsync(TransformedTransferResultCollection results, string source, TransferSearchDetails searchDetails);
+        Task<int> ProcessTPResultsAsync(TransformedTransferResultCollection results, TransferSearchDetails searchDetails);
 
     }
 }
