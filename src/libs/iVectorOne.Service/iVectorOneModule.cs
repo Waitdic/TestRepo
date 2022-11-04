@@ -59,7 +59,6 @@
     using Prebook = SDK.V2.PropertyPrebook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Search = SDK.V2.PropertySearch;
-    using iVectorOne.Interfaces;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
