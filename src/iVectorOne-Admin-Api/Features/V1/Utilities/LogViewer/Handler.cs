@@ -48,8 +48,33 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 $" FROM SupplierAPILog T1" +
                 $" INNER JOIN Supplier T3 ON T3.SupplierID = T1.SupplierID" +
                 $" LEFT OUTER JOIN Booking T2 on T2.BookingID = T1.BookingID" +
-                $" WHERE T1.AccountID = {request.AccountID}" +
-                " ORDER BY T1.RequestDateTime DESC";
+                $" WHERE T1.AccountID = {request.AccountID}";
+
+            if (request.SupplierID != 0)
+            {
+                queryText += $" AND T1.SupplierId={request.SupplierID}";
+            }
+
+            if (request.Type.ToLower() != "all")
+            {
+                queryText += $" AND T1.Type='{request.Type}'";
+            }
+
+            switch (request.Status.ToLower())
+            {
+                case "successful":
+                    queryText += $" AND T1.Successful=1";
+                    break;
+                case "unsuccessful":
+                    queryText += $" AND T1.Successful=0";
+                    break;
+            }
+            //if (request.Environment.ToLower() != "all")
+            //{
+            //    queryText += $" AND T1.Type='{request.Type}'";
+            //}
+
+            queryText += " ORDER BY T1.RequestDateTime DESC";
 
             var logEntries = await _context.LogEntries
              .FromSqlRaw(queryText)

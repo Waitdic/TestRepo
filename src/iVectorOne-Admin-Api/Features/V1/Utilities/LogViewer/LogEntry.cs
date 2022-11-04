@@ -16,5 +16,7 @@
 
         public string LeadGuestName { get; set; } = string.Empty;
 
+        public bool Succesful { get; set; }
+
     }
 }
