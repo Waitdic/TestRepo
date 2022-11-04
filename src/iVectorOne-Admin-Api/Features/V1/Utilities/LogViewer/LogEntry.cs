@@ -12,9 +12,9 @@
 
         public string ResponseTime { get; set; } = string.Empty;
 
-        public string SupplierReference { get; set; } = string.Empty;
+        public string SupplierBookingReference { get; set; } = string.Empty;
 
-        public string LeadGuest { get; set; } = string.Empty;
+        public string LeadGuestName { get; set; } = string.Empty;
 
     }
 }
