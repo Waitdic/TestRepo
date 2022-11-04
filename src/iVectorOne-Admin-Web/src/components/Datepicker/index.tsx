@@ -22,9 +22,9 @@ const Datepicker: React.FC<Props> = ({
     mode,
     static: true,
     monthSelectorType: 'static',
-    minDate: new Date().setDate(new Date().getDate() + 1),
     dateFormat: 'M j, Y',
-    defaultDate: [new Date().setDate(new Date().getDate() + 1)],
+    minDate: 'today',
+    defaultDate: new Date(),
     prevArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
     nextArrow:

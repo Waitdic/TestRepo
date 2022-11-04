@@ -1,4 +1,6 @@
-import type { ApiError, LogEntries } from '@/types';
+import { isArray } from 'lodash';
+//
+import type { ApiError, LogEntries, LogViewerFilters } from '@/types';
 import ApiCall from '@/axios';
 import handleApiError from '@/utils/handleApiError';
 
@@ -26,6 +28,78 @@ export async function getBookingsLogEntries({
     } = await ApiCall.request({
       method: 'GET',
       url: `/tenants/${tenant.id}/accounts/${accountId}/bookings?query=${searchQuery}`,
+      headers: {
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
+    if (success) {
+      const logEntriesFormatted = logEntries.map(
+        ({
+          timestamp,
+          supplierName,
+          type,
+          responseTime,
+          supplierBookingReference,
+          leadGuestName,
+        }: LogEntries) => ({
+          timestamp,
+          supplierName,
+          type,
+          responseTime,
+          supplierBookingReference,
+          leadGuestName,
+        })
+      );
+      onSuccess(logEntriesFormatted);
+    }
+  } catch (error) {
+    const { message, instance, title } = handleApiError(error as ApiError);
+    onFailed(message, instance, title);
+  }
+}
+
+export async function getFilteredLogEntries({
+  tenant,
+  userKey,
+  accountId,
+  filters,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  filters: LogViewerFilters;
+  onInit: () => void;
+  onSuccess: (logEntries: LogEntries[]) => void;
+  onFailed: (message: string, instance?: string, title?: string) => void;
+}) {
+  const queryParams = () => {
+    const dates = filters.logDateRange;
+    let startDate = '';
+    let endDate = '';
+
+    if (isArray(dates)) {
+      const start = new Date(dates[0]);
+      const end = new Date(dates[1]);
+      startDate = start.toISOString().split('T')[0];
+      endDate = new Date(new Date(end).setDate(new Date(end).getDate() + 1))
+        .toISOString()
+        .split('T')[0];
+    }
+
+    return `?SupplierId=${filters.supplier}&StartDate=${startDate}&endDate=${endDate}&enviroment=${filters.system}&type=${filters.system}&status=${filters.responseSuccess}`;
+  };
+
+  onInit();
+  try {
+    const {
+      data: { logEntries, success },
+    } = await ApiCall.request({
+      method: 'GET',
+      url: `/tenants/${tenant.id}/accounts/${accountId}/logs${queryParams()}`,
       headers: {
         Tenantkey: tenant.key,
         UserKey: userKey,

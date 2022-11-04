@@ -1,4 +1,5 @@
 import React, { forwardRef, useRef, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 //
 import type { Property } from '@/types';
 import useOnClickOutside from '@/utils/useOnClickOutside';
@@ -81,15 +82,18 @@ const UncontrolledTextField: React.FC<Props> = forwardRef(
         )}
         {showAutoComplete && !!autoComplete && autoComplete.results.length > 0 && (
           <div className='absolute z-50 top-full left-0 w-full max-h-[400px] overflow-auto bg-white border border-slate-200 rounded-sm shadow-lg'>
-            {autoComplete.results.map((result) => (
-              <div
-                key={result.propertyId}
-                className='p-2 cursor-pointer hover:bg-slate-100'
-                onClick={() => handleAutoComplete(result.propertyId)}
-              >
-                {result.name}
-              </div>
-            ))}
+            {autoComplete.results.map((result) => {
+              const id = uuid();
+              return (
+                <div
+                  key={id}
+                  className='p-2 cursor-pointer hover:bg-slate-100'
+                  onClick={() => handleAutoComplete(result.propertyId)}
+                >
+                  {result.name}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

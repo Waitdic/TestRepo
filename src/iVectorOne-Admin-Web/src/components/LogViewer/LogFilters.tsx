@@ -13,7 +13,10 @@ import {
   Tabs,
   UncontrolledTextField,
 } from '@/components';
-import { getBookingsLogEntries } from '@/libs/log-viewer/data-access';
+import {
+  getBookingsLogEntries,
+  getFilteredLogEntries,
+} from '@/libs/log-viewer/data-access';
 
 type Props = {
   setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
@@ -31,11 +34,14 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<LogViewerFilters>({
     accountId: -1,
-    logDateRange: new Date(),
-    supplier: 'All',
-    system: 'All',
-    type: 'All',
-    responseSuccess: 'All',
+    logDateRange: [
+      new Date(),
+      new Date(new Date().setDate(new Date().getDate() + 1)),
+    ],
+    supplier: 'all',
+    system: 'all',
+    type: 'all',
+    responseSuccess: 'all',
   });
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [tabs, setTabs] = useState([
@@ -124,6 +130,31 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     });
   }, [isLoading, activeTenant, userKey, filters, searchQuery]);
 
+  const handleOnLogRefresh = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1) return;
+
+    await getFilteredLogEntries({
+      tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      accountId: filters.accountId,
+      filters,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: (logEntries) => {
+        dispatch.app.setIsLoading(false);
+        setResults(logEntries);
+      },
+      onFailed: (message) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+        });
+      },
+    });
+  }, [activeTenant, userKey, filters]);
+
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant || !userKey) return;
     await getAccounts(
@@ -157,6 +188,10 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
       setAccounts([]);
     };
   }, [fetchAccounts]);
+
+  useEffect(() => {
+    handleOnLogRefresh();
+  }, [handleOnLogRefresh]);
 
   return (
     <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
@@ -196,13 +231,13 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Supplier'
               options={[
                 {
-                  id: 0,
+                  id: 'all',
                   name: 'All',
                 },
               ]}
               defaultValue={{
                 id: filters.supplier,
-                name: filters.supplier,
+                name: filters.supplier as string,
               }}
               onUncontrolledChange={(optionId) =>
                 handleOnFilterChange('supplier', optionId)
@@ -216,7 +251,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='System'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
@@ -244,7 +279,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Type'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
@@ -272,7 +307,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Response Success'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
@@ -294,7 +329,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
             />
           </div>
           <div className='col-span-2 flex justify-end items-end'>
-            <Button text='Refresh' onClick={handleOnSearch} />
+            <Button text='Refresh' onClick={handleOnLogRefresh} />
           </div>
         </div>
       )}
