@@ -1,5 +1,6 @@
 ﻿using iVectorOne_Admin_Api.Data.Models;
 using iVectorOne_Admin_Api.Data.Models.Dashboard;
+//using iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer;
 using Newtonsoft.Json;
 using System.Text.Json;
 using Attribute = iVectorOne_Admin_Api.Config.Models.Attribute;
@@ -29,6 +30,7 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<Property> Properties { get; set; } = null!;
         public virtual DbSet<BookingLog> BookingLogs { get; set; } = null!;
 
+        public virtual DbSet<LogEntry> LogEntries { get; set; } = null!;
         public virtual DbSet<FireForgetSearchResponse> FireForgetSearchResponses { get; set; } = null!;
 
         //
@@ -91,6 +93,12 @@ namespace iVectorOne_Admin_Api.Data
             });
 
             modelBuilder.Entity<BookingLog>(e =>
+            {
+                //e.HasKey(e => e.BookingId);
+                e.HasNoKey();
+            });
+
+            modelBuilder.Entity<LogEntry>(e =>
             {
                 //e.HasKey(e => e.BookingId);
                 e.HasNoKey();

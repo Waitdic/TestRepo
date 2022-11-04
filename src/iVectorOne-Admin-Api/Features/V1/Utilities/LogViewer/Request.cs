@@ -6,6 +6,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
     {
         public int AccountID { get; set; }
 
+        public int SupplierID { get; set; }
+
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
