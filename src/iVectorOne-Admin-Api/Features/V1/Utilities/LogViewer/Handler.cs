@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using iVectorOne_Admin_Api.Adaptors;
 using iVectorOne_Admin_Api.Features.Shared;
+using iVectorOne_Admin_Api.Features.V1.Dashboard.Info;
 
 namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
 {
@@ -40,7 +41,22 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 return response;
             }
 
-            response.Ok(new ResponseModel() { Success = true, HasMoreResults = false });
+            var logEntries = new List<LogEntry>();
+            for (int i = 0; i < 30; i++)
+            {
+                logEntries.Add(new LogEntry
+                {
+                    Environment = $"Environment-{i}",
+                    Timestamp = $"Timestamp-{i}",
+                    SupplierName = $"SupplierName-{i}",
+                    Type = $"Type-{i}",
+                    ResponseTime = $"ResponseTime-{i}",
+                    SupplierReference = $"SupplierReference-{i}",
+                    LeadGuest = $"LeadGuest-{i}"
+                });
+            }
+
+            response.Ok(new ResponseModel() { Success = true, HasMoreResults = false, LogEntries = logEntries });
             return response;
         }
     }
