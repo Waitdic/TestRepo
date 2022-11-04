@@ -75,12 +75,16 @@ const Search: React.FC = () => {
   });
 
   const tableBody = useMemo(() => {
-    let rows: { id: number; name: string; items: string[] }[] = [];
+    let rows: {
+      id: number;
+      name: string;
+      items: { name: string; value: any }[];
+    }[] = [];
     if (orderBy.by === null) {
       searchResults.forEach((result, idx) => {
-        let items: any[] = [];
+        let items: { name: string; value: any }[] = [];
         Object.entries(result).forEach(([key, value], idx) => {
-          items.push(value);
+          items.push({ name: key, value });
         });
         rows.push({
           id: idx,
