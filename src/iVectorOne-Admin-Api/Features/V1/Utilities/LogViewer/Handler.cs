@@ -48,7 +48,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 $" FROM SupplierAPILog T1" +
                 $" INNER JOIN Supplier T3 ON T3.SupplierID = T1.SupplierID" +
                 $" LEFT OUTER JOIN Booking T2 on T2.BookingID = T1.BookingID" +
-                $" WHERE T1.AccountID = {request.AccountID}";
+                $" WHERE T1.AccountID = {request.AccountID}" +
+                " ORDER BY T1.RequestDateTime DESC";
 
             var logEntries = await _context.LogEntries
              .FromSqlRaw(queryText)
