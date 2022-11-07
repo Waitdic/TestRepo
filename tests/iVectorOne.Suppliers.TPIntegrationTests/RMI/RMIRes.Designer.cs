@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.RMI {
+namespace iVectorOne.Tests.RMI {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.RMI {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.RMI.RMIRes", typeof(RMIRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.RMI.RMIRes", typeof(RMIRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
