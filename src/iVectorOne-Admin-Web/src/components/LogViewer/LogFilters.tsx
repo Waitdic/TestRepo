@@ -32,6 +32,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [refreshLogs, setRefreshLogs] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<LogViewerFilters>({
     accountId: -1,
@@ -130,7 +131,8 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   }, [isLoading, activeTenant, userKey, filters, searchQuery]);
 
   const handleOnLogRefresh = useCallback(async () => {
-    if (!activeTenant || !userKey || filters.accountId === -1) return;
+    if (!activeTenant || !userKey || filters.accountId === -1 || !refreshLogs)
+      return;
 
     await getFilteredLogEntries({
       tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
@@ -139,6 +141,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
       filters,
       onInit: () => {
         dispatch.app.setIsLoading(true);
+        setRefreshLogs(false);
       },
       onSuccess: (logEntries) => {
         dispatch.app.setIsLoading(false);
@@ -152,7 +155,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
         });
       },
     });
-  }, [activeTenant, userKey, filters]);
+  }, [activeTenant, userKey, filters, refreshLogs]);
 
   const fetchSuppliers = useCallback(async () => {
     if (!activeTenant || !userKey || filters.accountId === -1) return;
@@ -363,7 +366,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
             />
           </div>
           <div className='col-span-2 flex justify-end items-end'>
-            <Button text='Refresh' onClick={handleOnLogRefresh} />
+            <Button text='Refresh' onClick={() => setRefreshLogs(true)} />
           </div>
         </div>
       )}
