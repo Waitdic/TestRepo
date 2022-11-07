@@ -36,6 +36,7 @@ type Props = {
   orderBy?: {
     by: string | null;
     order: 'asc' | 'desc';
+    only?: string[];
   };
 };
 
@@ -67,6 +68,19 @@ const TableList: FC<Props> = ({
     return cellData;
   };
 
+  const handleOnOrderChange = (name: string, originalName?: string) => {
+    if (!!orderBy?.only && !orderBy.only.includes(name)) {
+      return;
+    }
+    onOrderChange?.(
+      originalName || name,
+      orderBy?.order === 'asc' &&
+        (orderBy?.by === originalName || orderBy?.by === name)
+        ? 'desc'
+        : 'asc'
+    );
+  };
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -92,18 +106,13 @@ const TableList: FC<Props> = ({
                           {
                             'text-left': align === 'left',
                             'text-right': align === 'right',
-                            'cursor-pointer': !!onOrderChange,
+                            'cursor-pointer':
+                              (!!onOrderChange && !orderBy?.only) ||
+                              (!!orderBy?.only && orderBy.only.includes(name)),
                           }
                         )}
                         key={name}
-                        onClick={() =>
-                          onOrderChange?.(
-                            original || name,
-                            orderBy?.order === 'asc' && orderBy?.by === original
-                              ? 'desc'
-                              : 'asc'
-                          )
-                        }
+                        onClick={() => handleOnOrderChange(name, original)}
                       >
                         <p className='relative'>
                           {name}
