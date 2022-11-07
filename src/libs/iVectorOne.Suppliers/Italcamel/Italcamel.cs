@@ -175,8 +175,6 @@
                 }
                 else
                 {
-                    await GetBookingCharge(propertyDetails, response.Package.Booking.UID);
-
                     // store bookinguid - required for cancellation
                     propertyDetails.SourceSecondaryReference = $"{response.Package.UID}|{response.Package.Booking.UID}";
                     reference = response.Package.Number;
@@ -228,8 +226,11 @@
                 // check response
                 if (string.IsNullOrEmpty(response.ErrorCode) && response.Status.ToSafeInt() == 0 && response.ErrorCode.ToSafeInt() == 0)
                 {
+                    var amount  = await GetBookingCharge(propertyDetails, propertyDetails.SourceSecondaryReference.Split('|')[1]);
+
                     thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
                     thirdPartyCancellationResponse.Success = true;
+                    thirdPartyCancellationResponse.Amount = amount;
                 }
             }
             catch (Exception ex)
@@ -409,9 +410,10 @@
             };
         }
 
-        private async Task GetBookingCharge(PropertyDetails propertyDetails, string uid)
+        private async Task<decimal> GetBookingCharge(PropertyDetails propertyDetails, string uid)
         {
             Request? request = null;
+            decimal amount = 0;
             try
             {
                 var bookingChargeRequest =
@@ -425,11 +427,20 @@
                 await request.Send(_httpClient, _logger);
 
                 var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML)
-                    .Body.Content;
+                    .Body.Content.GetBookingChargeResult;
 
                 if (bookingCharges.Status != null && bookingCharges.Status.ToSafeInt() != 0)
                 {
                     propertyDetails.Warnings.AddNew("GetBookingCharge failed", bookingCharges.ErrorMessage);
+                }
+                else
+                {
+                    var charge = bookingCharges.BookingCharges
+                        .Where(x => x.ChargeDate <= DateTime.Now).ToList();
+
+                    amount = charge.Any() 
+                        ? charge.OrderByDescending(x => x.ChargeDate).FirstOrDefault()!.ChargeAmount 
+                        : 0;
                 }
             }
             catch (Exception ex)
@@ -443,6 +454,8 @@
                     propertyDetails.AddLog("GetBookingCharge", request);
                 }
             }
+
+            return amount;
         }
 
         #endregion
