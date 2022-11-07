@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { sortBy } from 'lodash';
+import { orderBy as _orderBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import type { SearchDetails, SupplierSearchResults } from '@/types';
@@ -83,28 +83,39 @@ const Search: React.FC = () => {
     if (orderBy.by === null) {
       searchResults.forEach((result, idx) => {
         let items: { name: string; value: any }[] = [];
-        Object.entries(result).forEach(([key, value], idx) => {
+        Object.entries(result).forEach(([key, value]) => {
           items.push({ name: key, value });
         });
+        const name = Object.keys(result)[0];
         rows.push({
           id: idx,
-          name: Object.keys(result)[idx],
+          name,
           items,
         });
       });
     } else {
-      const sortedResults =
-        orderBy.order === 'asc'
-          ? sortBy(searchResults, [orderBy.by], [orderBy.order])
-          : sortBy(searchResults, [orderBy.by], [orderBy.order]).reverse();
+      let orderByKey = orderBy.by;
+      if (orderByKey === 'nonRef') {
+        orderByKey = 'nonRefundable';
+      } else if (orderByKey === 'cost') {
+        orderByKey = 'totalCost';
+      }
+
+      const sortedResults = _orderBy(
+        searchResults,
+        [orderByKey],
+        orderBy.order
+      );
+
       sortedResults.forEach((result, idx) => {
-        let items: any[] = [];
-        Object.entries(result).forEach(([key, value], idx) => {
-          items.push(value);
+        let items: { name: string; value: any }[] = [];
+        Object.entries(result).forEach(([key, value]) => {
+          items.push({ name: key, value });
         });
+        const name = Object.keys(result)[0];
         rows.push({
           id: idx,
-          name: Object.keys(result)[idx],
+          name,
           items,
         });
       });
