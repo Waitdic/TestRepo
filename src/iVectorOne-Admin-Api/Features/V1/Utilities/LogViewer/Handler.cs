@@ -81,7 +81,16 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
              .AsNoTracking()
              .ToListAsync(cancellationToken: cancellationToken);
 
-            var LogEntryList = _mapper.Map<List<LogEntry>>(logEntries);
+            var LogEntryList = logEntries.Select(x => new LogEntry
+            {
+                SupplierName = x.SupplierName,
+                LeadGuestName = x.LeadGuestName ?? "",
+                Succesful = x.Successful,
+                ResponseTime = $"{string.Format("{0:#,0}", x.ResponseTime)}ms",
+                Type = x.Type,
+                SupplierBookingReference = x.SupplierBookingReference ?? "",
+                Timestamp = x.RequestDateTime.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
+            }).ToList();
 
             response.Ok(new ResponseModel() { Success = true, HasMoreResults = false, LogEntries = LogEntryList });
             return response;
