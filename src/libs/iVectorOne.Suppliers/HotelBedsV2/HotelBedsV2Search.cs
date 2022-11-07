@@ -213,7 +213,6 @@
                                 MealBasisCode = rate.boardCode,
                                 RoomType = room.name,
                                 Amount = amount,
-                                SellingPrice = amount,
                                 NetPrice = amount,
                                 MinimumPrice = rate.hotelMandatory ? rate.sellingRate.ToSafeDecimal() : 0,
                                 CurrencyCode = hotel.currency,
