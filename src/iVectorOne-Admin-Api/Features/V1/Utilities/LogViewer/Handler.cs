@@ -43,7 +43,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 return response;
             }
 
-            var queryText = $"SELECT T1.RequestDateTime,T3.SupplierName,T1.Type," +
+            var queryText = $"SELECT T1.SupplierApiLogId, T1.RequestDateTime,T3.SupplierName,T1.Type," +
                 $"T1.Successful,T1.ResponseTime,T2.SupplierBookingReference,T2.LeadGuestName" +
                 $" FROM SupplierAPILog T1" +
                 $" INNER JOIN Supplier T3 ON T3.SupplierID = T1.SupplierID" +
