@@ -98,6 +98,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
 
             var LogEntryList = logEntries.Select(x => new LogEntry
             {
+                SupplierApiLogId = x.SupplierApiLogId,
                 SupplierName = x.SupplierName,
                 LeadGuestName = x.LeadGuestName ?? "",
                 Succesful = x.Successful,
