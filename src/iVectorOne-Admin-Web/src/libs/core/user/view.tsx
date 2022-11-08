@@ -164,7 +164,9 @@ const UserView: React.FC<Props> = () => {
 
   const handleTenantSelect = useCallback(
     (tenantId: number) => {
-      const selectedTenant = tenants.find((t) => tenantId === t.tenantId);
+      const selectedTenant = tenants.find(
+        (t) => Number(tenantId) === t.tenantId
+      );
       if (selectedTenant) {
         setDraftTenant({
           userId: currentUser?.userId as number,

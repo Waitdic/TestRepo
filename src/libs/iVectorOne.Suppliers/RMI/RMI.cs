@@ -103,22 +103,30 @@
                             {
                                 throw new Exception("Room price not found");
                             }
-
-                            foreach (var oCancellationPolicy in room.CancellationPolicies)
+                            var freeCanx = new CancellationPolicy
                             {
-                                var cancelBy = oCancellationPolicy.CancelBy.ToSafeDate();
-                                var penalty = oCancellationPolicy.Penalty.ToSafeDecimal();
-                                var now = DateTime.Now;
+                                CancelBy = "1990-01-01",
+                                Penalty = "0"
+                            };
 
-                                if (cancelBy > now)
-                                {
-                                    cancellations.AddNew(now, cancelBy, penalty);
-                                }
-                                else
-                                {
-                                    cancellations.AddNew(cancelBy, now, penalty);
-                                }
-                            }
+                            var canxRaw = room.CancellationPolicies
+                                .Concat(new List<CancellationPolicy>{ freeCanx })
+                                .Select(x => new
+                            {
+                                StartDate = x.CancelBy.ToSafeDate(),
+                                Amount = x.Penalty.ToSafeDecimal()
+                            }).OrderBy(x => x.StartDate).ToArray();
+
+                            var canx = canxRaw.Select((x, i) => new Cancellation 
+                            { 
+                                StartDate = x.StartDate,
+                                Amount = x.Amount,
+                                EndDate = ReferenceEquals(x, canxRaw.Last())
+                                    ? propertyDetails.ArrivalDate
+                                    : canxRaw[i+1].StartDate.AddSeconds(-1)
+                            });
+
+                            cancellations.AddRange(canx);
                         }
 
                         var errataItems = searchResponse.PropertyResults

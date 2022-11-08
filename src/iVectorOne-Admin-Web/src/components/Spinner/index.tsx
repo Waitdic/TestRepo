@@ -9,7 +9,7 @@ const Spinner: FC<Props> = ({ className = null }) => (
   <svg
     role='status'
     className={classnames(
-      'mr-2 w-8 h-8 animate-spin text-transparent fill-blue-600',
+      'w-8 h-8 animate-spin text-transparent fill-blue-600',
       className
     )}
     viewBox='0 0 100 101'

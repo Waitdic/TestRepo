@@ -244,17 +244,30 @@ export async function deleteSupplier(
 }
 
 //* Test supplier
-export async function testSupplier(
-  tenantKey: string,
-  userKey: string,
-  tenantId: number,
-  accountId: number,
-  supplierId: number,
-  onSuccess: (status: string) => void,
-  onFailed: (message: string, instance?: string) => void
-) {
+export async function testSupplier({
+  tenantKey,
+  userKey,
+  tenantId,
+  accountId,
+  supplierId,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenantKey: string;
+  userKey: string;
+  tenantId: number;
+  accountId: number;
+  supplierId: number;
+  onInit: () => void;
+  onSuccess: (data: { message: string; status: boolean }) => void;
+  onFailed: (message: string, instance?: string) => void;
+}) {
+  onInit();
   try {
-    const { data } = await ApiCall.request({
+    const {
+      data: { requestKey, message },
+    } = await ApiCall.request({
       method: 'POST',
       url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test`,
       headers: {
@@ -262,9 +275,35 @@ export async function testSupplier(
         UserKey: userKey,
       },
     });
-    if (data.success) {
-      onSuccess(data.message);
+
+    const reqKeyInvalid = parseInt(requestKey.trim()) === 0;
+    if (reqKeyInvalid) {
+      onFailed(message);
+      return;
     }
+
+    let timerCount = 0;
+    const timer = setInterval(async () => {
+      const res = await ApiCall.request({
+        method: 'GET',
+        url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test?q=${requestKey}`,
+        headers: {
+          Tenantkey: tenantKey,
+          UserKey: userKey,
+        },
+      });
+      if (res.status === 200) {
+        onSuccess(res.data);
+        clearInterval(timer);
+      }
+
+      if (timerCount >= 24) {
+        console.error('Search timeout');
+        onFailed('Search timeout');
+        clearInterval(timer);
+      }
+      timerCount++;
+    }, 5000);
   } catch (error: any) {
     const { message, instance } = handleApiError(error);
     onFailed(message, instance);

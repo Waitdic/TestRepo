@@ -29,6 +29,6 @@
     {
         public string Total { get; set; } = string.Empty;
         public string Successful { get; set; } = string.Empty;
-        public string AvgResp { get; set; } = string.Empty;
+        public string Avg_Resp { get; set; } = string.Empty;
     }
 }

@@ -102,20 +102,29 @@ const SupplierList: React.FC<Props> = () => {
     async (name: string, supplierId: number, accountId: number) => {
       if (!activeTenant || !userKey) return;
       setTestDetails({ name, isTesting: true, status: 'Running test...' });
-      await testSupplier(
-        activeTenant?.tenantKey,
+      await testSupplier({
+        tenantKey: activeTenant?.tenantKey,
         userKey,
-        activeTenant.tenantId,
+        tenantId: activeTenant.tenantId,
         accountId,
         supplierId,
-        (status) => {
+        onInit: () => {
+          dispatch.app.setIsLoading(true);
+        },
+        onSuccess: ({ message }) => {
+          dispatch.app.setIsLoading(false);
+          dispatch.app.setNotification({
+            status: NotificationStatus.SUCCESS,
+            message,
+          });
           setTestDetails({
             name,
             isTesting: true,
-            status: status,
+            status: message,
           });
         },
-        (err, instance) => {
+        onFailed: (err, instance) => {
+          dispatch.app.setIsLoading(false);
           setTestDetails({
             name,
             isTesting: true,
@@ -126,8 +135,8 @@ const SupplierList: React.FC<Props> = () => {
             message: err,
             instance,
           });
-        }
-      );
+        },
+      });
     },
     []
   );
@@ -225,7 +234,13 @@ const SupplierList: React.FC<Props> = () => {
                 </div>
               </div>
             </div>
-            <p className='p-5'>{testDetails.status}</p>
+            <p
+              className={classNames('p-5', {
+                'animate-pulse': isLoading,
+              })}
+            >
+              {testDetails.status}
+            </p>
             <div className='flex justify-end px-5 pb-5'>
               <Button
                 text='Close'

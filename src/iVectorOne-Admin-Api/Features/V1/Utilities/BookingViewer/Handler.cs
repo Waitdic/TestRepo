@@ -44,17 +44,15 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
                 return response;
             }
 
-            var queryText = $"Portal_BookingSearch '{request.Query}', {request.AccountID}";
-
-
+            var queryText = $"Portal_BookingSearch '{(request.Query!.EndsWith('%') ? request.Query : $"{request.Query}%")}', {request.AccountID}";
             var bookings = await _context.BookingLogs
-                 .FromSqlRaw(queryText)
-                 .AsNoTracking()
-                 .ToListAsync(cancellationToken: cancellationToken);
+             .FromSqlRaw(queryText)
+             .AsNoTracking()
+             .ToListAsync(cancellationToken: cancellationToken);
 
             var LogEntryList = _mapper.Map<List<LogEntry>>(bookings);
 
-            response.Ok(new ResponseModel() { Success = true, LogEntries= LogEntryList });
+            response.Ok(new ResponseModel() { Success = true, LogEntries = LogEntryList });
             return response;
         }
     }

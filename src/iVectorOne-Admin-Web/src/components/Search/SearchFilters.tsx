@@ -43,6 +43,7 @@ const SearchFilters: React.FC<Props> = ({
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [propertyIsLoading, setPropertyIsLoading] = useState(false);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,45 +52,52 @@ const SearchFilters: React.FC<Props> = ({
     [user]
   );
 
-  const onSearch = async (value: string) => {
-    await getPropertiesById({
-      userKey: userKey as string,
-      tenant: {
-        id: activeTenant?.tenantId as number,
-        key: activeTenant?.tenantKey as string,
-      },
-      accountId: searchDetails.accountId,
-      query: value,
-      onInit: () => {
-        dispatch.app.setIsLoading(true);
-        setSearchDetails((prev) => ({ ...prev, properties: [] }));
-      },
-      onSuccess: (properties) => {
-        dispatch.app.setIsLoading(false);
-        setSearchDetails((prev) => ({ ...prev, properties }));
-      },
-      onFailed: (_err, instance, title) => {
-        dispatch.app.setIsLoading(false);
-        dispatch.app.setNotification({
-          status: NotificationStatus.ERROR,
-          message: title,
-          instance,
-        });
-      },
-    });
-  };
+  const onSearch = useCallback(
+    async (value: string) => {
+      if (isLoading) return;
+      await getPropertiesById({
+        userKey: userKey as string,
+        tenant: {
+          id: activeTenant?.tenantId as number,
+          key: activeTenant?.tenantKey as string,
+        },
+        accountId: searchDetails.accountId,
+        query: value,
+        onInit: () => {
+          setPropertyIsLoading(true);
+          setSearchDetails((prev) => ({ ...prev, properties: [] }));
+        },
+        onSuccess: (properties) => {
+          setPropertyIsLoading(false);
+          setSearchDetails((prev) => ({ ...prev, properties }));
+        },
+        onFailed: (_err, instance, title) => {
+          setPropertyIsLoading(false);
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: title,
+            instance,
+          });
+        },
+      });
+    },
+    [activeTenant, userKey, searchDetails, isLoading]
+  );
 
-  const handleChangeDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (isLoading) return;
-    const { value } = e.target;
-    setSearchDetails((prev) => ({
-      ...prev,
-      property: {
-        propertyId: 0,
-        name: value,
-      },
-    }));
-  };
+  const handleChangeDetails = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (isLoading) return;
+      const { value } = e.target;
+      setSearchDetails((prev) => ({
+        ...prev,
+        property: {
+          propertyId: 0,
+          name: value,
+        },
+      }));
+    },
+    [isLoading]
+  );
 
   const handleChangeArrivalDate = (date: Date[] | Date) => {
     if (Array.isArray(date)) {
@@ -113,6 +121,23 @@ const SearchFilters: React.FC<Props> = ({
           }),
         }));
       }
+    }
+    if (name === 'account') {
+      setSearchDetails({
+        accountId: value,
+        properties: [],
+        property: {
+          propertyId: 0,
+          name: '',
+        },
+        arrivalDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+        duration: 7,
+        adults: 2,
+        children: 0,
+        childrenAges: [],
+        infants: 0,
+        isActive: false,
+      });
     }
     setSearchDetails((prev) => ({ ...prev, [name]: value }));
   };
@@ -210,6 +235,7 @@ const SearchFilters: React.FC<Props> = ({
       (p) => p.propertyId === selectedResult
     );
     if (selectedProperty) {
+      setSearchQuery(selectedProperty.name);
       setSearchDetails((prev) => ({
         ...prev,
         property: selectedProperty,
@@ -225,16 +251,17 @@ const SearchFilters: React.FC<Props> = ({
     [searchDetails]
   );
 
-  const handlePropertySearch = async () => {
+  const handlePropertySearch = useCallback(async () => {
+    if (!activeTenant || !userKey || searchDetails.property.name === '') return;
     const { name } = searchDetails.property;
     if (name.length >= 4 && !!searchDetails.accountId) {
       await onSearch(name);
       setSearchQuery(searchDetails.property.name);
     }
-  };
+  }, [activeTenant, userKey, searchDetails, onSearch]);
 
   useEffect(() => {
-    if (!userKey || !activeTenant) return;
+    if (searchDetails.property.name === '') return;
     const timedSearch = setInterval(() => {
       if (
         searchDetails.property.name.length >= 4 &&
@@ -248,7 +275,7 @@ const SearchFilters: React.FC<Props> = ({
     return () => {
       timedSearch && clearInterval(timedSearch);
     };
-  }, [searchDetails, userKey, activeTenant, searchQuery]);
+  }, [searchDetails, searchQuery]);
 
   useEffect(() => {
     fetchAccounts();
@@ -291,6 +318,7 @@ const SearchFilters: React.FC<Props> = ({
               onChange={handleChangeDetails}
               value={searchDetails.property.name}
               autoComplete={autoCompleteDetails}
+              isLoading={propertyIsLoading}
             />
           </div>
           <div className='col-span-1'>

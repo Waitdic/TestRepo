@@ -51,24 +51,27 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            var requests = new List<Request>();
             var hotels = resortSplits.SelectMany(resort => resort.Hotels).ToList();
-            var requestedMealBasisIds = _settings.RequestedMealBases(searchDetails)
-                                                                    .Split(',')
-                                                                    .Select(mb => mb.ToSafeInt())
-                                                                    .Where(mb => mb != 0)
-                                                                    .Take(10).ToList();
-
-            if (!requestedMealBasisIds.Any())
+            if (hotels.Any()) 
             {
-                requestedMealBasisIds.Add(0);
+                var requestedMealBasisIds = _settings.RequestedMealBases(searchDetails)
+                                                                        .Split(',')
+                                                                        .Select(mb => mb.ToSafeInt())
+                                                                        .Where(mb => mb != 0)
+                                                                        .Take(10).ToList();
+
+                if (!requestedMealBasisIds.Any())
+                {
+                    requestedMealBasisIds.Add(0);
+                }
+
+                requests = requestedMealBasisIds.Select(mealBasisId =>
+                {
+                    string request = BuildSearchXml(searchDetails, hotels, mealBasisId);
+                    return BuildRequest(searchDetails, request);
+                }).ToList();
             }
-
-            var requests = requestedMealBasisIds.Select(mealBasisId =>
-            {
-                string request = BuildSearchXml(searchDetails, hotels, mealBasisId);
-                return BuildRequest(searchDetails, request);
-            }).ToList();
-
             return Task.FromResult(requests);
         }
 

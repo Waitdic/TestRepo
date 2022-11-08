@@ -1,18 +1,20 @@
 import { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
-import classnames from 'classnames';
+import classNames from 'classnames';
+import moment from 'moment';
 //
-import { EmptyState, Spinner } from '@/components';
+import { EmptyState, Spinner, YesOrNo } from '@/components';
 
 type Props = {
   headerList: {
     name: string;
     align: string;
+    original?: string;
   }[];
   bodyList: {
     id: number | string;
     name: string;
-    items?: any[];
+    items?: { name: string; value: any }[];
     isActive?: boolean;
     actions?: {
       name: string;
@@ -30,6 +32,12 @@ type Props = {
     onClick?: () => void;
   };
   isLoading?: boolean;
+  onOrderChange?: (orderBy: string, order: 'asc' | 'desc') => void;
+  orderBy?: {
+    by: string | null;
+    order: 'asc' | 'desc';
+    only?: string[];
+  };
 };
 
 const TableList: FC<Props> = ({
@@ -39,7 +47,40 @@ const TableList: FC<Props> = ({
   isLoading = false,
   showOnEmpty = false,
   initText,
+  onOrderChange,
+  orderBy,
 }) => {
+  const renderCell = (cellData: any, name: string) => {
+    if (typeof cellData === 'boolean') {
+      return (
+        <div className='text-center'>
+          <YesOrNo isActive={cellData} />
+        </div>
+      );
+    }
+    if (
+      typeof cellData === 'string' &&
+      (name?.includes?.('date') || name?.includes?.('timestamp'))
+    ) {
+      const dateStr = moment(new Date(cellData)).format('YYYY-MM-DD HH:mm:ss');
+      return dateStr !== 'Invalid date' ? dateStr : cellData;
+    }
+    return cellData;
+  };
+
+  const handleOnOrderChange = (name: string, originalName?: string) => {
+    if (!!orderBy?.only && !orderBy.only.includes(name)) {
+      return;
+    }
+    onOrderChange?.(
+      originalName || name,
+      orderBy?.order === 'asc' &&
+        (orderBy?.by === originalName || orderBy?.by === name)
+        ? 'desc'
+        : 'asc'
+    );
+  };
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -53,23 +94,52 @@ const TableList: FC<Props> = ({
       {bodyList.length > 0 || showOnEmpty ? (
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
-            <table className='table-fixed divide-y divide-gray-200 w-full'>
-              <thead className='bg-gray-50'>
+            <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
+              <thead className='bg-primary'>
                 <tr>
                   {headerList.length > 0 &&
-                    headerList.map(({ name, align }) => (
+                    headerList.map(({ name, align, original }, idx) => (
                       <th
                         scope='col'
-                        className={classnames(
-                          'px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider',
+                        className={classNames(
+                          'px-6 py-3 text-xs font-medium text-white uppercase tracking-wider',
                           {
                             'text-left': align === 'left',
                             'text-right': align === 'right',
+                            'cursor-pointer':
+                              (!!onOrderChange && !orderBy?.only) ||
+                              (!!orderBy?.only && orderBy.only.includes(name)),
                           }
                         )}
                         key={name}
+                        onClick={() => handleOnOrderChange(name, original)}
                       >
-                        {name}
+                        <p className='relative'>
+                          {name}
+                          <span className='absolute top-0'>
+                            {((!!onOrderChange &&
+                              orderBy?.by === (original || name)) ||
+                              (idx === 0 && orderBy?.by === null)) && (
+                              <svg
+                                className={classNames('w-4 h-4 ml-1', {
+                                  'transform rotate-180':
+                                    orderBy?.order === 'asc',
+                                })}
+                                fill='none'
+                                stroke='currentColor'
+                                viewBox='0 0 24 24'
+                                xmlns='http://www.w3.org/2000/svg'
+                              >
+                                <path
+                                  strokeLinecap='round'
+                                  strokeLinejoin='round'
+                                  strokeWidth={2}
+                                  d='M5 15l7-7 7 7'
+                                />
+                              </svg>
+                            )}
+                          </span>
+                        </p>
                       </th>
                     ))}
                 </tr>
@@ -87,7 +157,7 @@ const TableList: FC<Props> = ({
                 {bodyList.map(
                   ({ id, name, isActive = undefined, actions, items }, idx) => {
                     const isEven = idx % 2 === 0;
-                    const rowClass = classnames(
+                    const rowClass = classNames(
                       'bg-white',
                       { 'bg-gray-50': isEven },
                       { 'bg-green-50': isActive }
@@ -101,7 +171,7 @@ const TableList: FC<Props> = ({
                                 key={idx}
                                 className='px-6 py-4 text-sm font-medium text-dark'
                               >
-                                {item}
+                                {renderCell(item.value, item.name)}
                               </td>
                             ))}
                           </>

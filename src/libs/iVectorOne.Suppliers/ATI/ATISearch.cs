@@ -10,7 +10,6 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using iVector.Search.Property;
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.ATI.Models;
@@ -23,10 +22,12 @@
 
     public class ATISearch : IThirdPartySearch, ISingleSource
     {
+        private static readonly int _noMealBasisId = 2399;
+        private static readonly List<int> _mealBasisIds = new() { 391, 392, 2305, 2306, 2345, 2383 };
         private readonly IATISettings _settings;
         private readonly ISerializer _serializer;
         private readonly IMemoryCache _cache;
-        
+
         public ATISearch(IATISettings settings, ISerializer serializer, IMemoryCache cache)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
@@ -83,6 +84,7 @@
                 Pos = new Pos { Source = new Source { UserId = userId } },
                 AvailRequestSegments = new[]{ new AvailRequestSegment
                 {
+                    AvailReqType = "AMENITIES",
                     StayDateRange = new StayDateRange
                     {
                         Start = arrivalDate.ToString("yyyy-MM-dd"),
@@ -136,15 +138,16 @@
             var groupings = new Groupings();
             foreach (var roomStay in response.Body.Content.RoomStays)
             {
-                var grouping = new Grouping();
                 try
                 {
-                    grouping.PropertyCode = roomStay.BasicPropertyInfo.HotelCode;
-
                     var roomType = roomStay.RoomTypes.First();
-                    grouping.RoomTypeCode = roomType.RoomTypeCode.Split('-')[1];
-                    grouping.PropertyRoomBooking = roomStay.GuestCounts.First().ResGuestRPH;
-                    grouping.RoomTypeDescription = roomType.RoomDescription.Text;
+                    var grouping = new Grouping()
+                    {
+                        PropertyCode = roomStay.BasicPropertyInfo.HotelCode,
+                        RoomTypeCode = roomType.RoomTypeCode,
+                        RoomType = roomType,
+                        PropertyRoomBooking = roomStay.GuestCounts.First().ResGuestRPH,
+                    };
 
                     if (roomStay.RoomRates.Any(r => r.RatePlanCode == "Available"))
                     {
@@ -204,15 +207,12 @@
                     {
                         var occupancyInfo = mergedResponses.OccupancyInfo.Rooms.First(r => r.ID == propertyRoomBooking.ID);
 
-                        decimal amount = CalculateAmount(mergedResponses, property, propertyRoomBooking, roomType);
+                        decimal amount = CalculateAmount(mergedResponses, propertyRoomBooking, roomType);
                         var adjustments = GetAdjustments(roomStays, propertyRoomBooking, roomType);
 
                         var absoluteDeadline = roomStays
-                            .Where(x =>
-                            {
-                                return x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID)
-                                       && x.RoomTypes.Any(t => t.RoomTypeCode.Substring(t.RoomTypeCode.IndexOf('-') + 1) == roomType.RoomTypeCode);
-                            })
+                            .Where(x => x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID) &&
+                                    x.RoomTypes.Any(t => t.RoomTypeCode == roomType.RoomTypeCode))
                             .SelectMany(x => x.CancelPenalties)
                             .Select(p => p.Deadline.AbsoluteDeadline)
                             .FirstOrDefault();
@@ -224,7 +224,7 @@
                         {
                             cancellationDeadline = DateTime.Now;
                             nrf = true;
-                        } 
+                        }
                         else if (cancellationDeadline.Date == searchDetails.BookingDate.Date)
                         {
                             nrf = true;
@@ -238,20 +238,24 @@
 
                         cancellations.AddNew(cancellationDeadline, searchDetails.ArrivalDate, amount);
 
-                        var transformedResult =new TransformedResult
+                        int mealBasisId = roomType.Amenities
+                            .FirstOrDefault(amenity => _mealBasisIds.Contains(amenity.RoomAmenityCode.ToSafeInt()))?
+                            .RoomAmenityCode ?? _noMealBasisId;
+
+                        var transformedResult = new TransformedResult
                         {
                             TPKey = property.PropertyCode,
                             CurrencyCode = currencyCode,
                             PropertyRoomBookingID = propertyRoomBooking.ID,
                             RoomType = roomType.RoomTypeDescription.Text,
-                            RoomTypeCode = $"{property.PropertyCode}-{roomType.RoomTypeCode}",
-                            MealBasisCode = "RO",
+                            RoomTypeCode = roomType.RoomTypeCode,
+                            MealBasisCode = mealBasisId.ToString(),
                             Adults = occupancyInfo.Adults,
                             Children = occupancyInfo.Children,
                             Infants = occupancyInfo.Infants,
                             ChildAgeCSV = occupancyInfo.hlpChildAgeCSV,
                             Amount = amount,
-                            TPReference = $"{roomType.RoomTypeCode}|{cancellationDeadline}",
+                            TPReference = $"{roomType.RoomTypeCode.Split('-')[1]}|{cancellationDeadline}",
                             NonRefundableRates = nrf,
                             Adjustments = adjustments,
                             Cancellations = cancellations
@@ -277,7 +281,6 @@
 
         private static decimal CalculateAmount(
             Results mergedResponses,
-            Property property,
             PropertyRoomBooking propertyRoomBooking,
             RoomType roomType)
         {
@@ -286,14 +289,13 @@
                 .Body
                 .Content
                 .RoomStays
-                .Where(x => 
-                    x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID) 
-                    && x.RoomTypes.Any(t => t.RoomTypeCode == $"{property.PropertyCode}-{roomType.RoomTypeCode}"))
-                .SelectMany(rs => rs.RoomRates)
-                .SelectMany(r => r.Rates)
-                .Select(b => b.Base)
-                .Select(a => a.AmountAfterTax)
-                .ToArray();
+                    .Where(x => x.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID) &&
+                        x.RoomTypes.Any(t => t.RoomTypeCode == roomType.RoomTypeCode))
+                    .SelectMany(rs => rs.RoomRates)
+                    .SelectMany(r => r.Rates)
+                    .Select(b => b.Base)
+                    .Select(a => a.AmountAfterTax)
+                    .ToArray();
 
             return amountCollection.Sum() / ((decimal)amountCollection.Length / mergedResponses.OccupancyInfo.Duration) / 100;
         }
@@ -303,17 +305,16 @@
             PropertyRoomBooking propertyRoomBooking,
             RoomType roomType)
         {
-           return roomStays
-                .Where(r => r.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID)
-                            && r.RoomTypes
-                                .Any(t => t.RoomTypeCode.Substring(t.RoomTypeCode.IndexOf('-') + 1) == roomType.RoomTypeCode))
-                .SelectMany(x => x.RoomRates)
-                .SelectMany(r => r.Rates)
-                .Select(rate => new TransformedResultAdjustment(
-                    SDK.V2.PropertySearch.AdjustmentType.Offer,
-                    $"{rate.Discount.DiscountValue} - {rate.EffectiveDate}",
-                    $"{rate.Discount.Description}"))
-                .ToList();
+            return roomStays
+                 .Where(r => r.GuestCounts.Any(g => g.ResGuestRPH == propertyRoomBooking.ID) &&
+                     r.RoomTypes.Any(t => t.RoomTypeCode == roomType.RoomTypeCode))
+                 .SelectMany(x => x.RoomRates)
+                 .SelectMany(r => r.Rates)
+                 .Select(rate => new TransformedResultAdjustment(
+                     SDK.V2.PropertySearch.AdjustmentType.Offer,
+                     $"{rate.Discount.DiscountValue} - {rate.EffectiveDate}",
+                     $"{rate.Discount.Description}"))
+                 .ToList();
         }
 
         public class Groupings : List<Grouping>
@@ -342,15 +343,15 @@
                 return result;
             }
 
-            private Dictionary<string, string> GetPropertyRoomTypes(string propertyCode)
+            private Dictionary<string, RoomType> GetPropertyRoomTypes(string propertyCode)
             {
-                var result = new Dictionary<string, string>();
+                var result = new Dictionary<string, RoomType>();
 
-                foreach (var grouping in this.Where(grouping => 
-                             grouping.PropertyCode == propertyCode
-                             && !result.ContainsKey(grouping.RoomTypeCode)))
+                foreach (var grouping in this.Where(grouping =>
+                             grouping.PropertyCode == propertyCode &&
+                                !result.ContainsKey(grouping.RoomType.RoomTypeCode)))
                 {
-                    result.Add(grouping.RoomTypeCode, grouping.RoomTypeDescription);
+                    result.Add(grouping.RoomTypeCode, grouping.RoomType);
                 }
 
                 return result;
@@ -358,11 +359,11 @@
 
             private IEnumerable<int> GetPropertyRoomBooking(string propertyCode, string roomTypeCode)
             {
-               return this
-                   .Where(grouping => grouping.PropertyCode == propertyCode
-                                      && grouping.RoomTypeCode == roomTypeCode)
-                   .Select(g => g.PropertyRoomBooking)
-                   .Distinct();
+                return this
+                    .Where(grouping => grouping.PropertyCode == propertyCode
+                                       && grouping.RoomTypeCode == roomTypeCode)
+                    .Select(g => g.PropertyRoomBooking)
+                    .Distinct();
             }
 
             private static string GetRoomTypeDescription(string hotelCode, string roomTypeCode, IMemoryCache cache)
@@ -382,7 +383,7 @@
                         {
                             roomTypeDescriptions.Add(roomTypesCells[1], HttpUtility.HtmlEncode(roomTypesCells[2]));
                         }
-                        
+
                         roomTypesLine = roomTypes.ReadLine()!;
                     }
 
@@ -400,26 +401,31 @@
             {
                 return new PropertyGroupings
                 {
-                    Properties = GetDistinctProperties().Select(propertyCode => new Property
-                    {
-                        PropertyCode = propertyCode,
-                        RoomTypes = GetPropertyRoomTypes(propertyCode)
-                            .Select(roomType => new RoomType 
-                            {
-                                RoomTypeCode = roomType.Key,
-                                RoomTypeDescription = new RoomTypeDescription 
-                                { 
-                                    Text = !string.IsNullOrEmpty(roomType.Value)
-                                    ? roomType.Value
-                                    : GetRoomTypeDescription(propertyCode, roomType.Key, cache)
-                                },
-                                PropertyRoomBookings = GetPropertyRoomBooking(propertyCode, roomType.Key)
-                                    .Select(roomBooking => new PropertyRoomBooking
+                    Properties = GetDistinctProperties()
+                        .Select(propertyCode => new Property
+                        {
+                            PropertyCode = propertyCode,
+                            RoomTypes = GetPropertyRoomTypes(propertyCode)
+                                .Select(roomGroup =>
+                                {
+                                    var finalRoomType = roomGroup.Value;
+
+                                    finalRoomType.RoomTypeDescription = new RoomTypeDescription
                                     {
-                                        ID = roomBooking
-                                    }).ToArray(),
-                            }).ToArray()
-                    }).ToArray()
+                                        Text = !string.IsNullOrEmpty(finalRoomType.RoomDescription.Text) ?
+                                            finalRoomType.RoomDescription.Text :
+                                            GetRoomTypeDescription(propertyCode, roomGroup.Key, cache)
+                                    };
+
+                                    finalRoomType.PropertyRoomBookings = GetPropertyRoomBooking(propertyCode, roomGroup.Key)
+                                        .Select(roomBooking => new PropertyRoomBooking
+                                        {
+                                            ID = roomBooking
+                                        }).ToArray();
+
+                                    return finalRoomType;
+                                }).ToArray()
+                        }).ToArray()
                 };
             }
         }
@@ -428,8 +434,8 @@
         {
             public string PropertyCode;
             public string RoomTypeCode;
+            public RoomType RoomType;
             public int PropertyRoomBooking;
-            public string RoomTypeDescription;
         }
     }
 }

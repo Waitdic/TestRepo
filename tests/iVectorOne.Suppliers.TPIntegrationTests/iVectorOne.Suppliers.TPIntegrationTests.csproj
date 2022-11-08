@@ -130,6 +130,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MTSRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="RMI\RMIRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RMIRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="TBOHolidays\TBOHolidaysRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -276,6 +281,10 @@
     <EmbeddedResource Update="MTS\MTSRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MTSRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="RMI\RMIRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RMIRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="TBOHolidays\TBOHolidaysRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

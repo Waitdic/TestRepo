@@ -157,20 +157,25 @@ const SupplierEdit: React.FC<Props> = () => {
       isTesting: true,
       status: 'Running test...',
     });
-    await testSupplier(
-      activeTenant?.tenantKey,
+    await testSupplier({
+      tenantKey: activeTenant?.tenantKey,
       userKey,
-      activeTenant.tenantId,
-      currentAccount?.accountId as number,
-      currentSupplier?.supplierID as number,
-      (status) => {
+      tenantId: activeTenant.tenantId,
+      accountId: currentAccount?.accountId as number,
+      supplierId: currentSupplier?.supplierID as number,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: ({ message }) => {
+        dispatch.app.setIsLoading(false);
         setTestDetails({
           name: currentSupplier?.name as string,
           isTesting: true,
-          status: status,
+          status: message,
         });
       },
-      (err, instance) => {
+      onFailed: (err, instance) => {
+        dispatch.app.setIsLoading(false);
         setTestDetails({
           name: currentSupplier?.name as string,
           isTesting: true,
@@ -181,8 +186,8 @@ const SupplierEdit: React.FC<Props> = () => {
           message: err,
           instance,
         });
-      }
-    );
+      },
+    });
   }, [originalSupplier, currentSupplier]);
 
   const fetchData = async () => {

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 //
 import messages from '@/i18n/messages';
 import { useCoreFetching } from '@/libs/core/data-access';
-import Dashboard from '@/libs/core';
+import Dashboard from '@/libs/core/dashboard';
 import NotFound from '@/layouts/NotFound';
 import TenantCreate from '@/libs/core/tenant/create';
 import TenantEdit from '@/libs/core/tenant/edit';
@@ -26,6 +26,7 @@ import UserCreate from '@/libs/core/user/create';
 import UserList from '@/libs/core/user/list';
 import UserView from '@/libs/core/user/view';
 import Search from '@/libs/search';
+import LogViewer from '@/libs/log-viewer';
 
 type Props = {
   app: { theme: string; lang: string };
@@ -59,6 +60,8 @@ const AppProvider: React.FC<Props> = ({ app, user }) => {
           <Route path='/' element={<Dashboard error={coreError} />} />
           {/* Search */}
           <Route path='/search' element={<Search />} />
+          {/* Log Viewer */}
+          <Route path='/log-viewer' element={<LogViewer />} />
           {/* Tenant Routes */}
           <Route path='/tenants'>
             <Route index element={<TenantList />} />

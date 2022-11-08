@@ -41,6 +41,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
 
             var searchResults = new List<SearchResult>();
 
+
             foreach (var result in results)
             {
                 if (result.SearchStatus.ToLower() == "ok")
@@ -52,17 +53,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                             searchResults.Add(new SearchResult
                             {
                                 Supplier = roomType.Supplier,
-                                RoomCode = roomType.RateCode,
+                                RoomCode = roomType.Code,
                                 RoomType = roomType.SupplierRoomType,
                                 MealBasis = roomType.MealBasisCode,
                                 Currency = roomType.CurrencyCode,
-                                TotalCost = roomType.TotalCost,
+                                TotalCost = $"{string.Format("{0:#,0}", roomType.TotalCost)}",
                                 NonRefundable = roomType.NonRefundable
                             });
                         }
                     }
                 }
             }
+
+            var message = results.Select(x => x.Information).Aggregate((i, j) => i + ',' + j);
 
             //Delete the response once it's been processed
             foreach (var result in results)
@@ -71,7 +74,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                 await _context.SaveChangesAsync(cancellationToken);
             }
 
-            response.Ok(new ResponseModel { Success = true, Results = searchResults });
+            response.Ok(new ResponseModel { Success = true, Message = message, Results = searchResults.OrderBy(x => x.Supplier).ToList() });
 
             return response;
         }

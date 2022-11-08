@@ -36,6 +36,8 @@ export { default as ConfirmModal } from './ConfirmModal';
 export { default as RoleGuard } from './RoleGuard';
 export { default as SearchFilters } from './Search/SearchFilters';
 export { default as MultiLevelTable } from './MultiLevelTable';
+export { default as LogFilters } from './LogViewer/LogFilters';
+export { default as Tabs } from './Tabs';
 
 //* Charts
 export { default as LineChart } from './Charts/LineChart';

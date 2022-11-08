@@ -6,5 +6,6 @@
     public record Request : RequestBase, IRequest<Response>
     {
         public List<string> PropertyIDs { get; set; } = new();
+        public bool IncludeRoomTypes { get; set; } = false;
     }
 }

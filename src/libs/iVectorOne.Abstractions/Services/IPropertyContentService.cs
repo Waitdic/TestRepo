@@ -13,8 +13,9 @@
         /// <summary>Returns the property content for each of the property ids passed in</summary>
         /// <param name="propertyIDs">Only provide content for the provided properties</param>
         /// <param name="account">The account making the request</param>
+        /// <param name="includeRoomTypes">Whether to include room types in the response</param>
         /// <returns>the property content for all provided property ids</returns>
-        Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Account account);
+        Task<PropertyContent.Response> PropertyContentAsync(List<int> propertyIDs, Account account, bool includeRoomTypes);
 
         /// <summary>Gets a list of all central property ids filtering by the past in last modified and suppliers</summary>
         /// <param name="lastModified">The last modified date is used to return only properties that have been imported after that date</param>

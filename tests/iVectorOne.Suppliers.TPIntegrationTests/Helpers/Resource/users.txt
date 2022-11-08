@@ -410,6 +410,20 @@
         }
       },
       {
+        "Supplier": "RMI",
+        "Configurations": {
+          "URL": "https://xmldev-xml.centriumres.com/",
+          "Login": "ClassicCollection",
+          "Password": "**********",
+          "Version": "6.0",
+          "UseGZip": "true",
+          "OffsetCancellationDays": 0,
+          "AllowCancellations": "true",
+          "DefaultCancellationReason": "Test",
+          "RequestedMealBases": ""
+        }
+      },
+      {
         "Supplier": "BookABed",
         "Configurations": {
           "GenericURL": "http://bookabedtest.ivectorconnect.co.uk/ivectorconnect.ashx",
