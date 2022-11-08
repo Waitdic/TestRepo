@@ -74,6 +74,16 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
             //    queryText += $" AND T1.Type='{request.Type}'";
             //}
 
+            if (request.StartDate == request.EndDate)
+            {
+                queryText += $" AND CAST(T1.RequestDateTime AS [DATE]) = CAST('{request.EndDate:s}' AS [DATE])";
+            }
+            else
+            {
+                queryText += $" AND CAST(T1.RequestDateTime AS [DATE]) >= CAST('{request.StartDate:s}' AS [DATE])";
+                queryText += $" AND CAST(T1.RequestDateTime AS [DATE]) <= CAST('{request.EndDate:s}' AS [DATE])";
+            }
+
             queryText += " ORDER BY T1.RequestDateTime DESC";
 
             var logEntries = await _context.LogEntries
