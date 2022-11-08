@@ -43,7 +43,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 return response;
             }
 
-            var queryText = $"SELECT T1.RequestDateTime,T3.SupplierName,T1.Type," +
+            var queryText = $"SELECT T1.SupplierApiLogId, T1.RequestDateTime,T3.SupplierName,T1.Type," +
                 $"T1.Successful,T1.ResponseTime,T2.SupplierBookingReference,T2.LeadGuestName" +
                 $" FROM SupplierAPILog T1" +
                 $" INNER JOIN Supplier T3 ON T3.SupplierID = T1.SupplierID" +
@@ -55,9 +55,14 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 queryText += $" AND T1.SupplierId={request.SupplierID}";
             }
 
-            if (request.Type.ToLower() != "all")
+            switch (request.Type.ToLower())
             {
-                queryText += $" AND T1.Type='{request.Type}'";
+                case "book only":
+                    queryText += $" AND T1.Type='Book'";
+                    break;
+                case "prebook only":
+                    queryText += $" AND T1.Type='Prebook'";
+                    break;
             }
 
             switch (request.Status.ToLower())
@@ -93,6 +98,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
 
             var LogEntryList = logEntries.Select(x => new LogEntry
             {
+                SupplierApiLogId = x.SupplierApiLogId,
                 SupplierName = x.SupplierName,
                 LeadGuestName = x.LeadGuestName ?? "",
                 Succesful = x.Successful,

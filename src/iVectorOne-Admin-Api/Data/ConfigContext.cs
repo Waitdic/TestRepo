@@ -31,6 +31,8 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<BookingLog> BookingLogs { get; set; } = null!;
 
         public virtual DbSet<LogEntry> LogEntries { get; set; } = null!;
+        public virtual DbSet<LogDetail> LogDetails { get; set; } = null!;
+
         public virtual DbSet<FireForgetSearchResponse> FireForgetSearchResponses { get; set; } = null!;
 
         //
@@ -99,6 +101,12 @@ namespace iVectorOne_Admin_Api.Data
             });
 
             modelBuilder.Entity<LogEntry>(e =>
+            {
+                //e.HasKey(e => e.BookingId);
+                e.HasNoKey();
+            });
+
+            modelBuilder.Entity<LogDetail>(e =>
             {
                 //e.HasKey(e => e.BookingId);
                 e.HasNoKey();
