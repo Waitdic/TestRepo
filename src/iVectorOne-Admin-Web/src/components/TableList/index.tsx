@@ -5,23 +5,31 @@ import moment from 'moment';
 //
 import { EmptyState, Spinner, YesOrNo } from '@/components';
 
+export interface TableHeaderList {
+  name: string;
+  align: string;
+  original?: string;
+}
+export interface TableBodyListItems {
+  name: string;
+  value: any;
+  align?: 'right' | 'center' | 'left';
+}
+export interface TableListBody {
+  id: number | string;
+  name: string;
+  items?: TableBodyListItems[];
+  isActive?: boolean;
+  actions?: {
+    name: string;
+    href?: string;
+    onClick?: () => void;
+  }[];
+}
+
 type Props = {
-  headerList: {
-    name: string;
-    align: string;
-    original?: string;
-  }[];
-  bodyList: {
-    id: number | string;
-    name: string;
-    items?: { name: string; value: any }[];
-    isActive?: boolean;
-    actions?: {
-      name: string;
-      href?: string;
-      onClick?: () => void;
-    }[];
-  }[];
+  headerList: TableHeaderList[];
+  bodyList: TableListBody[];
   showOnEmpty?: boolean;
   initText?: string;
   emptyState?: {
@@ -169,7 +177,13 @@ const TableList: FC<Props> = ({
                             {items.map((item, idx) => (
                               <td
                                 key={idx}
-                                className='px-6 py-4 text-sm font-medium text-dark'
+                                className={classNames(
+                                  'px-6 py-4 text-sm font-medium text-dark',
+                                  {
+                                    'text-right': item.align === 'right',
+                                    'text-center': item.align === 'center',
+                                  }
+                                )}
                               >
                                 {renderCell(item.value, item.name)}
                               </td>
