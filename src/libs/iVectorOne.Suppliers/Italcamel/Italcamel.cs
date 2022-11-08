@@ -208,6 +208,8 @@
 
             try
             {
+                var amount = await GetBookingCharge(propertyDetails, propertyDetails.SourceSecondaryReference.Split('|')[1]);
+
                 // create xml for cancellation request
                 var cancelRequest = BuildCancelRequest(propertyDetails);
 
@@ -226,8 +228,6 @@
                 // check response
                 if (string.IsNullOrEmpty(response.ErrorCode) && response.Status.ToSafeInt() == 0 && response.ErrorCode.ToSafeInt() == 0)
                 {
-                    var amount  = await GetBookingCharge(propertyDetails, propertyDetails.SourceSecondaryReference.Split('|')[1]);
-
                     thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
                     thirdPartyCancellationResponse.Success = true;
                     thirdPartyCancellationResponse.Amount = amount;
