@@ -61,7 +61,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                     queryText += $" AND T1.Type='Book'";
                     break;
                 case "prebook only":
-                    queryText += $" AND T1.Type='Pre-Book'";
+                    queryText += $" AND T1.Type='Prebook'";
                     break;
             }
 
