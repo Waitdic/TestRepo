@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { orderBy as _orderBy } from 'lodash';
 //
 import type { LogEntries } from '@/types';
+import type { TableBodyListItems } from 'src/components/TableList';
 import { RootState } from '@/store';
 import Main from '@/layouts/Main';
 import { LogFilters, TableList } from '@/components';
@@ -21,8 +22,12 @@ const tableHeaderList = [
     align: 'left',
   },
   {
-    name: 'Resp Time',
+    name: 'Success',
     align: 'left',
+  },
+  {
+    name: 'Resp Time',
+    align: 'right',
   },
   {
     name: 'Supplier Ref',
@@ -52,34 +57,27 @@ const LogViewer: React.FC = () => {
     let rows: {
       id: number;
       name: string;
-      items: { name: string; value: any }[];
+      items: TableBodyListItems[];
     }[] = [];
+    let orderedResults = results;
     if (orderBy.by === 'Date and Time') {
-      const orderedResults = _orderBy(results, 'timestamp', [orderBy.order]);
-      orderedResults.forEach((result, idx) => {
-        let items: any[] = [];
-        Object.entries(result).forEach(([key, value], idx) => {
-          items.push({ name: key, value: value });
-        });
-        rows.push({
-          id: idx,
-          name: Object.keys(result)[idx],
-          items,
-        });
-      });
-    } else {
-      results.forEach((result, idx) => {
-        let items: any[] = [];
-        Object.entries(result).forEach(([key, value], idx) => {
-          items.push({ name: key, value: value });
-        });
-        rows.push({
-          id: idx,
-          name: Object.keys(result)[idx],
-          items,
-        });
-      });
+      orderedResults = _orderBy(results, 'timestamp', [orderBy.order]);
     }
+    orderedResults.forEach((result, idx) => {
+      let items: any[] = [];
+      Object.entries(result).forEach(([key, value]) => {
+        if (key === 'responseTime') {
+          items.push({ name: key, value: value, align: 'right' });
+        } else {
+          items.push({ name: key, value: value });
+        }
+      });
+      rows.push({
+        id: idx,
+        name: Object.keys(result)[idx],
+        items,
+      });
+    });
     return rows;
   }, [results, orderBy]);
 
@@ -104,6 +102,9 @@ const LogViewer: React.FC = () => {
                 onOrderChange={(by, order) =>
                   setOrderBy((prev) => ({ ...prev, by, order }))
                 }
+                loadMore={{
+                  amount: 50,
+                }}
               />
             </div>
           )}

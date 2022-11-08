@@ -1,9 +1,9 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import moment from 'moment';
 //
-import { EmptyState, Spinner, YesOrNo } from '@/components';
+import { Button, EmptyState, Spinner, YesOrNo } from '@/components';
 
 export interface TableHeaderList {
   name: string;
@@ -27,6 +27,15 @@ export interface TableListBody {
   }[];
 }
 
+type BodyListPager = {
+  total: number;
+  current: number;
+  remaining: number;
+  amount: number;
+  multiplier: number;
+  isEnd: boolean;
+};
+
 type Props = {
   headerList: TableHeaderList[];
   bodyList: TableListBody[];
@@ -46,6 +55,10 @@ type Props = {
     order: 'asc' | 'desc';
     only?: string[];
   };
+  loadMore?: {
+    amount: number;
+    onClick?: (pager?: BodyListPager) => void;
+  };
 };
 
 const TableList: FC<Props> = ({
@@ -57,7 +70,46 @@ const TableList: FC<Props> = ({
   initText,
   onOrderChange,
   orderBy,
+  loadMore,
 }) => {
+  const [loadMoreMultiplier, setLoadMoreMultiplier] = useState(1);
+
+  const slicedBodyList = useMemo(() => {
+    if (!!loadMore) {
+      return bodyList.slice(0, loadMoreMultiplier * loadMore.amount);
+    }
+    return bodyList;
+  }, [bodyList, loadMoreMultiplier]);
+
+  const bodyListPager = useMemo(() => {
+    if (!!loadMore) {
+      const total = bodyList.length;
+      const current = slicedBodyList.length;
+      const remaining = total - current;
+      const amount = loadMore.amount;
+      const multiplier = loadMoreMultiplier;
+      const isEnd = remaining <= 0;
+
+      const pager: BodyListPager = {
+        total,
+        current,
+        remaining,
+        amount,
+        multiplier,
+        isEnd,
+      };
+
+      loadMore?.onClick?.(pager);
+
+      return pager;
+    }
+  }, [bodyList, loadMoreMultiplier]);
+
+  const handleLoadMore = () => {
+    if (!loadMore) return;
+    setLoadMoreMultiplier((prev) => prev + 1);
+  };
+
   const renderCell = (cellData: any, name: string) => {
     if (typeof cellData === 'boolean') {
       return (
@@ -99,7 +151,7 @@ const TableList: FC<Props> = ({
 
   return (
     <>
-      {bodyList.length > 0 || showOnEmpty ? (
+      {slicedBodyList.length > 0 || showOnEmpty ? (
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
             <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
@@ -153,7 +205,7 @@ const TableList: FC<Props> = ({
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {showOnEmpty && bodyList.length === 0 && (
+                {showOnEmpty && slicedBodyList.length === 0 && (
                   <tr>
                     <td className='px-6 py-4 ' colSpan={7}>
                       <p className='text-sm font-medium text-dark'>
@@ -162,7 +214,7 @@ const TableList: FC<Props> = ({
                     </td>
                   </tr>
                 )}
-                {bodyList.map(
+                {slicedBodyList.map(
                   ({ id, name, isActive = undefined, actions, items }, idx) => {
                     const isEven = idx % 2 === 0;
                     const rowClass = classNames(
@@ -240,6 +292,21 @@ const TableList: FC<Props> = ({
                 )}
               </tbody>
             </table>
+            {!!bodyListPager && (
+              <div
+                className={classNames('flex items-center my-5 px-4', {
+                  'justify-between': !bodyListPager.isEnd,
+                  'justify-end': bodyListPager.isEnd,
+                })}
+              >
+                {!bodyListPager.isEnd && (
+                  <Button text='Load More' onClick={handleLoadMore} />
+                )}
+                <p className='text-xs text-gray-400'>
+                  {bodyListPager.current} / {bodyListPager.total}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       ) : (
