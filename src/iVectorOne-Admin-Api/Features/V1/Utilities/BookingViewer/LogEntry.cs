@@ -18,6 +18,8 @@
 
         public int APILogId { get; set; }
 
+        public int SupplierApiLogId { get; set; }
+
         public bool Succesful { get; set; }
     }
 }

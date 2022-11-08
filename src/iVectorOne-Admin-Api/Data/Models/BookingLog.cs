@@ -6,6 +6,8 @@ namespace iVectorOne_Admin_Api.Data.Models
     {
         public int BookingId { get; set; }
 
+        public int SupplierApiLogId { get; set; }
+
         public int APILogId { get; set; }
 
         public DateTime BookingDateTime { get; set; }
