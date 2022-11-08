@@ -1,0 +1,50 @@
+{
+    "BookingsByHour": [
+        {
+            "Time": 0,
+            "CountToday": 100,
+            "CountPRevious": 200
+        },
+        {
+            "Time": 1,
+            "CountToday": 100,
+            "CountPRevious": 200
+        },
+        {
+            "Time": 2,
+            "CountToday": 100,
+            "CountPRevious": 200
+        }
+    ],
+    "SearchesByHour": [
+        {
+            "Time": 0,
+            "CountToday": 100,
+            "CountPRevious": 200
+        },
+        {
+            "Time": 1,
+            "CountToday": 100,
+            "CountPRevious": 200
+        },
+        {
+            "Time": 2,
+            "CountToday": 100,
+            "CountPRevious": 200
+        }
+    ],
+    "Summary": [
+        {
+            "Name": "Today",
+            "BookingsTotal": 1,
+            "BookingsValue": 100.09
+        }
+    ],
+    "Suppliers": [
+        {
+            "Name": "",
+            "searchTotal": 100,
+            "SearchSuccess": 90
+        }
+    ]
+}
