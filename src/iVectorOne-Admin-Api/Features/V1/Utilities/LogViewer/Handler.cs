@@ -55,9 +55,14 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 queryText += $" AND T1.SupplierId={request.SupplierID}";
             }
 
-            if (request.Type.ToLower() != "all")
+            switch (request.Type.ToLower())
             {
-                queryText += $" AND T1.Type='{request.Type}'";
+                case "book only":
+                    queryText += $" AND T1.Type='Book'";
+                    break;
+                case "prebook only":
+                    queryText += $" AND T1.Type='Pre-Book'";
+                    break;
             }
 
             switch (request.Status.ToLower())
