@@ -65,23 +65,12 @@ namespace iVectorOne.Tests.RMI {
         ///
         ///**HEADERS**
         ///
-        ///Timeout: 1
+        ///Timeout: 100
         ///
         ///
         ///**REQUEST**
         ///
-        ///&lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;SearchRequest xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-        ///  &lt;LoginDetails&gt;
-        ///    &lt;Login&gt;Kenwood&lt;/Login&gt;
-        ///    &lt;Password&gt;D_6bxJvsR9zt&lt;/Password&gt;
-        ///    &lt;Version&gt;6.0&lt;/Version&gt;
-        ///  &lt;/LoginDetails&gt;
-        ///  &lt;SearchDetails&gt;
-        ///    &lt;ArrivalDate&gt;2021-09-01&lt;/ArrivalDate&gt;
-        ///    &lt;Duration&gt;5&lt;/Duration&gt;
-        ///    &lt;PropertyID&gt;102245&lt;/PropertyID&gt;
-        ///    &lt;MealBasisID&gt;0&lt;/Meal [rest of string was truncated]&quot;;.
+        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;SearchRequest xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;&lt;LoginDetails&gt;&lt;Login&gt;ClassicCollection&lt;/Login&gt;&lt;Password&gt;**********&lt;/Password&gt;&lt;Version&gt;6.0&lt;/Version&gt;&lt;/LoginDetails&gt;&lt;SearchDetails&gt;&lt;ArrivalDate&gt;2021-09-01&lt;/ArrivalDate&gt;&lt;Duration&gt;5&lt;/Duration&gt;&lt;PropertyID&gt;102245&lt;/PropertyID&gt;&lt;MealBasisID&gt;0&lt;/MealBasisID&gt;&lt;MinStarRating&gt;0&lt;/Min [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {
