@@ -599,7 +599,19 @@
           "LeadGuestNationality": "GB",
           "CountryOfResidence": "GB"
         }
-      }
+      },
+      {
+        "Supplier": "ATI",
+        "Configurations": {
+          "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": 7,
+          "User": "qwcas12g",
+          "Password": "qtweqwrqwasd",
+          "Version": "v3",
+          "ExcludeNRF": "false"
+        }
+       }
     ]
   }
 ]
