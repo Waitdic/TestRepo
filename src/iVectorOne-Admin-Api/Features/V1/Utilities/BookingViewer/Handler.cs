@@ -50,7 +50,19 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
              .AsNoTracking()
              .ToListAsync(cancellationToken: cancellationToken);
 
-            var LogEntryList = _mapper.Map<List<LogEntry>>(bookings);
+            var LogEntryList = bookings.Select(x => new LogEntry
+            {
+                SupplierApiLogId = x.SupplierApiLogId,
+                SupplierName = x.SupplierName,
+                LeadGuestName = x.LeadGuestName ?? "",
+                Succesful = x.Success,
+                ResponseTime = $"{string.Format("{0:#,0}", x.ResponseTime)}ms",
+                Type = x.Type,
+                SupplierBookingReference = x.SupplierBookingReference ?? "",
+                Timestamp = x.BookingDateTime.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
+            }).ToList();
+
+            //var LogEntryList = _mapper.Map<List<LogEntry>>(bookings);
 
             response.Ok(new ResponseModel() { Success = true, LogEntries = LogEntryList });
             return response;

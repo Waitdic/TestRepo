@@ -4,13 +4,13 @@
     {
         public string Environment { get; set; } = string.Empty;
 
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; } = string.Empty;
 
         public string SupplierName { get; set; } = string.Empty;
 
         public string Type { get; set; } = string.Empty;
 
-        public int ResponseTime { get; set; }
+        public string ResponseTime { get; set; } = string.Empty;
 
         public string SupplierBookingReference { get; set; } = string.Empty;
 
