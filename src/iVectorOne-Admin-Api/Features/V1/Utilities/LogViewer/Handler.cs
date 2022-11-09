@@ -103,6 +103,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.LogViewer
                 LeadGuestName = x.LeadGuestName ?? "",
                 Succesful = x.Successful,
                 ResponseTime = $"{string.Format("{0:#,0}", x.ResponseTime)}ms",
+                ResponseTimeValue = x.ResponseTime,
                 Type = x.Type,
                 SupplierBookingReference = x.SupplierBookingReference ?? "",
                 Timestamp = x.RequestDateTime.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
