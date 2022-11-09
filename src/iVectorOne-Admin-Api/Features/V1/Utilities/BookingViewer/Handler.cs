@@ -55,6 +55,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
                 LeadGuestName = x.LeadGuestName ?? "",
                 Succesful = x.Success,
                 ResponseTime = $"{string.Format("{0:#,0}", x.ResponseTime)}ms",
+                ResponseTimeValue = x.ResponseTime,
                 Type = x.Type,
                 SupplierBookingReference = x.SupplierBookingReference ?? "",
                 Timestamp = x.BookingDateTime.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
