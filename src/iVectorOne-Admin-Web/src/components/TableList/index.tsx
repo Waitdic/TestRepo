@@ -1,27 +1,44 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import moment from 'moment';
 //
-import { EmptyState, Spinner, YesOrNo } from '@/components';
+import { Button, EmptyState, Spinner, YesOrNo } from '@/components';
+
+export interface TableHeaderList {
+  name: string;
+  align: string;
+  original?: string;
+}
+export interface TableBodyListItems {
+  name: string;
+  value: any;
+  align?: 'right' | 'center' | 'left';
+}
+export interface TableListBody {
+  id: number | string;
+  name: string;
+  items?: TableBodyListItems[];
+  isActive?: boolean;
+  actions?: {
+    name: string;
+    href?: string;
+    onClick?: () => void;
+  }[];
+}
+
+type BodyListPager = {
+  total: number;
+  current: number;
+  remaining: number;
+  amount: number;
+  multiplier: number;
+  isEnd: boolean;
+};
 
 type Props = {
-  headerList: {
-    name: string;
-    align: string;
-    original?: string;
-  }[];
-  bodyList: {
-    id: number | string;
-    name: string;
-    items?: { name: string; value: any }[];
-    isActive?: boolean;
-    actions?: {
-      name: string;
-      href?: string;
-      onClick?: () => void;
-    }[];
-  }[];
+  headerList: TableHeaderList[];
+  bodyList: TableListBody[];
   showOnEmpty?: boolean;
   initText?: string;
   emptyState?: {
@@ -36,6 +53,11 @@ type Props = {
   orderBy?: {
     by: string | null;
     order: 'asc' | 'desc';
+    only?: string[];
+  };
+  loadMore?: {
+    amount: number;
+    onClick?: (pager?: BodyListPager) => void;
   };
 };
 
@@ -48,7 +70,46 @@ const TableList: FC<Props> = ({
   initText,
   onOrderChange,
   orderBy,
+  loadMore,
 }) => {
+  const [loadMoreMultiplier, setLoadMoreMultiplier] = useState(1);
+
+  const slicedBodyList = useMemo(() => {
+    if (!!loadMore) {
+      return bodyList.slice(0, loadMoreMultiplier * loadMore.amount);
+    }
+    return bodyList;
+  }, [bodyList, loadMoreMultiplier]);
+
+  const bodyListPager = useMemo(() => {
+    if (!!loadMore) {
+      const total = bodyList.length;
+      const current = slicedBodyList.length;
+      const remaining = total - current;
+      const amount = loadMore.amount;
+      const multiplier = loadMoreMultiplier;
+      const isEnd = remaining <= 0;
+
+      const pager: BodyListPager = {
+        total,
+        current,
+        remaining,
+        amount,
+        multiplier,
+        isEnd,
+      };
+
+      loadMore?.onClick?.(pager);
+
+      return pager;
+    }
+  }, [bodyList, loadMoreMultiplier]);
+
+  const handleLoadMore = () => {
+    if (!loadMore) return;
+    setLoadMoreMultiplier((prev) => prev + 1);
+  };
+
   const renderCell = (cellData: any, name: string) => {
     if (typeof cellData === 'boolean') {
       return (
@@ -67,6 +128,19 @@ const TableList: FC<Props> = ({
     return cellData;
   };
 
+  const handleOnOrderChange = (name: string, originalName?: string) => {
+    if (!!orderBy?.only && !orderBy.only.includes(name)) {
+      return;
+    }
+    onOrderChange?.(
+      originalName || name,
+      orderBy?.order === 'asc' &&
+        (orderBy?.by === originalName || orderBy?.by === name)
+        ? 'desc'
+        : 'asc'
+    );
+  };
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -77,7 +151,7 @@ const TableList: FC<Props> = ({
 
   return (
     <>
-      {bodyList.length > 0 || showOnEmpty ? (
+      {slicedBodyList.length > 0 || showOnEmpty ? (
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
             <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
@@ -92,18 +166,13 @@ const TableList: FC<Props> = ({
                           {
                             'text-left': align === 'left',
                             'text-right': align === 'right',
-                            'cursor-pointer': !!onOrderChange,
+                            'cursor-pointer':
+                              (!!onOrderChange && !orderBy?.only) ||
+                              (!!orderBy?.only && orderBy.only.includes(name)),
                           }
                         )}
                         key={name}
-                        onClick={() =>
-                          onOrderChange?.(
-                            original || name,
-                            orderBy?.order === 'asc' && orderBy?.by === original
-                              ? 'desc'
-                              : 'asc'
-                          )
-                        }
+                        onClick={() => handleOnOrderChange(name, original)}
                       >
                         <p className='relative'>
                           {name}
@@ -136,7 +205,7 @@ const TableList: FC<Props> = ({
                 </tr>
               </thead>
               <tbody className='bg-white divide-y divide-gray-200'>
-                {showOnEmpty && bodyList.length === 0 && (
+                {showOnEmpty && slicedBodyList.length === 0 && (
                   <tr>
                     <td className='px-6 py-4 ' colSpan={7}>
                       <p className='text-sm font-medium text-dark'>
@@ -145,7 +214,7 @@ const TableList: FC<Props> = ({
                     </td>
                   </tr>
                 )}
-                {bodyList.map(
+                {slicedBodyList.map(
                   ({ id, name, isActive = undefined, actions, items }, idx) => {
                     const isEven = idx % 2 === 0;
                     const rowClass = classNames(
@@ -160,7 +229,13 @@ const TableList: FC<Props> = ({
                             {items.map((item, idx) => (
                               <td
                                 key={idx}
-                                className='px-6 py-4 text-sm font-medium text-dark'
+                                className={classNames(
+                                  'px-6 py-4 text-sm font-medium text-dark',
+                                  {
+                                    'text-right': item.align === 'right',
+                                    'text-center': item.align === 'center',
+                                  }
+                                )}
                               >
                                 {renderCell(item.value, item.name)}
                               </td>
@@ -217,6 +292,21 @@ const TableList: FC<Props> = ({
                 )}
               </tbody>
             </table>
+            {!!bodyListPager && (
+              <div
+                className={classNames('flex items-center my-5 px-4', {
+                  'justify-between': !bodyListPager.isEnd,
+                  'justify-end': bodyListPager.isEnd,
+                })}
+              >
+                {!bodyListPager.isEnd && (
+                  <Button text='Load More' onClick={handleLoadMore} />
+                )}
+                <p className='text-xs text-gray-400'>
+                  {bodyListPager.current} / {bodyListPager.total}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       ) : (

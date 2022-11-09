@@ -113,5 +113,11 @@
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string RateBasis { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the special offer.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string SpecialOffer { get; set; } = string.Empty;
     }
 }

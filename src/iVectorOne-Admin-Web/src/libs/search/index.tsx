@@ -4,6 +4,7 @@ import { orderBy as _orderBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import type { SearchDetails, SupplierSearchResults } from '@/types';
+import type { TableBodyListItems } from 'src/components/TableList';
 import Main from '@/layouts/Main';
 import { SearchFilters, TableList } from '@/components';
 
@@ -78,48 +79,41 @@ const Search: React.FC = () => {
     let rows: {
       id: number;
       name: string;
-      items: { name: string; value: any }[];
+      items: TableBodyListItems[];
     }[] = [];
-    if (orderBy.by === null) {
-      searchResults.forEach((result, idx) => {
-        let items: { name: string; value: any }[] = [];
-        Object.entries(result).forEach(([key, value]) => {
-          items.push({ name: key, value });
-        });
-        const name = Object.keys(result)[0];
-        rows.push({
-          id: idx,
-          name,
-          items,
-        });
-      });
-    } else {
-      let orderByKey = orderBy.by;
-      if (orderByKey === 'nonRef') {
-        orderByKey = 'nonRefundable';
-      } else if (orderByKey === 'cost') {
-        orderByKey = 'totalCost';
-      }
-
-      const sortedResults = _orderBy(
-        searchResults,
-        [orderByKey],
-        orderBy.order
-      );
-
-      sortedResults.forEach((result, idx) => {
-        let items: { name: string; value: any }[] = [];
-        Object.entries(result).forEach(([key, value]) => {
-          items.push({ name: key, value });
-        });
-        const name = Object.keys(result)[0];
-        rows.push({
-          id: idx,
-          name,
-          items,
-        });
-      });
+    let results: any[] = searchResults;
+    let orderByKey = orderBy.by;
+    if (orderByKey === 'nonRef') {
+      orderByKey = 'nonRefundable';
+    } else if (orderByKey === 'cost') {
+      orderByKey = 'totalCost';
     }
+
+    const sortedResults = _orderBy(searchResults, [orderByKey], orderBy.order);
+    if (orderBy.by !== null) {
+      results = sortedResults;
+    }
+
+    results.forEach((result, idx) => {
+      let items: TableBodyListItems[] = [];
+      Object.entries(result).forEach(([key, value]) => {
+        if (key === 'totalCost') {
+          items.push({
+            name: key,
+            value,
+            align: 'right',
+          });
+        } else {
+          items.push({ name: key, value });
+        }
+      });
+      const name = Object.keys(result)[0];
+      rows.push({
+        id: idx,
+        name,
+        items,
+      });
+    });
 
     return rows;
   }, [searchResults, orderBy]);

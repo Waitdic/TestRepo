@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { orderBy as _orderBy } from 'lodash';
 //
 import type { LogEntries } from '@/types';
+import type { TableBodyListItems } from 'src/components/TableList';
 import { RootState } from '@/store';
 import Main from '@/layouts/Main';
 import { LogFilters, TableList } from '@/components';
@@ -20,8 +22,12 @@ const tableHeaderList = [
     align: 'left',
   },
   {
-    name: 'Resp Time',
+    name: 'Success',
     align: 'left',
+  },
+  {
+    name: 'Resp Time',
+    align: 'right',
   },
   {
     name: 'Supplier Ref',
@@ -37,17 +43,34 @@ const LogViewer: React.FC = () => {
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const [results, setResults] = useState<LogEntries[]>([]);
+  const [orderBy, setOrderBy] = useState<{
+    by: string | null;
+    order: 'asc' | 'desc';
+    only: string[];
+  }>({
+    by: 'Date and Time',
+    order: 'asc',
+    only: ['Date and Time'],
+  });
 
   const tableBody = useMemo(() => {
     let rows: {
       id: number;
       name: string;
-      items: { name: string; value: any }[];
+      items: TableBodyListItems[];
     }[] = [];
-    results.forEach((result, idx) => {
+    let orderedResults = results;
+    if (orderBy.by === 'Date and Time') {
+      orderedResults = _orderBy(results, 'timestamp', [orderBy.order]);
+    }
+    orderedResults.forEach((result, idx) => {
       let items: any[] = [];
-      Object.entries(result).forEach(([key, value], idx) => {
-        items.push({ name: key, value: value });
+      Object.entries(result).forEach(([key, value]) => {
+        if (key === 'responseTime') {
+          items.push({ name: key, value: value, align: 'right' });
+        } else {
+          items.push({ name: key, value: value });
+        }
       });
       rows.push({
         id: idx,
@@ -56,7 +79,7 @@ const LogViewer: React.FC = () => {
       });
     });
     return rows;
-  }, [results]);
+  }, [results, orderBy]);
 
   return (
     <Main title='Log Viewer'>
@@ -75,6 +98,13 @@ const LogViewer: React.FC = () => {
                 bodyList={tableBody}
                 showOnEmpty
                 initText='Please input some search details and perform a search'
+                orderBy={orderBy as any}
+                onOrderChange={(by, order) =>
+                  setOrderBy((prev) => ({ ...prev, by, order }))
+                }
+                loadMore={{
+                  amount: 50,
+                }}
               />
             </div>
           )}

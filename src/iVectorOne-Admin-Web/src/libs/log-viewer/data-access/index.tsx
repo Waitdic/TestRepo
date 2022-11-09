@@ -39,6 +39,7 @@ export async function getBookingsLogEntries({
           timestamp,
           supplierName,
           type,
+          succesful,
           responseTime,
           supplierBookingReference,
           leadGuestName,
@@ -46,6 +47,7 @@ export async function getBookingsLogEntries({
           timestamp,
           supplierName,
           type,
+          succesful,
           responseTime,
           supplierBookingReference,
           leadGuestName,
@@ -88,7 +90,7 @@ export async function getFilteredLogEntries({
       endDate = end.toISOString().split('T')[0];
     }
 
-    return `Supplier=${filters.supplier}&StartDate=${startDate}&endDate=${endDate}&enviroment=${filters.system}&type=${filters.system}&status=${filters.responseSuccess}`;
+    return `Supplier=${filters.supplier}&StartDate=${startDate}&endDate=${endDate}&enviroment=${filters.system}&type=${filters.type}&status=${filters.responseSuccess}`;
   };
 
   onInit();
@@ -109,6 +111,7 @@ export async function getFilteredLogEntries({
           timestamp,
           supplierName,
           type,
+          succesful,
           responseTime,
           supplierBookingReference,
           leadGuestName,
@@ -116,6 +119,7 @@ export async function getFilteredLogEntries({
           timestamp,
           supplierName,
           type,
+          succesful,
           responseTime,
           supplierBookingReference,
           leadGuestName,

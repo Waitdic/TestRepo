@@ -225,6 +225,7 @@ export interface LogEntries {
   timestamp: string;
   supplierName: string;
   type: string;
+  succesful: boolean;
   responseTime: number;
   supplierBookingReference: string;
   leadGuestName: string;
