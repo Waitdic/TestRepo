@@ -14,7 +14,7 @@
 
         public string ResponseTime { get; set; } = string.Empty;
 
-        public int ResponseTimeValue { get; set; };
+        public int ResponseTimeValue { get; set; }
 
         public string SupplierBookingReference { get; set; } = string.Empty;
 
