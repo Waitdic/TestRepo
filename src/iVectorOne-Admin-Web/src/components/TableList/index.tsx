@@ -141,6 +141,46 @@ const TableList: FC<Props> = ({
     );
   };
 
+  const renderActions = (
+    actions:
+      | {
+          name: string;
+          href?: string;
+          onClick?: () => void;
+        }[]
+      | undefined
+  ) => {
+    if (!actions || actions?.length === 0) return null;
+
+    const actionClasses = classNames('text-primary hover:text-primaryHover', {
+      'ml-2': actions?.length > 1,
+    });
+
+    return (
+      <td className='px-6 py-4 text-right text-sm'>
+        {actions.map(({ name: actionName, href, onClick }) => {
+          if (!!href) {
+            return (
+              <Link to={href} className={actionClasses} key={href}>
+                {actionName}
+              </Link>
+            );
+          } else {
+            return (
+              <button
+                key={actionName}
+                className={actionClasses}
+                onClick={() => onClick?.()}
+              >
+                {actionName}
+              </button>
+            );
+          }
+        })}
+      </td>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className='p-4 text-center'>
@@ -240,6 +280,7 @@ const TableList: FC<Props> = ({
                                 {renderCell(item.value, item.name)}
                               </td>
                             ))}
+                            {renderActions(actions)}
                           </>
                         ) : (
                           <>
@@ -255,35 +296,7 @@ const TableList: FC<Props> = ({
                                 )}
                               </div>
                             </td>
-                            <td className='px-6 py-4 text-right text-sm'>
-                              {actions &&
-                                actions.length > 0 &&
-                                actions.map(
-                                  ({ name: actionName, href, onClick }) => {
-                                    if (!!href) {
-                                      return (
-                                        <Link
-                                          to={href}
-                                          className='text-primary hover:text-primaryHover'
-                                          key={href}
-                                        >
-                                          {actionName}
-                                        </Link>
-                                      );
-                                    } else {
-                                      return (
-                                        <button
-                                          key={actionName}
-                                          className='text-red-400 hover:text-primaryHover'
-                                          onClick={() => onClick?.()}
-                                        >
-                                          {actionName}
-                                        </button>
-                                      );
-                                    }
-                                  }
-                                )}
-                            </td>
+                            {renderActions(actions)}
                           </>
                         )}
                       </tr>
@@ -292,7 +305,7 @@ const TableList: FC<Props> = ({
                 )}
               </tbody>
             </table>
-            {!!bodyListPager && (
+            {!!bodyListPager && bodyListPager?.total > 0 && (
               <div
                 className={classNames('flex items-center my-5 px-4', {
                   'justify-between': !bodyListPager.isEnd,

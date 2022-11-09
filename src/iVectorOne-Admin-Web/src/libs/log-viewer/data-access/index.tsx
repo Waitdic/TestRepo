@@ -1,6 +1,11 @@
 import { isArray } from 'lodash';
 //
-import type { ApiError, LogEntries, LogViewerFilters } from '@/types';
+import type {
+  ApiError,
+  LogDetails,
+  LogEntries,
+  LogViewerFilters,
+} from '@/types';
 import ApiCall from '@/axios';
 import handleApiError from '@/utils/handleApiError';
 
@@ -36,6 +41,7 @@ export async function getBookingsLogEntries({
     if (success) {
       const logEntriesFormatted = logEntries.map(
         ({
+          supplierApiLogId,
           timestamp,
           supplierName,
           type,
@@ -44,6 +50,7 @@ export async function getBookingsLogEntries({
           supplierBookingReference,
           leadGuestName,
         }: LogEntries) => ({
+          id: supplierApiLogId,
           timestamp,
           supplierName,
           type,
@@ -108,6 +115,7 @@ export async function getFilteredLogEntries({
     if (success) {
       const logEntriesFormatted = logEntries.map(
         ({
+          supplierApiLogId,
           timestamp,
           supplierName,
           type,
@@ -116,6 +124,7 @@ export async function getFilteredLogEntries({
           supplierBookingReference,
           leadGuestName,
         }: LogEntries) => ({
+          id: supplierApiLogId,
           timestamp,
           supplierName,
           type,
@@ -126,6 +135,44 @@ export async function getFilteredLogEntries({
         })
       );
       onSuccess(logEntriesFormatted);
+    }
+  } catch (error) {
+    const { message, instance, title } = handleApiError(error as ApiError);
+    onFailed(message, instance, title);
+  }
+}
+
+export async function getLogViewerPayloadPopup({
+  tenant,
+  userKey,
+  accountId,
+  logId,
+  onInit,
+  onFailed,
+  onSuccess,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  logId: number;
+  onInit: () => void;
+  onSuccess: (logDetails: LogDetails[]) => void;
+  onFailed: (message: string, instance?: string, title?: string) => void;
+}) {
+  onInit();
+  try {
+    const {
+      data: { logDetails, success },
+    } = await ApiCall.request({
+      method: 'GET',
+      url: `/tenants/${tenant.id}/accounts/${accountId}/logs/${logId}`,
+      headers: {
+        Tenantkey: tenant.key,
+        UserKey: userKey,
+      },
+    });
+    if (success) {
+      onSuccess(logDetails);
     }
   } catch (error) {
     const { message, instance, title } = handleApiError(error as ApiError);

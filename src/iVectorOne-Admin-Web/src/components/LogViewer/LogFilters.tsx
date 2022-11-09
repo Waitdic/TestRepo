@@ -21,9 +21,10 @@ import { getSuppliersByAccount } from '@/libs/core/data-access/supplier';
 
 type Props = {
   setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
+  setAccountId: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const LogFilters: React.FC<Props> = ({ setResults }) => {
+const LogFilters: React.FC<Props> = ({ setResults, setAccountId }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
@@ -89,6 +90,10 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
       ...prevFilters,
       [name]: optionId,
     }));
+
+    if (name === 'accountId') {
+      setAccountId(Number(optionId));
+    }
   };
 
   const handleOnSearchQueryChange = (
@@ -224,11 +229,11 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   }, [fetchSuppliers]);
 
   return (
-    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
+    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 md:min-w-[380px] sm:space-y-3'>
       <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
 
       {isActiveTab('filter') && (
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
+        <div className='flex flex-col sm:grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
           <div>
             <Select
               id='accountId'
