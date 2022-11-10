@@ -200,10 +200,18 @@ const LogFilters: React.FC<Props> = ({ setResults, setAccountId }) => {
       (accounts) => {
         dispatch.app.setIsLoading(false);
         setAccounts(accounts);
-        setFilters((prev) => ({
-          ...prev,
-          accountId: accounts[0].accountId,
-        }));
+
+        if (accounts.length === 0) {
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'Get started by creating a new account.',
+          });
+        } else {
+          setFilters((prev) => ({
+            ...prev,
+            accountId: accounts[0].accountId,
+          }));
+        }
       },
       (error, instance) => {
         dispatch.app.setIsLoading(false);
