@@ -10,6 +10,7 @@ module.exports = {
     'bg-blue-500',
     'bg-green-500',
     'bg-orange-500',
+    'min-w-[1100px]',
   ],
   theme: {
     extend: {

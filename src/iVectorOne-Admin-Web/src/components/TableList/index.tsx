@@ -59,6 +59,7 @@ type Props = {
     amount: number;
     onClick?: (pager?: BodyListPager) => void;
   };
+  minWidth?: string;
 };
 
 const TableList: FC<Props> = ({
@@ -71,6 +72,7 @@ const TableList: FC<Props> = ({
   onOrderChange,
   orderBy,
   loadMore,
+  minWidth,
 }) => {
   const [loadMoreMultiplier, setLoadMoreMultiplier] = useState(1);
 
@@ -194,7 +196,14 @@ const TableList: FC<Props> = ({
       {slicedBodyList.length > 0 || showOnEmpty ? (
         <div className='align-middle inline-block w-full shadow'>
           <div className='overflow-x-auto overflow-y-hidden sm:rounded-lg'>
-            <table className='table-auto min-w-[1100px] divide-y divide-gray-200 w-full'>
+            <table
+              className={classNames(
+                'table-auto divide-y divide-gray-200 w-full',
+                {
+                  [`min-w-[${minWidth}]`]: !!minWidth,
+                }
+              )}
+            >
               <thead className='bg-primary'>
                 <tr>
                   {headerList.length > 0 &&

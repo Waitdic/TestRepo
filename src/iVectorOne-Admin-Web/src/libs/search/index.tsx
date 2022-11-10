@@ -145,6 +145,7 @@ const Search: React.FC = () => {
                 initText='Please input some search details and perform a search'
                 onOrderChange={handleOrderChange}
                 orderBy={orderBy}
+                minWidth='1100px'
               />
             </div>
           )}

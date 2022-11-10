@@ -194,6 +194,7 @@ const LogViewer: React.FC = () => {
                   loadMore={{
                     amount: 50,
                   }}
+                  minWidth='1100px'
                 />
               </div>
             )}
