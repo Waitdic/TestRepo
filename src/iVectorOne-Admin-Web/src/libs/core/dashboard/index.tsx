@@ -300,7 +300,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
                 />
               </div>
               {refreshTimer.selected?.id === 1 && (
-                <Button text='Refresh' onClick={fetchPageData} />
+                <Button text='Refresh Now' onClick={fetchPageData} />
               )}
             </div>
           )}
