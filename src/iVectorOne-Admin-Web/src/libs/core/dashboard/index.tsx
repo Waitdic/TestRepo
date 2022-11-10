@@ -54,8 +54,8 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     options: [
       { id: 1, name: 'Manual' },
       { id: 2, name: '5 min' },
-      { id: 3, name: '30 min' },
-      { id: 4, name: '60 min' },
+      { id: 3, name: '15 min' },
+      { id: 4, name: '30 min' },
     ],
     selected: { id: 1, name: 'Manual' },
   });
@@ -242,10 +242,10 @@ const Dashboard: React.FC<Props> = ({ error }) => {
         interval = 5 * 60 * 1000;
         break;
       case 3:
-        interval = 30 * 60 * 1000;
+        interval = 15 * 60 * 1000;
         break;
       case 4:
-        interval = 60 * 60 * 1000;
+        interval = 30 * 60 * 1000;
         break;
       default:
         break;
