@@ -13,7 +13,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Users.Create
                 var response = await mediator.Send(request);
 
                 return response.Result;
-            })..AllowAnonymous();
+            }).RequireAuthorization();
 
             return endpoints;
         }
