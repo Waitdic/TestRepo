@@ -14,4 +14,5 @@
     [TotalPrice] DECIMAL (14, 2) NOT NULL,
     [ISOCurrencyID] INT NOT NULL,
     [EstimatedGBPPrice] DECIMAL (14, 2) NOT NULL
+    CONSTRAINT UC_AccountReference UNIQUE (BookingReference, AccountID)
 )

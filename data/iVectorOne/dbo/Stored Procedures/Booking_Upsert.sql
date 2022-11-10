@@ -61,7 +61,6 @@ merge Booking target
 	when matched then
 		update
 			set SupplierBookingReference = source.SupplierBookingReference,
-				AccountID = source.AccountID,
 				SupplierID = source.SupplierID,
 				PropertyID = source.PropertyID,
 				Status = source.Status,
@@ -74,4 +73,5 @@ merge Booking target
 
 select BookingID
 	from Booking
-	where BookingReference = @bookingReference;
+	where BookingReference = @bookingReference
+		and AccountID = @accountId;

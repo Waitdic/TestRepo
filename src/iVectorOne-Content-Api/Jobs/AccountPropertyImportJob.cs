@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Content.Imports
+﻿namespace iVectorOne.Content.Jobs
 {
     using System.Threading.Tasks;
     using Intuitive;
