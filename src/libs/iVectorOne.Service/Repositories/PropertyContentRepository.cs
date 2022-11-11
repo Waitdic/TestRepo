@@ -151,7 +151,7 @@
         /// <inheritdoc/>
         public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account, string supplierBookingReference)
         {
-            return await _sql.ReadSingleAsync<PropertyContent>(
+            return await _sql.ReadFirstOrDefaultAsync<PropertyContent>(
                     "Property_SingleProperty",
                     new CommandSettings()
                         .IsStoredProcedure()
