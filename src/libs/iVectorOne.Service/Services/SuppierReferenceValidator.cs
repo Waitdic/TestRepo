@@ -28,12 +28,14 @@
                 case ThirdParties.DERBYSOFTSYNXIS:
                 case ThirdParties.DERBYSOFTMARRIOTT:
                 case ThirdParties.DOTW:
+                case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
                 case ThirdParties.HOTELBEDSV2:
                 case ThirdParties.JONVIEW:
                 case ThirdParties.JUMBO:
                 case ThirdParties.MTS:
                 case ThirdParties.RESTEL:
+                case ThirdParties.RMI:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.STUBA:
                 case ThirdParties.TEAMAMERICA:
@@ -120,6 +122,7 @@
                 case ThirdParties.BOOKABED:
                 case ThirdParties.CHANNELMANAGER:
                 case ThirdParties.DOTW:
+                case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
                 case ThirdParties.HOTELBEDSV2:
                 case ThirdParties.IMPERATORE:
@@ -131,6 +134,7 @@
                 case ThirdParties.MTS:
                 case ThirdParties.OWNSTOCK:
                 case ThirdParties.PORTIMAR:
+                case ThirdParties.RMI:
                 case ThirdParties.STUBA:
                 case ThirdParties.SUNHOTELS:
                 case ThirdParties.TEAMAMERICA:

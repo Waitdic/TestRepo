@@ -1,0 +1,152 @@
+import classNames from 'classnames';
+import { capitalize } from 'lodash';
+import React, { useMemo } from 'react';
+import { v4 as uuid } from 'uuid';
+//
+import type { MultiLevelTableData } from '@/types';
+import { replaceWithSpace } from '@/utils/format';
+
+type Props = {
+  data: MultiLevelTableData[] | null;
+};
+
+const MultiLevelTable: React.FC<Props> = ({ data }) => {
+  const headers = useMemo(() => {
+    if (!data?.length) return [];
+    const headers = Object?.keys(data[0]);
+    return headers;
+  }, [data]);
+
+  const getHeaderName = (header: string) => {
+    if (header.toLowerCase() === 'name') return '';
+    if (header.toLowerCase() === 's2b') return 'S2B';
+    return capitalize(header);
+  };
+  const getSubHeaders = (header: string) => {
+    if (!data) return [];
+    const subHeaders: string[] = [];
+    data.forEach((d: any) => {
+      if (typeof d[header] === 'object') {
+        Object.keys(d[header]).forEach((subHeader) => {
+          if (!subHeaders.includes(subHeader)) subHeaders.push(subHeader);
+        });
+      }
+    });
+    return subHeaders;
+  };
+
+  const getHeaderColors = (header: string) => {
+    const createColor = (colorStr: string) => {
+      return `bg-${colorStr}-500`;
+    };
+
+    switch (header.toLowerCase()) {
+      case 'searches':
+        return createColor('green');
+      case 'bookings':
+        return createColor('red');
+      case 'prebook':
+        return createColor('blue');
+      case 's2b':
+        return createColor('orange');
+
+      default:
+        return createColor('gray');
+    }
+  };
+
+  return (
+    <div>
+      <div className='flex'>
+        {headers?.map((header, idx) => {
+          if (header === 'queryDate') return null;
+          const colorClass = getHeaderColors(header);
+          return (
+            <div
+              key={idx}
+              className={classNames(
+                `flex-1 text-center border-t border-b text-white border-slate-300 ${
+                  idx !== 0 && colorClass
+                }`,
+                {
+                  'border-t-0': idx === 0,
+                  'border-l': idx !== 0,
+                  'border-r': idx === headers.length - 1,
+                }
+              )}
+            >
+              <p
+                className={classNames(`p-1 border-slate-300`, {
+                  'border-b': idx !== 0,
+                })}
+              >
+                {getHeaderName(header)}
+              </p>
+              <div className='flex bg-gray-500 bg-opacity-50'>
+                {getSubHeaders(header)?.map((subHeader) => (
+                  <div key={subHeader} className='flex-1 text-sm p-1'>
+                    {replaceWithSpace(subHeader, true)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {data?.map((row: any, index: number) => {
+        const rowId = uuid();
+        const isEven = index % 2 === 0;
+        const rowClass = classNames('flex border-l border-b border-slate-300', {
+          'bg-gray-200': isEven,
+        });
+        const cellClass = classNames(
+          'flex-1 px-[2px] border-r border-slate-300'
+        );
+        const cellTextClass = 'p-1 text-sm 2xl:text-base';
+
+        return (
+          <div key={rowId} className={rowClass}>
+            {Object.values(row).map((value, index) => {
+              const rowKey = Object.keys(row)[index];
+              if (rowKey === 'queryDate') {
+                return null;
+              }
+
+              const cellId = uuid();
+              if (typeof value === 'object' && !!value) {
+                return (
+                  <div key={cellId} className={`flex ${cellClass}`}>
+                    {Object.values(value).map((subValue, index) => (
+                      <div
+                        key={rowId + cellId + index}
+                        className={classNames('text-right flex-1', {
+                          'border-r border-slate-300':
+                            index !== Object.values(value).length - 1,
+                        })}
+                      >
+                        <p className={cellTextClass}>{subValue}</p>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={cellId}
+                  className={classNames(cellClass, {
+                    'text-right border-r border-slate-300': index !== 0,
+                    'bg-yellow-200': index === 0,
+                  })}
+                >
+                  <p className={cellTextClass}>{value}</p>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default React.memo(MultiLevelTable);

@@ -11,6 +11,7 @@
     using iVectorOne.Services;
     using Search = SDK.V2.PropertySearch;
     using iVectorOne.Utility;
+    using System;
 
     /// <summary>
     /// A factory that creates property pre book responses using the provided property details
@@ -50,7 +51,7 @@
             var errata = new List<string>();
             var cancellationTerms = new List<Search.CancellationTerm>();
             var roomBookings = new List<RoomBooking>();
-            int currencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
+            int isoCurrencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
                 await _support.ISOCurrencyIDLookupAsync(propertyDetails.ISOCurrencyCode) :
                 0;
 
@@ -84,13 +85,14 @@
                     Infants = room.Infants,
                     ChildAges = room.ChildAges,
                     PropertyRoomBookingID = room.PropertyRoomBookingID,
-                    LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(room.LocalCost * 100), 7),
+                    LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(room.LocalCost * 100), 7),                    
                     MealBasisID = PropertyFactoryHelper.SplitNumberToNDigitList(mealbasisId, 2),
                 };
 
                 var roomBooking = new RoomBooking()
                 {
-                    TotalCost = room.LocalCost + 0.00M,
+                    TotalCost = room.LocalCost + 0.00M,                    
+                    CommissionPercentage = Math.Round(room.CommissionPercentage + 0.00M, 2),
                     RoomBookingToken = _tokenService.EncodeRoomToken(roomToken),
                     SupplierReference = room.ThirdPartyReference,
                     Supplier = propertyDetails.Source,
@@ -106,7 +108,7 @@
                 Duration = propertyDetails.Duration,
                 PropertyID = propertyDetails.PropertyID,
                 Rooms = propertyDetails.Rooms.Count,
-                CurrencyID = currencyId,
+                ISOCurrencyID = isoCurrencyId,
             };
 
             var response = new Response()

@@ -260,6 +260,12 @@
         public string RateCode { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the Package Rate Basis
+        /// </summary>
+        [XmlAttribute("PRB")]
+        public string PackageRateBasis { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets a value indicating whether [on request].
         /// </summary>
         [XmlAttribute("RQ")]

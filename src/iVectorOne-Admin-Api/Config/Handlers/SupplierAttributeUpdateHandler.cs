@@ -5,9 +5,9 @@
 
     public class SupplierAttributeUpdateHandler : IRequestHandler<SupplierAttributeUpdateRequest, SupplierAttributeUpdateResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public SupplierAttributeUpdateHandler(ConfigContext context, IMapper mapper)
+        public SupplierAttributeUpdateHandler(AdminContext context, IMapper mapper)
         {
             _context = context;
         }

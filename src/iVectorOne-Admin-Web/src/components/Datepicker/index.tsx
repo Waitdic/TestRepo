@@ -4,45 +4,70 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 type Props = {
-  align: any;
+  align?: 'left' | 'center' | 'right';
+  label?: string;
+  onReady?: (dateObj: Date, dateStr: string, instance: any) => void;
+  onChange?: (date: Date[] | Date) => void;
+  mode?: 'single' | 'multiple' | 'range' | 'time';
+  maxDate?: Date;
+  minDate?: Date | 'today' | null;
+  defaultDate?: Date | Date[] | null;
 };
 
-const Datepicker: React.FC<Props> = ({ align }) => {
+const Datepicker: React.FC<Props> = ({
+  align,
+  label,
+  onReady,
+  onChange,
+  mode = 'single',
+  minDate = 'today',
+  maxDate,
+  defaultDate = new Date(),
+}) => {
   const options = {
-    mode: 'range',
+    mode,
     static: true,
     monthSelectorType: 'static',
     dateFormat: 'M j, Y',
-    defaultDate: [new Date().setDate(new Date().getDate() - 6), new Date()],
+    minDate,
+    maxDate,
+    defaultDate,
     prevArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M5.4 10.8l1.4-1.4-4-4 4-4L5.4 0 0 5.4z" /></svg>',
     nextArrow:
       '<svg class="fill-current" width="7" height="11" viewBox="0 0 7 11"><path d="M1.4 10.8L0 9.4l4-4-4-4L1.4 0l5.4 5.4z" /></svg>',
-    onReady: (_selectedDates: any, dateStr: string, instance: any) => {
+    onReady: (selectedDates: any, dateStr: string, instance: any) => {
       instance.element.value = dateStr.replace('to', '-');
       const customClass = align ? align : '';
       instance.calendarContainer.classList.add(`flatpickr-${customClass}`);
+      onReady?.(selectedDates, dateStr, instance);
     },
-    onChange: (_selectedDates: any, dateStr: string, instance: any) => {
+    onChange: (selectedDates: any, dateStr: string, instance: any) => {
       instance.element.value = dateStr.replace('to', '-');
+      onChange?.(selectedDates);
     },
   };
 
   return (
-    <div className='relative'>
-      <Flatpickr
-        className='form-input form-input-with-icon-left text-dark font-medium focus:border-slate-300 w-60'
-        options={options as any}
-      />
-      <div className='absolute inset-0 right-auto flex items-center pointer-events-none'>
-        <svg
-          className='w-4 h-4 fill-current text-slate-500 ml-3'
-          viewBox='0 0 16 16'
-        >
-          <path d='M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z' />
-        </svg>
+    <>
+      {!!label && (
+        <label className='block text-sm font-medium mb-1'>{label}</label>
+      )}
+      <div className='relative'>
+        <Flatpickr
+          className='w-full form-input cursor-pointer text-dark font-medium focus:border-slate-300'
+          options={options as any}
+        />
+        <div className='absolute inset-0 left-auto flex items-center pointer-events-none'>
+          <svg
+            className='w-4 h-4 fill-current text-slate-500 mr-3'
+            viewBox='0 0 16 16'
+          >
+            <path d='M15 2h-2V0h-2v2H9V0H7v2H5V0H3v2H1a1 1 0 00-1 1v12a1 1 0 001 1h14a1 1 0 001-1V3a1 1 0 00-1-1zm-1 12H2V6h12v8z' />
+          </svg>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

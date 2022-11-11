@@ -11,5 +11,9 @@
         [XmlArray("RoomTypes")]
         [XmlArrayItem("RoomType")]
         public List<RoomType> RoomTypes { get; set; } = new();
+
+        [XmlArray("Errata")]
+        [XmlArrayItem("Erratum")]
+        public List<Erratum> Errata { get; set; } = new();
     }
 }

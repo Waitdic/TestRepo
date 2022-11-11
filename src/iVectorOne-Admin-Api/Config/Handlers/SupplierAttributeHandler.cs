@@ -8,9 +8,9 @@
 
     public class SupplierAttributeHandler : IRequestHandler<SupplierAttributeRequest, SupplierAttributeResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public SupplierAttributeHandler(ConfigContext context)
+        public SupplierAttributeHandler(AdminContext context)
         {
             _context = context;
         }

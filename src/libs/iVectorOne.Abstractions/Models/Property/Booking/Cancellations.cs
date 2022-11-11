@@ -45,7 +45,7 @@
             startDates.Sort();
 
             // Loop through the dates
-            decimal lastAmount = 0m;
+            decimal lastAmount = -1m;
             foreach (DateTime startDate in startDates)
             {
                 // get all the rules that pass over this date

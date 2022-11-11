@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.Hotelston {
+namespace iVectorOne.Tests.Hotelston {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Hotelston {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.Hotelston.HotelstonRes", typeof(HotelstonRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.Hotelston.HotelstonRes", typeof(HotelstonRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,7 +70,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Hotelston {
         ///
         ///**REQUEST**
         ///
-        ///&lt;soapenv:Envelope xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot; xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+        ///&lt;soapenv:Envelope xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot; xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
         ///  &lt;soapenv:Header /&gt;
         ///  &lt;soapenv:Body&gt;
         ///    &lt;xsd:SearchHotelsRequest&gt;

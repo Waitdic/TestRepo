@@ -2,20 +2,20 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 //
-import { deleteSupplier, updateSupplier } from '../data-access/supplier';
+import {
+  deleteSupplier,
+  testSupplier,
+  updateSupplier,
+} from '../data-access/supplier';
 import { getAccountWithSupplierAndConfigurations } from '../data-access/account';
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import {
-  Supplier,
-  SupplierFormFields,
-  Account,
-  NotificationState,
-} from '@/types';
+import type { Supplier, SupplierFormFields, Account } from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
-import { SectionTitle, Button, Notification, ConfirmModal } from '@/components';
+import { SectionTitle, Button, ConfirmModal, Modal } from '@/components';
 
 type Props = {};
 
@@ -43,16 +43,23 @@ const SupplierEdit: React.FC<Props> = () => {
     (state: RootState) => state.app.awsAmplify.username
   );
 
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState<NotificationState>();
   const [currentAccount, setCurrentAccount] = useState<Account | null>(null);
   const [currentSupplier, setCurrentSupplier] = useState<Supplier | null>(null);
+  const [originalSupplier, setOriginalSupplier] = useState<Supplier | null>(
+    null
+  );
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [testDetails, setTestDetails] = useState({
+    name: '',
+    isTesting: false,
+    status: '',
+  });
 
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<SupplierFormFields>();
 
@@ -65,35 +72,35 @@ const SupplierEdit: React.FC<Props> = () => {
     (data, event) => {
       event?.preventDefault();
       if (!activeTenant) return;
-      updateSupplier(
-        { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-        userKey as string,
-        Number(currentAccount?.accountId),
-        Number(currentSupplier?.supplierID),
+      updateSupplier({
+        tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+        userKey: userKey as string,
+        accountId: Number(currentAccount?.accountId),
+        supplierId: Number(currentSupplier?.supplierID),
         data,
-        () => {
+        onInit: () => {
           dispatch.app.setIsLoading(true);
         },
-        () => {
+        onSuccess: () => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: MESSAGES.onSuccess.update,
           });
-          setShowNotification(true);
+
           setTimeout(() => {
             navigate('/suppliers');
           }, 500);
         },
-        () => {
+        onFailed: (err, instance) => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
-            message: MESSAGES.onFailed.update,
+            message: err,
+            instance,
           });
-          setShowNotification(true);
-        }
-      );
+        },
+      });
     },
     [activeTenant, currentAccount, currentSupplier, userKey]
   );
@@ -111,25 +118,77 @@ const SupplierEdit: React.FC<Props> = () => {
       () => {
         dispatch.app.setIsLoading(false);
         setIsDeleting(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.delete,
         });
-        setShowNotification(true);
         setTimeout(() => {
           navigate('/suppliers');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.delete,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, [activeTenant, currentAccount, currentSupplier, userKey]);
+
+  const handleTesting = useCallback(async () => {
+    const originalConfigurationsValues = originalSupplier?.configurations
+      ?.map((c) => c.value)
+      .join('');
+    const currentConfigurationsValues = getValues('configurations').join('');
+
+    if (originalConfigurationsValues !== currentConfigurationsValues) {
+      dispatch.app.setNotification({
+        status: NotificationStatus.ERROR,
+        message: 'Please save the configurations before testing',
+      });
+      return;
+    }
+    if (!activeTenant || !userKey) return;
+
+    setTestDetails({
+      name: currentSupplier?.name as string,
+      isTesting: true,
+      status: 'Running test...',
+    });
+    await testSupplier({
+      tenantKey: activeTenant?.tenantKey,
+      userKey,
+      tenantId: activeTenant.tenantId,
+      accountId: currentAccount?.accountId as number,
+      supplierId: currentSupplier?.supplierID as number,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: ({ message }) => {
+        dispatch.app.setIsLoading(false);
+        setTestDetails({
+          name: currentSupplier?.name as string,
+          isTesting: true,
+          status: message,
+        });
+      },
+      onFailed: (err, instance) => {
+        dispatch.app.setIsLoading(false);
+        setTestDetails({
+          name: currentSupplier?.name as string,
+          isTesting: true,
+          status: err,
+        });
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message: err,
+          instance,
+        });
+      },
+    });
+  }, [originalSupplier, currentSupplier]);
 
   const fetchData = async () => {
     if (!activeTenant) return;
@@ -144,13 +203,15 @@ const SupplierEdit: React.FC<Props> = () => {
       (account, configurations, supplier) => {
         setCurrentAccount(account);
         setCurrentSupplier({ ...supplier, configurations });
+        setOriginalSupplier({ ...supplier, configurations });
         dispatch.app.setIsLoading(false);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Failed to fetch data.',
+          message: err,
+          instance,
         });
         navigate('/suppliers');
       }
@@ -161,6 +222,12 @@ const SupplierEdit: React.FC<Props> = () => {
     if (!!user) {
       fetchData();
     }
+    return () => {
+      setCurrentAccount(null);
+      setCurrentSupplier(null);
+      setOriginalSupplier(null);
+      dispatch.app.resetNotification();
+    };
   }, [user]);
 
   useEffect(() => {
@@ -168,6 +235,10 @@ const SupplierEdit: React.FC<Props> = () => {
       setValue('account', currentAccount.accountId);
       setValue('supplier', currentSupplier.supplierID as number);
     }
+    return () => {
+      setValue('account', 0);
+      setValue('supplier', 0);
+    };
   }, [currentSupplier, currentAccount, setValue]);
 
   return (
@@ -197,6 +268,12 @@ const SupplierEdit: React.FC<Props> = () => {
               </div>
               <div className='flex justify-end mt-5 pt-5'>
                 <Button
+                  text='Test'
+                  color={ButtonColors.OUTLINE}
+                  className='ml-4'
+                  onClick={handleTesting}
+                />
+                <Button
                   text='Cancel'
                   color={ButtonColors.OUTLINE}
                   className='ml-4'
@@ -219,15 +296,6 @@ const SupplierEdit: React.FC<Props> = () => {
         </div>
       </MainLayout>
 
-      {showNotification && (
-        <Notification
-          description={notification?.message as string}
-          status={notification?.status}
-          show={showNotification}
-          setShow={setShowNotification}
-        />
-      )}
-
       {isDeleting && (
         <ConfirmModal
           title='Delete Supplier'
@@ -241,6 +309,34 @@ const SupplierEdit: React.FC<Props> = () => {
           setShow={setIsDeleting}
           onConfirm={handleDeleteSupplier}
         />
+      )}
+
+      {testDetails.isTesting && (
+        <Modal transparent flex>
+          <div className='bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full'>
+            <div className='px-5 py-3 border-b border-slate-200'>
+              <div className='flex justify-between items-center'>
+                <div className='font-semibold text-slate-800'>
+                  {testDetails.name}
+                </div>
+              </div>
+            </div>
+            <p className='p-5'>{testDetails.status}</p>
+            <div className='flex justify-end px-5 pb-5'>
+              <Button
+                text='Close'
+                onClick={() => {
+                  setTestDetails({
+                    name: '',
+                    isTesting: false,
+                    status: '',
+                  });
+                }}
+                color={ButtonColors.PRIMARY}
+              />
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   );

@@ -4,13 +4,11 @@
     {
         public static IEndpointRouteBuilder MapTenantInfoV1Endpoint(this IEndpointRouteBuilder endpoints)
         {
-
             _ = endpoints.MapGet("v1/tenants/{tenantId}", async (IMediator mediator, int tenantId) =>
             {
                 var response = await mediator.Send(new Request { TenantId = tenantId });
-
                 return response.Result;
-            });
+            }).RequireAuthorization();
 
             return endpoints;
         }

@@ -117,6 +117,27 @@ const Sidebar: React.FC<Props> = ({ sidebarOpen, setSidebarOpen }) => {
                     sidebarExpanded={sidebarExpanded}
                     setSidebarExpanded={setSidebarExpanded}
                   />
+                  {/* Search */}
+                  <SidebarLinkGroup
+                    activecondition={
+                      pathname === '/search' || pathname.includes('search')
+                    }
+                    to='/search'
+                    title='Search Tester'
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarExpanded={setSidebarExpanded}
+                  />
+                  {/* Log Viewer */}
+                  <SidebarLinkGroup
+                    activecondition={
+                      pathname === '/log-viewer' ||
+                      pathname.includes('log-viewer')
+                    }
+                    to='/log-viewer'
+                    title='Log Viewer'
+                    sidebarExpanded={sidebarExpanded}
+                    setSidebarExpanded={setSidebarExpanded}
+                  />
                   {/* Accounts */}
                   <SidebarLinkGroup
                     activecondition={

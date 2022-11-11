@@ -1,28 +1,44 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Link
-{
-    public class Handler : IRequestHandler<Request, Response>
-    {
-        private readonly ConfigContext _context;
-        private readonly IMapper _mapper;
+﻿using iVectorOne_Admin_Api.Features.Shared;
 
-        public Handler(ConfigContext context, IMapper mapper)
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Users.Link
+{
+    public class Handler : IRequestHandler<Request, ResponseBase>
+    {
+        private readonly AdminContext _context;
+
+        public Handler(AdminContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
+
+            var tenant = await _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            var user = await _context.Users
+                .Where(t => t.UserId == request.UserId)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+            if (tenant == null || user == null)
+            {
+                response.NotFound("Tenant and / or User not found.");
+                return response;
+            }
 
             var userTenant = await _context.UserTenants
                 .Where(t => t.TenantId == request.TenantId && t.UserId == request.UserId)
                 .AsNoTracking()
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (userTenant != null)
             {
-                response.Default(new ResponseModel { Success = true, TenantId = request.TenantId });
+                response.Ok(new ResponseModel { Success = true, TenantId = request.TenantId });
                 return response;
             }
 
@@ -35,9 +51,9 @@
                 Object = $"tenantid:{request.TenantId}"
             });
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
-            response.Default(new ResponseModel { Success = true, TenantId = request.TenantId });
+            response.Ok(new ResponseModel { Success = true, TenantId = request.TenantId });
 
             return response;
         }

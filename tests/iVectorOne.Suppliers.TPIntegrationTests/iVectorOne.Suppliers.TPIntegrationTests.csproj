@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="AbreuV2\AbreuV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AbreuV2Res.resx</DependentUpon>
+    </Compile>
     <Compile Update="Acerooms\AceroomsRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -60,10 +65,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GoGlobalRes.resx</DependentUpon>
     </Compile>
-    <Compile Update="HBSi\HBSiRes.Designer.cs">
+	<Compile Update="HBSi\HBSiRes.Designer.cs">
+		<DesignTime>True</DesignTime>
+		<AutoGen>True</AutoGen>
+		<DependentUpon>HBSiRes.resx</DependentUpon>
+	</Compile>
+	<Compile Update="HotelsProV2\HotelsProV2Res.Designer.cs">
+		<DesignTime>True</DesignTime>
+		<AutoGen>True</AutoGen>
+		<DependentUpon>HotelsProV2Res.resx</DependentUpon>
+	</Compile>
+	<Compile Update="Hotelston\HotelstonRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>HBSiRes.resx</DependentUpon>
+      <DependentUpon>HotelstonRes.resx</DependentUpon>
     </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -114,6 +129,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MTSRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="RMI\RMIRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RMIRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="TBOHolidays\TBOHolidaysRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TBOHolidaysRes.resx</DependentUpon>
     </Compile>
     <Compile Update="TeamAmerica\TeamAmericaRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -173,6 +198,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="AbreuV2\AbreuV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AbreuV2Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Acerooms\AceroomsRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AceroomsRes.Designer.cs</LastGenOutput>
@@ -201,11 +230,19 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="HBSi\HBSiRes.resx">
+	<EmbeddedResource Update="HBSi\HBSiRes.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+	  <LastGenOutput>HBSiRes.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Update="HotelsProV2\HotelsProV2Res.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>HBSiRes.Designer.cs</LastGenOutput>
+      <LastGenOutput>HotelsProV2Res.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
+	<EmbeddedResource Update="Hotelston\HotelstonRes.resx">
+	  <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BookABedRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -244,6 +281,14 @@
     <EmbeddedResource Update="MTS\MTSRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MTSRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="RMI\RMIRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RMIRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="TBOHolidays\TBOHolidaysRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TBOHolidaysRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="TeamAmerica\TeamAmericaRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

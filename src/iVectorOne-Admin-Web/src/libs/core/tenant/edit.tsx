@@ -13,23 +13,12 @@ import {
 } from '@/constants';
 import { useSlug } from '@/utils/use-slug';
 import MainLayout from '@/layouts/Main';
-import {
-  TextField,
-  Notification,
-  Button,
-  ConfirmModal,
-  RoleGuard,
-} from '@/components';
+import { TextField, Button, ConfirmModal, RoleGuard } from '@/components';
 import {
   deleteTenant,
   getTenantById,
   updateTenant,
 } from '../data-access/tenant';
-
-type NotificationState = {
-  status: NotificationStatus;
-  message: string;
-};
 
 type Props = {};
 
@@ -58,11 +47,6 @@ const TenantEdit: React.FC<Props> = () => {
   );
   const appError = useSelector((state: RootState) => state.app.error);
 
-  const [notification, setNotification] = useState<NotificationState>({
-    status: NotificationStatus.SUCCESS,
-    message: MESSAGES.onSuccess.update,
-  });
-  const [showNotification, setShowNotification] = useState<boolean>(false);
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -97,12 +81,13 @@ const TenantEdit: React.FC<Props> = () => {
         dispatch.app.setIsLoading(false);
         setTenant(t);
       },
-      (err) => {
+      (err, instance) => {
         console.error(err);
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: 'Tenant not found',
+          message: err,
+          instance,
         });
         navigate('/tenants');
       }
@@ -121,23 +106,23 @@ const TenantEdit: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.update,
         });
-        setShowNotification(true);
+
         setTimeout(() => {
           navigate('/tenants');
         }, 500);
       },
-      (err) => {
+      (err, instance) => {
         console.error(err);
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.update,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   };
@@ -157,13 +142,12 @@ const TenantEdit: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: tenant?.isDeleted
             ? MESSAGES.onSuccess.delete[1]
             : MESSAGES.onSuccess.delete[0],
         });
-        setShowNotification(true);
         setTenant({
           ...(tenant as Tenant),
           isDeleted: true,
@@ -173,26 +157,23 @@ const TenantEdit: React.FC<Props> = () => {
           navigate('/tenants');
         }, 500);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: tenant?.isDeleted
-            ? MESSAGES.onFailed.delete[1]
-            : MESSAGES.onFailed.delete[0],
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   };
 
   useEffect(() => {
     if (!!appError) {
-      setNotification({
+      dispatch.app.setNotification({
         status: NotificationStatus.ERROR,
         message: appError as string,
       });
-      setShowNotification(true);
     }
   }, [appError]);
 
@@ -296,15 +277,6 @@ const TenantEdit: React.FC<Props> = () => {
           </div>
         </MainLayout>
       </RoleGuard>
-
-      {showNotification && (
-        <Notification
-          description={notification.message}
-          show={showNotification}
-          setShow={setShowNotification}
-          status={notification.status}
-        />
-      )}
 
       {isDeleting && (
         <ConfirmModal

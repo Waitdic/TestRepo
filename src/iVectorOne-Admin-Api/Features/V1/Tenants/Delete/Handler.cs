@@ -1,33 +1,35 @@
 ﻿using iVectorOne_Admin_Api.Config.Models;
+using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Tenants.Delete
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context, IMapper mapper)
         {
             _context = context;
         }
 
-        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var tenantModel = await _context.Tenants.Where(t => t.TenantId == request.TenantId)
-                .FirstOrDefaultAsync();
+            var tenant = await _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
-            if (tenantModel == null)
+            if (tenant == null)
             {
-                response.NotFound();
+                response.NotFound("Tenant not found.");
                 return response;
             }
 
-            tenantModel.Status = RecordStatus.Deleted;
-            await _context.SaveChangesAsync();
+            tenant.Status = RecordStatus.Deleted;
+            await _context.SaveChangesAsync(cancellationToken);
 
-            response.Default(new ResponseModel { Success = true, TenantId = request.TenantId});
+            response.Ok(new ResponseModel { Success = true, TenantId = request.TenantId});
 
             return response;
         }

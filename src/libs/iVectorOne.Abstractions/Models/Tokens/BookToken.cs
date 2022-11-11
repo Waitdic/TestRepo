@@ -13,5 +13,9 @@
         /// <summary>Gets or sets the Source.</summary>
         [JsonPropertyName("S")]
         public string Source { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets the Booking identifier.</summary>
+        [JsonPropertyName("B")]
+        public int BookingID { get; set; }
     }
 }

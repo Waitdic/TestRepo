@@ -22,7 +22,8 @@
         {
             return await _service.PropertyContentAsync(
                 request.PropertyIDs.Select(s => s.ToSafeInt()).ToList(),
-                request.Account);
+                request.Account,
+                request.IncludeRoomTypes);
         }
     }
 }

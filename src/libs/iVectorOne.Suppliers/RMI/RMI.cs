@@ -16,6 +16,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using System.Text;
 
     public class RMI : IThirdParty, ISingleSource
     {
@@ -102,24 +103,53 @@
                             {
                                 throw new Exception("Room price not found");
                             }
-
-                            foreach (var oCancellationPolicy in room.CancellationPolicies)
+                            var freeCanx = new CancellationPolicy
                             {
-                                var cancelBy = oCancellationPolicy.CancelBy.ToSafeDate();
-                                var penalty = oCancellationPolicy.Penalty.ToSafeDecimal();
-                                var now = DateTime.Now;
+                                CancelBy = "1990-01-01",
+                                Penalty = "0"
+                            };
 
-                                if (cancelBy > now)
-                                {
-                                    cancellations.AddNew(now, cancelBy, penalty);
-                                }
-                                else
-                                {
-                                    cancellations.AddNew(cancelBy, now, penalty);
-                                }
-                            }
+                            var canxRaw = room.CancellationPolicies
+                                .Concat(new List<CancellationPolicy>{ freeCanx })
+                                .Select(x => new
+                            {
+                                StartDate = x.CancelBy.ToSafeDate(),
+                                Amount = x.Penalty.ToSafeDecimal()
+                            }).OrderBy(x => x.StartDate).ToArray();
+
+                            var canx = canxRaw.Select((x, i) => new Cancellation 
+                            { 
+                                StartDate = x.StartDate,
+                                Amount = x.Amount,
+                                EndDate = ReferenceEquals(x, canxRaw.Last())
+                                    ? propertyDetails.ArrivalDate
+                                    : canxRaw[i+1].StartDate.AddSeconds(-1)
+                            });
+
+                            cancellations.AddRange(canx);
                         }
 
+                        var errataItems = searchResponse.PropertyResults
+                                     .Where(propertyResult => propertyResult.PropertyId == propertyDetails.TPKey)
+                                     .SelectMany(propertyResult => propertyResult.Errata)
+                                     .Where(errata => !string.IsNullOrEmpty(errata.Description));
+
+                        foreach (var errata in errataItems)
+                        {
+                            var sb = new StringBuilder();
+                            if (!string.IsNullOrEmpty(errata.StartDate))
+                            {
+                                sb.AppendLine($"Start Date: {errata.StartDate}, ");
+                            }
+
+                            if (!string.IsNullOrEmpty(errata.EndDate))
+                            {
+                                sb.AppendLine($"End Date: {errata.EndDate}, ");
+                            }
+
+                            sb.AppendLine(errata.Description);
+                            propertyDetails.Errata.AddNew("Important Information", sb.ToString());
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -331,7 +361,10 @@
                     Duration = propertyDetails.Duration,
                     LeadGuest =leadGuest,
                     TradeReference = propertyDetails.BookingReference,
-                    RoomBookings = roomBookings
+                    RoomBookings = roomBookings,
+                    Request = propertyDetails.Rooms.Any(x => !string.IsNullOrEmpty(x.SpecialRequest)) ?
+                        string.Join(Environment.NewLine, propertyDetails.Rooms.Select(x => x.SpecialRequest)) :
+                        string.Empty
                 }
             };
             return _serializer.Serialize(bookRequest).OuterXml;

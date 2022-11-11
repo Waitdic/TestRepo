@@ -1,6 +1,7 @@
 CREATE TABLE [dbo].[Supplier](
 	[SupplierID] [smallint] IDENTITY(1,1) NOT NULL,
 	[SupplierName] [nvarchar](200) NOT NULL,
+	[TestPropertyIDs] [varchar](100) NULL,
  CONSTRAINT [PK_Supplier] PRIMARY KEY NONCLUSTERED 
 (
 	[SupplierID] ASC

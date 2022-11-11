@@ -1,6 +1,13 @@
-import ApiCall from '@/axios';
-import { Supplier, SupplierConfiguration, SupplierFormFields } from '@/types';
 import { get } from 'lodash';
+//
+import ApiCall from '@/axios';
+import {
+  ApiError,
+  Supplier,
+  SupplierConfiguration,
+  SupplierFormFields,
+} from '@/types';
+import handleApiError from '@/utils/handleApiError';
 
 //* Fetch suppliers by Account
 export async function getSuppliersByAccount(
@@ -9,7 +16,7 @@ export async function getSuppliersByAccount(
   accountId: number,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -25,12 +32,9 @@ export async function getSuppliersByAccount(
     );
     const data = get(res, 'data.accountSuppliers', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -40,7 +44,7 @@ export async function getSuppliers(
   userKey: string,
   onInit: () => void,
   onSuccess: (suppliers: Supplier[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -53,12 +57,9 @@ export async function getSuppliers(
     });
     const data = get(res, 'data.suppliers', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -70,7 +71,7 @@ export async function getSupplierById(
   supplierId: number,
   onInit: () => void,
   onSuccess: (supplier: Supplier) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -86,12 +87,9 @@ export async function getSupplierById(
     );
     const data = get(res, 'data', null);
     onSuccess(data);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -102,7 +100,7 @@ export async function getConfigurationsBySupplier(
   supplierId: number,
   onInit: () => void,
   onSuccess: (configurations: SupplierConfiguration[]) => void,
-  onFailed: (error: string | null) => void
+  onFailed: (error: string | null, instance?: string) => void
 ) {
   onInit();
   try {
@@ -115,26 +113,32 @@ export async function getConfigurationsBySupplier(
     });
     const configurations = get(configurationsRes, 'data.configurations', []);
     onSuccess(configurations);
-  } catch (err) {
-    if (typeof err === 'string') {
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
 //* Update supplier data
-export async function updateSupplier(
-  tenant: { id: number; key: string },
-  userKey: string,
-  accountId: number,
-  supplierId: number,
-  data: SupplierFormFields,
-  onInit: () => void,
-  onSuccess: (updatedSupplier: Supplier) => void,
-  onFailed: (error: string) => void
-) {
+export async function updateSupplier({
+  tenant,
+  userKey,
+  accountId,
+  supplierId,
+  data,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  supplierId: number;
+  data: SupplierFormFields;
+  onInit: () => void;
+  onSuccess: (updatedSupplier: Supplier) => void;
+  onFailed: (error: string, instance?: string) => void;
+}) {
   const { configurations } = data;
   onInit();
 
@@ -157,28 +161,32 @@ export async function updateSupplier(
     });
     const updatedSupplier = get(updatedSupplierRes, 'data', null);
     onSuccess(updatedSupplier);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
 //* Create supplier data
-export async function createSupplier(
-  tenant: { id: number; key: string },
-  userKey: string,
-  accountId: number,
-  supplierId: number,
-  data: SupplierFormFields,
-  onInit: () => void,
-  onSuccess: (updatedSupplier: Supplier) => void,
-  onFailed: (error: string) => void
-) {
+export async function createSupplier({
+  tenant,
+  userKey,
+  accountId,
+  supplierId,
+  data,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenant: { id: number; key: string };
+  userKey: string;
+  accountId: number;
+  supplierId: number;
+  data: SupplierFormFields;
+  onInit: () => void;
+  onSuccess: (updatedSupplier: Supplier) => void;
+  onFailed: (error: string, instance?: string) => void;
+}) {
   const { configurations } = data;
   onInit();
 
@@ -201,14 +209,9 @@ export async function createSupplier(
     });
     const newSupplier = get(newSupplierRes, 'data', null);
     onSuccess(newSupplier);
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
-    }
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
   }
 }
 
@@ -220,7 +223,7 @@ export async function deleteSupplier(
   supplierId: number,
   onInit: () => void,
   onSuccess: () => void,
-  onFailed: (error: string) => void
+  onFailed: (error: string, instance?: string) => void
 ) {
   onInit();
 
@@ -234,13 +237,75 @@ export async function deleteSupplier(
       },
     });
     onSuccess();
-  } catch (err) {
-    if (typeof err === 'string') {
-      console.error(err.toUpperCase());
-      onFailed(err.toUpperCase());
-    } else if (err instanceof Error) {
-      console.error(err.message);
-      onFailed(err.message);
+  } catch (err: any) {
+    const { message, instance } = handleApiError(err as ApiError);
+    onFailed?.(message, instance);
+  }
+}
+
+//* Test supplier
+export async function testSupplier({
+  tenantKey,
+  userKey,
+  tenantId,
+  accountId,
+  supplierId,
+  onInit,
+  onSuccess,
+  onFailed,
+}: {
+  tenantKey: string;
+  userKey: string;
+  tenantId: number;
+  accountId: number;
+  supplierId: number;
+  onInit: () => void;
+  onSuccess: (data: { message: string; status: boolean }) => void;
+  onFailed: (message: string, instance?: string) => void;
+}) {
+  onInit();
+  try {
+    const {
+      data: { requestKey, message },
+    } = await ApiCall.request({
+      method: 'POST',
+      url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test`,
+      headers: {
+        Tenantkey: tenantKey,
+        UserKey: userKey,
+      },
+    });
+
+    const reqKeyInvalid = parseInt(requestKey.trim()) === 0;
+    if (reqKeyInvalid) {
+      onFailed(message);
+      return;
     }
+
+    let timerCount = 0;
+    const timer = setInterval(async () => {
+      const res = await ApiCall.request({
+        method: 'GET',
+        url: `tenants/${tenantId}/accounts/${accountId}/suppliers/${supplierId}/test?q=${requestKey}`,
+        headers: {
+          Tenantkey: tenantKey,
+          UserKey: userKey,
+        },
+      });
+      if (res.status === 200) {
+        onSuccess(res.data);
+        clearInterval(timer);
+      }
+
+      if (timerCount >= 24) {
+        console.error('Search timeout');
+        onFailed('Search timeout');
+        clearInterval(timer);
+      }
+      timerCount++;
+    }, 5000);
+  } catch (error: any) {
+    const { message, instance } = handleApiError(error);
+    onFailed(message, instance);
   }
 }

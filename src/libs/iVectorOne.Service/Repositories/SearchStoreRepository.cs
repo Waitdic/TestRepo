@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using iVectorOne.Models.SearchStore;
-using Microsoft.Data.SqlClient;
-
-namespace iVectorOne.Repositories
+﻿namespace iVectorOne.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Threading.Tasks;
+    using iVectorOne.Models.SearchStore;
+    using Microsoft.Data.SqlClient;
+
     public class SearchStoreRepository : ISearchStoreRepository
     {
         private readonly string _connectionString;

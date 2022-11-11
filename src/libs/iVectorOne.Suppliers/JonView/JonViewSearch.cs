@@ -84,7 +84,7 @@
                     SoapAction = Constant.RequestSoapAction,
                     Method = RequestMethod.POST,
                     Source = Source,
-                    ExtraInfo = string.Join(",", resort.Hotels.Select(x=>x.TPKey)),
+                    ExtraInfo = $"{cityCode}_{string.Join(",", resort.Hotels.Select(x => x.TPKey))}",
                     UseGZip = true
                 };
                 request.SetRequest(xmlBody);
@@ -98,12 +98,13 @@
         {
             var transformedResults = new TransformedResultCollection();
             var jonviewSearchResponses = new List<SearchResponse>();
-          
-           
+
             foreach (var request in requests)
             {
                 bool success = request.Success;
-                string[] TPKeys = (request.ExtraInfo as string).Split(',');
+                string extraInfo = (request.ExtraInfo as string)!;
+                string cityCode = extraInfo.Split('_')[0];
+                string[] tpKeys = extraInfo.Split('_')[1].Split(',');
 
                 if (success)
                 {
@@ -112,8 +113,8 @@
                     if (message.AlternateList != null)
                     {
                         //increasing performance, transform requested hotels only
-                        var roomRecords = TPKeys.Any()
-                            ? message.AlternateList.RoomRecords.Where(x => TPKeys.Contains(x.SupplierCode)).ToList()
+                        var roomRecords = tpKeys.Any()
+                            ? message.AlternateList.RoomRecords.Where(x => tpKeys.Contains(x.SupplierCode)).ToList()
                             : message.AlternateList.RoomRecords;
 
                         var transformedRooms = roomRecords.SelectMany(room =>
@@ -142,7 +143,7 @@
                                 MealBasisCode = room.ProductDetails.Board,
                                 Amount = localCost,
                                 PropertyRoomBookingID = prbid,
-                                TPReference = $"{room.ProdCode}_{room.DayPrice}",
+                                TPReference = $"{cityCode}_{room.ProdCode}_{room.DayPrice}",
                                 NonRefundableRates = nfr,
                                 RoomType = room.ProductDetails.RoomType,
                                 Cancellations = cancellationSet
@@ -169,14 +170,14 @@
 
         #region Helper classes
 
-        private string BuildSearchRequest(SearchDetails searchDetails, string cityCode) 
+        private string BuildSearchRequest(SearchDetails searchDetails, string cityCode)
         {
             var room = searchDetails.RoomDetails[0];
 
-            var availRQ = new SearchRequest 
+            var availRQ = new SearchRequest
             {
                 ActionSeg = "CT",
-                SearchSeg = 
+                SearchSeg =
                 {
                     ProdTypeCode = "FIT",
                     SearchType = "CITY",
@@ -205,12 +206,12 @@
             return message.OuterXml;
         }
 
-        private static Cancellation GetCancellation(RoomRecord room, CancelicyItem cancelItem, DateTime arrivalDate, int personCount) 
+        private static Cancellation GetCancellation(RoomRecord room, CancelicyItem cancelItem, DateTime arrivalDate, int personCount)
         {
             var fromDaysBeforeArrival = cancelItem.FromDays.ToSafeInt();
             var toDaysBeforeArrival = cancelItem.ToDays.ToSafeInt();
 
-            var startDate = toDaysBeforeArrival < 0
+            var startDate = fromDaysBeforeArrival < 0
                 ? arrivalDate
                 : arrivalDate.AddDays(-fromDaysBeforeArrival);
 
@@ -223,7 +224,7 @@
 
             List<decimal> baseAmounts = new();
 
-            switch (cancelItem.ChargeType) 
+            switch (cancelItem.ChargeType)
             {
                 case ChargeType.EntireItem:
                     baseAmounts = new List<decimal> { localCost };
@@ -248,7 +249,7 @@
                     : amount;
             });
 
-            var cancellation =  new Cancellation
+            var cancellation = new Cancellation
             {
                 StartDate = startDate,
                 EndDate = endDate,

@@ -6,10 +6,10 @@
 
     public class AccountSupplierHandler : IRequestHandler<AccountSupplierRequest, AccountSupplierResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
 
-        public AccountSupplierHandler(ConfigContext context, IMapper mapper)
+        public AccountSupplierHandler(AdminContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

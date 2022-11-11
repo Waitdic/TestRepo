@@ -1,15 +1,15 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { sortBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import MainLayout from '@/layouts/Main';
-import type { NotificationState, SelectOption, Tenant, User } from '@/types';
-import { NotificationStatus, ButtonColors, ButtonVariants } from '@/constants';
+import type { SelectOption, Tenant, User } from '@/types';
+import { NotificationStatus, ButtonColors } from '@/constants';
 import {
   Button,
   ConfirmModal,
-  Notification,
   RoleGuard,
   Select,
   TableList,
@@ -21,7 +21,6 @@ import {
 } from '../data-access/user';
 import { useSlug } from '@/utils/use-slug';
 import { getTenants } from '../data-access/tenant';
-import { sortBy } from 'lodash';
 
 type Props = {};
 
@@ -54,8 +53,6 @@ const UserView: React.FC<Props> = () => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
-  const [notification, setNotification] = useState<NotificationState>();
-  const [showNotification, setShowNotification] = useState(false);
   const [userTenants, setUserTenants] = useState<Tenant[]>([]);
   const [tenantsOptions, setTenantsOptions] = useState<SelectOption[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
@@ -120,6 +117,7 @@ const UserView: React.FC<Props> = () => {
     async (tenantId: number, userId: number) => {
       if (!isValidUser || isLoading) return;
       await unlinkUserTenant(
+        activeTenant?.tenantKey as string,
         userKey as string,
         tenantId,
         userId,
@@ -128,20 +126,20 @@ const UserView: React.FC<Props> = () => {
         },
         () => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.SUCCESS,
             message: MESSAGES.onSuccess.unlinkTenant,
           });
-          setShowNotification(true);
+
           fetchUser();
         },
-        () => {
+        (err, instance) => {
           dispatch.app.setIsLoading(false);
-          setNotification({
+          dispatch.app.setNotification({
             status: NotificationStatus.ERROR,
-            message: MESSAGES.onFailed.unlinkTenant,
+            message: err,
+            instance,
           });
-          setShowNotification(true);
         }
       );
     },
@@ -166,7 +164,9 @@ const UserView: React.FC<Props> = () => {
 
   const handleTenantSelect = useCallback(
     (tenantId: number) => {
-      const selectedTenant = tenants.find((t) => tenantId === t.tenantId);
+      const selectedTenant = tenants.find(
+        (t) => Number(tenantId) === t.tenantId
+      );
       if (selectedTenant) {
         setDraftTenant({
           userId: currentUser?.userId as number,
@@ -181,6 +181,7 @@ const UserView: React.FC<Props> = () => {
   const handleTenantLink = useCallback(async () => {
     if (!isValidUser || isLoading) return;
     await linkUserTenant(
+      activeTenant?.tenantKey as string,
       userKey as string,
       draftTenant?.tenantId,
       draftTenant?.userId,
@@ -189,20 +190,20 @@ const UserView: React.FC<Props> = () => {
       },
       () => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.SUCCESS,
           message: MESSAGES.onSuccess.linkTenant,
         });
-        setShowNotification(true);
+
         fetchUser();
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.linkTenant,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, [isValidUser, isLoading, draftTenant]);
@@ -221,13 +222,14 @@ const UserView: React.FC<Props> = () => {
         setCurrentUser(fetchedUser);
         setUserTenants(fetchedUser?.tenants || []);
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.userFetch,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
+
         navigate('/users', { replace: true });
       }
     );
@@ -237,6 +239,7 @@ const UserView: React.FC<Props> = () => {
     if (!isValidUser) return;
     await getTenants(
       userKey as string,
+      activeTenant?.tenantKey as string,
       () => {
         dispatch.app.setIsLoading(true);
       },
@@ -251,13 +254,13 @@ const UserView: React.FC<Props> = () => {
           }))
         );
       },
-      () => {
+      (err, instance) => {
         dispatch.app.setIsLoading(false);
-        setNotification({
+        dispatch.app.setNotification({
           status: NotificationStatus.ERROR,
-          message: MESSAGES.onFailed.tenantsFetch,
+          message: err,
+          instance,
         });
-        setShowNotification(true);
       }
     );
   }, [isValidUser]);
@@ -351,15 +354,6 @@ const UserView: React.FC<Props> = () => {
           setShow={setIsUnlinking}
           onConfirm={handleTenantUnlink}
           confirmButtonText='Unlink'
-        />
-      )}
-
-      {showNotification && (
-        <Notification
-          status={notification?.status}
-          description={notification?.message as string}
-          show={showNotification}
-          setShow={setShowNotification}
         />
       )}
     </>

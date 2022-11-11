@@ -3,6 +3,8 @@
 	[Type] varchar(30) NOT NULL,
 	[Time] datetime NOT NULL,
 	[RequestLog] varchar(max) NOT NULL,
-	[ResponseLog] varchar(max) NULL,
-	[Login] varchar(100) NULL,
+	[ResponseLog] varchar(max) NOT NULL,
+	[AccountID] int NOT NULL,
+	[Success] bit NOT NULL,
+	[BookingID] int NOT NULL,
 PRIMARY KEY CLUSTERED ([APILogID] ASC));

@@ -64,11 +64,12 @@
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
                     Source = propertyToken.Source,
+                    SupplierID = propertyToken.SupplierID,
                     CentralPropertyID = propertyToken.CentralPropertyID,
                     PropertyID = propertyToken.PropertyID,
                     TPKey = propertyToken.TPKey,
                     ISONationalityCode = request.NationalityID,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = request.Account.Configurations,
@@ -186,6 +187,7 @@
                 propertyDetails = new PropertyDetails()
                 {
                     AccountID = request.Account.AccountID,
+                    SupplierID = propertyToken.SupplierID,
                     LeadGuestTitle = leadCustomer.CustomerTitle,
                     LeadGuestFirstName = leadCustomer.CustomerFirstName,
                     LeadGuestLastName = leadCustomer.CustomerLastName,
@@ -211,7 +213,7 @@
                     ArrivalDate = propertyToken.ArrivalDate,
                     DepartureDate = propertyToken.ArrivalDate.AddDays(propertyToken.Duration),
                     ISONationalityCode = request.NationalityID,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
                     OpaqueRates = request.OpaqueRates,
                     SellingCountry = request.SellingCountry,
                     ThirdPartyConfigurations = request.Account.Configurations,
@@ -285,6 +287,14 @@
                     room.Passengers.Add(passenger);
                 }
 
+                foreach (var (child, childage) in room.Passengers.Where(x => x.PassengerType == PassengerType.Child).Zip(roomToken.ChildAges, (r1, r2) => (r1, r2)))
+                {
+                    if (child.Age == 0)
+                    {
+                        child.Age = childage;
+                    }
+                }
+
                 if (room.Passengers.TotalAdults != roomToken.Adults ||
                     room.Passengers.TotalChildren != roomToken.Children ||
                     room.Passengers.TotalInfants != roomToken.Infants)
@@ -306,7 +316,7 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
@@ -316,13 +326,18 @@
                     AccountID = request.Account.AccountID,
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
+                    SupplierID = propertyToken.SupplierID,
                     TPKey = propertyToken.TPKey,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
+                    BookingID = token.BookingID,
                 };
 
                 SetSupplierReference1(propertyDetails, request.SupplierReference1);
                 SetSupplierReference2(propertyDetails, request.SupplierReference2);
+
+                // hack - editing param
+                request.BookingID = token.BookingID;
             }
             else
             {
@@ -337,7 +352,7 @@
         {
             var propertyDetails = new PropertyDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account);
+            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
             var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
             if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
@@ -347,13 +362,18 @@
                     AccountID = request.Account.AccountID,
                     SourceReference = request.SupplierBookingReference,
                     Source = token.Source,
+                    SupplierID = propertyToken.SupplierID,
                     TPKey = propertyToken.TPKey,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.CurrencyID),
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
+                    BookingID = token.BookingID,
                 };
 
                 SetSupplierReference1(propertyDetails, request.SupplierReference1);
                 SetSupplierReference2(propertyDetails, request.SupplierReference2);
+
+                // hack - editing param
+                request.BookingID = token.BookingID;
             }
             else
             {

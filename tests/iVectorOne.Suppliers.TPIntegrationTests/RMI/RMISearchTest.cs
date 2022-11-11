@@ -4,9 +4,9 @@
     using Helpers;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Suppliers.RMI;
-    using iVectorOne.Lookups;
     using iVectorOne.Search.Models;
     using Xunit;
+    using iVectorOne.Tests.RMI;
 
     public class RMISearchTest : ThirdPartyPropertySearchBaseTest
     {

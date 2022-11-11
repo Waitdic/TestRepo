@@ -6,10 +6,10 @@
 
     public class AccountHandler : IRequestHandler<AccountRequest, AccountResponse>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
 
-        public AccountHandler(ConfigContext context, IMapper mapper)
+        public AccountHandler(AdminContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -63,6 +63,9 @@
 
     public class ListRecord
     {
+        [XmlElement("citycode")]
+        public string CityCode { get; set; } = string.Empty;
+
         [XmlElement("cancellation")]
         public Cancellation Cancellation { get; set; } = new();
     }

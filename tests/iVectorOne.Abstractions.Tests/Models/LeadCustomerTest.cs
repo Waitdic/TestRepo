@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Intuitive.Helpers.Extensions;
     using iVectorOne.SDK.V2;
     using iVectorOne.SDK.V2.PropertyBook;
     using iVectorOne.Tests.Models;
@@ -75,7 +76,7 @@
                 CustomerTitle = title,
                 CustomerFirstName = firstName,
                 CustomerLastName = lastName,
-                DateOfBirth = DateTime.Parse(dob),
+                DateOfBirth = dob.ToSafeDate(),
                 CustomerAddress1 = addres1,
                 CustomerTownCity = city,
                 CustomerCounty = country,

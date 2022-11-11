@@ -1,0 +1,410 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { sortBy } from 'lodash';
+//
+import type { Account, LogEntries, LogViewerFilters, Supplier } from '@/types';
+import { getAccounts } from '@/libs/core/data-access/account';
+import { RootState } from '@/store';
+import { NotificationStatus } from '@/constants';
+import {
+  Button,
+  Datepicker,
+  Select,
+  Tabs,
+  UncontrolledTextField,
+} from '@/components';
+import {
+  getBookingsLogEntries,
+  getFilteredLogEntries,
+} from '@/libs/log-viewer/data-access';
+import { getSuppliersByAccount } from '@/libs/core/data-access/supplier';
+
+type Props = {
+  setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
+  setAccountId: React.Dispatch<React.SetStateAction<number>>;
+};
+
+const LogFilters: React.FC<Props> = ({ setResults, setAccountId }) => {
+  const dispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.app.user);
+  const userKey = useSelector(
+    (state: RootState) => state.app.awsAmplify.username
+  );
+  const isLoading = useSelector((state: RootState) => state.app.isLoading);
+
+  const [refreshLogs, setRefreshLogs] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<LogViewerFilters>({
+    accountId: -1,
+    logDateRange: [new Date(), new Date()],
+    supplier: 0,
+    system: 'all',
+    type: 'all',
+    responseSuccess: 'all',
+  });
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [tabs, setTabs] = useState([
+    {
+      name: 'Filter',
+      href: 'filter',
+      current: true,
+    },
+    {
+      name: 'Booking Search',
+      href: 'search',
+      current: false,
+    },
+  ]);
+
+  const activeTenant = useMemo(
+    () => user?.tenants?.find((t) => t.isSelected),
+    [user]
+  );
+  const isActiveTab = (name: string) => {
+    return tabs.find((t) => t.current)?.href === name;
+  };
+
+  const handleOnTabChange = (href: string) => {
+    setTabs((prev) =>
+      prev.map((t) => ({
+        ...t,
+        current: t.href === href,
+      }))
+    );
+  };
+
+  const handleChangeLogDateRange = useCallback(
+    (date: Date[] | Date) => {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        logDateRange: date,
+      }));
+    },
+    [setFilters]
+  );
+
+  const handleOnFilterChange = (name: string, optionId: number) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: optionId,
+    }));
+
+    if (name === 'accountId') {
+      setAccountId(Number(optionId));
+    }
+  };
+
+  const handleOnSearchQueryChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setSearchQuery(value);
+  };
+
+  const handleOnSearch = useCallback(async () => {
+    if (isLoading || !activeTenant || !userKey) return;
+    if (searchQuery.length < 3) {
+      dispatch.app.setNotification({
+        status: NotificationStatus.ERROR,
+        message: 'Search query must be at least 3 characters long',
+      });
+      return;
+    }
+
+    await getBookingsLogEntries({
+      tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      accountId: filters.accountId,
+      searchQuery,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+      },
+      onSuccess: (logEntries) => {
+        dispatch.app.setIsLoading(false);
+        setResults(logEntries);
+      },
+      onFailed: (message) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+        });
+      },
+    });
+  }, [isLoading, activeTenant, userKey, filters, searchQuery]);
+
+  const handleOnLogRefresh = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1 || !refreshLogs)
+      return;
+
+    await getFilteredLogEntries({
+      tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      accountId: filters.accountId,
+      filters,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+        setRefreshLogs(false);
+      },
+      onSuccess: (logEntries) => {
+        dispatch.app.setIsLoading(false);
+        setResults(logEntries);
+      },
+      onFailed: (message) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+        });
+      },
+    });
+  }, [activeTenant, userKey, filters, refreshLogs]);
+
+  const fetchSuppliers = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1) return;
+    await getSuppliersByAccount(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      filters.accountId,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (suppliers) => {
+        dispatch.app.setIsLoading(false);
+        setSuppliers(suppliers);
+      },
+      (message, instance) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+          instance,
+        });
+      }
+    );
+  }, [activeTenant, filters.accountId, userKey]);
+
+  const fetchAccounts = useCallback(async () => {
+    if (!activeTenant || !userKey) return;
+    await getAccounts(
+      {
+        id: activeTenant?.tenantId,
+        key: activeTenant?.tenantKey,
+      },
+      userKey,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (accounts) => {
+        dispatch.app.setIsLoading(false);
+        setAccounts(accounts);
+
+        if (accounts.length === 0) {
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'Get started by creating a new account.',
+          });
+        } else {
+          setFilters((prev) => ({
+            ...prev,
+            accountId: accounts[0].accountId,
+          }));
+        }
+      },
+      (error, instance) => {
+        dispatch.app.setIsLoading(false);
+        console.error(error, instance);
+      }
+    );
+  }, [userKey, activeTenant]);
+
+  useEffect(() => {
+    fetchAccounts();
+
+    return () => {
+      setAccounts([]);
+    };
+  }, [fetchAccounts]);
+
+  useEffect(() => {
+    handleOnLogRefresh();
+  }, [handleOnLogRefresh]);
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, [fetchSuppliers]);
+
+  return (
+    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 md:min-w-[380px] sm:space-y-3'>
+      <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
+
+      {isActiveTab('filter') && (
+        <div className='flex flex-col sm:grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
+          <div>
+            <Select
+              id='accountId'
+              name='accountId'
+              labelText='Account'
+              options={sortBy?.(accounts, [
+                function (o) {
+                  return o?.userName?.toLowerCase?.();
+                },
+              ])?.map((a) => ({
+                id: a.accountId,
+                name: a.userName,
+              }))}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('accountId', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Datepicker
+              mode='range'
+              label='Log Date Range'
+              onChange={handleChangeLogDateRange}
+              maxDate={new Date()}
+              minDate={null}
+              defaultDate={filters.logDateRange}
+            />
+          </div>
+          <div>
+            <Select
+              id='supplier'
+              name='supplier'
+              labelText='Supplier'
+              options={[
+                {
+                  id: 0,
+                  name: 'All',
+                },
+                ...suppliers?.map((s) => ({
+                  id: s.supplierID as number,
+                  name: s.name as string,
+                })),
+              ]}
+              defaultValue={{
+                id: filters.supplier,
+                name: filters.supplier.toString(),
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('supplier', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='system'
+              name='system'
+              labelText='System'
+              options={[
+                {
+                  id: 'all',
+                  name: 'All',
+                },
+                {
+                  id: 'Live Only',
+                  name: 'Live Only',
+                },
+                {
+                  id: 'Test Only',
+                  name: 'Test Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.system,
+                name: filters.system,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('system', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='type'
+              name='type'
+              labelText='Type'
+              options={[
+                {
+                  id: 'all',
+                  name: 'All',
+                },
+                {
+                  id: 'Prebook Only',
+                  name: 'Prebook Only',
+                },
+                {
+                  id: 'Book Only',
+                  name: 'Book Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.type,
+                name: filters.type,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('type', optionId)
+              }
+            />
+          </div>
+          <div>
+            <Select
+              id='responseSuccess'
+              name='responseSuccess'
+              labelText='Response Success'
+              options={[
+                {
+                  id: 'all',
+                  name: 'All',
+                },
+                {
+                  id: 'successful',
+                  name: 'Successful Only',
+                },
+                {
+                  id: 'unsuccessful',
+                  name: 'Unsuccessful Only',
+                },
+              ]}
+              defaultValue={{
+                id: filters.responseSuccess,
+                name: filters.responseSuccess,
+              }}
+              onUncontrolledChange={(optionId) =>
+                handleOnFilterChange('responseSuccess', optionId)
+              }
+            />
+          </div>
+          <div className='col-span-2 flex justify-end items-end'>
+            <Button text='Refresh' onClick={() => setRefreshLogs(true)} />
+          </div>
+        </div>
+      )}
+      {isActiveTab('search') && (
+        <div className='grid lg:grid-cols-4'>
+          <div className='col-span-full text-sm mb-2'>
+            <p>
+              Please input a booking reference, supplier booking reference or
+              lead quest name
+            </p>
+          </div>
+          <div className='col-span-2'>
+            <UncontrolledTextField
+              name='searchQuery'
+              onChange={handleOnSearchQueryChange}
+              value={searchQuery}
+            />
+          </div>
+          <div className='col-span-full'>
+            <Button text='Search' onClick={handleOnSearch} className='mt-5' />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default React.memo(LogFilters);

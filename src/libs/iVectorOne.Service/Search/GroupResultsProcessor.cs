@@ -94,7 +94,9 @@
                         Discount = searchResult.Discount,
                         CommissionPercentage = searchResult.CommissionPercentage,
                         GrossCost = searchResult.GrossCost,
-                        CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails)
+                        CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails),
+                        SellingPrice = searchResult.SellingPrice,
+                        RateBasis = searchResult.PackageRateBasis,                        
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {

@@ -1,50 +1,36 @@
 ﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Create
 {
-    using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+    using Intuitive;
+    using Intuitive.Helpers.Security;
     using System.Security.Cryptography;
-    using System.Text;
 
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ConfigContext _context;
+        private readonly AdminContext _context;
         private readonly IMapper _mapper;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public Handler(ConfigContext context, IMapper mapper)
+        public Handler(AdminContext context, IMapper mapper, ISecretKeeper secretKeeper)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = Ensure.IsNotNull(context, nameof(context));
+            _mapper = Ensure.IsNotNull(mapper, nameof(mapper));
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
             var response = new Response();
 
-            var tenant = _context.Tenants.Where(t => t.TenantId == request.TenantId).Include(t => t.Accounts).FirstOrDefault();
+            var tenant = _context.Tenants
+                .Where(t => t.TenantId == request.TenantId)
+                .Include(t => t.Accounts)
+                .FirstOrDefault();
 
             if (tenant is null)
             {
                 response.NotFound();
                 return response;
             }
-
-            string GeneratePassword(int length)
-            {
-                const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-                StringBuilder res = new StringBuilder();
-                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-                {
-                    byte[] uintBuffer = new byte[sizeof(uint)];
-
-                    while (length-- > 0)
-                    {
-                        rng.GetBytes(uintBuffer);
-                        uint num = BitConverter.ToUInt32(uintBuffer, 0);
-                        res.Append(valid[(int)(num % (uint)valid.Length)]);
-                    }
-                }
-
-                return res.ToString();
-              }
 
             Account CreateAccount(bool isLive)
             {
@@ -56,7 +42,8 @@
                 account.LogMainSearchError = true;
                 account.Environment = environment.ToLower();
                 account.Login = $"{account.Login.Replace(' ', '_')}_{environment}";
-                account.Password = GeneratePassword(20);
+                account.Password = account.Login; //needs to be fixed in database to allow null;
+                account.EncryptedPassword = _secretKeeper.Encrypt(account.Login); // default password to login
                 return account;
             }
 

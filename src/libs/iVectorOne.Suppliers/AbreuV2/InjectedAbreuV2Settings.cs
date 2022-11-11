@@ -9,9 +9,9 @@
     {
         protected override string Source => ThirdParties.ABREUV2;
 
-        public string SearchHotelAvailabilityURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("SearchHotelAvailabilityURL", tpAttributeSearch);
+            return Get_Value("SearchURL", tpAttributeSearch);
         }
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {

@@ -20,6 +20,7 @@ export const app = createModel<RootModel>()({
     error: null,
     isLoading: false,
     incompleteSetup: false,
+    notification: null,
   } as AppState,
   reducers: {
     updateLang(state, payload: string) {
@@ -68,6 +69,12 @@ export const app = createModel<RootModel>()({
     },
     setIncompleteSetup(state, payload: boolean) {
       return { ...state, incompleteSetup: payload };
+    },
+    setNotification(state, payload: AppState['notification']) {
+      return { ...state, notification: payload };
+    },
+    resetNotification(state) {
+      return { ...state, notification: null };
     },
   },
   effects: (dispatch) => ({

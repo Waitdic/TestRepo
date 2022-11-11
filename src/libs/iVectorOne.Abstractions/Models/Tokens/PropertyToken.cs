@@ -36,7 +36,7 @@
 
         /// <summary>Gets or sets the currency id</summary>
         [JsonPropertyName("CI")]
-        public int CurrencyID { get; set; }
+        public int ISOCurrencyID { get; set; }
 
         /// <summary>Gets or sets the property name.</summary>
         [JsonPropertyName("PN")]
@@ -45,5 +45,9 @@
         /// <summary>Gets or sets the geography code</summary>
         [JsonPropertyName("GC")]
         public string GeographyCode { get; set; } = string.Empty;
+
+        /// <summary>Gets or sets the supplier id</summary>
+        [JsonPropertyName("SI")]
+        public int SupplierID { get; set; }
     }
 }

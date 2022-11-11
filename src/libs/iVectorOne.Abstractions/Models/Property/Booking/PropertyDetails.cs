@@ -6,12 +6,13 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.VirtualCreditCards;
+    using iVectorOne.Models.SupplierLog;
 
     /// <summary>
     /// The property details passed into book and pre books
     /// </summary>
     /// <seealso cref="IThirdPartyAttributeSearch" />
-    public class  PropertyDetails : IThirdPartyAttributeSearch
+    public class PropertyDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
         /// Gets or sets the account identifier
@@ -48,7 +49,6 @@
         /// </summary>
         public DateTime ArrivalDate { get; set; }
 
-        // todo - replace with TP currency code as this is what the interfaces are expecting, currently set to ISO code
         /// <summary>
         /// Gets or sets The ISO currency code
         /// </summary>
@@ -85,6 +85,11 @@
         public Logs Logs { get; set; } = new();
 
         /// <summary>
+        /// Gets or sets The supplier logs
+        /// </summary>
+        public List<SupplierLog> SupplierLogs { get; set; } = new();
+
+        /// <summary>
         /// Gets or sets The warnings
         /// </summary>
         public Warnings Warnings { get; set; } = new();
@@ -108,6 +113,11 @@
         /// Gets or sets The source
         /// </summary>
         public string Source { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The supplier identifier
+        /// </summary>
+        public int SupplierID { get; set; }
 
         /// <summary>
         /// Gets or sets The source reference
@@ -217,7 +227,7 @@
         /// <summary>
         /// Gets or sets v card
         /// </summary>
-        public VirtualCardReturn GeneratedVirtualCard { get; set; }  = new VirtualCardReturn();
+        public VirtualCardReturn GeneratedVirtualCard { get; set; } = new VirtualCardReturn();
 
         /// <summary>
         /// Get or sets the unique nationality code 
@@ -228,6 +238,21 @@
         /// Gets or sets the boolean to decide whether opaque rates are supported.
         /// </summary>
         public bool OpaqueRates { get; set; }
+
+        /// <summary>
+        /// Gets or sets the override rate basis.
+        /// </summary>
+        public string OverrideRateBasis { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the commission percentage.
+        /// </summary>
+        public decimal CommissionPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the boolean indicates commission percentage changing.
+        /// </summary>
+        public bool CommissionPercentageChange { get; set; } = false;
 
         /// <summary>
         /// Gets the duration.
@@ -255,9 +280,14 @@
         public string SellingCountry { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the 
+        /// Gets or sets the third party configurations
         /// </summary>
         public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the booking identifier
+        /// </summary>
+        public int BookingID { get; set; }
 
         /// <summary>
         /// Adds the log.
@@ -266,7 +296,13 @@
         /// <param name="request">The web request.</param>
         public void AddLog(string title, Request request)
         {
+            // todo - remove legacy log collection (merge with supplier logs)
             Logs.AddNew(this.Source, title, request.RequestLog, request.ResponseLog);
+            SupplierLogs.Add(new SupplierLog()
+            {
+                Title = title,
+                Request = request,
+            });
         }
     }
 }

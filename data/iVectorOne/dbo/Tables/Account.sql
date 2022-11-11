@@ -11,6 +11,7 @@ CREATE TABLE [dbo].[Account](
 	[TenantID] [int] NULL,
 	[CustomerID] [int] NULL,
 	[Status] VARCHAR(8) NOT NULL DEFAULT 'active',
+	[EncryptedPassword] [varchar](500) NULL,
 	CONSTRAINT [PK_Account] PRIMARY KEY NONCLUSTERED ([AccountID] ASC),
 	CONSTRAINT [CK_Unique_AccountLogin] UNIQUE NONCLUSTERED ([Login] ASC)
 ) ON [PRIMARY]

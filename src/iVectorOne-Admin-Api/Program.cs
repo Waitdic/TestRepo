@@ -4,7 +4,6 @@ using iVectorOne_Admin_Api.Config.Responses;
 using iVectorOne_Admin_Api.Features;
 using iVectorOne_Admin_Api.Infrastructure;
 using iVectorOne_Admin_Api.Security;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
@@ -41,40 +40,17 @@ try
     var app = builder.Build();
 
     app
-       .UseIntuitiveLogging()
-       .UseIntuitiveAuditing()
-       .UseHttpsRedirection()
-       .UseAuthentication()
-       .UseAuthorization()
-       .UseIntuitiveCors()
-       .UseExceptionHandler("/error")
-       .UseIntuitiveMiddleware();
+        .UseIntuitiveLogging()
+        .UseIntuitiveAuditing()
+        .UseIntuitiveMiddleware()
+        .UseAuthentication()
+        .UseAuthorization()
+        .UseIntuitiveCors()
+        .UseExceptionHandler("/Error");
 
-    app.MapHealthChecks("/healthz").WithMetadata(new AllowAnonymousAttribute());
+    app.MapHealthChecks("/healthcheck").AllowAnonymous();
 
     app.AddFeatures();
-
-    app.MapGet("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int tenantid, int accountid, int supplierid) =>
-    {
-        if (httpContext.User.Identity is not TenantIdentity identity)
-        {
-            return Results.Challenge();
-        }
-
-        SupplierResponse response = null!;
-
-        try
-        {
-            var request = new SupplierRequest(tenantid) { AccountId = accountid, SupplierId = supplierid };
-            response = await mediator.Send(request);
-        }
-        catch (Exception e)
-        {
-            return Results.Problem(e.ToString());
-        }
-
-        return Results.Ok(response);
-    }).RequireAuthorization();
 
     app.MapPut(
             "v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}/accountsupplierattributes",
@@ -143,50 +119,6 @@ try
             }
             return Results.Ok(response);
         }).RequireAuthorization();
-
-    app.MapGet("v1/suppliers", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey) =>
-    {
-        if (httpContext.User.Identity is not TenantIdentity identity)
-        {
-            return Results.Challenge();
-        }
-
-        SupplierListResponse response = null!;
-
-        try
-        {
-            var request = new SupplierListRequest();
-            response = await mediator.Send(request);
-        }
-        catch (Exception e)
-        {
-            return Results.Problem(e.ToString());
-        }
-
-        return Results.Ok(response);
-    }).RequireAuthorization();
-
-    app.MapGet("v1/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, [FromHeader(Name = "TenantKey")] Guid tenantKey, int supplierid) =>
-    {
-        if (httpContext.User.Identity is not TenantIdentity identity)
-        {
-            return Results.Challenge();
-        }
-
-        SupplierAttributeResponse response = null!;
-
-        try
-        {
-            var request = new SupplierAttributeRequest() { SupplierID = supplierid };
-            response = await mediator.Send(request);
-        }
-        catch (Exception e)
-        {
-            return Results.Problem(e.ToString());
-        }
-
-        return Results.Ok(response);
-    }).RequireAuthorization();
 
     app.MapPost("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}",
         async (IMediator mediator,
