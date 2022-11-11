@@ -105,6 +105,11 @@
         public string BookingReference { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the Booking Reference Component Number.
+        /// </summary>
+        public string ComponentNumber { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets The source
         /// </summary>
         public string Source { get; set; } = string.Empty;

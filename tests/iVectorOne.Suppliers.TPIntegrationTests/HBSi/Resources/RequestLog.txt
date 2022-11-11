@@ -1,0 +1,54 @@
+﻿URL: https://rhea.demandmatrix.net/app/dm/xml/kenwood
+
+**HEADERS**
+
+Timeout: 25
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><Interface ChannelIdentifierId="Kenwood_XML4T" Version="2005A" Interface="HBSI XML 4 OTA" xmlns="http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/"><ComponentInfo Id="102245" User="kenwood" Pwd="xml4t!" ComponentType="Hotel" /></Interface></soap-env:Header><soap-env:Body RequestId="20220718120000000" Transaction="HotelAvailRQ"><OTA_HotelAvailRQ Version="1.003" Target="Test" TimeStamp="2022-07-18T12:00:00.000+03:00" BestOnly="false" SummaryOnly="false"><POS><Source><RequestorID Type="18" ID="Partner" /><BookingChannel Type="2" Primary="true"><CompanyName>Kenwood</CompanyName></BookingChannel></Source></POS><AvailRequestSegments><AvailRequestSegment><HotelSearchCriteria><Criterion><StayDateRange Start="2021-09-01" End="2021-09-06" Duration="Day" /><RatePlanCandidates><RatePlanCandidate RatePlanCode="*" RPH="1"><HotelRefs><HotelRef HotelCode="102245" /></HotelRefs><MealsIncluded MealPlanCodes="*" /></RatePlanCandidate></RatePlanCandidates><RoomStayCandidates><RoomStayCandidate RoomTypeCode="*" Quantity="1" RPH="1" RatePlanCandidateRPH="1"><GuestCounts><GuestCount Count="1" Age="30" /></GuestCounts></RoomStayCandidate></RoomStayCandidates></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ></soap-env:Body></soap-env:Envelope>
+
+URL: https://rhea.demandmatrix.net/app/dm/xml/kenwood
+
+**HEADERS**
+
+Timeout: 25
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><Interface ChannelIdentifierId="Kenwood_XML4T" Version="2005A" Interface="HBSI XML 4 OTA" xmlns="http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/"><ComponentInfo Id="102245" User="kenwood" Pwd="xml4t!" ComponentType="Hotel" /></Interface></soap-env:Header><soap-env:Body RequestId="20220718120000000" Transaction="HotelAvailRQ"><OTA_HotelAvailRQ Version="1.003" Target="Test" TimeStamp="2022-07-18T12:00:00.000+03:00" BestOnly="false" SummaryOnly="false"><POS><Source><RequestorID Type="18" ID="Partner" /><BookingChannel Type="2" Primary="true"><CompanyName>Kenwood</CompanyName></BookingChannel></Source></POS><AvailRequestSegments><AvailRequestSegment><HotelSearchCriteria><Criterion><StayDateRange Start="2021-09-01" End="2021-09-06" Duration="Day" /><RatePlanCandidates><RatePlanCandidate RatePlanCode="*" RPH="1"><HotelRefs><HotelRef HotelCode="102245" /></HotelRefs><MealsIncluded MealPlanCodes="*" /></RatePlanCandidate></RatePlanCandidates><RoomStayCandidates><RoomStayCandidate RoomTypeCode="*" Quantity="1" RPH="1" RatePlanCandidateRPH="1"><GuestCounts><GuestCount Count="2" Age="30" /></GuestCounts></RoomStayCandidate></RoomStayCandidates></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ></soap-env:Body></soap-env:Envelope>
+
+URL: https://rhea.demandmatrix.net/app/dm/xml/kenwood
+
+**HEADERS**
+
+Timeout: 25
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><Interface ChannelIdentifierId="Kenwood_XML4T" Version="2005A" Interface="HBSI XML 4 OTA" xmlns="http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/"><ComponentInfo Id="102245" User="kenwood" Pwd="xml4t!" ComponentType="Hotel" /></Interface></soap-env:Header><soap-env:Body RequestId="20220718120000000" Transaction="HotelAvailRQ"><OTA_HotelAvailRQ Version="1.003" Target="Test" TimeStamp="2022-07-18T12:00:00.000+03:00" BestOnly="false" SummaryOnly="false"><POS><Source><RequestorID Type="18" ID="Partner" /><BookingChannel Type="2" Primary="true"><CompanyName>Kenwood</CompanyName></BookingChannel></Source></POS><AvailRequestSegments><AvailRequestSegment><HotelSearchCriteria><Criterion><StayDateRange Start="2021-09-01" End="2021-09-06" Duration="Day" /><RatePlanCandidates><RatePlanCandidate RatePlanCode="*" RPH="1"><HotelRefs><HotelRef HotelCode="102245" /></HotelRefs><MealsIncluded MealPlanCodes="*" /></RatePlanCandidate></RatePlanCandidates><RoomStayCandidates><RoomStayCandidate RoomTypeCode="*" Quantity="1" RPH="1" RatePlanCandidateRPH="1"><GuestCounts><GuestCount Count="1" Age="30" /><GuestCount Count="1" Age="10" /></GuestCounts></RoomStayCandidate></RoomStayCandidates></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ></soap-env:Body></soap-env:Envelope>
+
+URL: https://rhea.demandmatrix.net/app/dm/xml/kenwood
+
+**HEADERS**
+
+Timeout: 25
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><Interface ChannelIdentifierId="Kenwood_XML4T" Version="2005A" Interface="HBSI XML 4 OTA" xmlns="http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/"><ComponentInfo Id="102245" User="kenwood" Pwd="xml4t!" ComponentType="Hotel" /></Interface></soap-env:Header><soap-env:Body RequestId="20220718120000000" Transaction="HotelAvailRQ"><OTA_HotelAvailRQ Version="1.003" Target="Test" TimeStamp="2022-07-18T12:00:00.000+03:00" BestOnly="false" SummaryOnly="false"><POS><Source><RequestorID Type="18" ID="Partner" /><BookingChannel Type="2" Primary="true"><CompanyName>Kenwood</CompanyName></BookingChannel></Source></POS><AvailRequestSegments><AvailRequestSegment><HotelSearchCriteria><Criterion><StayDateRange Start="2021-09-01" End="2021-09-06" Duration="Day" /><RatePlanCandidates><RatePlanCandidate RatePlanCode="*" RPH="1"><HotelRefs><HotelRef HotelCode="102245" /></HotelRefs><MealsIncluded MealPlanCodes="*" /></RatePlanCandidate></RatePlanCandidates><RoomStayCandidates><RoomStayCandidate RoomTypeCode="*" Quantity="1" RPH="1" RatePlanCandidateRPH="1"><GuestCounts><GuestCount Count="1" Age="30" /><GuestCount Count="1" Age="1" /></GuestCounts></RoomStayCandidate></RoomStayCandidates></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ></soap-env:Body></soap-env:Envelope>
+
+URL: https://rhea.demandmatrix.net/app/dm/xml/kenwood
+
+**HEADERS**
+
+Timeout: 25
+
+
+**REQUEST**
+
+<?xml version="1.0" encoding="utf-8"?><soap-env:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header><Interface ChannelIdentifierId="Kenwood_XML4T" Version="2005A" Interface="HBSI XML 4 OTA" xmlns="http://www.hbsiapi.com/Documentation/XML/OTA/4/2005A/"><ComponentInfo Id="102245" User="kenwood" Pwd="xml4t!" ComponentType="Hotel" /></Interface></soap-env:Header><soap-env:Body RequestId="20220718120000000" Transaction="HotelAvailRQ"><OTA_HotelAvailRQ Version="1.003" Target="Test" TimeStamp="2022-07-18T12:00:00.000+03:00" BestOnly="false" SummaryOnly="false"><POS><Source><RequestorID Type="18" ID="Partner" /><BookingChannel Type="2" Primary="true"><CompanyName>Kenwood</CompanyName></BookingChannel></Source></POS><AvailRequestSegments><AvailRequestSegment><HotelSearchCriteria><Criterion><StayDateRange Start="2021-09-01" End="2021-09-06" Duration="Day" /><RatePlanCandidates><RatePlanCandidate RatePlanCode="*" RPH="1"><HotelRefs><HotelRef HotelCode="102245" /></HotelRefs><MealsIncluded MealPlanCodes="*" /></RatePlanCandidate></RatePlanCandidates><RoomStayCandidates><RoomStayCandidate RoomTypeCode="*" Quantity="1" RPH="1" RatePlanCandidateRPH="1"><GuestCounts><GuestCount Count="1" Age="30" /><GuestCount Count="1" Age="10" /><GuestCount Count="1" Age="1" /></GuestCounts></RoomStayCandidate></RoomStayCandidates></Criterion></HotelSearchCriteria></AvailRequestSegment></AvailRequestSegments></OTA_HotelAvailRQ></soap-env:Body></soap-env:Envelope>
