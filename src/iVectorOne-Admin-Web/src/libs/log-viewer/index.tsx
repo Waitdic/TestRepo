@@ -204,7 +204,7 @@ const LogViewer: React.FC = () => {
 
       {payloadPopup.isOpen && (
         <Modal transparent flex onKeyDown={handleTogglePayloadPopup}>
-          <div className='relative bg-white rounded shadow-lg overflow-auto max-w-xl w-full max-h-full min-w-[280px]'>
+          <div className='relative bg-white rounded shadow-lg overflow-auto max-w-3xl w-full max-h-full min-w-[280px]'>
             <div className='absolute top-0 right-0'>
               <button
                 className='cursor-pointer p-1'
@@ -225,7 +225,7 @@ const LogViewer: React.FC = () => {
                 </div>
               )}
               {payloadPopup.details.length > 0 && (
-                <div className='text-sm overflow-auto max-h-[80vh] mt-2'>
+                <div className='text-xs lg:text-sm overflow-auto max-h-[90vh] mt-2'>
                   {payloadPopup.variant === 'request' ? (
                     <pre
                       dangerouslySetInnerHTML={{
