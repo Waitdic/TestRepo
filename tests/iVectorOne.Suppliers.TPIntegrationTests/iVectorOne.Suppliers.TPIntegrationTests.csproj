@@ -65,15 +65,20 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>GoGlobalRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="HBSi\HBSiRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HBSiRes.resx</DependentUpon>
+    </Compile>
+    <Compile Update="HotelsProV2\HotelsProV2Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HotelsProV2Res.resx</DependentUpon>
+    </Compile>
     <Compile Update="Hotelston\HotelstonRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>HotelstonRes.resx</DependentUpon>
-    </Compile>
-	<Compile Update="HotelsProV2\HotelsProV2Res.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>HotelsProV2Res.resx</DependentUpon>
     </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -84,7 +89,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>DOTWRes.resx</DependentUpon>
-	</Compile>
+    </Compile>
     <Compile Update="DerbySoft\DerbySoftRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -225,13 +230,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>GoGlobalRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="HBSi\HBSiRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HBSiRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="HotelsProV2\HotelsProV2Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HotelsProV2Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Hotelston\HotelstonRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-	<EmbeddedResource Update="HotelsProV2\HotelsProV2Res.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>HotelsProV2Res.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -240,7 +249,7 @@
     <EmbeddedResource Update="DOTW\DOTWRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DOTWRes.Designer.cs</LastGenOutput>
-	</EmbeddedResource>
+    </EmbeddedResource>
     <EmbeddedResource Update="DerbySoft\DerbySoftRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DerbySoftRes.Designer.cs</LastGenOutput>
@@ -326,5 +335,4 @@
       <LastGenOutput>YouTravelRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
 </Project>

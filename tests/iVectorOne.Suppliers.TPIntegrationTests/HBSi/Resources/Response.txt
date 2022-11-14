@@ -1,0 +1,1399 @@
+﻿<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Header /><soap-env:Body RequestId="20220718044851222" Transaction="HotelAvailRS"><OTA_HotelAvailRS TimeStamp="2022-07-18T13:48:57+00:00" Target="Test" xmlns="http://www.opentravel.org/OTA/2003/05"><Success /><Warnings><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WWRIONRKRT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION7NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION6NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION5NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION4NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION3NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION14NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION12NT
+Roomtype DD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype TBFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype TBFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype PK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype PD
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype OVK
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype OTK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype OTD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype OFK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype OFD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype LOVK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype LOVD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype LK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype LHK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype LD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype HSK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype HSD
+Error NotAvailable
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype HOVK
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype HOVD
+Error MinimumStayLength
+</Warning><Warning ShortText="Minimum stay length.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype HBK
+Error MinimumStayLength
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype GLK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype GLD
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype DK
+Error NotAvailable
+</Warning><Warning ShortText="Not available.">Property 37958
+From 2022-08-27
+Until 2022-08-28
+Rateplan WRION10NT
+Roomtype DD
+Error NotAvailable
+</Warning></Warnings><RoomStays><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="PD"><RoomDescription Name="Caribbean Luxury Family Sized Suite Double"><Text>Arranged across the first to fifth floors in the resort's main building, these premium rooms are richly decorated and feature soft, muted décor, traditional mahogany and marble furnishings including a king-size bed or two double beds, en-suite bathroom, and flat screen television. The room includes a stylish seating area with sofa bed and mahogany desk, with some leading to private balconies or patios or boast a French balcony, where views of the resort grounds beckon. These accommodations are ideal for larger families, with ample space for another rollaway bed.</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="PD" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="720.00" AmountAfterTax="720.00" CurrencyCode="USD" /><Total AmountBeforeTax="1440.00" AmountAfterTax="1440.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 360 Sell: 360
+
+Guest 1
+Set rate (unit rate): Net: 360 Sell: 360
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 360 Sell: 360
+
+Guest 1
+Set rate (unit rate): Net: 360 Sell: 360
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="1440.00" AmountAfterTax="1440.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="OTK"><RoomDescription Name="Greek Beachfront Concierge Terrace Suite King"><Text>Arranged across the second and third floors of the resort's oceanfront building, these substantial suites are beautifully decorated to offer an abundance of light, space and luxury for the entire family. These concierge suites comprise a generously proportioned bedroom boasting the choice of a mahogany king-sized bed or two double beds, flat screen television and completed by a well appointed en-suite bathroom. The suites' relaxing lounge area includes a double pull-out sofa and leads to a large terrace where magnificent vistas of the Caribbean Sea await.</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="OTK" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="996.00" AmountAfterTax="996.00" CurrencyCode="USD" /><Total AmountBeforeTax="1992.00" AmountAfterTax="1992.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 498 Sell: 498
+
+Guest 1
+Set rate (unit rate): Net: 498 Sell: 498
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 498 Sell: 498
+
+Guest 1
+Set rate (unit rate): Net: 498 Sell: 498
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="1992.00" AmountAfterTax="1992.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="LK"><RoomDescription Name="Caribbean Grande Luxe Suite King"><Text>These large suites are the perfect family retreat, offering an abundance of space and natural light. Located on 1st-3rd floors in the east and west wings of the resort's main building, each accommodation features traditional mahogany furniture including a king-size bed, flat screen television and a well-appointed en-suite bathroom. The living area boasts spacious seating, which leads to either a large walkout balcony or patio that provide delightful views across the resort's tropical gardens. These suites are ideal for larger families with ample space for another roll-away bed and can connect to adjacent suites if required (based on availability).</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="LK" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="772.00" AmountAfterTax="772.00" CurrencyCode="USD" /><Total AmountBeforeTax="1544.00" AmountAfterTax="1544.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 386 Sell: 386
+
+Guest 1
+Set rate (unit rate): Net: 386 Sell: 386
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 386 Sell: 386
+
+Guest 1
+Set rate (unit rate): Net: 386 Sell: 386
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="1544.00" AmountAfterTax="1544.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="HOVK"><RoomDescription Name="Caribbean Honeymoon Oceanview Concierge Veranda Suite King"><Text>These enormous suites are the perfect family retreat offering an abundance of space and natural light. Located on the 2nd and 3rd floors in the East wing of the resort's main building, each accommodation features traditional mahogany furniture including a king sized bed or two double beds, flat screen television, and a well-appointed en-suite bathroom. A living area boasts spacious sitting, which leads to a large walkout balcony providing a delightful view across the resort s tropical gardens and Caribbean Sea.</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="HOVK" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="976.00" AmountAfterTax="976.00" CurrencyCode="USD" /><Total AmountBeforeTax="1952.00" AmountAfterTax="1952.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 488 Sell: 488
+
+Guest 1
+Set rate (unit rate): Net: 488 Sell: 488
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 488 Sell: 488
+
+Guest 1
+Set rate (unit rate): Net: 488 Sell: 488
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="1952.00" AmountAfterTax="1952.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="HOVD"><RoomDescription Name="Caribbean Honeymoon Oceanview Concierge Veranda Suite Double"><Text>These enormous, mega suites are the perfect family retreat offering an abundance of space and natural light. Located on the 2nd and 3rd floors in the East wing of the resort's main building, each accommodation features traditional mahogany furniture including a king-size bed or two double beds, flat screen television, and a well-appointed en-suite bathroom. A living area boasts spacious sitting, which leads to a large walkout balcony providing a delightful view across the resort s tropical gardens and Caribbean Sea.</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="HOVD" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="976.00" AmountAfterTax="976.00" CurrencyCode="USD" /><Total AmountBeforeTax="1952.00" AmountAfterTax="1952.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 488 Sell: 488
+
+Guest 1
+Set rate (unit rate): Net: 488 Sell: 488
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 488 Sell: 488
+
+Guest 1
+Set rate (unit rate): Net: 488 Sell: 488
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="1952.00" AmountAfterTax="1952.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay><RoomStay><RoomTypes><RoomType NumberOfUnits="1" RoomTypeCode="HBK"><RoomDescription Name="Greek Honeymoon Beachfront Walkout Concierge Suite"><Text>Commanding a unique location on the ground floor of the Naxos terrace, these large suites feature delicate decor and stylish furnishings for an incredible Caribbean experience. Comprising a wonderfully-sized bedroom and living area boasting a mahogany king-size bed, matching furniture including double sofa bed, flat screen television, and a well-appointed en-suite bathroom. Completing the magic is a large private deck which offers spectacular and far-reaching views of the Caribbean Sea and walkout access to the resort's white-sand beach, just a heartbeat away.</Text></RoomDescription></RoomType></RoomTypes><RatePlans><RatePlan RatePlanCode="WWRIONRKRT"><RatePlanDescription Name="WTOUKRKRT_UK"><Text>WTOUKRKRT_UK</Text></RatePlanDescription><MealsIncluded MealPlanCodes="AI" /></RatePlan></RatePlans><RoomRates><RoomRate RoomTypeCode="HBK" NumberOfUnits="1" EffectiveDate="2022-08-27" ExpireDate="2022-08-29" RatePlanCode="WWRIONRKRT"><Rates><Rate RateTimeUnit="Day" UnitMultiplier="2" EffectiveDate="2022-08-27" ExpireDate="2022-08-29"><Base AmountBeforeTax="1010.00" AmountAfterTax="1010.00" CurrencyCode="USD" /><Total AmountBeforeTax="2020.00" AmountAfterTax="2020.00" CurrencyCode="USD" /></Rate></Rates><RoomRateDescription><Text>2022-08-27
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 505 Sell: 505
+
+Guest 1
+Set rate (unit rate): Net: 505 Sell: 505
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates
+
+2022-08-28
+Unit rate 
+Guest 0
+Set rate (unit rate): Net: 505 Sell: 505
+
+Guest 1
+Set rate (unit rate): Net: 505 Sell: 505
+
+Mealplan rate 
+Guest 0
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Guest 1
+Set rate (mealplan rate): Net: 0 Sell: 0
+
+Product rates</Text></RoomRateDescription></RoomRate></RoomRates><GuestCounts><GuestCount Age="30" Count="2" /></GuestCounts><TimeSpan Start="2022-08-27" Duration="P2N" End="2022-08-29" /><CancelPenalties><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-07-28T00:00:00" /><AmountPercent Percent="50" /></CancelPenalty><CancelPenalty PolicyCode="CXP"><Deadline AbsoluteDeadline="2022-08-13T00:00:00" /><AmountPercent Percent="100" /></CancelPenalty></CancelPenalties><Total AmountBeforeTax="2020.00" AmountAfterTax="2020.00" CurrencyCode="USD" /><BasicPropertyInfo HotelCode="37958" HotelName="Beaches Ocho Rios (BBO)"><Address><AddressLine>St. Ann, Boscobel</AddressLine><AddressLine>P.O. Box 63</AddressLine><CityName>Ocho Rios</CityName><PostalCode>1</PostalCode><CountryName>JAM</CountryName></Address></BasicPropertyInfo></RoomStay></RoomStays></OTA_HotelAvailRS></soap-env:Body></soap-env:Envelope>
