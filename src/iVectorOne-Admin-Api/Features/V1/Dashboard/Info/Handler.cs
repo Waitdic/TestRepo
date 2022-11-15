@@ -32,6 +32,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 return response;
             }
 
+            var currentHour = DateTime.Now.Hour;
+
             var queryText = $"Portal_SearchesByHour {request.AccountId}";
             var searchesByHourData = await _context.SearchesByHour
                 .FromSqlRaw(queryText)
@@ -43,7 +45,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var searchesByHour = searchesByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentWeekTotal += x.CurrentWeek,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : 0,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
@@ -58,7 +60,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var bookingsByHour = bookingsByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentWeekTotal += x.CurrentWeek,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : 0,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
@@ -124,7 +126,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     },
                     S2B = x.S2B.ToString("n0")
                 }).ToList());
-             }
+            }
 
             var responseModel = new ResponseModel()
             {
