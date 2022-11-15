@@ -36,13 +36,9 @@
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
-        /// <summary>Creates the location mapping.</summary>
-        /// <param name="searchDetails">The search details, used to retrieve information about the search</param>
-        /// <param name="account">The account.....</param>
-        /// <returns>A transfer location map</returns>
-        public LocationMapping Create(TransferSearchDetails searchDetails, Account account)
+        public async Task<LocationMapping> CreateAsync(TransferSearchDetails searchDetails, Account account)
         {
-            return new LocationMapping();
+            return await _searchRepository.GetLocationMappingAsync(searchDetails, account);
         }
     }
 }

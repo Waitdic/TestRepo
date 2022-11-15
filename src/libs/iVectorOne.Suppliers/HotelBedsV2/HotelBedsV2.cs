@@ -17,6 +17,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class HotelBedsV2 : IThirdParty, ISingleSource
     {

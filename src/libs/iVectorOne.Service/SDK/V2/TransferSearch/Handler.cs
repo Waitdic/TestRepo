@@ -4,15 +4,15 @@
     using System.Threading.Tasks;
     using MediatR;
     using iVectorOne.Search.Models;
-    using iVectorOne.Services;
+    using iVectorOne.Services.Transfer;
 
     public class Handler : IRequestHandler<Request, Response>
     {
-        private readonly ITransferSearchService _searchService;
+        private readonly ISearchService _searchService;
         private readonly IRequestTracker _requestTracker;
 
         public Handler(
-            ITransferSearchService searchService,
+            ISearchService searchService,
             IRequestTracker requestTracker)
         {
             _searchService = searchService;

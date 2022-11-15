@@ -9,6 +9,7 @@
     using iVectorOne.Models.Tokens;
     using iVectorOne.Models.Tokens.Constants;
     using iVectorOne.Repositories;
+    using iVectorOne.Suppliers.NullTestTransferSupplier;
     using iVectorOne.Utility;
     using Microsoft.Extensions.Logging;
 
@@ -102,7 +103,10 @@
             _tokenValues.AddValue(TokenValueType.Year, transferToken.DepartureDate.Year - DateTime.Now.Year);
             _tokenValues.AddValue(TokenValueType.Month, transferToken.DepartureDate.Month);
             _tokenValues.AddValue(TokenValueType.Day, transferToken.DepartureDate.Day);
-            _tokenValues.AddValue(TokenValueType.CurrencyID, transferToken.CurrencyID);
+            _tokenValues.AddValue(TokenValueType.CurrencyID, transferToken.ISOCurrencyID);
+            _tokenValues.AddValue(TokenValueType.Adults, transferToken.Adults);
+            _tokenValues.AddValue(TokenValueType.Children, transferToken.Children);
+            _tokenValues.AddValue(TokenValueType.Infants, transferToken.Infants);
 
             char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
 
@@ -259,6 +263,51 @@
             return token;
         }
 
+        public async Task<TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account)
+        {
+            TransferToken? token = null;
+
+            try
+            {
+                _tokenValues.Clear();
+                _tokenValues.AddValue(TokenValueType.Year);
+                _tokenValues.AddValue(TokenValueType.Month);
+                _tokenValues.AddValue(TokenValueType.Day);
+                _tokenValues.AddValue(TokenValueType.CurrencyID);
+                _tokenValues.AddValue(TokenValueType.Adults);
+                _tokenValues.AddValue(TokenValueType.Children);
+                _tokenValues.AddValue(TokenValueType.Infants);
+
+                GetTokenValues(tokenString);
+
+                token = new TransferToken()
+                {
+                    ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID),
+                    Adults = _tokenValues.GetValue(TokenValueType.Adults),
+                    Children = _tokenValues.GetValue(TokenValueType.Children),
+                    Infants = _tokenValues.GetValue(TokenValueType.Infants),
+                };
+
+                int day = _tokenValues.GetValue(TokenValueType.Day);
+                int month = _tokenValues.GetValue(TokenValueType.Month);
+                int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
+
+                if (day > 0 && month > 0)
+                {
+                    token.DepartureDate = new DateTime(year, month, day);
+                }
+
+                await PopulateTransferTokenFieldsAsync(token, account);
+            }
+            catch (Exception ex)
+            {
+                token = null;
+                _logger.LogError(ex, "TransferTokenDecodeError");
+            }
+
+            return token;
+        }
+
         private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
         {
             try
@@ -289,6 +338,27 @@
             {
                 bookToken.Source = propertyContent.Source;
                 bookToken.BookingID = propertyContent.BookingID;
+            }
+        }
+
+        private async Task PopulateTransferTokenFieldsAsync(TransferToken transferToken, Account account)
+        {
+            try
+            {
+                await Task.Delay(1);
+
+                transferToken.Source = Constants.ThirdParties.NULLTESTTRANSFERSUPPLIER;
+
+                //var propertyContent = await _contentRepository.GetContentforPropertyAsync(transferToken.PropertyID, account, string.Empty);
+
+                //if (propertyContent != null)
+                //{
+                //    transferToken.Source = propertyContent.Source;
+                //}
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
             }
         }
 

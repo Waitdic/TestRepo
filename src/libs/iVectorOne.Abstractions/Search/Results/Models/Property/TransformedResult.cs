@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using System.Linq;
     using System.Xml.Serialization;
+    using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
 
     /// <summary>

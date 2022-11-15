@@ -9,6 +9,7 @@
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
     using iVectorOne.Models;
+    using iVectorOne.Models.Models.Property;
 
     // todo - merge this file with the tp support wrapper
     /// <summary>

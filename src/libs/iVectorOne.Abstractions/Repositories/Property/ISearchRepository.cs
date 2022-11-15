@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// A repository for returning search information from the database

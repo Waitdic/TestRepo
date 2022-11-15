@@ -9,6 +9,7 @@
     using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.SearchStore;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertySearch;

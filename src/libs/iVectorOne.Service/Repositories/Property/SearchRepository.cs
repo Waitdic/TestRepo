@@ -6,6 +6,7 @@
     using Intuitive;
     using Intuitive.Data;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// A repository for returning search information from the database

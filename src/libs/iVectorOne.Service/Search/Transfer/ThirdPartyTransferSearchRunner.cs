@@ -14,19 +14,19 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using iVectorOne.Interfaces;
+    using iVectorOne.Transfer;
     using iVectorOne.Models;
     using iVectorOne.Models.SearchStore;
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
-    using iVectorOne.Services;
+    using iVectorOne.Services.Transfer;
 
     /// <summary>
     /// Third Party Transfer Search Runner
     /// </summary>
     public class ThirdPartyTransferSearchRunner : IThirdPartyTransferSearchRunner
     {
-        private readonly ISearchStoreService _searchStoreService;
+        //private readonly ISearchStoreService _searchStoreService;
         private readonly ILogger<ThirdPartyTransferSearchRunner> _logger;
 
         private readonly IEmailService _emailService;
@@ -39,14 +39,12 @@
             ILogger<ThirdPartyTransferSearchRunner> logger,
             IEmailService emailService,
             ITransferSearchResultsProcessor searchResultsProcessor,
-            HttpClient httpClient,
-            ISearchStoreService searchStoreService)
+            HttpClient httpClient)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _emailService = Ensure.IsNotNull(emailService, nameof(emailService));
             _searchResultsProcessor = Ensure.IsNotNull(searchResultsProcessor, nameof(searchResultsProcessor));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
-            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService)); ;
         }
 
         /// <summary>Gets the current time taken in seconds.</summary>
@@ -63,7 +61,7 @@
         public async Task SearchAsync(
             TransferSearchDetails searchDetails,
             LocationMapping locationMapping,
-            IThirdPartyTransferSearch thirdPartySearch,
+            Transfer.IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {
             try

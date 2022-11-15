@@ -14,6 +14,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Interfaces;
+    using iVectorOne.Models.Property;
 
     public class TeamAmericaSearch : IThirdPartySearch, ISingleSource
     {

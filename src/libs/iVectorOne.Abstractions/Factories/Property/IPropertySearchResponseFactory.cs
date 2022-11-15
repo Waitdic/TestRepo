@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Search.Models;
 

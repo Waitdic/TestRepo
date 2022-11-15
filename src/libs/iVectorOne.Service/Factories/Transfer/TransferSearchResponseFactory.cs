@@ -60,12 +60,14 @@
             {
                 try
                 {
-                    //var supplierSplit = supplierSplits.FirstOrDefault(ss => ss.Supplier == propertyData.Source);
-
                     var transferToken = new TransferToken()
                     {
                         DepartureDate = searchDetails.DepartureDate,
-                        CurrencyID = result.CurrencyID
+                        ISOCurrencyID = result.CurrencyID,
+                        TPSessionID = result.TPSessionID,
+                        Adults = searchDetails.Adults,
+                        Children = searchDetails.Children,
+                        Infants = searchDetails.Infants,
                     };
 
                     var transferResult = new TransferResult()

@@ -18,6 +18,7 @@
     using iVectorOne.Suppliers.OceanBeds.Models.Common;
     using static OceanBedsHelper;
     using Status = Models.Common.Status;
+    using iVectorOne.Models.Property;
 
     public class OceanBeds : IThirdParty, ISingleSource
     {

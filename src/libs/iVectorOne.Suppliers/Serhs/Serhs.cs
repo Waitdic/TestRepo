@@ -16,6 +16,7 @@
     using Microsoft.Extensions.Logging;
     using iVectorOne.Interfaces;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class Serhs : IThirdParty, ISingleSource
     {

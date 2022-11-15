@@ -3,6 +3,7 @@
     using iVectorOne.Models;
     using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Models;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines a factory that takes in a third party transfer search request and creations a location map
@@ -14,6 +15,6 @@
         /// <param name="account">The account</param>
         /// <param name="log">boolean that decides if we log third party requests and responses</param>
         /// <returns>A transfer location map</returns>
-        LocationMapping Create(TransferSearchDetails searchDetails, Account account);
+        Task<LocationMapping> CreateAsync(TransferSearchDetails searchDetails, Account account);
     }
 }

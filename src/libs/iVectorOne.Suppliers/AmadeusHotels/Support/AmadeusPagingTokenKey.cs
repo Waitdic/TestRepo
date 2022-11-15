@@ -3,6 +3,7 @@
     using System.Linq;
     using iVectorOne.Models;
     using iVectorOne.Interfaces;
+    using iVectorOne.Models.Property;
 
     public class AmadeusPagingTokenKey : IPagingTokenKey
     {

@@ -16,6 +16,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {

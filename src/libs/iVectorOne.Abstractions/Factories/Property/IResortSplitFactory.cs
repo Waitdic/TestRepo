@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// A factory that creates resort splits

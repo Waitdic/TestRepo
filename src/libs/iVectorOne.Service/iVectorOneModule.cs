@@ -59,6 +59,11 @@
     using Prebook = SDK.V2.PropertyPrebook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Search = SDK.V2.PropertySearch;
+    using TransferBook = SDK.V2.TransferBook;
+    using TransferCancel = SDK.V2.TransferCancel;
+    using TransferPrebook = SDK.V2.TransferPrebook;
+    using TransferPrecancel = SDK.V2.TransferPrecancel;
+    using TransferSearch = SDK.V2.TransferSearch;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -92,6 +97,10 @@
             services.AddSingleton<IRoomRequestsFactory, RoomRequestsFactory>();
             services.AddSingleton<ISearchDetailsFactory, SearchDetailsFactory>();
             services.AddSingleton<IThirdPartyFactory, ThirdPartyFactory>();
+            services.AddSingleton<ICancelTransferResponseFactory, CancelTransferResponseFactory>();
+            services.AddSingleton<ITransferBookResponseFactory, TransferBookResponseFactory>();
+            services.AddSingleton<ITransferDetailsFactory, TransferDetailsFactory>();
+            services.AddSingleton<ITransferPrebookResponseFactory, TransferPrebookResponseFactory>();
             services.AddSingleton<ITransferSearchResponseFactory, TransferSearchResponseFactory>();
             services.AddSingleton<ITransferSearchDetailsFactory, TransferSearchDetailsFactory>();
             services.AddSingleton<ITransferThirdPartyFactory, TransferThirdPartyFactory>();
@@ -129,7 +138,10 @@
             services.AddSingleton<ITPSupport, TPSupportWrapper>();
             services.AddSingleton<IRequestTracker, ThirdPartyRequestTracker>();
             services.AddSingleton<IThirdPartyPropertySearchRunner, ThirdPartyPropertySearchRunner>();
-            services.AddSingleton<ITransferSearchService, TransferSearchService>();
+            services.AddSingleton<Services.Transfer.ISearchService, Services.Transfer.SearchService>();
+            services.AddSingleton<Services.Transfer.IPrebookService, Services.Transfer.PrebookService>();
+            services.AddSingleton<Services.Transfer.IBookService, Services.Transfer.BookService>();
+            services.AddSingleton<Services.Transfer.ICancellationService, Services.Transfer.CancellationService>();
             services.AddSingleton<ITransferSearchResultsProcessor, TransferSearchResultsProcessor>();
             services.AddSingleton<IThirdPartyTransferSearchRunner, ThirdPartyTransferSearchRunner>();
 
@@ -153,7 +165,10 @@
             services.AddHandlerAndValidator<Book.Request, Book.Response, Book.Handler, Book.Validator>();
             services.AddHandlerAndValidator<Precancel.Request, Precancel.Response, Precancel.Handler, Precancel.Validator>();
             services.AddHandlerAndValidator<Cancel.Request, Cancel.Response, Cancel.Handler, Cancel.Validator>();
-            services.AddHandlerAndValidator<SDK.V2.TransferSearch.Request, SDK.V2.TransferSearch.Response, SDK.V2.TransferSearch.Handler, SDK.V2.TransferSearch.Validator>();
+            services.AddHandlerAndValidator<TransferSearch.Request, TransferSearch.Response, TransferSearch.Handler, TransferSearch.Validator>();
+            services.AddHandlerAndValidator<TransferPrebook.Request, TransferPrebook.Response, TransferPrebook.Handler, TransferPrebook.Validator>();
+            services.AddHandlerAndValidator<TransferBook.Request, TransferBook.Response, TransferBook.Handler, TransferBook.Validator>();
+            services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
@@ -237,7 +252,7 @@
             services.AddSingleton<IThirdPartySearch, WelcomeBedsSearch>();
             services.AddSingleton<IThirdPartySearch, YalagoSearch>();
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
-            services.AddSingleton<IThirdPartyTransferSearch, NullTestTransferSupplierSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, NullTestTransferSupplierSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)

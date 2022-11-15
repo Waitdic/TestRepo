@@ -17,6 +17,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using System.Text;
+    using iVectorOne.Models.Property;
 
     public class RMI : IThirdParty, ISingleSource
     {

@@ -9,6 +9,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.TPImport.Models;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using Content = SDK.V2.PropertyContent;
 
     /// <summary>Repository that retrieves property content from the database</summary>

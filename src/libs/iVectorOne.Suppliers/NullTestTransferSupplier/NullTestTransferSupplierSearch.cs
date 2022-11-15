@@ -4,7 +4,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Net;
-    using iVectorOne;
+    using iVectorOne.Transfer;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
@@ -12,7 +12,7 @@
     using iVectorOne.Search.Results.Models;
 
 
-    public class NullTestTransferSupplierSearch : IThirdPartyTransferSearch, ISingleSource
+    public class NullTestTransferSupplierSearch : IThirdPartySearch, ISingleSource
     {
         private INullTestTransferSupplierSettings _settings;
 
@@ -25,6 +25,8 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
+            var tpLocation = GetThirdPartyLocations<int>(searchDetails, location);
+
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return Task.FromResult(new List<Request>() { new Request() {
                 EndPoint = "",
@@ -72,9 +74,15 @@
             return transformedResults;
         }
 
+        public Task<T> GetThirdPartyLocations<T>(TransferSearchDetails searchDetails, LocationMapping location)
+        {
+            return default;
+        }
+
         public bool SearchRestrictions(TransferSearchDetails searchDetails)
         {
             return false;
         }
+
     }
 }

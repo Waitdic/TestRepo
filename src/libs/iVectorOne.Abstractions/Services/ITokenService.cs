@@ -41,6 +41,12 @@
         /// <returns>an encoded room token</returns>
         string EncodeRoomToken(RoomToken propertyToken);
 
+        /// <summary>Decodes the property token.</summary>
+        /// <param name="tokenString">The token string.</param>
+        /// <param name="account">The account making the request</param>
+        /// <returns>a Property Token object</returns>
+        Task<TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account);
+
         /// <summary>Encodes the transfer token.</summary>
         /// <param name="transferToken">The transfer token.</param>
         /// <returns>An encoded property token.</returns>

@@ -5,6 +5,7 @@
     using iVectorOne.Models.Property.Booking;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// A factory that creates property cancellation responses using the provided property details

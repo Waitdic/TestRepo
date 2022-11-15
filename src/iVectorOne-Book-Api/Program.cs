@@ -27,6 +27,7 @@ try
     //Load application specific endpoints
     app.MapEndpointsV1();
     app.MapEndpoints();
+    app.MapTransferEndpoints();
 
     app.BuildAndRun();
 }

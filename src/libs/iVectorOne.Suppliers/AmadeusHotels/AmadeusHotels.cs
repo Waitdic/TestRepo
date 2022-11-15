@@ -18,7 +18,7 @@
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
 
     public class AmadeusHotels : IThirdParty, ISingleSource

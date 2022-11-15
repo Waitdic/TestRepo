@@ -15,6 +15,7 @@
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
 
     public class YouTravel : IThirdParty, ISingleSource
     {

@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using FluentValidation;
+    using iVectorOne.SDK.V2.Book;
 
     public class Validator : AbstractValidator<Request>
     {

@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using System.Threading.Tasks;
+    using iVectorOne.Transfer;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
 
@@ -21,7 +22,7 @@
         Task SearchAsync(
             TransferSearchDetails searchDetails,
             LocationMapping locationMapping,
-            IThirdPartyTransferSearch thirdPartySearch,
+            IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }
 }

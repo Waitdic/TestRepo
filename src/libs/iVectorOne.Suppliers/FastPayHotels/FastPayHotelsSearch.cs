@@ -17,11 +17,12 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Results.Models;
-    using Cancellation = iVectorOne.Models.Property.Booking.Cancellation;
+    using Cancellation = iVectorOne.Models.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
     using static iVectorOne.Suppliers.FastPayHotels.Models.SharedModels;
     using static iVectorOne.Suppliers.FastPayHotels.Models.FastPayHotelsAvailabilityResponse;
     using static iVectorOne.Suppliers.FastPayHotels.Models.FastPayHotelsAvailabilityRequest;
+    using iVectorOne.Models.Property;
 
     public class FastPayHotelsSearch : IThirdPartySearch, ISingleSource
     {

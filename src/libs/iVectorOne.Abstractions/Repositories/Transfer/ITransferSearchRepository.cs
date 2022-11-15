@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using iVectorOne.Models;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// A repository for returning search information from the database
@@ -12,10 +13,9 @@
         /// <summary>
         /// Gets the resort splits.
         /// </summary>
-        /// <param name="properties">The properties.</param>
-        /// <param name="suppliers">The suppliers.</param>
+        /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="account">The API Login</param>
         /// <returns>A list of resort splits</returns>
-        Task<List<SupplierResortSplit>> GetResortSplitsAsync(string properties, string suppliers, Account account);
+        Task<LocationMapping> GetLocationMappingAsync(TransferSearchDetails searchDetails, Account account);
     }
 }

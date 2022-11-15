@@ -4,6 +4,7 @@
     using System.Linq;
     using iVector.Search.Property;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// A factory that creates resort splits from a data row

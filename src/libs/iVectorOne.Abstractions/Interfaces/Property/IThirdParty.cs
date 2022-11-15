@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
 
     /// <summary>

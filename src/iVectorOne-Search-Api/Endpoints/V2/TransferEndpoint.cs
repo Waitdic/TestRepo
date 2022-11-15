@@ -13,8 +13,7 @@
     {
         public static IEndpointRouteBuilder MapTransferEndpoints(this IEndpointRouteBuilder endpoints)
         {
-            //RegisterSearchEndpointsForDomain(endpoints, EndpointBase.Domain);
-            RegisterSearchEndpointsForDomain(endpoints, "transfers");
+            RegisterSearchEndpointsForDomain(endpoints, EndpointBase.TransferDomain);
 
             _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
 
@@ -32,6 +31,9 @@
                         [FromQuery] DateTime departureDate,
                         [FromQuery] int? departureLocationId,
                         [FromQuery] int? arrivalLocationId,
+                        [FromQuery] int? adults,
+                        [FromQuery] int? children,
+                        [FromQuery] int? infants,
                         [FromQuery] string? supplier,
                         [FromQuery] string? currencycode,
                         [FromQuery] string? emailLogsTo)
@@ -42,6 +44,9 @@
                             DepartureDate = departureDate,
                             DepartureLocationID = departureLocationId ?? 0,
                             ArrivalLocationID = arrivalLocationId ?? 0,
+                            Adults = adults ?? 0,
+                            Children = children ?? 0,
+                            Infants = infants ?? 0,
                             CurrencyCode = currencycode ?? string.Empty,
                             //SellingCountry = sellingcountry ?? string.Empty,
                             Supplier = supplier ?? string.Empty,

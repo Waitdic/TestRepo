@@ -8,13 +8,13 @@
     using iVector.Search.Property;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Lookups;
-    using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
     using iVectorOne.Utility;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     ///  Class responsible for building the property search response

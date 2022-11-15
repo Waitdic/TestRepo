@@ -20,8 +20,9 @@
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using Cancellation = iVectorOne.Models.Property.Booking.Cancellation;
+    using Cancellation = iVectorOne.Models.Cancellation;
     using RoomDetails = iVector.Search.Property.RoomDetails;
+    using iVectorOne.Models.Property;
 
     public class NetstormingSearch : IThirdPartySearch, IMultiSource
     {

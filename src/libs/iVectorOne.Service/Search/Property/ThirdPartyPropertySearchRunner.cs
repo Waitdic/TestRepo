@@ -20,6 +20,7 @@
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// Third Party Property Search Runner

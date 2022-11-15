@@ -139,7 +139,7 @@
         public const string InvalidBookingReference = "A Booking Reference is required";
 
         /// <summary>
-        ///   <para>Every cancel request must have a supplier booking reference</para>
+        ///   <para>Every prebook or cancel request must have a supplier booking reference</para>
         /// </summary>
         public const string InvalidSupplierBookingReference = "A Supplier Booking Reference is required";
 
@@ -272,5 +272,10 @@
         ///   <para>An arrival location ID is required</para>
         /// </summary>
         public const string InvalidArrivalLocationID = "An arrival location ID is required";
+
+        /// <summary>
+        ///   <para>An adult or child is required</para>
+        /// </summary>
+        public const string NoAdultsOrChildrenSpecified = "At least one adult or child must be specified";
     }
 }

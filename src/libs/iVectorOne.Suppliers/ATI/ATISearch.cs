@@ -19,6 +19,7 @@
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class ATISearch : IThirdPartySearch, ISingleSource
     {

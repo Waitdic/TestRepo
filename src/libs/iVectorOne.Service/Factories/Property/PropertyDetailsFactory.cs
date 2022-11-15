@@ -18,6 +18,7 @@
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
     using Intuitive;
+    using iVectorOne.SDK.V2.Book;
 
     /// <summary>
     /// Factory that builds up property details from api requests, used to pass into the third party code
@@ -271,14 +272,14 @@
 
                     switch (guestDetail.Type)
                     {
-                        case Book.GuestType.Unset:
-                        case Book.GuestType.Adult:
+                        case GuestType.Unset:
+                        case GuestType.Adult:
                             passenger.PassengerType = PassengerType.Adult;
                             break;
-                        case Book.GuestType.Child:
+                        case GuestType.Child:
                             passenger.PassengerType = PassengerType.Child;
                             break;
-                        case Book.GuestType.Infant:
+                        case GuestType.Infant:
                             passenger.PassengerType = PassengerType.Infant;
                             break;
                     }
