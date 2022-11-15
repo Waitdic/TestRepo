@@ -63,6 +63,7 @@
             var stopwatch = Stopwatch.StartNew();
             //SearchStoreItem searchStoreItem = null!;
 
+            var locationMapping = new LocationMapping();
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
 
@@ -73,7 +74,7 @@
                 // searchStoreItem = searchDetails.SearchStoreItem;
                 //searchStoreItem.SearchDateAndTime = DateTime.Now;
 
-                // 2.Check we want to search this supplier??
+                // 2.Check we want to search this supplier
                 //var supplier = searchRequest.Account.Configurations
                 //    .Select(c => c.Supplier)
                 //    .Where(s => s == searchRequest.Supplier)
@@ -81,12 +82,6 @@
 
 
                 //searchStoreItem.PreProcessTime = (int)stopwatch.ElapsedMilliseconds;
-
-                // 3.Get TP search
-                //await GetThirdPartySearchesAsync(searchDetails, requestTracker);
-
-                var locationMapping = new LocationMapping();
-
 
                 // 3.Get TP search
                 var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);

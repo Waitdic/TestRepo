@@ -5,6 +5,7 @@
     using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Utility;
     using Microsoft.Extensions.Logging;
     using System;
     using System.Linq;
@@ -61,7 +62,7 @@
                         VehicleCost = result.VehicleCost,
                         AdultCost = result.AdultCost,
                         ChildCost = result.ChildCost,
-                        CurrencyID = await GetISOCurrencyID(searchDetails.Source, result.CurrencyCode),
+                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(searchDetails.Source, result.CurrencyCode, searchDetails.AccountID, _currencyRepository),
                         VehicleQuantity = result.VehicleQuantity,
                         Cost = result.Cost,
                         BuyingChannelCost = result.BuyingChannelCost,
@@ -86,28 +87,6 @@
             }
 
             return resultsCount;
-        }
-
-        //duplicated with GroupResultsProcessor
-        private async Task<int> GetISOCurrencyID(string source, string currencyCode)
-        {
-            int currencyId = 0;
-
-            //if (!string.IsNullOrWhiteSpace(searchResult.CurrencyCode))
-            //{
-            //    if (IsSingleTenant(propertyData.Source))
-            //    {
-            //        currencyId = await _currencyRepository.AccountCurrencyLookupAsync(searchDetails.AccountID, searchResult.CurrencyCode);
-            //    }
-            //    else
-            //    {
-            //        currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(propertyData.Source, searchResult.CurrencyCode);
-            //    }
-            //}
-
-            currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(source, currencyCode);
-
-            return currencyId;
         }
     }
 }

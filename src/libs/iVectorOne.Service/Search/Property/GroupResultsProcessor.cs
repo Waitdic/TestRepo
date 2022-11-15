@@ -12,6 +12,7 @@
     using iVectorOne.SDK.V2.PropertySearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Utility;
 
     /// <summary>
     /// Groups third Party results by property into our own format
@@ -94,7 +95,7 @@
                         Discount = searchResult.Discount,
                         CommissionPercentage = searchResult.CommissionPercentage,
                         GrossCost = searchResult.GrossCost,
-                        CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails),
+                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(result.PropertyData.Source, searchResult.CurrencyCode, searchDetails.AccountID, _currencyRepository),
                         SellingPrice = searchResult.SellingPrice,
                         RateBasis = searchResult.PackageRateBasis,                        
                     },
@@ -133,28 +134,6 @@
         {
             return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.AccountID);
         }
-
-        private async Task<int> GetISOCurrencyID(PropertyData propertyData, TransformedResult searchResult, SearchDetails searchDetails)
-        {
-            int currencyId = 0;
-
-            if (!string.IsNullOrWhiteSpace(searchResult.CurrencyCode))
-            {
-                if (IsSingleTenant(propertyData.Source))
-                {
-                    currencyId = await _currencyRepository.AccountCurrencyLookupAsync(searchDetails.AccountID, searchResult.CurrencyCode);
-                }
-                else
-                {
-                    currencyId = await _currencyRepository.GetISOCurrencyIDFromSupplierCurrencyCodeAsync(propertyData.Source, searchResult.CurrencyCode);
-                }
-            }
-
-            return currencyId;
-        }
-
-        private bool IsSingleTenant(string source)
-            => source.InList(ThirdParties.OWNSTOCK, ThirdParties.CHANNELMANAGER);
 
         /// <summary>Gets the property room booking identifier.</summary>
         /// <param name="searchResult">The search result.</param>

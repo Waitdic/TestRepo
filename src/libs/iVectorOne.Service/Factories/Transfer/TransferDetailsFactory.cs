@@ -47,7 +47,7 @@
         {
             var transferDetails = new TransferDetails();
 
-            var transferToken = await _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.Account);
+            var transferToken = _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.SupplierReference, request.Account);
 
             if (transferToken is not null)
             {

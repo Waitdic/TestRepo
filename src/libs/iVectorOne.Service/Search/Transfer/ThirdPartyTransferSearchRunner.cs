@@ -72,7 +72,6 @@
 
                 var taskList = new List<Task>();
                 string source = searchDetails.Source;
-                //var resortSplits = supplierResortSplit.ResortSplits;
 
                 var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, locationMapping);
 
@@ -151,6 +150,8 @@
                 _logger.LogError(ex.Message, ex);
             }
         }
+
+        ///TODO - refactor - below are shared with properties
 
         /// <summary>Requests the time out seconds.</summary>
         /// <param name="searchDetails">The transfer search details.</param>

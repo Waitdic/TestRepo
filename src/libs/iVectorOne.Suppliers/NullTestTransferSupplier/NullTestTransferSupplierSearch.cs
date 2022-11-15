@@ -53,7 +53,7 @@
                     ReturnTime = "15:00",
                     VehicleCost = 150,
                     AdultCost = 100,
-                    ChildCost = 0,
+                    ChildCost = 50,
                     CurrencyCode = "CAD",
                     VehicleQuantity = 1,
                     Cost = 200,

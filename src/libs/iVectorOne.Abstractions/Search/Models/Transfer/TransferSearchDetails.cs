@@ -62,7 +62,10 @@
         /// </summary>
         public int ArrivalLocationId { get; set; }
 
-
+        /// <summary>
+        /// Get or sets the ISO currency code
+        /// </summary>
+        public string ISOCurrencyCode { get; set; } = string.Empty;
 
 
 
@@ -77,17 +80,8 @@
 
         List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        /// delete what I don't need from below
 
-
-
-
-
-
-        /// <summary>
-        /// Get or sets the ISO currency code
-        /// </summary>
-        public string ISOCurrencyCode { get; set; } = string.Empty;
+        
 
 
         /// <summary>
@@ -96,7 +90,7 @@
         /// <value>
         /// The session identifier.
         /// </value>
-        public string SessionID { get; set; } = string.Empty;
+        //public string SessionID { get; set; } = string.Empty;
 
 
         
@@ -104,7 +98,7 @@
         /// <summary>
         /// Gets or sets The departure secondary time
         /// </summary>
-        public string DepartureSecondaryTime { get; set; } = string.Empty;
+        //public string DepartureSecondaryTime { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The departure flight code
@@ -179,22 +173,12 @@
         /// <summary>
         /// Gets or sets The supplier identifier
         /// </summary>
-        public int SupplierID { get; set; } = 0;
+        //public int SupplierID { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets The vehicle type
         /// </summary>
-        public string VehicleType { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to include in progress contracts
-        /// </summary>
-        public bool IncludeInProgressContracts { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to ignore min book ahead
-        /// </summary>
-        public bool IgnoreMinBookAhead { get; set; }
+        //public string VehicleType { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the booking date.
@@ -212,132 +196,17 @@
         /// <summary>
         /// Gets or sets the arrival resort identifier
         /// </summary>
-        public int ArrivalResortID { get; set; } = 0;
+        //public int ArrivalResortID { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets the child ages
         /// </summary>
-        public List<int> ChildAges { get; set; } = new List<int>();
+        //public List<int> ChildAges { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the senior ages
         /// </summary>
-        public List<int> SeniorAges { get; set; } = new List<int>();
-
-
-
-
-
-
-        /// <summary>
-        /// Gets or sets the brand identifier.
-        /// </summary>
-        /// <value>
-        /// The brand identifier.
-        /// </value>
-        public int BrandID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the sales channel identifier.
-        /// </summary>
-        /// <value>
-        /// The sales channel identifier.
-        /// </value>
-        public int SalesChannelID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selling country.
-        /// </summary>
-        /// <value>
-        /// The ISO 3166-2 country code.
-        /// </value>
-        public string SellingCountry { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the selling currency identifier.
-        /// </summary>
-        /// <value>
-        /// The selling currency identifier.
-        /// </value>
-        public int SellingCurrencyID { get; set; }
-
-
-
-        /// <summary>
-        /// Gets or sets the trade identifier.
-        /// </summary>
-        /// <value>
-        /// The trade identifier.
-        /// </value>
-        public int TradeID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the selling geography level1 identifier.
-        /// </summary>
-        /// <value>
-        /// The selling geography level1 identifier.
-        /// </value>
-        public int SellingGeographyLevel1ID { get; set; }     
-
-        /// <summary>
-        /// Gets or sets the geography level1 identifier.
-        /// </summary>
-        /// <value>
-        /// The geography level1 identifier.
-        /// </value>
-        public int GeographyLevel1ID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the geography level2 identifier.
-        /// </summary>
-        /// <value>
-        /// The geography level2 identifier.
-        /// </value>
-        public int GeographyLevel2ID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the geography level3 identifier.
-        /// </summary>
-        /// <value>
-        /// The geography level3 identifier.
-        /// </value>
-        public int GeographyLevel3ID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the latitude.
-        /// </summary>
-        /// <value>
-        /// The latitude.
-        /// </value>
-        public decimal Latitude { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the longitude.
-        /// </summary>
-        /// <value>
-        /// The longitude.
-        /// </value>
-        public decimal Longitude { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the radius.
-        /// </summary>
-        /// <value>
-        /// The radius.
-        /// </value>
-        public decimal Radius { get; set; } = 0;
-
-        /// <summary>
-        /// Get or sets the currency code
-        /// </summary>
-        /// <value>
-        ///  The currency code identifier
-        /// </value>
-        public string CurrencyCode { get; set; } = string.Empty;
-
-
-
-
+        //public List<int> SeniorAges { get; set; } = new List<int>();
 
 
         /// <summary>
@@ -352,8 +221,6 @@
         ///   <c>true</c> if [store search logging]; otherwise, <c>false</c>.
         /// </value>
         public bool StoreSearchLogging { get; set; } = false;
-
-
 
 
         /// <summary>

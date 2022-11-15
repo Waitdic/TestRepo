@@ -31,14 +31,13 @@
 
                 Source = searchRequest.Supplier,
 
-                //ISONationalityCode = searchRequest.NationalityID,
                 AccountID = account.AccountID,
                 Settings = account.TPSettings,
                 ThirdPartyConfigurations = account.Configurations,
                 LoggingType = log ? "All" : "None",
-                //ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? account.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
-                //SellingCountry = searchRequest.SellingCountry,
+                ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? account.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
+
                 //SearchStoreItem =
                 //{
                 //    AccountName = account.Login,

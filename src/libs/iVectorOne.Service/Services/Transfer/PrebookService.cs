@@ -4,13 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Amazon.Runtime.Internal.Util;
     using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models.Transfer;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.TransferPrebook;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///   <para>The service responsible for handling the pre book</para>
@@ -112,7 +110,7 @@
                 }
                 else if (requestValid)
                 {
-                    //response.Warnings = null!;
+                    response.Warnings = null!;
                 }
             }
 

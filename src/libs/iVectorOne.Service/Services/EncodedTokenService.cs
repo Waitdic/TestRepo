@@ -9,7 +9,6 @@
     using iVectorOne.Models.Tokens;
     using iVectorOne.Models.Tokens.Constants;
     using iVectorOne.Repositories;
-    using iVectorOne.Suppliers.NullTestTransferSupplier;
     using iVectorOne.Utility;
     using Microsoft.Extensions.Logging;
 
@@ -263,7 +262,7 @@
             return token;
         }
 
-        public async Task<TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account)
+        public TransferToken? DecodeTransferTokenAsync(string tokenString, string supplierToken, Account account)
         {
             TransferToken? token = null;
 
@@ -297,7 +296,7 @@
                     token.DepartureDate = new DateTime(year, month, day);
                 }
 
-                await PopulateTransferTokenFieldsAsync(token, account);
+                //use supplier reference/token to populate other fields
             }
             catch (Exception ex)
             {
@@ -338,27 +337,6 @@
             {
                 bookToken.Source = propertyContent.Source;
                 bookToken.BookingID = propertyContent.BookingID;
-            }
-        }
-
-        private async Task PopulateTransferTokenFieldsAsync(TransferToken transferToken, Account account)
-        {
-            try
-            {
-                await Task.Delay(1);
-
-                transferToken.Source = Constants.ThirdParties.NULLTESTTRANSFERSUPPLIER;
-
-                //var propertyContent = await _contentRepository.GetContentforPropertyAsync(transferToken.PropertyID, account, string.Empty);
-
-                //if (propertyContent != null)
-                //{
-                //    transferToken.Source = propertyContent.Source;
-                //}
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
             }
         }
 
