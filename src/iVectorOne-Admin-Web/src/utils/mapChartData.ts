@@ -10,11 +10,12 @@ const mapChartData = (
   }[],
   rawColors: string[]
 ): ChartData => {
-  const labels = data.map((item) => pad2(item.time + 1));
+  const labels = data.map((item) => pad2(item.time));
   const colors = rawColors.map(
     (color) => tailwindConfig()?.theme?.colors?.[color]?.[500]
   );
   const currentDateHours = new Date().getHours();
+
   const datasets = [
     {
       label: 'Today',
