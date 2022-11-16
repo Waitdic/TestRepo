@@ -14,14 +14,13 @@ const mapChartData = (
   const colors = rawColors.map(
     (color) => tailwindConfig()?.theme?.colors?.[color]?.[500]
   );
-  const currentDateHours = new Date().getHours();
 
   const datasets = [
     {
       label: 'Today',
       data: data
-        .map((item) => Number(item.currentTotal))
-        .slice(0, currentDateHours),
+        .filter((item) => item.currentTotal !== null)
+        .map((item) => Number(item.currentTotal)),
       borderColor: colors[0],
       fill: false,
       borderWidth: 2,
