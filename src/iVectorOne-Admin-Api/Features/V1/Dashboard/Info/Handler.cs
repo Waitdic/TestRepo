@@ -45,7 +45,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var searchesByHour = searchesByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : 0,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : null,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
@@ -60,7 +60,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var bookingsByHour = bookingsByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : 0,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : null,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
