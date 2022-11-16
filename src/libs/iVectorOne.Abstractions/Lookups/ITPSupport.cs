@@ -78,5 +78,23 @@
         /// <param name="currencyId">The ISO currency id.</param>
         /// <returns>The currency code of corresponding currency id</returns>
         Task<string> ISOCurrencyCodeLookupAsync(int currencyId);
+
+        /// <summary>
+        /// The supplier name lookup.
+        /// </summary>
+        /// <param name="supplierId">The suplier identifier.</param>
+        /// <returns>
+        /// The supplier name
+        /// </returns>
+        Task<string> SupplierNameLookupAsync(int supplierId);
+
+        /// <summary>
+        /// The supplier identifier lookup.
+        /// </summary>
+        /// <param name="supplierName">The suplier name.</param>
+        /// <returns>
+        /// The supplier identifier
+        /// </returns>
+        Task<int> SupplierIDLookupAsync(string supplierName);
     }
 }

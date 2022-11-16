@@ -36,7 +36,7 @@
         /// <inheritdoc />
         public IThirdParty CreateFromSource(string source, ThirdPartyConfiguration config)
         {
-            _transferBookServices.TryGetValue(source, out var supplierBook);
+            _transferBookServices.TryGetValue(source.ToLower(), out var supplierBook);
             return supplierBook;
         }
 

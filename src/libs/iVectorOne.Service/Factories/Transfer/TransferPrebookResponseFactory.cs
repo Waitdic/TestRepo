@@ -5,13 +5,15 @@
     using Intuitive;
     using iVectorOne.Lookups;
     using iVectorOne.Models.Transfer;
-    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.TransferPrebook;
     using iVectorOne.Services;
     using Search = SDK.V2.TransferSearch;
     using iVectorOne.Utility;
     using System;
+    using iVectorOne.SDK.V2;
+    using iVectorOne.Search.Models;
 
     /// <summary>
     /// A factory that creates transfer pre book responses using the provided transfer details
@@ -42,36 +44,40 @@
         /// <returns>A pre book response</returns>
         public async Task<Response> CreateAsync(TransferDetails transferDetails)
         {
-            var errata = new List<string>();
-            //var cancellationTerms = new List<Search.CancellationTerm>();
-           
+            var cancellationTerms = new List<CancellationTerm>();
+
             int isoCurrencyId = !string.IsNullOrEmpty(transferDetails.ISOCurrencyCode) ?
-                await _support.ISOCurrencyIDLookupAsync(transferDetails.ISOCurrencyCode) :
-                0;
+                await _support.ISOCurrencyIDLookupAsync(transferDetails.ISOCurrencyCode) : 0;
 
             foreach (var cancellation in transferDetails.Cancellations)
             {
-                //var cancellationTerm = new Search.CancellationTerm()
-                //{
-                //    Amount = cancellation.Amount + 0.00M,
-                //    StartDate = cancellation.StartDate,
-                //    EndDate = cancellation.EndDate,
-                //};
-                //cancellationTerms.Add(cancellationTerm);
+                var cancellationTerm = new CancellationTerm()
+                {
+                    Amount = cancellation.Amount + 0.00M,
+                    StartDate = cancellation.StartDate,
+                    EndDate = cancellation.EndDate,
+                };
+                cancellationTerms.Add(cancellationTerm);
             }
 
-
-            var bookingToken = new TransferToken()
+            var transferToken = new TransferToken()
             {
                 DepartureDate = transferDetails.DepartureDate,
+                ISOCurrencyID = isoCurrencyId,
+                Adults = transferDetails.Adults,
+                Children = transferDetails.Children,
+                Infants = transferDetails.Infants,
+                SupplierID = transferDetails.SupplierID,
             };
 
             var response = new Response()
             {
-                BookingToken = _tokenService.EncodeTransferToken(bookingToken),
+                BookingToken = _tokenService.EncodeTransferToken(transferToken),
+                SupplierReference = transferDetails.SupplierReference,
                 TotalCost = transferDetails.LocalCost + 0.00M,
-                //CancellationTerms = cancellationTerms,
-                //SupplierReference = transferDetails.TPRef1,
+                CancellationTerms = cancellationTerms,
+                DepartureNotes = transferDetails.DepartureNotes,
+                ReturnNotes = transferDetails.ReturnNotes,
             };
 
             return response;

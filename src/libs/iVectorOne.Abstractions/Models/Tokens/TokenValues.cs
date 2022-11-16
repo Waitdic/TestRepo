@@ -135,6 +135,9 @@
                 case TokenValueType.MealBasisID3:
                     bits = TokenValueBits.MealBasis;
                     break;
+                case TokenValueType.SupplierID:
+                    bits = TokenValueBits.SupplierBits;
+                    break;
                 case TokenValueType.ChildAge1:
                 case TokenValueType.ChildAge2:
                 case TokenValueType.ChildAge3:

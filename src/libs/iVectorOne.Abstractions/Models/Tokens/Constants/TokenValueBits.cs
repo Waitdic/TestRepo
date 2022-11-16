@@ -53,5 +53,9 @@
         /// <summary>MealBasis  will be stored as a split of 3 parts of 2 digits, each part is stored in 7 bits which allow 
         /// 0-128 to be stored (only 0-99 will be used)</summary>
         public const int MealBasis = 7;
+
+        /// <summary>Supplier ids  will be stored as a split of 3 parts of 2 digits, each part is stored in 7 bits which allow 
+        /// 0-128 to be stored</summary>
+        public const int SupplierBits = 7;
     }
 }

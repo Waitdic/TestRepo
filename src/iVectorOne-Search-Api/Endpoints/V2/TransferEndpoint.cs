@@ -29,11 +29,15 @@
                         HttpContext httpContext,
                         [FromServices] IMediator mediator,
                         [FromQuery] DateTime departureDate,
-                        [FromQuery] int? departureLocationId,
-                        [FromQuery] int? arrivalLocationId,
+                        [FromQuery] string? departureTime,
+                        [FromQuery] DateTime? returnDate,
+                        [FromQuery] string? returnTime,
+                        [FromQuery] int departureLocationId,
+                        [FromQuery] int arrivalLocationId,
                         [FromQuery] int? adults,
                         [FromQuery] int? children,
                         [FromQuery] int? infants,
+                        [FromQuery] string? childAges,
                         [FromQuery] string? supplier,
                         [FromQuery] string? currencycode,
                         [FromQuery] string? emailLogsTo)
@@ -42,11 +46,15 @@
                         var request = new Request
                         {
                             DepartureDate = departureDate,
-                            DepartureLocationID = departureLocationId ?? 0,
-                            ArrivalLocationID = arrivalLocationId ?? 0,
+                            DepartureTime = departureTime ?? string.Empty,
+                            ReturnDate = returnDate,
+                            ReturnTime = returnTime ?? string.Empty,
+                            DepartureLocationID = departureLocationId,
+                            ArrivalLocationID = arrivalLocationId,
                             Adults = adults ?? 0,
                             Children = children ?? 0,
                             Infants = infants ?? 0,
+                            ChildAges = SetChildAges(childAges ?? string.Empty),
                             CurrencyCode = currencycode ?? string.Empty,
                             //SellingCountry = sellingcountry ?? string.Empty,
                             Supplier = supplier ?? string.Empty,
@@ -69,6 +77,11 @@
                 .WithName($"{domain.ToProperCase()} Search")
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .Produces(StatusCodes.Status200OK);
+        }
+
+        private static List<int> SetChildAges(string childAges)
+        {
+            return childAges.Split(',').Where(m => int.TryParse(m, out _)).Select(m => int.Parse(m)).ToList();
         }
     }
 }

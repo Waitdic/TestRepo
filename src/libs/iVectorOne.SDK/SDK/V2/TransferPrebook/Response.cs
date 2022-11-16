@@ -10,7 +10,7 @@
         /// </summary>
         public string BookingToken { get; set; } = string.Empty;
 
-        /// <summary>Gets or sets the supplier reference1.</summary>
+        /// <summary>Gets or sets the supplier reference.</summary>
         public string SupplierReference { get; set; } = string.Empty;
 
         /// <summary>
@@ -21,11 +21,17 @@
         /// <summary>
         /// Gets or sets the cancellation terms.
         /// </summary>
-        //public List<CancellationTerm> CancellationTerms { get; set; } = new();
+        public List<CancellationTerm> CancellationTerms { get; set; } = new();
 
         /// <summary>
-        /// Gets or sets the errata.
+        /// Gets or sets the departure notes.
         /// </summary>
-        public List<string> Errata { get; set; } = new List<string>();
+        public string DepartureNotes { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the return notes.
+        /// </summary>
+        public string ReturnNotes { get; set; } = string.Empty;
+
     }
 }

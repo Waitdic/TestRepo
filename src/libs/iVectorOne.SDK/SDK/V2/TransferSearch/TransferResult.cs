@@ -14,20 +14,20 @@
         public string BookingToken { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the tp session id.
-        /// </summary>
-        /// <value>
-        /// The transfer vehicle.
-        /// </value>
-        public string TPSessionID { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets the supplier reference.
         /// </summary>
         /// <value>
         /// The transfer vehicle.
         /// </value>
         public string SupplierReference { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the tp session id.
+        /// </summary>
+        /// <value>
+        /// The transfer vehicle.
+        /// </value>
+        public string TPSessionID { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the transfer vehicle.

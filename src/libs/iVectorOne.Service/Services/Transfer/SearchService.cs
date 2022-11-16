@@ -13,6 +13,8 @@
     using iVectorOne.Constants;
     using iVectorOne.Search;
     using iVectorOne.Interfaces;
+    using iVectorOne.Lookups;
+    using Intuitive.Helpers.Extensions;
 
     /// <summary>
     /// The main transfer search service, responsible for doing all the searching
@@ -20,7 +22,7 @@
     /// <seealso cref="ThirdParty.Service.Services.ITransferSearchService" />
     public class SearchService : ISearchService
     {
-        /// private readonly ISearchStoreService _searchStoreService;
+        private readonly ISearchStoreService _searchStoreService;
 
         /// <summary>The search repository</summary>
         private readonly ITransferLocationMappingFactory _locationMappingFactory;
@@ -36,18 +38,19 @@
 
         private readonly IThirdPartyTransferSearchRunner _searchRunner;
 
-
         /// <summary>Initializes a new instance of the <see cref="TransferSearchService" /> class.</summary>
         /// <param name="locationMappingFactory">The location mapping factory.</param>
         /// <param name="searchDetailsFactory">The search details factory.</param>
         /// <param name="transferSearchResponseFactory">The factory that produces the response using the results returned from the results processor</param>
         /// <param name="thirdPartyFactory">Takes in a source and return the third party search class</param>
+        /// <param name="searchStoreService">The service to store the search </param>
         public SearchService(
             ITransferLocationMappingFactory locationMappingFactory,
             ITransferSearchDetailsFactory searchDetailsFactory,
             ITransferSearchResponseFactory transferSearchResponseFactory,
             ITransferThirdPartyFactory thirdPartyFactory,
-            IThirdPartyTransferSearchRunner searchRunner)
+            IThirdPartyTransferSearchRunner searchRunner,
+            ISearchStoreService searchStoreService)
         {
             _locationMappingFactory = Ensure.IsNotNull(locationMappingFactory, nameof(locationMappingFactory));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
@@ -69,31 +72,21 @@
 
             try
             {
-                // 1.Convert Request to Search details object
                 var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
                 // searchStoreItem = searchDetails.SearchStoreItem;
                 //searchStoreItem.SearchDateAndTime = DateTime.Now;
-
-                // 2.Check we want to search this supplier
-                //var supplier = searchRequest.Account.Configurations
-                //    .Select(c => c.Supplier)
-                //    .Where(s => s == searchRequest.Supplier)
-                //    .FirstOrDefault();
-
-
                 //searchStoreItem.PreProcessTime = (int)stopwatch.ElapsedMilliseconds;
 
-                // 3.Get TP search
                 var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);
 
-                if (thirdPartySearch != null && !thirdPartySearch.SearchRestrictions(searchDetails))
+                if (thirdPartySearch != null 
+                    && !thirdPartySearch.SearchRestrictions(searchDetails) 
+                    && AccountHasSupplier(searchRequest))
                 {
-                    //set Source casing - improve
                     searchDetails.Source = (thirdPartySearch as ISingleSource)!.Source;
 
-                    locationMapping = await _locationMappingFactory.CreateAsync(searchDetails, new Account());
+                    locationMapping = await _locationMappingFactory.CreateAsync(searchDetails, searchRequest.Account);
 
-                    // todo - request tracker
                     taskList.Add(
                         _searchRunner.SearchAsync(
                             searchDetails,
@@ -106,7 +99,6 @@
 
                 stopwatch.Restart();
 
-                // 5.Build response and return
                 var response =
                     await _transferSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
 
@@ -139,5 +131,9 @@
                 //_ = _searchStoreService.AddAsync(searchStoreItem);
             }
         }
+
+        private bool AccountHasSupplier(Request searchRequest)
+            => true;
+        //searchRequest.Account.Configurations.Where(c => c.Supplier == searchRequest.Supplier).Any();
     }
 }

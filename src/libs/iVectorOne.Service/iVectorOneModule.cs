@@ -236,6 +236,7 @@
             services.AddSingleton<IThirdPartySearch, JumboSearch>();
             services.AddSingleton<IThirdPartySearch, JuniperSearch>();
             services.AddSingleton<IThirdPartySearch, NullTestSupplierSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, NullTestTransferSupplierSearch>();
             services.AddSingleton<IThirdPartySearch, NetstormingSearch>();
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
@@ -252,7 +253,6 @@
             services.AddSingleton<IThirdPartySearch, WelcomeBedsSearch>();
             services.AddSingleton<IThirdPartySearch, YalagoSearch>();
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
-            services.AddSingleton<Transfer.IThirdPartySearch, NullTestTransferSupplierSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -280,6 +280,7 @@
             services.AddSingleton<IThirdParty, Miki>();
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
+            services.AddSingleton<Transfer.IThirdParty, NullTestTransferSupplier>();
             services.AddSingleton<IThirdParty, OceanBeds>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();

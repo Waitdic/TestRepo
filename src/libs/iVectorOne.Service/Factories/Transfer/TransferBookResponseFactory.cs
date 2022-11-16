@@ -3,10 +3,11 @@
     using Intuitive;
     using iVectorOne.Constants;
     using iVectorOne.Models.Transfer;
-    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.TransferBook;
     using iVectorOne.Services;
+    using iVectorOne.Models.Tokens;
 
     /// <summary>
     /// A factory that creates transfer book responses using the provided transfer details
@@ -31,18 +32,10 @@
         /// <returns>A book response</returns>
         public Response Create(TransferDetails transferDetails)
         {
-            var token = new BookToken()
-            {
-                //PropertyID = transferDetails.PropertyID
-            };
-
             var response = new Response()
             {
-                //SupplierBookingReference = transferDetails.SupplierSourceReference,
-                BookToken = _tokenService.EncodeBookingToken(token),
-                BookingToken = _tokenService.EncodeBookingToken(token),
-                //SupplierReference1 = this.GetSupplierReference1(transferDetails),
-                //SupplierReference2 = this.GetSupplierReference2(transferDetails)
+                SupplierBookingReference = transferDetails.SupplierReference,
+                SupplierReference = transferDetails.ConfirmationReference,
             };
 
             return response;

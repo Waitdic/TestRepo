@@ -9,7 +9,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
     using iVectorOne.Repositories;
-    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.SDK.V2;
     using iVectorOne.Services;
     using iVectorOne.Utility;
@@ -18,6 +18,8 @@
     using Precancel = SDK.V2.TransferPrecancel;
     using Cancel = SDK.V2.TransferCancel;
     using Intuitive;
+    using iVectorOne.Suppliers.Models.WelcomeBeds;
+    using iVectorOne.SDK.V2.Book;
 
     /// <summary>
     /// Factory that builds up transfer details from api requests, used to pass into the third party code
@@ -47,7 +49,7 @@
         {
             var transferDetails = new TransferDetails();
 
-            var transferToken = _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.SupplierReference, request.Account);
+            var transferToken = await _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.Account);
 
             if (transferToken is not null)
             {
@@ -56,13 +58,14 @@
                     AccountID = request.Account.AccountID,
                     DepartureDate = transferToken.DepartureDate,
                     Source = transferToken.Source,
-                    TPSessionID = transferToken.TPSessionID,
+                    SupplierID = transferToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
                     Adults = transferToken.Adults,
                     Children = transferToken.Children,
                     Infants = transferToken.Infants,
-                    LocalCost = 123M, 
+                    //LocalCost = 123M, 
+                    SupplierReference= request.SupplierReference,
                 };
             }
 
@@ -88,42 +91,42 @@
         /// </summary>
         /// <param name="roomToken">The room token.</param>
         /// <returns>A passengers collection</returns>
-        private Passengers SetupPrebookPassengers(RoomToken roomToken)
-        {
-            var passengers = new Passengers();
+        //private Passengers SetupPrebookPassengers(RoomToken roomToken)
+        //{
+        //    var passengers = new Passengers();
 
-            for (int i = 0; i < roomToken.Adults; i++)
-            {
-                var passenger = new Passenger()
-                {
-                    PassengerType = PassengerType.Adult,
-                    Age = 50
-                };
-                passengers.Add(passenger);
-            }
+        //    for (int i = 0; i < roomToken.Adults; i++)
+        //    {
+        //        var passenger = new Passenger()
+        //        {
+        //            PassengerType = PassengerType.Adult,
+        //            Age = 50
+        //        };
+        //        passengers.Add(passenger);
+        //    }
 
-            for (int i = 0; i < roomToken.Children; i++)
-            {
-                var passenger = new Passenger()
-                {
-                    PassengerType = PassengerType.Child,
-                    Age = roomToken.ChildAges[i]
-                };
-                passengers.Add(passenger);
-            }
+        //    for (int i = 0; i < roomToken.Children; i++)
+        //    {
+        //        var passenger = new Passenger()
+        //        {
+        //            PassengerType = PassengerType.Child,
+        //            Age = roomToken.ChildAges[i]
+        //        };
+        //        passengers.Add(passenger);
+        //    }
 
-            for (int i = 0; i < roomToken.Infants; i++)
-            {
-                var passenger = new Passenger()
-                {
-                    PassengerType = PassengerType.Infant,
-                    Age = 1
-                };
-                passengers.Add(passenger);
-            }
+        //    for (int i = 0; i < roomToken.Infants; i++)
+        //    {
+        //        var passenger = new Passenger()
+        //        {
+        //            PassengerType = PassengerType.Infant,
+        //            Age = 1
+        //        };
+        //        passengers.Add(passenger);
+        //    }
 
-            return passengers;
-        }
+        //    return passengers;
+        //}
 
         /// <inheritdoc />
         public async Task<TransferDetails> CreateAsync(Book.Request request)
@@ -138,32 +141,34 @@
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
-                    //SupplierID = transferToken.SupplierID,
-                    //LeadGuestTitle = leadCustomer.CustomerTitle,
-                    //LeadGuestFirstName = leadCustomer.CustomerFirstName,
-                    //LeadGuestLastName = leadCustomer.CustomerLastName,
-                    //LeadGuestDateOfBirth = leadCustomer.DateOfBirth,
-                    //LeadGuestAddress1 = leadCustomer.CustomerAddress1,
-                    //LeadGuestAddress2 = leadCustomer.CustomerAddress2,
-                    //LeadGuestTownCity = leadCustomer.CustomerTownCity,
-                    //LeadGuestCounty = leadCustomer.CustomerCounty,
-                    //LeadGuestPostcode = leadCustomer.CustomerPostcode,
-                    //LeadGuestCountryCode = request.LeadCustomer.CustomerBookingCountryCode,
-                    //LeadGuestPhone = leadCustomer.CustomerPhone,
-                    //LeadGuestMobile = leadCustomer.CustomerMobile,
-                    //LeadGuestEmail = leadCustomer.CustomerEmail,
-                    //LeadGuestPassportNumber = leadCustomer.PassportNumber,
-                    //TPRef1 = request.SupplierReference1,
-                    //TPRef2 = request.SupplierReference2,
-                    //Source = transferToken.Source,
+                    SupplierID = transferToken.SupplierID,
+                    LeadGuestTitle = leadCustomer.CustomerTitle,
+                    LeadGuestFirstName = leadCustomer.CustomerFirstName,
+                    LeadGuestLastName = leadCustomer.CustomerLastName,
+                    LeadGuestDateOfBirth = leadCustomer.DateOfBirth,
+                    LeadGuestAddress1 = leadCustomer.CustomerAddress1,
+                    LeadGuestAddress2 = leadCustomer.CustomerAddress2,
+                    LeadGuestTownCity = leadCustomer.CustomerTownCity,
+                    LeadGuestCounty = leadCustomer.CustomerCounty,
+                    LeadGuestPostcode = leadCustomer.CustomerPostcode,
+                    LeadGuestCountryCode = request.LeadCustomer.CustomerBookingCountryCode,
+                    LeadGuestPhone = leadCustomer.CustomerPhone,
+                    LeadGuestMobile = leadCustomer.CustomerMobile,
+                    LeadGuestEmail = leadCustomer.CustomerEmail,
+                    LeadGuestPassportNumber = leadCustomer.PassportNumber,
+                    SupplierReference = request.SupplierReference,
+                    Source = transferToken.Source,
+                    //LocalCost = localCost,
                     //BookingReference = request.BookingReference,
-                    //DepartureDate = transferToken.DepartureDate,
+                    DepartureDate = transferToken.DepartureDate,
                     //ISONationalityCode = request.NationalityID,
-                    ////ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
-                    //OpaqueRates = request.OpaqueRates,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     //SellingCountry = request.SellingCountry,
-                    //ThirdPartyConfigurations = request.Account.Configurations,
+                    ThirdPartyConfigurations = request.Account.Configurations,
+
                 };
+
+                SetupGuests(request, transferToken, transferDetails);
             }
 
             this.Validate(transferToken!, transferDetails);
@@ -176,14 +181,14 @@
         {
             var transferDetails = new TransferDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
+            //var token = await _tokenService.DecodeTransferBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
+            //var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
 
-            if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
-            {
-                transferDetails = new TransferDetails()
-                {
-                    AccountID = request.Account.AccountID,
+            //if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
+            //{
+            //    transferDetails = new TransferDetails()
+            //    {
+            //        AccountID = request.Account.AccountID,
                     //SourceReference = request.SupplierBookingReference,
                     //Source = token.Source,
                     //SupplierID = propertyToken.SupplierID,
@@ -191,18 +196,18 @@
                     //ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
                     //ThirdPartyConfigurations = request.Account.Configurations,
                     //BookingID = token.BookingID,
-                };
+           //    };
 
                 //SetSupplierReference1(transferDetails, request.SupplierReference1);
                 //SetSupplierReference2(transferDetails, request.SupplierReference2);
 
                 // hack - editing param
-                request.BookingID = token.BookingID;
-            }
-            else
-            {
-                transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidBookingToken);
-            }
+           //     request.BookingID = token.BookingID;
+            //}
+            //else
+           //{
+           //     transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidBookingToken);
+           // }
 
             return transferDetails;
         }
@@ -241,6 +246,51 @@
             }
 
             return transferDetails;
+        }
+
+        private void SetupGuests(Book.Request request, TransferToken transferToken, TransferDetails transferDetails)
+        {
+            foreach (var guestDetail in request.GuestDetails)
+            {
+                var passenger = new Passenger()
+                {
+                    Title = guestDetail.Title,
+                    FirstName = guestDetail.FirstName,
+                    LastName = guestDetail.LastName,
+                    DateOfBirth = guestDetail.DateOfBirth,
+                    Age = guestDetail.DateOfBirth.GetAgeAtTargetDate(transferToken.DepartureDate)
+                };
+
+                switch (guestDetail.Type)
+                {
+                    case GuestType.Unset:
+                    case GuestType.Adult:
+                        passenger.PassengerType = PassengerType.Adult;
+                        break;
+                    case GuestType.Child:
+                        passenger.PassengerType = PassengerType.Child;
+                        break;
+                    case GuestType.Infant:
+                        passenger.PassengerType = PassengerType.Infant;
+                        break;
+                }
+                transferDetails.Passengers.Add(passenger);
+            }
+
+            //foreach (var (child, childage) in room.Passengers.Where(x => x.PassengerType == PassengerType.Child).Zip(roomToken.ChildAges, (r1, r2) => (r1, r2)))
+            //{
+            //    if (child.Age == 0)
+            //    {
+            //        child.Age = childage;
+            //    }
+            //}
+
+            if (transferDetails.Passengers.TotalAdults != transferToken.Adults ||
+                transferDetails.Passengers.TotalChildren != transferToken.Children ||
+                transferDetails.Passengers.TotalInfants != transferToken.Infants)
+            {
+                transferDetails.Warnings.AddNew("Validate failure", $"The guest details do not match what was searched for");
+            }
         }
     }
 }

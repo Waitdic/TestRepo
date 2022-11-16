@@ -152,7 +152,7 @@
         /// <value>
         /// The number of youths.
         /// </value>
-        public int Youths { get; set; }
+        ///public int Youths { get; set; }
 
         /// <summary>
         /// Gets or sets the number of infants.
@@ -161,6 +161,11 @@
         /// The number of infants.
         /// </value>
         public int Infants { get; set; }
+
+        /// <summary>
+        /// Gets or sets the child ages
+        /// </summary>
+        public List<int> ChildAges { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the number of seniors.
@@ -198,10 +203,6 @@
         /// </summary>
         //public int ArrivalResortID { get; set; } = 0;
 
-        /// <summary>
-        /// Gets or sets the child ages
-        /// </summary>
-        //public List<int> ChildAges { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the senior ages

@@ -104,6 +104,18 @@
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc />
+        public async Task<string> SupplierNameLookupAsync(int supplierId)
+        {
+            (await SupplierAsync()).TryGetValue(supplierId, out string source);
+            return source;
+        }
+
+        public async Task<int> SupplierIDLookupAsync(string supplierName)
+        {
+            return (await SupplierAsync()).FirstOrDefault(x => x.Value == supplierName).Key;
+        }
+
         private bool IsSingleTenant(string source)
             => source.InList(ThirdParties.OWNSTOCK, ThirdParties.CHANNELMANAGER);
 
@@ -213,6 +225,21 @@
             return cache;
         }
 
+        /// <summary>Supplier name lookup</summary>
+        /// <returns>A dictionary of suppliers</returns>
+        private async Task<Dictionary<int, string>> SupplierAsync()
+        {
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select SupplierID, SupplierName from Supplier",
+                    async r => (await r.ReadAllAsync<Supplier>()).ToDictionary(x => x.SupplierID, x => x.SupplierName),
+                    new CommandSettings());
+            }
+
+            return await _cache.GetOrCreateAsync("SupplierCache", cacheBuilder, _timeout);
+        }
+
         #endregion
 
         #region DTO classes
@@ -260,6 +287,12 @@
             public string CountryCode { get; set; } = string.Empty;
             public string ISOCountryCode { get; set; } = string.Empty;
             public string Country { get; set; } = string.Empty;
+        }
+
+        private class Supplier
+        {
+            public int SupplierID { get; set; }
+            public string SupplierName { get; set; } = string.Empty;
         }
 
         #endregion

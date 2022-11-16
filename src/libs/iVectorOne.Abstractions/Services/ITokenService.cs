@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
     using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
+    using Transfers = Models.Tokens.Transfer;
 
     /// <summary>Token Service, responsible for encoding and decoding tokens</summary>
     public interface ITokenService
@@ -45,11 +46,11 @@
         /// <param name="tokenString">The token string.</param>
         /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
-        TransferToken? DecodeTransferTokenAsync(string tokenString, string supplierToken, Account account);
+        Task<Transfers.TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account);
 
         /// <summary>Encodes the transfer token.</summary>
         /// <param name="transferToken">The transfer token.</param>
         /// <returns>An encoded property token.</returns>
-        string EncodeTransferToken(TransferToken transferToken);
+        string EncodeTransferToken(Transfers.TransferToken transferToken);
     }
 }

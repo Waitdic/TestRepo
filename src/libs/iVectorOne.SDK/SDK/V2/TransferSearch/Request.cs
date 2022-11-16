@@ -26,6 +26,22 @@
         public string DepartureTime { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the return date.
+        /// </summary>
+        /// <value>
+        /// The return date.
+        /// </value>
+        public DateTime? ReturnDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the return time.
+        /// </summary>
+        /// <value>
+        /// The return time.
+        /// </value>
+        public string ReturnTime { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the departure location identifier.
         /// </summary>
         /// <value>
@@ -64,6 +80,11 @@
         /// The infants.
         /// </value>
         public int Infants { get; set; }
+
+        /// <summary>
+        /// Gets or sets the child ages.
+        /// </summary>
+        public List<int> ChildAges { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the currency code.

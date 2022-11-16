@@ -12,6 +12,7 @@
     using Search = SDK.V2.PropertySearch;
     using iVectorOne.Utility;
     using System;
+    using iVectorOne.SDK.V2;
 
     /// <summary>
     /// A factory that creates property pre book responses using the provided property details
@@ -49,7 +50,7 @@
         public async Task<Response> CreateAsync(PropertyDetails propertyDetails)
         {
             var errata = new List<string>();
-            var cancellationTerms = new List<Search.CancellationTerm>();
+            var cancellationTerms = new List<CancellationTerm>();
             var roomBookings = new List<RoomBooking>();
             int isoCurrencyId = !string.IsNullOrEmpty(propertyDetails.ISOCurrencyCode) ?
                 await _support.ISOCurrencyIDLookupAsync(propertyDetails.ISOCurrencyCode) :
@@ -62,7 +63,7 @@
 
             foreach (var cancellation in propertyDetails.Cancellations)
             {
-                var cancellationTerm = new Search.CancellationTerm()
+                var cancellationTerm = new CancellationTerm()
                 {
                     Amount = cancellation.Amount + 0.00M,
                     StartDate = cancellation.StartDate,

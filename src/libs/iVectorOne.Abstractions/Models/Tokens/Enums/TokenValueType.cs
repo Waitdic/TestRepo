@@ -25,6 +25,7 @@
         MealBasisID2,
         MealBasisID3,
         LocalCost1,
-        LocalCost2
+        LocalCost2, 
+        SupplierID
     }
 }

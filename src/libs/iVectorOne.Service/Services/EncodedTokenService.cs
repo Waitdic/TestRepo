@@ -5,8 +5,12 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
+    using iVectorOne.Constants;
+    using iVectorOne.Lookups;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Tokens;
+    using Transfers = iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.Models.Tokens.Constants;
     using iVectorOne.Repositories;
     using iVectorOne.Utility;
@@ -16,22 +20,26 @@
     public class EncodedTokenService : ITokenService
     {
         private readonly IPropertyContentRepository _contentRepository;
+        private readonly ITPSupport _support;
         private readonly IBaseConverter _converter;
         private readonly ITokenValues _tokenValues;
         private readonly ILogger<EncodedTokenService> _logger;
 
         /// <summary>Initializes a new instance of the <see cref="EncodedTokenService" /> class.</summary>
         /// <param name="contentRepository">The content repository.</param>
+        /// <param name="support">The third party support repository.</param>
         /// <param name="converter">The base converter.</param>
         /// <param name="tokenValues">The colelction that stores the TokenValues</param>
         /// <param name="logger"></param>
         public EncodedTokenService(
             IPropertyContentRepository contentRepository,
+            ITPSupport support,
             IBaseConverter converter,
             ITokenValues tokenValues,
             ILogger<EncodedTokenService> logger)
         {
             _contentRepository = Ensure.IsNotNull(contentRepository, nameof(contentRepository));
+            _support = Ensure.IsNotNull(support, nameof(support));
             _converter = Ensure.IsNotNull(converter, nameof(converter));
             _tokenValues = Ensure.IsNotNull(tokenValues, nameof(tokenValues));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -96,7 +104,7 @@
             return tokenString;
         }
 
-        public string EncodeTransferToken(TransferToken transferToken)
+        public string EncodeTransferToken(Transfers.TransferToken transferToken)
         {
             _tokenValues.Clear();
             _tokenValues.AddValue(TokenValueType.Year, transferToken.DepartureDate.Year - DateTime.Now.Year);
@@ -106,10 +114,11 @@
             _tokenValues.AddValue(TokenValueType.Adults, transferToken.Adults);
             _tokenValues.AddValue(TokenValueType.Children, transferToken.Children);
             _tokenValues.AddValue(TokenValueType.Infants, transferToken.Infants);
+            _tokenValues.AddValue(TokenValueType.SupplierID, transferToken.SupplierID);
 
             char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
 
-            string tokenString = new string(bits.Take(TokenLengths.Property).ToArray());
+            string tokenString = new string(bits.Take(TokenLengths.Transfer).ToArray());
 
             return tokenString;
         }
@@ -153,7 +162,6 @@
 
             return token;
         }
-
         public async Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Account account)
         {
             PropertyToken? token = null;
@@ -262,9 +270,9 @@
             return token;
         }
 
-        public TransferToken? DecodeTransferTokenAsync(string tokenString, string supplierToken, Account account)
+        public async Task<Transfers.TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account)
         {
-            TransferToken? token = null;
+            Transfers.TransferToken? token = null;
 
             try
             {
@@ -276,15 +284,17 @@
                 _tokenValues.AddValue(TokenValueType.Adults);
                 _tokenValues.AddValue(TokenValueType.Children);
                 _tokenValues.AddValue(TokenValueType.Infants);
+                _tokenValues.AddValue(TokenValueType.SupplierID);
 
                 GetTokenValues(tokenString);
 
-                token = new TransferToken()
+                token = new Transfers.TransferToken()
                 {
                     ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID),
                     Adults = _tokenValues.GetValue(TokenValueType.Adults),
                     Children = _tokenValues.GetValue(TokenValueType.Children),
                     Infants = _tokenValues.GetValue(TokenValueType.Infants),
+                    SupplierID = _tokenValues.GetValue(TokenValueType.SupplierID),
                 };
 
                 int day = _tokenValues.GetValue(TokenValueType.Day);
@@ -296,7 +306,7 @@
                     token.DepartureDate = new DateTime(year, month, day);
                 }
 
-                //use supplier reference/token to populate other fields
+                await PopulateTransferTokenFieldsAsync(token, account);
             }
             catch (Exception ex)
             {
@@ -337,6 +347,18 @@
             {
                 bookToken.Source = propertyContent.Source;
                 bookToken.BookingID = propertyContent.BookingID;
+            }
+        }
+
+        private async Task PopulateTransferTokenFieldsAsync(Transfers.TransferToken transferToken, Account account)
+        {
+            try
+            {
+                transferToken.Source = await _support.SupplierNameLookupAsync(transferToken.SupplierID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
             }
         }
 

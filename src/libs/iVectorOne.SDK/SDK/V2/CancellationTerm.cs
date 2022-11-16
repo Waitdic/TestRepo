@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.SDK.V2.PropertySearch
+﻿namespace iVectorOne.SDK.V2
 {
     using System;
 

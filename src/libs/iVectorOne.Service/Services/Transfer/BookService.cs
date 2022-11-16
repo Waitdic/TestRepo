@@ -93,7 +93,7 @@
                     {
                         bookDateAndTime = DateTime.Now;
                         var supplierReference = await thirdParty.BookAsync(transferDetails);
-                        //transferDetails.SupplierSourceReference = supplierReference;
+                        transferDetails.SupplierReference = supplierReference;
                         success = supplierReference.ToLower() != "failed";
 
                         if (success)

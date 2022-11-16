@@ -44,6 +44,11 @@
         public const string DepartureDateToFarInTheFuture = "The Departure date can not be more than 3 years in the future";
 
         /// <summary>
+        /// Return Date must be on or after the departure date
+        /// </summary>
+        public const string ReturnDateBeforeDepartureDate = "The Return date cannot be before the Departure date";
+
+        /// <summary>
         /// A Duration must be specified
         /// </summary>
         public const string DurationNotSpecified = "A Duration must be specified";
@@ -69,14 +74,29 @@
         public const string Only15AdultsAllowed = "A Maximum of 15 adults can be specified in a single room";
 
         /// <summary>
-        /// At least one Adult per room must be specified
+        /// A Maximum of 15 adults can be specified"
+        /// </summary>
+        public const string Only15AdultsAllowedTransfer = "A Maximum of 15 adults can be specified";
+
+        /// <summary>
+        /// /// Only 8 children cab be specified in a room
         /// </summary>
         public const string Only8ChildrenAllowed = "A Maximum of 8 children can be specified in a single room";
 
         /// <summary>
-        /// At least one Adult per room must be specified
+        /// Only 8 children can be specified
+        /// </summary>
+        public const string Only8ChildrenAllowedTransfer = "A Maximum of 8 children can be specified";
+
+        /// <summary>
+        /// Only 7 infants can be specified in a room
         /// </summary>
         public const string Only7InfantsAllowed = "A Maximum of 7 infants can be specified in a single room";
+
+        /// <summary>
+        /// Only 7 infants can be specified in a room
+        /// </summary>
+        public const string Only7InfantsAllowedTransfer = "A Maximum of 7 infants can be specified";
 
         /// <summary>
         /// The number of Child Ages must match the number of Children
@@ -139,7 +159,7 @@
         public const string InvalidBookingReference = "A Booking Reference is required";
 
         /// <summary>
-        ///   <para>Every prebook or cancel request must have a supplier booking reference</para>
+        ///   <para>Every transfer prebook, transfer book or cancel request must have a supplier booking reference</para>
         /// </summary>
         public const string InvalidSupplierBookingReference = "A Supplier Booking Reference is required";
 

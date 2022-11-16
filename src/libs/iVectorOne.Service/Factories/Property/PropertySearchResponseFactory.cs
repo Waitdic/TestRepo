@@ -15,6 +15,7 @@
     using iVectorOne.Services;
     using iVectorOne.Utility;
     using iVectorOne.Models.Property;
+    using iVectorOne.SDK.V2;
 
     /// <summary>
     ///  Class responsible for building the property search response

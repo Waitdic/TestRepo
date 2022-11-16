@@ -4,6 +4,7 @@
     using iVectorOne.Models;
     using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Models;
+    using System;
 
     /// <summary>
     /// A factory that creates a search details factory using a search request
@@ -19,15 +20,16 @@
         public TransferSearchDetails Create(Request searchRequest, Account account, bool log)
         {
             var searchDetails = new TransferSearchDetails()
-            {     
-                DepartureTime = searchRequest.DepartureTime,
-
+            {
                 DepartureLocationId = searchRequest.DepartureLocationID,
                 ArrivalLocationId = searchRequest.ArrivalLocationID,
+
+                OneWay = !searchRequest.ReturnDate.HasValue,
 
                 Adults = searchRequest.Adults,
                 Children = searchRequest.Children,
                 Infants = searchRequest.Infants,
+                ChildAges = searchRequest.ChildAges,
 
                 Source = searchRequest.Supplier,
 
@@ -52,7 +54,14 @@
             if (searchRequest.DepartureDate.HasValue)
             {
                 searchDetails.DepartureDate = searchRequest.DepartureDate.Value;
-            }               
+                searchDetails.DepartureTime = searchRequest.DepartureTime;
+            }
+
+            if (searchRequest.ReturnDate.HasValue)
+            {
+                searchDetails.ReturnDate = searchRequest.ReturnDate.Value;
+                searchDetails.ReturnTime = searchRequest.ReturnTime;
+            }
 
             return searchDetails;
         }

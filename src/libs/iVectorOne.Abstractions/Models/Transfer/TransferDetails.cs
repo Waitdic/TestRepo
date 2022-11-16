@@ -21,12 +21,17 @@
         /// <summary>
         /// Gets or sets the third party session id.
         /// </summary>
-        public string TPSessionID { get; set; } = string.Empty;
+        //public string TPSessionID { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The departure date
         /// </summary>
         public DateTime DepartureDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the one way flag.
+        /// </summary>
+        public bool OneWay { get; set; }
 
         /// <summary>
         /// Gets or sets The ISO currency code
@@ -63,15 +68,33 @@
         /// </summary>
         public Warnings Warnings { get; set; } = new();
 
+        /// <summary> Gets or sets The passengers</summary>
+        public Passengers Passengers { get; set; } = new();
+
         /// <summary>
         /// Gets or sets The source
         /// </summary>
         public string Source { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets The supplier reference
+        /// Gets or sets The supplier identifier
         /// </summary>
+        public int SupplierID { get; set; }
+
+        ///// <summary>
+        ///// Gets or sets The supplier reference
+        ///// </summary>
         public string SupplierReference { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// Gets or sets The source reference
+        ///// </summary>
+        //public string SourceReference { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// Gets or sets The confirmation reference
+        ///// </summary>
+        public string ConfirmationReference { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets the adults.
@@ -163,7 +186,15 @@
         /// </summary>
         public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
 
+        ///// <summary>
+        ///// Gets or sets the departure notes
+        ///// </summary>
+        public string DepartureNotes { get; set; } = string.Empty;
 
+        ///// <summary>
+        ///// Gets or sets the return notes
+        ///// </summary>
+        public string ReturnNotes { get; set; } = string.Empty;
 
 
 
@@ -173,7 +204,7 @@
         ///// </summary>
         //public DateTime ArrivalDate { get; set; }
 
-        
+
 
 
         ///// <summary>
@@ -181,7 +212,7 @@
         ///// </summary>
         //public string BookingReference { get; set; } = string.Empty;
 
-        
+
 
         ///// <summary>
         ///// Gets or sets The supplier identifier
@@ -213,7 +244,7 @@
         ///// </summary>
         //public string TPRef2 { get; set; } = string.Empty;
 
-        
+
 
         ///// <summary>
         ///// Gets or sets The resort code
@@ -260,7 +291,7 @@
         ///// </summary>
         //public int Duration => (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
 
-        
+
 
         ///// <summary>
         ///// Gets or sets the selling country.

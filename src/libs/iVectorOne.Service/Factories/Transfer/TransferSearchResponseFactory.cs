@@ -4,7 +4,7 @@
     using iVectorOne.Factories;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
-    using iVectorOne.Models.Tokens;
+    using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
@@ -64,17 +64,18 @@
                     {
                         DepartureDate = searchDetails.DepartureDate,
                         ISOCurrencyID = result.CurrencyID,
-                        TPSessionID = result.TPSessionID,
                         Adults = searchDetails.Adults,
                         Children = searchDetails.Children,
                         Infants = searchDetails.Infants,
+                        ChildAges = searchDetails.ChildAges,
+                        SupplierID = await _support.SupplierIDLookupAsync(searchDetails.Source),
                     };
 
                     var transferResult = new TransferResult()
                     {
                         BookingToken = _tokenService.EncodeTransferToken(transferToken),
-                        TPSessionID = result.TPSessionID,
                         SupplierReference = result.SupplierReference,
+                        TPSessionID = result.TPSessionID,
                         TransferVehicle = result.TransferVehicle,
                         ReturnTime = result.ReturnTime,
                         VehicleCost = result.VehicleCost,
@@ -107,6 +108,17 @@
             requestTracker.RequestTimes.Add(createResponseTimer);
 
             return response;
+        }
+
+        private int SetDuration(TransferSearchDetails searchDetails)
+        {
+            if (searchDetails.OneWay)
+            {
+                return 0;
+            } else
+            {
+                return (searchDetails.ReturnDate - searchDetails.DepartureDate).Days;
+            }
         }
     }
 }

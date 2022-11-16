@@ -11,10 +11,18 @@
             RuleFor(x => x.DepartureDate).NotNull().WithMessage(WarningMessages.DepartureDateNotSpecified);
             RuleFor(x => x.DepartureDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.DepartureDateInThePast);
             RuleFor(x => x.DepartureDate).LessThan(DateTime.Now.AddYears(3).Date).WithMessage(WarningMessages.DepartureDateToFarInTheFuture);
+            //TODO complete validation
+            //RuleFor(x => (x.ReturnDate - x.DepartureDate).Days.LessThan(0).WithMessage(WarningMessages.ReturnDateBeforeDepartureDate);
+            //RuleFor(x => (x.ReturnDate - x.DepartureDate).Days.LessThan(63).WithMessage(WarningMessages.DurationInvalid);
             RuleFor(x => x.DepartureLocationID).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.InvalidDepartureLocationID);
             RuleFor(x => x.ArrivalLocationID).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.InvalidArrivalLocationID);
             RuleFor(x => x.Supplier).NotNull().NotEmpty().WithMessage(WarningMessages.InvalidSupplier);
             RuleFor(x => x.Adults + x.Children).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.NoAdultsOrChildrenSpecified);
+            RuleFor(x => x.Adults).LessThanOrEqualTo(15).WithMessage(WarningMessages.Only15AdultsAllowedTransfer);
+            RuleFor(x => x.Children).LessThanOrEqualTo(8).WithMessage(WarningMessages.Only8ChildrenAllowedTransfer);
+            RuleFor(x => x.Infants).LessThanOrEqualTo(7).WithMessage(WarningMessages.Only7InfantsAllowedTransfer);
+            //RuleFor(x => x.Children == x.ChildAges.Count).WithMessage(WarningMessages.ChildAgesDontMatchChildren);
+            //RuleFor(x => x.ChildAges.All(a => a >= 2 && a < 18)).WithMessage(WarningMessages.InvalidChildAge);
         }
     }
 }
