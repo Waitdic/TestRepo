@@ -7,8 +7,8 @@
             _ = endpoints.MapGet("v1/suppliers", async (IMediator mediator) =>
             {
                 var response = await mediator.Send(new Request());
-
                 return response.Result;
+
             }).RequireAuthorization();
 
             return endpoints;

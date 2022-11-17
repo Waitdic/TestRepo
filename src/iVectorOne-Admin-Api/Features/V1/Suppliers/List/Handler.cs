@@ -15,7 +15,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Suppliers.List
         {
             var response = new ResponseBase();
 
-            var suppliers = await _context.Suppliers.AsNoTracking().ToListAsync();
+            var suppliers = await _context.Suppliers.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
 
             var supplierList = suppliers.Select(x => new SupplierDto
             {

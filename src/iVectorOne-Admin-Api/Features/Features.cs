@@ -75,7 +75,7 @@ namespace iVectorOne_Admin_Api.Features
             app.MapTenantAccountSupplierInfoV1Endpoint();
 
             app.MapTenantAccountSupplierInfoV2Endpoint();
-            app.MapSupplierInfoV2Endpoint();
+            //app.MapSupplierInfoV2Endpoint();
             app.MapSupplierListV1Endpoint();
             app.MapSupplierInfoV1Endpoint();
 
