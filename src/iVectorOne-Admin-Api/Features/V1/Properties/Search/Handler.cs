@@ -36,10 +36,10 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
             }
 
             //Escape any single quote in the query so the query doesn't break
-            var query = request.Query.Replace("'", "''");
+            var query = request.Query?.Replace("'", "''");
 
             //Append a % for wildcard match if not supplied
-            var queryText = $"Portal_PropertySearch '{(query!.EndsWith('%') ? query : $"{query}%")}', {request.AccountID}";
+            var queryText = $"Portal_PropertySearch '{(query!.EndsWith('%') ? query : $"{query}%")}', {request.AccountId}";
             var properties = await _context.Properties
                 .FromSqlRaw(queryText)
                 .AsNoTracking()
