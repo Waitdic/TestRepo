@@ -42,7 +42,20 @@ namespace iVectorOne_Admin_Api.Features
                 throw new ArgumentNullException(nameof(app));
             }
 
+            //Common
             app.MapErrorRoutes();
+
+            //Dashboard
+            app.MapDashboardInfoV1Endpoint();
+
+            //Utilities
+            app.MapPropertiesSearchV1Endpoint();
+
+            //Supplier
+            app.MapSupplierListV1Endpoint();
+            app.MapSupplierInfoV1Endpoint();
+
+
 
             //Tenant
             app.MapTenantsListV1Endpoint();
@@ -76,8 +89,7 @@ namespace iVectorOne_Admin_Api.Features
 
             app.MapTenantAccountSupplierInfoV2Endpoint();
             //app.MapSupplierInfoV2Endpoint();
-            app.MapSupplierListV1Endpoint();
-            app.MapSupplierInfoV1Endpoint();
+
 
             //Utilities
             app.MapSearchTestV1Endpoint();
@@ -86,8 +98,7 @@ namespace iVectorOne_Admin_Api.Features
             app.MapPropertiesSearchV1Endpoint();
             app.MapLogViewerDetailV1Endpoint();
 
-            //Dashboard
-            app.MapDashboardInfoV1Endpoint();
+
 
             return app;
         }
