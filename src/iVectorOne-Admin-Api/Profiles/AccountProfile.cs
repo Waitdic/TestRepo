@@ -11,8 +11,8 @@
                 .ForMember(dest => dest.UserName, act=> act.MapFrom(src=> src.Login));
             CreateMap<AccountSupplier, SupplierDTO>()
                 .ForMember(dest => dest.Name, act => act.MapFrom(src => src.Supplier.SupplierName));
-            CreateMap<Supplier, SupplierListItemDTO>()
-                .ForMember(dest => dest.Name, act => act.MapFrom(src => src.SupplierName));
+            //CreateMap<Supplier, SupplierDto>()
+            //    .ForMember(dest => dest.Name, act => act.MapFrom(src => src.SupplierName));
         }
     }
 }

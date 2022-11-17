@@ -9,5 +9,7 @@
         public virtual ICollection<SupplierAttribute> SupplierAttributes { get; set; } = new HashSet<SupplierAttribute>();
 
         public string Schema { get; set; } = string.Empty;
+
+        public bool IsLegacyFormat { get; set; }
     }
 }

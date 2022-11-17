@@ -17,11 +17,15 @@ namespace iVectorOne_Admin_Api.Data
         {
         }
 
+        public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+
+
+
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Authorisation> Authorisations { get; set; } = null!;
         public virtual DbSet<Attribute> Attributes { get; set; } = null!;
         public virtual DbSet<Account> Accounts { get; set; } = null!;
-        public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+
         public virtual DbSet<SupplierAttribute> SupplierAttributes { get; set; } = null!;
         public virtual DbSet<AccountSupplier> AccountSuppliers { get; set; } = null!;
         public virtual DbSet<AccountSupplierAttribute> AccountSupplierAttributes { get; set; } = null!;
@@ -49,6 +53,25 @@ namespace iVectorOne_Admin_Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Supplier>(entity =>
+            {
+                entity.HasKey(e => e.SupplierId)
+                    .IsClustered(false);
+
+                entity.ToTable("Supplier");
+
+                entity.HasIndex(e => e.SupplierName, "CK_Unique_SupplierName")
+                    .IsUnique();
+
+                entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
+
+                entity.Property(e => e.SupplierName).HasMaxLength(200);
+
+                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
+            });
+
+
+
 
             modelBuilder.Entity<BookingsByHour>(e =>
             {
@@ -205,22 +228,7 @@ namespace iVectorOne_Admin_Api.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Supplier>(entity =>
-            {
-                entity.HasKey(e => e.SupplierId)
-                    .IsClustered(false);
 
-                entity.ToTable("Supplier");
-
-                entity.HasIndex(e => e.SupplierName, "CK_Unique_SupplierName")
-                    .IsUnique();
-
-                entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
-
-                entity.Property(e => e.SupplierName).HasMaxLength(200);
-
-                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
-            });
 
             modelBuilder.Entity<SupplierAttribute>(entity =>
             {

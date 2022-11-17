@@ -1,8 +1,9 @@
-﻿namespace iVectorOne_Admin_Api.Config.Models
+﻿namespace iVectorOne_Admin_Api.Features.V1.Suppliers.List
 {
-    public class SupplierListItemDTO
+    public record SupplierDto
     {
         public int SupplierID { get; set; }
+
         public string Name { get; set; } = string.Empty;
     }
 }
