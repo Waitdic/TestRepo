@@ -100,7 +100,7 @@
         /// <value>
         /// The ISO 3166-2 country code.
         /// </value>
-        public string SellingCountry { get; set; } = string.Empty;
+        //public string SellingCountry { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the supplier.

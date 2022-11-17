@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Transfer
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
@@ -34,8 +35,8 @@
         /// </summary>
         /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="location">The location mapping.</param>
-        /// <returns>A list of request</returns>
-        Task<T> GetThirdPartyLocations<T>(TransferSearchDetails searchDetails, LocationMapping location);
+        /// <returns>The third party locations</returns>
+        object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
         /// Check if there are any search restrictions for the third party.

@@ -42,7 +42,7 @@
         /// <returns>an encoded room token</returns>
         string EncodeRoomToken(RoomToken propertyToken);
 
-        /// <summary>Decodes the property token.</summary>
+        /// <summary>Decodes the transfer token.</summary>
         /// <param name="tokenString">The token string.</param>
         /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
@@ -52,5 +52,11 @@
         /// <param name="transferToken">The transfer token.</param>
         /// <returns>An encoded property token.</returns>
         string EncodeTransferToken(Transfers.TransferToken transferToken);
+
+        /// <summary>Decodes the property token.</summary>
+        /// <param name="supplierBookingReference">The supplier booking reference.</param>
+        /// <param name="account">The account making the request</param>
+        /// <returns>a Property Token object</returns>
+        Task<Transfers.TransferToken?> PopulateTransferTokenAsync(string supplierBookingReference);
     }
 }

@@ -161,7 +161,7 @@
         /// <summary>
         ///   <para>Every transfer prebook, transfer book or cancel request must have a supplier booking reference</para>
         /// </summary>
-        public const string InvalidSupplierBookingReference = "A Supplier Booking Reference is required";
+        public const string InvalidSupplierBookingReference = "A valid Supplier Booking Reference is required";
 
         /// <summary>
         ///   <para>Every book request must have a supplier reference 1</para>

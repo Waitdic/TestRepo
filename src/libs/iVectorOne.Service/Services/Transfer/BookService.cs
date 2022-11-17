@@ -17,7 +17,7 @@
         private readonly ITransferDetailsFactory _transferDetailsFactory;
 
         /// <summary>The log repository</summary>
-        private readonly IAPILogRepository _logRepository;
+        private readonly ITransferAPILogRepository _logRepository;
 
         /// <summary>Factory that creates the third party class</summary>
         private readonly ITransferThirdPartyFactory _thirdPartyFactory;
@@ -25,39 +25,33 @@
         /// <summary>Creates a book response using information from the transfer details</summary>
         private readonly ITransferBookResponseFactory _responseFactory;
 
-        /// <summary>The reference validator</summary>
-        /// private readonly ISuppierReferenceValidator _referenceValidator;
-
         /// <summary>The supplier log repository</summary>
-        /// private readonly ISupplierLogRepository _supplierLogRepository;
+        private readonly ITransferSupplierLogRepository _supplierLogRepository;
 
-        /// <summary>The supplier log repository</summary>
-        /// private readonly IBookingRepository _bookingRepository;
+        /// <summary>The transfer booking repository</summary>
+        private readonly ITransferBookingRepository _bookingRepository;
 
         /// <summary>Initializes a new instance of the <see cref="BookService" /> class.</summary>
         /// <param name="transferDetailsFactory">The transfer details factory.</param>
         /// <param name="logRepository">Repository for saving pre book logs to the database</param>
         /// <param name="thirdPartyFactory">Factory that creates the correct third party class</param>
         /// <param name="responseFactory">Creates a book response using information from the transfer details</param>
-        /// <param name="referenceValidator">Validates if the right supplier references have been sent for the supplier</param>
         /// <param name="supplierLogRepository">Repository for saving supplier logs to the database</param>
         /// <param name="bookingRepository">Repository for saving the booking to the database</param>
         public BookService(
             ITransferDetailsFactory transferDetailsFactory,
-            IAPILogRepository logRepository,
+            ITransferAPILogRepository logRepository,
             ITransferThirdPartyFactory thirdPartyFactory,
             ITransferBookResponseFactory responseFactory,
-            ISuppierReferenceValidator referenceValidator,
-            ISupplierLogRepository supplierLogRepository,
-            IBookingRepository bookingRepository)
+            ITransferSupplierLogRepository supplierLogRepository,
+            ITransferBookingRepository bookingRepository)
         {
             _transferDetailsFactory = Ensure.IsNotNull(transferDetailsFactory, nameof(transferDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
-            //_referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
-            //_supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
-            //_bookingRepository = Ensure.IsNotNull(bookingRepository, nameof(bookingRepository));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
+            _bookingRepository = Ensure.IsNotNull(bookingRepository, nameof(bookingRepository));
         }
 
         /// <inheritdoc/>
@@ -72,7 +66,6 @@
             try
             {
                 transferDetails = await _transferDetailsFactory.CreateAsync(bookRequest);
-                //_referenceValidator.ValidateBook(transferDetails, bookRequest);
 
                 if (transferDetails.Warnings.Any())
                 {
@@ -116,12 +109,12 @@
             }
             finally
             {
-                //int bookingId = await _bookingRepository.StoreBookingAsync(transferDetails, requestValid, success);
-                //transferDetails.BookingID = bookingId;
-                //bookRequest.BookingID = bookingId;
+                int transferBookingId = await _bookingRepository.StoreBookingAsync(transferDetails, requestValid, success);
+                transferDetails.TransferBookingID = transferBookingId;
+                bookRequest.BookingID = transferBookingId;
 
-                //await _logRepository.LogBookAsync(bookRequest, response!, success);
-                //await _supplierLogRepository.LogBookRequestsAsync(transferDetails);
+                await _logRepository.LogBookAsync(bookRequest, response!, success);
+                await _supplierLogRepository.LogBookRequestsAsync(transferDetails);
 
                 if (requestValid && !success)
                 {
@@ -129,7 +122,7 @@
                 }
                 else if (requestValid)
                 {
-                    //response.Warnings = null!;
+                    response.Warnings = null!;
                 }
             }
 

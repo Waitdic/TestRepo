@@ -306,7 +306,7 @@
                     token.DepartureDate = new DateTime(year, month, day);
                 }
 
-                await PopulateTransferTokenFieldsAsync(token, account);
+                await PopulateTransferTokenFieldsAsync(token);
             }
             catch (Exception ex)
             {
@@ -314,6 +314,22 @@
                 _logger.LogError(ex, "TransferTokenDecodeError");
             }
 
+            return token;
+        }
+
+        public async Task<Transfers.TransferToken?> PopulateTransferTokenAsync(string supplierBookingReference)
+        {
+            Transfers.TransferToken? token;
+
+            try
+            {
+                token = await _support.GetTransferTokenDetails(supplierBookingReference);
+            }
+            catch (Exception ex)
+            {
+                token = null;
+                _logger.LogError(ex, ex.Message);
+            }
             return token;
         }
 
@@ -350,7 +366,7 @@
             }
         }
 
-        private async Task PopulateTransferTokenFieldsAsync(Transfers.TransferToken transferToken, Account account)
+        private async Task PopulateTransferTokenFieldsAsync(Transfers.TransferToken transferToken)
         {
             try
             {

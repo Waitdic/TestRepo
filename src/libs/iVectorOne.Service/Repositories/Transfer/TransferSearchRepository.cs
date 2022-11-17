@@ -25,23 +25,20 @@
             _sql = Ensure.IsNotNull(sql, nameof(sql));
         }
 
-        public Task<LocationMapping> GetLocationMappingAsync(TransferSearchDetails searchDetails, Account account)
+        public async Task<LocationMapping> GetLocationMappingAsync(TransferSearchDetails searchDetails)
         {
-            //var results = await _sql.ReadSingleAsync<LocationMapping>(
-            //    "TransferSearch_GetLocationMapping",
-            //    new CommandSettings()
-            //        .IsStoredProcedure()
-            //        .WithParameters(new
-            //        {
-            //            departureLocationID = searchDetails.DepartureLocationId,
-            //            arrivalLocationID = searchDetails.ArrivalLocationId,
-            //            source = searchDetails.Source,
-            //            accountId = account.AccountID,
-            //        }));
+            var results = await _sql.ReadSingleAsync<LocationMapping>(
+                "Transfer_GetLocationMapping",
+                new CommandSettings()
+                    .IsStoredProcedure()
+                    .WithParameters(new
+                    {
+                        departureLocationID = searchDetails.DepartureLocationId,
+                        arrivalLocationID = searchDetails.ArrivalLocationId,
+                        source = searchDetails.Source,
+                    }));
 
-            var results = new LocationMapping();
-
-            return Task.FromResult(results);
+            return results;
         }
     }
 }

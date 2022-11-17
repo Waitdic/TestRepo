@@ -14,6 +14,16 @@
     public class TransferDetails : IThirdPartyAttributeSearch
     {
         /// <summary>
+        /// Gets or sets The booking reference
+        /// </summary>
+        public string BookingReference { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The booking identifier
+        /// </summary>
+        public int TransferBookingID { get; set; }
+
+        /// <summary>
         /// Gets or sets the account identifier
         /// </summary>
         public int AccountID { get; set; }
@@ -197,100 +207,16 @@
         public string ReturnNotes { get; set; } = string.Empty;
 
 
-
-
         ///// <summary>
         ///// Gets or sets The arrival date
         ///// </summary>
         //public DateTime ArrivalDate { get; set; }
 
 
-
-
-        ///// <summary>
-        ///// Gets or sets The booking reference
-        ///// </summary>
-        //public string BookingReference { get; set; } = string.Empty;
-
-
-
-        ///// <summary>
-        ///// Gets or sets The supplier identifier
-        ///// </summary>
-        //public int SupplierID { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets The source reference
-        ///// </summary>
-        //public string SourceReference { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets The source secondary reference
-        ///// </summary>
-        //public string SourceSecondaryReference { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets The supplier source reference
-        ///// </summary>
-        //public string SupplierSourceReference { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets The Third party ref1
-        ///// </summary>
-        //public string TPRef1 { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets The Third party ref2
-        ///// </summary>
-        //public string TPRef2 { get; set; } = string.Empty;
-
-
-
-        ///// <summary>
-        ///// Gets or sets The resort code
-        ///// </summary>
-        //public string ResortCode { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets The channel manager
-        ///// </summary>
-        //public string ChannelManager { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets v card
-        ///// </summary>
-        //public VirtualCardReturn GeneratedVirtualCard { get; set; } = new VirtualCardReturn();
-
-        ///// <summary>
-        ///// Get or sets the unique nationality code 
-        ///// </summary>
-        //public string ISONationalityCode { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets the boolean to decide whether opaque rates are supported.
-        ///// </summary>
-        //public bool OpaqueRates { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the override rate basis.
-        ///// </summary>
-        //public string OverrideRateBasis { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets the commission percentage.
-        ///// </summary>
-        //public decimal CommissionPercentage { get; set; }
-
-        ///// <summary>
-        ///// Gets or sets the boolean indicates commission percentage changing.
-        ///// </summary>
-        //public bool CommissionPercentageChange { get; set; } = false;
-
         ///// <summary>
         ///// Gets the duration.
         ///// </summary>
         //public int Duration => (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
-
 
 
         ///// <summary>

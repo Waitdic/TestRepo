@@ -34,8 +34,8 @@
         {
             var response = new Response()
             {
-                SupplierBookingReference = transferDetails.SupplierReference,
-                SupplierReference = transferDetails.ConfirmationReference,
+                SupplierBookingReference = transferDetails.ConfirmationReference,
+                SupplierReference = transferDetails.SupplierReference,
             };
 
             return response;

@@ -9,7 +9,7 @@
         public Validator()
         {
             RuleFor(x => x.SupplierBookingReference).NotEmpty().WithMessage(WarningMessages.InvalidSupplierBookingReference);
-            RuleFor(x => x.BookingToken).NotEmpty().WithMessage(WarningMessages.InvalidBookingToken);
+            //RuleFor(x => x.BookingToken).NotEmpty().WithMessage(WarningMessages.InvalidBookingToken);
         }
     }
 }

@@ -8,6 +8,7 @@
         public Validator()
         {
             RuleFor(x => x.BookingToken).NotEmpty().WithMessage(WarningMessages.InvalidBookingToken);
+            RuleFor(x => x.BookingReference).NotEmpty().WithMessage(WarningMessages.InvalidBookingReference);
             RuleFor(x => x.SupplierReference).NotEmpty().WithMessage(WarningMessages.InvalidSupplierBookingReference);
             RuleFor(x => x.LeadCustomer).NotEmpty().WithMessage(WarningMessages.InvalidLeadCustomer);
 

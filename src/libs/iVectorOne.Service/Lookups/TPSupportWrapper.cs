@@ -10,6 +10,7 @@
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
+    using iVectorOne.Models.Tokens.Transfer;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -238,6 +239,18 @@
             }
 
             return await _cache.GetOrCreateAsync("SupplierCache", cacheBuilder, _timeout);
+        }
+
+        public async Task<TransferToken?> GetTransferTokenDetails(string supplierBookingReference)
+        {
+            return await _sql.ReadSingleAsync<TransferToken>(
+                        "TransferBooking_GetTokenData",
+                        new CommandSettings()
+                        .IsStoredProcedure()
+                        .WithParameters(new
+                        {
+                            supplierBookingReference = supplierBookingReference
+                        }));
         }
 
         #endregion

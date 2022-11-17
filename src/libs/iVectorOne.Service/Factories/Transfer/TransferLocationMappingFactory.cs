@@ -38,7 +38,7 @@
 
         public async Task<LocationMapping> CreateAsync(TransferSearchDetails searchDetails, Account account)
         {
-            return await _searchRepository.GetLocationMappingAsync(searchDetails, account);
+            return await _searchRepository.GetLocationMappingAsync(searchDetails);
         }
     }
 }

@@ -16,6 +16,6 @@
         /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="account">The API Login</param>
         /// <returns>A list of resort splits</returns>
-        Task<LocationMapping> GetLocationMappingAsync(TransferSearchDetails searchDetails, Account account);
+        Task<LocationMapping> GetLocationMappingAsync(TransferSearchDetails searchDetails);
     }
 }

@@ -56,7 +56,7 @@
 
         /// <summary>Gets or sets the child ages</summary>
         //[JsonPropertyName("CA")]
-        public List<int> ChildAges { get; set; } = new();
+        //public List<int> ChildAges { get; set; } = new();
 
         /// <summary>Gets or sets the Local cost</summary>
         //[JsonPropertyName("AMT")]
@@ -65,5 +65,8 @@
         /// <summary>Gets or sets the supplier id</summary>
         [JsonPropertyName("SI")]
         public int SupplierID { get; set; }
+
+        [JsonPropertyName("TB")]
+        public int TransferBookingID { get; set; }
     }
 }

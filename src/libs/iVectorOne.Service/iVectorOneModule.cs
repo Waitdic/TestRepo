@@ -117,7 +117,10 @@
             services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
             services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
             services.AddSingleton<IBookingRepository, BookingRepository>();
+            services.AddSingleton<ITransferAPILogRepository, TransferAPILogRepository>();
             services.AddSingleton<ITransferSearchRepository, TransferSearchRepository>();
+            services.AddSingleton<ITransferSupplierLogRepository, TransferSupplierLogRepository>();
+            services.AddSingleton<ITransferBookingRepository, TransferBookingRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -168,6 +171,7 @@
             services.AddHandlerAndValidator<TransferSearch.Request, TransferSearch.Response, TransferSearch.Handler, TransferSearch.Validator>();
             services.AddHandlerAndValidator<TransferPrebook.Request, TransferPrebook.Response, TransferPrebook.Handler, TransferPrebook.Validator>();
             services.AddHandlerAndValidator<TransferBook.Request, TransferBook.Response, TransferBook.Handler, TransferBook.Validator>();
+            services.AddHandlerAndValidator<TransferPrecancel.Request, TransferPrecancel.Response, TransferPrecancel.Handler, TransferPrecancel.Validator>();
             services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
         }
 

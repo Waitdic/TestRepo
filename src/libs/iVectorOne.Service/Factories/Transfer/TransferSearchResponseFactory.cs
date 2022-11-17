@@ -67,7 +67,7 @@
                         Adults = searchDetails.Adults,
                         Children = searchDetails.Children,
                         Infants = searchDetails.Infants,
-                        ChildAges = searchDetails.ChildAges,
+                        //ChildAges = searchDetails.ChildAges,
                         SupplierID = await _support.SupplierIDLookupAsync(searchDetails.Source),
                     };
 

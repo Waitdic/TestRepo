@@ -9,8 +9,6 @@
         /// </summary>
         public string SupplierBookingReference { get; set; } = string.Empty;
 
-        public string BookingToken { get; set; } = string.Empty;
-
         /// <summary>Gets or sets the supplier reference.</summary>
         public string SupplierReference { get; set; } = string.Empty;
     }

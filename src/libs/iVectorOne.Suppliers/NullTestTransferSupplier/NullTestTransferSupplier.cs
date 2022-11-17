@@ -1,11 +1,17 @@
 ﻿namespace iVectorOne.Suppliers
 {
+    using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models.Property;
+    using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.Transfer;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.HotelBedsV2;
     using iVectorOne.Transfer;
+    using Newtonsoft.Json;
     using System;
+    using System.Net.Http;
     using System.Threading.Tasks;
 
     public partial class NullTestTransferSupplier : IThirdParty, ISingleSource
@@ -58,12 +64,29 @@
 
         Task<ThirdPartyCancellationResponse> IThirdParty.CancelBookingAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            var cancellationResponse = new ThirdPartyCancellationResponse();
+
+            try
+            {
+                cancellationResponse.Success = true;
+                cancellationResponse.CurrencyCode = transferDetails.ISOCurrencyCode;
+                cancellationResponse.Amount = transferDetails.LocalCost;
+                cancellationResponse.TPCancellationReference = "cancel_ref";
+            }
+            catch (Exception exception)
+            {
+                cancellationResponse.Success = false;
+                cancellationResponse.TPCancellationReference = "failed";
+
+                transferDetails.Warnings.AddNew("Cancellation Exception", exception.ToString());
+            }
+
+            return Task.FromResult(cancellationResponse);
         }
 
         Task<ThirdPartyCancellationFeeResult> IThirdParty.GetCancellationCostAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         bool IThirdParty.SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)

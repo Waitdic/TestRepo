@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Lookups
 {
+    using iVectorOne.Models.Tokens.Transfer;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -96,5 +97,14 @@
         /// The supplier identifier
         /// </returns>
         Task<int> SupplierIDLookupAsync(string supplierName);
+
+        /// <summary>
+        /// Gets the transfer token details for a transfer booking table.
+        /// </summary>
+        /// <param name="supplierBookingReference">The suplier booking reference.</param>
+        /// <returns>
+        /// The supplier identifier
+        /// </returns>
+        Task<TransferToken?> GetTransferTokenDetails(string supplierBookingReference);
     }
 }

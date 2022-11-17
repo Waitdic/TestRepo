@@ -159,7 +159,7 @@
                     SupplierReference = request.SupplierReference,
                     Source = transferToken.Source,
                     //LocalCost = localCost,
-                    //BookingReference = request.BookingReference,
+                    BookingReference = request.BookingReference,
                     DepartureDate = transferToken.DepartureDate,
                     //ISONationalityCode = request.NationalityID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
@@ -181,33 +181,28 @@
         {
             var transferDetails = new TransferDetails();
 
-            //var token = await _tokenService.DecodeTransferBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
-            //var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
+            var transferToken = await _tokenService.PopulateTransferTokenAsync(request.SupplierBookingReference);
 
-            //if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
-            //{
-            //    transferDetails = new TransferDetails()
-            //    {
-            //        AccountID = request.Account.AccountID,
-                    //SourceReference = request.SupplierBookingReference,
-                    //Source = token.Source,
-                    //SupplierID = propertyToken.SupplierID,
-                    //TPKey = propertyToken.TPKey,
-                    //ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
-                    //ThirdPartyConfigurations = request.Account.Configurations,
-                    //BookingID = token.BookingID,
-           //    };
+            if (transferToken is not null && !string.IsNullOrEmpty(transferToken.Source))
+            {
+                transferDetails = new TransferDetails()
+                {
+                    AccountID = request.Account.AccountID,
+                    ConfirmationReference = request.SupplierBookingReference,
+                    SupplierReference = request.SupplierReference,
+                    Source = transferToken.Source,
+                    SupplierID = transferToken.SupplierID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
+                    ThirdPartyConfigurations = request.Account.Configurations,
+                    TransferBookingID = transferToken.TransferBookingID,
+                };
 
-                //SetSupplierReference1(transferDetails, request.SupplierReference1);
-                //SetSupplierReference2(transferDetails, request.SupplierReference2);
-
-                // hack - editing param
-           //     request.BookingID = token.BookingID;
-            //}
-            //else
-           //{
-           //     transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidBookingToken);
-           // }
+                request.BookingID = transferToken.TransferBookingID;
+            }
+            else
+            {
+                transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidSupplierBookingReference);
+            }
 
             return transferDetails;
         }
@@ -217,32 +212,27 @@
         {
             var transferDetails = new TransferDetails();
 
-            var token = await _tokenService.DecodeBookTokenAsync(request.BookingToken, request.Account, request.SupplierBookingReference);
-            var propertyToken = await _tokenService.DecodePropertyTokenAsync(request.BookingToken, request.Account);
+            var transferToken = await _tokenService.PopulateTransferTokenAsync(request.SupplierBookingReference);
 
-            if (token is not null && propertyToken is not null && token.PropertyID != 0 && !string.IsNullOrEmpty(token.Source))
+            if (transferToken is not null && !string.IsNullOrEmpty(transferToken.Source))
             {
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
-                    //SourceReference = request.SupplierBookingReference,
-                    //Source = token.Source,
-                    //SupplierID = propertyToken.SupplierID,
-                    //TPKey = propertyToken.TPKey,
-                    //ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(propertyToken.ISOCurrencyID),
-                    //ThirdPartyConfigurations = request.Account.Configurations,
-                    //BookingID = token.BookingID,
+                    ConfirmationReference = request.SupplierBookingReference,
+                    SupplierReference = request.SupplierReference,
+                    Source = transferToken.Source,
+                    SupplierID = transferToken.SupplierID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
+                    ThirdPartyConfigurations = request.Account.Configurations,
+                    TransferBookingID = transferToken.TransferBookingID,
                 };
 
-                //SetSupplierReference1(transferDetails, request.SupplierReference1);
-                //SetSupplierReference2(transferDetails, request.SupplierReference2);
-
-                // hack - editing param
-                request.BookingID = token.BookingID;
+                request.BookingID = transferToken.TransferBookingID;
             }
             else
             {
-                transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidBookingToken);
+                transferDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidSupplierBookingReference);
             }
 
             return transferDetails;

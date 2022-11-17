@@ -11,6 +11,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.Helpers
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.Helpers;
+    using iVectorOne.Models.Property;
 
     //using MoreLinq;
 

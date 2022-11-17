@@ -19,7 +19,7 @@
         private readonly ITransferDetailsFactory _transferDetailsFactory;
 
         /// <summary>The log repository</summary>
-        private readonly IAPILogRepository _logRepository;
+        private readonly ITransferAPILogRepository _logRepository;
 
         /// <summary>Factory that creates the third party class</summary>
         private readonly ITransferThirdPartyFactory _thirdPartyFactory;
@@ -28,23 +28,26 @@
         private readonly ITransferPrebookResponseFactory _responseFactory;
 
         /// <summary>The supplier log repository</summary>
-       //// private readonly ISupplierLogRepository _supplierLogRepository;
+        private readonly ITransferSupplierLogRepository _supplierLogRepository;
 
         /// <summary>Initializes a new instance of the <see cref="PrebookService" /> class.</summary>
         /// <param name="transferDetailsFactory">The transfer details factory.</param>
         /// <param name="logRepository">Repository for saving pre book logs to the database</param>
         /// <param name="thirdPartyFactory">Factory that creates the correct third party class</param>
         /// <param name="responseFactory">The factory responsible for building the pre book response</param>
+        /// <param name="supplierLogRepository">Repository for saving supplier logs to the database</param>
         public PrebookService(
             ITransferDetailsFactory transferDetailsFactory,
-            IAPILogRepository logRepository,
+            ITransferAPILogRepository logRepository,
             ITransferThirdPartyFactory thirdPartyFactory,
-            ITransferPrebookResponseFactory responseFactory)
+            ITransferPrebookResponseFactory responseFactory,
+            ITransferSupplierLogRepository supplierLogRepository)
         {
             _transferDetailsFactory = Ensure.IsNotNull(transferDetailsFactory, nameof(transferDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
         }
 
         /// <inheritdoc/>
@@ -101,8 +104,8 @@
             }
             finally
             {
-                //await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
-                //await _supplierLogRepository.LogPrebookRequestsAsync(transferDetails);
+                await _logRepository.LogPrebookAsync(prebookRequest, response!, success);
+                await _supplierLogRepository.LogPrebookRequestsAsync(transferDetails);
 
                 if (requestValid && !success)
                 {

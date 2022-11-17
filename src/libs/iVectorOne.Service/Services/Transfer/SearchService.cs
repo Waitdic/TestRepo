@@ -133,7 +133,6 @@
         }
 
         private bool AccountHasSupplier(Request searchRequest)
-            => true;
-        //searchRequest.Account.Configurations.Where(c => c.Supplier == searchRequest.Supplier).Any();
+            => searchRequest.Account.Configurations.Where(c => c.Supplier.ToLower() == searchRequest.Supplier.ToLower()).Any();
     }
 }

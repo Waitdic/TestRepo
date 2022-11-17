@@ -25,58 +25,57 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            var tpLocation = GetThirdPartyLocations<int>(searchDetails, location);
+            (string, string) tpLocations = ((string, string))GetThirdPartyLocations(searchDetails, location);
+             bool returnResults = tpLocations.Item1.ToLower() == "airport1" && tpLocations.Item2.ToLower() == "resort1";
 
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return Task.FromResult(new List<Request>() { new Request() {
                 EndPoint = "",
-                ExtraInfo = searchDetails,
+                ExtraInfo = returnResults,
                 Method=RequestMethod.GET} });
-        }
-
-        public bool ResponseHasExceptions(Request request)
-        {
-            return false;
         }
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
             var transformedResults = new TransformedTransferResultCollection();
 
-            for (int i = 0; i < 3; i++)
+            foreach (var request in requests)
             {
-                var transfer = new TransformedTransferResult()
+                if (request.ExtraInfo != null && !(bool)(request.ExtraInfo))
                 {
-                    TPSessionID = $"TPSession_{i}",
-                    SupplierReference = $"SupplierRef_{i}",
-                    TransferVehicle = $"Car_{i}",
-                    ReturnTime = "15:00",
-                    VehicleCost = 150,
-                    AdultCost = 100,
-                    ChildCost = 50,
-                    CurrencyCode = "CAD",
-                    VehicleQuantity = 1,
-                    Cost = 200,
-                    BuyingChannelCost = 0,
-                    OutboundInformation = $"OutboundInformation_{i}",
-                    ReturnInformation = $"ReturnInformation_{i}",
-                    OutboundCost = 100,
-                    ReturnCost = 100,
-                    OutboundXML = "",
-                    ReturnXML = "",
-                    OutboundTransferMinutes = 55,
-                    ReturnTransferMinutes = 55
-                };
+                    return transformedResults;
+                }
 
-                transformedResults.TransformedResults.Add(transfer);
+                for (int i = 0; i < 3; i++)
+                {
+                    var transfer = new TransformedTransferResult()
+                    {
+                        TPSessionID = $"TPSession_{i}",
+                        SupplierReference = $"SupplierRef_{i}",
+                        TransferVehicle = $"Car_{i}",
+                        ReturnTime = "15:00",
+                        VehicleCost = 150,
+                        AdultCost = 100,
+                        ChildCost = 50,
+                        CurrencyCode = "GBP",
+                        VehicleQuantity = 1,
+                        Cost = 200,
+                        BuyingChannelCost = 0,
+                        OutboundInformation = $"OutboundInformation_{i}",
+                        ReturnInformation = $"ReturnInformation_{i}",
+                        OutboundCost = 100,
+                        ReturnCost = 100,
+                        OutboundXML = "",
+                        ReturnXML = "",
+                        OutboundTransferMinutes = 55,
+                        ReturnTransferMinutes = 55
+                    };
+
+                    transformedResults.TransformedResults.Add(transfer);
+                }
             }
 
             return transformedResults;
-        }
-
-        public Task<T> GetThirdPartyLocations<T>(TransferSearchDetails searchDetails, LocationMapping location)
-        {
-            return default;
         }
 
         public bool SearchRestrictions(TransferSearchDetails searchDetails)
@@ -84,5 +83,14 @@
             return false;
         }
 
+        public bool ResponseHasExceptions(Request request)
+        {
+            return false;
+        }
+
+        public object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location)
+        {
+            return (location.DepartureData, location.ArrivalData);
+        }
     }
 }

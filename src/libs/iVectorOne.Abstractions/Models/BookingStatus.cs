@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Models.Property.Booking
+﻿namespace iVectorOne.Models
 {
     public enum BookingStatus
     {
