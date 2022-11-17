@@ -1,6 +1,4 @@
-﻿using AutoMapper.QueryableExtensions;
-using FluentValidation;
-using iVectorOne_Admin_Api.Data;
+﻿using FluentValidation;
 using iVectorOne_Admin_Api.Features.Shared;
 
 namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
@@ -9,28 +7,23 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
     {
         private readonly AdminContext _context;
         private readonly IValidator<Request> _validator;
-        private readonly IMapper _mapper;
 
-        public Handler(AdminContext context, IValidator<Request> validator, IMapper mapper)
+        public Handler(AdminContext context, IValidator<Request> validator)
         {
             _context = context;
             _validator = validator;
-            _mapper = mapper;
         }
 
         public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
             var response = new ResponseBase();
 
-            var account = _context.Accounts.Where(a => a.AccountId == request.AccountID)
-                .Include(a => a.AccountSuppliers)
-                .ThenInclude(a => a.Supplier)
-                .AsNoTracking()
-                .FirstOrDefault();
+            //Check the tenant and account that was supplied are valid
+            var account = await AccountChecker.IsTenantAccountValid(_context, request.TenantId, request.AccountId, cancellationToken);
 
             if (account == null)
             {
-                response.NotFound("Account not found.");
+                response.NotFound();
                 return response;
             }
 
@@ -42,11 +35,21 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
                 return response;
             }
 
+            //Escape any single quote in the query so the query doesn't break
             var query = request.Query.Replace("'", "''");
-            var queryText = $"Portal_PropertySearch '{(query!.EndsWith('%') ? query : $"{query}%")}', {request.AccountID}";
-            var properties = await _context.Properties.FromSqlRaw(queryText).ToListAsync(cancellationToken: cancellationToken);
 
-            var propertyList = _mapper.Map<List<PropertyDto>>(properties);
+            //Append a % for wildcard match if not supplied
+            var queryText = $"Portal_PropertySearch '{(query!.EndsWith('%') ? query : $"{query}%")}', {request.AccountID}";
+            var properties = await _context.Properties
+                .FromSqlRaw(queryText)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken: cancellationToken);
+
+            var propertyList = properties.Select(x => new PropertyDto
+            {
+                PropertyId = x.CentralPropertyID,
+                Name = x.Name,
+            }).ToList();
 
             response.Ok(new ResponseModel() { Success = true, Properties = propertyList });
             return response;

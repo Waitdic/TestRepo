@@ -20,6 +20,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Suppliers.Info
             var configurations = new List<ConfigurationDTO>();
 
             var supplier = await _context.Suppliers
+                .AsNoTracking()
                 .Include(s => s.SupplierAttributes)
                 .ThenInclude(sa => sa.Attribute)
                 .FirstOrDefaultAsync(s => s.SupplierId == request.SupplierID, cancellationToken: cancellationToken);

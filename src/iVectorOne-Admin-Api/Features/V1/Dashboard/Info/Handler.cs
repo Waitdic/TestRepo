@@ -18,13 +18,8 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var response = new ResponseBase();
             Random random = new();
 
-            //Check the account that was supplied is valid
-            var account = await _context.Accounts
-                .Where(x => x.TenantId == request.TenantId && x.AccountId == request.AccountId)
-                .Include(x => x.AccountSuppliers)
-                .ThenInclude(x => x.Supplier)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+            //Check the tenant and account that was supplied are valid
+            var account = await AccountChecker.IsTenantAccountValid(_context, request.TenantId, request.AccountId, cancellationToken);
 
             if (account == null)
             {
@@ -128,17 +123,15 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                 }).ToList());
             }
 
-            var responseModel = new ResponseModel()
+            response.Ok(new ResponseModel()
             {
                 BookingsByHour = bookingsByHour,
                 SearchesByHour = searchesByHour,
                 Summary = dashboardSummary,
                 Supplier = supplierSummary,
-            };
+            });
 
-            response.Ok(responseModel);
             return response;
-
         }
     }
 
