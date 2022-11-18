@@ -352,10 +352,9 @@
 
                 if (marketingFee != null && marketingFee.Amount > 0)
                 {
-                    result.SellingPrice = inclusiveRate.Amount;
                     result.CommissionPercentage = marketingFee.Amount / billableInclusiveRate.Amount * 100;
                     result.Amount = billableInclusiveRate.Amount;
-                    result.PackageRateBasis = "Gross NetDown";
+                    result.PackageRateBasis = "Gross Margin";
                 }
                 else 
                 {
