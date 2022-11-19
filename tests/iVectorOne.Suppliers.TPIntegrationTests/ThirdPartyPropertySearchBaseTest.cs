@@ -8,6 +8,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
+    using iVectorOne.Models.Property;
 
     /// <summary>
     /// Third Party Property Search Base Test

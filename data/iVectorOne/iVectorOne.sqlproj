@@ -101,7 +101,4 @@
     <Build Include="dbo\Stored Procedures\TransferBooking_Upsert.sql" />
     <Build Include="dbo\Stored Procedures\TransferBooking_GetTokenData.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="iVectorOne.refactorlog" />
-  </ItemGroup>
 </Project>

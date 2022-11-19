@@ -9,6 +9,7 @@
     using iVectorOne.Repositories;
     using iVectorOne.Services;
     using iVectorOne.Lookups;
+    using iVectorOne.Models;
 
     public class PropertyPrebookResponseFactoryTests
     {

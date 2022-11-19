@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Models.Property
+﻿namespace iVectorOne.Models
 {
     using System.Collections.Generic;
 

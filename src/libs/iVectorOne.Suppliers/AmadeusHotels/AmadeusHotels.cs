@@ -20,6 +20,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
 
     public class AmadeusHotels : IThirdParty, ISingleSource
     {

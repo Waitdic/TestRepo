@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using iVectorOne.Models;
-    using iVectorOne.Models.Property;
     using iVectorOne.Models.Transfer;
 
     /// <summary>

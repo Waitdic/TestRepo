@@ -14,7 +14,7 @@
         /// </summary>
         /// <value>
         /// The departure location.
-        /// </value>
+        /// </value>DepartureL
         public int DepartureLocationID { get; set; }
 
         /// <summary>

@@ -3,6 +3,7 @@
     using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
+    using iVectorOne.Models;
     using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.Transfer;

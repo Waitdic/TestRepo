@@ -9,6 +9,8 @@
     using iVectorOne.Repositories;
     using iVectorOne.Services;
     using iVectorOne.Utility;
+    using iVectorOne.Models.Property;
+    using iVectorOne.Lookups;
 
     public class EncodedTokenServiceTests
     {
@@ -26,7 +28,7 @@
             // Act
             var encoded = tokenService.EncodeBookingToken(bookToken);
 
-            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user);
+            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user, "");
 
             //Assert
             Assert.Equal(bookToken.PropertyID, decodedToken.PropertyID);
@@ -202,7 +204,7 @@
             var user = new Account();
 
             // Act
-            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user);
+            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user, "");
 
             //Assert
             Assert.Equal("ExpediaRapid", decodedToken.Source);
@@ -251,10 +253,11 @@
             string source = "")
         {
             var mockRepo = new Mock<IPropertyContentRepository>();
+            var mockSupport = new Mock<ITPSupport>();
 
             if (centralPropertyId > 0)
             {
-                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Account>()))
+                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Account>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new PropertyContent()
                 {
                     CentralPropertyID = centralPropertyId,
@@ -265,7 +268,7 @@
 
             var converter = new Base92Converter();
             var mocklogwriter = new Mock<ILogger<EncodedTokenService>>();
-            return new EncodedTokenService(mockRepo.Object, converter, tokenValues, mocklogwriter.Object);
+            return new EncodedTokenService(mockRepo.Object, mockSupport.Object, converter, tokenValues, mocklogwriter.Object);
         }
     }
 }
