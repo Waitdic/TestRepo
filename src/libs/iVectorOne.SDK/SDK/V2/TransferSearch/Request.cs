@@ -10,6 +10,22 @@
     public record Request : RequestBase, IRequest<Response>
     {
         /// <summary>
+        /// Gets or sets the departure location identifier.
+        /// </summary>
+        /// <value>
+        /// The departure location.
+        /// </value>
+        public int DepartureLocationID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the arrival location identifier.
+        /// </summary>
+        /// <value>
+        /// The arrival location.
+        /// </value>
+        public int ArrivalLocationID { get; set; }
+
+        /// <summary>
         /// Gets or sets the departure date.
         /// </summary>
         /// <value>
@@ -26,6 +42,14 @@
         public string DepartureTime { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the one way flag.
+        /// </summary>
+        /// <value>
+        /// The one way flag.
+        /// </value>
+        public bool OneWay { get; set; }
+
+        /// <summary>
         /// Gets or sets the return date.
         /// </summary>
         /// <value>
@@ -40,22 +64,6 @@
         /// The return time.
         /// </value>
         public string ReturnTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the departure location identifier.
-        /// </summary>
-        /// <value>
-        /// The departure location.
-        /// </value>
-        public int DepartureLocationID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arrival location identifier.
-        /// </summary>
-        /// <value>
-        /// The arrival location.
-        /// </value>
-        public int ArrivalLocationID { get; set; }
 
         /// <summary>
         /// Gets or sets the adults.

@@ -15,6 +15,10 @@
     using iVectorOne.Repositories;
     using iVectorOne.Utility;
     using Microsoft.Extensions.Logging;
+    using System.Globalization;
+    using iVectorOne.Models.Tokens.Transfer;
+    using Intuitive.Helpers.Extensions;
+
 
     /// <summary>A Service for encrypting and decrypting base 92 tokens.</summary>
     public class EncodedTokenService : ITokenService
@@ -104,21 +108,37 @@
             return tokenString;
         }
 
-        public string EncodeTransferToken(Transfers.TransferToken transferToken)
+        public string EncodeTransferToken(TransferToken transferToken)
         {
+            (int, int) departureTime = GetTimeParts(transferToken.DepartureTime);
+            (int, int) returnTime = transferToken.OneWay ? (0,0) : GetTimeParts(transferToken.ReturnTime);
+                
             _tokenValues.Clear();
             _tokenValues.AddValue(TokenValueType.Year, transferToken.DepartureDate.Year - DateTime.Now.Year);
             _tokenValues.AddValue(TokenValueType.Month, transferToken.DepartureDate.Month);
             _tokenValues.AddValue(TokenValueType.Day, transferToken.DepartureDate.Day);
+            _tokenValues.AddValue(TokenValueType.Hour1, departureTime.Item1);
+            _tokenValues.AddValue(TokenValueType.Minute1, departureTime.Item2);
+            _tokenValues.AddValue(TokenValueType.Duration, transferToken.Duration);
+            _tokenValues.AddValue(TokenValueType.OneWay, transferToken.OneWay ? 1 : 0);
+            _tokenValues.AddValue(TokenValueType.Hour2, returnTime.Item1);
+            _tokenValues.AddValue(TokenValueType.Minute2, returnTime.Item2);
+
+            char[] timeBits = ConvertValuesToCharArray(_tokenValues.Values);
+
+            _tokenValues.Clear();
             _tokenValues.AddValue(TokenValueType.CurrencyID, transferToken.ISOCurrencyID);
             _tokenValues.AddValue(TokenValueType.Adults, transferToken.Adults);
             _tokenValues.AddValue(TokenValueType.Children, transferToken.Children);
             _tokenValues.AddValue(TokenValueType.Infants, transferToken.Infants);
             _tokenValues.AddValue(TokenValueType.SupplierID, transferToken.SupplierID);
 
-            char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
+            char[] detailsBits = ConvertValuesToCharArray(_tokenValues.Values);
 
-            string tokenString = new string(bits.Take(TokenLengths.Transfer).ToArray());
+            string timeTokenString = new string(timeBits.Take(TokenLengths.Transfer).ToArray());
+            string detailsTokenString = new string(detailsBits.Take(TokenLengths.Transfer).ToArray());
+
+            string tokenString = timeTokenString + detailsTokenString.TrimEnd();
 
             return tokenString;
         }
@@ -270,9 +290,9 @@
             return token;
         }
 
-        public async Task<Transfers.TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account)
+        public async Task<TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account)
         {
-            Transfers.TransferToken? token = null;
+            TransferToken? token = null;
 
             try
             {
@@ -280,21 +300,20 @@
                 _tokenValues.AddValue(TokenValueType.Year);
                 _tokenValues.AddValue(TokenValueType.Month);
                 _tokenValues.AddValue(TokenValueType.Day);
-                _tokenValues.AddValue(TokenValueType.CurrencyID);
-                _tokenValues.AddValue(TokenValueType.Adults);
-                _tokenValues.AddValue(TokenValueType.Children);
-                _tokenValues.AddValue(TokenValueType.Infants);
-                _tokenValues.AddValue(TokenValueType.SupplierID);
+                _tokenValues.AddValue(TokenValueType.Hour1);
+                _tokenValues.AddValue(TokenValueType.Minute1);
+                _tokenValues.AddValue(TokenValueType.Duration);
+                _tokenValues.AddValue(TokenValueType.OneWay);
+                _tokenValues.AddValue(TokenValueType.Hour2);
+                _tokenValues.AddValue(TokenValueType.Minute2);
 
-                GetTokenValues(tokenString);
+                GetTokenValues(tokenString.Substring(0, 8));
 
-                token = new Transfers.TransferToken()
+                //TODO refactor this mess when token details settled
+                token = new TransferToken()
                 {
-                    ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID),
-                    Adults = _tokenValues.GetValue(TokenValueType.Adults),
-                    Children = _tokenValues.GetValue(TokenValueType.Children),
-                    Infants = _tokenValues.GetValue(TokenValueType.Infants),
-                    SupplierID = _tokenValues.GetValue(TokenValueType.SupplierID),
+                    Duration = _tokenValues.GetValue(TokenValueType.Duration),
+                    OneWay = _tokenValues.GetValue(TokenValueType.OneWay) == 1 ? true : false,
                 };
 
                 int day = _tokenValues.GetValue(TokenValueType.Day);
@@ -305,6 +324,34 @@
                 {
                     token.DepartureDate = new DateTime(year, month, day);
                 }
+
+                int hour = _tokenValues.GetValue(TokenValueType.Hour1);
+                int minute = _tokenValues.GetValue(TokenValueType.Minute1);
+
+                token.DepartureTime = GetTimeFromTokenValues(hour, minute);
+
+                if (!token.OneWay)
+                {
+                    hour = _tokenValues.GetValue(TokenValueType.Hour2);
+                    minute = _tokenValues.GetValue(TokenValueType.Minute2);
+
+                    token.ReturnTime = GetTimeFromTokenValues(hour, minute);
+                }
+
+                _tokenValues.Clear();
+                _tokenValues.AddValue(TokenValueType.CurrencyID);
+                _tokenValues.AddValue(TokenValueType.Adults);
+                _tokenValues.AddValue(TokenValueType.Children);
+                _tokenValues.AddValue(TokenValueType.Infants);
+                _tokenValues.AddValue(TokenValueType.SupplierID);
+
+                GetTokenValues(new string(tokenString.Substring(8, tokenString.Length - 8).ToArray()));
+
+                token.ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID);
+                token.Adults = _tokenValues.GetValue(TokenValueType.Adults);
+                token.Children = _tokenValues.GetValue(TokenValueType.Children);
+                token.Infants = _tokenValues.GetValue(TokenValueType.Infants);
+                token.SupplierID = _tokenValues.GetValue(TokenValueType.SupplierID);
 
                 await PopulateTransferTokenFieldsAsync(token);
             }
@@ -511,6 +558,21 @@
             }
 
             return localCosts;
+        }
+
+        private (int, int) GetTimeParts(string time)
+        {
+            if (DateTime.TryParseExact(time, "t", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+            {
+                return (result.Hour, result.Minute);
+            }
+
+            return default;
+        }
+
+        private string GetTimeFromTokenValues(int hour, int minute)
+        {
+            return new DateTime(2022, 1, 1, hour, minute, 0).ToString("HH:mm").ToString();
         }
     }
 }

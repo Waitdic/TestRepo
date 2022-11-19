@@ -14,6 +14,7 @@
     using System;
     using iVectorOne.SDK.V2;
     using iVectorOne.Search.Models;
+    using iVector.Search.Property;
 
     /// <summary>
     /// A factory that creates transfer pre book responses using the provided transfer details
@@ -63,11 +64,15 @@
             var transferToken = new TransferToken()
             {
                 DepartureDate = transferDetails.DepartureDate,
+                DepartureTime = transferDetails.DepartureTime,
+                Duration = transferDetails.Duration,
+                OneWay = transferDetails.OneWay,
+                ReturnTime = transferDetails.ReturnTime,
                 ISOCurrencyID = isoCurrencyId,
                 Adults = transferDetails.Adults,
                 Children = transferDetails.Children,
                 Infants = transferDetails.Infants,
-                SupplierID = transferDetails.SupplierID,
+                SupplierID = await _support.SupplierIDLookupAsync(transferDetails.Source),
             };
 
             var response = new Response()

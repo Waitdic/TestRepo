@@ -63,6 +63,10 @@
                     var transferToken = new TransferToken()
                     {
                         DepartureDate = searchDetails.DepartureDate,
+                        DepartureTime = searchDetails.DepartureTime,
+                        Duration = searchDetails.Duration,
+                        OneWay = searchDetails.OneWay,
+                        ReturnTime = searchDetails.ReturnTime,
                         ISOCurrencyID = result.CurrencyID,
                         Adults = searchDetails.Adults,
                         Children = searchDetails.Children,

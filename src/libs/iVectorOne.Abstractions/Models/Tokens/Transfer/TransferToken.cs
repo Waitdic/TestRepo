@@ -14,21 +14,24 @@
 
         /// <summary>Gets or sets the departure date</summary>
         /// <value>The departure date.</value>
-        [JsonProperty("D")]
+        [JsonProperty("DD")]
         public DateTime DepartureDate { get; set; }
 
-        ///// <summary>Gets or sets the departure time</summary>
-        ///// <value>The departure time.</value>
-        //[JsonProperty("DT")]
-        //public string DepartureTime { get; set; } = string.Empty;
+        /// <summary>Gets or sets the departure time</summary>
+        /// <value>The departure time.</value>
+        [JsonProperty("DT")]
+        public string DepartureTime { get; set; } = string.Empty;
 
-        //[JsonPropertyName("D")]
-        //public int Duration { get; set; }
+        [JsonPropertyName("D")]
+        public int Duration { get; set; }
 
-        ///// <summary>Gets or sets the return time</summary>
-        ///// <value>The return time.</value>
-        //[JsonProperty("RT")]
-        //public string ReturnTime { get; set; } = string.Empty;
+        [JsonPropertyName("O")]
+        public bool OneWay { get; set; }
+
+        /// <summary>Gets or sets the return time</summary>
+        /// <value>The return time.</value>
+        [JsonProperty("RT")]
+        public string ReturnTime { get; set; } = string.Empty;
 
         /// <summary>Gets or sets the departure location id</summary>
         //[JsonPropertyName("DL")]

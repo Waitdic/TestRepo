@@ -22,22 +22,15 @@
         /// </summary>
         public int AccountID { get; set; }
 
-        /// <summary>Gets or sets the settings.</summary>
-        public Settings Settings { get; set; } = new();
-
-        /// <summary>Gets or sets the third party configurations.</summary>
-        public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
-
-        /// <summary>Gets or sets the type of the logging.</summary>
-        public string LoggingType { get; set; } = "None";
-
         /// <summary>
-        /// Gets or sets The email logs to address
+        /// Gets or sets the departure location identifier
         /// </summary>
-        public string EmailLogsToAddress { get; set; } = string.Empty;
+        public int DepartureLocationId { get; set; }
 
-
-
+        // <summary>
+        /// Gets or sets the arrival location identifier
+        /// </summary>
+        public int ArrivalLocationId { get; set; }
 
         /// <summary>
         /// Gets or sets the departure date.
@@ -53,59 +46,6 @@
         public string DepartureTime { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the departure location identifier
-        /// </summary>
-        public int DepartureLocationId { get; set; }
-
-        // <summary>
-        /// Gets or sets the arrival location identifier
-        /// </summary>
-        public int ArrivalLocationId { get; set; }
-
-        /// <summary>
-        /// Get or sets the ISO currency code
-        /// </summary>
-        public string ISOCurrencyCode { get; set; } = string.Empty;
-
-
-
-
-        /// <summary>
-        /// Gets or sets The results
-        /// </summary>
-        public TransferSearchResults Results { get; set; } = new TransferSearchResults();
-        ///public List<TransformedTransferResult> Results { get; set; } = new List<TransformedTransferResult>();
-
-        public string Source { get; set; } = string.Empty;
-
-        List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-
-        
-
-
-        /// <summary>
-        /// Gets or sets the session identifier.
-        /// </summary>
-        /// <value>
-        /// The session identifier.
-        /// </value>
-        //public string SessionID { get; set; } = string.Empty;
-
-
-        
-
-        /// <summary>
-        /// Gets or sets The departure secondary time
-        /// </summary>
-        //public string DepartureSecondaryTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The departure flight code
-        /// </summary>
-        public string DepartureFlightCode { get; set; } = string.Empty;
-
-        /// <summary>
         /// Gets or sets a value indicating whether the transfer is one way
         /// </summary>
         public bool OneWay { get; set; }
@@ -119,16 +59,6 @@
         /// Gets or sets The return time
         /// </summary>
         public string ReturnTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The return secondary time
-        /// </summary>
-        public string ReturnSecondaryTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The return flight code
-        /// </summary>
-        public string ReturnFlightCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the number of adults.
@@ -147,14 +77,6 @@
         public int Children { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of youths.
-        /// </summary>
-        /// <value>
-        /// The number of youths.
-        /// </value>
-        ///public int Youths { get; set; }
-
-        /// <summary>
         /// Gets or sets the number of infants.
         /// </summary>
         /// <value>
@@ -168,12 +90,77 @@
         public List<int> ChildAges { get; set; } = new List<int>();
 
         /// <summary>
+        /// Get or sets the ISO currency code
+        /// </summary>
+        public string ISOCurrencyCode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The results
+        /// </summary>
+        public TransferSearchResults Results { get; set; } = new TransferSearchResults();
+        ///public List<TransformedTransferResult> Results { get; set; } = new List<TransformedTransferResult>();
+
+        public string Source { get; set; } = string.Empty;
+
+        List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        /// <summary>
+        /// Gets the duration.
+        /// </summary>
+        /// <value>
+        /// The duration. Zero for one way
+        /// </value>
+        public int Duration => OneWay ? 0 : (ReturnDate - DepartureDate).Days;
+
+
+        /// <summary>
+        /// Gets or sets the session identifier.
+        /// </summary>
+        /// <value>
+        /// The session identifier.
+        /// </value>
+        //public string SessionID { get; set; } = string.Empty;
+
+
+
+
+        /// <summary>
+        /// Gets or sets The departure secondary time
+        /// </summary>
+        //public string DepartureSecondaryTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The departure flight code
+        /// </summary>
+        //public string DepartureFlightCode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The return secondary time
+        /// </summary>
+        //public string ReturnSecondaryTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets The return flight code
+        /// </summary>
+        //public string ReturnFlightCode { get; set; } = string.Empty;
+
+
+
+        /// <summary>
+        /// Gets or sets the number of youths.
+        /// </summary>
+        /// <value>
+        /// The number of youths.
+        /// </value>
+        ///public int Youths { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of seniors.
         /// </summary>
         /// <value>
         /// The number of seniors.
         /// </value>
-        public int Seniors { get; set; }
+        //public int Seniors { get; set; }
 
         /// <summary>
         /// Gets or sets The supplier identifier
@@ -196,7 +183,7 @@
         /// <summary>
         /// Gets or sets the IATA code
         /// </summary>
-        public string IATACode { get; set; } = string.Empty;
+        //public string IATACode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the arrival resort identifier
@@ -223,14 +210,27 @@
         /// </value>
         public bool StoreSearchLogging { get; set; } = false;
 
-
         /// <summary>
         /// Gets or sets The warnings
         /// </summary>
         public ArrayList Warnings { get; set; } = new ArrayList();
 
+        /// <summary>Gets or sets the settings.</summary>
+        public Settings Settings { get; set; } = new();
 
-        
-        
+        /// <summary>Gets or sets the third party configurations.</summary>
+        public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
+
+        /// <summary>Gets or sets the type of the logging.</summary>
+        public string LoggingType { get; set; } = "None";
+
+        /// <summary>
+        /// Gets or sets The email logs to address
+        /// </summary>
+        public string EmailLogsToAddress { get; set; } = string.Empty;
+
+
+
+
     }
 }

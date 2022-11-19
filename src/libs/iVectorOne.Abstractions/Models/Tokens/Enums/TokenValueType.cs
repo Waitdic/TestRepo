@@ -7,6 +7,10 @@
         Month,
         Day,
         Duration,
+        Hour1,
+        Minute1,
+        Hour2,
+        Minute2,
         Adults,
         Children,
         Infants,
@@ -26,6 +30,7 @@
         MealBasisID3,
         LocalCost1,
         LocalCost2, 
-        SupplierID
+        SupplierID, 
+        OneWay
     }
 }

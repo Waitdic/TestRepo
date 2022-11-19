@@ -29,19 +29,40 @@
         public int AccountID { get; set; }
 
         /// <summary>
-        /// Gets or sets the third party session id.
+        /// Gets or sets the departure date.
         /// </summary>
-        //public string TPSessionID { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The departure date
-        /// </summary>
+        /// <value>
+        /// The departure date.
+        /// </value>
         public DateTime DepartureDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the one way flag.
+        /// Gets or sets The departure time
+        /// </summary>
+        public string DepartureTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the transfer is one way
         /// </summary>
         public bool OneWay { get; set; }
+
+        /// <summary>
+        /// Gets or sets The return date
+        /// </summary>
+        public DateTime ReturnDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets The return time
+        /// </summary>
+        public string ReturnTime { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the duration.
+        /// </summary>
+        /// <value>
+        /// The duration. Zero for one way
+        /// </value>
+        public int Duration => OneWay ? 0 : (ReturnDate - DepartureDate).Days;
 
         /// <summary>
         /// Gets or sets The ISO currency code
@@ -206,6 +227,15 @@
         ///// </summary>
         public string ReturnNotes { get; set; } = string.Empty;
 
+        ///// <summary>
+        ///// Gets or sets the outbound details
+        ///// </summary>
+        public JourneyDetails OutboundDetails { get; set; } = new();
+
+        ///// <summary>
+        ///// Gets or sets the return details
+        ///// </summary>
+        public JourneyDetails ReturnDetails { get; set; } = new();
 
         ///// <summary>
         ///// Gets or sets The arrival date

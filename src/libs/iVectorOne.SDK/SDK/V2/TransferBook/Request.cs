@@ -30,6 +30,16 @@
         public List<GuestDetail> GuestDetails { get; set; } = new();
 
         /// <summary>
+        /// Gets or sets the outbound details.
+        /// </summary>
+        public JourneyDetails OutboundDetails { get; set; } = new();
+
+        /// <summary>
+        /// Gets or sets the return details.
+        /// </summary>
+        public JourneyDetails ReturnDetails { get; set; } = new();
+
+        /// <summary>
         /// Get or sets the unique nationality identifier 
         /// </summary>
         ///public string NationalityID { get; set; } = string.Empty;

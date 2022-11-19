@@ -24,7 +24,7 @@
                 DepartureLocationId = searchRequest.DepartureLocationID,
                 ArrivalLocationId = searchRequest.ArrivalLocationID,
 
-                OneWay = !searchRequest.ReturnDate.HasValue,
+                OneWay = searchRequest.OneWay,
 
                 Adults = searchRequest.Adults,
                 Children = searchRequest.Children,

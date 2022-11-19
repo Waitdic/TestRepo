@@ -57,6 +57,8 @@
                 {
                     AccountID = request.Account.AccountID,
                     DepartureDate = transferToken.DepartureDate,
+                    DepartureTime = transferToken.DepartureTime,
+                    OneWay = transferToken.OneWay,
                     Source = transferToken.Source,
                     SupplierID = transferToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
@@ -67,6 +69,12 @@
                     //LocalCost = 123M, 
                     SupplierReference= request.SupplierReference,
                 };
+
+                if (!transferDetails.OneWay)
+                {
+                    transferDetails.ReturnDate = transferDetails.DepartureDate.AddDays(transferToken.Duration);
+                    transferDetails.ReturnTime = transferToken.ReturnTime;
+                }
             }
 
             Validate(transferToken!, transferDetails);
@@ -138,10 +146,23 @@
 
             if (transferToken is not null)
             {
+
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
+                    DepartureDate = transferToken.DepartureDate,
+                    DepartureTime = transferToken.DepartureTime,
+                    OneWay = transferToken.OneWay,
+                    Source = transferToken.Source,
                     SupplierID = transferToken.SupplierID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
+                    ThirdPartyConfigurations = request.Account.Configurations,
+                    Adults = transferToken.Adults,
+                    Children = transferToken.Children,
+                    Infants = transferToken.Infants,
+                    SupplierReference = request.SupplierReference,
+                    BookingReference = request.BookingReference,
+
                     LeadGuestTitle = leadCustomer.CustomerTitle,
                     LeadGuestFirstName = leadCustomer.CustomerFirstName,
                     LeadGuestLastName = leadCustomer.CustomerLastName,
@@ -156,19 +177,16 @@
                     LeadGuestMobile = leadCustomer.CustomerMobile,
                     LeadGuestEmail = leadCustomer.CustomerEmail,
                     LeadGuestPassportNumber = leadCustomer.PassportNumber,
-                    SupplierReference = request.SupplierReference,
-                    Source = transferToken.Source,
-                    //LocalCost = localCost,
-                    BookingReference = request.BookingReference,
-                    DepartureDate = transferToken.DepartureDate,
-                    //ISONationalityCode = request.NationalityID,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
-                    //SellingCountry = request.SellingCountry,
-                    ThirdPartyConfigurations = request.Account.Configurations,
-
                 };
 
+                if (!transferDetails.OneWay)
+                {
+                    transferDetails.ReturnDate = transferDetails.DepartureDate.AddDays(transferToken.Duration);
+                    transferDetails.ReturnTime = transferToken.ReturnTime;
+                }
+
                 SetupGuests(request, transferToken, transferDetails);
+                SetupJourneyDetails(request, transferDetails);
             }
 
             this.Validate(transferToken!, transferDetails);
@@ -281,6 +299,25 @@
             {
                 transferDetails.Warnings.AddNew("Validate failure", $"The guest details do not match what was searched for");
             }
+        }
+
+        private void SetupJourneyDetails(Book.Request request, TransferDetails transferDetails)
+        {
+            var outboundJourney = new JourneyDetails();
+            var returnJourney = new JourneyDetails();
+
+            if (request.OutboundDetails != null)
+            {
+                outboundJourney.FlightCode = request.OutboundDetails.FlightCode;
+            }
+
+            if (request.ReturnDetails != null)
+            {
+                returnJourney.FlightCode = request.ReturnDetails.FlightCode;
+            }
+
+            transferDetails.OutboundDetails = outboundJourney;
+            transferDetails.ReturnDetails = returnJourney;
         }
     }
 }
