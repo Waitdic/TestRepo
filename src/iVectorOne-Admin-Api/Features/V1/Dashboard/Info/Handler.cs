@@ -18,19 +18,16 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var response = new ResponseBase();
             Random random = new();
 
-            //Check the account that was supplied is valid
-            var account = await _context.Accounts
-                .Where(x => x.TenantId == request.TenantId && x.AccountId == request.AccountId)
-                .Include(x => x.AccountSuppliers)
-                .ThenInclude(x => x.Supplier)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
+            //Check the tenant and account that was supplied are valid
+            var account = await AccountChecker.IsTenantAccountValid(_context, request.TenantId, request.AccountId, cancellationToken);
 
             if (account == null)
             {
                 response.NotFound();
                 return response;
             }
+
+            var currentHour = DateTime.Now.Hour;
 
             var queryText = $"Portal_SearchesByHour {request.AccountId}";
             var searchesByHourData = await _context.SearchesByHour
@@ -43,7 +40,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var searchesByHour = searchesByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentWeekTotal += x.CurrentWeek,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : null,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
@@ -58,7 +55,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
             var bookingsByHour = bookingsByHourData.Select(x => new Node
             {
                 Time = x.Hour,
-                CurrentTotal = currentWeekTotal += x.CurrentWeek,
+                CurrentTotal = currentHour >= x.Hour ? currentWeekTotal += x.CurrentWeek : null,
                 PreviousTotal = previousWeekTotal += x.PreviousWeek,
             }).ToList();
 
@@ -124,19 +121,17 @@ namespace iVectorOne_Admin_Api.Features.V1.Dashboard.Info
                     },
                     S2B = x.S2B.ToString("n0")
                 }).ToList());
-             }
+            }
 
-            var responseModel = new ResponseModel()
+            response.Ok(new ResponseModel()
             {
                 BookingsByHour = bookingsByHour,
                 SearchesByHour = searchesByHour,
                 Summary = dashboardSummary,
                 Supplier = supplierSummary,
-            };
+            });
 
-            response.Ok(responseModel);
             return response;
-
         }
     }
 

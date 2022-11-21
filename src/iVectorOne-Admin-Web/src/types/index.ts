@@ -229,7 +229,13 @@ export interface LogEntries {
   responseTime: number;
   supplierBookingReference: string;
   leadGuestName: string;
-  apiLogId?: number;
+  id?: number;
+  supplierApiLogId?: number;
+}
+
+export interface LogDetails {
+  requestLog: string;
+  responseLog: string;
 }
 
 //* App State

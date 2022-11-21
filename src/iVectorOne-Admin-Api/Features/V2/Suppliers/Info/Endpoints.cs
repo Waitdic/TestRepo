@@ -6,31 +6,31 @@ namespace iVectorOne_Admin_Api.Features.V2.Suppliers.Info
 {
     public static class Endpoints
     {
-        public static IEndpointRouteBuilder MapSupplierInfoV2Endpoint(this IEndpointRouteBuilder endpoints)
-        {
-            _ = endpoints.MapGet("v2/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, int supplierid) =>
-            {
-                if (httpContext.User.Identity is not TenantIdentity identity)
-                {
-                    return Results.Challenge();
-                }
+        //public static IEndpointRouteBuilder MapSupplierInfoV2Endpoint(this IEndpointRouteBuilder endpoints)
+        //{
+        //    _ = endpoints.MapGet("v2/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, int supplierid) =>
+        //    {
+        //        if (httpContext.User.Identity is not TenantIdentity identity)
+        //        {
+        //            return Results.Challenge();
+        //        }
 
-                SupplierAttributeResponse response = null!;
+        //        Response response = null!;
 
-                try
-                {
-                    var request = new SupplierAttributeRequest() { SupplierID = supplierid };
-                    response = await mediator.Send(request);
-                }
-                catch (Exception e)
-                {
-                    return Results.Problem(e.ToString());
-                }
+        //        try
+        //        {
+        //            var request = new Request() { SupplierID = supplierid };
+        //            response = await mediator.Send(request);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            return Results.Problem(e.ToString());
+        //        }
 
-                return Results.Ok(response);
-            }).RequireAuthorization();
+        //        return Results.Ok(response);
+        //    }).RequireAuthorization();
 
-            return endpoints;
-        }
+        //    return endpoints;
+        //}
     }
 }

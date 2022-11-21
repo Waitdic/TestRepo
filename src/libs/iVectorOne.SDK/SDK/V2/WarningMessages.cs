@@ -24,7 +24,7 @@
         public const string ArrivalDateInThePast = "An Arrival Date on or after today must be specified";
 
         /// <summary>
-        /// An Arrival Date on or after today must be specified
+        /// An Arrival Date not too far in the future must be specified
         /// </summary>
         public const string ArrivalDateToFarInTheFuture = "The arrival date can not be more than 3 years in the future";
 

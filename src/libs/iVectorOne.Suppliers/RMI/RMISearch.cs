@@ -16,6 +16,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using System;
 
     public class RMISearch : IThirdPartySearch, ISingleSource
     {
@@ -100,14 +101,28 @@
                             PropertyRoomBookingID = roomType.RoomsAppliesTo.RoomRequest,
                             SpecialOffer = string.Join(",", roomType.SpecialOffers.Select(offer => offer.Name)),
                             Discount = roomType.SpecialOffers.Sum(offer => offer.Total.ToSafeDecimal()),
-                            MasterID = propertyResult.PropertyId.ToSafeInt()
+                            MasterID = propertyResult.PropertyId.ToSafeInt(),
+                            NonRefundableRates = IsNonRefundable(roomType)
                         };
                     });
                 });
             }).ToList();
-            transformedResults.TransformedResults.AddRange(xmls);
+            transformedResults.TransformedResults.AddRange(xmls);            
 
             return transformedResults;
+        }
+
+        private bool IsNonRefundable(RoomType roomType)
+        {
+            var fullFeeForNow = roomType.CancellationPolicies.Any(canx =>
+            {
+                DateTime startDate = canx.CancelBy.ToSafeDate();
+                DateTime now = DateTime.Now;
+                decimal fee = canx.Penalty.ToSafeDecimal();
+                return startDate < now && fee >= roomType.Total;
+            });
+
+            return fullFeeForNow;
         }
 
         public string BuildSearchXml(SearchDetails searchDetails, List<Hotel> hotels, int mealBasisId)

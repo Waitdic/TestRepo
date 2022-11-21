@@ -52,11 +52,12 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     selected?: { id: number; name: string };
   }>({
     options: [
-      { id: 1, name: 'Refresh now' },
+      { id: 1, name: 'Manual' },
       { id: 2, name: '5 min' },
-      { id: 3, name: '30 min' },
-      { id: 4, name: '60 min' },
+      { id: 3, name: '15 min' },
+      { id: 4, name: '30 min' },
     ],
+    selected: { id: 1, name: 'Manual' },
   });
 
   const activeTenant = useMemo(
@@ -237,21 +238,14 @@ const Dashboard: React.FC<Props> = ({ error }) => {
 
     let interval = 0;
     switch (refreshTimer.selected?.id) {
-      case 1:
-        setRefreshTimer({
-          ...refreshTimer,
-          selected: undefined,
-        });
-        fetchPageData();
-        break;
       case 2:
         interval = 5 * 60 * 1000;
         break;
       case 3:
-        interval = 30 * 60 * 1000;
+        interval = 15 * 60 * 1000;
         break;
       case 4:
-        interval = 60 * 60 * 1000;
+        interval = 30 * 60 * 1000;
         break;
       default:
         break;
@@ -263,10 +257,6 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     }, interval);
 
     return () => {
-      setRefreshTimer({
-        ...refreshTimer,
-        selected: refreshTimer.options[refreshTimer.options.length - 1],
-      });
       clearInterval(intervalId);
     };
   }, [refreshTimer?.selected]);
@@ -299,14 +289,19 @@ const Dashboard: React.FC<Props> = ({ error }) => {
             )}
           </div>
           {summaryTableData && (
-            <div>
-              <Select
-                id='refreshTimer'
-                name='refreshTimer'
-                options={refreshTimer.options}
-                labelText='Refresh'
-                onUncontrolledChange={handleChangeRefreshTimer}
-              />
+            <div className='flex items-end gap-4'>
+              <div className='flex-1'>
+                <Select
+                  id='refreshTimer'
+                  name='refreshTimer'
+                  options={refreshTimer.options}
+                  labelText='Auto Refresh'
+                  onUncontrolledChange={handleChangeRefreshTimer}
+                />
+              </div>
+              {refreshTimer.selected?.id === 1 && (
+                <Button text='Refresh Now' onClick={fetchPageData} />
+              )}
             </div>
           )}
         </div>
