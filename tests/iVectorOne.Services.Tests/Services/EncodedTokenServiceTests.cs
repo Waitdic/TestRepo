@@ -26,7 +26,7 @@
             // Act
             var encoded = tokenService.EncodeBookingToken(bookToken);
 
-            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user);
+            var decodedToken = await tokenService.DecodeBookTokenAsync(encoded, user, string.Empty);
 
             //Assert
             Assert.Equal(bookToken.PropertyID, decodedToken.PropertyID);
@@ -202,7 +202,7 @@
             var user = new Account();
 
             // Act
-            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user);
+            var decodedToken = await tokenService.DecodeBookTokenAsync("0Pc]I0!", user, string.Empty);
 
             //Assert
             Assert.Equal("ExpediaRapid", decodedToken.Source);
@@ -254,7 +254,7 @@
 
             if (centralPropertyId > 0)
             {
-                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Account>()))
+                mockRepo.Setup(r => r.GetContentforPropertyAsync(It.IsAny<int>(), It.IsAny<Account>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(new PropertyContent()
                 {
                     CentralPropertyID = centralPropertyId,
