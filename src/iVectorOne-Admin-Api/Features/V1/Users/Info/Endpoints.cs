@@ -9,7 +9,7 @@
                 var response = await mediator.Send(new Request { Key = key });
 
                 return response.Result;
-            }).RequireAuthorization();
+            }).AllowAnonymous();
 
             return endpoints;
         }
