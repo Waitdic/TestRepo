@@ -65,7 +65,7 @@
             return Helper.AreSameWebRequests(mockRequests, builtRequests);
         }
 
-        private bool ValidWhlTransformResponse(string response, string mockResponse, SearchDetails searchDetails, object extraInfo, List<ResortSplit> resortSplits)
+        private new bool ValidTransformResponse(string response, string mockResponse, SearchDetails searchDetails, object extraInfo, List<ResortSplit> resortSplits)
         {
             // Arrange 
             var request = CreateResponseWebRequest(response, searchDetails, extraInfo);
@@ -105,7 +105,7 @@
         public void TransformResponseTest()
         {
             // Assert 
-            Assert.True(ValidWhlTransformResponse(NetstormingRes.Response, NetstormingRes.TransformedResponse, SearchDetailsList[0], null!, Helper.CreateResortSplits(Supplier, new List<Hotel>(), string.Empty)));
+            Assert.True(ValidTransformResponse(NetstormingRes.Response, NetstormingRes.TransformedResponse, SearchDetailsList[0], null!, Helper.CreateResortSplits(Supplier, new List<Hotel>(), string.Empty)));
         }
     }
 }
