@@ -37,12 +37,6 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
                 return response;
             }
 
-            //if (results.Count < 3)
-            //{
-            //    response.NotReady();
-            //    return response;
-            //}
-
             //Delete the response once it's been processed
             foreach (var result in results)
             {
@@ -59,7 +53,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
             {
                 response.Ok(new ResponseModel { Success = true, Message = $"Failed with error: {string.Join(",", results.Where(x => x.Information.Length != 0).ToList())}" });
                 return response;
-            } 
+            }
         }
     }
 }

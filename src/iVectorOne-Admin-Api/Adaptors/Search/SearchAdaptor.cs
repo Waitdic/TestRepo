@@ -57,6 +57,7 @@ namespace iVectorOne_Admin_Api.Adaptors.Search
                     else
                     {
                         response.SearchStatus = Response.SearchStatusEnum.NoResults;
+                        response.Information = "No results";
                     }
                 }
                 else
