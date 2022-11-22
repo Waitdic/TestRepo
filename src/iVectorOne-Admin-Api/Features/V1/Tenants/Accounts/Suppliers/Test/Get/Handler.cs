@@ -37,11 +37,12 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
                 return response;
             }
 
-            //if (results.Count < 3)
-            //{
-            //    response.NotReady();
-            //    return response;
-            //}
+            //Wait for at least 2 out of 3 searches to return results
+            if (results.Count < 2)
+            {
+                response.NotReady();
+                return response;
+            }
 
             //Delete the response once it's been processed
             foreach (var result in results)
@@ -57,9 +58,9 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Test.Get
             }
             else
             {
-                response.Ok(new ResponseModel { Success = true, Message = $"Failed with error: {string.Join(",", results.Where(x => x.Information.Length != 0).ToList())}" });
+                response.Ok(new ResponseModel { Success = true, Message = $"Failed with error: {string.Join(",", results.Where(x => x.Information.Length != 0).Select(x => x.Information).ToList())}" });
                 return response;
-            } 
+            }
         }
     }
 }

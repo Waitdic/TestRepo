@@ -17,12 +17,20 @@ namespace iVectorOne_Admin_Api.Data
         {
         }
 
+        public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
+
+        public virtual DbSet<Attribute> Attributes { get; set; } = null!;
+
+        public virtual DbSet<SupplierAttribute> SupplierAttributes { get; set; } = null!;
+
+
+
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Authorisation> Authorisations { get; set; } = null!;
-        public virtual DbSet<Attribute> Attributes { get; set; } = null!;
+
         public virtual DbSet<Account> Accounts { get; set; } = null!;
-        public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
-        public virtual DbSet<SupplierAttribute> SupplierAttributes { get; set; } = null!;
+
+
         public virtual DbSet<AccountSupplier> AccountSuppliers { get; set; } = null!;
         public virtual DbSet<AccountSupplierAttribute> AccountSupplierAttributes { get; set; } = null!;
         public virtual DbSet<Tenant> Tenants { get; set; } = null!;
@@ -31,6 +39,8 @@ namespace iVectorOne_Admin_Api.Data
         public virtual DbSet<BookingLog> BookingLogs { get; set; } = null!;
 
         public virtual DbSet<LogEntry> LogEntries { get; set; } = null!;
+        public virtual DbSet<LogDetail> LogDetails { get; set; } = null!;
+
         public virtual DbSet<FireForgetSearchResponse> FireForgetSearchResponses { get; set; } = null!;
 
         //
@@ -47,6 +57,31 @@ namespace iVectorOne_Admin_Api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Supplier>(entity =>
+            {
+                entity.ToTable("Supplier");
+
+                entity.HasKey(e => e.SupplierId).IsClustered(false);
+                entity.HasIndex(e => e.SupplierName, "CK_Unique_SupplierName").IsUnique();
+
+                entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
+                entity.Property(e => e.SupplierName).HasMaxLength(200);
+                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<Attribute>(entity =>
+            {
+                entity.ToTable("Attribute");
+
+                entity.HasKey(e => e.AttributeId).IsClustered(false);
+                entity.HasIndex(e => e.AttributeName, "CK_Unique_AttributeName").IsUnique();
+
+                entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
+                entity.Property(e => e.AttributeName).HasMaxLength(200).IsUnicode(false);
+                entity.Property(e => e.DefaultValue).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Schema).IsUnicode(false);
+            });
+
 
             modelBuilder.Entity<BookingsByHour>(e =>
             {
@@ -104,6 +139,12 @@ namespace iVectorOne_Admin_Api.Data
                 e.HasNoKey();
             });
 
+            modelBuilder.Entity<LogDetail>(e =>
+            {
+                //e.HasKey(e => e.BookingId);
+                e.HasNoKey();
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
@@ -122,29 +163,7 @@ namespace iVectorOne_Admin_Api.Data
                     .IsClustered(false);
             });
 
-            modelBuilder.Entity<Attribute>(entity =>
-            {
-                entity.HasKey(e => e.AttributeId)
-                    .IsClustered(false);
 
-                entity.ToTable("Attribute");
-
-                entity.HasIndex(e => e.AttributeName, "CK_Unique_AttributeName")
-                    .IsUnique();
-
-                entity.Property(e => e.AttributeId).HasColumnName("AttributeID");
-
-                entity.Property(e => e.AttributeName)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DefaultValue)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Schema)
-                    .IsUnicode(false);
-            });
 
             modelBuilder.Entity<Account>(entity =>
             {
@@ -197,22 +216,7 @@ namespace iVectorOne_Admin_Api.Data
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Supplier>(entity =>
-            {
-                entity.HasKey(e => e.SupplierId)
-                    .IsClustered(false);
 
-                entity.ToTable("Supplier");
-
-                entity.HasIndex(e => e.SupplierName, "CK_Unique_SupplierName")
-                    .IsUnique();
-
-                entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
-
-                entity.Property(e => e.SupplierName).HasMaxLength(200);
-
-                entity.Property(e => e.TestPropertyIDs).HasMaxLength(100);
-            });
 
             modelBuilder.Entity<SupplierAttribute>(entity =>
             {

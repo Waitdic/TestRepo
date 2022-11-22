@@ -10,14 +10,17 @@ const mapChartData = (
   }[],
   rawColors: string[]
 ): ChartData => {
-  const labels = data.map((item) => pad2(item.time + 1));
+  const labels = data.map((item) => pad2(item.time));
   const colors = rawColors.map(
     (color) => tailwindConfig()?.theme?.colors?.[color]?.[500]
   );
+
   const datasets = [
     {
       label: 'Today',
-      data: data.map((item) => Number(item.currentTotal)),
+      data: data
+        .filter((item) => item.currentTotal !== null)
+        .map((item) => Number(item.currentTotal)),
       borderColor: colors[0],
       fill: false,
       borderWidth: 2,

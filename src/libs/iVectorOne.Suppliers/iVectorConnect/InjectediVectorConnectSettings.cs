@@ -7,11 +7,6 @@
     {
         protected override string Source => string.Empty;
 
-        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
-        {
-            return Get_Value("SearchURL", tpAttributeSearch, source);
-        }
-
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch, string source)
         {
             return Get_Value("GenericURL", tpAttributeSearch, source);

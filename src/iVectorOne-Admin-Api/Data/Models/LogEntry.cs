@@ -4,9 +4,7 @@ namespace iVectorOne_Admin_Api.Data.Models
 {
     public class LogEntry
     {
-        //public int BookingId { get; set; }
-
-        //public int APILogId { get; set; }
+        public int SupplierApiLogId { get; set; }
 
         public DateTime RequestDateTime { get; set; }
 

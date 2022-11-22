@@ -110,21 +110,25 @@
                             };
 
                             var canxRaw = room.CancellationPolicies
-                                .Concat(new List<CancellationPolicy>{ freeCanx })
+                                .Concat(new List<CancellationPolicy> { freeCanx })
                                 .Select(x => new
-                            {
-                                StartDate = x.CancelBy.ToSafeDate(),
-                                Amount = x.Penalty.ToSafeDecimal()
-                            }).OrderBy(x => x.StartDate).ToArray();
+                                {
+                                    StartDate = x.CancelBy.ToSafeDate(),
+                                    Amount = x.Penalty.ToSafeDecimal()
+                                }).OrderBy(x => x.StartDate).ToArray();
 
-                            var canx = canxRaw.Select((x, i) => new Cancellation 
-                            { 
+
+                            var now = DateTime.Now;
+                            var nowDateStart = new DateTime(now.Year, now.Month, now.Day);
+
+                            var canx = canxRaw.Select((x, i) => new Cancellation
+                            {
                                 StartDate = x.StartDate,
                                 Amount = x.Amount,
                                 EndDate = ReferenceEquals(x, canxRaw.Last())
                                     ? propertyDetails.ArrivalDate
-                                    : canxRaw[i+1].StartDate.AddSeconds(-1)
-                            });
+                                    : canxRaw[i + 1].StartDate.AddSeconds(-1)
+                            }).Where(x => x.EndDate > nowDateStart);
 
                             cancellations.AddRange(canx);
                         }

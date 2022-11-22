@@ -225,10 +225,17 @@ export interface LogEntries {
   timestamp: string;
   supplierName: string;
   type: string;
+  succesful: boolean;
   responseTime: number;
   supplierBookingReference: string;
   leadGuestName: string;
-  apiLogId?: number;
+  id?: number;
+  supplierApiLogId?: number;
+}
+
+export interface LogDetails {
+  requestLog: string;
+  responseLog: string;
 }
 
 //* App State

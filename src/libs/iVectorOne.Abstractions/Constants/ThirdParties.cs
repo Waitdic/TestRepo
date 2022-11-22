@@ -86,6 +86,51 @@
         public const string GOGLOBAL = "GoGlobal";
 
         /// <summary>
+        /// The third party HBSiBestWestern
+        /// </summary>
+        public const string HBSIBESTWESTERN = "HBSiBestWestern";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSICET = "HBSiCET";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSICOUPLES = "HBSiCouples";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSIPALACERESORTS = "HBSiPalaceResorts";
+
+        /// <summary>
+        /// The third party HBSiSandals
+        /// </summary>
+        public const string HBSISANDALS = "HBSiSandals";
+
+        /// <summary>
+        /// The third party HBSiStarwood
+        /// </summary>
+        public const string HBSISTARWOOD = "HBSiStarwood";
+
+        /// <summary>
+        /// The third party HBSiStationCasinos
+        /// </summary>
+        public const string HBSISTATIONCASINOS = "HBSiStationCasinos";
+
+        /// <summary>
+        /// The third party HBSiUniversal
+        /// </summary>
+        public const string HBSIUNIVERSAL = "HBSiUniversal";
+
+        /// <summary>
+        /// The third party HBSiVenetian
+        /// </summary>
+        public const string HBSIVENETIAN = "HBSiVenetian";
+
+        /// <summary>
         /// The third party HotelBedsV2
         /// </summary>
         public const string HOTELBEDSV2 = "HotelBedsV2";

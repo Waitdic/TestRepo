@@ -13,41 +13,25 @@ namespace iVectorOne_Admin_Api.Features.Shared
 
         public IResult Result { get; set; }
 
-        public void NotFound()
-        {
-            Result = Results.NotFound();
-        }
+        public void NotFound() => Result = Results.NotFound();
 
         public void NotFound(string detail) => Result = Results.NotFound(BuildProblemDetails(detail));
 
-        public void Ok(IResponseModel model)
-        {
-            Result = Results.Ok(model);
-        }
+        public void Ok(IResponseModel model) => Result = Results.Ok(model);
 
         public void BadRequest(string detail) => Result = Results.BadRequest(BuildProblemDetails(detail));
 
         public void BadRequest(string detail, IDictionary<string, string[]> errors)
-        {
-            var activity = Activity.Current;
-
-            var problemDetails = new ValidationProblemDetails(errors)
+            => Result = Results.BadRequest(new ValidationProblemDetails(errors)
             {
                 Title = "An error occurred while processing your request.",
-                Instance = activity?.GetTraceId(),
+                Instance = Activity.Current?.GetTraceId(),
                 Detail = detail
-            };
-
-            Result = Results.BadRequest(problemDetails);
-        }
-
+            });
 
         public void NotReady() => Result = Results.NoContent();
 
-        public void Accepted(IResponseModel model)
-        {
-            Result = Results.Accepted(value: model);
-        }
+        public void Accepted(IResponseModel model) => Result = Results.Accepted(value: model);
 
         #region Private methods
 
