@@ -211,8 +211,6 @@
 
             try
             {
-                
-
                 // create xml for cancellation request
                 var cancelRequest = BuildCancelRequest(propertyDetails);
 
