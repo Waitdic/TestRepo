@@ -11,7 +11,6 @@
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.Italcamel.Models.Cancel;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
     using iVectorOne.Suppliers.Italcamel.Models.Envelope;
@@ -126,7 +125,11 @@
                     cancellationPolicies = response.Package.Booking.Rooms.SelectMany(x => x.CancellationPolicies).ToArray();
                 }
 
-                propertyDetails.Errata.Add(new Erratum("REMARKS", remarks));
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    propertyDetails.Errata.Add(new Erratum("REMARKS", remarks));
+                }
+                
                 SetCancellations(propertyDetails, cancellationPolicies);
             }
             catch (Exception ex)
@@ -208,7 +211,7 @@
 
             try
             {
-                var amount = await GetBookingCharge(propertyDetails, propertyDetails.SourceSecondaryReference.Split('|')[1]);
+                
 
                 // create xml for cancellation request
                 var cancelRequest = BuildCancelRequest(propertyDetails);
@@ -230,7 +233,6 @@
                 {
                     thirdPartyCancellationResponse.TPCancellationReference = DateTime.Now.ToString("yyyyMMddhhmm");
                     thirdPartyCancellationResponse.Success = true;
-                    thirdPartyCancellationResponse.Amount = amount;
                 }
             }
             catch (Exception ex)
@@ -250,9 +252,62 @@
             return thirdPartyCancellationResponse;
         }
 
-        public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            return Task.FromResult(new ThirdPartyCancellationFeeResult());
+            var feeResult = new ThirdPartyCancellationFeeResult();
+            feeResult.Success = false;
+            Request? request = null;
+
+            try
+            {
+                var bookingChargeRequest =
+                    _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, propertyDetails.SourceSecondaryReference.Split('|')[1]);
+                var soapAction = _settings.GenericURL(propertyDetails)
+                    .Replace("https", "http")
+                    .Replace("test", "") + "/GETBOOKINGCHARGE";
+
+                request = _helper.CreateWebRequest(_settings.GenericURL(propertyDetails), soapAction);
+                request.SetRequest(bookingChargeRequest);
+                await request.Send(_httpClient, _logger);
+
+                var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML)
+                    .Body.Content.GetBookingChargeResult;
+
+                if (bookingCharges.Status != null && bookingCharges.Status.ToSafeInt() != 0)
+                {
+                    propertyDetails.Warnings.AddNew("GetBookingCharge failed", bookingCharges.ErrorMessage);
+                }
+                else
+                {
+                    var charge = bookingCharges.BookingCharges
+                        .Where(x => x.ChargeDate <= new DateTime()).ToList();
+
+                    var amount = charge.Any()
+                        ? charge
+                            .GroupBy(x => x.ChargeDate)
+                            .OrderByDescending(x => x.Key)
+                            .FirstOrDefault()!
+                            .Sum(x => x.ChargeAmount)
+                        : 0;
+
+                    feeResult.Success = true;
+                    feeResult.Amount = amount;
+                    feeResult.CurrencyCode = bookingCharges.BookingCharges.Select(x => x.Currency).FirstOrDefault() ?? string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("CancellationCost Exception", ex.Message);
+            }
+            finally
+            {
+                if (request != null)
+                {
+                    propertyDetails.AddLog("CancellationInfo", request);
+                }
+            }
+
+            return feeResult;
         }
 
         public void EndSession(PropertyDetails propertyDetails)
@@ -408,54 +463,6 @@
                     bookingCost * value / 100,
                 _ => throw new Exception("Cancellation type unknown")
             };
-        }
-
-        private async Task<decimal> GetBookingCharge(PropertyDetails propertyDetails, string uid)
-        {
-            Request? request = null;
-            decimal amount = 0;
-            try
-            {
-                var bookingChargeRequest =
-                    _helper.BuildBookingChargeRequest(_settings, _serializer, propertyDetails, uid);
-                var soapAction = _settings.GenericURL(propertyDetails)
-                    .Replace("https", "http")
-                    .Replace("test", "") + "/GETBOOKINGCHARGE";
-
-                request = _helper.CreateWebRequest(_settings.GenericURL(propertyDetails), soapAction);
-                request.SetRequest(bookingChargeRequest);
-                await request.Send(_httpClient, _logger);
-
-                var bookingCharges = _serializer.DeSerialize<Envelope<GetBookingChargeResponse>>(request.ResponseXML)
-                    .Body.Content.GetBookingChargeResult;
-
-                if (bookingCharges.Status != null && bookingCharges.Status.ToSafeInt() != 0)
-                {
-                    propertyDetails.Warnings.AddNew("GetBookingCharge failed", bookingCharges.ErrorMessage);
-                }
-                else
-                {
-                    var charge = bookingCharges.BookingCharges
-                        .Where(x => x.ChargeDate <= DateTime.Now).ToList();
-
-                    amount = charge.Any() 
-                        ? charge.OrderByDescending(x => x.ChargeDate).FirstOrDefault()!.ChargeAmount 
-                        : 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                propertyDetails.Warnings.AddNew("GetBookingCharge Exception", ex.Message);
-            }
-            finally
-            {
-                if (request != null)
-                {
-                    propertyDetails.AddLog("GetBookingCharge", request);
-                }
-            }
-
-            return amount;
         }
 
         #endregion

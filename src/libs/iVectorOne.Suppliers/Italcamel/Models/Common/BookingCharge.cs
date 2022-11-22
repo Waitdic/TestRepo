@@ -13,5 +13,8 @@
 
         [XmlElement("CHARGEAMOUNT")]
         public decimal ChargeAmount { get; set; }
+
+        [XmlElement("CURRENCY")]
+        public string Currency { get; set; } = string.Empty;
     }
 }
