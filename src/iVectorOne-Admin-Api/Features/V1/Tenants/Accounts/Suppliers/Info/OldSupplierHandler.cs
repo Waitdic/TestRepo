@@ -6,11 +6,11 @@
     using iVectorOne_Admin_Api.Config.Requests;
     using iVectorOne_Admin_Api.Config.Responses;
 
-    public class SupplierHandler : IRequestHandler<SupplierRequest, SupplierResponse>
+    public class OldSupplierHandler : IRequestHandler<SupplierRequest, SupplierResponse>
     {
         private readonly AdminContext _context;
 
-        public SupplierHandler(AdminContext context)
+        public OldSupplierHandler(AdminContext context)
         {
             _context = context;
         }
