@@ -10,21 +10,43 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-
+    using System.Net.Http;
+    using iVectorOne.Suppliers.TourPlanTransfers;
+    using Microsoft.Extensions.Logging;
+    using Intuitive.Data;
 
     public class NullTestTransferSupplierSearch : IThirdPartySearch, ISingleSource
     {
         private INullTestTransferSupplierSettings _settings;
 
+        private readonly HttpClient _httpClient;
+        private readonly ISqlFactory _sqlFactory;
+
         public string Source => ThirdParties.NULLTESTTRANSFERSUPPLIER;
 
-        public NullTestTransferSupplierSearch(INullTestTransferSupplierSettings settings)
+        public NullTestTransferSupplierSearch(
+            INullTestTransferSupplierSettings settings,
+            HttpClient httpClient,
+            ISqlFactory sqlFactory)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
+            _sqlFactory = Ensure.IsNotNull(sqlFactory, nameof(sqlFactory));
         }
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
+            //Test Code for scraping locations
+           // using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
+           //.SetMinimumLevel(LogLevel.Trace)
+           //.AddConsole());
+
+           // ILogger<GetLocations> logger = loggerFactory.CreateLogger<GetLocations>();
+
+           // GetLocations getLocations = new GetLocations(_sqlFactory, _httpClient, logger);
+
+           // await getLocations.AddNewLocations();
+
             (string, string) tpLocations = ((string, string))GetThirdPartyLocations(searchDetails, location);
              bool returnResults = tpLocations.Item1.ToLower() == "airport1" && tpLocations.Item2.ToLower() == "resort1";
 
