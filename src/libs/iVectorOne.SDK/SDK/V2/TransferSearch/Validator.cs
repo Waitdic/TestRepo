@@ -10,10 +10,10 @@
         {
             RuleFor(x => x.DepartureLocationID).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.InvalidDepartureLocationID);
             RuleFor(x => x.ArrivalLocationID).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.InvalidArrivalLocationID);
-            RuleFor(x => x.DepartureDate).NotEmpty().WithMessage(WarningMessages.DepartureDateNotSpecified);
+            RuleFor(x => x.DepartureDate).NotNull().WithMessage(WarningMessages.DepartureDateNotSpecified);
             RuleFor(x => x.DepartureDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.DepartureDateInThePast);
             RuleFor(x => x.DepartureDate).LessThan(DateTime.Now.AddYears(3).Date).WithMessage(WarningMessages.DepartureDateToFarInTheFuture);
-            RuleFor(x => x.ReturnDate).NotEmpty().When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnDateNotSpecified);
+            RuleFor(x => x.ReturnDate).NotNull().When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnDateNotSpecified);
             RuleFor(x => x.Supplier).NotNull().NotEmpty().WithMessage(WarningMessages.InvalidSupplier);
             RuleFor(x => x.Adults + x.Children).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.NoAdultsOrChildrenSpecified);
             RuleFor(x => x.Adults).LessThanOrEqualTo(15).WithMessage(WarningMessages.Only15AdultsAllowedTransfer);
