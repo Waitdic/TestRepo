@@ -34,6 +34,15 @@
         public const string DepartureDateNotSpecified = "An Departure Date must be specified";
 
         /// <summary>
+        /// An Return Date must be specified
+        /// </summary>
+        public const string ReturnDateNotSpecified = "An Return Date must be specified";
+
+        /// <summary>
+        /// An Return Time must be specified
+        /// </summary>
+        public const string ReturnTimeNotSpecified = "An Return Time must be specified";
+        /// <summary>
         /// An Departure Date on or after today must be specified
         /// </summary>
         public const string DepartureDateInThePast = "An Departure Date on or after today must be specified";
@@ -297,5 +306,20 @@
         ///   <para>An adult or child is required</para>
         /// </summary>
         public const string NoAdultsOrChildrenSpecified = "At least one adult or child must be specified";
+        
+        /// <summary>
+        ///   <para>"Return Time must be in correct format</para>
+        /// </summary>
+        public const string ReturnTimeInvalid = "Return Time must be in correct format";
+
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeInvalid = "Departure Time must be in correct format";
+        
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeRequired = "Departure Time is is required";
     }
 }
