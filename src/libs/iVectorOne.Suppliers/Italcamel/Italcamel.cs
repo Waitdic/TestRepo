@@ -359,7 +359,7 @@
                                         {
                                             PassengerType.Adult => DateTime.Now.AddYears(-40),
                                             PassengerType.Child => DateTime.Now.AddYears(p.Age),
-                                            _ => DateTime.Now.AddYears(-30)
+                                            PassengerType.Infant => DateTime.Now.AddYears(-30)
                                         }).ToString("yyyy-MM-dd")
                                     }).ToArray(),
                                     Board =
