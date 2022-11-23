@@ -115,6 +115,7 @@
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
             services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<ITransferSearchStoreRepository>(_ => new TransferSearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
             services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
             services.AddSingleton<IBookingRepository, BookingRepository>();
             services.AddSingleton<ITransferAPILogRepository, TransferAPILogRepository>();
@@ -156,6 +157,12 @@
                 new SearchStoreService(
                     s.GetRequiredService<ILogger<SearchStoreService>>(),
                     s.GetRequiredService<ISearchStoreRepository>(),
+                    context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
+
+            services.AddSingleton<Services.Transfer.ISearchStoreService>(s =>
+                new Services.Transfer.SearchStoreService(
+                    s.GetRequiredService<ILogger<Services.Transfer.SearchStoreService>>(),
+                    s.GetRequiredService<ITransferSearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }
 

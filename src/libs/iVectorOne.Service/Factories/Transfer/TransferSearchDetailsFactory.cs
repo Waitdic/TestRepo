@@ -40,14 +40,14 @@
                 ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? account.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
 
-                //SearchStoreItem =
-                //{
-                //    AccountName = account.Login,
-                //    AccountId = account.AccountID,
-                //    System = account.Environment.ToString(),
-                //    SearchDateAndTime = DateTime.Now,
-                //    PropertiesRequested = searchRequest.Properties.Count
-                //}
+                SearchStoreItem =
+                {
+                    AccountName = account.Login,
+                    AccountId = account.AccountID,
+                    System = account.Environment.ToString(),
+                    SearchDateAndTime = DateTime.Now,
+                    //PropertiesRequested = searchRequest.Properties.Count
+                }
 
             };
 

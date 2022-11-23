@@ -10,11 +10,11 @@
     using System.Diagnostics;
     using iVectorOne.Models;
     using System.Threading;
-    using iVectorOne.Constants;
     using iVectorOne.Search;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
-    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Models.SearchStore;
+    using System;
+    using iVectorOne.Repositories;
 
     /// <summary>
     /// The main transfer search service, responsible for doing all the searching
@@ -23,6 +23,9 @@
     public class SearchService : ISearchService
     {
         private readonly ISearchStoreService _searchStoreService;
+
+        /// <summary>The search repository</summary>
+        private readonly ISearchRepository _searchRepository;
 
         /// <summary>The search repository</summary>
         private readonly ITransferLocationMappingFactory _locationMappingFactory;
@@ -50,13 +53,16 @@
             ITransferSearchResponseFactory transferSearchResponseFactory,
             ITransferThirdPartyFactory thirdPartyFactory,
             IThirdPartyTransferSearchRunner searchRunner,
-            ISearchStoreService searchStoreService)
+            ISearchStoreService searchStoreService,
+            ISearchRepository searchRepository)
         {
             _locationMappingFactory = Ensure.IsNotNull(locationMappingFactory, nameof(locationMappingFactory));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
             _transferSearchResponseFactory = Ensure.IsNotNull(transferSearchResponseFactory, nameof(transferSearchResponseFactory));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _searchRunner = Ensure.IsNotNull(searchRunner, nameof(searchRunner));
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
+            _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));
         }
 
         /// <inheritdoc />
@@ -64,7 +70,7 @@
         {
             var totalTime = Stopwatch.StartNew();
             var stopwatch = Stopwatch.StartNew();
-            //SearchStoreItem searchStoreItem = null!;
+            TransferSearchStoreItem searchStoreItem = null!;
 
             var locationMapping = new LocationMapping();
             var taskList = new List<Task>();
@@ -73,9 +79,9 @@
             try
             {
                 var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
-                // searchStoreItem = searchDetails.SearchStoreItem;
-                //searchStoreItem.SearchDateAndTime = DateTime.Now;
-                //searchStoreItem.PreProcessTime = (int)stopwatch.ElapsedMilliseconds;
+                searchStoreItem = searchDetails.SearchStoreItem;
+                searchStoreItem.SearchDateAndTime = DateTime.Now;
+                searchStoreItem.PreProcessTime = (int)stopwatch.ElapsedMilliseconds;
 
                 var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);
 
@@ -102,33 +108,33 @@
                 var response =
                     await _transferSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
 
-                //searchStoreItem.PostProcessTime += (int)stopwatch.ElapsedMilliseconds;
-                //searchStoreItem.PropertiesReturned = response.TransferResults.Count;
-                //searchStoreItem.Successful = true;
+                searchStoreItem.PostProcessTime += (int)stopwatch.ElapsedMilliseconds;
+                searchStoreItem.ResultsReturned = response.TransferResults.Count;
+                searchStoreItem.Successful = true;
 
                 return response;
             }
             finally
             {
-                //if (searchStoreItem == null!)
-                //{
-                //    searchStoreItem = new SearchStoreItem
-                //    {
-                //        SearchStoreId = Guid.NewGuid(),
-                //        SearchDateAndTime = DateTime.Now
-                //    };
+                if (searchStoreItem == null!)
+                {
+                    searchStoreItem = new TransferSearchStoreItem
+                    {
+                        TransferSearchStoreId = Guid.NewGuid(),
+                        SearchDateAndTime = DateTime.Now
+                    };
 
-                //    if (searchRequest?.Account != null)
-                //    {
-                //        searchStoreItem.AccountName = searchRequest.Account.Login;
-                //        searchStoreItem.AccountId = searchRequest.Account.AccountID;
-                //        searchStoreItem.System = searchRequest.Account.Environment.ToString();
-                //    }
-                //}
+                    if (searchRequest?.Account != null)
+                    {
+                        searchStoreItem.AccountName = searchRequest.Account.Login;
+                        searchStoreItem.AccountId = searchRequest.Account.AccountID;
+                        searchStoreItem.System = searchRequest.Account.Environment.ToString();
+                    }
+                }
 
-                //searchStoreItem.TotalTime = (int)totalTime.ElapsedMilliseconds;
+                searchStoreItem.TotalTime = (int)totalTime.ElapsedMilliseconds;
 
-                //_ = _searchStoreService.AddAsync(searchStoreItem);
+                _ = _searchStoreService.AddAsync(searchStoreItem);
             }
         }
 

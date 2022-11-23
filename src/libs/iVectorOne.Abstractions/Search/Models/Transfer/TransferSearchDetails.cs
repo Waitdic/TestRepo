@@ -8,6 +8,7 @@
     using System.Xml;
     using System.Xml.Serialization;
     using iVectorOne.Models;
+    using iVectorOne.Models.SearchStore;
     using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Results.Models;
 
@@ -229,8 +230,9 @@
         /// </summary>
         public string EmailLogsToAddress { get; set; } = string.Empty;
 
-
-
-
+        /// <summary>
+        /// Gets or sets the transfer search store item
+        /// </summary>
+        public TransferSearchStoreItem SearchStoreItem { get; set; } = new() { TransferSearchStoreId = Guid.NewGuid() };
     }
 }

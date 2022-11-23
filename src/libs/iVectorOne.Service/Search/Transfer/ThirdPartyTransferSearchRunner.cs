@@ -8,13 +8,11 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Serialization;
     using Intuitive;
     using Intuitive.Helpers.Email;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
-    using iVectorOne.Transfer;
     using iVectorOne.Models;
     using iVectorOne.Models.SearchStore;
     using iVectorOne.Search;
@@ -26,7 +24,7 @@
     /// </summary>
     public class ThirdPartyTransferSearchRunner : IThirdPartyTransferSearchRunner
     {
-        //private readonly ISearchStoreService _searchStoreService;
+        private readonly ISearchStoreService _searchStoreService;
         private readonly ILogger<ThirdPartyTransferSearchRunner> _logger;
 
         private readonly IEmailService _emailService;
@@ -36,11 +34,13 @@
         private readonly HttpClient _httpClient;
 
         public ThirdPartyTransferSearchRunner(
+            ISearchStoreService searchStoreService,
             ILogger<ThirdPartyTransferSearchRunner> logger,
             IEmailService emailService,
             ITransferSearchResultsProcessor searchResultsProcessor,
             HttpClient httpClient)
         {
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _emailService = Ensure.IsNotNull(emailService, nameof(emailService));
             _searchResultsProcessor = Ensure.IsNotNull(searchResultsProcessor, nameof(searchResultsProcessor));
@@ -84,9 +84,8 @@
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
 
-                    //uncomment after third party configs setup for transfer third parties
-                    //request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source); 
-                    //request.UseGZip = UseGZip(searchDetails, source);
+                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source); 
+                    request.UseGZip = UseGZip(searchDetails, source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
                 }
@@ -111,38 +110,30 @@
                     var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
                     stopwatch.Restart();
 
-                    var resultsCount = _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, searchDetails);
+                    var resultsCount = await _searchResultsProcessor.ProcessTPResultsAsync(transformedResponses, searchDetails);
 
-                    //var searchStoreSupplierItem = new SearchStoreSupplierItem
-                    //{
-                    //    SearchStoreId = searchDetails.SearchStoreItem.SearchStoreId,
-                    //    AccountName = searchDetails.SearchStoreItem.AccountName,
-                    //    AccountId = searchDetails.SearchStoreItem.AccountId,
-                    //    System = searchDetails.SearchStoreItem.System,
-                    //    SupplierName = source,
-                    //    Successful = requests.All(r => r.Success),
-                    //    Timeout = requests.Any(r => r.TimeOut),
-                    //    SearchDateAndTime = searchDetails.SearchStoreItem.SearchDateAndTime,
-                    //    PropertiesRequested = resortSplits.Sum(r => r.Hotels.Count),
-                    //    PropertiesReturned = resultsCount,
-                    //    PreProcessTime = preprocessTime,
-                    //    SupplierTime = supplierTime,
-                    //    DedupeTime = dedupeTime,
-                    //    PostProcessTime = postProcessTime,
-                    //    TotalTime = preprocessTime + supplierTime + dedupeTime + postProcessTime
-                    //};
+                    var searchStoreSupplierItem = new TransferSearchStoreSupplierItem
+                    {
+                        TransferSearchStoreId = searchDetails.SearchStoreItem.TransferSearchStoreId,
+                        AccountName = searchDetails.SearchStoreItem.AccountName,
+                        AccountId = searchDetails.SearchStoreItem.AccountId,
+                        System = searchDetails.SearchStoreItem.System,
+                        SupplierName = source,
+                        Successful = requests.All(r => r.Success),
+                        Timeout = requests.Any(r => r.TimeOut),
+                        SearchDateAndTime = searchDetails.SearchStoreItem.SearchDateAndTime,
+                        ResultsReturned = resultsCount,
+                        PreProcessTime = preprocessTime,
+                        SupplierTime = supplierTime,
+                        PostProcessTime = postProcessTime,
+                        TotalTime = preprocessTime + supplierTime + postProcessTime
+                    };
 
-                    //searchDetails.SearchStoreItem.MaxSupplierTime = Math.Max(
-                    //    searchStoreSupplierItem.SupplierTime,
-                    //    searchDetails.SearchStoreItem.MaxSupplierTime);
+                    searchDetails.SearchStoreItem.MaxSupplierTime = Math.Max(
+                        searchStoreSupplierItem.SupplierTime,
+                        searchDetails.SearchStoreItem.MaxSupplierTime);
 
-                    //searchDetails.SearchStoreItem.MaxDedupeTime = Math.Max(
-                    //    searchStoreSupplierItem.DedupeTime,
-                    //    searchDetails.SearchStoreItem.MaxDedupeTime);
-
-                    //searchDetails.SearchStoreItem.PostProcessTime += dedupeTime;
-
-                    //_ = _searchStoreService.AddAsync(searchStoreSupplierItem);
+                    _ = _searchStoreService.AddAsync(searchStoreSupplierItem);
                 }
             }
             catch (Exception ex)
