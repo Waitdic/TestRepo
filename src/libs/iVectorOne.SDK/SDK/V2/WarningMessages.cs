@@ -321,5 +321,10 @@
         ///   <para>"Departure Time must be in correct format</para>
         /// </summary>
         public const string DepartureTimeRequired = "A departure time is required";
+
+        /// <summary>
+        ///   <para>"The return date cannot be more than 62 days after the departure date</para>
+        /// </summary>
+        public const string InvalidDuration = "The return date cannot be more than 62 days after the departure date";
     }
 }
