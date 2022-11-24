@@ -36,12 +36,12 @@
         /// <summary>
         /// An Return Date must be specified
         /// </summary>
-        public const string ReturnDateNotSpecified = "An Return Date must be specified";
+        public const string ReturnDateNotSpecified = "A return date must be specified when the transfer is not one way";
 
         /// <summary>
         /// An Return Time must be specified
         /// </summary>
-        public const string ReturnTimeNotSpecified = "An Return Time must be specified";
+        public const string ReturnTimeNotSpecified = "A return time must be specified when the transfer is not one way";
         /// <summary>
         /// An Departure Date on or after today must be specified
         /// </summary>
@@ -310,16 +310,16 @@
         /// <summary>
         ///   <para>"Return Time must be in correct format</para>
         /// </summary>
-        public const string ReturnTimeInvalid = "Return Time must be in correct format";
+        public const string ReturnTimeInvalid = "Return time must be in the format HH:mm";
 
         /// <summary>
         ///   <para>"Departure Time must be in correct format</para>
         /// </summary>
-        public const string DepartureTimeInvalid = "Departure Time must be in correct format";
+        public const string DepartureTimeInvalid = "Departure time must be in the format HH:mm";
         
         /// <summary>
         ///   <para>"Departure Time must be in correct format</para>
         /// </summary>
-        public const string DepartureTimeRequired = "Departure Time is is required";
+        public const string DepartureTimeRequired = "A departure time is required";
     }
 }
