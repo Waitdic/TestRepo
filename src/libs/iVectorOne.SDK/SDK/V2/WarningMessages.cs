@@ -36,12 +36,22 @@
         /// <summary>
         /// An Return Date must be specified
         /// </summary>
-        public const string ReturnDateNotSpecified = "A return date must be specified when the transfer is not one way";
+        public const string ReturnDateSpecified = "A return date must be specified when the transfer is not one way";
 
         /// <summary>
         /// An Return Time must be specified
         /// </summary>
-        public const string ReturnTimeNotSpecified = "A return time must be specified when the transfer is not one way";
+        public const string ReturnTimeSpecified = "A return time must be specified when the transfer is not one way";
+
+        /// <summary>
+        /// An Return Date cannot be specified
+        /// </summary>
+        public const string ReturnDateNotSpecified = "A return date cannot be specified when the transfer is one way";
+
+        /// <summary>
+        /// A return time cannot be specified when the transfer is one way
+        /// </summary>
+        public const string ReturnTimeNotSpecified = "A return time cannot be specified when the transfer is one way";
         /// <summary>
         /// An Departure Date on or after today must be specified
         /// </summary>
