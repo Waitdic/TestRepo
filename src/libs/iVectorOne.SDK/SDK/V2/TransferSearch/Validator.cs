@@ -20,10 +20,10 @@
             RuleFor(x => x.Adults).LessThanOrEqualTo(15).WithMessage(WarningMessages.Only15AdultsAllowedTransfer);
             RuleFor(x => x.Children).LessThanOrEqualTo(8).WithMessage(WarningMessages.Only8ChildrenAllowedTransfer);
             RuleFor(x => x.Infants).LessThanOrEqualTo(7).WithMessage(WarningMessages.Only7InfantsAllowedTransfer);
-            RuleFor(x => x.ReturnTime).NotNull().NotEmpty().When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnTimeSpecified);
+            RuleFor(x => x.ReturnTime).NotEmpty().When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnTimeSpecified);
             RuleFor(x => x.ReturnTime).Empty().When(x => x.OneWay == true).WithMessage(WarningMessages.ReturnTimeNotSpecified);
             RuleFor(x => x.ReturnTime).Matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$").When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnTimeInvalid);
-            RuleFor(x => x.DepartureTime).NotEmpty().NotNull().WithMessage(WarningMessages.DepartureTimeRequired);
+            RuleFor(x => x.DepartureTime).NotEmpty().WithMessage(WarningMessages.DepartureTimeRequired);
             RuleFor(x => x.DepartureTime).Matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$").WithMessage(WarningMessages.DepartureTimeInvalid);
             RuleFor(x => ((x.ReturnDate.Value.Subtract(x.DepartureDate.Value)).Days)).LessThan(63).When(x=>x.ReturnDate!=null && x.DepartureDate!=null).WithMessage(WarningMessages.InvalidDuration);
            
