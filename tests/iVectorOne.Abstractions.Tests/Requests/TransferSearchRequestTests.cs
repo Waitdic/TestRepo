@@ -359,10 +359,10 @@
             {
                 DepartureLocationID = 1,
                 ArrivalLocationID = 1,
-                DepartureDate = Convert.ToDateTime("2023-01-01").Date,
+                DepartureDate = DateTime.Today.AddDays(2),
                 DepartureTime = "10:00",
                 OneWay = false,
-                ReturnDate = Convert.ToDateTime("2023-02-01").Date,
+                ReturnDate = DateTime.Today.AddDays(8).Date,
                 ReturnTime = "10:22" ,
                 Supplier = "nulltesttransfersupplier",
                 Adults = 2,
