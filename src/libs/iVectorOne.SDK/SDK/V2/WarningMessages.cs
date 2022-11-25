@@ -34,6 +34,25 @@
         public const string DepartureDateNotSpecified = "An Departure Date must be specified";
 
         /// <summary>
+        /// An Return Date must be specified
+        /// </summary>
+        public const string ReturnDateSpecified = "A return date must be specified when the transfer is not one way";
+
+        /// <summary>
+        /// An Return Time must be specified
+        /// </summary>
+        public const string ReturnTimeSpecified = "A return time must be specified when the transfer is not one way";
+
+        /// <summary>
+        /// An Return Date cannot be specified
+        /// </summary>
+        public const string ReturnDateNotSpecified = "A return date cannot be specified when the transfer is one way";
+
+        /// <summary>
+        /// A return time cannot be specified when the transfer is one way
+        /// </summary>
+        public const string ReturnTimeNotSpecified = "A return time cannot be specified when the transfer is one way";
+        /// <summary>
         /// An Departure Date on or after today must be specified
         /// </summary>
         public const string DepartureDateInThePast = "An Departure Date on or after today must be specified";
@@ -297,5 +316,29 @@
         ///   <para>An adult or child is required</para>
         /// </summary>
         public const string NoAdultsOrChildrenSpecified = "At least one adult or child must be specified";
+        
+        /// <summary>
+        ///   <para>"Return Time must be in correct format</para>
+        /// </summary>
+        public const string ReturnTimeInvalid = "Return time must be in the format HH:mm";
+
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeInvalid = "Departure time must be in the format HH:mm";
+        
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeRequired = "A departure time is required";
+
+        /// <summary>
+        ///   <para>"The return date cannot be more than 62 days after the departure date</para>
+        /// </summary>
+        public const string InvalidDuration = "The return date cannot be more than 62 days after the departure date";
+        /// <summary>
+        ///   <para>"The return date not before departure date</para>
+        /// </summary>
+        public const string ReturnDateNotBeforeDepartureDate = "The return date cannot be before the departure date";
     }
 }
