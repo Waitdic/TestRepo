@@ -336,5 +336,9 @@
         ///   <para>"The return date cannot be more than 62 days after the departure date</para>
         /// </summary>
         public const string InvalidDuration = "The return date cannot be more than 62 days after the departure date";
+        /// <summary>
+        ///   <para>"The return date not before departure date</para>
+        /// </summary>
+        public const string ReturnDateNotBeforeDepartureDate = "The return date cannot be before the departure date";
     }
 }

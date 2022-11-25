@@ -26,7 +26,8 @@
             RuleFor(x => x.DepartureTime).NotEmpty().WithMessage(WarningMessages.DepartureTimeRequired);
             RuleFor(x => x.DepartureTime).Matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$").WithMessage(WarningMessages.DepartureTimeInvalid);
             RuleFor(x => ((x.ReturnDate.Value.Subtract(x.DepartureDate.Value)).Days)).LessThan(63).When(x=>x.ReturnDate!=null && x.DepartureDate!=null).WithMessage(WarningMessages.InvalidDuration);
-           
+            RuleFor(x=>x.DepartureDate).LessThanOrEqualTo(x=>x.ReturnDate).WithMessage(WarningMessages.ReturnDateNotBeforeDepartureDate);
+
         }
     }
 }
