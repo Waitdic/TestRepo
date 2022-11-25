@@ -47,7 +47,6 @@
         public Task LogCancelAsync(Cancel.Request request, Cancel.Response response, bool success)
             => this.InsertLogsAsync(request, response, LogType.Cancel, success);
 
-
         /// <summary>
         /// Method that actually does all the work
         /// </summary>

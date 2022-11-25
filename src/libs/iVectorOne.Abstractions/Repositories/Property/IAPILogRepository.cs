@@ -5,10 +5,6 @@
     using Book = SDK.V2.PropertyBook;
     using Precancel = SDK.V2.PropertyPrecancel;
     using Cancel = SDK.V2.PropertyCancel;
-    using TransferPrebook = SDK.V2.TransferPrebook;
-    using TransferBook = SDK.V2.TransferBook;
-    using TransferPrecancel = SDK.V2.TransferPrecancel;
-    using TransferCancel = SDK.V2.TransferCancel;
 
     /// <summary>Defines a repository for saving book, pre book and cancel requests and responses</summary>
     public interface IAPILogRepository
