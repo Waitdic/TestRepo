@@ -350,5 +350,34 @@
             // Assert
             Assert.Contains(WarningMessages.InvalidDuration, warnings.Errors.Select(e => e.ErrorMessage));
         }
+
+        [Fact]
+        public void Validate_Should_NoWarning_When_Request_All_Field_Valid()
+        {
+            //Arrange
+            Request request = new Request()
+            {
+                DepartureLocationID = 1,
+                ArrivalLocationID = 1,
+                DepartureDate = Convert.ToDateTime("2023-01-01").Date,
+                DepartureTime = "10:00",
+                OneWay = false,
+                ReturnDate = Convert.ToDateTime("2023-02-01").Date,
+                ReturnTime = "10:22" ,
+                Supplier = "nulltesttransfersupplier",
+                Adults = 2,
+                Children = 1,
+                Infants = 0,
+                ChildAges = new List<int>() { 1,2,3,4,5,6,7 }
+            };
+
+            Validator validator = new Validator();
+
+            //Act
+            FluentValidation.Results.ValidationResult warnings = validator.Validate(request);
+
+            // Assert
+            Assert.False(warnings.Errors.Any());
+        }
     }
 }
