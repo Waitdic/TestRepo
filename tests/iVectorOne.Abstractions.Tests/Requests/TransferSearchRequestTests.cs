@@ -259,13 +259,31 @@
         }
 
         [Fact]
-        public void Validate_Should_AddCorrectWarning_When_OneWayIsTrue_DepartureTimeInvalid()
+        public void Validate_Should_AddCorrectWarning_When_OneWayIsTrue_ReturnTimeIsvalid()
         {
             //Arrange
             Request request = new Request()
             {
-                OneWay = true,
-                ReturnTime = "10:61"
+                OneWay = false,
+                ReturnTime = "10:21"
+            };
+
+            Validator validator = new Validator();
+
+            //Act
+            FluentValidation.Results.ValidationResult warnings = validator.Validate(request);
+
+            // Assert
+            Assert.NotSame(WarningMessages.ReturnTimeInvalid, warnings.Errors.Select(e => e.ErrorMessage));
+        }
+
+        [Fact]
+        public void Validate_Should_AddCorrectWarning_When_DepartureTimeInvalid()
+        {
+            //Arrange
+            Request request = new Request()
+            {
+                DepartureTime = "10:61"
             };
 
             Validator validator = new Validator();
@@ -275,6 +293,24 @@
 
             // Assert
             Assert.Contains(WarningMessages.DepartureTimeInvalid, warnings.Errors.Select(e => e.ErrorMessage));
+        }
+
+        [Fact]
+        public void Validate_Should_AddCorrectWarning_When_DepartureTimeIsvalid()
+        {
+            //Arrange
+            Request request = new Request()
+            {
+                DepartureTime = "10:11"
+            };
+
+            Validator validator = new Validator();
+
+            //Act
+            FluentValidation.Results.ValidationResult warnings = validator.Validate(request);
+
+            // Assert
+            Assert.NotSame(WarningMessages.DepartureTimeInvalid, warnings.Errors.Select(e => e.ErrorMessage));
         }
 
         [Fact]
