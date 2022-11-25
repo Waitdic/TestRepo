@@ -15,17 +15,17 @@
     using Microsoft.Extensions.Logging;
     using Intuitive.Data;
 
-    public class NullTestTransferSupplierSearch : IThirdPartySearch, ISingleSource
+    public class TestTransferSupplierSearch : IThirdPartySearch, ISingleSource
     {
-        private INullTestTransferSupplierSettings _settings;
+        private ITestTransferSupplierSettings _settings;
 
         private readonly HttpClient _httpClient;
         private readonly ISqlFactory _sqlFactory;
 
-        public string Source => ThirdParties.NULLTESTTRANSFERSUPPLIER;
+        public string Source => ThirdParties.TESTTRANSFERSUPPLIER;
 
-        public NullTestTransferSupplierSearch(
-            INullTestTransferSupplierSettings settings,
+        public TestTransferSupplierSearch(
+            ITestTransferSupplierSettings settings,
             HttpClient httpClient,
             ISqlFactory sqlFactory)
         {

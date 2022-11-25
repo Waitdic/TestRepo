@@ -151,11 +151,6 @@
         public const string NULLTESTSUPPLIER = "NullTestSupplier";
 
         /// <summary>
-        /// The third party NullTestTransferProvider
-        /// </summary>
-        public const string NULLTESTTRANSFERSUPPLIER = "NullTestTransferSupplier";
-
-        /// <summary>
         /// The third party OceanBeds
         /// </summary>
         public const string OCEANBEDS = "OceanBeds";
@@ -204,6 +199,11 @@
         /// The third party TeamAmerica
         /// </summary>
         public const string TEAMAMERICA = "TeamAmerica";
+
+        /// <summary>
+        /// The third party TestTransferProvider
+        /// </summary>
+        public const string TESTTRANSFERSUPPLIER = "TestTransferSupplier";
 
         /// <summary>
         /// The third party Travelgate

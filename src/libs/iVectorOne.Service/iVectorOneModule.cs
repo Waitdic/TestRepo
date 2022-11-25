@@ -206,7 +206,7 @@
             services.AddSingleton<IJuniperSettings, InjectedJuniperSettings>();
             services.AddSingleton<INetstormingSettings, InjectedNetstormingSettings>();
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
-            services.AddSingleton<INullTestTransferSupplierSettings, InjectedNullTestTransferSupplierSettings>();
+            services.AddSingleton<ITestTransferSupplierSettings, InjectedTestTransferSupplierSettings>();
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
@@ -247,7 +247,7 @@
             services.AddSingleton<IThirdPartySearch, JumboSearch>();
             services.AddSingleton<IThirdPartySearch, JuniperSearch>();
             services.AddSingleton<IThirdPartySearch, NullTestSupplierSearch>();
-            services.AddSingleton<Transfer.IThirdPartySearch, NullTestTransferSupplierSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
             services.AddSingleton<IThirdPartySearch, NetstormingSearch>();
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
@@ -291,7 +291,7 @@
             services.AddSingleton<IThirdParty, Miki>();
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
-            services.AddSingleton<Transfer.IThirdParty, NullTestTransferSupplier>();
+            services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
             services.AddSingleton<IThirdParty, OceanBeds>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();

@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne.Suppliers
 {
-    public interface INullTestTransferSupplierSettings
+    public interface ITestTransferSupplierSettings
     {
         int SearchTimeMilliseconds(IThirdPartyAttributeSearch tpAttributeSearch);
     }

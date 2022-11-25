@@ -71,7 +71,6 @@
                         Adults = searchDetails.Adults,
                         Children = searchDetails.Children,
                         Infants = searchDetails.Infants,
-                        //ChildAges = searchDetails.ChildAges,
                         SupplierID = await _support.SupplierIDLookupAsync(searchDetails.Source),
                     };
 
@@ -112,17 +111,6 @@
             requestTracker.RequestTimes.Add(createResponseTimer);
 
             return response;
-        }
-
-        private int SetDuration(TransferSearchDetails searchDetails)
-        {
-            if (searchDetails.OneWay)
-            {
-                return 0;
-            } else
-            {
-                return (searchDetails.ReturnDate - searchDetails.DepartureDate).Days;
-            }
         }
     }
 }

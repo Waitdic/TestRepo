@@ -1,23 +1,16 @@
 ﻿namespace iVectorOne.Suppliers
 {
-    using Intuitive.Helpers.Net;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using iVectorOne.Models.Property;
-    using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.Transfer;
-    using iVectorOne.Search.Models;
-    using iVectorOne.Suppliers.HotelBedsV2;
     using iVectorOne.Transfer;
-    using Newtonsoft.Json;
     using System;
-    using System.Net.Http;
     using System.Threading.Tasks;
 
-    public partial class NullTestTransferSupplier : IThirdParty, ISingleSource
+    public partial class TestTransferSupplier : IThirdParty, ISingleSource
     {
-        public string Source => ThirdParties.NULLTESTTRANSFERSUPPLIER;
+        public string Source => ThirdParties.TESTTRANSFERSUPPLIER;
 
         async Task<bool> IThirdParty.PreBookAsync(TransferDetails transferDetails)
         {

@@ -3,9 +3,9 @@
     using iVectorOne.Constants;
     using iVectorOne.Support;
 
-    public class InjectedNullTestTransferSupplierSettings : SettingsBase, INullTestTransferSupplierSettings
+    public class InjectedTestTransferSupplierSettings : SettingsBase, ITestTransferSupplierSettings
     {
-        protected override string Source => ThirdParties.NULLTESTTRANSFERSUPPLIER;
+        protected override string Source => ThirdParties.TESTTRANSFERSUPPLIER;
 
         public int SearchTimeMilliseconds(IThirdPartyAttributeSearch tpAttributeSearch)
         {
