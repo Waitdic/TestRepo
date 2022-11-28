@@ -6,9 +6,19 @@
 
     public abstract class InjectedTourPlanTransfersSettings : SettingsBase, ITourPlanTransfersSettings
     {
-        public int SearchTimeMilliseconds(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("URL", tpAttributeSearch);
+        }
+
+        public string AgentId(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("AgentId", tpAttributeSearch);
+        }
+
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("Password", tpAttributeSearch);
         }
     }
 }

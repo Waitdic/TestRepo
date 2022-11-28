@@ -208,7 +208,6 @@
             services.AddSingleton<IJuniperSettings, InjectedJuniperSettings>();
             services.AddSingleton<INetstormingSettings, InjectedNetstormingSettings>();
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
-            services.AddSingleton<ITestTransferSupplierSettings, InjectedTestTransferSupplierSettings>();
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
@@ -224,6 +223,9 @@
             services.AddSingleton<IWelcomeBedsSettings, InjectedWelcomeBedsSettings>();
             services.AddSingleton<IYalagoSettings, InjectedYalagoSettings>();
             services.AddSingleton<IYouTravelSettings, InjectedYouTravelSettings>();
+
+            services.AddSingleton<ITestTransferSupplierSettings, InjectedTestTransferSupplierSettings>();
+            services.AddSingleton<ITourPlanTransfersSettings, InjectedGowaySydneyTransfersSettings>();
         }
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)
@@ -268,7 +270,6 @@
 
             services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
-            //services.AddSingleton<Transfer.IThirdPartySearch, TourPlanTransfersSearchBase>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -311,7 +312,6 @@
 
             services.AddSingleton<Transfer.IThirdParty, GowaySydneyTransfers>();
             services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
-            //services.AddSingleton<Transfer.IThirdParty, TourPlanTransfersBase>();
         }
 
         public void RegsiterThirdPartyUtilities(IServiceCollection services)
