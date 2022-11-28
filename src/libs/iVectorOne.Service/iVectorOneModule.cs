@@ -44,6 +44,8 @@
     using iVectorOne.Suppliers.TeamAmerica;
     using iVectorOne.Suppliers.Travelgate;
     using iVectorOne.Suppliers.YouTravel;
+    using iVectorOne.Suppliers.TourPlanTransfers;
+    using iVectorOne.Suppliers.GowaySydneyTransfers;
     using iVectorOne.Lookups;
     using iVectorOne.Factories;
     using iVectorOne.Models.Tokens;
@@ -247,7 +249,6 @@
             services.AddSingleton<IThirdPartySearch, JumboSearch>();
             services.AddSingleton<IThirdPartySearch, JuniperSearch>();
             services.AddSingleton<IThirdPartySearch, NullTestSupplierSearch>();
-            services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
             services.AddSingleton<IThirdPartySearch, NetstormingSearch>();
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
@@ -264,6 +265,10 @@
             services.AddSingleton<IThirdPartySearch, WelcomeBedsSearch>();
             services.AddSingleton<IThirdPartySearch, YalagoSearch>();
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
+
+            services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
+            //services.AddSingleton<Transfer.IThirdPartySearch, TourPlanTransfersSearchBase>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -291,7 +296,6 @@
             services.AddSingleton<IThirdParty, Miki>();
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
-            services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
             services.AddSingleton<IThirdParty, OceanBeds>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();
@@ -304,6 +308,10 @@
             services.AddSingleton<IThirdParty, W2M>();
             services.AddSingleton<IThirdParty, WelcomeBeds>();
             services.AddSingleton<IThirdParty, YouTravel>();
+
+            services.AddSingleton<Transfer.IThirdParty, GowaySydneyTransfers>();
+            services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
+            //services.AddSingleton<Transfer.IThirdParty, TourPlanTransfersBase>();
         }
 
         public void RegsiterThirdPartyUtilities(IServiceCollection services)

@@ -364,7 +364,7 @@
                 OneWay = false,
                 ReturnDate = DateTime.Today.AddDays(8).Date,
                 ReturnTime = "10:22" ,
-                Supplier = "nulltesttransfersupplier",
+                Supplier = "testtransfersupplier",
                 Adults = 2,
                 Children = 1,
                 Infants = 0,

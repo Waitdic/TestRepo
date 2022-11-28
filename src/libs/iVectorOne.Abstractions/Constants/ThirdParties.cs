@@ -86,6 +86,11 @@
         public const string GOGLOBAL = "GoGlobal";
 
         /// <summary>
+        /// The third party GowaySydneyTransfers
+        /// </summary>
+        public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
+
+        /// <summary>
         /// The third party HotelBedsV2
         /// </summary>
         public const string HOTELBEDSV2 = "HotelBedsV2";
