@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
-    using iVectorOne.Models;
+    using iVectorOne.Models;  
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 
@@ -36,7 +36,7 @@
         /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="location">The location mapping.</param>
         /// <returns>The third party locations</returns>
-        object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
+        //object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
         /// Check if there are any search restrictions for the third party.
@@ -52,5 +52,6 @@
         /// <param name="request">The request.</param>
         /// <returns>a boolean if the response has an exception</returns>
         bool ResponseHasExceptions(Request request);
+        // GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
     }
 }

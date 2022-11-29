@@ -29,21 +29,42 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            throw new System.NotImplementedException();
+            LocationData tpLocations = GetThirdPartyLocations(location);
+
+           return Task.FromResult(new List<Request>() { new Request() {
+                EndPoint = "",
+                ExtraInfo = tpLocations.Validation() ? tpLocations : new LocationData(),
+                Method=RequestMethod.POST,
+                ContentType = ContentTypes.Application_xml
+
+            } });
         }
 
-        public object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location)
+        public LocationData GetThirdPartyLocations(LocationMapping location)
         {
-            throw new System.NotImplementedException();
+            LocationData locationData = new LocationData();
+            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0) {
+                string[] departureData = location.DepartureData.Split(":");
+                string[] arrivalData = location.ArrivalData.Split(":");
+
+            locationData.ArrivalName = location.ArrivalData.Split(":")[1];
+            locationData.DepartureName = departureData[1];
+            locationData.LocationCode =  arrivalData[0].Equals(departureData[0]) ? arrivalData[0] :string.Empty;
+          }
+
+            return locationData;
+
         }
 
         public bool ResponseHasExceptions(Request request)
         {
-            throw new System.NotImplementedException();
+            return false;
+            //throw new System.NotImplementedException();
         }
 
         public bool SearchRestrictions(TransferSearchDetails searchDetails)
         {
+            return false;
             throw new System.NotImplementedException();
         }
 
