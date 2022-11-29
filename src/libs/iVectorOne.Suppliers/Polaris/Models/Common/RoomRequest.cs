@@ -1,14 +1,14 @@
 ﻿namespace iVectorOne.Suppliers.Polaris.Models
 {
     using System.Collections.Generic;
-    using System.Text.Json.Serialization;
+    using Newtonsoft.Json;
 
-    public class RoomRequest 
+    public class RoomRequest
     {
-        [JsonPropertyName("index")]
+        [JsonProperty("index")]
         public int Index { get; set; }
 
-        [JsonPropertyName("passengerAges")]
+        [JsonProperty("passengerAges")]
         public List<int> PassengerAges { get; set; } = new();
     }
 

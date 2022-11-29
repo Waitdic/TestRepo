@@ -59,7 +59,4 @@
       <LastGenOutput>SunHotelsRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Polaris\Models\Common\" />
-  </ItemGroup>
 </Project>

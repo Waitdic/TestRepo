@@ -1,10 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iVectorOne.Suppliers.Polaris
+﻿namespace iVectorOne.Suppliers.Polaris
 {
-    public class InjectedPolarisSettings
+    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Constants;
+    using iVectorOne.Support;
+
+    public class InjectedPolarisSettings : SettingsBase, IPolarisSettings
     {
+        protected override string Source => ThirdParties.POLARIS;
+
+        public string User(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("User", tpAttributeSearch);
+        }
+
+        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("Password", tpAttributeSearch);
+        }
+
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("SearchURL", tpAttributeSearch);
+        }
+
+        public string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("PreBookURL", tpAttributeSearch);
+        }
+
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("BookURL", tpAttributeSearch);
+        }
+
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("CancelURL", tpAttributeSearch);
+        }
+
+        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("LeadGuestNationality", tpAttributeSearch);
+        }
     }
 }

@@ -1,14 +1,16 @@
 ﻿namespace iVectorOne.Suppliers.Polaris.Models
 {
-    using System.Text.Json.Serialization;
+    using Newtonsoft.Json;
 
     public class AvailRequest 
     {
-        [JsonPropertyName("hotelAvailability")]
+        [JsonProperty("hotelAvailability")]
         public HotelAvailabilityRequest HotelAvailability { get; set; } = new();
 
-        [JsonPropertyName("token")]
-        public string Token { get; set; } = string.Empty;
+        [JsonProperty("token")]
+        public string Token { get; set; }
+
+        public bool ShouldSerializeToken() => !string.IsNullOrEmpty(Token);
     }
 
 }

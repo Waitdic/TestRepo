@@ -1,9 +1,8 @@
 ﻿namespace iVectorOne.Suppliers.Polaris.Models
 {
-    public class Location 
+    public class Warn
     {
-        public string DestinationCode { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty;
+        public string Desc { get; set; } = string.Empty;
     }
-
 }

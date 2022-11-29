@@ -36,6 +36,7 @@
     using iVectorOne.Suppliers.Miki;
     using iVectorOne.Suppliers.Netstorming;
     using iVectorOne.Suppliers.OceanBeds;
+    using iVectorOne.Suppliers.Polaris;
     using iVectorOne.Suppliers.Restel;
     using iVectorOne.Suppliers.RMI;
     using iVectorOne.Suppliers.Serhs;
@@ -175,6 +176,7 @@
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
+            services.AddSingleton<IPolarisSettings, InjectedPolarisSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
             services.AddSingleton<IRestelSettings, InjectedRestelSettings>();
             services.AddSingleton<IRMISettings, InjectedRMISettings>();
@@ -218,6 +220,7 @@
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
             services.AddSingleton<IThirdPartySearch, OceanBedsSearch>();
+            services.AddSingleton<IThirdPartySearch, PolarisSearch>();
             services.AddSingleton<IThirdPartySearch, RestelSearch>();
             services.AddSingleton<IThirdPartySearch, RMISearch>();
             services.AddSingleton<IThirdPartySearch, SerhsSearch>();
@@ -259,6 +262,7 @@
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
             services.AddSingleton<IThirdParty, OceanBeds>();
+            services.AddSingleton<IThirdParty, Polaris>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();
             services.AddSingleton<IThirdParty, Serhs>();

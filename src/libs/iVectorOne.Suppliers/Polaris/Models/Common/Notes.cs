@@ -1,14 +1,14 @@
 ﻿namespace iVectorOne.Suppliers.Polaris.Models
 {
     using System.Collections.Generic;
-    using System.Text.Json.Serialization;
+    using Newtonsoft.Json;
 
-    public class Notes 
+    public class Notes
     {
-        [JsonPropertyName("warnings")]
+        [JsonProperty("warnings")]
         public List<Warn> Warnings { get; set; } = new();
 
-        [JsonPropertyName("err")]
+        [JsonProperty("err")]
         public List<Err> Err { get; set; } = new();
     }
 
