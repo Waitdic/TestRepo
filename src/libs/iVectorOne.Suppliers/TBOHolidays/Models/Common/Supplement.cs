@@ -1,19 +1,22 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
-{
-    using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
 
+namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
+{
     public class Supplement
     {
-        [XmlAttribute("SuppChargeType")]
-        public SuppChargeType SuppChargeType { get; set; }
+        [JsonProperty("Index")]
+        public int Index { get; set; }
 
-        [XmlAttribute("SuppIsMandatory")]
-        public bool SuppIsMandatory { get; set; }
+        [JsonProperty("Type")]
+        public SuppChargeType Type { get; set; }
 
-        [XmlAttribute("SuppID")]
-        public int SuppID { get; set; }
+        [JsonProperty("Description")]
+        public string Description { get; set; } = string.Empty;
 
-        [XmlAttribute("Price")]
+        [JsonProperty("Price")]
         public decimal Price { get; set; }
+
+        [JsonProperty("Currency")]
+        public string Currency { get; set; } = string.Empty;
     }
 }

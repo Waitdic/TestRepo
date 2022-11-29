@@ -1,16 +1,11 @@
-﻿
-namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
     using System;
-    using System.Xml.Serialization;
     using Common;
+    using Newtonsoft.Json;
 
-    public class HotelSearchWithRoomsResponse : SoapContent
+    public class HotelSearchWithRoomsResponse
     {
-        [XmlArray("HotelResultList")]
-        [XmlArrayItem("HotelResult")]
-        public HotelResult[] HotelResultList { get; set; } = Array.Empty<HotelResult>();
-
-        public string SessionId { get; set; } = string.Empty;
+       
     }
 }

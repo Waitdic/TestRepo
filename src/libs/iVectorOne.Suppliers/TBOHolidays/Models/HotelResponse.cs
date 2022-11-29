@@ -1,11 +1,15 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
-    using System;
-    using System.Xml.Serialization;
+    using System.Collections.Generic;
+    using Common;
+    using Newtonsoft.Json;
 
     public class HotelResponse
     {
-        [XmlElement("Envelope")]
-        public Envelope<HotelSearchWithRoomsResponse>[] Envelopes { get; set; } = Array.Empty<Envelope<HotelSearchWithRoomsResponse>>();
+        [JsonProperty("Status")]
+        public Status Status { get; set; } = new();
+
+        [JsonProperty("HotelResult")]
+        public List<HotelResult> HotelResult { get; set; } = new();
     }
 }

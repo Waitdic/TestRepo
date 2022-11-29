@@ -1,8 +1,10 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
+    using System.Collections.Generic;
+
     public class Results
     {
-        public HotelResponse HotelResponse { get; set; } = new();
+        public List<HotelResponse> HotelResponses { get; set; } = new();
 
         public HotelCombinations HotelCombinations { get; set; } = new();
     }

@@ -1,11 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
-    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Lookups;
@@ -16,10 +14,13 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using Newtonsoft.Json;
+    
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {
-        private const string DateFormat = "yyyy-MM-ddThh:mm:ss";
+        private const string DateFormat = "yyyy-MM-dd";
 
         private readonly ITBOHolidaysSettings _settings;
         private readonly ITPSupport _support;
@@ -34,33 +35,38 @@
 
         public string Source => ThirdParties.TBOHOLIDAYS;
 
-        public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public async Task<List<Intuitive.Helpers.Net.Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var requests = new List<Request>();
-
-            foreach (var resortSplit in resortSplits)
+            if (resortSplits.Count == 0)
             {
-                var request = await BuildSearchRequestAsync(searchDetails, "HotelSearchWithRooms", resortSplit);
+                return new List<Intuitive.Helpers.Net.Request>();
+            }
 
-                var webRequest = new Request
+            var requests = new List<Intuitive.Helpers.Net.Request>();
+
+            for (var index = 0; index < searchDetails.Rooms; index++)
+            {
+                var request = await BuildSearchRequestAsync(searchDetails, resortSplits, index);
+                
+                var webRequest = new Intuitive.Helpers.Net.Request
                 {
-                    UseGZip = false,
-                    EndPoint = _settings.GenericURL(searchDetails),
+                    EndPoint = /*_settings.SearchURL(searchDetails)*/"http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search",
                     Method = RequestMethod.POST,
-                    ContentType = ContentTypes.Application_SOAP_XML,
+                    ContentType = ContentTypes.Application_json,
+                    Accept = "application/json",
                 };
 
-                webRequest.SetRequest(Helper.CleanRequest(_serializer.Serialize(request).OuterXml));
+                webRequest.Headers.AddNew("Authorization", "Basic " + "QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1");
+                webRequest.SetRequest(request);
                 requests.Add(webRequest);
             }
 
             return requests;
         }
 
-        private async Task<Envelope<HotelSearchWithRoomsRequest>> BuildSearchRequestAsync(SearchDetails searchDetails, string type, ResortSplit resortSplit)
+        private async Task<string> BuildSearchRequestAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits, int index)
         {
-            string[] resortSplitItems = resortSplit.ResortCode.Split('|');
-            string guestNationality = string.Empty;
+            var guestNationality = string.Empty;
 
             if (!string.IsNullOrEmpty(searchDetails.ISONationalityCode))
             {
@@ -72,91 +78,58 @@
                 guestNationality = _settings.LeadGuestNationality(searchDetails);
             }
 
-            var envelope = new Envelope<HotelSearchWithRoomsRequest>
+            var request = new HotelSearchWithRoomsRequest
             {
-                Header = TBOHolidays.BuildHeader(type, searchDetails, _settings),
-                Body =
+                CheckIn = searchDetails.ArrivalDate.ToString(DateFormat),
+                CheckOut = searchDetails.DepartureDate.ToString(DateFormat),
+                HotelCodes = string.Join(',', resortSplits.SelectMany(x => x.Hotels).Select(x => x.TPKey)),
+                GuestNationality = guestNationality,
+                ResponseTime = 23.0m,
+                IsDetailedResponse = false,
+                Filters =
                 {
-                    Content =
-                    {
-                        CheckInDate = searchDetails.ArrivalDate.ToString(DateFormat),
-                        CheckOutDate = searchDetails.DepartureDate.ToString(DateFormat),
-                        CountryName = resortSplitItems[0],
-                        CityName = resortSplitItems[1],
-                        CityId = resortSplitItems[2],
-                        IsNearBySearchAllowed = "false",
-                        NoOfRooms = searchDetails.RoomDetails.Count,
-                        GuestNationality = guestNationality,
-                        PreferredCurrencyCode = _settings.Currency(searchDetails),
-                        ResultCount = _settings.ResultCount(searchDetails).ToSafeString()
-                    }
+                    Refundable = /*_settings.ExcludeNRF(searchDetails)*/ false,
+                    NoOfRooms = 0,
+                    MealType = /*_settings.RequestedMealBases(searchDetails)*/ "All"
                 }
             };
 
-            var request = envelope.Body.Content;
-
-            foreach (var roomDetails in searchDetails.RoomDetails)
+            var roomDetail = searchDetails.RoomDetails[index];
+            var paxRoom = new PaxRoom
             {
-                var roomGuest = new RoomGuest
-                {
-                    AdultCount = roomDetails.Adults,
-                    ChildCount = roomDetails.Children + roomDetails.Infants
-                };
+                Adults = roomDetail.Adults,
+                Children = roomDetail.Children + roomDetail.Infants,
+            };
 
-                // don't have ages so input dummy
-                if (roomGuest.ChildCount > 0)
+            if (paxRoom.Children > 0)
+            {
+                paxRoom.ChildrenAges.AddRange(roomDetail.ChildAges);
+                for (var i = 0; i < roomDetail.Infants; i++)
                 {
-                    foreach (int childAge in roomDetails.ChildAges)
-                    {
-                        roomGuest.ChildAge.Add(childAge);
-                    }
-
-                    for (int i = 1; i <= roomDetails.Infants; i++)
-                    {
-                        roomGuest.ChildAge.Add(0);
-                    }
+                    paxRoom.ChildrenAges.Add(0);
                 }
-
-                request.RoomGuests.Add(roomGuest);
             }
 
-            return envelope;
+            request.PaxRooms.Add(paxRoom);
+            
+            return JsonConvert.SerializeObject(request);
         }
 
-        public TransformedResultCollection TransformResponse(List<Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
+        public TransformedResultCollection TransformResponse(List<Intuitive.Helpers.Net.Request> requests, SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
             var transformed = new TransformedResultCollection();
 
-            var hotelResponse = new HotelResponse
+            var hotelResponses = requests
+                .Select(request => JsonConvert.DeserializeObject<HotelResponse>(request.ResponseString))
+                .Where(x => x.Status.Code == "200" && x.Status.Description == "Successful")
+                .ToList();
+
+            if (hotelResponses.Count != searchDetails.Rooms)
             {
-                Envelopes = requests
-                    .Select(x => _serializer.DeSerialize<Envelope<HotelSearchWithRoomsResponse>>(x.ResponseXML))
-                    .ToArray()
-            };
-
-            // dedupe properties as results from multiple requests can return the same property
-            foreach (var response in hotelResponse.Envelopes)
-            {
-                var resultList = new List<HotelResult>();
-
-                foreach (var hotelResult in response.Body.Content.HotelResultList)
-                {
-                    string code = hotelResult.HotelInfo.HotelCode;
-                    if (resultList.All(x => x.HotelInfo.HotelCode != code))
-                    {
-                        resultList.Add(hotelResult);
-                    }
-                }
-
-                response.Body.Content.HotelResultList = resultList.ToArray();
+                return transformed;
             }
 
-            var combination = FindPossibleCombinations(hotelResponse, searchDetails);
-            var results = new Results { HotelResponse = hotelResponse, HotelCombinations = combination };
-
-            bool multiRoom = searchDetails.RoomDetails.Count > 1; 
-
-            transformed.TransformedResults.AddRange(BuildTransformResult(results, multiRoom));
+            transformed.TransformedResults.AddRange(BuildTransformResult(hotelResponses!));
             return transformed;
         }
 
@@ -165,148 +138,224 @@
             return false;
         }
 
-        public bool ResponseHasExceptions(Request request)
+        public bool ResponseHasExceptions(Intuitive.Helpers.Net.Request request)
         {
             return false;
         }
 
-        public HotelCombinations FindPossibleCombinations(HotelResponse response, SearchDetails searchDetails)
-        {
-            // new hotel
-            var hotelCombinations = new List<HotelCombination>();
-            var hotelCodes = new List<string>();
+        #region OLD
 
-            //gather the raw room information
-            foreach (var hotelNode in response.Envelopes.SelectMany(x => x.Body.Content.HotelResultList))
-            {
-                var hotel = new Hotel { HotelCode = hotelNode.HotelInfo.HotelCode };
-                
-                for (int prbid = 1; prbid <= searchDetails.RoomDetails.Count; prbid++)
-                {
-                    var hotelRoom = new Room
-                    {
-                        PRBID = prbid
-                    };
+        //public HotelCombinations FindPossibleCombinations(List<HotelResponse> responses, SearchDetails searchDetails)
+        //{
+        //    // new hotel
+        //    var hotelCombinations = new List<HotelCombination>();
+        //    var hotelCodes = new List<string>();
 
-                    foreach (var roomCombination in hotelNode.OptionsForBooking.RoomCombination)
-                    {
-                        int roomIndex = roomCombination.RoomIndex[prbid - 1];
+        //    //gather the raw room information
+        //    foreach (var hotelNode in responses.SelectMany(x => x.HotelResult))
+        //    {
+        //        var hotel = new Hotel { HotelCode = hotelNode.HotelCode };
 
-                        if (!hotelRoom.RoomIndex.Contains(roomIndex))
-                        {
-                            hotelRoom.RoomIndex.Add(roomIndex);
-                        }
-                    }
+        //        for (int prbid = 1; prbid <= searchDetails.RoomDetails.Count; prbid++)
+        //        {
+        //            var hotelRoom = new Room
+        //            {
+        //                PRBID = prbid
+        //            };
 
-                    hotel.Rooms.Add(hotelRoom);
-                }
+        //            //foreach (var roomCombination in hotelNode.OptionsForBooking.RoomCombination)
+        //            //{
+        //            //    int roomIndex = roomCombination.RoomIndex[prbid - 1];
 
-                // process - if total combinations match then display all, else only display first
-                int totalCombinations = hotelNode.OptionsForBooking.RoomCombination.Length;
-                
-                int totalPossibleCombinations = hotel.Rooms.First(x => x.PRBID == 1).RoomIndex.Count;
-                totalPossibleCombinations = hotel.Rooms
-                    .Where(x => x.PRBID != 1)
-                    .Aggregate(totalPossibleCombinations, (current, room) =>
-                        current * room.RoomIndex.Count);
+        //            //    if (!hotelRoom.RoomIndex.Contains(roomIndex))
+        //            //    {
+        //            //        hotelRoom.RoomIndex.Add(roomIndex);
+        //            //    }
+        //            //}
 
-                string combinationType = totalCombinations == totalPossibleCombinations 
-                    ? "All" 
-                    : "First";
+        //            hotel.Rooms.Add(hotelRoom);
+        //        }
 
-                if (!hotelCodes.Contains(hotel.HotelCode))
-                {
-                    hotelCombinations.Add(new HotelCombination
-                    {
-                        HotelCode = hotel.HotelCode,
-                        CombinationType = combinationType,
-                        Rooms = combinationType == "All" 
-                            ? hotel.Rooms.Select(x => new Models.Common.Room
-                            {
-                                PRBID = x.PRBID,
-                                RoomIndex = x.RoomIndex.ToArray(),
-                            }).ToArray() 
-                            : Array.Empty<Models.Common.Room>()
-                    });
+        //        // process - if total combinations match then display all, else only display first
+        //        int totalCombinations = hotelNode.OptionsForBooking.RoomCombination.Length;
 
-                    hotelCodes.Add(hotel.HotelCode);
-                }
-            }
+        //        int totalPossibleCombinations = hotel.Rooms.First(x => x.PRBID == 1).RoomIndex.Count;
+        //        totalPossibleCombinations = hotel.Rooms
+        //            .Where(x => x.PRBID != 1)
+        //            .Aggregate(totalPossibleCombinations, (current, room) =>
+        //                current * room.RoomIndex.Count);
 
-            return new HotelCombinations { HotelCombination = hotelCombinations.ToArray() };
-        }
+        //        string combinationType = totalCombinations == totalPossibleCombinations 
+        //            ? "All" 
+        //            : "First";
 
-        private List<TransformedResult> BuildTransformResult(Results result, bool multiRoom)
+        //        if (!hotelCodes.Contains(hotel.HotelCode))
+        //        {
+        //            hotelCombinations.Add(new HotelCombination
+        //            {
+        //                HotelCode = hotel.HotelCode,
+        //                CombinationType = combinationType,
+        //                Rooms = combinationType == "All" 
+        //                    ? hotel.Rooms.Select(x => new Models.Common.Room
+        //                    {
+        //                        PRBID = x.PRBID,
+        //                        RoomIndex = x.RoomIndex.ToArray(),
+        //                    }).ToArray() 
+        //                    : Array.Empty<Models.Common.Room>()
+        //            });
+
+        //            hotelCodes.Add(hotel.HotelCode);
+        //        }
+        //    }
+
+        //    return new HotelCombinations { HotelCombination = hotelCombinations.ToArray() };
+        //}
+
+        //public HotelCombinations FindPossibleCombinations(List<HotelResponse> responses, SearchDetails searchDetails)
+        //{
+        //    // new hotel
+        //    var hotelCombinations = new List<HotelCombination>();
+        //    var hotelCodes = new List<string>();
+
+        //    //gather the raw room information
+        //    foreach (var hotelNode in responses[0].HotelResult)
+        //    {
+        //        if (!responses.All(x => x.HotelResult.Any(hc => hc.HotelCode == hotelNode.HotelCode)))
+        //        {
+        //            continue;
+        //        }
+
+        //        var hotel = new Hotel { HotelCode = hotelNode.HotelCode };
+
+        //        var limit = responses
+        //            .SelectMany(x => x.HotelResult)
+        //            .Where(h => h.HotelCode == hotel.HotelCode)
+        //            .OrderBy(r => r.Rooms.Length)
+        //            .First().Rooms.Length;
+
+        //        for (var index = 0; index < limit; index++)
+        //        {
+        //            for (var prbid = 0; prbid < searchDetails.RoomDetails.Count; prbid++)
+        //            {
+        //                var hotelRoom = new Room
+        //                {
+        //                    PRBID = prbid + 1
+        //                };
+
+        //                var roomIndex = responses[prbid].HotelResult
+        //                    .First(x => x.HotelCode == hotel.HotelCode)
+        //                    .Rooms[index]
+        //                    .BookingCode.Split('!')[2]
+        //                    .ToSafeInt();
+
+
+        //            }
+        //        }
+        //    }
+
+
+        //    foreach (var hotelNode in responses.SelectMany(x => x.HotelResult))
+        //    {
+        //        var hotel = new Hotel { HotelCode = hotelNode.HotelCode };
+
+        //        for (int prbid = 1; prbid <= searchDetails.RoomDetails.Count; prbid++)
+        //        {
+        //            var hotelRoom = new Room
+        //            {
+        //                PRBID = prbid
+        //            };
+
+        //            //foreach (var roomCombination in hotelNode.OptionsForBooking.RoomCombination)
+        //            //{
+        //            //    int roomIndex = roomCombination.RoomIndex[prbid - 1];
+
+        //            //    if (!hotelRoom.RoomIndex.Contains(roomIndex))
+        //            //    {
+        //            //        hotelRoom.RoomIndex.Add(roomIndex);
+        //            //    }
+        //            //}
+
+        //            hotel.Rooms.Add(hotelRoom);
+        //        }
+
+        //        // process - if total combinations match then display all, else only display first
+        //        int totalCombinations = hotelNode.OptionsForBooking.RoomCombination.Length;
+
+        //        int totalPossibleCombinations = hotel.Rooms.First(x => x.PRBID == 1).RoomIndex.Count;
+        //        totalPossibleCombinations = hotel.Rooms
+        //            .Where(x => x.PRBID != 1)
+        //            .Aggregate(totalPossibleCombinations, (current, room) =>
+        //                current * room.RoomIndex.Count);
+
+        //        string combinationType = totalCombinations == totalPossibleCombinations
+        //            ? "All"
+        //            : "First";
+
+        //        if (!hotelCodes.Contains(hotel.HotelCode))
+        //        {
+        //            hotelCombinations.Add(new HotelCombination
+        //            {
+        //                HotelCode = hotel.HotelCode,
+        //                CombinationType = combinationType,
+        //                Rooms = combinationType == "All"
+        //                    ? hotel.Rooms.Select(x => new Models.Common.Room
+        //                    {
+        //                        PRBID = x.PRBID,
+        //                        RoomIndex = x.RoomIndex.ToArray(),
+        //                    }).ToArray()
+        //                    : Array.Empty<Models.Common.Room>()
+        //            });
+
+        //            hotelCodes.Add(hotel.HotelCode);
+        //        }
+        //    }
+
+        //    return new HotelCombinations { HotelCombination = hotelCombinations.ToArray() };
+        //}
+
+        #endregion
+
+        private List<TransformedResult> BuildTransformResult(List<HotelResponse> result)
         {
             var transformedResult = new List<TransformedResult>();
 
-            foreach (var response in result.HotelResponse.Envelopes)
+            foreach (var hotelCode in result
+                         .SelectMany(x => x.HotelResult)
+                         .GroupBy(hr => hr.HotelCode)
+                         .Where(x => x.Count() == result.Count)
+                         .Select(g => g.Key))
             {
-                var searchResponse = response.Body.Content;
-
-                foreach (var hotelCombination in result.HotelCombinations.HotelCombination)
+                for (var prbid = 0; prbid < result.Count; prbid++)
                 {
-                    int resultIndex = searchResponse.HotelResultList
-                        .First(x => x.HotelInfo.HotelCode == hotelCombination.HotelCode).ResultIndex;
-
-                    if (!multiRoom)
+                    foreach (var hotelResult in result[prbid].HotelResult.Where(hr => hr.HotelCode == hotelCode))
                     {
-                        foreach (var hotelRoom in searchResponse.HotelResultList
-                                     .Where(r => r.HotelInfo.HotelCode == hotelCombination.HotelCode)
-                                     .SelectMany(x => x.HotelRooms))
+                        foreach (var room in hotelResult.Rooms)
                         {
-                            transformedResult.Add(GetTransformedResultModel(
-                                hotelRoom,
-                                hotelCombination.HotelCode,
-                                resultIndex,
-                                searchResponse.SessionId,
-                                1));
-                        }
-                    }
-                    else
-                    {
-                        if (hotelCombination.CombinationType == "First")
-                        {
-                            int position = 1;
+                            var supplements = room.Supplements
+                                    .SelectMany(x => x.Where(s => s.Type == SuppChargeType.AtProperty)
+                                    .ToList());
 
-                            var hotelResult = searchResponse.HotelResultList
-                                .First(x => x.HotelInfo.HotelCode == hotelCombination.HotelCode);
+                            var supplementInformation = string.Concat(supplements.Select(c => $"{c.Index},{c.Price}|"));
+                            var tpReference = string.Concat(room.BookingCode, Helper.Separators[0],
+                                supplementInformation);
 
-                            foreach (int roomIndex in hotelResult.OptionsForBooking.RoomCombination[0].RoomIndex)
+                            transformedResult.Add(new TransformedResult
                             {
-                                var hotelRoom = hotelResult.HotelRooms
-                                    .First(x => x.RoomIndex == roomIndex);
-
-                                transformedResult.Add(GetTransformedResultModel(
-                                    hotelRoom,
-                                    hotelCombination.HotelCode,
-                                    resultIndex,
-                                    searchResponse.SessionId,
-                                    position));
-
-                                position++;
-                            }
-                        }
-
-                        if (hotelCombination.CombinationType == "All")
-                        {
-                            foreach (var room in hotelCombination.Rooms)
-                            {
-                                foreach (int roomIndex in room.RoomIndex)
-                                {
-                                    var hotelRoom = searchResponse.HotelResultList
-                                        .Where(x => x.HotelInfo.HotelCode == hotelCombination.HotelCode)
-                                        .SelectMany(h => h.HotelRooms)
-                                        .First(x => x.RoomIndex == roomIndex);
-
-                                    transformedResult.Add(GetTransformedResultModel(
-                                        hotelRoom,
-                                        hotelCombination.HotelCode,
-                                        resultIndex,
-                                        searchResponse.SessionId,
-                                        room.PRBID));
-                                }
-                            }
+                                TPKey = hotelResult.HotelCode,
+                                CurrencyCode = hotelResult.Currency,
+                                PropertyRoomBookingID = prbid + 1,
+                                RoomType = room.Name.First(),
+                                MealBasisCode = room.MealType,
+                                Amount = room.TotalFare,
+                                TPReference = tpReference,
+                                SellingPrice = room.RecommendedSellingRate,
+                                Adjustments = supplements
+                                    .Select(s => new TransformedResultAdjustment(
+                                        AdjustmentType.Supplement,
+                                        string.Empty,
+                                        s.Description,
+                                        s.Price)).ToList()
+                            });
                         }
                     }
                 }
@@ -315,58 +364,16 @@
             return transformedResult;
         }
 
-        private static TransformedResult GetTransformedResultModel(
-            HotelRoom hotelRoom,
-            string hotelCode,
-            int resultIndex,
-            string sessionId,
-            int prbId)
-        {
-            var rate = hotelRoom.RoomRate;
+        //private class Hotel
+        //{
+        //    public string HotelCode { get; set; } = string.Empty;
+        //    public List<Room> Rooms { get; set; } = new();
+        //}
 
-            string supplementInformation = string.Concat(hotelRoom.Supplements.Supplement
-                .Where(x => x.SuppChargeType == SuppChargeType.AtProperty && x.SuppIsMandatory)
-                .Select(c => $"{c.SuppID},{c.Price}|"));
-
-            string roomRateElement = $"{rate.B2CRates},{rate.AgentMarkUp},{rate.RoomTax},{rate.RoomFare},{rate.Currency},{rate.TotalFare}";
-            string tpReference = string.Concat(
-                sessionId,
-                Helper.Separators[0],
-                resultIndex,
-                Helper.Separators[0],
-                hotelRoom.RoomIndex,
-                Helper.Separators[0],
-                hotelRoom.RoomTypeCode,
-                Helper.Separators[0],
-                hotelRoom.RatePlanCode,
-                Helper.Separators[0],
-                roomRateElement,
-                Helper.Separators[0],
-                supplementInformation);
-
-            return new TransformedResult
-            {
-                TPKey = hotelCode,
-                CurrencyCode = rate.Currency,
-                PropertyRoomBookingID = prbId,
-                RoomType = hotelRoom.RoomTypeName,
-                MealBasisCode = "RO",
-                Amount = rate.TotalFare,
-                TPReference = tpReference,
-                Discount = hotelRoom.Discount
-            };
-        }
-
-        private class Hotel
-        {
-            public string HotelCode { get; set; } = string.Empty;
-            public List<Room> Rooms { get; set; } = new();
-        }
-
-        private class Room
-        {
-            public int PRBID { get; set; }
-            public List<int> RoomIndex { get; set; } = new();
-        }
+        //private class Room
+        //{
+        //    public int PRBID { get; set; }
+        //    public List<int> RoomIndex { get; set; } = new();
+        //}
     }
 }
