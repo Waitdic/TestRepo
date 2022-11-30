@@ -80,7 +80,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Info
             {
                 var configuration = new ConfigurationDTO
                 {
-                    SupplierAttributeID = item.SupplierAttributeId,
+                    AccountSupplierAttributeID = item.AccountSupplierAttributeId,
                     Value = item.Value,
                     DefaultValue = item.SupplierAttribute.Attribute.DefaultValue,
                 };
