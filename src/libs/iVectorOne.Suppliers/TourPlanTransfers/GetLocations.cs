@@ -104,7 +104,7 @@
 
             foreach (XmlNode node in searchResponse.SelectNodes($"Reply/OptionInfoReply/Option/OptGeneral/Description"))
             {
-                locationNames.AddRange(SplitDescription(code, node.InnerText));
+                locationNames.AddRange(SplitDescription(node.InnerText).Select(x => $"{code}: {x}"));
             }
 
             return locationNames;
@@ -123,31 +123,27 @@
                         }));
         }
 
-        private List<string> SplitDescription(string code, string description)
+        private List<string> SplitDescription(string description)
         {
+            var list = new List<string>();
+
             try
             {
                 description = description.Replace(",", "");
 
-                var list = new List<string>();
                 var strings = description.Split(" to ");
 
                 if (strings.Length == 2)
                 {
-                    list.Add($"{code}: {strings[0]}");
-                    list.Add($"{code}: {strings[1].Replace(" Transfer", "")}");
-                } else
-                {
-                    list.Add($"{code}: {description} - Full Description");
+                    list.Add(strings[0]);
+                    list.Add(strings[1].Replace(" Transfer", ""));
                 }
-
-                return list;
             }
-            catch (System.Exception ex)
+            catch
             {
-                throw;
             }
-        }
 
+            return list;
+        }
     }
 }
