@@ -47,10 +47,17 @@
             {
                 string[] departureData = location.DepartureData.Split(":");
                 string[] arrivalData = location.ArrivalData.Split(":");
+                if (locationData.IsLocationDataValid(arrivalData) &&
+                    locationData.IsLocationDataValid(departureData))
+                {
+                    locationData.ArrivalName = arrivalData[1];
+                    locationData.DepartureName = departureData[1];
+                    if (arrivalData[0].Equals(departureData[0]))
+                    {
+                        locationData.LocationCode = arrivalData[0];
+                    }
+                }
 
-                locationData.ArrivalName = arrivalData.Length == 2 ? arrivalData[1] : string.Empty;
-                locationData.DepartureName = departureData.Length == 2 ? departureData[1] : string.Empty;
-                locationData.LocationCode = arrivalData[0].Equals(departureData[0]) ? arrivalData[0] : string.Empty;
             }
 
             return locationData;

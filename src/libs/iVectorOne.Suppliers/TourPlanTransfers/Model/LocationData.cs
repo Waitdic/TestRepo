@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
- namespace iVectorOne.Suppliers.TourPlanTransfers
+namespace iVectorOne.Suppliers.TourPlanTransfers
 {
     public class LocationData
     {
@@ -20,13 +20,25 @@ using System.Text;
         /// Gets or sets the arrival name.
         /// </summary>
         public string ArrivalName { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// Validate the fields 
         /// </summary>
         public bool Validation()
         {
-            return !string.IsNullOrEmpty(LocationCode);
+            return !string.IsNullOrEmpty(LocationCode)
+                && !string.IsNullOrEmpty(DepartureName)
+                && !string.IsNullOrEmpty(ArrivalName);
+        }
+
+        /// <summary>
+        /// Check the location data valid or invalid.
+        /// </summary>
+        /// <param name="locationData"></param>
+        /// <returns></returns>
+        public bool IsLocationDataValid(string[] locationData)
+        {
+            return locationData.Length == 2;
         }
     }
 }
