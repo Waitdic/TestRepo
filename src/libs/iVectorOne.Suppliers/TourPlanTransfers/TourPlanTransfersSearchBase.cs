@@ -29,21 +29,49 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            throw new System.NotImplementedException();
+            LocationData tpLocations = GetThirdPartyLocations(location);
+
+            return Task.FromResult(new List<Request>() { new Request() {
+                EndPoint = "",
+                ExtraInfo = tpLocations.Validation() ? tpLocations : new LocationData(),
+                Method=RequestMethod.POST,
+                ContentType = ContentTypes.Application_xml
+
+            } });
         }
 
-        public object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location)
+        public LocationData GetThirdPartyLocations(LocationMapping location)
         {
-            throw new System.NotImplementedException();
+            LocationData locationData = new LocationData();
+            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0)
+            {
+                string[] departureData = location.DepartureData.Split(":");
+                string[] arrivalData = location.ArrivalData.Split(":");
+                if (locationData.IsLocationDataValid(arrivalData) &&
+                    locationData.IsLocationDataValid(departureData))
+                {
+                    locationData.ArrivalName = arrivalData[1].TrimStart();
+                    locationData.DepartureName = departureData[1].TrimStart();
+                    if (arrivalData[0].Equals(departureData[0]))
+                    {
+                        locationData.LocationCode = arrivalData[0];
+                    }
+                }
+
+            }
+
+            return locationData;
+
         }
 
         public bool ResponseHasExceptions(Request request)
         {
-            throw new System.NotImplementedException();
+            return false;
         }
 
         public bool SearchRestrictions(TransferSearchDetails searchDetails)
         {
+            return false;
             throw new System.NotImplementedException();
         }
 
