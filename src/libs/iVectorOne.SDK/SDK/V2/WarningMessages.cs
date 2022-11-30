@@ -340,5 +340,9 @@
         ///   <para>"The return date not before departure date</para>
         /// </summary>
         public const string ReturnDateNotBeforeDepartureDate = "The return date cannot be before the departure date";
+        /// <summary>
+        ///   <para>"Invalid Supplier Reference</para>
+        /// </summary>
+        public const string InvalidSupplierReference = "Invalid Supplier Reference";
     }
 }
