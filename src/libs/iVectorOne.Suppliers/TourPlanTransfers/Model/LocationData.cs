@@ -7,17 +7,17 @@ using System.Text;
     public class LocationData
     {
         /// <summary>
-        /// Gets or sets the LocationCode.
+        /// Gets or sets the location code.
         /// </summary>
         public string LocationCode { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the DepartureName.
+        /// Gets or sets the departure name.
         /// </summary>
         public string DepartureName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the ArrivalName.
+        /// Gets or sets the arrival name.
         /// </summary>
         public string ArrivalName { get; set; } = string.Empty;
         
@@ -26,9 +26,7 @@ using System.Text;
         /// </summary>
         public bool Validation()
         {
-            if (string.IsNullOrEmpty(LocationCode))
-                return false;
-            return true;
+            return !string.IsNullOrEmpty(LocationCode);
         }
     }
 }

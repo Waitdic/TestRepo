@@ -31,7 +31,7 @@
         {
             LocationData tpLocations = GetThirdPartyLocations(location);
 
-           return Task.FromResult(new List<Request>() { new Request() {
+            return Task.FromResult(new List<Request>() { new Request() {
                 EndPoint = "",
                 ExtraInfo = tpLocations.Validation() ? tpLocations : new LocationData(),
                 Method=RequestMethod.POST,
@@ -43,14 +43,15 @@
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0) {
+            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0)
+            {
                 string[] departureData = location.DepartureData.Split(":");
                 string[] arrivalData = location.ArrivalData.Split(":");
 
-            locationData.ArrivalName = location.ArrivalData.Split(":")[1];
-            locationData.DepartureName = departureData[1];
-            locationData.LocationCode =  arrivalData[0].Equals(departureData[0]) ? arrivalData[0] :string.Empty;
-          }
+                locationData.ArrivalName = arrivalData.Length == 2 ? arrivalData[1] : string.Empty;
+                locationData.DepartureName = departureData.Length == 2 ? departureData[1] : string.Empty;
+                locationData.LocationCode = arrivalData[0].Equals(departureData[0]) ? arrivalData[0] : string.Empty;
+            }
 
             return locationData;
 
@@ -59,7 +60,6 @@
         public bool ResponseHasExceptions(Request request)
         {
             return false;
-            //throw new System.NotImplementedException();
         }
 
         public bool SearchRestrictions(TransferSearchDetails searchDetails)

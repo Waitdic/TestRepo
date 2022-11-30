@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
-    using iVectorOne.Models;  
+    using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 
@@ -31,14 +31,6 @@
         TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
-        /// Builds the search requests.
-        /// </summary>
-        /// <param name="searchDetails">The transfer search details.</param>
-        /// <param name="location">The location mapping.</param>
-        /// <returns>The third party locations</returns>
-        //object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
-
-        /// <summary>
         /// Check if there are any search restrictions for the third party.
         /// For example; the third party can not perform multi-room bookings.
         /// </summary>
@@ -52,6 +44,5 @@
         /// <param name="request">The request.</param>
         /// <returns>a boolean if the response has an exception</returns>
         bool ResponseHasExceptions(Request request);
-        // GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
     }
 }
