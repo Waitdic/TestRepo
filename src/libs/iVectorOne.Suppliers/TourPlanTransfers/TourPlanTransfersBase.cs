@@ -8,6 +8,9 @@
     using Intuitive;
     using System.Net.Http;
     using Microsoft.Extensions.Logging;
+    using iVectorOne.SDK.V2;
+    using System;
+    using System.Collections.Generic;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -16,6 +19,7 @@
         private ITourPlanTransfersSettings _settings;
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
+        public const string InvalidSupplierReference = "Invalid Supplier Reference";
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
@@ -34,7 +38,16 @@
 
         public Task<string> BookAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                var supplierReferenceValues = SplitSupplierReference(transferDetails);
+                return Task.FromResult("failed");
+            }
+            catch (ArgumentException ex)
+            {
+                transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
+                return Task.FromResult("failed");
+            }
         }
 
         public Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
@@ -50,6 +63,45 @@
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
             throw new System.NotImplementedException();
+        }
+        private class SupplierReferenceData
+        {
+            public string Opt { get; set; }
+            public string RateId { get; set; }
+        }
+        private List<SupplierReferenceData> SplitSupplierReference(TransferDetails transferDetails)
+        {
+            List<SupplierReferenceData> result = new List<SupplierReferenceData>();
+
+            if (transferDetails.OneWay)
+            {
+                string[] supplierReferenceValues = transferDetails.SupplierReference.Split("-");
+                if (supplierReferenceValues.Length != 2)
+                {
+                    throw new ArgumentException(InvalidSupplierReference);
+                }
+                result.Add(new SupplierReferenceData { Opt = supplierReferenceValues[0], RateId = supplierReferenceValues[1] });
+            }
+            else
+            {
+                string[] legSupplierReferences = transferDetails.SupplierReference.Split("|");
+                if (legSupplierReferences.Length != 2)
+                {
+                    throw new ArgumentException(InvalidSupplierReference);
+                }
+                foreach (string legSupplierReference in legSupplierReferences)
+                {
+                    string[] supplierReferenceValues = legSupplierReference.Split("-");
+
+                    if (supplierReferenceValues.Length != 2)
+                    {
+                        throw new ArgumentException(InvalidSupplierReference);
+                    }
+                    result.Add(new SupplierReferenceData { Opt = supplierReferenceValues[0], RateId = supplierReferenceValues[1] });
+                }
+
+            }
+            return result;
         }
     }
 }
