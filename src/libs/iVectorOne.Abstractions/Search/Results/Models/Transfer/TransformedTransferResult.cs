@@ -10,12 +10,6 @@
     public class TransformedTransferResult
     {
         /// <summary>
-        /// The tp session identifier error message
-        /// </summary>
-        [XmlIgnore]
-        public const string TPSESSIONIDERRORMESSAGE = "No TP Session Id Specified";
-
-        /// <summary>
         /// The currency code error message
         /// </summary>
         [XmlIgnore]
@@ -205,11 +199,6 @@
         /// </summary>
         public void Validate()
         {
-            if (string.IsNullOrEmpty(this.TPSessionID))
-            {
-                this.Warnings.Add(TPSESSIONIDERRORMESSAGE);
-            }
-
             if (string.IsNullOrEmpty(this.CurrencyCode))
             {
                 this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
