@@ -31,14 +31,6 @@
         TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
-        /// Builds the search requests.
-        /// </summary>
-        /// <param name="searchDetails">The transfer search details.</param>
-        /// <param name="location">The location mapping.</param>
-        /// <returns>The third party locations</returns>
-        object GetThirdPartyLocations(TransferSearchDetails searchDetails, LocationMapping location);
-
-        /// <summary>
         /// Check if there are any search restrictions for the third party.
         /// For example; the third party can not perform multi-room bookings.
         /// </summary>
