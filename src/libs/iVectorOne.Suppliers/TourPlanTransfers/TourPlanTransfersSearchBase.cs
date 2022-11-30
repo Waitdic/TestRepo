@@ -50,8 +50,8 @@
                 if (locationData.IsLocationDataValid(arrivalData) &&
                     locationData.IsLocationDataValid(departureData))
                 {
-                    locationData.ArrivalName = arrivalData[1];
-                    locationData.DepartureName = departureData[1];
+                    locationData.ArrivalName = arrivalData[1].TrimStart();
+                    locationData.DepartureName = departureData[1].TrimStart();
                     if (arrivalData[0].Equals(departureData[0]))
                     {
                         locationData.LocationCode = arrivalData[0];
