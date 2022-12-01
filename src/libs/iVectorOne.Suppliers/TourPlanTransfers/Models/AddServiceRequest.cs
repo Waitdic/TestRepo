@@ -10,38 +10,32 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public string Password { get; set; }
         public string Opt { get; set; }
         public string ExistingBookingInfo { get; set; }
-        public string RateID { get; set; }
-        public DateTime DateFrom { get; set; }
-        public NewBookingInfo NewBookingInfo { get; set; }
-        public RoomConfigs RoomConfigs { get; set; }
-        public DateTime PickUp_Date { get; set; }
+        public string RateId { get; set; }
+        public string DateFrom { get; set; }
+        public NewBookingInformation NewBookingInfo { get; set; }
+        public RoomConfigurations RoomConfigs { get; set; }
+        public string PickUp_Date { get; set; }
         public string PuTime { get; set; }
         public string PuRemark { get; set; }
     }
 
-    public class NewBookingInfo
+    public class NewBookingInformation
     {
         public string Name { get; set; }
         public string QB { get; set; } = "B";
     }
 
-    public class RoomConfigs
+    public class RoomConfigurations
     {
-        public RoomConfig RoomConfig { get; set; }
+        public RoomConfiguration RoomConfig { get; set; }
     }
-    public class RoomConfig
+    public class RoomConfiguration
     {
         public int Adults { get; set; }
         public int Children { get; set; }
         public int Infants { get; set; }
-        public PaxList PaxList { get; set; }
+        public List<PaxDetails> PaxList { get; set; }
     }
-
-    public class PaxList
-    {
-        public PaxDetails PaxDetails { get; set; }
-    }
-
     public class PaxDetails
     {
         public string Title { get; set; }
