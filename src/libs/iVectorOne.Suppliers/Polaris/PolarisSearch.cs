@@ -29,19 +29,26 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
-            var requests = resortSplits.Select(resort => 
+            var requests = resortSplits.SelectMany(resort => 
             {
-                return BuildJsonRequest(searchDetails, resort);
+                return BuildResortRequests(searchDetails, resort);
             }).ToList();
 
             return Task.FromResult(requests);
         }
 
-        public Request BuildJsonRequest(SearchDetails searchDetails, ResortSplit resort) 
+        public List<Request> BuildResortRequests(SearchDetails searchDetails, ResortSplit resort) 
         {
-            var availRequest = new AvailRequest
+            string basicAuthToken = Convert.ToBase64String(new UTF8Encoding().GetBytes(
+                $"{_settings.User(searchDetails)}:{_settings.Password(searchDetails)}"));
+
+            var requests = Enumerable.Range(0, _settings.SplitMultiRoom(searchDetails) 
+                                                        ? searchDetails.Rooms 
+                                                        : 1).Select(splitIdx =>
             {
-                HotelAvailability = {
+                var availRequest = new AvailRequest
+                {
+                    HotelAvailability = {
                     SearchAvail =
                     {
                         CheckIn = searchDetails.ArrivalDate.ToString(Constant.DateFormat),
@@ -59,7 +66,10 @@
                                         ? string.Empty
                                         : searchDetails.SellingCountry,
 
-                        Rooms = searchDetails.RoomDetails.Select((room, roomIdx) => new RoomRequest
+                        Rooms = searchDetails.RoomDetails
+                        .Where((room, roomIdx) => !_settings.SplitMultiRoom(searchDetails)
+                                                  || roomIdx == splitIdx)
+                        .Select((room, roomIdx) => new RoomRequest
                         {
                             Index = roomIdx + 1,
                             PassengerAges = Enumerable.Range(0, room.Adults)
@@ -71,25 +81,25 @@
                         }).ToList()
                     }
                 },
-                Token = DateTime.UtcNow.ToString()
-            };
+                    Token = DateTime.UtcNow.ToString()
+                };
 
-            var requestString = JsonConvert.SerializeObject(availRequest);
+                var requestString = JsonConvert.SerializeObject(availRequest);
 
-            var request = new Request()
-            {
-                EndPoint = _settings.SearchURL(searchDetails),
-                Method = RequestMethod.POST,
-                Source = Source,
-                ContentType = ContentTypes.Application_json,
-                UseGZip = _settings.UseGZip(searchDetails)
-            };
-            request.SetRequest(requestString);
-            var encoder = new UTF8Encoding();
-            string basicToken = Convert.ToBase64String(encoder.GetBytes($"{_settings.User(searchDetails)}:{_settings.Password(searchDetails)}"));
-            request.Headers.AddNew("Authorization", "Basic " + basicToken);
-
-            return request;
+                var request = new Request()
+                {
+                    EndPoint = _settings.SearchURL(searchDetails),
+                    Method = RequestMethod.POST,
+                    Source = Source,
+                    ExtraInfo = splitIdx + 1,
+                    ContentType = ContentTypes.Application_json,
+                    UseGZip = _settings.UseGZip(searchDetails)
+                };
+                request.SetRequest(requestString);
+                request.Headers.AddNew("Authorization", "Basic " + basicAuthToken);
+                return request;
+            }).ToList();
+            return requests;
         }
 
         public bool ResponseHasExceptions(Request request)
@@ -120,6 +130,9 @@
                                                                 && x.Amount >= roomRate.Pricing.Net.Price).Any();
                         var excludeNRF = _settings.ExcludeNRF(searchDetails);
 
+                        var cc = new Cancellations();
+                        cc.AddRange(canxs);
+
                         return roomRate.Rooms.Where(x => !(excludeNRF && isRateNonRefundable)).Select(roomInfo =>
                         {
                             return new TransformedResult
@@ -129,12 +142,14 @@
                                 CurrencyCode = roomRate.Pricing.Currency,
                                 RoomType = roomInfo.Name,
                                 RoomTypeCode = roomInfo.Id,
-                                PropertyRoomBookingID = roomInfo.Index,
-                                SellingPrice = roomInfo.Pricing.Sell.Price,
+                                PropertyRoomBookingID = _settings.SplitMultiRoom(searchDetails)
+                                                        ? requests.ExtraInfo.ToSafeInt()
+                                                        : roomInfo.Index,
+                                MinimumPrice = roomInfo.Pricing.Sell.Price,
                                 Amount = roomInfo.Pricing.Net.Price,                                
                                 MealBasisCode = roomRate.Meal.Id,
                                 TPReference = roomRate.BookToken,
-                                Cancellations = canxs,
+                                Cancellations = cc,
                                 NonRefundableRates = isRateNonRefundable                            
                             };
                         });

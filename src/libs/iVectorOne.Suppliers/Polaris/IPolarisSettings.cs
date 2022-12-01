@@ -16,5 +16,6 @@ namespace iVectorOne.Suppliers.Polaris
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
         string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool SplitMultiRoom(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

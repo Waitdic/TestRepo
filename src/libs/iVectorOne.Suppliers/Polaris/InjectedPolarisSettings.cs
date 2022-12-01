@@ -57,5 +57,10 @@
         {
             return Get_Value("LeadGuestNationality", tpAttributeSearch);
         }
+
+        public bool SplitMultiRoom(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("SplitMultiRoom", tpAttributeSearch).ToSafeBoolean();
+        }
     }
 }
