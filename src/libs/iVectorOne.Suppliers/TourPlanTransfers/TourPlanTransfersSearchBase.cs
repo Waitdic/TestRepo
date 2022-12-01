@@ -9,7 +9,6 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -19,8 +18,7 @@
 
     public abstract class TourPlanTransfersSearchBase : IThirdPartySearch, ISingleSource
     {
-        public abstract string Source { get; }
-
+        #region Constructor
         private ITourPlanTransfersSettings _settings;
 
         private readonly HttpClient _httpClient;
@@ -35,59 +33,30 @@
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
+        #endregion
 
+        #region Properties
+        public abstract string Source { get; }
+        #endregion
+
+        #region Public Functions
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
             LocationData tpLocations = GetThirdPartyLocations(location);
-
-            XmlDocument departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+            var departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> request = new List<Request>();
+            var xmlDocument = Serialize(departureBuildOptionInfoRequest);
             request.Add(GetXMLRequest(searchDetails));
-            request[0].SetRequest(JsonConvert.SerializeObject(departureBuildOptionInfoRequest));
+            request[0].SetRequest(xmlDocument);
             if (!searchDetails.OneWay)
             {
-                XmlDocument returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
                 request.Add(GetXMLRequest(searchDetails));
-                request[1].SetRequest(JsonConvert.SerializeObject(returnBuildOptionInfoRequest));
+                xmlDocument = Serialize(returnBuildOptionInfoRequest);
+                request[1].SetRequest(xmlDocument);
             }
 
-            return Task.FromResult( request);
-        }
-
-        private XmlDocument BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
-        {
-            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
-            {
-                AgentID = _settings.AgentId(searchDetails), 
-                Password = _settings.Password(searchDetails), 
-                DateFrom = dateFrom.ToString(Constant.DateTimeFormat) ,
-                Info = "GSIT",
-                Opt = tpLocations.LocationCode + "TR????????????",
-                RoomConfigs = new List<RoomConfig>()
-                {
-                   new RoomConfig() {
-                   Adults = searchDetails.Adults,
-                   Children = searchDetails.Children,
-                   Infants = searchDetails.Children
-                   }
-                }
-            };
-
-            XmlDocument xmlRequest = _serializer.SerializeWithoutNamespaces(optionInfoRequest);
-            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
-
-            return xmlRequest;
-        }
-
-        private Request GetXMLRequest(TransferSearchDetails searchDetails)
-        {
-            return new Request()
-            {
-                EndPoint = _settings.URL(searchDetails),
-                Method = RequestMethod.POST,
-                ContentType = ContentTypes.Application_xml
-
-            };
+            return Task.FromResult(request);
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
@@ -128,5 +97,48 @@
         {
             throw new System.NotImplementedException();
         }
+        #endregion
+
+        #region Private Functions
+        private OptionInfoRequest BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
+        {
+            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+            {
+                AgentID = _settings.AgentId(searchDetails),
+                Password = _settings.Password(searchDetails),
+                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
+                Info = Constant.Info,
+                Opt = tpLocations.LocationCode + Constant.TransferOptText,
+                RoomConfigs = new List<RoomConfig>()
+                {
+                   new RoomConfig() {
+                   Adults = searchDetails.Adults,
+                   Children = searchDetails.Children,
+                   Infants = searchDetails.Children
+                   }
+                }
+            };
+
+            return optionInfoRequest;
+        }
+        private Request GetXMLRequest(TransferSearchDetails searchDetails)
+        {
+            return new Request()
+            {
+                EndPoint = _settings.URL(searchDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+
+            };
+        }
+
+        private XmlDocument Serialize(OptionInfoRequest request)
+        {
+            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
+            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
+            return xmlRequest;
+        }
+        #endregion
+
     }
 }

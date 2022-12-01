@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iVectorOne.Suppliers.TourPlanTransfers.Models
+﻿namespace iVectorOne.Suppliers.TourPlanTransfers.Models
 {
     public static class Constant
     {
         public const string DateTimeFormat = "yyyy-MM-dd";
+        public const string Info = "GSIT";
+        public const string TransferOptText = "TR????????????";
+
     }
 }
