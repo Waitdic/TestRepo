@@ -42,11 +42,8 @@
 
             XmlDocument departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> request = new List<Request>();
-            //Request departureRequest = GetXMLRequest(searchDetails);
             request.Add(GetXMLRequest(searchDetails));
             request[0].SetRequest(JsonConvert.SerializeObject(departureBuildOptionInfoRequest));
-            //Request returnRequest;
-            //departureRequest.SetRequest(JsonConvert.SerializeObject(departureBuildOptionInfoRequest));
             if (!searchDetails.OneWay)
             {
                 XmlDocument returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
