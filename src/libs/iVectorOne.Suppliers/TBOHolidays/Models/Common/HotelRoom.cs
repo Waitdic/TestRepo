@@ -1,9 +1,7 @@
-﻿using System;
-using Newtonsoft.Json;
-
-namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
     using System.Collections.Generic;
+    using Newtonsoft.Json;
 
     public class HotelRoom
     {
@@ -30,16 +28,9 @@ namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 
         public bool WithTransfers { get; set; }
 
+        [JsonProperty("CancelPolicies")]
+        public List<CancelPolicy> CancelPolicies { get; set; } = new();
+
         public int RoomIndex { get; set; }
-
-
-
-        //public string RoomTypeCode { get; set; } = string.Empty;
-
-        //public string RatePlanCode { get; set; } = string.Empty;
-
-        //public RoomRate RoomRate { get; set; } = new();
-
-        //public decimal Discount { get; set; }
     }
 }

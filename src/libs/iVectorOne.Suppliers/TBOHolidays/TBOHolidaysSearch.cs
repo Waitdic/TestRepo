@@ -1,5 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays
 {
+    using System;
+    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -9,6 +11,7 @@
     using Lookups;
     using Models;
     using Models.Common;
+    using Models.Search;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
@@ -16,7 +19,6 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.SDK.V2.PropertySearch;
     using Newtonsoft.Json;
-    
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {
@@ -43,6 +45,7 @@
             }
 
             var requests = new List<Intuitive.Helpers.Net.Request>();
+            var auth = Helper.GetAuth(_settings.User(searchDetails), _settings.Password(searchDetails));
 
             for (var index = 0; index < searchDetails.Rooms; index++)
             {
@@ -56,7 +59,7 @@
                     Accept = "application/json",
                 };
 
-                webRequest.Headers.AddNew("Authorization", "Basic " + "QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1");
+                webRequest.Headers.AddNew("Authorization", auth);
                 webRequest.SetRequest(request);
                 requests.Add(webRequest);
             }
@@ -348,7 +351,7 @@
                                 MealBasisCode = room.MealType,
                                 Amount = room.TotalFare,
                                 TPReference = tpReference,
-                                SellingPrice = room.RecommendedSellingRate,
+                                MinimumPrice = room.RecommendedSellingRate,
                                 Adjustments = supplements
                                     .Select(s => new TransformedResultAdjustment(
                                         AdjustmentType.Supplement,

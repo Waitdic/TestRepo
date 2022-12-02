@@ -1,7 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
     using System;
+    using System.Text;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Search.Models;
 
     public static class Helper
     {
@@ -17,6 +19,12 @@
             return request
                 .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
                 .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
+        }
+
+        public static string GetAuth(string user, string password)
+        {
+            return "Basic " + Convert.ToBase64String(
+            ASCIIEncoding.ASCII.GetBytes($"{user}:{password}"));
         }
     }
 
