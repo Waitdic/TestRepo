@@ -5,7 +5,10 @@
 
     public class Hotel
     {
+        [JsonProperty("chekIn")]
         public string CheckIn { get; set; } = string.Empty;
+
+        [JsonProperty("chekOut")]
         public string CheckOut { get; set; } = string.Empty;
 
         [JsonProperty("hotelCode")]

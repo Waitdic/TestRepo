@@ -5,6 +5,7 @@
         public const string DateFormat = "yyyy-MM-dd";
         public const int DefaultAdultAge = 30;
         public const int DefaultInfantAge = 0;
+        public const string Token = "asdfasdfasd";
 
         internal static class LocationType
         {
@@ -18,6 +19,9 @@
         {
             public const string Ok = "OK";
             public const string Error = "ERROR";
+            public const string Confirmed = "CONFIRMED";
+            public const string AlreadyConfirmed = "ALREADY_CONFIRMED";
+            public const string AlreadyBookConfirmed = "ALREADY_BOOK_CONFIRMED";
         }
     }
 }

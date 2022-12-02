@@ -11,6 +11,9 @@
         [JsonProperty("rateId")]
         public string RateId { get; set; } = string.Empty;
 
+        [JsonProperty("roomQty")]
+        public int RoomQty { get; set; }
+
         [JsonProperty("rooms")]
         public List<RoomInfo> Rooms { set; get; } = new();
 

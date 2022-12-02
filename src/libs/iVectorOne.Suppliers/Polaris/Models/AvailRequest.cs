@@ -9,7 +9,6 @@
 
         [JsonProperty("token")]
         public string Token { get; set; }
-
         public bool ShouldSerializeToken() => !string.IsNullOrEmpty(Token);
     }
 

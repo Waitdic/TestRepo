@@ -23,9 +23,9 @@
             return Get_Value("SearchURL", tpAttributeSearch);
         }
 
-        public string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("PreBookURL", tpAttributeSearch);
+            return Get_Value("PrebookURL", tpAttributeSearch);
         }
 
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -61,6 +61,11 @@
         public bool SplitMultiRoom(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("SplitMultiRoom", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
     }
 }

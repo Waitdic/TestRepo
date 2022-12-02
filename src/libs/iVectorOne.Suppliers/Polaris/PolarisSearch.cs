@@ -1,7 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.Polaris
 {
+    using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Security;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
@@ -13,18 +15,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class PolarisSearch : IThirdPartySearch, ISingleSource
     {
         public string Source => ThirdParties.POLARIS;
 
-        public IPolarisSettings _settings;
+        private readonly IPolarisSettings _settings;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public PolarisSearch(IPolarisSettings settings)
+        public PolarisSearch(IPolarisSettings settings, ISecretKeeper secretKeeper)
         {
             _settings = settings;
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
@@ -39,8 +42,7 @@
 
         public List<Request> BuildResortRequests(SearchDetails searchDetails, ResortSplit resort) 
         {
-            string basicAuthToken = Convert.ToBase64String(new UTF8Encoding().GetBytes(
-                $"{_settings.User(searchDetails)}:{_settings.Password(searchDetails)}"));
+            string basicAuthToken = Polaris.BasicToken(searchDetails, _settings);
 
             var requests = Enumerable.Range(0, _settings.SplitMultiRoom(searchDetails) 
                                                         ? searchDetails.Rooms 
@@ -49,24 +51,24 @@
                 var availRequest = new AvailRequest
                 {
                     HotelAvailability = {
-                    SearchAvail =
-                    {
-                        CheckIn = searchDetails.ArrivalDate.ToString(Constant.DateFormat),
-                        CheckOut = searchDetails.ArrivalDate.AddDays(searchDetails.Duration).ToString(Constant.DateFormat),
-                        Destination =
+                        SearchAvail =
                         {
-                            HotelCodes = resort.Hotels.Select(x => x.TPKey).ToList(),
-                            Location = new Location
+                            CheckIn = searchDetails.ArrivalDate.ToString(Constant.DateFormat),
+                            CheckOut = searchDetails.ArrivalDate.AddDays(searchDetails.Duration).ToString(Constant.DateFormat),
+                            Destination =
                             {
-                                DestinationCode = resort.ResortCode,
-                                Type = Constant.LocationType.Empty,
-                            }
-                        },
-                        Market = string.IsNullOrEmpty(searchDetails.SellingCountry)
+                                HotelCodes = resort.Hotels.Select(x => x.TPKey).ToList(),
+                                Location = new Location
+                                {
+                                    DestinationCode = resort.ResortCode,
+                                    Type = Constant.LocationType.Empty,
+                                }
+                            },
+                            Market = string.IsNullOrEmpty(searchDetails.SellingCountry)
                                         ? string.Empty
                                         : searchDetails.SellingCountry,
 
-                        Rooms = searchDetails.RoomDetails
+                            Rooms = searchDetails.RoomDetails
                         .Where((room, roomIdx) => !_settings.SplitMultiRoom(searchDetails)
                                                   || roomIdx == splitIdx)
                         .Select((room, roomIdx) => new RoomRequest
@@ -79,9 +81,8 @@
                                                               .Select(_ => Constant.DefaultInfantAge))
                                             .ToList()
                         }).ToList()
-                    }
-                },
-                    Token = DateTime.UtcNow.ToString()
+                        }
+                    },
                 };
 
                 var requestString = JsonConvert.SerializeObject(availRequest);
@@ -125,7 +126,7 @@
                     return hotel.RoomRates.Where(roomRate => roomRate.Status == Constant.Status.Ok)
                                           .SelectMany(roomRate =>
                     {
-                        var canxs = TransformCancellations(roomRate.CancellationPolicies);
+                        var canxs = Polaris.TransformCancellations(roomRate.CancellationPolicies);
                         var isRateNonRefundable = canxs.Where(x => x.StartDate <= nowDay 
                                                                 && x.Amount >= roomRate.Pricing.Net.Price).Any();
                         var excludeNRF = _settings.ExcludeNRF(searchDetails);
@@ -135,6 +136,15 @@
 
                         return roomRate.Rooms.Where(x => !(excludeNRF && isRateNonRefundable)).Select(roomInfo =>
                         {
+                            var roomIndex = _settings.SplitMultiRoom(searchDetails)
+                                                        ? requests.ExtraInfo.ToSafeInt()
+                                                        : roomInfo.Index;
+                            var reference = new PolarisTpRef
+                            {
+                                BookToken = roomRate.BookToken,
+                                RoomIndex = roomIndex
+                            }.Encrypt(_secretKeeper);
+
                             return new TransformedResult
                             {
                                 TPKey = hotel.HotelCode,
@@ -142,13 +152,10 @@
                                 CurrencyCode = roomRate.Pricing.Currency,
                                 RoomType = roomInfo.Name,
                                 RoomTypeCode = roomInfo.Id,
-                                PropertyRoomBookingID = _settings.SplitMultiRoom(searchDetails)
-                                                        ? requests.ExtraInfo.ToSafeInt()
-                                                        : roomInfo.Index,
-                                MinimumPrice = roomInfo.Pricing.Sell.Price,
+                                PropertyRoomBookingID = roomIndex,
                                 Amount = roomInfo.Pricing.Net.Price,                                
                                 MealBasisCode = roomRate.Meal.Id,
-                                TPReference = roomRate.BookToken,
+                                TPReference = reference,
                                 Cancellations = cc,
                                 NonRefundableRates = isRateNonRefundable                            
                             };
@@ -160,17 +167,6 @@
             var resultCollection = new TransformedResultCollection();
             resultCollection.TransformedResults.AddRange(responses);
             return resultCollection;
-        }
-
-        public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations) 
-        {
-            var canxs = cancellations.Select(cancellation => new Cancellation
-            {
-                StartDate = cancellation.From.ToSafeDate(),
-                EndDate = cancellation.To.ToSafeDate(),
-                Amount = cancellation.Pricing.Net.Price
-            }).ToList();
-            return canxs;
         }
     }
 }

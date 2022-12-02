@@ -9,7 +9,7 @@ namespace iVectorOne.Suppliers.Polaris
         string User(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
         string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string PreBookURL(IThirdPartyAttributeSearch tpAttributeSearch);
+        string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch);
         string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
@@ -17,5 +17,6 @@ namespace iVectorOne.Suppliers.Polaris
         bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch);
         string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch);
         bool SplitMultiRoom(IThirdPartyAttributeSearch tpAttributeSearch);
+        int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }
