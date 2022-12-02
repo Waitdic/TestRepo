@@ -11,10 +11,13 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
+    using System.Data.SqlTypes;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
+    using System.Xml.Serialization;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -57,11 +60,34 @@
 
                 await request.Send(_httpClient, _logger);
 
+                if (!ResponseHasError(transferDetails, request.ResponseXML))
+                {
+                    var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
+
+                    if (deserializedResponse != null &&
+                        string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
+                    {
+                        transferDetails.ConfirmationReference = Convert.ToString(deserializedResponse.BookingId);
+                        transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
+                        return deserializedResponse.Ref;
+                    }
+                    else
+                    {
+                        return "failed";
+                    }
+                }
+
+
                 return "failed";
             }
             catch (ArgumentException ex)
             {
                 transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
+                return "failed";
+            }
+            catch (Exception ex)
+            {
+                transferDetails.Warnings.AddNew("ServerError", ex.Message);
                 return "failed";
             }
             finally
@@ -72,6 +98,12 @@
                 }
 
             }
+        }
+
+        public ErrorReply DeserializeErrorResponse(XmlDocument xmlErrorResponse)
+        {
+            return _serializer.DeSerialize<ErrorReply>(
+                    _serializer.CleanXmlNamespaces(xmlErrorResponse));
         }
 
         public Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
@@ -190,6 +222,23 @@
             xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
             return xmlRequest;
         }
+        public T DeSerialize<T>(XmlDocument xmlDocument) where T : class
+        {
+            var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
+            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
+            return _serializer.DeSerialize<T>(xmlResponse);
+        }
 
+        private bool ResponseHasError(TransferDetails transferDetails, XmlDocument responseXML)
+        {
+            if (responseXML.OuterXml.Contains("<ErrorReply>"))
+            {
+                var errorResponseObj = DeSerialize<ErrorReply>(responseXML);
+                transferDetails.Warnings.AddNew("Book Exception", string.IsNullOrEmpty(errorResponseObj.Error) ?
+                    "Failed to confirm booking" : errorResponseObj.Error);
+                return true;
+            }
+            return false;
+        }
     }
 }
