@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Book
 {
     using Common;
 
-    public class HotelBookResponse : SoapContent
+    public class HotelBookResponse
     {
         public BookingStatus BookingStatus { get; set; }
 

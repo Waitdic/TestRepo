@@ -1,8 +1,8 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Cancel
 {
     using Common;
 
-    public class HotelCancelRequest : SoapContent
+    public class HotelCancelRequest
     {
         public int BookingId { get; set; }
 

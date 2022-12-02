@@ -1,9 +1,8 @@
-﻿using iVectorOne.Suppliers.TBOHolidays.Models.Common;
-
-namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Search
 {
     using Newtonsoft.Json;
     using System.Collections.Generic;
+    using iVectorOne.Suppliers.TBOHolidays.Models.Common;
 
     public class HotelSearchWithRoomsRequest
     {
@@ -30,16 +29,5 @@ namespace iVectorOne.Suppliers.TBOHolidays.Models
 
         [JsonProperty("Filters")]
         public Filters Filters { get; set; } = new();
-
-
-        //public string CountryName { get; set; } = string.Empty;
-        //public string CityName { get; set; } = string.Empty;
-        //public string CityId { get; set; } = string.Empty;
-        //public string IsNearBySearchAllowed { get; set; } = string.Empty;
-        //public int NoOfRooms { get; set; }
-
-
-        //public string PreferredCurrencyCode { get; set; } = string.Empty;
-        //public string ResultCount { get; set; } = string.Empty;
     }
 }

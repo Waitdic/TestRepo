@@ -1,6 +1,6 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Book
 {
-    public class HotelBookingDetailRequest : SoapContent
+    public class HotelBookingDetailRequest
     {
         public int BookingId { get; set; }
 

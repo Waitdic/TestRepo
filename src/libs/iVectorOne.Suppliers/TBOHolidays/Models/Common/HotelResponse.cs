@@ -1,7 +1,6 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
     using System.Collections.Generic;
-    using Common;
     using Newtonsoft.Json;
 
     public class HotelResponse

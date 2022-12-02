@@ -1,10 +1,10 @@
-﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Book
 {
     using System;
     using System.Xml.Serialization;
     using Common;
 
-    public class HotelBookRequest : SoapContent
+    public class HotelBookRequest
     {
         public string ClientReferenceNumber { get; set; } = string.Empty;
 
