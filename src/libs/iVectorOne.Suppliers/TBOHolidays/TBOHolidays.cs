@@ -17,6 +17,10 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.TBOHolidays.Models.Prebook;
+    using iVectorOne.Suppliers.TBOHolidays.Models.Cancel;
+    using Newtonsoft.Json;
+    using MoreLinq;
 
     public class TBOHolidays : IThirdParty, ISingleSource
     {
@@ -62,243 +66,205 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            // no actual prebook, do an availability and price check, grab cancellation policies
-            bool success = false;
-            //bool priceChanged = false;
-            //bool cancellationPoliciesAvailable = false;
-            //string url = _settings.GenericURL(propertyDetails);
-            //var request = new Request();
-            //var policyRequest = new Request();
+            var success = false;
+            var priceChanged = false;
+            var url = /*_settings.PrebookURL(propertyDetails)*/ "https://api.tbotechnology.in/TBOHolidays_HotelAPI/PreBook";
+            var requests = new List<Request>();
+            
+            try
+            {
+                var auth = Helper.GetAuth(_settings.User(propertyDetails), _settings.Password(propertyDetails));
 
-            //// availability and pricing
-            //try
-            //{
-            //    var availabilityRequest = BuildAvailabilityRequest(propertyDetails);
-            //    availabilityRequest.Header = BuildHeader("AvailabilityAndPricing", propertyDetails, _settings);
+                foreach (var room in propertyDetails.Rooms)
+                {
+                    var requestJson = JsonConvert.SerializeObject(BuildAvailabilityRequest(room));
 
-            //    var requestXml = Helper.CleanRequest(_serializer.Serialize(availabilityRequest).OuterXml);
-            //    request = CreateRequest("AvailabilityAndPricing", url);
-            //    request.SetRequest(requestXml);
-            //    await request.Send(_httpClient, _logger);
+                    var request = CreateRequest("AvailabilityAndPricing", url, auth);
+                    request.SetRequest(requestJson);
 
-            //    var response = _serializer.DeSerialize<Envelope<AvailabilityAndPricingResponse>>(request.ResponseXML);
-            //    var availabilityPricingResponse = response.Body.Content;
+                    await request.Send(_httpClient, _logger);
+                    requests.Add(request);
+                }
 
-            //    // cancellation policies available
-            //    cancellationPoliciesAvailable = availabilityPricingResponse.CancellationPoliciesAvailable;
-            //    string availabilityStatusCode = availabilityPricingResponse.Status.StatusCode;
-            //    var priceVerificationStatus = availabilityPricingResponse.PriceVerification.Status;
+                var responses = requests
+                    .Select(x => JsonConvert.DeserializeObject<PrebookResponse>(x.ResponseString))
+                    .ToList();
 
-            //    // price check
-            //    if (availabilityStatusCode == "01"
-            //        && (priceVerificationStatus == StatusEnum.Successful ||
-            //            priceVerificationStatus == StatusEnum.NotAvailable))
-            //    {
-            //        if (availabilityPricingResponse.PriceVerification.PriceChanged)
-            //        {
-            //            if (availabilityPricingResponse.PriceVerification.AvailableOnNewPrice)
-            //            {
-            //                // do the price change
-            //                foreach (var room in propertyDetails.Rooms)
-            //                {
-            //                    int roomIndex = Helper.GetReferenceValues(room.ThirdPartyReference).RoomIndex;
-            //                    decimal newPrice = availabilityPricingResponse.PriceVerification.HotelRooms
-            //                        .Where(r => r.RoomIndex == roomIndex)
-            //                        .Select(rate => rate.RoomRate.TotalFare)
-            //                        .First();
+                if (responses.All(r => r.Status.Code == "200" && r.Status.Description == "Successful"))
+                {
+                    // do the price change
+                    foreach (var room in propertyDetails.Rooms)
+                    {
+                        var bookingCode = room.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0];
+                        var newPrice = responses
+                            .SelectMany(r => r.HotelResult)
+                            .SelectMany(x => x.Rooms)
+                            .Where(r => r.BookingCode == bookingCode)
+                            .Select(rate => rate.TotalFare)
+                            .First();
 
-            //                    if (newPrice != room.LocalCost)
-            //                    {
-            //                        room.LocalCost = newPrice;
-            //                        room.GrossCost = newPrice;
-            //                        priceChanged = true;
-            //                    }
-            //                }
+                        if (newPrice == room.LocalCost) continue;
 
-            //                success = true;
-            //            }
-            //            else
-            //            {
-            //                propertyDetails.Warnings.AddNew("Prebook Exception", "New Price not Available");
-            //                success = false;
-            //            }
-            //        }
-            //        else
-            //        {
-            //            // successful and no price changed
-            //            success = true;
-            //        }
+                        room.LocalCost = newPrice;
+                        room.GrossCost = newPrice;
+                        priceChanged = true;
+                    }
 
-            //        if (success)
-            //        {
-            //            string priceDetails = string.Empty;
+                    if (priceChanged)
+                    {
+                        propertyDetails.Warnings.AddNew("PriceChanged", "Price was changed");
+                    }
+                    //var priceDetails = string.Empty;
 
-            //            // grab the price details and store as tpref
-            //            foreach (var room in propertyDetails.Rooms)
-            //            {
-            //                var referenceValues = Helper.GetReferenceValues(room.ThirdPartyReference);
+                    //// grab the price details and store as tpref
+                    //foreach (var room in propertyDetails.Rooms)
+                    //{
+                    //    var referenceValues = Helper.GetReferenceValues(room.ThirdPartyReference);
 
-            //                // build the RoomRateElement here and put it into tpref2
-            //                RoomRate roomPriceDetails;
+                    //    // build the RoomRateElement here and put it into tpref2
+                    //    RoomRate roomPriceDetails;
 
-            //                if (priceChanged)
-            //                {
-            //                    roomPriceDetails = availabilityPricingResponse
-            //                        .PriceVerification.HotelRooms
-            //                        .First(r => r.RoomIndex == referenceValues.RoomIndex)
-            //                        .RoomRate;
-            //                }
-            //                else
-            //                {
-            //                    string[] roomRateInfo = referenceValues.RoomRateInfo.Split(',');
+                    //    if (priceChanged)
+                    //    {
+                    //        roomPriceDetails = availabilityPricingResponse
+                    //            .PriceVerification.HotelRooms
+                    //            .First(r => r.RoomIndex == referenceValues.RoomIndex)
+                    //            .RoomRate;
+                    //    }
+                    //    else
+                    //    {
+                    //        string[] roomRateInfo = referenceValues.RoomRateInfo.Split(',');
 
-            //                    roomPriceDetails = new RoomRate
-            //                    {
-            //                        B2CRates = roomRateInfo[0].ToSafeBoolean(),
-            //                        AgentMarkUp = roomRateInfo[1].ToSafeDecimal(),
-            //                        RoomTax = roomRateInfo[2].ToSafeDecimal(),
-            //                        RoomFare = roomRateInfo[3].ToSafeDecimal(),
-            //                        Currency = roomRateInfo[4],
-            //                        TotalFare = roomRateInfo[5].ToSafeDecimal()
-            //                    };
-            //                }
+                    //        roomPriceDetails = new RoomRate
+                    //        {
+                    //            B2CRates = roomRateInfo[0].ToSafeBoolean(),
+                    //            AgentMarkUp = roomRateInfo[1].ToSafeDecimal(),
+                    //            RoomTax = roomRateInfo[2].ToSafeDecimal(),
+                    //            RoomFare = roomRateInfo[3].ToSafeDecimal(),
+                    //            Currency = roomRateInfo[4],
+                    //            TotalFare = roomRateInfo[5].ToSafeDecimal()
+                    //        };
+                    //    }
 
-            //                priceDetails += $"{Helper.CleanRequest(_serializer.Serialize(roomPriceDetails).InnerXml)}|";
-            //            }
+                    //    priceDetails += $"{Helper.CleanRequest(_serializer.Serialize(roomPriceDetails).InnerXml)}|";
+                    //}
 
-            //            propertyDetails.TPRef1 = priceDetails.Chop();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        // failed to prebook
-            //        propertyDetails.Warnings.AddNew("Prebook Exception", "Prebook was unsuccessful");
-            //        success = false;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
-            //    success = false;
-            //}
-            //finally
-            //{
-            //    propertyDetails.AddLog("Availability Check", request);
-            //}
+                    //propertyDetails.TPRef1 = priceDetails.Chop();
 
-            //if (success && cancellationPoliciesAvailable)
-            //{
-            //    try
-            //    {
-            //        success = false;
+                    var newLocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
 
-            //        var policyRequestObj = BuildPolicyRequest(propertyDetails);
-            //        policyRequestObj.Header = BuildHeader("HotelCancellationPolicy", propertyDetails, _settings);
+                    if (propertyDetails.LocalCost != newLocalCost)
+                    {
+                        propertyDetails.LocalCost = newLocalCost;
+                    }
 
-            //        var policyRequestXml = Helper.CleanRequest(_serializer.Serialize(policyRequestObj).OuterXml);
-            //        policyRequest = CreateRequest("HotelCancellationPolicies", url);
-            //        policyRequest.SetRequest(policyRequestXml);
-            //        await policyRequest.Send(_httpClient, _logger);
+                    var cancellationList = new Cancellations();
+                    foreach (var response in responses)
+                    {
+                        //var completePolicy =
+                        //    string.IsNullOrEmpty(response.HotelResult
+                        //        .SelectMany(x => x.Rooms)
+                        //        .SelectMany(c => c.CancelPolicies)
+                        //        .Select(c => c.Index)
+                        //        .FirstOrDefault());
 
-            //        var response = _serializer.DeSerialize<Envelope<HotelCancellationPolicyResponse>>(policyRequest.ResponseXML);
-            //        var policyResponse = response.Body.Content;
+                        //var cost = !completePolicy
+                        //    ? propertyDetails.Rooms
+                        //        .First(x => x.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0] ==
+                        //                    response.HotelResult.SelectMany(x => x.Rooms).First().BookingCode).LocalCost
+                        //    : propertyDetails.Rooms.Where(x => );
 
-            //        bool completePolicy =
-            //            string.IsNullOrEmpty(policyResponse.CancelPolicies.OfType<CancelPolicy>().Select(c => c.RoomIndex).FirstOrDefault());
-            //        decimal newLocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
 
-            //        if (propertyDetails.LocalCost != newLocalCost)
-            //        {
-            //            propertyDetails.LocalCost = newLocalCost;
-            //        }
+                        var cost = propertyDetails.Rooms
+                            .First(x => x.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0] ==
+                                        response.HotelResult.SelectMany(x => x.Rooms).First().BookingCode).LocalCost;
 
-            //        if (policyResponse.Status.StatusCode == "01")
-            //        {
-            //            // TBOHolidays can return cancellation policies in 2 different formats depending on whats available to them
-            //            // node format policies - individual rooms
-            //            if (!completePolicy)
-            //            {
-            //                foreach (var room in propertyDetails.Rooms)
-            //                {
-            //                    int roomIndex = Helper.GetReferenceValues(room.ThirdPartyReference).RoomIndex;
-            //                    foreach (var policyNode in policyResponse.CancelPolicies.OfType<CancelPolicy>().Where(r =>
-            //                                 r.RoomIndex.ToSafeInt() == roomIndex))
-            //                    {
-            //                        decimal amount = 0;
-            //                        switch (policyNode.ChargeType)
-            //                        {
-            //                            case ChargeType.Fixed:
-            //                                amount = policyNode.CancellationCharge;
-            //                                break;
-            //                            case ChargeType.Percentage:
-            //                                amount = (policyNode.CancellationCharge / 100) * room.LocalCost;
-            //                                break;
-            //                        }
+                        var cancelPolicies = response.HotelResult
+                            .SelectMany(x => x.Rooms)
+                            .SelectMany(c => c.CancelPolicies)
+                            .ToList();
 
-            //                        propertyDetails.Cancellations.AddNew(
-            //                            policyNode.FromDate.ToSafeDate(),
-            //                            policyNode.ToDate.ToSafeDate(),
-            //                            amount);
-            //                    }
-            //                }
-            //            }
-            //            else
-            //            {
-            //                foreach (var policyNode in policyResponse.CancelPolicies.OfType<CancelPolicy>())
-            //                {
-            //                    decimal amount = 0;
-            //                    switch (policyNode.ChargeType)
-            //                    {
-            //                        case ChargeType.Fixed:
-            //                            amount = policyNode.CancellationCharge;
-            //                            break;
-            //                        case ChargeType.Percentage:
-            //                            amount = (policyNode.CancellationCharge / 100) * propertyDetails.LocalCost;
-            //                            break;
-            //                    }
+                        foreach (var policyNode in cancelPolicies)
+                        {
+                            var amount = policyNode.ChargeType switch
+                            {
+                                ChargeType.Fixed => policyNode.CancellationCharge,
+                                ChargeType.Percentage => (policyNode.CancellationCharge / 100) * cost,
+                                _ => 0
+                            };
 
-            //                    propertyDetails.Cancellations.AddNew(
-            //                        policyNode.FromDate.ToSafeDate(),
-            //                        policyNode.ToDate.ToSafeDate(),
-            //                        amount);
-            //                }
-            //            }
+                            var toDate = cancelPolicies.Any(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
+                                ? cancelPolicies
+                                    .Where(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
+                                    .OrderBy(x => x.FromDate)
+                                    .First()
+                                    .ToSafeDate()
+                                : propertyDetails.ArrivalDate;
 
-            //            propertyDetails.Cancellations.Solidify(SolidifyType.Sum);
-            //            success = true;
+                            cancellationList.AddNew(policyNode.FromDate.ToSafeDate(), toDate, amount);
+                        }
 
-            //            foreach (string hotelNorm in policyResponse.HotelNorms)
-            //            {
-            //                if (!string.IsNullOrEmpty(hotelNorm))
-            //                {
-            //                    propertyDetails.Errata.AddNew("Important Information", hotelNorm);
-            //                }
-            //            }
+                        if (response.HotelResult.SelectMany(x => x.Rooms).SelectMany(x => x.Supplements).Any(s => s.Any()))
+                        {
+                            foreach (var supplements in response.HotelResult.SelectMany(x => x.Rooms).SelectMany(x => x.Supplements))
+                            {
+                                supplements.ForEach(x => propertyDetails.Errata.AddNew(
+                                    "Supplements",
+                                    $"Payable at the property: {x.Description} {x.Price} {x.Currency}"));
+                            }
+                        }
+                    }
 
-            //            foreach (var hotelPolicy in policyResponse.CancelPolicies.OfType<DefaultPolicy>())
-            //            {
-            //                if (!string.IsNullOrEmpty(hotelPolicy.Value))
-            //                {
-            //                    propertyDetails.Errata.AddNew("Important Information", hotelPolicy.Value);
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            propertyDetails.Warnings.AddNew("Cancellation Policies Exception",
-            //                "Failed to get cancellation policies");
-            //            success = false;
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        propertyDetails.Warnings.AddNew("Cancellation Policies Exception", ex.ToString());
-            //    }
-            //    finally
-            //    {
-            //        propertyDetails.AddLog("Cancellation Policies", policyRequest);
-            //    }
-            //}
+                    //cancellationList[0].StartDate.AddDays(2);
+                    //cancellationList[1].StartDate.AddDays(1);
+
+                    //cancellationList.AddNew(
+                    //    cancellationList[0].StartDate.AddDays(-3),
+                    //    cancellationList[0].StartDate.AddSeconds(-1),
+                    //    cancellationList[0].Amount / 2);
+
+                    //cancellationList.AddNew(
+                    //    cancellationList[1].StartDate.AddDays(-2),
+                    //    cancellationList[1].StartDate.AddSeconds(-1),
+                    //    cancellationList[1].Amount / 2);
+
+                    propertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(cancellationList);
+
+                    if (responses.Any(x => x.HotelResult.Any(hr => hr.RateConditions != Array.Empty<string>())))
+                    {
+                        var conditions = responses
+                            .SelectMany(x => x.HotelResult)
+                            .Where(hr => hr.RateConditions != Array.Empty<string>())
+                            .Select(r => r.RateConditions)
+                            .First();
+
+                        foreach (var condition in conditions)
+                        {
+                            propertyDetails.Errata.AddNew("Important Information", condition);
+                        }
+                    }
+
+                    success = true;
+                }
+                else
+                {
+                    // failed to prebook
+                    propertyDetails.Warnings.AddNew("Prebook Exception", "Prebook was unsuccessful");
+                    success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("Prebook Exception", ex.ToString());
+                success = false;
+            }
+            finally
+            {
+                foreach (var request in requests)
+                {
+                    propertyDetails.AddLog("Prebook Check", request);
+                }
+            }
 
             return success;
         }
@@ -451,68 +417,40 @@
 
         }
 
-        private static Envelope<AvailabilityAndPricingRequest> BuildAvailabilityRequest(PropertyDetails propertyDetails)
+        private static PrebookRequest BuildAvailabilityRequest(RoomDetails room)
         {
-            string reference = propertyDetails.Rooms[0].ThirdPartyReference;
-            var referenceValues = Helper.GetReferenceValues(reference);
-
-            return new Envelope<AvailabilityAndPricingRequest>
+            return new PrebookRequest
             {
-                Body = new Envelope<AvailabilityAndPricingRequest>.SoapBody
-                {
-                    Content = new AvailabilityAndPricingRequest
-                    {
-                        ResultIndex = referenceValues.ResultIndex,
-                        HotelCode = propertyDetails.TPKey,
-                        SessionId = referenceValues.SessionId,
-                        OptionsForBooking = new OptionsForBooking
-                        {
-                            FixedFormat = false,
-                            RoomCombination = new[]
-                            {
-                                new RoomCombination
-                                {
-                                    RoomIndex = propertyDetails.Rooms
-                                        .Select(r => Helper.GetReferenceValues(r.ThirdPartyReference).RoomIndex)
-                                        .ToArray()
-                                }
-                            }
-                        }
-                    }
-                }
+                BookingCode = room.ThirdPartyReference.Split("~~~")[0],
+                PaymentMode = PaymentMode.Limit.ToString()
             };
-        }
 
-        private static Envelope<HotelCancellationPolicyRequest> BuildPolicyRequest(PropertyDetails propertyDetails)
-        {
-            string reference = propertyDetails.Rooms[0].ThirdPartyReference;
-            var referenceValues = Helper.GetReferenceValues(reference);
-
-            return new Envelope<HotelCancellationPolicyRequest>
-            {
-                Body = new Envelope<HotelCancellationPolicyRequest>.SoapBody
-                {
-                    Content = new HotelCancellationPolicyRequest
-                    {
-                        ResultIndex = referenceValues.ResultIndex,
-                        HotelCode = propertyDetails.TPRef1,
-                        SessionId = referenceValues.SessionId,
-                        OptionsForBooking = new OptionsForBooking
-                        {
-                            FixedFormat = false,
-                            RoomCombination = new[]
-                            {
-                                new RoomCombination
-                                {
-                                    RoomIndex = propertyDetails.Rooms
-                                        .Select(r => Helper.GetReferenceValues(r.ThirdPartyReference).RoomIndex)
-                                        .ToArray()
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            //var referenceValues = Helper.GetReferenceValues(reference);
+            //return new Envelope<AvailabilityAndPricingRequest>
+            //{
+            //    Body = new Envelope<AvailabilityAndPricingRequest>.SoapBody
+            //    {
+            //        Content = new AvailabilityAndPricingRequest
+            //        {
+            //            ResultIndex = referenceValues.ResultIndex,
+            //            HotelCode = propertyDetails.TPKey,
+            //            SessionId = referenceValues.SessionId,
+            //            OptionsForBooking = new OptionsForBooking
+            //            {
+            //                FixedFormat = false,
+            //                RoomCombination = new[]
+            //                {
+            //                    new RoomCombination
+            //                    {
+            //                        RoomIndex = propertyDetails.Rooms
+            //                            .Select(r => Helper.GetReferenceValues(r.ThirdPartyReference).RoomIndex)
+            //                            .ToArray()
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //};
         }
 
         //private async Task<Envelope<HotelBookRequest>> BuildBookRequestAsync(PropertyDetails propertyDetails)
@@ -658,42 +596,25 @@
         //    };
         //}
 
-        private static Envelope<HotelCancelRequest> BuildCancelRequest(PropertyDetails propertyDetails)
-        {
-            return new Envelope<HotelCancelRequest>
-            {
-                Body = new Envelope<HotelCancelRequest>.SoapBody
-                {
-                    Content = new HotelCancelRequest
-                    {
-                        BookingId = propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt(),
-                        RequestType = RequestType.HotelCancel,
-                        Remarks = "Cancel Booking"
-                    }
-                }
-            };
-        }
+        //private static Envelope<HotelCancelRequest> BuildCancelRequest(PropertyDetails propertyDetails)
+        //{
+        //    return newEnvelope<HotelCancelRequest>
+        //    {
+        //        Body = new Envelope<HotelCancelRequest>.SoapBody
+        //        {
+        //            Content = new HotelCancelRequest
+        //            {
+        //                BookingId = propertyDetails.SourceSecondaryReference.Split('-')[0].ToSafeInt(),
+        //                RequestType = RequestType.HotelCancel,
+        //                Remarks = "Cancel Booking"
+        //            }
+        //        }
+        //    };
+        //}
 
-        public static SoapHeader BuildHeader(
-            string type,
-            IThirdPartyAttributeSearch searchDetails,
-            ITBOHolidaysSettings settings)
+        private static Request CreateRequest(string type, string url, string auth)
         {
-            return new SoapHeader
-            {
-                Credentials = new Credentials
-                {
-                    UserName = settings.User(searchDetails),
-                    Password = settings.Password(searchDetails),
-                },
-                Action = $"http://TekTravel/HotelBookingApi/{type}",
-                To = settings.GenericURL(searchDetails)
-            };
-        }
-
-        private static Request CreateRequest(string type, string url)
-        {
-            return new Request
+            var webRequest = new Request
             {
                 Source = ThirdParties.TBOHOLIDAYS,
                 LogFileName = type,
@@ -701,8 +622,12 @@
                 EndPoint = url,
                 CreateLog = true,
                 Method = RequestMethod.POST,
-                ContentType = ContentTypes.Application_SOAP_XML
+                ContentType = ContentTypes.Application_json,
+                Accept = "application/json"
             };
+            webRequest.Headers.AddNew("Authorization", auth);
+
+            return webRequest;
         }
     } 
 }

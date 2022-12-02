@@ -10,14 +10,6 @@
 
         public HotelRoom[] Rooms { get; set; } = Array.Empty<HotelRoom>();
 
-
-
-        //public HotelInfo HotelInfo { get; set; } = new();
-
-        //public OptionsForBooking OptionsForBooking { get; set; } = new();
-
-        //public HotelRoom[] HotelRooms { get; set; } = Array.Empty<HotelRoom>();
-
-        //public int ResultIndex { get; set; }
+        public string[] RateConditions { get; set; } = Array.Empty<string>();
     }
 }
