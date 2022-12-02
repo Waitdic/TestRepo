@@ -1,30 +1,20 @@
 ﻿namespace iVectorOne.Suppliers.TourPlanTransfers
 {
+    using Intuitive;
+    using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Serialization;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using iVectorOne.Transfer;
-    using System.Threading.Tasks;
     using iVectorOne.Models.Transfer;
-    using Intuitive;
-    using System.Net.Http;
+    using iVectorOne.Suppliers.TourPlanTransfers.Models;
+    using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
-    using iVectorOne.SDK.V2;
     using System;
     using System.Collections.Generic;
-    using Intuitive.Helpers.Net;
-    using iVectorOne.Suppliers.Xml.W2M;
-    using Newtonsoft.Json;
-    using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Serialization;
-    using Intuitive.Helpers.Serialization;
-    using NodaTime.TimeZones;
-    using System.Globalization;
-    using iVectorOne.Suppliers.GoGlobal.Models;
-    using System.Xml.Linq;
-    using iVectorOne.Suppliers.Netstorming.Models.Common;
-    using iVectorOne.Models.Property.Booking;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -35,6 +25,8 @@
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
         public const string InvalidSupplierReference = "Invalid Supplier Reference";
+        private const string First = "FIRST";
+        private const string Second = "SECOND";
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
@@ -55,23 +47,15 @@
 
         public async Task<string> BookAsync(TransferDetails transferDetails)
         {
-            var request = new Request();
-            bool isFirstLeg = true;
+            var requests = new Dictionary<string, Request>();
             try
             {
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
-                request = await BuildRequestAsync(transferDetails, supplierReferenceData, isFirstLeg);
+                requests.Add(First, await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
+                    transferDetails.DepartureDate, transferDetails.DepartureTime));
 
-                await request.Send(_httpClient, _logger);
-
-                // IF Request succeeds 
-                // SET isFirstLeg = false;
-                // CREATE second leg request 
-                // SEND second leg request
-
-                // ELSE IF Request Fails
-                // CALL Cancel workflow
+                await requests[First].Send(_httpClient, _logger);
 
                 return "failed";
             }
@@ -82,8 +66,11 @@
             }
             finally
             {
-                //Here as well based on isFirstLeg flag, we can log the requests.
-                transferDetails.AddLog("Book", request);
+                foreach (var request in requests)
+                {
+                    transferDetails.AddLog("Book", request.Value);
+                }
+
             }
         }
 
@@ -142,15 +129,10 @@
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
-            List<SupplierReferenceData> supplierReferenceData, bool isFirstLeg)
+            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime)
         {
-            Tuple<SupplierReferenceData, string, string> dynamicLegValues = new Tuple<SupplierReferenceData, string, string>(
-                (transferDetails.OneWay && isFirstLeg) ? supplierReferenceData.First() : supplierReferenceData.Last(),
-                ((transferDetails.OneWay && isFirstLeg) ? transferDetails.DepartureDate : transferDetails.ReturnDate).ToString("yyyy-MM-dd"),
-                (transferDetails.OneWay && isFirstLeg) ? transferDetails.DepartureTime : transferDetails.ReturnTime
-                );
-
-            var bookingData = BuildBookingDataAsync(transferDetails, dynamicLegValues);
+            var bookingData = BuildBookingDataAsync(transferDetails, supplierReferenceData.Opt,
+                supplierReferenceData.RateId, departureDate, departureTime);
 
             var request = new Request()
             {
@@ -164,16 +146,16 @@
         }
 
         private Task<AddServiceRequest> BuildBookingDataAsync(TransferDetails transferDetails,
-            Tuple<SupplierReferenceData, string, string> dynamicLegValues)
+            string opt, string rateId, DateTime departureDate, string departureTime)
         {
             var addServiceRequest = new AddServiceRequest()
             {
                 AgentID = _settings.AgentId(transferDetails),
                 Password = _settings.Password(transferDetails),
-                Opt = dynamicLegValues.Item1.Opt,
-                RateId = dynamicLegValues.Item1.RateId,
+                Opt = opt,
+                RateId = rateId,
                 ExistingBookingInfo = "",
-                DateFrom = dynamicLegValues.Item2,
+                DateFrom = departureDate.ToString("yyyy-MM-dd"),
                 NewBookingInfo = new NewBookingInformation
                 {
                     Name = $"{transferDetails.LeadGuestFirstName} {transferDetails.LeadGuestLastName}"
@@ -194,8 +176,8 @@
                         }).ToList()
                     }
                 },
-                PickUp_Date = dynamicLegValues.Item2,
-                PuTime = dynamicLegValues.Item3,
+                PickUp_Date = departureDate.ToString("yyyy-MM-dd"),
+                PuTime = departureTime,
                 PuRemark = ""
             };
 
