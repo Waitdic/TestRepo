@@ -99,13 +99,6 @@
 
             }
         }
-
-        public ErrorReply DeserializeErrorResponse(XmlDocument xmlErrorResponse)
-        {
-            return _serializer.DeSerialize<ErrorReply>(
-                    _serializer.CleanXmlNamespaces(xmlErrorResponse));
-        }
-
         public Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
         {
             throw new System.NotImplementedException();
