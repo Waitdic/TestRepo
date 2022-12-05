@@ -31,5 +31,8 @@
 
         [JsonProperty("bookToken")]
         public string BookToken { get; set; } = string.Empty;
+
+        [JsonProperty("observations")]
+        public List<Observation> Observations { get; set; } = new();
     }
 }

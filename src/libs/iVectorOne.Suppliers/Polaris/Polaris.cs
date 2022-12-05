@@ -64,35 +64,68 @@
         #region "PreBook"
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
+            bool isSplit = _settings.SplitMultiRoom(propertyDetails);
+
+            if (isSplit) return await PreBookSplitAsync(propertyDetails);
+
             var preBookSuccess = false;
-            var requests = new List<Request>();
+            var request = new Request();
 
             try
             {
-                bool isSplit = _settings.SplitMultiRoom(propertyDetails);
-
-                var polarisTpRefs = propertyDetails.Rooms.Where((room, idx) => isSplit || idx == 0)
-                                .Select(room => PolarisTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference));
-
                 var prebookResponses = new List<PrebookResponse>();
 
-                foreach (var polarisTpRef in polarisTpRefs) 
-                {
-                    var prebookContent = new PrebookRequest
-                    {
-                        BookToken = polarisTpRef.BookToken
-                    };
+                var tpRef = PolarisTpRef.Decrypt(_secretKeeper, propertyDetails.Rooms.First().ThirdPartyReference);
 
-                    var preBookUrl = _settings.PrebookURL(propertyDetails);
-                    var preBookRequest = await CreateRequestAsync(propertyDetails, preBookUrl, prebookContent);
-                    requests.Add(preBookRequest);
-                    var prebookReponse = JsonConvert.DeserializeObject<PrebookResponse>(preBookRequest.ResponseString);
-                    prebookResponses.Add(prebookReponse);
-                }
+                var preBookRequest = await CreateRequestAsync(propertyDetails, _settings.PrebookURL(propertyDetails), 
+                    new PrebookRequest 
+                    { 
+                        BookToken = tpRef.BookToken 
+                    });
+
+                var prebookResponse = JsonConvert.DeserializeObject<PrebookResponse>(preBookRequest.ResponseString);
+                var roomRate = prebookResponse.Hotel.RoomRates.First();
+
                 //check status
+                if (!string.Equals(prebookResponse.Status, Constant.Status.Confirmed)) 
+                {
+                    throw new Exception($"PreBook status is {prebookResponse.Status}");
+                }
+
                 //verify price
+                var isPriceChanged = false;
+                var roomIdx = 0;
+                foreach (var room in roomRate.Rooms.OrderBy(x => x.Index)) 
+                {
+                    if (!decimal.Equals(room.Pricing.Net.Price, propertyDetails.Rooms[roomIdx].LocalCost))
+                    {
+                        propertyDetails.Rooms[roomIdx].LocalCost = room.Pricing.Net.Price;
+                        propertyDetails.Rooms[roomIdx].GrossCost = room.Pricing.Net.Price;
+                    }
+                    roomIdx++;
+                }
+                if (isPriceChanged) 
+                {
+                    propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
+                    propertyDetails.GrossCost = propertyDetails.Rooms.Sum(r => r.GrossCost);
+                }
+
                 //add cancellations with solidify
+                var canx = new Cancellations();
+                canx.AddRange(TransformCancellations(roomRate.CancellationPolicies));
+
+                propertyDetails.Cancellations = canx;
+
                 //add erratum
+                foreach (var observation in roomRate.Observations) 
+                {
+                    propertyDetails.Errata.Add(new Erratum 
+                    {
+                        Title = "Important information",
+                        Text = $"{observation.Type} {observation.Txt}"
+                    });
+                }
+
                 preBookSuccess = true;
             }
             catch (Exception ex)
@@ -102,32 +135,91 @@
             }
             finally 
             {
-                foreach (var request in requests) 
+                propertyDetails.AddLog("Prebook", request);
+            }
+
+            return preBookSuccess;
+        }
+
+
+
+        public async Task<bool> PreBookSplitAsync(PropertyDetails propertyDetails) 
+        {
+            var preBookSuccess = false;
+            var requests = new List<Request>();
+            var prebookResponses = new List<PrebookResponse>();
+
+            try
+            {
+                var isPriceChanged = false;
+                var canx = new Cancellations();
+                var observations = new List<Observation>();
+
+                foreach (var room in propertyDetails.Rooms) 
+                {
+                    var polarisTpRef = PolarisTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference);
+                    var prebookContent = new PrebookRequest
+                    {
+                        BookToken = polarisTpRef.BookToken
+                    };
+
+                    var preBookRequest = await CreateRequestAsync(propertyDetails, _settings.PrebookURL(propertyDetails), prebookContent);
+                    var prebookResponse = JsonConvert.DeserializeObject<PrebookResponse>(preBookRequest.ResponseString);
+                    var roomRate = prebookResponse.Hotel.RoomRates.First();
+
+                    if (!string.Equals(prebookResponse.Status, Constant.Status.Confirmed)) 
+                    {
+                        throw new Exception($"PreBook status is {prebookResponse.Status}");
+                    }
+
+                    var roomPrice = roomRate.Pricing.Net.Price;
+                    if (!Equals(room.LocalCost, roomPrice)) 
+                    {
+                        isPriceChanged = true;
+                        room.LocalCost = roomPrice;
+                        room.GrossCost = roomPrice;
+                    }
+
+                    var cancellations = TransformCancellations(roomRate.CancellationPolicies);
+                    canx.AddRange(cancellations);
+
+                    observations.AddRange(roomRate.Observations);
+                }
+                if (isPriceChanged)
+                {
+                    propertyDetails.LocalCost = propertyDetails.Rooms.Sum(x => x.LocalCost);
+                    propertyDetails.GrossCost = propertyDetails.Rooms.Sum(x => x.GrossCost);
+                }
+
+                propertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(canx);
+
+                //add erratum
+                var information = observations.Select(x => $"{x.Type} {x.Txt}").Distinct();
+                foreach (var observation in information)
+                {
+                    propertyDetails.Errata.Add(new Erratum
+                    {
+                        Title = "Important Information",
+                        Text = observation
+                    });
+                }
+
+                preBookSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("PreBook Failed", ex.Message);
+                preBookSuccess = false;
+            }
+            finally 
+            {
+                foreach (var request in requests)
                 {
                     propertyDetails.AddLog("Prebook", request);
                 }
             }
 
             return preBookSuccess;
-        }
-
-        public async Task<Request> CreateRequestAsync<T>(PropertyDetails propertyDetail, string endpoint, T requestContent)
-        {
-            var requestString = JsonConvert.SerializeObject(requestContent);
-            var request = new Request()
-            {
-                EndPoint = endpoint,
-                Method = RequestMethod.POST,
-                Source = Source,
-                ContentType = ContentTypes.Application_json,
-                UseGZip = _settings.UseGZip(propertyDetail)
-            };
-            request.SetRequest(requestString);
-            request.Headers.AddNew("Authorization", "Basic " + BasicToken(propertyDetail, _settings));
-
-            await request.Send(_httpClient, _logger);
-
-            return request;
         }
 
         #endregion
@@ -137,6 +229,12 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<string> BookSplitAsync(PropertyDetails propertyDetails) 
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
         #region "Cancellations"
@@ -177,6 +275,25 @@
         #endregion
 
         #region "Helpers"
+
+        public async Task<Request> CreateRequestAsync<T>(PropertyDetails propertyDetail, string endpoint, T requestContent)
+        {
+            var requestString = JsonConvert.SerializeObject(requestContent);
+            var request = new Request()
+            {
+                EndPoint = endpoint,
+                Method = RequestMethod.POST,
+                Source = Source,
+                ContentType = ContentTypes.Application_json,
+                UseGZip = _settings.UseGZip(propertyDetail)
+            };
+            request.SetRequest(requestString);
+            request.Headers.AddNew("Authorization", "Basic " + BasicToken(propertyDetail, _settings));
+
+            await request.Send(_httpClient, _logger);
+
+            return request;
+        }
 
         public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations)
         {
