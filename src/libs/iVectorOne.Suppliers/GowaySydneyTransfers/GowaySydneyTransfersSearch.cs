@@ -16,8 +16,7 @@
         private readonly ISerializer _serializer;
 
         public GowaySydneyTransfersSearch(
-            ITourPlanTransfersSettings settings,
-            HttpClient httpClient, ISerializer serializer) : base(settings, httpClient, serializer)
+            ITourPlanTransfersSettings settings, HttpClient httpClient, ISerializer serializer) : base(settings, httpClient, serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));

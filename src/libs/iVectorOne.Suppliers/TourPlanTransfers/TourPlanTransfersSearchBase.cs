@@ -44,19 +44,15 @@
         {
             LocationData tpLocations = GetThirdPartyLocations(location);
             var departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
-            List<Request> request = new List<Request>();
-            var xmlDocument = Serialize(departureBuildOptionInfoRequest);
-            request.Add(GetXMLRequest(searchDetails));
-            request[0].SetRequest(xmlDocument);
+            List<Request> requests = new List<Request>();
+            requests.Add(departureBuildOptionInfoRequest);
             if (!searchDetails.OneWay)
             {
                 var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
-                request.Add(GetXMLRequest(searchDetails));
-                xmlDocument = Serialize(returnBuildOptionInfoRequest);
-                request[1].SetRequest(xmlDocument);
+                requests.Add(returnBuildOptionInfoRequest);
             }
 
-            return Task.FromResult(request);
+            return Task.FromResult(requests);
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
@@ -100,10 +96,12 @@
         #endregion
 
         #region Private Functions
-        private OptionInfoRequest BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
+        private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
         {
+            Request request = new Request();
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
+
                 AgentID = _settings.AgentId(searchDetails),
                 Password = _settings.Password(searchDetails),
                 DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
@@ -119,7 +117,11 @@
                 }
             };
 
-            return optionInfoRequest;
+            request = GetXMLRequest(searchDetails);
+            var xmlDocument = Serialize(optionInfoRequest);
+            request.SetRequest(xmlDocument);
+
+            return request;
         }
         private Request GetXMLRequest(TransferSearchDetails searchDetails)
         {
