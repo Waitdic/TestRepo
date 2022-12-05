@@ -1,7 +1,5 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays
 {
-    using System;
-    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -124,7 +122,7 @@
 
             var hotelResponses = requests
                 .Select(request => JsonConvert.DeserializeObject<HotelResponse>(request.ResponseString))
-                .Where(x => x.Status.Code == "200" && x.Status.Description == "Successful")
+                .Where(x => x.Status.Code == 200 && x.Status.Description == "Successful")
                 .ToList();
 
             if (hotelResponses.Count != searchDetails.Rooms)
@@ -366,17 +364,5 @@
 
             return transformedResult;
         }
-
-        //private class Hotel
-        //{
-        //    public string HotelCode { get; set; } = string.Empty;
-        //    public List<Room> Rooms { get; set; } = new();
-        //}
-
-        //private class Room
-        //{
-        //    public int PRBID { get; set; }
-        //    public List<int> RoomIndex { get; set; } = new();
-        //}
     }
 }
