@@ -18,6 +18,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.TBOHolidays.Models.Prebook;
+    using iVectorOne.Suppliers.TBOHolidays.Models.Book;
     using iVectorOne.Suppliers.TBOHolidays.Models.Cancel;
     using Newtonsoft.Json;
     using MoreLinq;
@@ -90,7 +91,7 @@
                     .Select(x => JsonConvert.DeserializeObject<PrebookResponse>(x.ResponseString))
                     .ToList();
 
-                if (responses.All(r => r.Status.Code == "200" && r.Status.Description == "Successful"))
+                if (responses.All(r => r.Status.Code == 200 && r.Status.Description == "Successful"))
                 {
                     // do the price change
                     foreach (var room in propertyDetails.Rooms)
@@ -215,19 +216,6 @@
                         }
                     }
 
-                    //cancellationList[0].StartDate.AddDays(2);
-                    //cancellationList[1].StartDate.AddDays(1);
-
-                    //cancellationList.AddNew(
-                    //    cancellationList[0].StartDate.AddDays(-3),
-                    //    cancellationList[0].StartDate.AddSeconds(-1),
-                    //    cancellationList[0].Amount / 2);
-
-                    //cancellationList.AddNew(
-                    //    cancellationList[1].StartDate.AddDays(-2),
-                    //    cancellationList[1].StartDate.AddSeconds(-1),
-                    //    cancellationList[1].Amount / 2);
-
                     propertyDetails.Cancellations = Cancellations.MergeMultipleCancellationPolicies(cancellationList);
 
                     if (responses.Any(x => x.HotelResult.Any(hr => hr.RateConditions != Array.Empty<string>())))
@@ -271,43 +259,83 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            string reference = string.Empty;
-            //string url = _settings.GenericURL(propertyDetails);
-            //var request = new Request();
+            var reference = string.Empty;
+            var url = /*_settings.BookingURL(propertyDetails)*/ "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Book";
+            var requests = new List<Request>();
+            var requestsDetails = new List<BookingDetailRequest>();
 
-            //try
-            //{
-            //    var bookRequest = await BuildBookRequestAsync(propertyDetails);
-            //    bookRequest.Header = BuildHeader("HotelBook", propertyDetails, _settings);
+            try
+            {
+                var auth = Helper.GetAuth(_settings.User(propertyDetails), _settings.Password(propertyDetails));
 
-            //    var bookRequestXml = Helper.CleanRequest(_serializer.Serialize(bookRequest).OuterXml);
-            //    request = CreateRequest("HotelBook", url);
-            //    request.SetRequest(bookRequestXml);
-            //    await request.Send(_httpClient, _logger);
+                foreach (var room in propertyDetails.Rooms)
+                {
+                    var bookRequest = await BuildBookRequestAsync(propertyDetails, room);
+                    var bookRequestJson = JsonConvert.SerializeObject(bookRequest);
 
-            //    var response = _serializer.DeSerialize<Envelope<HotelBookResponse>>(request.ResponseXML);
-            //    var bookResponse = response.Body.Content;
+                    var request = CreateRequest("HotelBook", url, auth);
+                    request.SetRequest(bookRequestJson);
+                    await request.Send(_httpClient, _logger);
 
-            //    if (bookResponse.BookingStatus == Models.Common.BookingStatus.Vouchered && bookResponse.Status.StatusCode == "01")
-            //    {
-            //        propertyDetails.SourceSecondaryReference = $"{bookResponse.BookingId}-{bookResponse.TripId}";
-            //        reference = bookResponse.ConfirmationNo;
-            //    }
-            //    else
-            //    {
-            //        propertyDetails.Warnings.AddNew("Book Exception", "Failed to confirm booking");
-            //        reference = "failed";
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
-            //    reference = "failed";
-            //}
-            //finally
-            //{
-            //    propertyDetails.AddLog("Book", request);
-            //}
+                    requestsDetails.Add(new BookingDetailRequest
+                    {
+                        BookWebRequest = request,
+                        BookRequest = bookRequest,
+                    });
+
+                    requests.Add(request);
+                }
+
+                foreach (var requestsDetail in requestsDetails)
+                {
+                    requestsDetail.BookResponse =
+                        JsonConvert.DeserializeObject<HotelBookResponse>(requestsDetail.BookWebRequest.ResponseString);
+                }
+
+                if (requestsDetails.Any(rd => rd.BookResponse.Status.Code != 200 || rd.BookResponse.Status.Description != "Successful"))
+                {
+                    var detailUrl = "http://api.tbotechnology.in/TBOHolidays_HotelAPI/BookingDetail";
+
+                    foreach (var requestsDetail in requestsDetails
+                                 .Where(r => r.BookResponse.Status.Code != 200 || r.BookResponse.Status.Description != "Successful"))
+                    {
+                        var bookingDetailRequest = BuildBookDetailRequest(
+                            string.Empty,
+                            requestsDetail.BookRequest.BookingReferenceId,
+                            requestsDetail.BookRequest.PaymentMode);
+
+                        var bookingDetailJson = JsonConvert.SerializeObject(bookingDetailRequest);
+                        var webRequest = CreateRequest("HotelBookingDetail", detailUrl, auth);
+                        webRequest.SetRequest(bookingDetailJson);
+
+                        await webRequest.Send(_httpClient, _logger);
+                        requestsDetail.BookDetailWebRequest = webRequest;
+                    }
+                    
+                    requestsDetails.ForEach(b => b.BookingDetailResponse =
+                        JsonConvert.DeserializeObject<HotelBookingDetailResponse>(b.BookDetailWebRequest.ResponseString));
+                }
+
+                //if (bookResponse.BookingStatus == Models.Common.BookingType.Vouchered && bookResponse.Status.StatusCode == "01")
+                //{
+                //    propertyDetails.SourceSecondaryReference = $"{bookResponse.BookingId}-{bookResponse.TripId}";
+                //    reference = bookResponse.ConfirmationNo;
+                //}
+                //else
+                //{
+                //    propertyDetails.Warnings.AddNew("Book Exception", "Failed to confirm booking");
+                //    reference = "failed";
+                //}
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("Book Exception", ex.ToString());
+                reference = "failed";
+            }
+            finally
+            {
+                //propertyDetails.AddLog("Book", request);
+            }
 
             return reference;
         }
@@ -424,177 +452,70 @@
                 BookingCode = room.ThirdPartyReference.Split("~~~")[0],
                 PaymentMode = PaymentMode.Limit.ToString()
             };
-
-            //var referenceValues = Helper.GetReferenceValues(reference);
-            //return new Envelope<AvailabilityAndPricingRequest>
-            //{
-            //    Body = new Envelope<AvailabilityAndPricingRequest>.SoapBody
-            //    {
-            //        Content = new AvailabilityAndPricingRequest
-            //        {
-            //            ResultIndex = referenceValues.ResultIndex,
-            //            HotelCode = propertyDetails.TPKey,
-            //            SessionId = referenceValues.SessionId,
-            //            OptionsForBooking = new OptionsForBooking
-            //            {
-            //                FixedFormat = false,
-            //                RoomCombination = new[]
-            //                {
-            //                    new RoomCombination
-            //                    {
-            //                        RoomIndex = propertyDetails.Rooms
-            //                            .Select(r => Helper.GetReferenceValues(r.ThirdPartyReference).RoomIndex)
-            //                            .ToArray()
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //};
         }
 
-        //private async Task<Envelope<HotelBookRequest>> BuildBookRequestAsync(PropertyDetails propertyDetails)
-        //{
-        //    var referenceValues = Helper.GetReferenceValues(propertyDetails.Rooms[0].ThirdPartyReference);
+        private async Task<HotelBookRequest> BuildBookRequestAsync(PropertyDetails propertyDetails, RoomDetails room)
+        {
+            var guestNationality = string.Empty;
 
-        //    int resultIndex = referenceValues.ResultIndex;
-        //    string sessionId = referenceValues.SessionId;
-        //    string clientCode = _settings.ClientCode(propertyDetails);
+            if (!string.IsNullOrEmpty(propertyDetails.ISONationalityCode))
+            {
+                guestNationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.ISONationalityCode);
+            }
 
-        //    string guestNationality = string.Empty;
+            if (string.IsNullOrEmpty(guestNationality))
+            {
+                guestNationality = _settings.LeadGuestNationality(propertyDetails);
+            }
 
-        //    if (!string.IsNullOrEmpty(propertyDetails.ISONationalityCode))
-        //    {
-        //        guestNationality = await _support.TPNationalityLookupAsync(propertyDetails.Source, propertyDetails.ISONationalityCode);
-        //    }
+            var request = new HotelBookRequest
+            {
+                BookingCode = room.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0],
+                ClientReferenceId = $"{DateTime.Now:ddMMyyhhmmssfff}-{01}",
+                BookingReferenceId = room.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0],
+                CustomerDetails = new List<CustomerDetail>
+                {
+                    new()
+                    {
+                        CustomerNames = (from passenger in room.Passengers
+                            let title = passenger.Title switch
+                            {
+                                "Mr" or "Miss" or "Mrs" or "Ms" => passenger.Title,
+                                _ => "Mr",
+                            }
+                            select new CustomerName
+                            {
+                                Title = title,
+                                FirstName = passenger.FirstName.Length == 1 ? "TBA" : passenger.FirstName,
+                                LastName = passenger.LastName.Length == 1 ? "TBA" : passenger.LastName,
+                                Type = passenger.PassengerType is PassengerType.Child or PassengerType.Infant
+                                    ? GuestType.Child
+                                    : GuestType.Adult
+                            }).ToArray()
+                    }
+                },
+                TotalFare = room.TotalCost,
+                EmailId = propertyDetails.LeadGuestEmail,
+                PhoneNumber = propertyDetails.LeadGuestPhone,
+                BookingType = BookingType.Vouchered.ToString(),
+                PaymentMode = PaymentMode.Limit.ToString(),
+            };
 
-        //    if (string.IsNullOrEmpty(guestNationality))
-        //    {
-        //        guestNationality = _settings.LeadGuestNationality(propertyDetails);
-        //    }
+            return request;
+        }
 
-        //    int passengerIndex = 1;
-        //    int mockRoomIndex = 1;
-        //    var guests = new List<Guest>();
-        //    foreach (var room in propertyDetails.Rooms)
-        //    {
-        //        foreach (var passenger in room.Passengers)
-        //        {
-        //            string title = passenger.Title switch
-        //            {
-        //                "Mr" or "Miss" or "Mrs" or "Ms" => passenger.Title,
-        //                _ => "Mr",
-        //            };
-        //            guests.Add(new Guest
-        //            {
-        //                GuestInRoom = mockRoomIndex,
-        //                Title = title,
-        //                LeadGuest = passengerIndex == 1,
-        //                FirstName = passenger.FirstName.Length == 1 ? "TBA" : passenger.FirstName,
-        //                LastName = passenger.LastName.Length == 1 ? "TBA" : passenger.LastName,
-
-        //                GuestType = passenger.PassengerType is PassengerType.Child or PassengerType.Infant
-        //                    ? GuestType.Child
-        //                    : GuestType.Adult,
-
-        //                Age = passenger.PassengerType is PassengerType.Child or PassengerType.Infant
-        //                    ? passenger.Age
-        //                    : null
-        //            });
-
-        //            passengerIndex++;
-        //        }
-
-        //        mockRoomIndex++;
-        //    }
-
-        //    string[] roomRateRefs = propertyDetails.TPRef1.Split('|');
-        //    var hotelRooms = new List<HotelRoom>();
-        //    int roomPriceIndex = 0;
-        //    foreach (var room in propertyDetails.Rooms)
-        //    {
-        //        var roomReferenceValues = Helper.GetReferenceValues(room.ThirdPartyReference);
-        //        string supplementInformation = roomReferenceValues.SupplementInformation.Chop();
-
-        //        var supplements = new List<SuppInfo>();
-        //        if (!string.IsNullOrEmpty(supplementInformation))
-        //        {
-        //            supplements.AddRange(supplementInformation.Split('|').Select(x => new SuppInfo
-        //            {
-        //                SuppChargeType = SuppChargeType.AtProperty,
-        //                SuppIsSelected = false,
-        //                SuppID = x.Split(',')[0].ToSafeInt(),
-        //                Price = x.Split(',')[1].ToSafeInt()
-        //            }));
-        //        }
-
-        //        hotelRooms.Add(new HotelRoom
-        //        {
-        //            RoomIndex = Helper.GetReferenceValues(room.ThirdPartyReference).RoomIndex,
-        //            Name = room.RoomType,
-        //            RoomTypeCode = roomReferenceValues.RoomTypeCode,
-        //            RatePlanCode = roomReferenceValues.RatePlanCode,
-        //            RoomRate = _serializer.DeSerialize<RoomRate>(roomRateRefs[roomPriceIndex]),
-        //            Supplements = new Supplements { SuppInfo = supplements.ToArray() }
-        //        });
-
-        //        roomPriceIndex++;
-        //    }
-
-        //    var specialRequests = new List<SpecialRequests>();
-        //    if (propertyDetails.BookingComments.Count > 0)
-        //    {
-        //        int commentIndex = 1;
-        //        foreach (var bookingComment in propertyDetails.BookingComments)
-        //        {
-        //            specialRequests.Add(new SpecialRequests
-        //            {
-        //                RequestId = commentIndex,
-        //                Remarks = bookingComment.Text,
-        //                RequestType = "BookingComment"
-        //            });
-        //            commentIndex++;
-        //        }
-        //    }
-
-        //    var request = new HotelBookRequest
-        //    {
-        //        ClientReferenceNumber = $"{DateTime.Now:ddMMyyhhmmssfff}#{clientCode}",
-        //        GuestNationality = guestNationality,
-        //        Guests = guests.ToArray(),
-        //        HotelRooms = hotelRooms.ToArray(),
-        //        AddressInfo = new AddressInfo
-        //        {
-        //            AddressLine1 = propertyDetails.LeadGuestAddress1,
-        //            AddressLine2 = propertyDetails.LeadGuestAddress2,
-        //            PhoneNo = propertyDetails.LeadGuestPhone,
-        //            Email = propertyDetails.LeadGuestEmail,
-        //            City = propertyDetails.LeadGuestTownCity,
-        //            State = propertyDetails.LeadGuestCounty,
-        //            Country = await _support.TPCountryCodeLookupAsync(propertyDetails.Source, propertyDetails.LeadGuestCountryCode, propertyDetails.AccountID),
-        //            ZipCode = propertyDetails.LeadGuestPostcode,
-        //        },
-        //        PaymentInfo = new PaymentInfo
-        //        {
-        //            VoucherBooking = true,
-        //            PaymentModeType =(PaymentModeType) Enum.Parse(
-        //                typeof(PaymentModeType),
-        //                _settings.PaymentModeType(propertyDetails),
-        //                true)
-        //        },
-        //        SessionId = sessionId,
-        //        NoOfRooms = propertyDetails.Rooms.Count,
-        //        ResultIndex = resultIndex,
-        //        HotelCode = propertyDetails.TPKey,
-        //        HotelName = propertyDetails.PropertyName,
-        //        SpecialRequests = specialRequests.ToArray()
-        //    };
-
-        //    return new Envelope<HotelBookRequest>
-        //    {
-        //        Body = new Envelope<HotelBookRequest>.SoapBody { Content = request }
-        //    };
-        //}
+        private HotelBookingDetailRequest BuildBookDetailRequest(
+            string confirmationNumber,
+            string bookingReferenceId,
+            string paymentMode)
+        {
+            return new HotelBookingDetailRequest
+            {
+                ConfirmationNumber = confirmationNumber,
+                BookingReferenceId = bookingReferenceId,
+                PaymentMode = paymentMode
+            };
+        }
 
         //private static Envelope<HotelCancelRequest> BuildCancelRequest(PropertyDetails propertyDetails)
         //{
@@ -628,6 +549,15 @@
             webRequest.Headers.AddNew("Authorization", auth);
 
             return webRequest;
+        }
+
+        private class BookingDetailRequest
+        {
+            public Request BookWebRequest { get; set; }
+            public HotelBookRequest BookRequest { get; set; }
+            public HotelBookResponse? BookResponse { get; set; }
+            public Request BookDetailWebRequest { get; set; }
+            public HotelBookingDetailResponse? BookingDetailResponse { get; set; }
         }
     } 
 }

@@ -2,8 +2,10 @@
 {
     public class HotelBookingDetailRequest
     {
-        public int BookingId { get; set; }
+        public string ConfirmationNumber { get; set; } = string.Empty;
 
-        public string ConfirmationNo { get; set; } = string.Empty;
+        public string BookingReferenceId { get; set; } = string.Empty;
+
+        public string PaymentMode { get; set; } = string.Empty;
     }
 }

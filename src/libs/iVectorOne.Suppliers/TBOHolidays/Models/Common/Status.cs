@@ -6,7 +6,7 @@
     {
 
         [JsonProperty("Code")]
-        public string Code { get; set; } = string.Empty;
+        public int Code { get; set; }
 
 
         [JsonProperty("Description")]

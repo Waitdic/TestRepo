@@ -30,7 +30,5 @@
 
         [JsonProperty("CancelPolicies")]
         public List<CancelPolicy> CancelPolicies { get; set; } = new();
-
-        public int RoomIndex { get; set; }
     }
 }
