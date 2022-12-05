@@ -9,6 +9,11 @@
     {
         protected override string Source => ThirdParties.TBOHOLIDAYS;
 
+        public string RequestedMealBases(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("GenericURL", tpAttributeSearch);
@@ -19,9 +24,29 @@
             return Get_Value("OffsetCancellationDays", tpAttributeSearch).ToSafeInt();
         }
 
+        public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
+        }
+
+        public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public int RoomSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
         }
 
         public string User(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -32,6 +57,26 @@
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("Password", tpAttributeSearch);
+        }
+
+        public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
+        {
+            throw new System.NotImplementedException();
         }
 
         public string PaymentModeType(IThirdPartyAttributeSearch tpAttributeSearch)
