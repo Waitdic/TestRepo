@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Suppliers.TourPlanTransfers
 {
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Interfaces;
@@ -67,7 +68,7 @@
                     if (deserializedResponse != null &&
                         string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
                     {
-                        transferDetails.ConfirmationReference = Convert.ToString(deserializedResponse.BookingId);
+                        transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
                         transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
                         return deserializedResponse.Ref;
                     }
@@ -87,7 +88,7 @@
             }
             catch (Exception ex)
             {
-                transferDetails.Warnings.AddNew("ServerError", ex.Message);
+                transferDetails.Warnings.AddNew("BookException", ex.Message);
                 return "failed";
             }
             finally
