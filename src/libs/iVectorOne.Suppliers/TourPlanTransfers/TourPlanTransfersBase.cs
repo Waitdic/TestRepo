@@ -52,6 +52,7 @@
             var requests = new List<Request>();
             try
             {
+                string refValue = string.Empty;
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
@@ -70,6 +71,8 @@
                     {
                         transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
                         transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
+                        refValue = deserializedResponse.Ref;
+
                         if (!transferDetails.OneWay)
                         {
                             var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
@@ -85,10 +88,9 @@
                                 if (deserializedReturnResponse != null &&
                                     string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
                                 {
-                                    transferDetails.ConfirmationReference =
-                                        $"{transferDetails.ConfirmationReference}|{Convert.ToString(deserializedReturnResponse.BookingId)}";
-                                    transferDetails.LocalCost = deserializedReturnResponse.Services.Service.LinePrice;
-                                    return $"{deserializedResponse.Ref}|{deserializedReturnResponse.Ref}";
+                                    transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
+                                    transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice;
+                                    refValue += $"|{deserializedReturnResponse.Ref}";
                                 }
                                 else
                                 {
@@ -96,7 +98,7 @@
                                 }
                             }
                         }
-                        return deserializedResponse.Ref;
+                        return refValue;
                     }
                     else
                     {
