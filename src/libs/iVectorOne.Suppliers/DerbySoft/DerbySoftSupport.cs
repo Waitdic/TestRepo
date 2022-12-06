@@ -16,6 +16,7 @@
             ThirdParties.DERBYSOFTCLUBMED,
             ThirdParties.DERBYSOFTMARRIOTT,
             ThirdParties.DERBYSOFTSYNXIS,
+            ThirdParties.DERBYSOFTTRAVELCLICK
         };
     }
 }

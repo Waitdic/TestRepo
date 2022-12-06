@@ -66,6 +66,11 @@
         public const string DERBYSOFTSYNXIS = "DerbySoftSynxis";
 
         /// <summary>
+        /// The third party DerbySoftTravelClick
+        /// </summary>
+        public const string DERBYSOFTTRAVELCLICK = "DerbySoftTravelClick";
+
+        /// <summary>
         /// The third party DOTW
         /// </summary>
         public const string DOTW = "DOTW";
