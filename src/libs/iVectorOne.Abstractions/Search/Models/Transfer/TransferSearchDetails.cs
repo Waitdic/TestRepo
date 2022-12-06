@@ -103,8 +103,6 @@
 
         public string Source { get; set; } = string.Empty;
 
-        List<ThirdPartyConfiguration> IThirdPartyAttributeSearch.ThirdPartyConfigurations { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         /// <summary>
         /// Gets the duration.
         /// </summary>

@@ -13,7 +13,7 @@
 
         public string AgentId(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("AgentId", tpAttributeSearch);
+            return Get_Value("AgentID", tpAttributeSearch);
         }
 
         public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
