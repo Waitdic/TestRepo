@@ -91,6 +91,11 @@
         public const string GOGLOBAL = "GoGlobal";
 
         /// <summary>
+        /// The third party HBSiAMR
+        /// </summary>
+        public const string HBSIAMR = "HBSiAMR";
+
+        /// <summary>
         /// The third party HBSiBestWestern
         /// </summary>
         public const string HBSIBESTWESTERN = "HBSiBestWestern";

@@ -21,6 +21,7 @@
 
         public static List<string> HBSiSources => new()
         {
+            ThirdParties.HBSIAMR,
             ThirdParties.HBSIBESTWESTERN,
             ThirdParties.HBSICET,
             ThirdParties.HBSICOUPLES,
@@ -29,7 +30,7 @@
             ThirdParties.HBSISTARWOOD,
             ThirdParties.HBSISTATIONCASINOS,
             ThirdParties.HBSIUNIVERSAL,
-            ThirdParties.HBSIVENETIAN,
+            ThirdParties.HBSIVENETIAN
         };
     }
 }
