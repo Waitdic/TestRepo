@@ -149,7 +149,7 @@
                     string sRoomTypeCode = oRoomRate.RoomTypeCode;
                     string sRatePlanCode = oRoomRate.RatePlanCode;
                     string sRatePlanCodePrefix = sRatePlanCode.Split('_')[0];
-                    string TPKey = $"{sHotelCode}|{_settings.PartnerName(oSearchDetails, source)}";
+                    string TPKey = $"{sHotelCode}";
 
 
                     string[] HotelCodes = _settings.HotelCodesWithAdditionalRoomTypeInfo(oSearchDetails, source).Split(',');
