@@ -30,12 +30,12 @@
 
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("BookURL", tpAttributeSearch);
+            return Get_Value("BookingURL", tpAttributeSearch);
         }
 
         public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("CancelURL", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)

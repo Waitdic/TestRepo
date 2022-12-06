@@ -12,7 +12,6 @@
     using iVectorOne;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using System.Threading.Tasks;
@@ -172,6 +171,12 @@
                         throw new Exception($"PreBook status is {prebookResponse.Status}");
                     }
 
+                    room.ThirdPartyReference = new PolarisTpRef 
+                    {
+                        BookToken = roomRate.BookToken,
+                        RoomIndex = polarisTpRef.RoomIndex
+                    }.Encrypt(_secretKeeper);
+
                     var roomPrice = roomRate.Pricing.Net.Price;
                     if (!Equals(room.LocalCost, roomPrice)) 
                     {
@@ -225,27 +230,127 @@
         #endregion
 
         #region "Book"
-        public Task<string> BookAsync(PropertyDetails propertyDetails)
+        public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            // if (_settings.SplitMultiRoom(propertyDetails)) return await BookSplitAsync(propertyDetails);            
+            string reference;
+            var bookRequest = new Request();
+
+            try
+            {
+                var bookRequestContent = BuildBookRequest(propertyDetails);
+                bookRequest = await CreateRequestAsync(propertyDetails, _settings.BookingURL(propertyDetails), bookRequestContent);
+                var bookResponse = JsonConvert.DeserializeObject<BookResponse>(bookRequest.ResponseString);
+                if (!string.Equals(bookResponse.Status, Constant.Status.Confirmed)) 
+                {
+                    var errors = string.Join(";", bookResponse.Notes.Err.Select(err => $"desc={err.Desc} type={err.Type}"));
+                    throw new Exception($"Response status is [{bookResponse.Status}], Errors: {errors}");
+                }
+                
+                reference = bookResponse.BookingReference.BookingReferenceId;
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("PreBook Failed", ex.Message);
+                reference = Constant.Failed;
+            }
+            finally 
+            {
+                propertyDetails.AddLog("Book", bookRequest);
+            }
+
+            return reference;
         }
 
-        public Task<string> BookSplitAsync(PropertyDetails propertyDetails) 
+        public BookRequest BuildBookRequest(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            var encryptedTpRef = propertyDetails.Rooms.First().ThirdPartyReference;
+            var polarisTpRef = PolarisTpRef.Decrypt(_secretKeeper, encryptedTpRef);
+
+            return new BookRequest
+            {
+                BookToken = polarisTpRef.BookToken,
+                BookingReference =
+                {
+                    RequestReferenceId = propertyDetails.BookingReference,
+                },
+                Remarks = string.Join(", ", propertyDetails.Rooms.Select(room => 
+                        string.IsNullOrEmpty(room.SpecialRequest)
+                            ? string.Empty
+                            : $"Room {room.PropertyRoomBookingID}: {room.SpecialRequest}")),
+                Travellers = propertyDetails.Rooms.SelectMany((room, roomIdx) => room.Passengers
+                                            .Select(pax => new Traveller 
+                                            { 
+                                                Age = CalculateAge(pax.DateOfBirth, propertyDetails.ArrivalDate),
+                                                Index = room.PropertyRoomBookingID,
+                                                Person = 
+                                                {
+                                                    LastName = pax.LastName,
+                                                    Name = pax.FirstName
+                                                }
+                                            })).ToList()
+            };
+        }
+
+        public async Task<string> BookSplitAsync(PropertyDetails propertyDetails) 
+        {
+            await Task.Yield();
+            return "";
         }
 
         #endregion
 
         #region "Cancellations"
-        public Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            var tpCancelResponse = new ThirdPartyCancellationResponse();
+            var request = new Request();
+
+            try
+            {
+                var cancelContent = new CancelRequest
+                {
+                    BookingReference =
+                    {
+                        BookingReferenceId = propertyDetails.SourceReference
+                    }
+                };
+                request = await CreateRequestAsync(propertyDetails, _settings.CancellationURL(propertyDetails), cancelContent);
+                var cancelResponse = JsonConvert.DeserializeObject<CancelResponse>(request.ResponseString);
+
+                if (!string.Equals(cancelResponse.Status, Constant.Status.Cancel)) 
+                {
+                    throw new Exception($"Cancellation failed, response status is {cancelResponse.Status}");
+                }
+                var roomRate = cancelResponse.Hotel.RoomRates.First();
+                var cancellations = TransformCancellations(roomRate.CancellationPolicies);
+                var now = Now();
+                var activeCancelPeriod = cancellations.FirstOrDefault(cx => cx.StartDate <= now && cx.EndDate >= now);
+                if (activeCancelPeriod != null) 
+                {
+                    tpCancelResponse.Amount = activeCancelPeriod.Amount;
+                    tpCancelResponse.CurrencyCode = roomRate.Pricing.Currency;
+                }
+
+                tpCancelResponse.Success = true;
+                tpCancelResponse.TPCancellationReference = propertyDetails.SourceReference;
+            }
+            catch (Exception ex)
+            {
+                tpCancelResponse.TPCancellationReference = "Failed";
+                tpCancelResponse.Success = false;
+                propertyDetails.Warnings.AddNew("Cancellation Exception", ex.Message);
+            }
+            finally
+            {
+                propertyDetails.AddLog("Cancellation", request);
+            }
+            return tpCancelResponse;
         }
 
         public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
         #endregion
 
@@ -301,7 +406,9 @@
             {
                 StartDate = cancellation.From.ToSafeDate(),
                 EndDate = cancellation.To.ToSafeDate(),
-                Amount = cancellation.Pricing.Net.Price
+                Amount = (cancellation.Pricing.Net != null)
+                            ? cancellation.Pricing.Net.Price
+                            : cancellation.Pricing.Sell.Price
             }).ToList();
             return canxs;
         }
@@ -310,6 +417,20 @@
         {
             return Convert.ToBase64String(new UTF8Encoding().GetBytes(
                 $"{settings.User(tpAttributeSearch)}:{settings.Password(tpAttributeSearch)}"));
+        }
+
+        internal static int CalculateAge(DateTime dateOfBirth, DateTime arrivalDate) 
+        {
+            return arrivalDate.Year - dateOfBirth.Year
+                    + (dateOfBirth.Month <= arrivalDate.Month
+                        && dateOfBirth.Day <= arrivalDate.Day 
+                        ? 0 : -1);
+        }
+
+        internal static DateTime Now() 
+        {
+            var now = DateTime.UtcNow; 
+            return now;
         }
         #endregion
     }

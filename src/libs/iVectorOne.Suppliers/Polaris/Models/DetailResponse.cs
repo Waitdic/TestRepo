@@ -2,7 +2,7 @@
 {
     using Newtonsoft.Json;
 
-    public class PrebookResponse
+    public class DetailResponse 
     {
         [JsonProperty("hotel")]
         public Hotel Hotel { get; set; } = new();
