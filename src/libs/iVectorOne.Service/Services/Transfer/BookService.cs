@@ -118,7 +118,7 @@
 
                 if (requestValid && !success)
                 {
-                    response.Warnings = new List<string>() { "Suppplier book failed" };
+                    response.Warnings = new List<string>() { "Supplier book failed" };
                 }
                 else if (requestValid)
                 {
