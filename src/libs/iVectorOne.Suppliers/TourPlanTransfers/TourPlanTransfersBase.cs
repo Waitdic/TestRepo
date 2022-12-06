@@ -1,16 +1,20 @@
 ﻿namespace iVectorOne.Suppliers.TourPlanTransfers
 {
+    using Intuitive;
+    using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Serialization;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using iVectorOne.Transfer;
-    using System.Threading.Tasks;
     using iVectorOne.Models.Transfer;
-    using Intuitive;
-    using System.Net.Http;
+    using iVectorOne.Suppliers.TourPlanTransfers.Models;
+    using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
-    using iVectorOne.SDK.V2;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Xml;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -19,16 +23,19 @@
         private ITourPlanTransfersSettings _settings;
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
+        private readonly ISerializer _serializer;
         public const string InvalidSupplierReference = "Invalid Supplier Reference";
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
             HttpClient httpClient,
-            ILogger<TourPlanTransfersSearchBase> logger)
+            ILogger<TourPlanTransfersSearchBase> logger,
+            ISerializer serializer)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
         public Task<bool> PreBookAsync(TransferDetails transferDetails)
@@ -36,17 +43,34 @@
             throw new System.NotImplementedException();
         }
 
-        public Task<string> BookAsync(TransferDetails transferDetails)
+        public async Task<string> BookAsync(TransferDetails transferDetails)
         {
+            var requests = new List<Request>();
             try
             {
-                var supplierReferenceValues = SplitSupplierReference(transferDetails);
-                return Task.FromResult("failed");
+                var supplierReferenceData = SplitSupplierReference(transferDetails);
+
+                var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
+                    transferDetails.DepartureDate, transferDetails.DepartureTime);
+
+                requests.Add(request);
+
+                await request.Send(_httpClient, _logger);
+
+                return "failed";
             }
             catch (ArgumentException ex)
             {
                 transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
-                return Task.FromResult("failed");
+                return "failed";
+            }
+            finally
+            {
+                foreach (var request in requests)
+                {
+                    transferDetails.AddLog("Book", request);
+                }
+
             }
         }
 
@@ -103,5 +127,69 @@
             }
             return result;
         }
+
+        private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
+            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime)
+        {
+            var bookingData = BuildBookingDataAsync(transferDetails, supplierReferenceData.Opt,
+                supplierReferenceData.RateId, departureDate, departureTime);
+
+            var request = new Request()
+            {
+                EndPoint = _settings.URL(transferDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+            };
+            var xmlDocument = Serialize(await bookingData);
+            request.SetRequest(xmlDocument);
+            return request;
+        }
+
+        private Task<AddServiceRequest> BuildBookingDataAsync(TransferDetails transferDetails,
+            string opt, string rateId, DateTime departureDate, string departureTime)
+        {
+            var addServiceRequest = new AddServiceRequest()
+            {
+                AgentID = _settings.AgentId(transferDetails),
+                Password = _settings.Password(transferDetails),
+                Opt = opt,
+                RateId = rateId,
+                ExistingBookingInfo = "",
+                DateFrom = departureDate.ToString("yyyy-MM-dd"),
+                NewBookingInfo = new NewBookingInformation
+                {
+                    Name = $"{transferDetails.LeadGuestFirstName} {transferDetails.LeadGuestLastName}"
+                },
+                RoomConfigs = new RoomConfigurations()
+                {
+                    RoomConfig = new RoomConfiguration()
+                    {
+                        Adults = transferDetails.Adults,
+                        Children = transferDetails.Children,
+                        Infants = transferDetails.Infants,
+                        PaxList = transferDetails.Passengers.Select(x => new PaxDetails
+                        {
+                            Title = x.Title,
+                            Forename = x.FirstName,
+                            Surname = x.LastName,
+                            PaxType = x.PassengerType.ToString().ToCharArray()[0].ToString()
+                        }).ToList()
+                    }
+                },
+                PickUp_Date = departureDate.ToString("yyyy-MM-dd"),
+                PuTime = departureTime,
+                PuRemark = ""
+            };
+
+            return Task.FromResult(addServiceRequest);
+        }
+
+        public XmlDocument Serialize(AddServiceRequest request)
+        {
+            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
+            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
+            return xmlRequest;
+        }
+
     }
 }
