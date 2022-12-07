@@ -15,7 +15,7 @@
     <PackageReference Include="Intuitive.Helpers" Version="0.18.0"/>
     <PackageReference Include="Intuitive.Scheduling" Version="7.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="TPImport.Local.SDK" Version="0.5.2" />
