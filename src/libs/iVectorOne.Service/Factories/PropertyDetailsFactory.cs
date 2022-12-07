@@ -87,24 +87,33 @@
 
                     if (roomToken is not null && roomToken.Adults != 0)
                     {
-                        var passengers = SetupPrebookPassengers(roomToken);
-                        var mealbasisId = roomToken.MealBasisID;
-                        var localCost = roomToken.LocalCost;
+                        var roomContent = await _contentRepository.GetContentforPropertyAsync(roomToken.PropertyID, request.Account, string.Empty);
 
-                        var roomDetails = new RoomDetails()
+                        if (roomContent.Source == propertyContent.Source)
                         {
-                            ThirdPartyReference = room.SupplierReference1,
-                            RoomTypeCode = room.SupplierReference2,
-                            Passengers = passengers,
-                            LocalCost = localCost,
-                            PropertyRoomBookingID = roomToken.PropertyRoomBookingID,
-                            MealBasisCode = await _mealbasisRepository.GetMealBasisCodefromTPMealbasisIDAsync(
-                                propertyContent.Source,
-                                mealbasisId,
-                                propertyDetails.AccountID)
-                        };
-                        propertyDetails.LocalCost += localCost;
-                        propertyDetails.Rooms.Add(roomDetails);
+                            var passengers = SetupPrebookPassengers(roomToken);
+                            var mealbasisId = roomToken.MealBasisID;
+                            var localCost = roomToken.LocalCost;
+
+                            var roomDetails = new RoomDetails()
+                            {
+                                ThirdPartyReference = room.SupplierReference1,
+                                RoomTypeCode = room.SupplierReference2,
+                                Passengers = passengers,
+                                LocalCost = localCost,
+                                PropertyRoomBookingID = roomToken.PropertyRoomBookingID,
+                                MealBasisCode = await _mealbasisRepository.GetMealBasisCodefromTPMealbasisIDAsync(
+                                    propertyContent.Source,
+                                    mealbasisId,
+                                    propertyDetails.AccountID)
+                            };
+                            propertyDetails.LocalCost += localCost;
+                            propertyDetails.Rooms.Add(roomDetails);
+                        }
+                        else
+                        {
+                            propertyDetails.Warnings.AddNew("Validate failure", WarningMessages.InvalidRoomCombination);
+                        }
                     }
                     else
                     {
@@ -113,7 +122,10 @@
                 }
             }
 
-            Validate(propertyToken!, propertyDetails);
+            if (!propertyDetails.Warnings.Any())
+            {
+                Validate(propertyToken!, propertyDetails);
+            }
 
             return propertyDetails;
         }
