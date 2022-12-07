@@ -83,7 +83,8 @@
                     .Select(x => JsonConvert.DeserializeObject<PrebookResponse>(x.ResponseString))
                     .ToList();
 
-                if (responses.All(r => Helper.CheckStatus(r.Status)))
+                if (responses.All(r => Helper.CheckStatus(r.Status) 
+                                       || (r.Status.Code == 200 && r.Status.Description == "The rate has changed.")))
                 {
                     // do the price change
                     foreach (var room in propertyDetails.Rooms)
@@ -350,7 +351,7 @@
 
                 var responses = requests.Select(r => JsonConvert.DeserializeObject<HotelCancelResponse>(r.ResponseString));
 
-                if (responses.All(r => Helper.CheckStatus(r.Status)))
+                if (responses.All(r => r.Status.Code == 200 && r.Status.Description == "Cancelled"))
                 {
                     thirdPartyCancellationResponse.Success = true;
                     thirdPartyCancellationResponse.TPCancellationReference = propertyDetails.SourceReference;
