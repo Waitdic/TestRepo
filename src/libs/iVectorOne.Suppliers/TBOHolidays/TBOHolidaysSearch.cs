@@ -4,7 +4,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
-    using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Lookups;
     using Models;
@@ -24,13 +23,11 @@
 
         private readonly ITBOHolidaysSettings _settings;
         private readonly ITPSupport _support;
-        private readonly ISerializer _serializer;
 
-        public TBOHolidaysSearch(ITBOHolidaysSettings settings, ITPSupport support, ISerializer serializer)
+        public TBOHolidaysSearch(ITBOHolidaysSettings settings, ITPSupport support)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _support = Ensure.IsNotNull(support, nameof(support));
-            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
         public string Source => ThirdParties.TBOHOLIDAYS;
@@ -51,7 +48,7 @@
                 
                 var webRequest = new Intuitive.Helpers.Net.Request
                 {
-                    EndPoint = /*_settings.SearchURL(searchDetails)*/"http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search",
+                    EndPoint = _settings.SearchURL(searchDetails),
                     Method = RequestMethod.POST,
                     ContentType = ContentTypes.Application_json,
                     Accept = "application/json",
@@ -89,9 +86,9 @@
                 IsDetailedResponse = false,
                 Filters =
                 {
-                    Refundable = /*_settings.ExcludeNRF(searchDetails)*/ false,
+                    Refundable = _settings.ExcludeNRF(searchDetails),
                     NoOfRooms = 0,
-                    MealType = /*_settings.RequestedMealBases(searchDetails)*/ "All"
+                    MealType = _settings.RequestedMealBases(searchDetails)
                 }
             };
 
@@ -122,7 +119,7 @@
 
             var hotelResponses = requests
                 .Select(request => JsonConvert.DeserializeObject<HotelResponse>(request.ResponseString))
-                .Where(x => x.Status.Code == 200 && x.Status.Description == "Successful")
+                .Where(x => Helper.CheckStatus(x.Status))
                 .ToList();
 
             if (hotelResponses.Count != searchDetails.Rooms)

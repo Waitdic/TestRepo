@@ -11,12 +11,7 @@
 
         public string RequestedMealBases(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("GenericURL", tpAttributeSearch);
+            return Get_Value("RequestedMealBases", tpAttributeSearch);
         }
 
         public int OffsetCancellationDays(IThirdPartyAttributeSearch tpAttributeSearch, bool isMandatory)
@@ -26,7 +21,7 @@
 
         public bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("UseGZip", tpAttributeSearch).ToSafeBoolean();
         }
 
         public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -36,17 +31,17 @@
 
         public bool ExcludeNRF(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("ExcludeNRF", tpAttributeSearch).ToSafeBoolean();
         }
 
         public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
         }
 
         public int RoomSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("RoomSearchLimit", tpAttributeSearch).ToSafeInt();
         }
 
         public string User(IThirdPartyAttributeSearch tpAttributeSearch)
@@ -61,47 +56,27 @@
 
         public string SearchURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("SearchURL", tpAttributeSearch);
         }
 
         public string PrebookURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("PrebookURL", tpAttributeSearch);
         }
 
         public string BookingURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
+            return Get_Value("BookingURL", tpAttributeSearch);
         }
 
         public string CancellationURL(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public string PaymentModeType(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("PaymentModeType", tpAttributeSearch);
-        }
-
-        public string ClientCode(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("ClientCode", tpAttributeSearch);
+            return Get_Value("CancellationURL", tpAttributeSearch);
         }
 
         public string LeadGuestNationality(IThirdPartyAttributeSearch tpAttributeSearch)
         {
             return Get_Value("LeadGuestNationality", tpAttributeSearch);
-        }
-
-        public string Currency(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("Currency", tpAttributeSearch);
-        }
-
-        public string ResultCount(IThirdPartyAttributeSearch tpAttributeSearch)
-        {
-            return Get_Value("ResultCount", tpAttributeSearch);
         }
     }
 }

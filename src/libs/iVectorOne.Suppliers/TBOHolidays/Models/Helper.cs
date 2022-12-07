@@ -13,6 +13,11 @@
             return "Basic " + Convert.ToBase64String(
                 System.Text.Encoding.ASCII.GetBytes($"{user}:{password}"));
         }
+
+        public static bool CheckStatus(Models.Common.Status status)
+        {
+            return status.Code == 200 && status.Description == "Successful";
+        }
     }
 
     public class BookingDetailRequest

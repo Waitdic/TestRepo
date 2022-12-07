@@ -7,14 +7,12 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
-    using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
     using Microsoft.Extensions.Logging;
     using Models;
     using Models.Common;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.TBOHolidays.Models.Prebook;
@@ -26,21 +24,15 @@
     public class TBOHolidays : IThirdParty, ISingleSource
     {
         private readonly ITBOHolidaysSettings _settings;
-        private readonly ITPSupport _support;
-        private readonly ISerializer _serializer;
         private readonly HttpClient _httpClient;
         private readonly ILogger<TBOHolidays> _logger;
 
         public TBOHolidays(
             ITBOHolidaysSettings settings,
-            ITPSupport support,
-            ISerializer serializer,
             HttpClient httpClient,
             ILogger<TBOHolidays> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
-            _support = Ensure.IsNotNull(support, nameof(support));
-            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
@@ -69,7 +61,7 @@
         {
             bool success;
             var priceChanged = false;
-            var url = /*_settings.PrebookURL(propertyDetails)*/ "https://api.tbotechnology.in/TBOHolidays_HotelAPI/PreBook";
+            var url = _settings.PrebookURL(propertyDetails);
             var requests = new List<Request>();
             
             try
@@ -91,7 +83,7 @@
                     .Select(x => JsonConvert.DeserializeObject<PrebookResponse>(x.ResponseString))
                     .ToList();
 
-                if (responses.All(r => r.Status.Code == 200 && r.Status.Description == "Successful"))
+                if (responses.All(r => Helper.CheckStatus(r.Status)))
                 {
                     // do the price change
                     foreach (var room in propertyDetails.Rooms)
@@ -209,8 +201,8 @@
 
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            var reference = string.Empty;
-            var url = /*_settings.BookingURL(propertyDetails)*/ "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Book";
+            string reference;
+            var url = _settings.BookingURL(propertyDetails);
             var requests = new List<Request>();
             var requestsDetails = new List<BookingDetailRequest>();
 
@@ -242,12 +234,11 @@
                         JsonConvert.DeserializeObject<HotelBookResponse>(requestsDetail.BookWebRequest.ResponseString);
                 }
 
-                if (requestsDetails.Any(rd => rd.BookResponse.Status.Code != 200 || rd.BookResponse.Status.Description != "Successful"))
+                if (requestsDetails.Any(rd => Helper.CheckStatus(rd.BookResponse.Status)))
                 {
-                    var detailUrl = "http://api.tbotechnology.in/TBOHolidays_HotelAPI/BookingDetail";
+                    var detailUrl = _settings.BookingURL(propertyDetails).Replace("/Book", "/BookingDetail");
 
-                    foreach (var requestsDetail in requestsDetails
-                                 .Where(r => r.BookResponse.Status.Code != 200 || r.BookResponse.Status.Description != "Successful"))
+                    foreach (var requestsDetail in requestsDetails.Where(r => Helper.CheckStatus(r.BookResponse.Status)))
                     {
                         var bookingDetailRequest = BuildBookDetailRequest(
                             string.Empty,
@@ -266,15 +257,10 @@
                         JsonConvert.DeserializeObject<HotelBookingDetailResponse>(b.BookDetailWebRequest.ResponseString));
                 }
 
-                if (requestsDetails.Any(x =>
-                        (x.BookResponse.Status.Code == 200 && x.BookResponse.Status.Description == "Successful")
-                        || (x.BookingDetailResponse.Status.Code == 200 &&
-                            x.BookingDetailResponse.Status.Description == "Successful")))
+                if (requestsDetails.Any(x => Helper.CheckStatus(x.BookResponse.Status) || Helper.CheckStatus(x.BookingDetailResponse.Status)))
                 {
                     propertyDetails.SourceReference = requestsDetails.All(x =>
-                        (x.BookResponse.Status.Code == 200 && x.BookResponse.Status.Description == "Successful")
-                        || (x.BookingDetailResponse.Status.Code == 200 &&
-                            x.BookingDetailResponse.Status.Description == "Successful"))
+                        Helper.CheckStatus(x.BookResponse.Status) || Helper.CheckStatus(x.BookingDetailResponse.Status))
                         ? "successful"
                         : "failed";
 
@@ -283,10 +269,8 @@
 
                     foreach (var requestsDetail in requestsDetails)
                     {
-                        var checkBooking = (requestsDetail.BookResponse.Status.Code == 200 
-                                            && requestsDetail.BookResponse.Status.Description == "Successful")
-                                           || (requestsDetail.BookingDetailResponse.Status.Code == 200
-                                               && requestsDetail.BookingDetailResponse.Status.Description == "Successful"
+                        var checkBooking = Helper.CheckStatus(requestsDetail.BookResponse.Status)
+                                           || (Helper.CheckStatus(requestsDetail.BookingDetailResponse.Status)
                                                && requestsDetail.BookingDetailResponse.BookingDetail.BookingStatus == "Confirmed");
 
                       
@@ -346,7 +330,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var thirdPartyCancellationResponse = new ThirdPartyCancellationResponse();
-            var url = /*_settings.CancellationURL(propertyDetails)*/ "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Cancel";
+            var url = _settings.CancellationURL(propertyDetails);
             var requests = new List<Request>();
 
             try
@@ -366,7 +350,7 @@
 
                 var responses = requests.Select(r => JsonConvert.DeserializeObject<HotelCancelResponse>(r.ResponseString));
 
-                if (responses.All(r => r.Status.Code == 200 && r.Status.Description == "Cancelled"))
+                if (responses.All(r => Helper.CheckStatus(r.Status)))
                 {
                     thirdPartyCancellationResponse.Success = true;
                     thirdPartyCancellationResponse.TPCancellationReference = propertyDetails.SourceReference;
