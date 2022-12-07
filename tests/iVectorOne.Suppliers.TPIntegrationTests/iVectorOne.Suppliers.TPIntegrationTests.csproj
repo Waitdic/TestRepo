@@ -80,6 +80,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>HotelstonRes.resx</DependentUpon>
     </Compile>
+	<Compile Update="Italcamel\ItalcamelRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ItalcamelRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="iVectorConnect\BookABedRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -241,6 +246,10 @@
     <EmbeddedResource Update="Hotelston\HotelstonRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>HotelstonRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+	<EmbeddedResource Update="Italcamel\ItalcamelRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ItalcamelRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="iVectorConnect\BookABedRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
