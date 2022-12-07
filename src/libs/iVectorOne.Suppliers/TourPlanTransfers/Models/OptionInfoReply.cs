@@ -17,12 +17,14 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public string Opt { get; set; }
         public int OptionNumber { get; set; }
         [XmlElement(ElementName = "OptGeneral")]
-        public List<OptGeneral> OptGeneral { get; set; }
+        public OptGeneral OptGeneral { get; set; }
         [XmlElement(ElementName = "OptionNotes")]
         public OptionNotes OptionNotes { get; set; }
         [XmlElement(ElementName = "OptStayResults")]
         public OptStayResults OptStayResults { get; set; }
     }
+
+    [XmlRoot(ElementName = "OptGeneral")]
     public class OptGeneral
     {
         public int SupplierId { get; set; }
