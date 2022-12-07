@@ -47,7 +47,7 @@
                             [Successful],
                             [RequestLog],
                             [ResponseLog],
-                            [BookingID]
+                            [TransferBookingID]
                         ) VALUES (
                             @accountId,
                             @supplierId,
@@ -58,7 +58,7 @@
                             @successful,
                             @requestLog,
                             @responseLog,
-                            @bookingId)",
+                            @transferBookingId)",
                     new CommandSettings()
                         .WithParameters(new
                         {
@@ -71,7 +71,7 @@
                             successful = log.Request.Success,
                             requestLog = log.Request.RequestLog,
                             responseLog = log.Request.ResponseLog,
-                            bookingId = transferDetails.TransferBookingID
+                            transferBookingId = transferDetails.TransferBookingID
                         }));
                 }
             }
