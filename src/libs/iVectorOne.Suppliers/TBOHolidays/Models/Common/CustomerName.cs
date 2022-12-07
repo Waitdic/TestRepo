@@ -8,6 +8,6 @@
 
         public string LastName { get; set; } = string.Empty;
 
-        public GuestType Type { get; set; }
+        public string Type { get; set; }
     }
 }

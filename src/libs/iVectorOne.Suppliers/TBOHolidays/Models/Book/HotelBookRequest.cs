@@ -7,8 +7,6 @@
     {
         public string BookingCode { get; set; } = string.Empty;
 
-        public string GuestNationality { get; set; } = string.Empty;
-
         public List<CustomerDetail> CustomerDetails { get; set; } = new();
 
         public string ClientReferenceId { get; set; } = string.Empty;

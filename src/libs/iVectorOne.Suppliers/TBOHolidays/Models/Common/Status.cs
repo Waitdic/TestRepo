@@ -4,7 +4,6 @@
 
     public class Status
     {
-
         [JsonProperty("Code")]
         public int Code { get; set; }
 

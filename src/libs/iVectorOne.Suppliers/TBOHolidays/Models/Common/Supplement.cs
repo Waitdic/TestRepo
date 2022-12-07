@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-
-namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
+﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
+    using Newtonsoft.Json;
+
     public class Supplement
     {
         [JsonProperty("Index")]

@@ -2,7 +2,7 @@
 {
     using Newtonsoft.Json;
 
-    public class CancelPolicy : BasePolicy
+    public class CancelPolicy
     {
         [JsonProperty("Index")]
         public string Index { get; set; } = string.Empty;
