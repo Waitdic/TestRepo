@@ -34,7 +34,7 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public int Adults { get; set; }
         public int Children { get; set; }
         public int Infants { get; set; }
-        public List<PaxDetails> PaxList { get; set; }
+        public List<PaxDetails> PaxList { get; set; } = new List<PaxDetails>();
     }
     public class PaxDetails
     {

@@ -10,6 +10,6 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public string Opt { get; set; }
         public string Info { get; set; }
         public string DateFrom { get; set; }
-        public List<RoomConfig> RoomConfigs { get; set; }
+        public List<RoomConfiguration> RoomConfigs { get; set; }
     }
 }
