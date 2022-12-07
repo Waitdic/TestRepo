@@ -10,5 +10,6 @@
 
         [JsonProperty("requestReferenceID")]
         public string RequestReferenceId { get; set; } = string.Empty;
+        public bool ShouldSerializeRequestReferenceId() => !string.IsNullOrEmpty(RequestReferenceId);
     }
 }

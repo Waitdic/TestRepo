@@ -63,9 +63,7 @@
         #region "PreBook"
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            bool isSplit = _settings.SplitMultiRoom(propertyDetails);
-
-            if (isSplit) return await PreBookSplitAsync(propertyDetails);
+            if (_settings.SplitMultiRoom(propertyDetails)) return await PreBookSplitAsync(propertyDetails);
 
             var preBookSuccess = false;
             var request = new Request();
@@ -232,13 +230,14 @@
         #region "Book"
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
-            // if (_settings.SplitMultiRoom(propertyDetails)) return await BookSplitAsync(propertyDetails);            
+            if (_settings.SplitMultiRoom(propertyDetails)) return await BookSplitAsync(propertyDetails);            
+            
             string reference;
             var bookRequest = new Request();
 
             try
             {
-                var bookRequestContent = BuildBookRequest(propertyDetails);
+                var bookRequestContent = BuildBookRequest(propertyDetails.Rooms, propertyDetails.BookingReference, propertyDetails.ArrivalDate);
                 bookRequest = await CreateRequestAsync(propertyDetails, _settings.BookingURL(propertyDetails), bookRequestContent);
                 var bookResponse = JsonConvert.DeserializeObject<BookResponse>(bookRequest.ResponseString);
                 if (!string.Equals(bookResponse.Status, Constant.Status.Confirmed)) 
@@ -262,9 +261,9 @@
             return reference;
         }
 
-        public BookRequest BuildBookRequest(PropertyDetails propertyDetails)
+        public BookRequest BuildBookRequest(List<RoomDetails> roomDetails, string bookingReference, DateTime arrivalDate)
         {
-            var encryptedTpRef = propertyDetails.Rooms.First().ThirdPartyReference;
+            var encryptedTpRef = roomDetails.First().ThirdPartyReference;
             var polarisTpRef = PolarisTpRef.Decrypt(_secretKeeper, encryptedTpRef);
 
             return new BookRequest
@@ -272,17 +271,17 @@
                 BookToken = polarisTpRef.BookToken,
                 BookingReference =
                 {
-                    RequestReferenceId = propertyDetails.BookingReference,
+                    RequestReferenceId = bookingReference,
                 },
-                Remarks = string.Join(", ", propertyDetails.Rooms.Select(room => 
+                Remarks = string.Join(", ", roomDetails.Select((room, roomIdx) => 
                         string.IsNullOrEmpty(room.SpecialRequest)
                             ? string.Empty
-                            : $"Room {room.PropertyRoomBookingID}: {room.SpecialRequest}")),
-                Travellers = propertyDetails.Rooms.SelectMany((room, roomIdx) => room.Passengers
+                            : $"Room {roomIdx + 1}: {room.SpecialRequest}")),
+                Travellers = roomDetails.SelectMany((room, roomIdx) => room.Passengers
                                             .Select(pax => new Traveller 
                                             { 
-                                                Age = CalculateAge(pax.DateOfBirth, propertyDetails.ArrivalDate),
-                                                Index = room.PropertyRoomBookingID,
+                                                Age = CalculateAge(pax.DateOfBirth, arrivalDate),
+                                                Index = roomIdx + 1,
                                                 Person = 
                                                 {
                                                     LastName = pax.LastName,
@@ -294,8 +293,42 @@
 
         public async Task<string> BookSplitAsync(PropertyDetails propertyDetails) 
         {
-            await Task.Yield();
-            return "";
+            var requests = new List<Request>();
+            var references = new List<string>();
+
+            try
+            {
+                foreach (var room in propertyDetails.Rooms) 
+                {
+                    var bookingReference = $"{propertyDetails.BookingReference}{room.PropertyRoomBookingID}"; 
+                    var bookRequestContent = BuildBookRequest(new List<RoomDetails> { room }, bookingReference, propertyDetails.ArrivalDate);
+                    var bookRequest = await CreateRequestAsync(propertyDetails, _settings.BookingURL(propertyDetails), bookRequestContent);
+                    var bookResponse = JsonConvert.DeserializeObject<BookResponse>(bookRequest.ResponseString);
+
+                    if (!string.Equals(bookResponse.Status, Constant.Status.Confirmed))
+                    {
+                        var errors = string.Join(";", bookResponse.Notes.Err.Select(err => $"desc={err.Desc} type={err.Type}"));
+                        throw new Exception($"Response status is [{bookResponse.Status}], Errors: {errors}");
+                    }
+                    var reference = bookResponse.BookingReference.BookingReferenceId;
+                    requests.Add(bookRequest);
+                    references.Add(reference);
+                }
+            }
+            catch (Exception ex)
+            {
+                propertyDetails.Warnings.AddNew("PreBook Failed", ex.Message);
+                references.Add(Constant.Failed);
+            }
+            finally 
+            {
+                foreach (var request in requests)
+                {
+                    propertyDetails.AddLog("Prebook", request);
+                }
+            }
+
+            return string.Join(Constant.ReferenceSeparator, references);
         }
 
         #endregion
@@ -303,49 +336,72 @@
         #region "Cancellations"
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            var tpCancelResponse = new ThirdPartyCancellationResponse();
             var request = new Request();
+            var success = true;
+            var cancelReferences = new List<string>();
+            var currencyCode = "";
+            decimal amountSum = 0.00M;
+
+            var references = propertyDetails.SourceReference.Split(Constant.ReferenceSeparator)
+                .Where(x => !string.Equals(x, Constant.Failed)).ToList();
 
             try
             {
-                var cancelContent = new CancelRequest
+                foreach (var reference in references) 
                 {
-                    BookingReference =
+                    try
                     {
-                        BookingReferenceId = propertyDetails.SourceReference
+                        var cancelContent = new CancelRequest
+                        {
+                            BookingReference =
+                            {
+                                BookingReferenceId = reference
+                            }
+                        };
+                        request = await CreateRequestAsync(propertyDetails, _settings.CancellationURL(propertyDetails), cancelContent);
+                        var cancelResponse = JsonConvert.DeserializeObject<CancelResponse>(request.ResponseString);
+
+                        if (!new List<string> { 
+                                Constant.Status.Cancel, 
+                                Constant.Status.AlreadyBookCancel 
+                            }.Contains(cancelResponse.Status))
+                        {
+                            throw new Exception($"Cancellation failed, response status is {cancelResponse.Status}");
+                        }
+
+                        if (cancelResponse.Hotel != null) 
+                        {
+                            var roomRate = cancelResponse.Hotel.RoomRates.First();
+                            var cancellations = TransformCancellations(roomRate.CancellationPolicies);
+                            var now = Now();
+                            var activeCancelPeriod = cancellations.FirstOrDefault(cx => cx.StartDate <= now && cx.EndDate >= now);
+                            if (activeCancelPeriod != null)
+                            {
+                                amountSum += activeCancelPeriod.Amount;
+                                currencyCode = roomRate.Pricing.Currency;
+                            }
+                        }
+                        cancelReferences.Add(reference);
                     }
-                };
-                request = await CreateRequestAsync(propertyDetails, _settings.CancellationURL(propertyDetails), cancelContent);
-                var cancelResponse = JsonConvert.DeserializeObject<CancelResponse>(request.ResponseString);
-
-                if (!string.Equals(cancelResponse.Status, Constant.Status.Cancel)) 
-                {
-                    throw new Exception($"Cancellation failed, response status is {cancelResponse.Status}");
+                    catch (Exception ex) 
+                    {
+                        cancelReferences.Add(Constant.Failed);
+                        success = false;
+                        propertyDetails.Warnings.AddNew("Cancellation Exception", ex.Message);
+                    }
                 }
-                var roomRate = cancelResponse.Hotel.RoomRates.First();
-                var cancellations = TransformCancellations(roomRate.CancellationPolicies);
-                var now = Now();
-                var activeCancelPeriod = cancellations.FirstOrDefault(cx => cx.StartDate <= now && cx.EndDate >= now);
-                if (activeCancelPeriod != null) 
-                {
-                    tpCancelResponse.Amount = activeCancelPeriod.Amount;
-                    tpCancelResponse.CurrencyCode = roomRate.Pricing.Currency;
-                }
-
-                tpCancelResponse.Success = true;
-                tpCancelResponse.TPCancellationReference = propertyDetails.SourceReference;
-            }
-            catch (Exception ex)
-            {
-                tpCancelResponse.TPCancellationReference = "Failed";
-                tpCancelResponse.Success = false;
-                propertyDetails.Warnings.AddNew("Cancellation Exception", ex.Message);
             }
             finally
             {
                 propertyDetails.AddLog("Cancellation", request);
             }
-            return tpCancelResponse;
+            return new ThirdPartyCancellationResponse
+            {
+                Success = success,
+                TPCancellationReference = string.Join(Constant.ReferenceSeparator, cancelReferences),
+                CurrencyCode = currencyCode,
+                Amount = amountSum
+            };
         }
 
         public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
@@ -421,10 +477,16 @@
 
         internal static int CalculateAge(DateTime dateOfBirth, DateTime arrivalDate) 
         {
-            return arrivalDate.Year - dateOfBirth.Year
+            var age = arrivalDate.Year - dateOfBirth.Year
                     + (dateOfBirth.Month <= arrivalDate.Month
                         && dateOfBirth.Day <= arrivalDate.Day 
                         ? 0 : -1);
+
+            // should match with search request pax ages            
+            if (age < 2) age = Constant.DefaultInfantAge;
+            if (age >= 18) age = Constant.DefaultAdultAge;
+
+            return age;
         }
 
         internal static DateTime Now() 
