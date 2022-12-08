@@ -42,9 +42,84 @@
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public Task<bool> PreBookAsync(TransferDetails transferDetails)
+        public async Task<bool> PreBookAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            var requests = new List<Request>();
+            try
+            {
+                var supplierReferenceData = SplitSupplierReference(transferDetails);
+
+                var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
+
+                requests.Add(request);
+
+                await request.Send(_httpClient, _logger);
+
+                if (!ResponseHasError(transferDetails, request.ResponseXML))
+                {
+                    var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+
+                    if (deserializedResponse != null &&
+                        deserializedResponse.Option != null &&
+                        deserializedResponse.Option.Count == 1 &&
+                        deserializedResponse.Option[0].Opt == supplierReferenceData.First().Opt)
+                    {
+                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
+                        transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
+                        transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+
+                        if (!transferDetails.OneWay)
+                        {
+                            var returnRequest = BuildOptionInfoRequest(transferDetails, supplierReferenceData.Last(), transferDetails.ReturnDate);
+
+                            requests.Add(returnRequest);
+
+                            await returnRequest.Send(_httpClient, _logger);
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML))
+                            {
+                                var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
+
+                                if (deserializedReturnResponse != null &&
+                                    deserializedReturnResponse.Option != null &&
+                                    deserializedReturnResponse.Option.Count == 1 &&
+                                    deserializedReturnResponse.Option[0].Opt == supplierReferenceData.Last().Opt)
+                                {
+                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
+                                    transferDetails.ISOCurrencyCode = deserializedReturnResponse.Option[0].OptStayResults.Currency;
+                                    transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                transferDetails.Warnings.AddNew("PrebookException", ex.Message);
+                return false;
+            }
+            finally
+            {
+                foreach (var request in requests)
+                {
+                    transferDetails.AddLog("Prebook", request);
+                }
+            }
         }
 
         public async Task<string> BookAsync(TransferDetails transferDetails)
@@ -261,6 +336,50 @@
                 return true;
             }
             return false;
+        }
+
+        private Request BuildOptionInfoRequest(TransferDetails transferDetails, SupplierReferenceData supplierReferenceData, DateTime dateFrom)
+        {
+            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+            {
+
+                AgentID = _settings.AgentId(transferDetails),
+                Password = _settings.Password(transferDetails),
+                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
+                Info = Constant.Info,
+                Opt = supplierReferenceData.Opt,
+                RoomConfigs = new List<RoomConfiguration>()
+                {
+                   new RoomConfiguration() {
+                   Adults = transferDetails.Adults,
+                   Children = transferDetails.Children,
+                   Infants = transferDetails.Infants
+                   }
+                }
+            };
+
+            var request = new Request()
+            {
+                EndPoint = _settings.URL(transferDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+
+            };
+            var xmlDocument = Serialize(optionInfoRequest);
+            request.SetRequest(xmlDocument);
+
+            return request;
+        }
+
+        // To do : Remove this method, when helper method will be created. 
+        private string CreateSupplierReference(string outBoundOpt, string outBoundRateId, string returnOpt = "", string returnRateId = "")
+        {
+            var reference = outBoundOpt + "-" + outBoundRateId;
+            if (!string.IsNullOrEmpty(returnOpt))
+            {
+                reference += "|" + returnOpt + "-" + returnRateId;
+            }
+            return reference;
         }
     }
 }
