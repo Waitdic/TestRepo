@@ -242,5 +242,10 @@
         /// <para>The dedupe method specified must be supported</para>
         /// </summary>
         public const string InvalidDedupeMethod = "The dedupe method in the request is unknown";
+
+        /// <summary>
+        /// <para></para>
+        /// </summary>
+        public const string InvalidRoomCombination = "Multi-room bookings must be for a single supplier";
     }
 }

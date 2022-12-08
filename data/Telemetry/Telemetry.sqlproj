@@ -65,5 +65,7 @@
     <Build Include="dbo\Tables\SearchStoreApi.sql" />
     <Build Include="dbo\Tables\SupplierAPILog.sql" />
     <Build Include="dbo\Tables\APILog.sql" />
+    <Build Include="dbo\Stored Procedures\SupplierAPILog_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\APILog_Insert.sql" />
   </ItemGroup>
 </Project>

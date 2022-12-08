@@ -32,6 +32,9 @@
         /// <summary>The supplier log repository</summary>
         private readonly ISupplierLogRepository _supplierLogRepository;
 
+        /// <summary>The supplier log repository</summary>
+        private readonly IBookingRepository _bookingRepository;
+
         /// <summary>Initializes a new instance of the <see cref="CancellationService" /> class.</summary>
         /// <param name="propertyDetailsFactory">Factory used for building a property details from the request</param>
         /// <param name="logRepository">Repository responsible for logging</param>
@@ -39,13 +42,15 @@
         /// <param name="responseFactory">Factory responsible for creating the response.</param>
         /// <param name="referenceValidator">Validates if the right supplier references have been sent for the supplier</param>
         /// <param name="supplierLogRepository">Repository for saving supplier logs to the database</param>
+        /// <param name="bookingRepository">Repository for saving the booking to the database</param>
         public CancellationService(
             IPropertyDetailsFactory propertyDetailsFactory,
             IAPILogRepository logRepository,
             IThirdPartyFactory thirdPartyFactory,
             ICancelPropertyResponseFactory responseFactory,
             ISuppierReferenceValidator referenceValidator,
-            ISupplierLogRepository supplierLogRepository)
+            ISupplierLogRepository supplierLogRepository,
+            IBookingRepository bookingRepository)
         {
             _propertyDetailsFactory = Ensure.IsNotNull(propertyDetailsFactory, nameof(propertyDetailsFactory));
             _logRepository = Ensure.IsNotNull(logRepository, nameof(logRepository));
@@ -53,6 +58,7 @@
             _responseFactory = Ensure.IsNotNull(responseFactory, nameof(responseFactory));
             _referenceValidator = Ensure.IsNotNull(referenceValidator, nameof(referenceValidator));
             _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
+            _bookingRepository = Ensure.IsNotNull(bookingRepository, nameof(bookingRepository));
         }
 
         /// <inheritdoc/>
@@ -65,8 +71,17 @@
 
             try
             {
-                propertyDetails = await _propertyDetailsFactory.CreateAsync(cancelRequest);
-                _referenceValidator.ValidateCancel(propertyDetails);
+                var booking = await _bookingRepository.GetBookingAsync(cancelRequest.SupplierBookingReference, cancelRequest.Account);
+
+                if (booking is null || booking.Status != BookingStatus.Live)
+                {
+                    propertyDetails.Warnings.AddNew("Unknown Booking", "No Booking could be found for the given supplier booking reference or the booking was not live.");
+                }
+                else
+                {
+                    propertyDetails = await _propertyDetailsFactory.CreateAsync(cancelRequest);
+                    _referenceValidator.ValidateCancel(propertyDetails);
+                }
 
                 if (propertyDetails.Warnings.Any())
                 {
@@ -91,6 +106,8 @@
                         if (success)
                         {
                             response = _responseFactory.Create(thirdPartyReponse!);
+                            booking!.Status = BookingStatus.Cancelled;
+                            await _bookingRepository.StoreBookingAsync(booking);
                         }
                         else
                         {

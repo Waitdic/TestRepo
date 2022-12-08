@@ -20,6 +20,7 @@
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
+    using iVectorOne.Repositories;
 
     /// <summary>
     /// Third Party Property Search Runner
@@ -27,6 +28,7 @@
     public class ThirdPartyPropertySearchRunner : IThirdPartyPropertySearchRunner
     {
         private readonly ISearchStoreService _searchStoreService;
+
         private readonly ILogger<ThirdPartyPropertySearchRunner> _logger;
 
         private readonly IEmailService _emailService;
@@ -35,18 +37,22 @@
 
         private readonly HttpClient _httpClient;
 
+        private readonly ISupplierLogRepository _supplierLogRepository;
+
         public ThirdPartyPropertySearchRunner(
             ILogger<ThirdPartyPropertySearchRunner> logger,
             IEmailService emailService,
             ISearchResultsProcessor searchResultsProcessor,
             HttpClient httpClient,
-            ISearchStoreService searchStoreService)
+            ISearchStoreService searchStoreService,
+            ISupplierLogRepository supplierLogRepository)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _emailService = Ensure.IsNotNull(emailService, nameof(emailService));
             _searchResultsProcessor = Ensure.IsNotNull(searchResultsProcessor, nameof(searchResultsProcessor));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
-            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService)); ;
+            _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
+            _supplierLogRepository = Ensure.IsNotNull(supplierLogRepository, nameof(supplierLogRepository));
         }
 
         /// <summary>Gets or sets a value indicating whether [exclude non refundable].</summary>
@@ -91,11 +97,13 @@
                 var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
                 stopwatch.Restart();
 
+                var config = searchDetails.Account.Configurations.First(c => c.Supplier == source);
+
                 foreach (var request in requests)
                 {
                     request.Source = source;
                     request.LogFileName = "Search";
-                    request.CreateLog = false; //TODO CS this should come from configuration
+                    request.CreateLog = config.LogSearchRequests;
                     request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source);
                     request.UseGZip = UseGZip(searchDetails, source);
 
@@ -106,6 +114,11 @@
 
                 var supplierTime = (int)stopwatch.ElapsedMilliseconds;
                 stopwatch.Restart();
+
+                if (config.LogSearchRequests)
+                {
+                    await _supplierLogRepository.LogSearchRequestsAsync(searchDetails, config.SupplierID, requests);
+                }
 
                 if (requests.Any())
                 {

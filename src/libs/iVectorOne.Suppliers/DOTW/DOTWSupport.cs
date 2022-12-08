@@ -15,7 +15,6 @@
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Logging;
     using iVectorOne.Constants;
-    using iVectorOne.DOTW;
     using iVectorOne.Lookups;
 
     public partial class DOTWSupport : IDOTWSupport

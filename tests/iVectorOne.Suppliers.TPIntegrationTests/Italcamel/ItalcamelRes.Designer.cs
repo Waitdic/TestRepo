@@ -61,22 +61,16 @@ namespace iVectorOne.Tests.Italcamel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to URL: http://dev.hotelston.com/ws/HotelService.HotelServiceHttpSoap11Endpoint/
+        ///   Looks up a localized string similar to URL: http://webservice.test.italcamel.com/Service_5_1.asmx
         ///
         ///**HEADERS**
         ///
-        ///Timeout: 1
+        ///Timeout: 100
         ///
         ///
         ///**REQUEST**
         ///
-        ///&lt;soapenv:Envelope xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot; xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-        ///  &lt;soapenv:Header /&gt;
-        ///  &lt;soapenv:Body&gt;
-        ///    &lt;xsd:SearchHotelsRequest&gt;
-        ///      &lt;xsd:locale&gt;en&lt;/xsd:locale&gt;
-        ///      &lt;xsd:loginDetails xsd1:email=&quot;booking@imperatours.com&quot; xsd1:password=&quot;ImperaTours2017&quot; /&gt;
-        ///      &lt;xs [rest of string was truncated]&quot;;.
+        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;GETAVAILABILITY xmlns=&quot;http://webservice.italcamel.com/service_5_1.asmx&quot;&gt;&lt;REQUEST&gt;&lt;USERNAME&gt;test1&lt;/USERNAME&gt;&lt;PASSWORD&gt;APIintuitive&lt;/PASSWORD&gt;&lt;LANGUAGEUID&gt;345d39f6-f05f-42c6-a61b-2bd7f [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {
@@ -85,14 +79,7 @@ namespace iVectorOne.Tests.Italcamel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-        ///&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
-        ///  &lt;soapenv:Body&gt;
-        ///    &lt;xsd:SearchHotelsResponse xmlns:xsd=&quot;http://request.ws.hotelston.com/xsd&quot;&gt;
-        ///      &lt;xsd:success xsd1:trackingId=&quot;4241477944478376:2101347183&quot; xmlns:xsd1=&quot;http://types.ws.hotelston.com/xsd&quot;&gt;true&lt;/xsd:success&gt;
-        ///      &lt;xsd:searchId&gt;3770913640&lt;/xsd:searchId&gt;
-        ///      &lt;xsd:hotel xsd:id=&quot;52700741&quot; xsd:name=&quot;Micon Lofts&quot; xsd:lastUpdated=&quot;2021-06-19T03:38:42.586+03:00&quot;&gt;
-        ///        &lt; [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;&lt;soap:Body&gt;&lt;GETAVAILABILITYResponse xmlns=&quot;http://webservice.italcamel.com/service_5_1.asmx&quot;&gt;&lt;GETAVAILABILITYResult&gt;&lt;STATUS&gt;0&lt;/STATUS&gt;&lt;ERRORCODE /&gt;&lt;ERRORMESSAGE /&gt;&lt;AVAILABILITYTOKEN&gt;280a7cb5-b5a5-47d7-b80c-7f9de097a915&lt;/AVAILABILITYTOKEN&gt;&lt;REQUEST&gt;&lt;USERNAME&gt;Imperatours2016_test&lt;/USERNAME&gt;&lt;PASSWORD&gt;xQ-4-8R [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Response {
             get {
@@ -101,7 +88,7 @@ namespace iVectorOne.Tests.Italcamel {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Results&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;52700741&quot; CC=&quot;EUR&quot; PRBID=&quot;1&quot; RTC=&quot;20744729856|3089463496&quot; RT=&quot;Loft Suite&quot; MBC=&quot;2359299&quot; AMT=&quot;299.52&quot; TPR=&quot;52700741|3770913640|2359299&quot; DSC=&quot;0&quot; COM=&quot;0&quot; DP=&quot;false&quot; NPA=&quot;0&quot; NRF=&quot;false&quot; FIXPR=&quot;false&quot; FREEC=&quot;false&quot; RQ=&quot;false&quot; PLA=&quot;false&quot; PLR=&quot;false&quot; MSP=&quot;0&quot;&gt;&lt;Cs /&gt;&lt;/Result&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;52700741&quot; CC=&quot;EUR&quot; PRBID=&quot;1&quot; RTC=&quot;20744729854|3089463496&quot; RT=&quot;Loft Suite&quot; MBC=&quot;2359299&quot; AMT=&quot;332.80&quot; TPR=&quot;52700741|3770913640|2359299&quot; DSC=&quot;0&quot; COM=&quot;0&quot; DP=&quot;false&quot; NPA=&quot;0&quot; NRF=&quot;false&quot; FIXPR=&quot;fals [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TransformedResponse {
             get {

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Data;
+    using iVectorOne.Models.Logging;
     using iVectorOne.SDK.V2;
     using Microsoft.Extensions.Logging;
     using Book = SDK.V2.PropertyBook;
@@ -25,10 +26,10 @@
 
         /// <summary>Initializes a new instance of the <see cref="APILogRepository" /> class.</summary>
         /// <param name="logger">The log writer.</param>
-        public APILogRepository(ILogger<APILogRepository> logger, ISql sql)
+        public APILogRepository(ILogger<APILogRepository> logger, ISqlFactory sqlFactory)
         {
             _logger = Ensure.IsNotNull(logger, nameof(logger));
-            _sql = Ensure.IsNotNull(sql, nameof(sql));
+            _sql = Ensure.IsNotNull(sqlFactory, nameof(sqlFactory)).CreateSqlContext(iVectorOneInfo.TelemetryContext);
         }
 
         /// <inheritdoc />
@@ -60,19 +61,18 @@
                 string requestLog = JsonSerializer.Serialize((object)request);
                 string responseLog = JsonSerializer.Serialize((object)response);
 
-                await _sql.ExecuteAsync(
-                    "Insert into APILog (Type, Time, RequestLog, ResponseLog, AccountID, Success, BookingID) " +
-                        "values (@logType,@time,@requestLog,@responseLog,@accountId,@success,@bookingId)",
+                await _sql.ExecuteAsync("APILog_Insert",
                     new CommandSettings()
+                        .IsStoredProcedure()
                         .WithParameters(new
                         {
                             logType = logType.ToString(),
-                            @time = DateTime.Now,
-                            @requestLog = requestLog,
-                            @responseLog = responseLog,
-                            @accountId = request.Account.AccountID,
-                            @success = success,
-                            @bookingId = request.BookingID,
+                            time = DateTime.Now,
+                            requestLog = requestLog,
+                            responseLog = responseLog,
+                            accountId = request.Account.AccountID,
+                            success = success,
+                            bookingId = request.BookingID,
                         }));
             }
             catch (Exception ex)
