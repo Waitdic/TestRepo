@@ -59,10 +59,7 @@
                 {
                     var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
 
-                    if (deserializedResponse != null &&
-                        deserializedResponse.Option != null &&
-                        deserializedResponse.Option.Count == 1 &&
-                        deserializedResponse.Option[0].Opt == supplierReferenceData.First().Opt)
+                    if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
                     {
                         transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
@@ -79,13 +76,9 @@
                             {
                                 var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
 
-                                if (deserializedReturnResponse != null &&
-                                    deserializedReturnResponse.Option != null &&
-                                    deserializedReturnResponse.Option.Count == 1 &&
-                                    deserializedReturnResponse.Option[0].Opt == supplierReferenceData.Last().Opt)
+                                if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
                                 {
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
-                                    transferDetails.ISOCurrencyCode = deserializedReturnResponse.Option[0].OptStayResults.Currency;
                                     transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                 }
                                 else
@@ -380,6 +373,14 @@
                 reference += "|" + returnOpt + "-" + returnRateId;
             }
             return reference;
+        }
+
+        private bool IsValidResponse(OptionInfoReply response, string opt)
+        {
+            return (response != null &&
+                    response.Option != null &&
+                    response.Option.Count == 1 &&
+                    response.Option[0].Opt == opt);
         }
     }
 }
