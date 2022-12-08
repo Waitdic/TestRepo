@@ -9,6 +9,7 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
+    using StackExchange.Profiling.Internal;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -44,10 +45,10 @@
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
             LocationData tpLocations = GetThirdPartyLocations(location);
-            var departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
-            departureBuildOptionInfoRequest.ExtraInfo = Constant.OneWay;
-            requests.Add(departureBuildOptionInfoRequest);
+            Outbound.ExtraInfo = Constant.Outbound;
+            requests.Add(Outbound);
             if (!searchDetails.OneWay)
             {
                 var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
@@ -93,51 +94,47 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            var TransformedTransferResultCollection = new TransformedTransferResultCollection();
+            TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
             LocationData tpLocations = GetThirdPartyLocations(location);
+            bool oneway = requests.Count == 1;
+            OptionInfoReply filteredOutbound = new OptionInfoReply();
+            OptionInfoReply filteredReturn = new OptionInfoReply();
+
             foreach (Request request in requests)
             {
                 if (!ResponseHasExceptions(request))
                 {
                     OptionInfoReply deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                    OptionInfoReply filterResult = new OptionInfoReply();
-                    OptionInfoReply departureFilterResult = FilterResult(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
-                    filterResult.Option.AddRange(departureFilterResult.Option);
-                    string supplierReference = GetOneWaySupplierReference(departureFilterResult);
-                    if (string.IsNullOrEmpty((string)request.ExtraInfo))
+                    if ((string)request.ExtraInfo == Constant.Outbound)
                     {
-                        OptionInfoReply arivalFilterResult = FilterResult(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
-                        filterResult.Option.AddRange(arivalFilterResult.Option);
-                        supplierReference = GetTwoWaySupplierReference(departureFilterResult, arivalFilterResult);
-
-
+                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
                     }
+                    //if ((string)request.ExtraInfo != Constant.Outbound)
+                    //{
+                    //    filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                    //}
+                    string supplierReference;
 
-
-                    foreach (var option in filterResult.Option)
+                    TransformedTransferResult? transformedResult = null;
+                    if (oneway)
                     {
-                        var transformedResult = new TransformedTransferResult()
+                        foreach (var outboundResult in filteredOutbound.Option)
                         {
-                            TPSessionID = "",
-                            SupplierReference = supplierReference,
-                            TransferVehicle = option.OptGeneral.Comment,
-                            ReturnTime = "12:00",
-                            VehicleCost = 0,
-                            AdultCost = 0,
-                            ChildCost = 0,
-                            CurrencyCode = option.OptStayResults.Currency,
-                            VehicleQuantity = 1,
-                            Cost = option.OptStayResults.TotalPrice,
-                            BuyingChannelCost = 0,
-                            OutboundInformation = "",
-                            ReturnInformation = "",
-                            OutboundCost = 0,
-                            ReturnCost = 0,
-                            OutboundXML = "",
-                            ReturnXML = "",
-                            OutboundTransferMinutes = 0,
-                            ReturnTransferMinutes = 0,
-                        };
+                            supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
+                            transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                        }
+                    }
+                    else
+                    {
+                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                        foreach (var returnResult in filteredReturn.Option.Where(x => filteredOutbound.Option.Select(y => y.OptGeneral.Comment).Contains(x.OptGeneral.Comment)))
+                        {
+                            supplierReference = CreateSupplierReference(filteredOutbound.Option.FirstOrDefault().Opt, filteredOutbound.Option.FirstOrDefault().OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
+                            transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + filteredOutbound.Option.FirstOrDefault().OptStayResults.TotalPrice);
+                        }
+                    }
+                    if (transformedResult != null)
+                    {
                         TransformedTransferResultCollection.TransformedResults.Add(transformedResult);
                     }
                 }
@@ -146,32 +143,55 @@
             return TransformedTransferResultCollection;
         }
 
+        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        {
+            var transformedResult = new TransformedTransferResult()
+            {
+                TPSessionID = "",
+                SupplierReference = supplierReference,
+                TransferVehicle = comment,
+                ReturnTime = "12:00",
+                VehicleCost = 0,
+                AdultCost = 0,
+                ChildCost = 0,
+                CurrencyCode = currency,
+                VehicleQuantity = 1,
+                Cost = totalPrice,
+                BuyingChannelCost = 0,
+                OutboundInformation = "",
+                ReturnInformation = "",
+                OutboundCost = 0,
+                ReturnCost = 0,
+                OutboundXML = "",
+                ReturnXML = "",
+                OutboundTransferMinutes = 0,
+                ReturnTransferMinutes = 0,
+            };
+
+            return transformedResult;
+        }
 
         #endregion
 
         #region Private Functions
-        private string GetOneWaySupplierReference(OptionInfoReply departureResult)
+        private string CreateSupplierReference(string outBoundOpt, string outBoundRateId, string returnOpt, string returnRateId)
         {
-            return departureResult.Option.Any() ? departureResult.Option.FirstOrDefault().Opt + "-" +
-                    departureResult.Option.FirstOrDefault().OptStayResults.RateId : string.Empty;
-        }
-        private string GetTwoWaySupplierReference(OptionInfoReply departureResult, OptionInfoReply arivalResult)
-        {
-            string result = string.Empty;
-            if (departureResult.Option.Any() && arivalResult.Option.Any())
+            var reference = outBoundOpt + "-" + outBoundRateId;
+            if (!string.IsNullOrEmpty(returnOpt))
             {
-                result = departureResult.Option.FirstOrDefault().Opt + "-" + departureResult.Option.FirstOrDefault().OptStayResults.RateId + "|" +
-                    arivalResult.Option.FirstOrDefault().Opt + "-" + arivalResult.Option.FirstOrDefault().OptStayResults.RateId;
+                reference += "|" + returnOpt + "-" + returnRateId;
             }
-
-            return result;
+            return reference;
         }
 
-        private OptionInfoReply FilterResult(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
         {
-            OptionInfoReply filterResult = new OptionInfoReply();
-            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName) && x.OptStayResults.Availability != "OK").ToList();
-            filterResult.Option.AddRange(result);
+            OptionInfoReply filterResult = new();
+            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
+            if (result.Any())
+            {
+                filterResult.Option.AddRange(result);
+            }
             return filterResult;
         }
 
