@@ -54,6 +54,11 @@
 
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return new List<Request>();
+            }
+
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
             int batchLimit = _settings.HotelBatchLimit(searchDetails);

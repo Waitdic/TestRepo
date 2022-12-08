@@ -504,9 +504,10 @@ namespace iVectorOne.Suppliers.HBSi
                 rph = paxIdx + 1
             });
 
-            int iLeadPassengerIndex = guests.First(g => g.pax.PassengerType == PassengerType.Adult
+            var leadGuest = guests.FirstOrDefault(g => g.pax.PassengerType == PassengerType.Adult
                     && string.Equals(g.pax.FirstName, oPropertyDetails.LeadGuestFirstName)
-                    && string.Equals(g.pax.LastName, oPropertyDetails.LeadGuestLastName)).rph;
+                    && string.Equals(g.pax.LastName, oPropertyDetails.LeadGuestLastName));
+            int leadGuestIndex = leadGuest != null ? leadGuest.rph : 1;
 
             var oResGuests = guests.Select(oGuest =>
             {
@@ -520,7 +521,7 @@ namespace iVectorOne.Suppliers.HBSi
                             Surname = pax.LastName,
                         }
                 };
-                if (oGuest.rph == iLeadPassengerIndex)
+                if (oGuest.rph == leadGuestIndex)
                 {
                     if (_settings.UseLeadGuestDetails(oPropertyDetails, source))
                     {
@@ -591,7 +592,7 @@ namespace iVectorOne.Suppliers.HBSi
             {
                 var acceptPayment = new AcceptedPayment
                 {
-                    RPH = iLeadPassengerIndex
+                    RPH = leadGuestIndex
                 };
                 // 'Select payment method
                 string sPaymentMethod = _settings.PaymentMethod(oPropertyDetails, source).ToLower();

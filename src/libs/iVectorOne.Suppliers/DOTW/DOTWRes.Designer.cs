@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.DOTW {
+namespace iVectorOne.Suppliers.DOTW {
     using System;
     
     

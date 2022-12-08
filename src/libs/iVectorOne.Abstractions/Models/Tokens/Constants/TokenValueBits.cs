@@ -31,10 +31,10 @@
         /// <summary>Children are stored in 4 bits, which allows values 0-15 to be stored. Thouh we only actually support 8 and validate against more.</summary>
         public const int ChildrenBits = 4;
 
-        /// <summary>Infats are stored in 3 bits, which allows values 0-7 to be stored.</summary>
+        /// <summary>Infants are stored in 3 bits, which allows values 0-7 to be stored.</summary>
         public const int InfantsBits = 3;
 
-        /// <summary>Infats are stored in 3 bits, which allows values 0-7 to be stored.</summary>
+        /// <summary>Rooms are stored in 3 bits, which allows values 0-7 to be stored.</summary>
         public const int RoomBits = 3;
 
         /// <summary>The currency ids are stored in 9, which allows 0-511 to be stored(But not going to all used.There are 300 ISO currency codes )</summary>
@@ -43,15 +43,14 @@
         /// <summary>Child ages are stored in 5 bits which allow 0-31 to be stored (though we validate these to 1-17)</summary>
         public const int ChildAgeBits = 5;
 
-        /// <summary>LocalCost  will be stored as a split of 2 parts of 7 digits, each part is stored in 24 bits which allow 
+        /// <summary>LocalCost will be stored as a split of 2 parts of 7 digits, each part is stored in 24 bits which allow 
         /// 0-16,777,216 to be stored (only 0-9,999,999 will be used)</summary>
         public const int LocalCostBits = 24;
 
         /// <summary>Property room booking ids are stored in 4 bits, which allows 0-15 to be stored</summary>
         public const int PropertyRoomBookingID = 4;
 
-        /// <summary>MealBasis  will be stored as a split of 3 parts of 2 digits, each part is stored in 7 bits which allow 
-        /// 0-128 to be stored (only 0-99 will be used)</summary>
-        public const int MealBasis = 7;
+        /// <summary>MealBasis ids are stored in 12 bits which allow 0-4095 to be stored</summary>
+        public const int MealBasis = 12;
     }
 }

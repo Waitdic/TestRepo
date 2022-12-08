@@ -80,7 +80,7 @@
 
             if (searchDetails.SellingCountry != string.Empty)
             {
-                countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.Account.AccountID);
             }
 
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);

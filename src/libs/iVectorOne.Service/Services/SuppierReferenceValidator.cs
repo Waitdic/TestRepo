@@ -50,6 +50,8 @@
                 case ThirdParties.HBSISTATIONCASINOS:
                 case ThirdParties.HBSIUNIVERSAL:
                 case ThirdParties.HBSIVENETIAN:
+                case ThirdParties.HBSIAMR:
+                case ThirdParties.HBSICOUPLES:
                 case ThirdParties.IMPERATORE:
                 case ThirdParties.JUNIPERECTRAVEL:
                 case ThirdParties.JUNIPERELEVATE:

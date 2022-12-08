@@ -17,10 +17,8 @@ namespace iVectorOne.Search.Models
     /// <seealso cref="IThirdPartyAttributeSearch" />
     public class SearchDetails : IThirdPartyAttributeSearch
     {
-        /// <summary>
-        /// Gets or sets the account identifier
-        /// </summary>
-        public int AccountID { get; set; }
+        /// <summary>Gets or sets the account</summary>
+        public Account Account { get; set; } = new();
 
         /// <summary>Gets or sets the settings.</summary>
         public Settings Settings { get; set; } = new();

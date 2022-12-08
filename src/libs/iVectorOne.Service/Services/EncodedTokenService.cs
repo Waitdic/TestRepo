@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
     using Intuitive;
-    using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
     using iVectorOne.Models.Tokens.Constants;
     using iVectorOne.Repositories;
@@ -15,23 +13,19 @@
     /// <summary>A Service for encrypting and decrypting base 92 tokens.</summary>
     public class EncodedTokenService : ITokenService
     {
-        private readonly IPropertyContentRepository _contentRepository;
         private readonly IBaseConverter _converter;
         private readonly ITokenValues _tokenValues;
         private readonly ILogger<EncodedTokenService> _logger;
 
         /// <summary>Initializes a new instance of the <see cref="EncodedTokenService" /> class.</summary>
-        /// <param name="contentRepository">The content repository.</param>
         /// <param name="converter">The base converter.</param>
         /// <param name="tokenValues">The colelction that stores the TokenValues</param>
         /// <param name="logger"></param>
         public EncodedTokenService(
-            IPropertyContentRepository contentRepository,
             IBaseConverter converter,
             ITokenValues tokenValues,
             ILogger<EncodedTokenService> logger)
         {
-            _contentRepository = Ensure.IsNotNull(contentRepository, nameof(contentRepository));
             _converter = Ensure.IsNotNull(converter, nameof(converter));
             _tokenValues = Ensure.IsNotNull(tokenValues, nameof(tokenValues));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -62,7 +56,7 @@
 
             char[] bits = ConvertValuesToCharArray(_tokenValues.Values);
 
-            string tokenString = new string(bits.Take(TokenLengths.Property).ToArray());
+            string tokenString = new(bits.Take(TokenLengths.Property).ToArray());
 
             return tokenString;
         }
@@ -70,6 +64,8 @@
         public string EncodeRoomToken(RoomToken propertyToken)
         {
             _tokenValues.Clear();
+            _tokenValues.AddValue(TokenValueType.PropertyID, propertyToken.PropertyID);
+            _tokenValues.AddValue(TokenValueType.MealBasisID, propertyToken.MealBasisID);
             _tokenValues.AddValue(TokenValueType.Adults, propertyToken.Adults);
             _tokenValues.AddValue(TokenValueType.Children, propertyToken.Children);
             _tokenValues.AddValue(TokenValueType.Infants, propertyToken.Infants);
@@ -80,18 +76,14 @@
             GenerateChildAgeValues(propertyToken);
             char[] childAgebits = ConvertValuesToCharArray(_tokenValues.Values);
 
-            GenerateMealBasisValues(propertyToken);
-            char[] mealBasesBits = ConvertValuesToCharArray(_tokenValues.Values);
-
             GenerateLocalCostValues(propertyToken);
             char[] localCostBits = ConvertValuesToCharArray(_tokenValues.Values);
 
-            string childAgeToken = new string(childAgebits.Take(TokenLengths.ChildAges).ToArray());
-            string roomToken = new string(mainbits.Take(TokenLengths.Room).ToArray());
-            string mealbasisToken = new string(mealBasesBits.Take(TokenLengths.MealBasis).ToArray());
-            string localCostToken = new string(localCostBits.Take(TokenLengths.LocalCost).ToArray());
+            string childAgeToken = new(childAgebits.Take(TokenLengths.ChildAges).ToArray());
+            string roomToken = new(mainbits.Take(TokenLengths.Room).ToArray());
+            string localCostToken = new(localCostBits.Take(TokenLengths.LocalCost).ToArray());
 
-            string tokenString = roomToken + childAgeToken + mealbasisToken + localCostToken.TrimEnd();
+            string tokenString = roomToken + childAgeToken + localCostToken.TrimEnd();
 
             return tokenString;
         }
@@ -110,7 +102,7 @@
             return bits;
         }
 
-        public async Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account, string supplierBookingReference)
+        public BookToken? DecodeBookToken(string tokenString)
         {
             BookToken? token = null;
             try
@@ -124,8 +116,6 @@
                 {
                     PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
                 };
-
-                await PopulateBookTokenFieldsAsync(token, account, supplierBookingReference);
             }
             catch (Exception ex)
             {
@@ -136,7 +126,7 @@
             return token;
         }
 
-        public async Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Account account)
+        public PropertyToken? DecodePropertyToken(string tokenString)
         {
             PropertyToken? token = null;
 
@@ -169,8 +159,6 @@
                 {
                     token.ArrivalDate = new DateTime(year, month, day);
                 }
-
-                await PopulatePropertyTokenFieldsAsync(token, account);
             }
             catch (Exception ex)
             {
@@ -188,6 +176,8 @@
             try
             {
                 _tokenValues.Clear();
+                _tokenValues.AddValue(TokenValueType.PropertyID);
+                _tokenValues.AddValue(TokenValueType.MealBasisID);
                 _tokenValues.AddValue(TokenValueType.Adults);
                 _tokenValues.AddValue(TokenValueType.Children);
                 _tokenValues.AddValue(TokenValueType.Infants);
@@ -197,6 +187,8 @@
 
                 token = new RoomToken()
                 {
+                    PropertyID = _tokenValues.GetValue(TokenValueType.PropertyID),
+                    MealBasisID = _tokenValues.GetValue(TokenValueType.MealBasisID),
                     Adults = _tokenValues.GetValue(TokenValueType.Adults),
                     Children = _tokenValues.GetValue(TokenValueType.Children),
                     Infants = _tokenValues.GetValue(TokenValueType.Infants),
@@ -219,20 +211,10 @@
 
                 _tokenValues.Clear();
 
-                _tokenValues.AddValue(TokenValueType.MealBasisID3);
-                _tokenValues.AddValue(TokenValueType.MealBasisID2);
-                _tokenValues.AddValue(TokenValueType.MealBasisID1);
-
-                GetTokenValues(new string(tokenString.Substring(14, 4).ToArray()));
-
-                token.MealBasisID = GetMealBasisFromTokenValues();
-
-                _tokenValues.Clear();
-
                 _tokenValues.AddValue(TokenValueType.LocalCost2);
                 _tokenValues.AddValue(TokenValueType.LocalCost1);
 
-                GetTokenValues(new string(tokenString.Skip(18).ToArray()));
+                GetTokenValues(new string(tokenString.Skip(14).ToArray()));
                 token.LocalCost = GetLocalCostFromTokenValues();
             }
             catch (Exception ex)
@@ -242,39 +224,6 @@
             }
 
             return token;
-        }
-
-        private async Task PopulatePropertyTokenFieldsAsync(PropertyToken propertyToken, Account account)
-        {
-            try
-            {
-                var propertyContent = await _contentRepository.GetContentforPropertyAsync(propertyToken.PropertyID, account, string.Empty);
-
-                if (propertyContent != null)
-                {
-                    propertyToken.Source = propertyContent.Source;
-                    propertyToken.TPKey = propertyContent.TPKey;
-                    propertyToken.PropertyName = propertyContent.PropertyName;
-                    propertyToken.CentralPropertyID = propertyContent.CentralPropertyID;
-                    propertyToken.GeographyCode = propertyContent.GeographyCode;
-                    propertyToken.SupplierID = propertyContent.SupplierID;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-            }
-        }
-
-        private async Task PopulateBookTokenFieldsAsync(BookToken bookToken, Account account, string supplierBookingReference)
-        {
-            var propertyContent = await _contentRepository.GetContentforPropertyAsync(bookToken.PropertyID, account, supplierBookingReference);
-
-            if (propertyContent != null)
-            {
-                bookToken.Source = propertyContent.Source;
-                bookToken.BookingID = propertyContent.BookingID;
-            }
         }
 
         private void GetTokenValues(string tokenString)
@@ -320,74 +269,29 @@
             return childAges;
         }
 
-        private void GenerateMealBasisValues(RoomToken roomtoken)
-        {
-            _tokenValues.Clear();
-            int[] mealBases = new int[3];
-
-            if (roomtoken.MealBasisID.Count < 3)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    if (i < 3 - roomtoken.MealBasisID.Count)
-                    {
-                        mealBases[i] = 0;
-                    }
-                    else
-                    {
-                        mealBases[i] = roomtoken.MealBasisID[i - 3 + roomtoken.MealBasisID.Count];
-                    }
-                }
-            }
-            else
-            {
-                mealBases = roomtoken.MealBasisID.ToArray();
-            }
-
-            for (int i = 3; i > 0; --i)
-            {
-                Enum.TryParse($"MealBasisID{i}", out TokenValueType tokenValueName);
-                _tokenValues.AddValue(tokenValueName, mealBases[i - 1]);
-            }
-        }
-
-        private List<int> GetMealBasisFromTokenValues()
-        {
-            var mealbases = new List<int>();
-
-            for (int i = 0; i < 3; ++i)
-            {
-                Enum.TryParse($"MealBasisID{i + 1}", out TokenValueType tokenValueName);
-
-                int mealbasis = _tokenValues.GetValue(tokenValueName);
-                mealbases.Add(mealbasis);
-            }
-
-            return mealbases;
-        }
-
         private void GenerateLocalCostValues(RoomToken roomToken)
         {
             _tokenValues.Clear();
             int[] localCosts = new int[2];
+            var localCostSplit = SplitNumberToNDigitList((int)(roomToken.LocalCost * 100), 7);
 
-            if (roomToken.LocalCost.Count < 2)
+            if (localCostSplit.Count < 2)
             {
                 for (int i = 0; i < 2; ++i)
                 {
-                    if (i < 2 - roomToken.LocalCost.Count)
+                    if (i < 2 - localCostSplit.Count)
                     {
                         localCosts[i] = 0;
                     }
                     else
                     {
-                        localCosts[i] = roomToken.LocalCost[i - 2 + roomToken.LocalCost.Count];
+                        localCosts[i] = localCostSplit[i - 2 + localCostSplit.Count];
                     }
                 }
             }
             else
             {
-                localCosts = roomToken.LocalCost.ToArray();
+                localCosts = localCostSplit.ToArray();
             }
 
             for (int i = 2; i > 0; --i)
@@ -397,7 +301,7 @@
             }
         }
 
-        private List<int> GetLocalCostFromTokenValues()
+        private decimal GetLocalCostFromTokenValues()
         {
             var localCosts = new List<int>();
 
@@ -409,7 +313,62 @@
                 localCosts.Add(localCost);
             }
 
-            return localCosts;
+            return GetNumFromList(localCosts, 7) / 100m;
+        }
+
+        /// <summary>
+        /// Split the given integer into a list with elements of given digits
+        /// </summary>
+        /// <param name="number">A number which is going to be split</param>
+        /// <param name="digit">A number of digits per element in the list</param>
+        /// <returns>A list with number as an element of given length</returns>
+        private List<int> SplitNumberToNDigitList(int number, int digit)
+        {
+            var list = new List<int>();
+            var upperBound = Math.Pow(10, digit) - 1; // a max number which given n digit number can be i.e. if 2 digits then upperBound is 99
+            var numOfDigits = (int)Math.Log10(number) + 1;
+
+            if (number > upperBound)
+            {
+                var numberString = number.ToString();
+                for (int i = 0; list.Count() < Math.Ceiling((decimal)numOfDigits / digit);)
+                {
+                    if (i == 0 && numOfDigits % digit != 0)
+                    {
+                        list.Add(int.Parse(numberString.Substring(i, 1)));
+                        ++i;
+                    }
+                    else
+                    {
+                        list.Add(int.Parse(numberString.Substring(i, digit)));
+                        i += digit;
+                    }
+                }
+            }
+            else
+            {
+                list.Add(number);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Get a combination of all numbers stored in the list as like string concatination 
+        /// Pads a number with zeros if given number is less then specified num of digits
+        /// </summary>
+        /// <param name="list">A list storing numbers</param>
+        /// <param name="digits">A number of digits of a number stored in each element</param>
+        /// <returns>A number which is concatination of all numbers in a list</returns>
+        private int GetNumFromList(List<int> list, int digits)
+        {
+            int numOfDecimals = (int)Math.Pow(10, digits);
+            var number = 0;
+            for (int i = 0; i < list.Count(); ++i)
+            {
+                number = number * numOfDecimals + list[i];
+            }
+            return number;
         }
     }
 }

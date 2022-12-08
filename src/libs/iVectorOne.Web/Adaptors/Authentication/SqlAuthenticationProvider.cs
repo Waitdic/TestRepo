@@ -37,7 +37,7 @@
             var hashedPassword = GetHash(password);
             var encryptedPassword = _secretKeeper.Encrypt(password);
             string cacheKey = "Account_" + username + "_" + hashedPassword;
-            
+
             async Task<List<Account>> cacheBuilder()
             {
                 var json = await _sql.ReadScalarAsync<string>("exec Get_Configurations");
@@ -46,7 +46,7 @@
                 return MapSqlAccount(sqlAccounts).ToList();
             }
 
-            var accounts = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 60);
+            var accounts = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, 3);
 
             var validAccount = accounts.FirstOrDefault(o => o.Login == username && o.EncryptedPassword == encryptedPassword)!;
 
@@ -87,11 +87,13 @@
 
                 var configs = sqlAccount.Configurations
                     .Select(x => new ThirdPartyConfiguration
-                        {
-                            Supplier = x.Supplier!,
-                            Configurations = x.Attributes!
+                    {
+                        Supplier = x.Supplier!,
+                        SupplierID = x.SupplierID,
+                        LogSearchRequests = x.LogSearchRequests,
+                        Configurations = x.Attributes!
                                 .ToDictionary(x => x.AttributeName!, x => x.AttributeValue!)
-                        })
+                    })
                     .ToList();
 
                 account.Configurations = configs;

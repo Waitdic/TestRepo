@@ -126,12 +126,12 @@
 
         private async Task<string> GetMealBasis(string source, TransformedResult searchResult, SearchDetails searchDetails)
         {
-            return await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.AccountID);
+            return await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.Account.AccountID);
         }
 
         private async Task<int> GetMealBasisID(string source, TransformedResult searchResult, SearchDetails searchDetails)
         {
-            return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.AccountID);
+            return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.Account.AccountID);
         }
 
         private async Task<int> GetISOCurrencyID(PropertyData propertyData, TransformedResult searchResult, SearchDetails searchDetails)
@@ -142,7 +142,7 @@
             {
                 if (IsSingleTenant(propertyData.Source))
                 {
-                    currencyId = await _currencyRepository.AccountCurrencyLookupAsync(searchDetails.AccountID, searchResult.CurrencyCode);
+                    currencyId = await _currencyRepository.AccountCurrencyLookupAsync(searchDetails.Account.AccountID, searchResult.CurrencyCode);
                 }
                 else
                 {

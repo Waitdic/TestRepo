@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Service
+﻿namespace iVectorOne
 {
     using System.Security.Cryptography;
     using Intuitive;
@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using iVectorOne;
     using iVectorOne.Suppliers;
     using iVectorOne.Suppliers.AbreuV2;
     using iVectorOne.Suppliers.Acerooms;
@@ -36,6 +35,7 @@
     using iVectorOne.Suppliers.Miki;
     using iVectorOne.Suppliers.Netstorming;
     using iVectorOne.Suppliers.OceanBeds;
+    using iVectorOne.Suppliers.Polaris;
     using iVectorOne.Suppliers.Restel;
     using iVectorOne.Suppliers.RMI;
     using iVectorOne.Suppliers.Serhs;
@@ -60,14 +60,15 @@
     using List = SDK.V2.PropertyList;
     using Prebook = SDK.V2.PropertyPrebook;
     using Precancel = SDK.V2.PropertyPrecancel;
-    using Search = SDK.V2.PropertySearch;
+    using SearchSDK = SDK.V2.PropertySearch;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
-        public const string IVectorOne = "iVectorOne";
-
         public iVectorOneModule()
-            : base(new ModuleId(IVectorOne), IVectorOne, dependencies: new[] { CoreInfo.CoreModuleId, DataInfo.DataModuleId })
+            : base(
+                iVectorOneInfo.IVectorOneModuleId,
+                iVectorOneInfo.IVectorOne,
+                dependencies: new[] { CoreInfo.CoreModuleId, DataInfo.DataModuleId })
         {
         }
 
@@ -103,7 +104,7 @@
             services.AddSingleton<IMealBasisLookupRepository, MealBasisLookupRepository>();
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
-            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString(iVectorOneInfo.TelemetryContext)));
             services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
             services.AddSingleton<IBookingRepository, BookingRepository>();
         }
@@ -129,7 +130,7 @@
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
-                    .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+                    .CreateSecretKeeper(iVectorOneInfo.SecurityKey, EncryptionType.Aes, CipherMode.ECB));
 
             services.AddSingleton<ISearchStoreService>(s =>
                 new SearchStoreService(
@@ -142,7 +143,7 @@
         {
             services.AddHandler<List.Request, List.Response, List.Handler>();
             services.AddHandlerAndValidator<Content.Request, Content.Response, Content.Handler, Content.Validator>();
-            services.AddHandlerAndValidator<Search.Request, Search.Response, Search.Handler, Search.Validator>();
+            services.AddHandlerAndValidator<SearchSDK.Request, SearchSDK.Response, SearchSDK.Handler, SearchSDK.Validator>();
             services.AddHandlerAndValidator<Prebook.Request, Prebook.Response, Prebook.Handler, Prebook.Validator>();
             services.AddHandlerAndValidator<Book.Request, Book.Response, Book.Handler, Book.Validator>();
             services.AddHandlerAndValidator<Precancel.Request, Precancel.Response, Precancel.Handler, Precancel.Validator>();
@@ -176,6 +177,7 @@
             services.AddSingleton<INullTestSupplierSettings, InjectedNullTestSupplierSettings>();
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
+            services.AddSingleton<IPolarisSettings, InjectedPolarisSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
             services.AddSingleton<IRestelSettings, InjectedRestelSettings>();
             services.AddSingleton<IRMISettings, InjectedRMISettings>();
@@ -220,6 +222,7 @@
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
             services.AddSingleton<IThirdPartySearch, OceanBedsSearch>();
+            services.AddSingleton<IThirdPartySearch, PolarisSearch>();
             services.AddSingleton<IThirdPartySearch, RestelSearch>();
             services.AddSingleton<IThirdPartySearch, RMISearch>();
             services.AddSingleton<IThirdPartySearch, SerhsSearch>();
@@ -262,6 +265,7 @@
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
             services.AddSingleton<IThirdParty, OceanBeds>();
+            services.AddSingleton<IThirdParty, Polaris>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();
             services.AddSingleton<IThirdParty, Serhs>();

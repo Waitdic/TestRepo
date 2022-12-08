@@ -85,13 +85,13 @@
                     Infants = room.Infants,
                     ChildAges = room.ChildAges,
                     PropertyRoomBookingID = room.PropertyRoomBookingID,
-                    LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(room.LocalCost * 100), 7),                    
-                    MealBasisID = PropertyFactoryHelper.SplitNumberToNDigitList(mealbasisId, 2),
+                    LocalCost = room.LocalCost,
+                    MealBasisID = mealbasisId,
                 };
 
                 var roomBooking = new RoomBooking()
                 {
-                    TotalCost = room.LocalCost + 0.00M,                    
+                    TotalCost = room.LocalCost + 0.00M,
                     CommissionPercentage = Math.Round(room.CommissionPercentage + 0.00M, 2),
                     RoomBookingToken = _tokenService.EncodeRoomToken(roomToken),
                     SupplierReference = room.ThirdPartyReference,
@@ -104,7 +104,6 @@
             var bookingToken = new PropertyToken()
             {
                 ArrivalDate = propertyDetails.ArrivalDate,
-                CentralPropertyID = propertyDetails.CentralPropertyID,
                 Duration = propertyDetails.Duration,
                 PropertyID = propertyDetails.PropertyID,
                 Rooms = propertyDetails.Rooms.Count,

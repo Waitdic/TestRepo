@@ -92,8 +92,7 @@
                 stopwatch.Restart();
 
                 // 5.Build response and return
-                var response =
-                    await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
+                var response = await _propertySearchResponseFactory.CreateAsync(searchDetails, resortSplits, requestTracker);
 
                 searchStoreItem.PostProcessTime += (int) stopwatch.ElapsedMilliseconds;
                 searchStoreItem.PropertiesReturned = response.PropertyResults.Count;
