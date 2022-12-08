@@ -513,16 +513,16 @@ namespace iVectorOne.Suppliers.HBSi
             {
                 bool bUseAge = _settings.UsePassengerAge(oPropertyDetails, source);
                 var pax = oGuest.pax;
-                var customer = new Customer
-                {
-                    PersonName =
-                        {
-                            GivenName = pax.FirstName,
-                            Surname = pax.LastName,
-                        }
-                };
+                var customer = new Customer();
+
                 if (oGuest.rph == leadGuestIndex)
                 {
+                    customer.PersonName = new PersonName
+                    {
+                        GivenName = oPropertyDetails.LeadGuestFirstName,
+                        Surname = oPropertyDetails.LeadGuestLastName,
+                    };
+
                     if (_settings.UseLeadGuestDetails(oPropertyDetails, source))
                     {
                         customer.Telephone = new Telephone
@@ -566,6 +566,14 @@ namespace iVectorOne.Suppliers.HBSi
                             }
                         };
                     }
+                }
+                else
+                {
+                    customer.PersonName = new PersonName
+                    {
+                        GivenName = pax.FirstName,
+                        Surname = pax.LastName,
+                    };
                 }
 
                 return new ResGuest
