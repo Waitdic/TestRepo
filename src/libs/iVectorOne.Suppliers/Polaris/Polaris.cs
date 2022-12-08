@@ -70,8 +70,6 @@
 
             try
             {
-                var prebookResponses = new List<PrebookResponse>();
-
                 var tpRef = PolarisTpRef.Decrypt(_secretKeeper, propertyDetails.Rooms.First().ThirdPartyReference);
 
                 var preBookRequest = await CreateRequestAsync(propertyDetails, _settings.PrebookURL(propertyDetails), 
@@ -87,6 +85,15 @@
                 if (!string.Equals(prebookResponse.Status, Constant.Status.Confirmed)) 
                 {
                     throw new Exception($"PreBook status is {prebookResponse.Status}");
+                }
+
+                foreach (var room in propertyDetails.Rooms) 
+                {
+                    room.ThirdPartyReference = new PolarisTpRef
+                    {
+                        BookToken = roomRate.BookToken,
+                        RoomIndex = room.PropertyRoomBookingID
+                    }.Encrypt(_secretKeeper);
                 }
 
                 //verify price
