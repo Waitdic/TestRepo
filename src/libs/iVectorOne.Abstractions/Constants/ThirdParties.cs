@@ -216,6 +216,11 @@
         public const string OWNSTOCK = "Own";
 
         /// <summary>
+        /// The third party Polaris
+        /// </summary>
+        public const string POLARIS = "Polaris";
+
+        /// <summary>
         /// The third party Portimar
         /// </summary>
         public const string PORTIMAR = "Portimar";
