@@ -57,6 +57,11 @@
 
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return new List<Request>();
+            }
+
             string source = resortSplits.First().ThirdPartySupplier;
             var requests = new List<Request>();
 

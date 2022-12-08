@@ -39,6 +39,5 @@
             // Assert 
             Assert.True(base.ValidTransformResponse(HotelsProV2Res.Response, HotelsProV2Res.TransformedResponse, SearchDetailsList[0]));
         }
-
     }
 }

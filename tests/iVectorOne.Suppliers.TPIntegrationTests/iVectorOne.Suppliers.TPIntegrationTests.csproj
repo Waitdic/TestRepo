@@ -40,6 +40,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AlturaRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="ATI\ATIRes.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ATIRes.resx</DependentUpon>
+    </Compile>
     <Compile Update="BedsWithEase\BedsWithEaseRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -214,6 +219,10 @@
     <EmbeddedResource Update="Altura\AlturaRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>AlturaRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ATI\ATIRes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ATIRes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="BedsWithEase\BedsWithEaseRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

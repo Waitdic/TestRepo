@@ -154,6 +154,15 @@
         public decimal GrossCost { get; set; }
 
         /// <summary>
+        /// Should we serialize adjustments.
+        /// </summary>
+        /// <returns>a value to determine whether we are returning adjustments</returns>
+        public bool ShouldSerializeGrossCost()
+        {
+            return GrossCost != 0;
+        }
+
+        /// <summary>
         /// Gets or sets the third party reference.
         /// </summary>
         [DefaultValue("")]
@@ -193,6 +202,13 @@
         public bool DynamicProperty { get; set; }
 
         /// <summary>
+        /// Gets or sets the Package Rate Basis
+        /// </summary>
+        [DefaultValue("")]
+        [XmlAttribute("PRB")]
+        public string PackageRateBasis { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets a value indicating whether [non refundable rates].
         /// </summary>
         [XmlIgnore]
@@ -228,14 +244,12 @@
         /// <summary>
         /// Gets or sets the selling price.
         /// </summary>
-        [DefaultValue("")]
-        [XmlAttribute("SELLPR")]
+        [XmlAttribute("SELLPR")] 
         public decimal SellingPrice { get; set; }
 
         /// <summary>
         /// Gets or sets the net price.
         /// </summary>
-        [DefaultValue("")]
         [XmlAttribute("NETPR")]
         public decimal NetPrice { get; set; }
 
@@ -258,12 +272,6 @@
         [DefaultValue("")]
         [XmlAttribute("TPRC")]
         public string RateCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the Package Rate Basis
-        /// </summary>
-        [XmlAttribute("PRB")]
-        public string PackageRateBasis { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether [on request].
