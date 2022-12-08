@@ -21,9 +21,7 @@
         ChildAge8,
         PropertyRoomBookingID, 
         CurrencyID,
-        MealBasisID1,
-        MealBasisID2,
-        MealBasisID3,
+        MealBasisID,
         LocalCost1,
         LocalCost2
     }

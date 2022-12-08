@@ -641,6 +641,24 @@
         }
       },
       {
+        "Supplier": "Italcamel",
+        "Configurations": {
+          "GenericURL": "http://webservice.test.italcamel.com/Service_5_1.asmx",
+          "Login": "test1",
+          "Password": "APIintuitive",
+          "LanguageID": "345d39f6-f05f-42c6-a61b-2bd7ffc24859",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0",
+          "MaximumHotelSearchNumber": "200",
+          "MaximumNumberOfNights": "28",
+          "MaximumRoomGuestNumber": "4",
+          "MaximumRoomNumber": "4",
+          "ExcludeNRF": "false",
+          "PackageRates": "true",
+          "DeltaPrice": "0.0"
+        }
+      },
+	  {
         "Supplier": "ATI",
         "Configurations": {
           "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",

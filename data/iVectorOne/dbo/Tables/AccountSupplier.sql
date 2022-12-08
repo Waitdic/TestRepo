@@ -3,7 +3,8 @@
 	[AccountID] [int] NOT NULL,
 	[SupplierID] [smallint] NOT NULL,
 	[Enabled] BIT NOT NULL DEFAULT 0, 
-	[Priority] [int] NOT NULL DEFAULT(1),
+	[Priority] [int] NOT NULL DEFAULT 1,
+	[LogSearchRequests] [bit] NOT NULL DEFAULT 0,
 	CONSTRAINT [PK_AccountSupplier] PRIMARY KEY NONCLUSTERED ([AccountSupplierID] ASC),
 	CONSTRAINT [UN_AccountIDSupplierID] UNIQUE NONCLUSTERED ([AccountID] ASC, [SupplierID] ASC)
 ) ON [PRIMARY]

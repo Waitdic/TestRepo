@@ -24,7 +24,9 @@ select Property.PropertyID,
 			on Supplier.SupplierName = Property.Source
 		left join Booking
 			on Booking.PropertyID = Property.PropertyID
+				and Booking.AccountID = @accountId
 				and Booking.SupplierBookingReference = @supplierBookingReference
+				and @supplierBookingReference not in ('', 'failed')
 	where Property.PropertyID = @propertyId
 union all
 select Property.PropertyID,
@@ -44,4 +46,6 @@ select Property.PropertyID,
 			on Supplier.SupplierName = Property.Source
 		left join Booking
 			on Booking.PropertyID = Property.PropertyID
+				and Booking.AccountID = @accountId
 				and Booking.SupplierBookingReference = @supplierBookingReference
+				and @supplierBookingReference not in ('', 'failed')

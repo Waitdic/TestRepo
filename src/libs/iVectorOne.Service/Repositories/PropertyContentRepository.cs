@@ -9,16 +9,19 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.TPImport.Models;
     using iVectorOne.Models;
+    using Microsoft.Extensions.Logging;
     using Content = SDK.V2.PropertyContent;
 
     /// <summary>Repository that retrieves property content from the database</summary>
     public class PropertyContentRepository : IPropertyContentRepository
     {
         private readonly ISql _sql;
+        private readonly ILogger<PropertyContentRepository> _logger;
 
-        public PropertyContentRepository(ISql sql)
+        public PropertyContentRepository(ISql sql, ILogger<PropertyContentRepository> logger)
         {
             _sql = Ensure.IsNotNull(sql, nameof(sql));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
 
         /// <inheritdoc/>
@@ -151,16 +154,24 @@
         /// <inheritdoc/>
         public async Task<PropertyContent> GetContentforPropertyAsync(int propertyId, Account account, string supplierBookingReference)
         {
-            return await _sql.ReadFirstOrDefaultAsync<PropertyContent>(
-                    "Property_SingleProperty",
-                    new CommandSettings()
-                        .IsStoredProcedure()
-                        .WithParameters(new
-                        {
-                            propertyId = propertyId,
-                            accountId = account.AccountID,
-                            supplierBookingReference = supplierBookingReference
-                        }));
+            try
+            {
+                return await _sql.ReadSingleAsync<PropertyContent>(
+                        "Property_SingleProperty",
+                        new CommandSettings()
+                            .IsStoredProcedure()
+                            .WithParameters(new
+                            {
+                                propertyId = propertyId,
+                                accountId = account.AccountID,
+                                supplierBookingReference = supplierBookingReference
+                            }));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new PropertyContent();
+            }
         }
 
         private List<Content.ContentVariable> GetContentVariables(PropertyDetails propertyDetails)

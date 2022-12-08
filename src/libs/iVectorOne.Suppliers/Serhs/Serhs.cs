@@ -325,7 +325,7 @@
                     },
                     PreBookings = new[]
                     {
-                        new Booking {
+                        new Models.Common.Booking {
                             Confirmed = "1",
                             Type = "A",
                             Code = propertyDetails.TPRef1,

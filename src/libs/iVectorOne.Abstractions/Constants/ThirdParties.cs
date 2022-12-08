@@ -66,6 +66,11 @@
         public const string DERBYSOFTSYNXIS = "DerbySoftSynxis";
 
         /// <summary>
+        /// The third party DerbySoftTravelClick
+        /// </summary>
+        public const string DERBYSOFTTRAVELCLICK = "DerbySoftTravelClick";
+
+        /// <summary>
         /// The third party DOTW
         /// </summary>
         public const string DOTW = "DOTW";
@@ -84,6 +89,11 @@
         /// The third party GoGlobal
         /// </summary>
         public const string GOGLOBAL = "GoGlobal";
+
+        /// <summary>
+        /// The third party HBSiAMR
+        /// </summary>
+        public const string HBSIAMR = "HBSiAMR";
 
         /// <summary>
         /// The third party HBSiBestWestern
@@ -409,5 +419,10 @@
         /// The third party YouTravel
         /// </summary>
         public const string YOUTRAVEL = "YouTravel";
+
+        /// <summary>
+        /// The third party Italcamel
+        /// </summary>
+        public const string ITALCAMEL = "Italcamel";
     }
 }

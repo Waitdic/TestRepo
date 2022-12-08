@@ -80,7 +80,7 @@
 
             if (searchDetails.SellingCountry != string.Empty)
             {
-                countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.AccountID);
+                countryCode = await _support.TPCountryCodeLookupAsync(Source, searchDetails.SellingCountry, searchDetails.Account.AccountID);
             }
 
             string currencyCode = await _support.TPCurrencyCodeLookupAsync(Source, searchDetails.ISOCurrencyCode);
@@ -352,10 +352,9 @@
 
                 if (marketingFee != null && marketingFee.Amount > 0)
                 {
-                    result.SellingPrice = inclusiveRate.Amount;
                     result.CommissionPercentage = marketingFee.Amount / billableInclusiveRate.Amount * 100;
                     result.Amount = billableInclusiveRate.Amount;
-                    result.PackageRateBasis = "Gross NetDown";
+                    result.PackageRateBasis = "Gross Margin";
                 }
                 else 
                 {
