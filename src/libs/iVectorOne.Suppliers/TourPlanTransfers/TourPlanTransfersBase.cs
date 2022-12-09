@@ -52,6 +52,7 @@
             var requests = new List<Request>();
             try
             {
+                string refValue = string.Empty;
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
@@ -70,7 +71,34 @@
                     {
                         transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
                         transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
-                        return deserializedResponse.Ref;
+                        refValue = deserializedResponse.Ref;
+
+                        if (!transferDetails.OneWay)
+                        {
+                            var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
+                                                transferDetails.ReturnDate, transferDetails.ReturnTime);
+
+                            requests.Add(returnRequest);
+
+                            await returnRequest.Send(_httpClient, _logger);
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML))
+                            {
+                                var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
+
+                                if (deserializedReturnResponse != null &&
+                                    string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
+                                {
+                                    transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
+                                    transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice;
+                                    refValue += $"|{deserializedReturnResponse.Ref}";
+                                }
+                                else
+                                {
+                                    return "failed";
+                                }
+                            }
+                        }
+                        return refValue;
                     }
                     else
                     {
@@ -210,7 +238,7 @@
             return Task.FromResult(addServiceRequest);
         }
 
-        public XmlDocument Serialize(AddServiceRequest request)
+        public XmlDocument Serialize(object request)
         {
             var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
             xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
