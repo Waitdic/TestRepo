@@ -504,24 +504,25 @@ namespace iVectorOne.Suppliers.HBSi
                 rph = paxIdx + 1
             });
 
-            int iLeadPassengerIndex = guests.First(g => g.pax.PassengerType == PassengerType.Adult
+            var leadGuest = guests.FirstOrDefault(g => g.pax.PassengerType == PassengerType.Adult
                     && string.Equals(g.pax.FirstName, oPropertyDetails.LeadGuestFirstName)
-                    && string.Equals(g.pax.LastName, oPropertyDetails.LeadGuestLastName)).rph;
+                    && string.Equals(g.pax.LastName, oPropertyDetails.LeadGuestLastName));
+            int leadGuestIndex = leadGuest != null ? leadGuest.rph : 1;
 
             var oResGuests = guests.Select(oGuest =>
             {
                 bool bUseAge = _settings.UsePassengerAge(oPropertyDetails, source);
                 var pax = oGuest.pax;
-                var customer = new Customer
+                var customer = new Customer();
+
+                if (oGuest.rph == leadGuestIndex)
                 {
-                    PersonName =
-                        {
-                            GivenName = pax.FirstName,
-                            Surname = pax.LastName,
-                        }
-                };
-                if (oGuest.rph == iLeadPassengerIndex)
-                {
+                    customer.PersonName = new PersonName
+                    {
+                        GivenName = oPropertyDetails.LeadGuestFirstName,
+                        Surname = oPropertyDetails.LeadGuestLastName,
+                    };
+
                     if (_settings.UseLeadGuestDetails(oPropertyDetails, source))
                     {
                         customer.Telephone = new Telephone
@@ -566,6 +567,14 @@ namespace iVectorOne.Suppliers.HBSi
                         };
                     }
                 }
+                else
+                {
+                    customer.PersonName = new PersonName
+                    {
+                        GivenName = pax.FirstName,
+                        Surname = pax.LastName,
+                    };
+                }
 
                 return new ResGuest
                 {
@@ -591,7 +600,7 @@ namespace iVectorOne.Suppliers.HBSi
             {
                 var acceptPayment = new AcceptedPayment
                 {
-                    RPH = iLeadPassengerIndex
+                    RPH = leadGuestIndex
                 };
                 // 'Select payment method
                 string sPaymentMethod = _settings.PaymentMethod(oPropertyDetails, source).ToLower();
