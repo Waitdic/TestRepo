@@ -86,7 +86,7 @@
                         RateCode = searchResult.RateCode,
                         OnRequest = searchResult.OnRequest
                     },
-                    PriceData = new PriceData()
+                    PriceData = new PriceDataAdditional()
                     {
                         TotalCost = searchResult.Amount.ToSafeDecimal(),
                         Total = searchResult.Amount.ToSafeDecimal(),
@@ -96,7 +96,8 @@
                         GrossCost = searchResult.GrossCost,
                         CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails),
                         SellingPrice = searchResult.SellingPrice,
-                        RateBasis = searchResult.PackageRateBasis,                        
+                        RateBasis = searchResult.PackageRateBasis,
+                        MinimumSellingPrice = searchResult.MinimumPrice
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
@@ -180,5 +181,10 @@
 
             return propertyRoomBookingId;
         }
+    }
+
+    public class PriceDataAdditional : PriceData
+    {
+        public decimal MinimumSellingPrice { get; set; }
     }
 }
