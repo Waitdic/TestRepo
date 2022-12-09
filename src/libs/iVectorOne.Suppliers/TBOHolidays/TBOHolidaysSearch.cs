@@ -87,7 +87,7 @@
                 Filters =
                 {
                     Refundable = _settings.ExcludeNRF(searchDetails),
-                    NoOfRooms = 0,
+                    NoOfRooms = _settings.RoomSearchLimit(searchDetails),
                     MealType = _settings.RequestedMealBases(searchDetails)
                 }
             };
