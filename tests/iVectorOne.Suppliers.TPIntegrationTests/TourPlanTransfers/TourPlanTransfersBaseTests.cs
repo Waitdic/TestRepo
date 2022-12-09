@@ -56,7 +56,6 @@
                 SupplierReference = supplierReference,
             };
 
-            //BookingId and BookingRef should only contain 1 value in case of OneWay=true and for OneWay=false, they should contain 2 values
             var bookingIDs = bookingId.Split('|');
             var bookingRefs = bookingRef.Split('|');
             List<AddServiceReply> serviceReply = new();
@@ -89,10 +88,6 @@
                     });
                 }
             }
-            //else
-            //{
-            //    throw new ArgumentException("Incorrect arguments passed");
-            //}
 
 
             // Act
@@ -171,10 +166,6 @@
                         ItExpr.IsAny<CancellationToken>())
                    .ReturnsAsync(response[0]);
             }
-            //else
-            //{
-            //    throw new ArgumentException("Incorrect arguments passed");
-            //}
 
             return new HttpClient(mockHttp.Object);
         }

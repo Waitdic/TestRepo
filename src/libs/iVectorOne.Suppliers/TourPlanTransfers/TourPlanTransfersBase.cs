@@ -26,13 +26,10 @@
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
         public const string InvalidSupplierReference = "Invalid Supplier Reference";
-        private enum exceptionTypes
-        {
-            BookException,
-            CancelException
-        };
-        private readonly Dictionary<exceptionTypes, string> exceptionTypeDescriptions =
-            new Dictionary<exceptionTypes, string>();
+
+        //TODO:move these constants to the Constants class once refactoring is done
+        public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
+        public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
@@ -44,8 +41,6 @@
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
-            exceptionTypeDescriptions.Add(exceptionTypes.BookException, "Failed to confirm booking");
-            exceptionTypeDescriptions.Add(exceptionTypes.CancelException, "Failed to cancel booking");
         }
 
         public Task<bool> PreBookAsync(TransferDetails transferDetails)
@@ -68,7 +63,7 @@
 
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML, exceptionTypes.BookException))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, BookException))
                 {
                     var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
 
@@ -87,7 +82,7 @@
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, exceptionTypes.BookException))
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, BookException))
                             {
                                 var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
 
@@ -137,7 +132,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
         {
             var requests = new List<Request>();
-            var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
+            var tpCancellationResponse = new ThirdPartyCancellationResponse();
             try
             {
                 string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
@@ -147,46 +142,52 @@
                     throw new ArgumentException(InvalidSupplierReference);
                 }
 
-                var request = await BuildCancellationRequestAsync(transferDetails, supplierReferenceData[0]);
+                bool firstBookingCancelStatus = false, secondBookingCancelStatus = false;
 
+                var request = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[0]);
                 requests.Add(request);
-
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML, exceptionTypes.CancelException))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, CancelException))
                 {
                     var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
 
                     if (deserializedResponse != null &&
-                        string.Equals(deserializedResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX")) //First Booking cancel success
+                        string.Equals(deserializedResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
                     {
-                        if (supplierReferenceData.Length > 1)
+                        firstBookingCancelStatus = true;
+                    }
+                }
+
+                if (supplierReferenceData.Length > 1)
+                {
+                    var returnCancellationRequest = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[1]);
+                    requests.Add(returnCancellationRequest);
+                    await returnCancellationRequest.Send(_httpClient, _logger);
+
+                    if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, CancelException))
+                    {
+                        var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
+
+                        if (deserializedReturnCancellationResponse != null &&
+                            string.Equals(deserializedReturnCancellationResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
                         {
-                            var returnCancellationRequest = await BuildCancellationRequestAsync(transferDetails, supplierReferenceData[1]);
-
-                            requests.Add(returnCancellationRequest);
-
-                            await returnCancellationRequest.Send(_httpClient, _logger);
-
-                            if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML,
-                                exceptionTypes.CancelException))
-                            {
-                                var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
-
-                                if (deserializedReturnCancellationResponse != null &&
-                                    string.Equals(deserializedReturnCancellationResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX")) //Second Booking cancel success
-                                {
-                                    tpCancellationResponse.Success = true;
-                                    tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            tpCancellationResponse.Success = true;
-                            tpCancellationResponse.TPCancellationReference = supplierReferenceData[0];
+                            secondBookingCancelStatus = true;
                         }
                     }
+                }
+
+                if (firstBookingCancelStatus && (supplierReferenceData.Length == 1 || secondBookingCancelStatus))
+                {
+                    tpCancellationResponse.Success = true;
+                    tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
+
+                }
+                else
+                {
+                    tpCancellationResponse.Success = false;
+                    tpCancellationResponse.TPCancellationReference = "failed";
+
                 }
 
                 return tpCancellationResponse;
@@ -254,7 +255,7 @@
             return result;
         }
 
-        private Task<Request> BuildCancellationRequestAsync(TransferDetails transferDetails, string supplierReference)
+        private Request BuildCancellationRequestAsync(TransferDetails transferDetails, string supplierReference)
         {
             var calcellationData = new CancelServicesRequest
             {
@@ -265,13 +266,13 @@
 
             var request = new Request
             {
-                EndPoint = _settings.URL(transferDetails), //Change this to calcellationURL
+                EndPoint = _settings.URL(transferDetails),
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
             var xmlDocument = Serialize(calcellationData);
             request.SetRequest(xmlDocument);
-            return Task.FromResult(request);
+            return request;
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
@@ -344,14 +345,14 @@
         }
 
         private bool ResponseHasError(TransferDetails transferDetails, XmlDocument responseXML,
-            exceptionTypes requestExceptionType)
+            Warning warning)
         {
             if (responseXML.OuterXml.Contains("<ErrorReply>"))
             {
 
                 var errorResponseObj = DeSerialize<ErrorReply>(responseXML);
-                transferDetails.Warnings.AddNew(requestExceptionType.ToString(), string.IsNullOrEmpty(errorResponseObj.Error) ?
-                    exceptionTypeDescriptions[requestExceptionType] : errorResponseObj.Error);
+                transferDetails.Warnings.AddNew(warning.Title, string.IsNullOrEmpty(errorResponseObj.Error) ?
+                    warning.Text : errorResponseObj.Error);
                 return true;
             }
             return false;
