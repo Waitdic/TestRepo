@@ -63,7 +63,7 @@
                         transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
-                        AddCancellation(deserializedResponse, transferDetails);
+                        AddCancellation(deserializedResponse, transferDetails, transferDetails.DepartureDate);
 
                         if (!transferDetails.OneWay)
                         {
@@ -80,6 +80,7 @@
                                 {
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
                                     transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                    AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.ReturnDate);
                                 }
                                 else
                                 {
@@ -383,12 +384,12 @@
                     response.Option[0].Opt == opt);
         }
 
-        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails)
+        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails, DateTime date)
         {
             var cancelPolicies = deserializedResponse.Option[0].OptStayResults.CancelPolicies;
             if (cancelPolicies != null)
             {
-                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, transferDetails.DepartureDate);
+                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, date);
             }
         }
 
