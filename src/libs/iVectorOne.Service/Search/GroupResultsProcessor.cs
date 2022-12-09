@@ -86,7 +86,7 @@
                         RateCode = searchResult.RateCode,
                         OnRequest = searchResult.OnRequest
                     },
-                    PriceData = new PriceDataAdditional()
+                    PriceData = new PriceData()
                     {
                         TotalCost = searchResult.Amount.ToSafeDecimal(),
                         Total = searchResult.Amount.ToSafeDecimal(),
@@ -181,10 +181,5 @@
 
             return propertyRoomBookingId;
         }
-    }
-
-    public class PriceDataAdditional : PriceData
-    {
-        public decimal MinimumSellingPrice { get; set; }
     }
 }

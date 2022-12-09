@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Intuitive.Helpers" Version="0.18.0" />
-    <PackageReference Include="iVector.Search.Abstractions" Version="0.11.1" />
+    <PackageReference Include="iVector.Search.Abstractions" Version="0.15.0" />
     <PackageReference Include="TPImport.Abstractions" Version="0.5.1" />
   </ItemGroup>
   <ItemGroup>
