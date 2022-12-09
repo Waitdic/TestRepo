@@ -257,7 +257,7 @@
 
         private Request BuildCancellationRequestAsync(TransferDetails transferDetails, string supplierReference)
         {
-            var calcellationData = new CancelServicesRequest
+            var cancellationData = new CancelServicesRequest
             {
                 AgentID = _settings.AgentId(transferDetails),
                 Password = _settings.Password(transferDetails),
@@ -270,7 +270,7 @@
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
-            var xmlDocument = Serialize(calcellationData);
+            var xmlDocument = Serialize(cancellationData);
             request.SetRequest(xmlDocument);
             return request;
         }
