@@ -18,7 +18,6 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Serialization;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -64,6 +63,7 @@
                         transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+                        AddCancellation(deserializedResponse, transferDetails);
 
                         if (!transferDetails.OneWay)
                         {
@@ -382,5 +382,72 @@
                     response.Option.Count == 1 &&
                     response.Option[0].Opt == opt);
         }
+
+        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails)
+        {
+            var cancelPolicies = deserializedResponse.Option[0].OptStayResults.CancelPolicies;
+            if (cancelPolicies != null)
+            {
+                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, transferDetails.DepartureDate);
+            }
+        }
+
+        private Cancellations GetCancellationFromCancelPolicies(CancelPolicies cancelPolicies, DateTime departureDate)
+        {
+            var cancellations = new Cancellations();
+            var cancelPenalties = cancelPolicies.CancelPenalty;
+
+            foreach (var cancelPenalty in cancelPenalties)
+            {
+                var deadlineDate = cancelPenalty.Deadline.DeadlineDateTime;
+                var timeUnit = cancelPenalty.Deadline.OffsetTimeUnit;
+                var timeValue = cancelPenalty.Deadline.OffsetUnitMultiplier;
+                var linePrice = cancelPenalty.LinePrice;
+
+                if (linePrice != null)
+                {
+                    decimal amount = decimal.Parse(linePrice) / 100m;
+
+                    if (deadlineDate != null)
+                    {
+                        var deadlineDateTime = DateTime.Parse(deadlineDate);
+                        cancellations.AddNew(deadlineDateTime, departureDate, amount);
+                    }
+                    else if (timeUnit != null && timeValue != null)
+                    {
+                        TimeSpan timeOffset = GetCancellationOffset(timeUnit, timeValue);
+                        cancellations.AddNew(departureDate.Add(timeOffset), departureDate, amount);
+                    }
+                }
+            }
+
+            cancellations.Solidify(SolidifyType.LatestStartDate);
+            return cancellations;
+        }
+
+        private TimeSpan GetCancellationOffset(string timeUnitNode, string timeValueNode)
+        {
+            string timeUnit = timeUnitNode;
+            decimal timeValue = decimal.Parse(timeValueNode);
+
+            switch (timeUnit ?? "")
+            {
+                case "Hour":
+                    {
+                        return TimeSpan.FromHours((double)-timeValue);
+                    }
+                case "Day":
+                    {
+                        return TimeSpan.FromDays((double)-timeValue);
+                    }
+
+                default:
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(timeUnit), $"Unrecognised cancellation OffsetTimeUnit value ({timeUnit})");
+                    }
+            }
+
+        }
+
     }
 }
