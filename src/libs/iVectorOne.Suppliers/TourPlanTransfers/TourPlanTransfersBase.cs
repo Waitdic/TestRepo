@@ -18,7 +18,6 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
-    using System.Xml.Serialization;
 
     public abstract class TourPlanTransfersBase : IThirdParty, ISingleSource
     {
@@ -42,9 +41,78 @@
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
         }
 
-        public Task<bool> PreBookAsync(TransferDetails transferDetails)
+
+        public async Task<bool> PreBookAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            var requests = new List<Request>();
+            try
+            {
+                var supplierReferenceData = SplitSupplierReference(transferDetails);
+
+                var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
+
+                requests.Add(request);
+
+                await request.Send(_httpClient, _logger);
+
+                if (!ResponseHasError(transferDetails, request.ResponseXML))
+                {
+                    var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+
+                    if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
+                    {
+                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
+                        transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
+                        transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+                        AddCancellation(deserializedResponse, transferDetails);
+                        if (!transferDetails.OneWay)
+                        {
+                            var returnRequest = BuildOptionInfoRequest(transferDetails, supplierReferenceData.Last(), transferDetails.ReturnDate);
+
+                            requests.Add(returnRequest);
+
+                            await returnRequest.Send(_httpClient, _logger);
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML))
+                            {
+                                var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
+
+                                if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
+                                {
+                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
+                                    transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return false;
+            }
+            catch (ArgumentException ex)
+            {
+                transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                transferDetails.Warnings.AddNew("PrebookException", ex.Message);
+                return false;
+            }
+            finally
+            {
+                foreach (var request in requests)
+                {
+                    transferDetails.AddLog("Prebook", request);
+                }
+            }
         }
 
         public async Task<string> BookAsync(TransferDetails transferDetails)
@@ -262,5 +330,124 @@
             }
             return false;
         }
+
+        private Request BuildOptionInfoRequest(TransferDetails transferDetails, SupplierReferenceData supplierReferenceData, DateTime dateFrom)
+        {
+            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+            {
+
+                AgentID = _settings.AgentId(transferDetails),
+                Password = _settings.Password(transferDetails),
+                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
+                Info = Constant.Info,
+                Opt = supplierReferenceData.Opt,
+                RoomConfigs = new List<RoomConfiguration>()
+                {
+                   new RoomConfiguration() {
+                   Adults = transferDetails.Adults,
+                   Children = transferDetails.Children,
+                   Infants = transferDetails.Infants
+                   }
+                }
+            };
+
+            var request = new Request()
+            {
+                EndPoint = _settings.URL(transferDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+
+            };
+            var xmlDocument = Serialize(optionInfoRequest);
+            request.SetRequest(xmlDocument);
+
+            return request;
+        }
+
+        // To do : Remove this method, when helper method will be created. 
+        private string CreateSupplierReference(string outBoundOpt, string outBoundRateId, string returnOpt = "", string returnRateId = "")
+        {
+            var reference = outBoundOpt + "-" + outBoundRateId;
+            if (!string.IsNullOrEmpty(returnOpt))
+            {
+                reference += "|" + returnOpt + "-" + returnRateId;
+            }
+            return reference;
+        }
+
+        private bool IsValidResponse(OptionInfoReply response, string opt)
+        {
+            return (response != null &&
+                    response.Option != null &&
+                    response.Option.Count == 1 &&
+                    response.Option[0].Opt == opt);
+        }
+
+        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails)
+        {
+            var cancelPolicies = deserializedResponse.Option[0].OptStayResults.CancelPolicies;
+            if (cancelPolicies != null)
+            {
+                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, transferDetails.DepartureDate);
+            }
+        }
+
+        private Cancellations GetCancellationFromCancelPolicies(CancelPolicies cancelPolicies, DateTime departureDate)
+        {
+            var cancellations = new Cancellations();
+            var cancelPenalties = cancelPolicies.CancelPenalty;
+
+            foreach (var cancelPenalty in cancelPenalties)
+            {
+                var deadlineDate = cancelPenalty.Deadline.DeadlineDateTime;
+                var timeUnit = cancelPenalty.Deadline.OffsetTimeUnit;
+                var timeValue = cancelPenalty.Deadline.OffsetUnitMultiplier;
+                var linePrice = cancelPenalty.LinePrice;
+
+                if (linePrice != null)
+                {
+                    decimal amount = decimal.Parse(linePrice) / 100m;
+
+                    if (deadlineDate != null)
+                    {
+                        var deadlineDateTime = DateTime.Parse(deadlineDate);
+                        cancellations.AddNew(deadlineDateTime, departureDate, amount);
+                    }
+                    else if (timeUnit != null && timeValue != null)
+                    {
+                        TimeSpan timeOffset = GetCancellationOffset(timeUnit, timeValue);
+                        cancellations.AddNew(departureDate.Add(timeOffset), departureDate, amount);
+                    }
+                }
+            }
+
+            cancellations.Solidify(SolidifyType.LatestStartDate);
+            return cancellations;
+        }
+
+        private TimeSpan GetCancellationOffset(string timeUnitNode, string timeValueNode)
+        {
+            string timeUnit = timeUnitNode;
+            decimal timeValue = decimal.Parse(timeValueNode);
+
+            switch (timeUnit ?? "")
+            {
+                case "Hour":
+                    {
+                        return TimeSpan.FromHours((double)-timeValue);
+                    }
+                case "Day":
+                    {
+                        return TimeSpan.FromDays((double)-timeValue);
+                    }
+
+                default:
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(timeUnit), $"Unrecognised cancellation OffsetTimeUnit value ({timeUnit})");
+                    }
+            }
+
+        }
+
     }
 }

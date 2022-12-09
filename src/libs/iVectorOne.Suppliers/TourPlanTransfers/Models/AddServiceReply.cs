@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Xml.Serialization;
 
 namespace iVectorOne.Suppliers.TourPlanTransfers.Models
 {
@@ -48,10 +48,11 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public CancelPolicies CancelPolicies { get; set; }
     }
 
+    [XmlRoot(ElementName = "CancelPolicies")]
     public class CancelPolicies
     {
-        public CancelPenalties CancelPenalty { get; set; }
-
+        [XmlElement(ElementName = "CancelPenalty")]
+        public List<CancelPenalties> CancelPenalty { get; set; }
     }
 
     public class CancelPenalties
