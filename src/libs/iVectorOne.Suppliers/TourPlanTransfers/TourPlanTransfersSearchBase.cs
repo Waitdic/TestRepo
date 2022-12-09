@@ -44,12 +44,14 @@
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
             LocationData tpLocations = GetThirdPartyLocations(location);
-            var departureBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
-            requests.Add(departureBuildOptionInfoRequest);
+            Outbound.ExtraInfo = Constant.Outbound;
+            requests.Add(Outbound);
             if (!searchDetails.OneWay)
             {
                 var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
                 requests.Add(returnBuildOptionInfoRequest);
             }
 
@@ -91,28 +93,109 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            var transformedCollection = new TransformedTransferResultCollection();
+            TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
             LocationData tpLocations = GetThirdPartyLocations(location);
+            bool oneway = requests.Count == 1;
+            OptionInfoReply filteredOutbound = new();
+            OptionInfoReply filteredReturn = new();
+            OptionInfoReply deserializedResponse = new();
             foreach (Request request in requests)
             {
                 if (!ResponseHasExceptions(request))
                 {
-                    OptionInfoReply deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                    var filterResult = FilterResult(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
-                    //To do : IDT-1301 Search - Transform Response - Combine and Return
+                    deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                    if ((string)request.ExtraInfo == Constant.Outbound)
+                    {
+                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
+                    }
+                    if ((string)request.ExtraInfo != Constant.Outbound)
+                    {
+                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                    }
                 }
             }
-        
-            return transformedCollection;
+            string supplierReference;
+
+            TransformedTransferResult? transformedResult = null;
+            List<TransformedTransferResult> transformedResultList = new();
+            if (oneway)
+            {
+                foreach (var outboundResult in filteredOutbound.Option)
+                {
+                    supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
+                    transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                    transformedResultList.Add(transformedResult);
+                }
+            }
+            else
+            {
+                foreach (var outboundResult in filteredOutbound.Option)
+                {
+                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
+                    {
+                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
+                        transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                        transformedResultList.Add(transformedResult);
+                    }
+                }
+            }
+            if (transformedResultList.Any())
+            {
+                TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
+            }
+
+            return TransformedTransferResultCollection;
         }
+
+        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        {
+            var transformedResult = new TransformedTransferResult()
+            {
+                TPSessionID = "",
+                SupplierReference = supplierReference,
+                TransferVehicle = comment,
+                ReturnTime = "12:00",
+                VehicleCost = 0,
+                AdultCost = 0,
+                ChildCost = 0,
+                CurrencyCode = currency,
+                VehicleQuantity = 1,
+                Cost = totalPrice,
+                BuyingChannelCost = 0,
+                OutboundInformation = "",
+                ReturnInformation = "",
+                OutboundCost = 0,
+                ReturnCost = 0,
+                OutboundXML = "",
+                ReturnXML = "",
+                OutboundTransferMinutes = 0,
+                ReturnTransferMinutes = 0,
+            };
+
+            return transformedResult;
+        }
+
         #endregion
 
         #region Private Functions
-        private OptionInfoReply FilterResult(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
         {
-            OptionInfoReply filterResult = new OptionInfoReply();
-            var result = deserializedResponse.Option.ToList().Where(x => x.OptGeneral.Any(x => filterDescription(x.Description, departureName, arrivalName))).ToList();
-            filterResult.Option.AddRange(result);
+            var reference = outboundOpt + "-" + outboundRateId;
+            if (!string.IsNullOrEmpty(returnOpt))
+            {
+                reference += "|" + returnOpt + "-" + returnRateId;
+            }
+            return reference;
+        }
+
+        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        {
+            OptionInfoReply filterResult = new();
+            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
+            if (result.Any())
+            {
+                filterResult.Option.AddRange(result);
+            }
             return filterResult;
         }
 
