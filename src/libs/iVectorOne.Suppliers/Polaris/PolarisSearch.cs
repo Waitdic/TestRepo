@@ -145,6 +145,10 @@
                                 RoomIndex = roomIndex
                             }.Encrypt(_secretKeeper);
 
+                            var minimumSellingPrice = roomRate.Binding
+                                ? roomRate.Pricing.Sell.Price
+                                : roomRate.Pricing.Net.Price;
+
                             return new TransformedResult
                             {
                                 TPKey = hotel.HotelCode,
@@ -157,7 +161,8 @@
                                 MealBasisCode = roomRate.Meal.Id,
                                 TPReference = reference,
                                 Cancellations = cc,
-                                NonRefundableRates = isRateNonRefundable                            
+                                NonRefundableRates = isRateNonRefundable,
+                                MinimumPrice = minimumSellingPrice
                             };
                         });
                     });

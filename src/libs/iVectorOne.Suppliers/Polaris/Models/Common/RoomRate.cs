@@ -34,5 +34,8 @@
 
         [JsonProperty("observations")]
         public List<Observation> Observations { get; set; } = new();
+
+        [JsonProperty("binding")]
+        public bool Binding { get; set; } = false;
     }
 }
