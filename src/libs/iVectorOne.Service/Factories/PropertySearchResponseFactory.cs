@@ -120,6 +120,7 @@
                             OnRequest = roomResult.RoomData.OnRequest,
                             GrossCost = GetGrossCost(roomResult),
                             SellingPrice = roomResult.PriceData.SellingPrice,
+                            MinimumSellingPrice = roomResult.PriceData.MinimumSellingPrice,
                             RateBasis = roomResult.PriceData.RateBasis
                         };
 
