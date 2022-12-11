@@ -152,8 +152,7 @@
                 {
                     var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
 
-                    if (deserializedResponse != null &&
-                        string.Equals(deserializedResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
+                    if (CancellationSuccessful(deserializedResponse))
                     {
                         firstBookingCancelStatus = true;
                     }
@@ -169,8 +168,7 @@
                     {
                         var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
 
-                        if (deserializedReturnCancellationResponse != null &&
-                            string.Equals(deserializedReturnCancellationResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
+                        if (CancellationSuccessful(deserializedReturnCancellationResponse))
                         {
                             secondBookingCancelStatus = true;
                         }
@@ -353,6 +351,16 @@
                 var errorResponseObj = DeSerialize<ErrorReply>(responseXML);
                 transferDetails.Warnings.AddNew(warning.Title, string.IsNullOrEmpty(errorResponseObj.Error) ?
                     warning.Text : errorResponseObj.Error);
+                return true;
+            }
+            return false;
+        }
+
+        private bool CancellationSuccessful(CancelServicesReply deserializedResponse)
+        {
+            if (deserializedResponse != null &&
+                        string.Equals(deserializedResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
+            {
                 return true;
             }
             return false;
