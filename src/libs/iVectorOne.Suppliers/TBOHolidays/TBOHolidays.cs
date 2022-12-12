@@ -90,10 +90,18 @@
                     foreach (var room in propertyDetails.Rooms)
                     {
                         var bookingCode = room.ThirdPartyReference.Split(Helper.Separators, StringSplitOptions.None)[0];
-                        var newPrice = responses
+
+                        var hotelRooms = responses
                             .SelectMany(r => r.HotelResult)
                             .SelectMany(x => x.Rooms)
                             .Where(r => r.BookingCode == bookingCode)
+                            .ToList();
+
+                        room.MinimumSellingPrice = hotelRooms
+                            .Select(rate => rate.RecommendedSellingRate)
+                            .First();
+
+                        var newPrice = hotelRooms
                             .Select(rate => rate.TotalFare)
                             .First();
 
