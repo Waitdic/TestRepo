@@ -96,7 +96,8 @@
                         GrossCost = searchResult.GrossCost,
                         CurrencyID = await GetISOCurrencyID(result.PropertyData, searchResult, searchDetails),
                         SellingPrice = searchResult.SellingPrice,
-                        RateBasis = searchResult.PackageRateBasis,                        
+                        RateBasis = searchResult.PackageRateBasis,
+                        MinimumSellingPrice = searchResult.MinimumPrice
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
