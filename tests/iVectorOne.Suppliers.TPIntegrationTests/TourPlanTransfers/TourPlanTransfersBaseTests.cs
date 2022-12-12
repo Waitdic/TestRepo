@@ -2,12 +2,14 @@
 {
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
     using iVectorOne.Suppliers.TourPlanTransfers;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using Microsoft.Extensions.Logging;
     using Moq;
     using Moq.Protected;
+    using System.Collections;
     using System.Net;
 
     public class TourPlanTransfersBaseTests
@@ -34,7 +36,7 @@
                 OneWay = oneWay,
                 SupplierReference = supplierReference,
             };
-            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new List<AddServiceReply>());
+            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
 
             // Act
             var bookingStatus = await goWayService.BookAsync(transferDetails);
@@ -44,36 +46,24 @@
         }
 
         [Theory]
-        [InlineData(true, "OPT-RateId1", "1234", "testRef1", 100)]
-        [InlineData(false, "OPT-RateId1|OPT-RateId2", "1234|5678", "testRef1|testRef2", 100)]
-        public async Task BookAsync_ShouldReturn_AppropriateResponse_When_Valid_InputsArePassed(bool oneWay, string supplierReference,
+        [InlineData("OPT-RateId1|OPT-RateId2", "1234|5678", "testRef1|testRef2", 100)]
+        public async Task BookAsync_ShouldReturn_AppropriateResponse_When_Valid_NonOneWay_InputsArePassed(string supplierReference,
            string bookingId, string bookingRef, decimal linePrice)
         {
             // Arrange
             TransferDetails transferDetails = new TransferDetails()
             {
-                OneWay = oneWay,
+                OneWay = false,
                 SupplierReference = supplierReference,
             };
 
             var bookingIDs = bookingId.Split('|');
             var bookingRefs = bookingRef.Split('|');
-            List<AddServiceReply> serviceReply = new();
-            var services = new Services() { Service = new Service() };
-            services.Service.LinePrice = linePrice;
 
-            if (transferDetails.OneWay
-                && bookingIDs.Length == 1 && bookingRefs.Length == 1)
-            {
-                serviceReply.Add(new AddServiceReply()
-                {
-                    BookingId = bookingId.ToSafeInt(),
-                    Ref = bookingRef,
-                    Status = "OK",
-                    Services = services
-                });
-            }
-            else if (!transferDetails.OneWay
+            ArrayList serviceReply = new();
+            var services = new Services() { Service = new Service() { LinePrice = linePrice } };
+
+            if (!transferDetails.OneWay
                 && bookingIDs.Length == 2 && bookingRefs.Length == 2)
             {
                 for (int i = 0; i < 2; i++)
@@ -81,14 +71,13 @@
                     serviceReply.Add(
                     new AddServiceReply()
                     {
-                        BookingId = bookingId.Split('|')[i].ToSafeInt(),
-                        Ref = bookingRef.Split('|')[i],
+                        BookingId = bookingIDs[i].ToSafeInt(),
+                        Ref = bookingRefs[i],
                         Status = "OK",
                         Services = services
                     });
                 }
             }
-
 
             // Act
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
@@ -96,10 +85,175 @@
             //Assert
             Assert.Equal(bookingRef, await bookingStatus);
             Assert.Equal(bookingId, transferDetails.ConfirmationReference);
-            Assert.Equal(transferDetails.OneWay ? linePrice : linePrice * 2, transferDetails.LocalCost);
+            Assert.Equal(linePrice * 2, transferDetails.LocalCost);
         }
 
-        private async Task<string> GetBookingStatusAsync<T>(TransferDetails transferDetails, List<T> serviceReply) where T : class
+        [Theory]
+        [InlineData("OPT-RateId1", "1234", "testRef1", 100)]
+        public async Task BookAsync_ShouldReturn_AppropriateResponse_When_Valid_OneWay_InputsArePassed(string supplierReference,
+          string bookingId, string bookingRef, decimal linePrice)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = true,
+                SupplierReference = supplierReference,
+            };
+
+            ArrayList serviceReply = new();
+            var services = new Services() { Service = new Service() { LinePrice = linePrice } };
+
+            serviceReply.Add(new AddServiceReply()
+            {
+                BookingId = bookingId.ToSafeInt(),
+                Ref = bookingRef,
+                Status = "OK",
+                Services = services
+            });
+
+            // Act
+            var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            Assert.Equal(bookingRef, await bookingStatus);
+            Assert.Equal(bookingId, transferDetails.ConfirmationReference);
+            Assert.Equal(linePrice, transferDetails.LocalCost);
+        }
+
+        [Theory]
+        [InlineData("OPT-RateId1|OPT-RateId2", "1234|5678", "testRef1|testRef2", 100)]
+        private async Task BookAsync_ShouldCancel_TheFirstLegBooking_When_SecondLegBooking_Fails(string supplierReference,
+           string bookingId, string bookingRef, decimal linePrice)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = false,
+                SupplierReference = supplierReference,
+            };
+
+            var bookingIDs = bookingId.Split('|');
+            var bookingRefs = bookingRef.Split('|');
+            ArrayList serviceReply = new();
+            var services = new Services() { Service = new Service() { LinePrice = linePrice } };
+
+            //Arrange FirstLeg Response Success
+            serviceReply.Add(
+                new AddServiceReply()
+                {
+                    BookingId = bookingIDs[0].ToSafeInt(),
+                    Ref = bookingRefs[0],
+                    Status = "OK",
+                    Services = services
+                });
+
+            //Arrange SecondLeg Response Failure
+            serviceReply.Add(
+                new AddServiceReply()
+                {
+                    BookingId = "".ToSafeInt(),
+                    Ref = "",
+                    Status = "RQ",
+                    Services = services
+                });
+
+            //Arrange Cancellation Response
+            serviceReply.Add(
+                new CancelServicesReply
+                {
+                    ServiceStatuses = new ServiceStatuses()
+                    { ServiceStatus = new ServiceStatusContents { Status = "XX" } },
+                }
+                );
+
+            // Act
+            var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            Assert.Equal("failed", await bookingStatus);
+        }
+
+
+        [Theory]
+        [InlineData("SuppRef1", true, "XX")]
+        [InlineData("SuppRef2", false, "")]
+        [InlineData("SuppRef2|SuppRef3|SuppRef4", false, "")]
+        [InlineData("", false, "")]
+        public async Task CancelBookingAsync_ShouldReturn_AppropriateResponse_When_Valid_OneWay_InputsArePassed(string supplierReference,
+            bool cancellationSuccess, string responseCancellationStatus)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = true,
+                SupplierReference = supplierReference,
+            };
+
+            ArrayList serviceReply = new()
+            {
+                new CancelServicesReply
+                {
+                    ServiceStatuses = new ServiceStatuses()
+                    { ServiceStatus = new ServiceStatusContents { Status = responseCancellationStatus} },
+                }
+            };
+
+            // Act
+            var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            Assert.Equal(cancellationSuccess, cancellationResponse.Success);
+
+            Assert.Equal(cancellationSuccess ? supplierReference : "failed", cancellationResponse.TPCancellationReference);
+        }
+
+        [Theory]
+        [InlineData("SuppRef1|SuppRef2", "XX", "XX", true)]
+        [InlineData("SuppRef1|SuppRef2", "XX", "", false)]
+        [InlineData("SuppRef1|SuppRef2", "", "XX", false)]
+        [InlineData("SuppRef1|SuppRef2", "", "", false)]
+        [InlineData("SuppRef1|", "XX", "", false)]
+        [InlineData("|SuppRef1", "", "XX", false)]
+        public async Task CancelBookingAsync_ShouldReturn_AppropriateResponse_When_Valid_NonOneWay_InputsArePassed(string supplierReference,
+            string responseCancellationStatusLeg1, string responseCancellationStatusLeg2, bool cancellationSuccess)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = false,
+                SupplierReference = supplierReference,
+            };
+
+            ArrayList serviceReply = new()
+            {
+                new CancelServicesReply
+                {
+                    ServiceStatuses = new ServiceStatuses()
+                    { ServiceStatus = new ServiceStatusContents { Status = responseCancellationStatusLeg1} },
+                },
+                 new CancelServicesReply
+                {
+                    ServiceStatuses = new ServiceStatuses()
+                    { ServiceStatus = new ServiceStatusContents { Status = responseCancellationStatusLeg2} },
+                }
+            };
+
+            // Act
+            var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            Assert.Equal(cancellationSuccess, cancellationResponse.Success);
+            Assert.Equal(cancellationSuccess ? supplierReference : "failed", cancellationResponse.TPCancellationReference);
+        }
+
+        private async Task<ThirdPartyCancellationResponse> GetCancellationStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
+        {
+            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
+
+            return await goWayService.CancelBookingAsync(transferDetails);
+        }
+
+        private async Task<string> GetBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
         {
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
 
@@ -107,8 +261,8 @@
         }
 
 
-        private TourPlanTransfersBase SetupGoWaySydneyTransfersService<T>(TransferDetails transferDetails,
-            List<T> responseXML) where T : class
+        private TourPlanTransfersBase SetupGoWaySydneyTransfersService(TransferDetails transferDetails,
+            ArrayList responseXML)
         {
             var mockITourPlanTransfersSettings = new Mock<ITourPlanTransfersSettings>();
             var mockHttpClient = SetupHttpClient(responseXML);
@@ -127,24 +281,51 @@
             return new GowaySydneyTransfers.GowaySydneyTransfers(mockITourPlanTransfersSettings.Object, mockHttpClient,
                mockLogger.Object, _serializer);
         }
-        private HttpClient SetupHttpClient<T>(List<T> responseXML) where T : class
+        private HttpClient SetupHttpClient(ArrayList responseXML)
         {
             var response = new List<HttpResponseMessage>();
 
             foreach (var item in responseXML)
             {
-                var xmlRequest = _serializer.SerializeWithoutNamespaces(item);
-                xmlRequest.InnerXml = $"<Reply>{xmlRequest.InnerXml}</Reply>";
+                var xmlResponse = _serializer.SerializeWithoutNamespaces(item);
+                xmlResponse.InnerXml = $"<Reply>{xmlResponse.InnerXml}</Reply>";
                 response.Add(new HttpResponseMessage
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(xmlRequest.OuterXml),
+                    Content = new StringContent(xmlResponse.OuterXml),
                 });
             }
 
             var mockHttp = new Mock<HttpMessageHandler>();
 
-            if (responseXML.Count == 2)
+            if (responseXML.Count == 4)
+            {
+                mockHttp
+                    .Protected()
+                    .SetupSequence<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>())
+                   .ReturnsAsync(response[0])
+                   .ReturnsAsync(response[1])
+                   .ReturnsAsync(response[2])
+                   .ReturnsAsync(response[3]);
+
+            }
+            else if (responseXML.Count == 3)
+            {
+                mockHttp
+                    .Protected()
+                    .SetupSequence<Task<HttpResponseMessage>>(
+                        "SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>())
+                   .ReturnsAsync(response[0])
+                   .ReturnsAsync(response[1])
+                   .ReturnsAsync(response[2]);
+
+            }
+            else if (responseXML.Count == 2)
             {
                 mockHttp
                     .Protected()
