@@ -9,6 +9,7 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -24,15 +25,18 @@
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
+        private readonly ILogger<TourPlanTransfersSearchBase> _logger;
 
         public TourPlanTransfersSearchBase(
             ITourPlanTransfersSettings settings,
             HttpClient httpClient,
-            ISerializer serializer)
+            ISerializer serializer,
+            ILogger<TourPlanTransfersSearchBase> logger)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
         }
         #endregion
 
@@ -201,8 +205,19 @@
 
         private bool filterDescription(string description, string departureName, string arrivalName)
         {
-            List<string> splitDescriptionLocation = SplitDescription(description);
-            return (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName);
+            bool result = false;
+            try
+            {
+                List<string> splitDescriptionLocation = SplitDescription(description);
+                result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, Constant.UnexpectedError);
+            }
+
+            return result;
         }
 
         private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)

@@ -7,5 +7,6 @@
         public const string TransferOptText = "TR????????????";
         public const string OneWay = "OneWay";
         public const string Outbound = "Outbound";
+        public const string UnexpectedError = "Unexpected error executing search request.";
     }
 }
