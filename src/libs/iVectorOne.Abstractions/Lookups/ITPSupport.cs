@@ -1,6 +1,8 @@
 ﻿namespace iVectorOne.Lookups
 {
+    using iVectorOne.Models;
     using iVectorOne.Models.Tokens.Transfer;
+    using iVectorOne.Search.Models;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -20,6 +22,18 @@
         /// </returns>
         Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int accountId);
 
+        /// <summary>
+        /// Get location mapping
+        /// </summary>
+        /// <param name="searchDetails"></param>
+        /// <returns></returns>
+        Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails);
+        /// <summary>
+        /// Get all locations list
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        Task<List<string>> TPAllLocationLookup(string source);
         /// <summary>
         /// The country lookup.
         /// </summary>
@@ -106,5 +120,11 @@
         /// The supplier identifier
         /// </returns>
         Task<TransferToken?> GetTransferTokenDetails(string supplierBookingReference);
+
+        /// <summary>
+        /// Remove the location cache data.
+        /// </summary>
+        /// <param name="source"></param>
+        void RemoveLocationCache(string source);
     }
 }
