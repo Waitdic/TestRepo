@@ -30,6 +30,7 @@
         //TODO:move these constants to the Constants class once refactoring is done
         public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
         public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
+        public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
@@ -56,7 +57,7 @@
 
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, PrebookException))
                 {
                     var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
 
@@ -66,7 +67,7 @@
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
                         AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
-                        AddCancellation(deserializedResponse, transferDetails);
+                        AddCancellation(deserializedResponse, transferDetails, transferDetails.DepartureDate);
 
                         if (!transferDetails.OneWay)
                         {
@@ -75,7 +76,7 @@
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML))
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, PrebookException))
                             {
                                 var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
 
@@ -84,6 +85,7 @@
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
                                     transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                     AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
+                                    AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.ReturnDate);
                                 }
                                 else
                                 {
@@ -497,12 +499,12 @@
             }
         }
 
-        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails)
+        private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails, DateTime date)
         {
             var cancelPolicies = deserializedResponse.Option[0].OptStayResults.CancelPolicies;
             if (cancelPolicies != null)
             {
-                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, transferDetails.DepartureDate);
+                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, date);
             }
         }
 
