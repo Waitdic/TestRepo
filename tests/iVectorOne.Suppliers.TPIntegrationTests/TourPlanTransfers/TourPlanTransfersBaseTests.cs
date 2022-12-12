@@ -15,20 +15,21 @@
     public class TourPlanTransfersBaseTests
     {
         private readonly ISerializer _serializer;
+        private readonly Mock<HttpMessageHandler> mockHttp;
 
         public TourPlanTransfersBaseTests()
         {
             _serializer = new Serializer();
+            mockHttp = new Mock<HttpMessageHandler>();
         }
 
         [Theory]
-        [InlineData(true, "OPT", "failed")]
-        [InlineData(false, "OPT|OPT-RateId2", "failed")]
-        [InlineData(false, "OPTRateId1|RateId2", "failed")]
-        [InlineData(false, "OPT-RateId1|", "failed")]
-        [InlineData(false, "|OPT-RateId2", "failed")]
-        public async Task BookAsync_ShouldReturn_Failed_When_Invalid_SupplierReferenceIsPassed(bool oneWay, string supplierReference,
-            string bookingStatusToAssert)
+        [InlineData(true, "OPT")]
+        [InlineData(false, "OPT|OPT-RateId2")]
+        [InlineData(false, "OPTRateId1|RateId2")]
+        [InlineData(false, "OPT-RateId1|")]
+        [InlineData(false, "|OPT-RateId2")]
+        public async Task BookAsync_ShouldReturn_Failed_When_Invalid_SupplierReferenceIsPassed(bool oneWay, string supplierReference)
         {
             // Arrange
             TransferDetails transferDetails = new TransferDetails()
@@ -42,7 +43,12 @@
             var bookingStatus = await goWayService.BookAsync(transferDetails);
 
             //Assert
-            Assert.Equal(bookingStatusToAssert, bookingStatus);
+            mockHttp.Protected().Verify("SendAsync",
+            Times.Never(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.IsAny<CancellationToken>());
+
+            Assert.Equal("failed", bookingStatus);
         }
 
         [Theory]
@@ -83,6 +89,11 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
+            mockHttp.Protected().Verify("SendAsync",
+            Times.Exactly(2),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.IsAny<CancellationToken>());
+
             Assert.Equal(bookingRef, await bookingStatus);
             Assert.Equal(bookingId, transferDetails.ConfirmationReference);
             Assert.Equal(linePrice * 2, transferDetails.LocalCost);
@@ -115,6 +126,11 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
+            mockHttp.Protected().Verify("SendAsync",
+            Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.IsAny<CancellationToken>());
+
             Assert.Equal(bookingRef, await bookingStatus);
             Assert.Equal(bookingId, transferDetails.ConfirmationReference);
             Assert.Equal(linePrice, transferDetails.LocalCost);
@@ -170,6 +186,16 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
+            mockHttp.Protected().Verify("SendAsync",
+             Times.Exactly(2),
+             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+             ItExpr.IsAny<CancellationToken>());
+
+            mockHttp.Protected().Verify("SendAsync",
+            Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+            ItExpr.IsAny<CancellationToken>());
+
             Assert.Equal("failed", await bookingStatus);
         }
 
@@ -178,7 +204,6 @@
         [InlineData("SuppRef1", true, "XX")]
         [InlineData("SuppRef2", false, "")]
         [InlineData("SuppRef2|SuppRef3|SuppRef4", false, "")]
-        [InlineData("", false, "")]
         public async Task CancelBookingAsync_ShouldReturn_AppropriateResponse_When_Valid_OneWay_InputsArePassed(string supplierReference,
             bool cancellationSuccess, string responseCancellationStatus)
         {
@@ -202,6 +227,11 @@
             var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
 
             //Assert
+            mockHttp.Protected().Verify("SendAsync",
+            supplierReference.Split('|').Length > 1 ? Times.Never() : Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+            ItExpr.IsAny<CancellationToken>());
+
             Assert.Equal(cancellationSuccess, cancellationResponse.Success);
 
             Assert.Equal(cancellationSuccess ? supplierReference : "failed", cancellationResponse.TPCancellationReference);
@@ -212,8 +242,6 @@
         [InlineData("SuppRef1|SuppRef2", "XX", "", false)]
         [InlineData("SuppRef1|SuppRef2", "", "XX", false)]
         [InlineData("SuppRef1|SuppRef2", "", "", false)]
-        [InlineData("SuppRef1|", "XX", "", false)]
-        [InlineData("|SuppRef1", "", "XX", false)]
         public async Task CancelBookingAsync_ShouldReturn_AppropriateResponse_When_Valid_NonOneWay_InputsArePassed(string supplierReference,
             string responseCancellationStatusLeg1, string responseCancellationStatusLeg2, bool cancellationSuccess)
         {
@@ -242,6 +270,11 @@
             var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
 
             //Assert
+            mockHttp.Protected().Verify("SendAsync",
+              Times.Exactly(2),
+              ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+              ItExpr.IsAny<CancellationToken>());
+
             Assert.Equal(cancellationSuccess, cancellationResponse.Success);
             Assert.Equal(cancellationSuccess ? supplierReference : "failed", cancellationResponse.TPCancellationReference);
         }
@@ -295,8 +328,6 @@
                     Content = new StringContent(xmlResponse.OuterXml),
                 });
             }
-
-            var mockHttp = new Mock<HttpMessageHandler>();
 
             if (responseXML.Count == 4)
             {
