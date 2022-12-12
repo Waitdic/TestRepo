@@ -24,14 +24,14 @@
         public List<CancellationTerm> CancellationTerms { get; set; } = new();
 
         /// <summary>
-        /// Gets or sets the departure notes.
+        /// Gets or sets the errata.
         /// </summary>
-        public string DepartureNotes { get; set; } = string.Empty;
+        public List<string> DepartureErrata { get; set; } = new List<string>();
 
         /// <summary>
-        /// Gets or sets the return notes.
+        /// Gets or sets the errata.
         /// </summary>
-        public string ReturnNotes { get; set; } = string.Empty;
+        public List<string> ReturnErrata { get; set; } = new List<string>();
 
     }
 }

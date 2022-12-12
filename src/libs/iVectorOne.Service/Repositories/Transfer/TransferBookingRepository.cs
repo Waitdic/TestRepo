@@ -44,7 +44,7 @@
                         .WithParameters(new
                         {
                             bookingReference = transferDetails.BookingReference,
-                            supplierBookingReference = transferDetails.SupplierReference,
+                            supplierBookingReference = transferDetails.ConfirmationReference,
                             accountId = transferDetails.AccountID,
                             supplierId = transferDetails.SupplierID,
                             status = status.ToString(),
