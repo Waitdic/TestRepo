@@ -93,6 +93,10 @@
                                 }
                             }
                         }
+                        if (transferDetails.Cancellations != null && transferDetails.Cancellations.Count > 0)
+                        {
+                            transferDetails.Cancellations.Solidify(SolidifyType.LatestStartDate, useMinutes: true);
+                        }
                         return true;
                     }
                     else
@@ -492,7 +496,8 @@
                 if (outbound)
                 {
                     transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
-                } else
+                }
+                else
                 {
                     transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
                 }
@@ -504,7 +509,7 @@
             var cancelPolicies = deserializedResponse.Option[0].OptStayResults.CancelPolicies;
             if (cancelPolicies != null)
             {
-                transferDetails.Cancellations = GetCancellationFromCancelPolicies(cancelPolicies, date);
+                transferDetails.Cancellations.AddRange(GetCancellationFromCancelPolicies(cancelPolicies, date));
             }
         }
 
@@ -537,7 +542,6 @@
                 }
             }
 
-            cancellations.Solidify(SolidifyType.LatestStartDate);
             return cancellations;
         }
 

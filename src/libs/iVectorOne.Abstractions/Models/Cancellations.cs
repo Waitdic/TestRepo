@@ -22,7 +22,11 @@
         /// <param name="solidifyTo">The d solidify to.</param>
         /// <param name="finalCost">The n final cost.</param>
         /// <returns>A list of cancellations</returns>
-        public Cancellations Solidify(Cancellations policy, SolidifyType solidifyType, DateTime solidifyTo = new DateTime(), decimal finalCost = 0m)
+        public Cancellations Solidify(Cancellations policy,
+            SolidifyType solidifyType,
+            DateTime solidifyTo = new DateTime(),
+            decimal finalCost = 0m,
+            bool useMinutes = false)
         {
             if (solidifyTo == DateTime.Parse("1990-01-01"))
             {
@@ -146,7 +150,7 @@
                 if (firstStartDateFromOriginalPolicy == DateTimeExtensions.EmptyDate)
                 {
                     firstStartDateFromOriginalPolicy = rule.StartDate;
-                } 
+                }
 
                 if (rule.StartDate < firstStartDateFromOriginalPolicy)
                 {
@@ -158,7 +162,14 @@
             {
                 for (int i = 0, loopTo = finalPolicy.Count - 2; i <= loopTo; i++)
                 {
-                    finalPolicy[i].EndDate = finalPolicy[i + 1].StartDate.AddDays(-1);
+                    if (useMinutes)
+                    {
+                        finalPolicy[i].EndDate = finalPolicy[i + 1].StartDate.AddMinutes(-1);
+                    }
+                    else
+                    {
+                        finalPolicy[i].EndDate = finalPolicy[i + 1].StartDate.AddDays(-1);
+                    }
                 }
             }
 
@@ -180,7 +191,14 @@
 
                 if (firstStartDateFromOriginalPolicy.Date > DateTime.Now.Date)
                 {
-                    finalPolicy.Insert(0, new Cancellation(DateTime.Now.Date, firstStartDateFromOriginalPolicy, 0));
+                    if (useMinutes)
+                    {
+                        finalPolicy.Insert(0, new Cancellation(DateTime.Now.Date, firstStartDateFromOriginalPolicy.AddMinutes(-1), 0));
+                    }
+                    else
+                    {
+                        finalPolicy.Insert(0, new Cancellation(DateTime.Now.Date, firstStartDateFromOriginalPolicy, 0));
+                    }
                 }
             }
 
@@ -258,9 +276,9 @@
         /// <param name="solidifyType">Type of the e solidify.</param>
         /// <param name="solidifyTo">The d solidify to.</param>
         /// <param name="finalCost">The n final cost.</param>
-        public void Solidify(SolidifyType solidifyType, DateTime solidifyTo = new DateTime(), decimal finalCost = 0m)
+        public void Solidify(SolidifyType solidifyType, DateTime solidifyTo = new DateTime(), decimal finalCost = 0m, bool useMinutes = false)
         {
-            Cancellations finalPolicy = this.Solidify(this, solidifyType, solidifyTo, finalCost);
+            Cancellations finalPolicy = this.Solidify(this, solidifyType, solidifyTo, finalCost, useMinutes);
             this.Clear();
             this.AddRange(finalPolicy);
         }
