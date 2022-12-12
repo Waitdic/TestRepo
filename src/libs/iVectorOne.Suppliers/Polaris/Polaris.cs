@@ -105,7 +105,18 @@
                     {
                         propertyDetails.Rooms[roomIdx].LocalCost = room.Pricing.Net.Price;
                         propertyDetails.Rooms[roomIdx].GrossCost = room.Pricing.Net.Price;
+                        isPriceChanged = true;
                     }
+                    
+                    var minimumSellingPrice = roomRate.Binding
+                        ? roomRate.Pricing.Sell.Price
+                        : roomRate.Pricing.Net.Price;
+
+                    if (!decimal.Equals(minimumSellingPrice, propertyDetails.Rooms[roomIdx].MinimumSellingPrice))
+                    {
+                        propertyDetails.Rooms[roomIdx].MinimumSellingPrice = minimumSellingPrice;
+                    }
+
                     roomIdx++;
                 }
                 if (isPriceChanged) 
@@ -188,6 +199,15 @@
                         isPriceChanged = true;
                         room.LocalCost = roomPrice;
                         room.GrossCost = roomPrice;
+                    }
+
+                    var minimumSellingPrice = roomRate.Binding
+                        ? roomRate.Pricing.Sell.Price
+                        : roomRate.Pricing.Net.Price;
+
+                    if (!decimal.Equals(minimumSellingPrice, room.MinimumSellingPrice))
+                    {
+                        room.MinimumSellingPrice = minimumSellingPrice;
                     }
 
                     var cancellations = TransformCancellations(roomRate.CancellationPolicies);
