@@ -22,6 +22,11 @@
         public decimal TotalCost { get; set; }
 
         /// <summary>
+        /// Gets or sets the minimum selling price.
+        /// </summary>
+        public decimal MinimumSellingPrice { get; set; }
+
+        /// <summary>
         /// Gets or sets the room bookings.
         /// </summary>
         public List<RoomBooking> RoomBookings { get; set; } = new();
