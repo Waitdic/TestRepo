@@ -132,7 +132,7 @@
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
         {
             var requests = new List<Request>();
-            var tpCancellationResponse = new ThirdPartyCancellationResponse();
+            var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
             try
             {
                 string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
@@ -179,12 +179,6 @@
                 {
                     tpCancellationResponse.Success = true;
                     tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
-
-                }
-                else
-                {
-                    tpCancellationResponse.Success = false;
-                    tpCancellationResponse.TPCancellationReference = "failed";
 
                 }
 
