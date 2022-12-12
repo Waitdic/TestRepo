@@ -113,7 +113,7 @@
 
                 if (requestValid && !success)
                 {
-                    response.Warnings = new List<string>() { "Suppplier cancellation failed" };
+                    response.Warnings = new List<string>() { "Supplier cancellation failed" };
                 }
                 else if (requestValid)
                 {
@@ -182,7 +182,7 @@
 
                 if (requestValid && !success)
                 {
-                    response.Warnings = new List<string>() { "Suppplier pre-cancellation failed" };
+                    response.Warnings = new List<string>() { "Supplier pre-cancellation failed" };
                 }
                 else if (requestValid)
                 {

@@ -12,8 +12,6 @@
     using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlTypes;
-    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -28,6 +26,10 @@
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
         public const string InvalidSupplierReference = "Invalid Supplier Reference";
+
+        //TODO:move these constants to the Constants class once refactoring is done
+        public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
+        public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
 
         public TourPlanTransfersBase(
             ITourPlanTransfersSettings settings,
@@ -132,7 +134,7 @@
 
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, BookException))
                 {
                     var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
 
@@ -151,7 +153,7 @@
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML))
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, BookException))
                             {
                                 var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
 
@@ -198,19 +200,83 @@
 
             }
         }
-        public Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            var requests = new List<Request>();
+            var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
+            try
+            {
+                string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
+                if (supplierReferenceData.Length == 0 ||
+                    supplierReferenceData.Length > 2)
+                {
+                    throw new ArgumentException(InvalidSupplierReference);
+                }
+
+                bool firstBookingCancelStatus = false, secondBookingCancelStatus = false;
+
+                var request = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[0]);
+                requests.Add(request);
+                await request.Send(_httpClient, _logger);
+
+                if (!ResponseHasError(transferDetails, request.ResponseXML, CancelException))
+                {
+                    var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
+
+                    if (CancellationSuccessful(deserializedResponse))
+                    {
+                        firstBookingCancelStatus = true;
+                    }
+                }
+
+                if (supplierReferenceData.Length > 1)
+                {
+                    var returnCancellationRequest = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[1]);
+                    requests.Add(returnCancellationRequest);
+                    await returnCancellationRequest.Send(_httpClient, _logger);
+
+                    if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, CancelException))
+                    {
+                        var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
+
+                        if (CancellationSuccessful(deserializedReturnCancellationResponse))
+                        {
+                            secondBookingCancelStatus = true;
+                        }
+                    }
+                }
+
+                if (firstBookingCancelStatus && (supplierReferenceData.Length == 1 || secondBookingCancelStatus))
+                {
+                    tpCancellationResponse.Success = true;
+                    tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
+
+                }
+
+                return tpCancellationResponse;
+            }
+            catch
+            {
+                return tpCancellationResponse;
+            }
+            finally
+            {
+
+                foreach (var request in requests)
+                {
+                    transferDetails.AddLog("Cancellation", request);
+                }
+            }
         }
 
         public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(TransferDetails transferDetails)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            throw new System.NotImplementedException();
+            return _settings.AllowCancellations(searchDetails);
         }
         private class SupplierReferenceData
         {
@@ -250,6 +316,26 @@
 
             }
             return result;
+        }
+
+        private Request BuildCancellationRequestAsync(TransferDetails transferDetails, string supplierReference)
+        {
+            var cancellationData = new CancelServicesRequest
+            {
+                AgentID = _settings.AgentId(transferDetails),
+                Password = _settings.Password(transferDetails),
+                Ref = supplierReference
+            };
+
+            var request = new Request
+            {
+                EndPoint = _settings.URL(transferDetails),
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+            };
+            var xmlDocument = Serialize(cancellationData);
+            request.SetRequest(xmlDocument);
+            return request;
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
@@ -321,13 +407,25 @@
             return _serializer.DeSerialize<T>(xmlResponse);
         }
 
-        private bool ResponseHasError(TransferDetails transferDetails, XmlDocument responseXML)
+        private bool ResponseHasError(TransferDetails transferDetails, XmlDocument responseXML,
+            Warning warning)
         {
             if (responseXML.OuterXml.Contains("<ErrorReply>"))
             {
+
                 var errorResponseObj = DeSerialize<ErrorReply>(responseXML);
-                transferDetails.Warnings.AddNew("Book Exception", string.IsNullOrEmpty(errorResponseObj.Error) ?
-                    "Failed to confirm booking" : errorResponseObj.Error);
+                transferDetails.Warnings.AddNew(warning.Title, string.IsNullOrEmpty(errorResponseObj.Error) ?
+                    warning.Text : errorResponseObj.Error);
+                return true;
+            }
+            return false;
+        }
+
+        private bool CancellationSuccessful(CancelServicesReply deserializedResponse)
+        {
+            if (deserializedResponse != null &&
+                        string.Equals(deserializedResponse.ServiceStatuses.ServiceStatus.Status.ToUpper(), "XX"))
+            {
                 return true;
             }
             return false;
