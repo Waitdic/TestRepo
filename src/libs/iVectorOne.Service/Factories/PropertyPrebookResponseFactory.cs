@@ -92,6 +92,7 @@
                 var roomBooking = new RoomBooking()
                 {
                     TotalCost = room.LocalCost + 0.00M,
+                    MinimumSellingPrice = room.MinimumSellingPrice + 0.00M,
                     CommissionPercentage = Math.Round(room.CommissionPercentage + 0.00M, 2),
                     RoomBookingToken = _tokenService.EncodeRoomToken(roomToken),
                     SupplierReference = room.ThirdPartyReference,
