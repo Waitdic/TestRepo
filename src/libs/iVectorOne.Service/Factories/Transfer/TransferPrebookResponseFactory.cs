@@ -15,6 +15,7 @@
     using iVectorOne.SDK.V2;
     using iVectorOne.Search.Models;
     using iVector.Search.Property;
+    using iVectorOne.Models.Property.Booking;
 
     /// <summary>
     /// A factory that creates transfer pre book responses using the provided transfer details
@@ -45,10 +46,22 @@
         /// <returns>A pre book response</returns>
         public async Task<Response> CreateAsync(TransferDetails transferDetails)
         {
+            var departureErrata = new List<string>();
+            var returnErrata = new List<string>();
             var cancellationTerms = new List<CancellationTerm>();
 
             int isoCurrencyId = !string.IsNullOrEmpty(transferDetails.ISOCurrencyCode) ?
                 await _support.ISOCurrencyIDLookupAsync(transferDetails.ISOCurrencyCode) : 0;
+
+            foreach (var erratum in transferDetails.DepartureErrata)
+            {
+                departureErrata.Add(string.Join(": ", erratum.Title, erratum.Text));
+            }
+
+            foreach (var erratum in transferDetails.ReturnErrata)
+            {
+                returnErrata.Add(string.Join(": ", erratum.Title, erratum.Text));
+            }
 
             foreach (var cancellation in transferDetails.Cancellations)
             {
@@ -81,8 +94,8 @@
                 SupplierReference = transferDetails.SupplierReference,
                 TotalCost = transferDetails.LocalCost + 0.00M,
                 CancellationTerms = cancellationTerms,
-                DepartureNotes = transferDetails.DepartureNotes,
-                ReturnNotes = transferDetails.ReturnNotes,
+                DepartureErrata = departureErrata,
+                ReturnErrata = returnErrata,
             };
 
             return response;
