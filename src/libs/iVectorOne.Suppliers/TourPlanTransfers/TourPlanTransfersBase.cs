@@ -63,6 +63,7 @@
                         transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+                        AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
                         AddCancellation(deserializedResponse, transferDetails);
 
                         if (!transferDetails.OneWay)
@@ -80,6 +81,7 @@
                                 {
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
                                     transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                    AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
                                 }
                                 else
                                 {
@@ -381,6 +383,20 @@
                     response.Option != null &&
                     response.Option.Count == 1 &&
                     response.Option[0].Opt == opt);
+        }
+
+        private void AddErrata(OptionNotes optionNotes, TransferDetails transferDetails, bool outbound)
+        {
+            foreach (var note in optionNotes.OptionNote)
+            {
+                if (outbound)
+                {
+                    transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
+                } else
+                {
+                    transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
+                }
+            }
         }
 
         private void AddCancellation(OptionInfoReply deserializedResponse, TransferDetails transferDetails)

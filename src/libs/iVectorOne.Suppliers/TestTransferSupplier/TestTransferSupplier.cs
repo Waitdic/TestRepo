@@ -26,11 +26,11 @@
             transferDetails.SupplierReference += "_prebooked";
             transferDetails.LocalCost = 200M;
             transferDetails.Cancellations.AddNew(DateTime.Now, transferDetails.DepartureDate, transferDetails.LocalCost);
-            transferDetails.DepartureNotes = "Departure Notes";
+            transferDetails.DepartureErrata.AddNew("Departure", "Departure Notes");
             
             if (!transferDetails.OneWay)
             {
-                transferDetails.ReturnNotes = "Return Notes";
+                transferDetails.ReturnErrata.AddNew("Return", "Return Notes");
             }
 
             return prebookSuccess;
