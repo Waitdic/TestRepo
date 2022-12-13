@@ -15,12 +15,12 @@
     public class TourPlanTransfersBaseTests
     {
         private readonly ISerializer _serializer;
-        private readonly Mock<HttpMessageHandler> mockHttp;
+        private readonly Mock<HttpMessageHandler> _mockHttp;
 
         public TourPlanTransfersBaseTests()
         {
             _serializer = new Serializer();
-            mockHttp = new Mock<HttpMessageHandler>();
+            _mockHttp = new Mock<HttpMessageHandler>();
         }
 
         [Theory]
@@ -43,7 +43,7 @@
             var bookingStatus = await goWayService.BookAsync(transferDetails);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
             Times.Never(),
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
             ItExpr.IsAny<CancellationToken>());
@@ -89,7 +89,7 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
             Times.Exactly(2),
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
             ItExpr.IsAny<CancellationToken>());
@@ -126,7 +126,7 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
             Times.Once(),
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
             ItExpr.IsAny<CancellationToken>());
@@ -186,12 +186,12 @@
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
              Times.Exactly(2),
              ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
              ItExpr.IsAny<CancellationToken>());
 
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
             Times.Once(),
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
             ItExpr.IsAny<CancellationToken>());
@@ -227,7 +227,7 @@
             var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
             supplierReference.Split('|').Length > 1 ? Times.Never() : Times.Once(),
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
             ItExpr.IsAny<CancellationToken>());
@@ -270,7 +270,7 @@
             var cancellationResponse = await GetCancellationStatusAsync(transferDetails, serviceReply);
 
             //Assert
-            mockHttp.Protected().Verify("SendAsync",
+            _mockHttp.Protected().Verify("SendAsync",
               Times.Exactly(2),
               ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
               ItExpr.IsAny<CancellationToken>());
@@ -331,7 +331,7 @@
 
             if (responseXML.Count == 4)
             {
-                mockHttp
+                _mockHttp
                     .Protected()
                     .SetupSequence<Task<HttpResponseMessage>>(
                         "SendAsync",
@@ -345,7 +345,7 @@
             }
             else if (responseXML.Count == 3)
             {
-                mockHttp
+                _mockHttp
                     .Protected()
                     .SetupSequence<Task<HttpResponseMessage>>(
                         "SendAsync",
@@ -358,7 +358,7 @@
             }
             else if (responseXML.Count == 2)
             {
-                mockHttp
+                _mockHttp
                     .Protected()
                     .SetupSequence<Task<HttpResponseMessage>>(
                         "SendAsync",
@@ -370,7 +370,7 @@
             }
             else if (responseXML.Count == 1)
             {
-                mockHttp
+                _mockHttp
                     .Protected()
                     .Setup<Task<HttpResponseMessage>>(
                         "SendAsync",
@@ -379,7 +379,7 @@
                    .ReturnsAsync(response[0]);
             }
 
-            return new HttpClient(mockHttp.Object);
+            return new HttpClient(_mockHttp.Object);
         }
     }
 
