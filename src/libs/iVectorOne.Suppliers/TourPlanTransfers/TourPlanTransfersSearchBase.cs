@@ -115,20 +115,14 @@
                 if (!ResponseHasExceptions(request))
                 {
                     deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                    var uniqueLocation = GetUniqueLocations(deserializedResponse, tpLocations, uniqueLocationList);
-
-                    if (uniqueLocation.Any())
-                    {
-                        uniqueLocationList.AddRange(uniqueLocation);
-                    }
 
                     if ((string)request.ExtraInfo == Constants.Outbound)
                     {
-                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
+                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
                     }
                     if ((string)request.ExtraInfo != Constants.Outbound)
                     {
-                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                     }
                 }
             }
@@ -163,17 +157,11 @@
             }
             if (uniqueLocationList.Any())
             {
-                _locationManagerService.CheckLocations(uniqueLocationList, searchDetails);
+                _locationManagerService.CheckLocations(uniqueLocationList, searchDetails, tpLocations.LocationCode);
             }
 
             return TransformedTransferResultCollection;
-        }
-
-        private List<string> GetUniqueLocations(OptionInfoReply deserializedResponse, LocationData tpLocations, List<string> uniqueLocationList)
-        {
-            var result = deserializedResponse.Option.ToList().Select(x => SplitDescription(x.OptGeneral.Description).Select(x => $"{tpLocations.LocationCode}: {x}")).ToList().SelectMany(x => x).Distinct();
-            return result.Where(x => x != $"{tpLocations.LocationCode}: {tpLocations.DepartureName}" && x != $"{tpLocations.LocationCode}: {tpLocations.ArrivalName}").Except(uniqueLocationList).ToList();
-        }
+        }  
 
         private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
         {
@@ -216,24 +204,51 @@
             return reference;
         }
 
-        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
-            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName) && x.OptStayResults.Availability == Constants.OK).ToList();
+            List<string> filterUniqueLocation = new();
+
+            List<Option> result = new();
+            bool isLocationMatch = false;
+            foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
+            {
+                isLocationMatch = filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation);
+                if (isLocationMatch)
+                {
+                    result.Add(option);
+                }
+                else
+                {
+                    filterUniqueLocation = filterUniqueLocation.Where(x => x != arrivalName && x != departureName).Except(uniqueLocationList).ToList();
+                }
+
+                if (filterUniqueLocation.Any())
+                {
+                    uniqueLocationList.AddRange(filterUniqueLocation);
+                }
+            }
+
             if (result.Any())
             {
                 filterResult.Option.AddRange(result);
             }
+
+
             return filterResult;
         }
 
-        private bool filterDescription(string description, string departureName, string arrivalName)
+        private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)
         {
             bool result = false;
             try
             {
                 List<string> splitDescriptionLocation = SplitDescription(description);
                 result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                if (!result && splitDescriptionLocation.Count == 2)
+                {
+                    filterUniqueLocation = new() { splitDescriptionLocation[0], splitDescriptionLocation[1] };
+                }
             }
             catch (Exception ex)
             {

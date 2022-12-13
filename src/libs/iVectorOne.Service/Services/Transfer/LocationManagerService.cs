@@ -17,10 +17,11 @@ namespace iVectorOne.Services.Transfer
             _tpSupport = Ensure.IsNotNull(tpSupport, nameof(tpSupport));
         }
 
-        public async void CheckLocations(List<string> uniqueLocationList, TransferSearchDetails searchDetails)
+        public async void CheckLocations(List<string> uniqueLocationList, TransferSearchDetails searchDetails, string locationCode)
         {
-            List<string> currentLocation = await _tpSupport.TPAllLocationLookup(searchDetails.Source);
-            List<string> newLocations = uniqueLocationList.Except(currentLocation).ToList();
+            uniqueLocationList = uniqueLocationList.Select(x => $"{locationCode}: {x}").ToList();
+            List<string> currentLocations = await _tpSupport.TPAllLocationLookup(searchDetails.Source);
+            List<string> newLocations = uniqueLocationList.Except(currentLocations).ToList();
             if (newLocations.Any())
             {
                 await _transferSearchRepository.AddLocations(searchDetails.Source, newLocations);

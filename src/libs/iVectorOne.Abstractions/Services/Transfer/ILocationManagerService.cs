@@ -12,6 +12,6 @@ namespace iVectorOne.Services.Transfer
         /// </summary>
         /// <param name="uniqueLocationList"></param>
         /// <param name="searchDetails"></param>
-        void CheckLocations(List<string> uniqueLocationList, TransferSearchDetails searchDetails);
+        void CheckLocations(List<string> uniqueLocationList, TransferSearchDetails searchDetails, string locationCode);
     }
 }
