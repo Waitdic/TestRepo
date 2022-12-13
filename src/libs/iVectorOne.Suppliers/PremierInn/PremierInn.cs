@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Intuitive;
+using Intuitive.Helpers.Serialization;
+using iVectorOne.Constants;
 using iVectorOne.Interfaces;
 using iVectorOne.Models;
 using iVectorOne.Models.Property.Booking;
@@ -7,7 +10,16 @@ namespace iVectorOne.Suppliers.PremierInn
 {
     public class PremierInn : IThirdParty, ISingleSource
     {
-        public string Source { get; }
+        private readonly IPremierInnSettings _settings;
+        private readonly ISerializer _serializer;
+
+        public PremierInn(IPremierInnSettings settings, ISerializer serializer)
+        {
+            _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+        }
+
+        public string Source => ThirdParties.PREMIERINN;
         public bool SupportsRemarks { get; }
         public bool SupportsBookingSearch { get; }
 
