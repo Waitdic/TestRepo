@@ -109,13 +109,10 @@
                     }
                     
                     var minimumSellingPrice = roomRate.Binding
-                        ? roomRate.Pricing.Sell.Price
-                        : roomRate.Pricing.Net.Price;
+                        ? room.Pricing.Sell.Price
+                        : room.Pricing.Net.Price;
 
-                    if (!decimal.Equals(minimumSellingPrice, propertyDetails.Rooms[roomIdx].MinimumSellingPrice))
-                    {
-                        propertyDetails.Rooms[roomIdx].MinimumSellingPrice = minimumSellingPrice;
-                    }
+                    propertyDetails.Rooms[roomIdx].MinimumSellingPrice = minimumSellingPrice;
 
                     roomIdx++;
                 }
@@ -483,15 +480,15 @@
             return request;
         }
 
-        public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations)
+        public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations, int roomQty = 1)
         {
             var canxs = cancellations.Select(cancellation => new Cancellation
             {
                 StartDate = cancellation.From.ToSafeDate(),
                 EndDate = cancellation.To.ToSafeDate(),
                 Amount = (cancellation.Pricing.Net != null)
-                            ? cancellation.Pricing.Net.Price
-                            : cancellation.Pricing.Sell.Price
+                            ? cancellation.Pricing.Net.Price / roomQty
+                            : cancellation.Pricing.Sell.Price / roomQty
             }).ToList();
             return canxs;
         }

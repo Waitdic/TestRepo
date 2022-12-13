@@ -126,7 +126,7 @@
                     return hotel.RoomRates.Where(roomRate => roomRate.Status == Constant.Status.Ok)
                                           .SelectMany(roomRate =>
                     {
-                        var canxs = Polaris.TransformCancellations(roomRate.CancellationPolicies);
+                        var canxs = Polaris.TransformCancellations(roomRate.CancellationPolicies, roomRate.RoomQty);
                         var isRateNonRefundable = canxs.Where(x => x.StartDate <= nowDay 
                                                                 && x.Amount >= roomRate.Pricing.Net.Price).Any();
                         var excludeNRF = _settings.ExcludeNRF(searchDetails);
@@ -146,8 +146,8 @@
                             }.Encrypt(_secretKeeper);
 
                             var minimumSellingPrice = roomRate.Binding
-                                ? roomRate.Pricing.Sell.Price
-                                : roomRate.Pricing.Net.Price;
+                                ? roomInfo.Pricing.Sell.Price
+                                : roomInfo.Pricing.Net.Price;
 
                             return new TransformedResult
                             {
