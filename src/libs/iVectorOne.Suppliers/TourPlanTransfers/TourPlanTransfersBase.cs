@@ -128,9 +128,9 @@
         public async Task<string> BookAsync(TransferDetails transferDetails)
         {
             var requests = new List<Request>();
+            string refValue = string.Empty;
             try
             {
-                string refValue = string.Empty;
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
@@ -172,15 +172,17 @@
                                 }
                                 else
                                 {
+                                    await CancelBookingAsync(transferDetails, refValue);
                                     return "failed";
                                 }
                             }
+                            else
+                            {
+                                await CancelBookingAsync(transferDetails, refValue);
+                                return "failed";
+                            }
                         }
                         return refValue;
-                    }
-                    else
-                    {
-                        return "failed";
                     }
                 }
 
@@ -190,11 +192,13 @@
             catch (ArgumentException ex)
             {
                 transferDetails.Warnings.AddNew("ArgumentException", ex.Message);
+                await CancelBookingAsync(transferDetails, refValue);
                 return "failed";
             }
             catch (Exception ex)
             {
                 transferDetails.Warnings.AddNew("BookException", ex.Message);
+                await CancelBookingAsync(transferDetails, refValue);
                 return "failed";
             }
             finally
@@ -206,6 +210,21 @@
 
             }
         }
+
+        private async Task CancelBookingAsync(TransferDetails transferDetails, string supplierReferenceToCancel)
+        {
+            if (string.IsNullOrEmpty(supplierReferenceToCancel))
+                return;
+
+            string tempSupplierReference = transferDetails.SupplierReference;
+
+            transferDetails.SupplierReference = supplierReferenceToCancel;
+
+            await CancelBookingAsync(transferDetails);
+
+            transferDetails.SupplierReference = tempSupplierReference;
+        }
+
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(TransferDetails transferDetails)
         {
             var requests = new List<Request>();
