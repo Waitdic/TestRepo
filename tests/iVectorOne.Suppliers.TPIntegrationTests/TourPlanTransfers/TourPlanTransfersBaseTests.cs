@@ -24,6 +24,8 @@
             _mockHttp = new Mock<HttpMessageHandler>();
         }
 
+        #region BookingTests
+
         [Theory]
         [InlineData(true, "OPT")]
         [InlineData(false, "OPT|OPT-RateId2")]
@@ -46,130 +48,10 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Never(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(AddServiceRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal("failed", bookingStatus);
-        }
-
-        [Theory]
-        [InlineData(true, "OPT")]
-        [InlineData(false, "OPT|OPT-RateId2")]
-        [InlineData(false, "OPTRateId1|RateId2")]
-        [InlineData(false, "OPT-RateId1|")]
-        [InlineData(false, "|OPT-RateId2")]
-        public async Task PreBookAsync_ShouldReturn_False_When_Invalid_SupplierReferenceIsPassed(bool oneWay, string supplierReference)
-        {
-            // Arrange
-            TransferDetails transferDetails = new TransferDetails()
-            {
-                OneWay = oneWay,
-                SupplierReference = supplierReference,
-            };
-            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
-
-            // Act
-            var preBookingStatus = await goWayService.PreBookAsync(transferDetails);
-
-            //Assert
-            _mockHttp.Protected().Verify("SendAsync",
-            Times.Never(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("OptionInfoRequest")),
-            ItExpr.IsAny<CancellationToken>());
-
-            Assert.False(preBookingStatus);
-        }
-
-        [Theory]
-        [InlineData("OPT-RateId1")]
-        public async Task PreBookAsync_ShouldReturn_False_When_Response_HasError_ForOneWay(string supplierReference)
-        {
-            // Arrange
-            TransferDetails transferDetails = new TransferDetails()
-            {
-                OneWay = true,
-                SupplierReference = supplierReference
-            };
-
-            ArrayList serviceReply = new()
-            {
-                new ErrorReply()
-                {
-                    Error="error"
-                }
-            };
-
-            // Act
-            var bookingStatus = await GetPreBookingStatusAsync(transferDetails, serviceReply);
-
-            //Assert
-            _mockHttp.Protected().Verify("SendAsync",
-            Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("OptionInfoRequest")),
-            ItExpr.IsAny<CancellationToken>());
-
-            Assert.False(bookingStatus);
-        }
-
-        [Theory]
-        [InlineData("OPT-RateId1|OPT-RateId2", 1000, "INR")]
-        public async Task PreBookAsync_ShouldReturn_False_When_Response_HasError_ForNonOneWay(string supplierReferences,
-            int totalPrice, string currency)
-        {
-            // Arrange
-            TransferDetails transferDetails = new TransferDetails()
-            {
-                OneWay = false,
-                SupplierReference = supplierReferences
-            };
-
-            var supplierReference = supplierReferences.Split('|');
-            ArrayList serviceReply = new()
-            {
-                 new OptionInfoReply()
-                {
-                    Option = new List<Option>
-                         {
-                            new Option()
-                            {
-                                OptStayResults= new OptStayResults()
-                                {
-                                    TotalPrice = totalPrice,
-                                    Currency=currency,
-                                    RateId = supplierReference[0].Split("-")[1],
-
-                                },
-                                OptionNotes = new OptionNotes{
-                                    OptionNote=new List<OptionNote>
-                                    {
-                                        new OptionNote
-                                        {
-                                        NoteText =$"TestNoteText",
-                                        NoteCategory=$"TestNoteCategory"
-                                        }
-                                    }
-                                },
-                                Opt=supplierReference[0].Split("-")[0],
-
-                            }
-                         }
-                },
-                new ErrorReply()
-                {
-                    Error="error"
-                }
-            };
-
-            // Act
-            var bookingStatus = await GetPreBookingStatusAsync(transferDetails, serviceReply);
-
-            //Assert
-            _mockHttp.Protected().Verify("SendAsync",
-            Times.Exactly(2),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("OptionInfoRequest")),
-            ItExpr.IsAny<CancellationToken>());
-
-            Assert.False(bookingStatus);
         }
 
         [Theory]
@@ -212,7 +94,7 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Exactly(2),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(AddServiceRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal(bookingRef, await bookingStatus);
@@ -249,7 +131,7 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(AddServiceRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal(bookingRef, await bookingStatus);
@@ -309,18 +191,26 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
              Times.Exactly(2),
-             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("AddServiceRequest")),
+             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(AddServiceRequest))),
              ItExpr.IsAny<CancellationToken>());
 
             _mockHttp.Protected().Verify("SendAsync",
             Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(CancelServicesRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal("failed", await bookingStatus);
         }
 
+        private async Task<string> GetBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
+        {
+            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
 
+            return await goWayService.BookAsync(transferDetails);
+        }
+        #endregion
+
+        #region CancelBookingTests
         [Theory]
         [InlineData("SuppRef1", true, "XX")]
         [InlineData("SuppRef2", false, "")]
@@ -350,7 +240,7 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             supplierReference.Split('|').Length > 1 ? Times.Never() : Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(CancelServicesRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal(cancellationSuccess, cancellationResponse.Success);
@@ -393,13 +283,23 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
               Times.Exactly(2),
-              ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("CancelServicesRequest")),
+              ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(CancelServicesRequest))),
               ItExpr.IsAny<CancellationToken>());
 
             Assert.Equal(cancellationSuccess, cancellationResponse.Success);
             Assert.Equal(cancellationSuccess ? supplierReference : "failed", cancellationResponse.TPCancellationReference);
         }
 
+        private async Task<ThirdPartyCancellationResponse> GetCancellationStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
+        {
+            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
+
+            return await goWayService.CancelBookingAsync(transferDetails);
+        }
+
+        #endregion
+
+        #region PrebookTests
         [Theory]
         [InlineData("OPT-RateId1|OPT-RateId2", 1000, "INR")]
         public async Task PreBookAsync_ShouldReturn_AppropriateResponse_When_Valid_NonOneWay_InputsArePassed(string supplierReferences,
@@ -420,35 +320,7 @@
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    serviceReply.Add(
-                    new OptionInfoReply()
-                    {
-                        Option = new List<Option>
-                        {
-                            new Option()
-                            {
-                                OptStayResults= new OptStayResults()
-                                {
-                                    TotalPrice = totalPrice,
-                                    Currency=currency,
-                                    RateId = supplierReference[i].Split("-")[1],
-
-                                },
-                                OptionNotes = new OptionNotes{
-                                    OptionNote=new List<OptionNote>
-                                    {
-                                        new OptionNote
-                                        {
-                                        NoteText =$"{i}TestNoteText",
-                                        NoteCategory=$"{i}TestNoteCategory"
-                                        }
-                                    }
-                                },
-                                Opt=supplierReference[i].Split("-")[0],
-
-                            }
-                        }
-                    });
+                    serviceReply.Add(generatePrebookResponse(totalPrice, currency, supplierReference, i));
                 }
             }
 
@@ -458,7 +330,7 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Exactly(2),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("OptionInfoRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
             ItExpr.IsAny<CancellationToken>());
 
             Assert.True(bookingStatus);
@@ -488,33 +360,71 @@
 
             ArrayList serviceReply = new()
             {
-                new OptionInfoReply()
+                generatePrebookResponse(totalPrice, currency, supplierReference.Split('|'), null)
+            };
+
+            // Act
+            var bookingStatus = await GetPreBookingStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            _mockHttp.Protected().Verify("SendAsync",
+            Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
+            ItExpr.IsAny<CancellationToken>());
+
+            Assert.True(bookingStatus);
+            Assert.Equal(supplierReference, transferDetails.SupplierReference);
+            Assert.Equal(totalPrice, transferDetails.LocalCost);
+            Assert.Equal(currency, transferDetails.ISOCurrencyCode);
+            Assert.Contains(transferDetails.DepartureErrata, x => x.Title == "TestNoteCategory");
+            Assert.Contains(transferDetails.DepartureErrata, x => x.Text == "TestNoteText");
+
+        }
+
+        [Theory]
+        [InlineData(true, "OPT")]
+        [InlineData(false, "OPT|OPT-RateId2")]
+        [InlineData(false, "OPTRateId1|RateId2")]
+        [InlineData(false, "OPT-RateId1|")]
+        [InlineData(false, "|OPT-RateId2")]
+        public async Task PreBookAsync_ShouldReturn_False_When_Invalid_SupplierReferenceIsPassed(bool oneWay, string supplierReference)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = oneWay,
+                SupplierReference = supplierReference,
+            };
+            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
+
+            // Act
+            var preBookingStatus = await goWayService.PreBookAsync(transferDetails);
+
+            //Assert
+            _mockHttp.Protected().Verify("SendAsync",
+            Times.Never(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
+            ItExpr.IsAny<CancellationToken>());
+
+            Assert.False(preBookingStatus);
+        }
+
+        [Theory]
+        [InlineData("OPT-RateId1")]
+        public async Task PreBookAsync_ShouldReturn_False_When_Response_HasError_ForOneWay(string supplierReference)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = true,
+                SupplierReference = supplierReference
+            };
+
+            ArrayList serviceReply = new()
+            {
+                new ErrorReply()
                 {
-                    Option = new List<Option>
-                         {
-                            new Option()
-                            {
-                                OptStayResults= new OptStayResults()
-                                {
-                                    TotalPrice = totalPrice,
-                                    Currency=currency,
-                                    RateId = supplierReference.Split("-")[1],
-
-                                },
-                                OptionNotes = new OptionNotes{
-                                    OptionNote=new List<OptionNote>
-                                    {
-                                        new OptionNote
-                                        {
-                                        NoteText =$"TestNoteText",
-                                        NoteCategory=$"TestNoteCategory"
-                                        }
-                                    }
-                                },
-                                Opt=supplierReference.Split("-")[0],
-
-                            }
-                         }
+                    Error="error"
                 }
             };
 
@@ -524,34 +434,78 @@
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Once(),
-            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains("OptionInfoRequest")),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
             ItExpr.IsAny<CancellationToken>());
 
-            Assert.True(bookingStatus);
-            Assert.Equal(supplierReference, transferDetails.SupplierReference);
-            Assert.Equal(totalPrice, transferDetails.LocalCost);
-            Assert.Equal(currency, transferDetails.ISOCurrencyCode);
+            Assert.False(bookingStatus);
+        }
 
-            for (int i = 0; i < 2; i++)
+        [Theory]
+        [InlineData("OPT-RateId1|OPT-RateId2", 1000, "INR")]
+        public async Task PreBookAsync_ShouldReturn_False_When_SecondResponse_HasError_ForNonOneWay(string supplierReferences,
+            int totalPrice, string currency)
+        {
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
             {
-                Assert.Contains(transferDetails.DepartureErrata, x => x.Title == "TestNoteCategory");
-                Assert.Contains(transferDetails.DepartureErrata, x => x.Text == "TestNoteText");
-            }
+                OneWay = false,
+                SupplierReference = supplierReferences
+            };
 
+            var supplierReference = supplierReferences.Split('|');
+            ArrayList serviceReply = new()
+            {
+                generatePrebookResponse(totalPrice, currency, supplierReference, null),
+                new ErrorReply()
+                {
+                    Error="error"
+                }
+            };
+
+            // Act
+            var bookingStatus = await GetPreBookingStatusAsync(transferDetails, serviceReply);
+
+            //Assert
+            _mockHttp.Protected().Verify("SendAsync",
+            Times.Exactly(2),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
+            ItExpr.IsAny<CancellationToken>());
+
+            Assert.False(bookingStatus);
         }
 
-        private async Task<ThirdPartyCancellationResponse> GetCancellationStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
+        [Theory]
+        [InlineData("OPT-RateId1|OPT-RateId2", 1000, "INR")]
+        public async Task PreBookAsync_ShouldReturn_False_When_FirstResponse_HasError_ForNonOneWay(string supplierReferences,
+            int totalPrice, string currency)
         {
-            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
+            // Arrange
+            TransferDetails transferDetails = new TransferDetails()
+            {
+                OneWay = false,
+                SupplierReference = supplierReferences
+            };
 
-            return await goWayService.CancelBookingAsync(transferDetails);
-        }
+            var supplierReference = supplierReferences.Split('|');
+            ArrayList serviceReply = new()
+            {
+                new ErrorReply()
+                {
+                    Error="error"
+                },
+                generatePrebookResponse(totalPrice, currency, supplierReference, null)
+            };
 
-        private async Task<string> GetBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
-        {
-            var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
+            // Act
+            var bookingStatus = await GetPreBookingStatusAsync(transferDetails, serviceReply);
 
-            return await goWayService.BookAsync(transferDetails);
+            //Assert
+            _mockHttp.Protected().Verify("SendAsync",
+            Times.Once(),
+            ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
+            ItExpr.IsAny<CancellationToken>());
+
+            Assert.False(bookingStatus);
         }
 
         private async Task<bool> GetPreBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
@@ -560,6 +514,39 @@
 
             return await goWayService.PreBookAsync(transferDetails);
         }
+
+        private OptionInfoReply generatePrebookResponse(int totalPrice, string currency, string[] supplierReference, int? index)
+        {
+            return new OptionInfoReply()
+            {
+                Option = new List<Option>
+                         {
+                            new Option()
+                            {
+                                OptStayResults= new OptStayResults()
+                                {
+                                    TotalPrice = totalPrice,
+                                    Currency=currency,
+                                    RateId = supplierReference[index??0].Split("-")[1],
+
+                                },
+                                OptionNotes = new OptionNotes{
+                                    OptionNote=new List<OptionNote>
+                                    {
+                                        new OptionNote
+                                        {
+                                        NoteText = index is null ? "TestNoteText" : $"{index}TestNoteText",
+                                        NoteCategory= index is null ? "TestNoteCategory" : $"{index}TestNoteCategory"
+                                        }
+                                    }
+                                },
+                                Opt=supplierReference[index??0].Split("-")[0],
+                            }
+                         }
+            };
+        }
+
+        #endregion
 
         private TourPlanTransfersBase SetupGoWaySydneyTransfersService(TransferDetails transferDetails,
             ArrayList responseXML)
