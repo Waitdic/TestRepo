@@ -7,6 +7,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Services.Transfer;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
-    using Constant = Models.Constant;
+    using Constants = Models.Constant;
 
     public abstract class TourPlanTransfersSearchBase : IThirdPartySearch, ISingleSource
     {
@@ -25,18 +26,23 @@
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
+        private readonly ILocationManagerService _locationManagerService;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
-
         public TourPlanTransfersSearchBase(
             ITourPlanTransfersSettings settings,
             HttpClient httpClient,
             ISerializer serializer,
-            ILogger<TourPlanTransfersSearchBase> logger)
+            ILogger<TourPlanTransfersSearchBase> logger,
+            ILocationManagerService locationManagerService
+
+           )
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
+
         }
         #endregion
 
@@ -50,7 +56,7 @@
             LocationData tpLocations = GetThirdPartyLocations(location);
             var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
-            Outbound.ExtraInfo = Constant.Outbound;
+            Outbound.ExtraInfo = Constants.Outbound;
             requests.Add(Outbound);
             if (!searchDetails.OneWay)
             {
@@ -103,18 +109,20 @@
             OptionInfoReply filteredOutbound = new();
             OptionInfoReply filteredReturn = new();
             OptionInfoReply deserializedResponse = new();
+            List<string> uniqueLocationList = new();
             foreach (Request request in requests)
             {
                 if (!ResponseHasExceptions(request))
                 {
                     deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                    if ((string)request.ExtraInfo == Constant.Outbound)
+
+                    if ((string)request.ExtraInfo == Constants.Outbound)
                     {
-                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
+                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
                     }
-                    if ((string)request.ExtraInfo != Constant.Outbound)
+                    if ((string)request.ExtraInfo != Constants.Outbound)
                     {
-                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                     }
                 }
             }
@@ -147,9 +155,13 @@
             {
                 TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
             }
+            if (uniqueLocationList.Any())
+            {
+                _locationManagerService.CheckLocations(uniqueLocationList, searchDetails, tpLocations.LocationCode);
+            }
 
             return TransformedTransferResultCollection;
-        }
+        }  
 
         private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
         {
@@ -192,24 +204,49 @@
             return reference;
         }
 
-        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
-            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
+            List<string> filterUniqueLocation = new();
+
+            List<Option> result = new();
+            foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
+            {
+                if (filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation))
+                {
+                    result.Add(option);
+                }
+                else
+                {
+                    filterUniqueLocation = filterUniqueLocation.Where(x => x != arrivalName && x != departureName).Except(uniqueLocationList).ToList();
+                }
+
+                if (filterUniqueLocation.Any())
+                {
+                    uniqueLocationList.AddRange(filterUniqueLocation);
+                }
+            }
+
             if (result.Any())
             {
                 filterResult.Option.AddRange(result);
             }
+
+
             return filterResult;
         }
 
-        private bool filterDescription(string description, string departureName, string arrivalName)
+        private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)
         {
             bool result = false;
             try
             {
                 List<string> splitDescriptionLocation = SplitDescription(description);
                 result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                if (!result && splitDescriptionLocation.Count == 2)
+                {
+                    filterUniqueLocation = new() { splitDescriptionLocation[0], splitDescriptionLocation[1] };
+                }
             }
             catch (Exception ex)
             {
@@ -228,9 +265,9 @@
 
                 AgentID = _settings.AgentId(searchDetails),
                 Password = _settings.Password(searchDetails),
-                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
-                Info = Constant.Info,
-                Opt = tpLocations.LocationCode + Constant.TransferOptText,
+                DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
+                Info = Constants.Info,
+                Opt = tpLocations.LocationCode + Constants.TransferOptText,
                 RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
