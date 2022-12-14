@@ -5,6 +5,7 @@
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.SupplierLog;
 
     /// <summary>
@@ -217,15 +218,15 @@
         /// </summary>
         public List<ThirdPartyConfiguration> ThirdPartyConfigurations { get; set; } = new();
 
-        ///// <summary>
-        ///// Gets or sets the departure notes
-        ///// </summary>
-        public string DepartureNotes { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets The errata
+        /// </summary>
+        public Errata DepartureErrata { get; set; } = new();
 
-        ///// <summary>
-        ///// Gets or sets the return notes
-        ///// </summary>
-        public string ReturnNotes { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets The errata
+        /// </summary>
+        public Errata ReturnErrata { get; set; } = new();
 
         ///// <summary>
         ///// Gets or sets the outbound details

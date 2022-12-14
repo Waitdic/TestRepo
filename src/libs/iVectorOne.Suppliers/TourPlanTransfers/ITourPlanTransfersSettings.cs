@@ -5,5 +5,6 @@
         string URL(IThirdPartyAttributeSearch tpAttributeSearch);
         string AgentId(IThirdPartyAttributeSearch tpAttributeSearch);
         string Password(IThirdPartyAttributeSearch tpAttributeSearch);
+        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
     }
 }

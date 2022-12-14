@@ -109,7 +109,7 @@
 
                 if (requestValid && !success)
                 {
-                    response.Warnings = new List<string>() { "Suppplier prebook failed" };
+                    response.Warnings = new List<string>() { "Supplier prebook failed" };
                 }
                 else if (requestValid)
                 {
