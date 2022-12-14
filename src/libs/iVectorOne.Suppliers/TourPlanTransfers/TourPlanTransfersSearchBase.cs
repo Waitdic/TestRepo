@@ -68,7 +68,7 @@
                 LocationData tpLocations = GetThirdPartyLocations(location);
                 var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
                 List<Request> requests = new List<Request>();
-                Outbound.ExtraInfo = Constant.Outbound;
+                Outbound.ExtraInfo = Constants.Outbound;
                 requests.Add(Outbound);
                 if (!searchDetails.OneWay)
                 {
@@ -134,18 +134,20 @@
                 OptionInfoReply filteredOutbound = new();
                 OptionInfoReply filteredReturn = new();
                 OptionInfoReply deserializedResponse = new();
+                List<string> uniqueLocationList = new();
                 foreach (Request request in requests)
                 {
                     if (!ResponseHasExceptions(request))
                     {
                         deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                        if ((string)request.ExtraInfo == Constant.Outbound)
+
+                        if ((string)request.ExtraInfo == Constants.Outbound)
                         {
-                            filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
+                            filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
                         }
-                        if ((string)request.ExtraInfo != Constant.Outbound)
+                        if ((string)request.ExtraInfo != Constants.Outbound)
                         {
-                            filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                            filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                         }
                     }
                 }
@@ -255,8 +257,6 @@
             {
                 filterResult.Option.AddRange(result);
             }
-
-
             return filterResult;
         }
 
@@ -290,7 +290,7 @@
                     AgentID = _settings.AgentId,
                     Password = _settings.Password,
                     DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
-                    Info = Constant.Info,
+                    Info = Constants.Info,
                     Opt = tpLocations.LocationCode + Constant.TransferOptText,
                     RoomConfigs = new List<RoomConfiguration>()
                 {

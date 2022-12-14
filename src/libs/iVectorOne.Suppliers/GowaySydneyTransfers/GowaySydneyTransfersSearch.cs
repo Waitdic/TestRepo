@@ -18,7 +18,7 @@
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ILocationManagerService _locationManagerService;
 
-        public GowaySydneyTransfersSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger) : base(httpClient, serializer, logger)
+        public GowaySydneyTransfersSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger, ILocationManagerService locationManagerService) : base(httpClient, serializer, logger, locationManagerService)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
