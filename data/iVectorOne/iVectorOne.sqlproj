@@ -101,5 +101,6 @@
     <Build Include="dbo\Stored Procedures\TransferBooking_Upsert.sql" />
     <Build Include="dbo\Stored Procedures\TransferBooking_GetTokenData.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_AddNewLocations.sql" />
+    <Build Include="dbo\Stored Procedures\Transfer_AddLocations.sql" />
   </ItemGroup>
 </Project>

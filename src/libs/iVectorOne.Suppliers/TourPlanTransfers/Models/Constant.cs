@@ -8,5 +8,6 @@
         public const string OneWay = "OneWay";
         public const string Outbound = "Outbound";
         public const string UnexpectedError = "Unexpected error executing search request.";
+        public const string OK = "OK";
     }
 }

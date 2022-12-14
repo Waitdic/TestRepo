@@ -1,12 +1,11 @@
 ﻿namespace iVectorOne.Repositories
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Data;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A repository for returning search information from the database
@@ -37,6 +36,22 @@
                         arrivalLocationID = searchDetails.ArrivalLocationId,
                         source = searchDetails.Source,
                     }));
+
+            return results;
+        }
+
+        public async Task<int> AddLocations(string source, List<string> newLocations)
+        {
+
+            var results = await _sql.ReadSingleAsync<int>(
+                 "Transfer_AddLocations",
+                 new CommandSettings()
+                     .IsStoredProcedure()
+                     .WithParameters(new
+                     {
+                         source = source,
+                         locations = string.Join(",", newLocations)
+                     }));
 
             return results;
         }

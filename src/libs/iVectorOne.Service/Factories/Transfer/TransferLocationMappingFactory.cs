@@ -1,17 +1,11 @@
 ﻿namespace iVectorOne.Factories
 {
     using Intuitive;
-    using iVectorOne.Factories;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
-    using iVectorOne.Models.Tokens;
     using iVectorOne.Repositories;
-    using iVectorOne.SDK.V2.TransferSearch;
     using iVectorOne.Search.Models;
-    using iVectorOne.Services;
     using Microsoft.Extensions.Logging;
-    using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -21,6 +15,7 @@
     {
         /// <summary>The transfer search repository</summary>
         private readonly ITransferSearchRepository _searchRepository;
+        private readonly ITPSupport _tpSupport;
 
         /// <summary>The log writer</summary>
         private readonly ILogger<TransferSearchResponseFactory> _logger;
@@ -30,15 +25,17 @@
         /// <param name="logger">The log writer</param>
         public TransferLocationMappingFactory(
             ITransferSearchRepository searchRepository,
-            ILogger<TransferSearchResponseFactory> logger)
+            ILogger<TransferSearchResponseFactory> logger,
+            ITPSupport tpSupport)
         {
             _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _tpSupport = Ensure.IsNotNull(tpSupport, nameof(tpSupport));
         }
 
         public async Task<LocationMapping> CreateAsync(TransferSearchDetails searchDetails, Account account)
         {
-            return await _searchRepository.GetLocationMappingAsync(searchDetails);
+            return await _tpSupport.TPLocationLookupAsync(searchDetails);
         }
     }
 }

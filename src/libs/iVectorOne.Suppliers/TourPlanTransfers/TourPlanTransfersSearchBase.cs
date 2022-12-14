@@ -7,6 +7,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Services.Transfer;
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Xml;
-    using Constant = Models.Constant;
+    using Constants = Models.Constant;
 
     public abstract class TourPlanTransfersSearchBase : IThirdPartySearch, ISingleSource
     {
@@ -25,17 +26,23 @@
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
+        private readonly ILocationManagerService _locationManagerService;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         public static readonly string ThirdPartySettingException = "The Third Party Setting: {0} must be provided.";
 
         public TourPlanTransfersSearchBase(
             HttpClient httpClient,
             ISerializer serializer,
-            ILogger<TourPlanTransfersSearchBase> logger)
+            ILogger<TourPlanTransfersSearchBase> logger,
+            ILocationManagerService locationManagerService
+
+           )
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
+            _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
+
         }
         #endregion
 
@@ -144,33 +151,37 @@
                 }
                 string supplierReference;
 
-                TransformedTransferResult? transformedResult = null;
-                List<TransformedTransferResult> transformedResultList = new();
-                if (oneway)
+            TransformedTransferResult? transformedResult = null;
+            List<TransformedTransferResult> transformedResultList = new();
+            if (oneway)
+            {
+                foreach (var outboundResult in filteredOutbound.Option)
                 {
-                    foreach (var outboundResult in filteredOutbound.Option)
+                    supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
+                    transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                    transformedResultList.Add(transformedResult);
+                }
+            }
+            else
+            {
+                foreach (var outboundResult in filteredOutbound.Option)
+                {
+                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
                     {
-                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
-                        transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
+                        transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
                 }
-                else
-                {
-                    foreach (var outboundResult in filteredOutbound.Option)
-                    {
-                        foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
-                        {
-                            supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
-                            transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
-                            transformedResultList.Add(transformedResult);
-                        }
-                    }
-                }
-                if (transformedResultList.Any())
-                {
-                    TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
-                }
+            }
+            if (transformedResultList.Any())
+            {
+                TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
+            }
+            if (uniqueLocationList.Any())
+            {
+                _locationManagerService.CheckLocations(uniqueLocationList, searchDetails, tpLocations.LocationCode);
+            }
 
                 return TransformedTransferResultCollection;
             }
@@ -217,27 +228,52 @@
                 return reference;
             }
 
-            private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
+        {
+            OptionInfoReply filterResult = new();
+            List<string> filterUniqueLocation = new();
+
+            List<Option> result = new();
+            foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
             {
-                OptionInfoReply filterResult = new();
-                var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
-                if (result.Any())
+                if (filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation))
                 {
-                    filterResult.Option.AddRange(result);
+                    result.Add(option);
                 }
-                return filterResult;
+                else
+                {
+                    filterUniqueLocation = filterUniqueLocation.Where(x => x != arrivalName && x != departureName).Except(uniqueLocationList).ToList();
+                }
+
+                if (filterUniqueLocation.Any())
+                {
+                    uniqueLocationList.AddRange(filterUniqueLocation);
+                }
             }
 
-            private bool filterDescription(string description, string departureName, string arrivalName)
+            if (result.Any())
             {
-                bool result = false;
-                try
+                filterResult.Option.AddRange(result);
+            }
+
+
+            return filterResult;
+        }
+
+        private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)
+        {
+            bool result = false;
+            try
+            {
+                List<string> splitDescriptionLocation = SplitDescription(description);
+                result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                if (!result && splitDescriptionLocation.Count == 2)
                 {
-                    List<string> splitDescriptionLocation = SplitDescription(description);
-                    result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                    filterUniqueLocation = new() { splitDescriptionLocation[0], splitDescriptionLocation[1] };
                 }
-                catch (Exception ex)
-                {
+            }
+            catch (Exception ex)
+            {
 
                     _logger.LogError(ex, Constant.UnexpectedError);
                 }

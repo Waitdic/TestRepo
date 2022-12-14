@@ -145,6 +145,7 @@
             services.AddSingleton<IRequestTracker, ThirdPartyRequestTracker>();
             services.AddSingleton<IThirdPartyPropertySearchRunner, ThirdPartyPropertySearchRunner>();
             services.AddSingleton<Services.Transfer.ISearchService, Services.Transfer.SearchService>();
+            services.AddSingleton<Services.Transfer.ILocationManagerService, Services.Transfer.LocationManagerService>();
             services.AddSingleton<Services.Transfer.IPrebookService, Services.Transfer.PrebookService>();
             services.AddSingleton<Services.Transfer.IBookService, Services.Transfer.BookService>();
             services.AddSingleton<Services.Transfer.ICancellationService, Services.Transfer.CancellationService>();

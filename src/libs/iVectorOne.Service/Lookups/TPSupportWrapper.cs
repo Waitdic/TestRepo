@@ -11,6 +11,8 @@
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
     using iVectorOne.Models.Tokens.Transfer;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Models;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -46,6 +48,28 @@
                 countryCode = country.TPCountryCode;
             }
             return countryCode;
+        }
+
+        public async Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails)
+        {
+            LocationMapping locationData;
+
+            Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
+            location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
+            location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
+            locationData = new()
+            {
+                DepartureData = departurePayload,
+                ArrivalData = arivalPayload
+            };
+
+            return locationData;
+        }
+
+        public async Task<List<string>> TPAllLocationLookup(string source)
+        {
+            Dictionary<int, string> location = await this.TPLocationAsync(source);
+            return location.Select(x => x.Value).ToList();
         }
 
         /// <inheritdoc />
@@ -115,6 +139,12 @@
         public async Task<int> SupplierIDLookupAsync(string supplierName)
         {
             return (await SupplierAsync()).FirstOrDefault(x => x.Value == supplierName).Key;
+        }
+
+        public void RemoveLocationCache(string source)
+        {
+            string cacheKey = "TPLocationLookup_" + source;
+            _cache.Remove(cacheKey);
         }
 
         private bool IsSingleTenant(string source)
@@ -209,6 +239,21 @@
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
+        private async Task<Dictionary<int, string>> TPLocationAsync(string source)
+        {
+            string cacheKey = "TPLocationLookup_" + source;
+
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select IVOLocationID, Payload  from IVOLocation where Source = @source",
+                    async r => (await r.ReadAllAsync<LocationLookup>()).ToDictionary(x => x.IVOLocationID, x => x.Payload),
+                    new CommandSettings().WithParameters(new { source }));
+            }
+
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
+        }
+
         private async Task<Dictionary<(int, string), AccountCountry>> AccountCountryAsync()
         {
             string cacheKey = "AccountCountryLookup";
@@ -292,6 +337,11 @@
             public string ISOCode { get; set; } = string.Empty;
             public string TPCountryCode { get; set; } = string.Empty;
             public string Country { get; set; } = string.Empty;
+        }
+        private class LocationLookup
+        {
+            public int IVOLocationID { get; set; }
+            public string Payload { get; set; } = string.Empty;
         }
 
         private class AccountCountry
