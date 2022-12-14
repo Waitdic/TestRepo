@@ -210,11 +210,9 @@
             List<string> filterUniqueLocation = new();
 
             List<Option> result = new();
-            bool isLocationMatch = false;
             foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
             {
-                isLocationMatch = filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation);
-                if (isLocationMatch)
+                if (filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation))
                 {
                     result.Add(option);
                 }
