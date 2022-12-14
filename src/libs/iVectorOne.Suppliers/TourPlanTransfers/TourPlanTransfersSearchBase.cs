@@ -26,14 +26,13 @@
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
+        public static readonly string ThirdPartySettingException = "The Third Party Setting: {0} must be provided.";
 
         public TourPlanTransfersSearchBase(
-            ITourPlanTransfersSettings settings,
             HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanTransfersSearchBase> logger)
         {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
@@ -47,19 +46,32 @@
         #region Public Functions
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            LocationData tpLocations = GetThirdPartyLocations(location);
-            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
-            List<Request> requests = new List<Request>();
-            Outbound.ExtraInfo = Constant.Outbound;
-            requests.Add(Outbound);
-            if (!searchDetails.OneWay)
+            if (searchDetails.ThirdPartySettings.Count == 0)
             {
-                var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
-                returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
-                requests.Add(returnBuildOptionInfoRequest);
+                throw new Exception(string.Format(ThirdPartySettingException, "AgentId"));
             }
+            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(searchDetails.ThirdPartySettings);
+            if (!thirdPartySettings.Item1)
+            {
+                throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
+            }
+            else
+            {
+                _settings = thirdPartySettings.Item3;
+                LocationData tpLocations = GetThirdPartyLocations(location);
+                var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+                List<Request> requests = new List<Request>();
+                Outbound.ExtraInfo = Constant.Outbound;
+                requests.Add(Outbound);
+                if (!searchDetails.OneWay)
+                {
+                    var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                    returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
+                    requests.Add(returnBuildOptionInfoRequest);
+                }
 
-            return Task.FromResult(requests);
+                return Task.FromResult(requests);
+            }
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
@@ -97,141 +109,154 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
-            LocationData tpLocations = GetThirdPartyLocations(location);
-            bool oneway = requests.Count == 1;
-            OptionInfoReply filteredOutbound = new();
-            OptionInfoReply filteredReturn = new();
-            OptionInfoReply deserializedResponse = new();
-            foreach (Request request in requests)
+            if (searchDetails.ThirdPartySettings.Count == 0)
             {
-                if (!ResponseHasExceptions(request))
-                {
-                    deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
-                    if ((string)request.ExtraInfo == Constant.Outbound)
-                    {
-                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
-                    }
-                    if ((string)request.ExtraInfo != Constant.Outbound)
-                    {
-                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
-                    }
-                }
+                throw new Exception(string.Format(ThirdPartySettingException, "AgentId"));
             }
-            string supplierReference;
-
-            TransformedTransferResult? transformedResult = null;
-            List<TransformedTransferResult> transformedResultList = new();
-            if (oneway)
+            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(searchDetails.ThirdPartySettings);
+            if (!thirdPartySettings.Item1)
             {
-                foreach (var outboundResult in filteredOutbound.Option)
-                {
-                    supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
-                    transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
-                    transformedResultList.Add(transformedResult);
-                }
+                throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
             }
             else
             {
-                foreach (var outboundResult in filteredOutbound.Option)
+                _settings = thirdPartySettings.Item3;
+                TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
+                LocationData tpLocations = GetThirdPartyLocations(location);
+                bool oneway = requests.Count == 1;
+                OptionInfoReply filteredOutbound = new();
+                OptionInfoReply filteredReturn = new();
+                OptionInfoReply deserializedResponse = new();
+                foreach (Request request in requests)
                 {
-                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
+                    if (!ResponseHasExceptions(request))
                     {
-                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
-                        transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                        deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                        if ((string)request.ExtraInfo == Constant.Outbound)
+                        {
+                            filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse);
+                        }
+                        if ((string)request.ExtraInfo != Constant.Outbound)
+                        {
+                            filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse);
+                        }
+                    }
+                }
+                string supplierReference;
+
+                TransformedTransferResult? transformedResult = null;
+                List<TransformedTransferResult> transformedResultList = new();
+                if (oneway)
+                {
+                    foreach (var outboundResult in filteredOutbound.Option)
+                    {
+                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
+                        transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
                 }
-            }
-            if (transformedResultList.Any())
-            {
-                TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
-            }
+                else
+                {
+                    foreach (var outboundResult in filteredOutbound.Option)
+                    {
+                        foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
+                        {
+                            supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
+                            transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                            transformedResultList.Add(transformedResult);
+                        }
+                    }
+                }
+                if (transformedResultList.Any())
+                {
+                    TransformedTransferResultCollection.TransformedResults.AddRange(transformedResultList);
+                }
 
-            return TransformedTransferResultCollection;
+                return TransformedTransferResultCollection;
+            }
         }
 
-        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
-        {
-            var transformedResult = new TransformedTransferResult()
+            private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
             {
-                TPSessionID = "",
-                SupplierReference = supplierReference,
-                TransferVehicle = comment,
-                ReturnTime = "12:00",
-                VehicleCost = 0,
-                AdultCost = 0,
-                ChildCost = 0,
-                CurrencyCode = currency,
-                VehicleQuantity = 1,
-                Cost = totalPrice,
-                BuyingChannelCost = 0,
-                OutboundInformation = "",
-                ReturnInformation = "",
-                OutboundCost = 0,
-                ReturnCost = 0,
-                OutboundXML = "",
-                ReturnXML = "",
-                OutboundTransferMinutes = 0,
-                ReturnTransferMinutes = 0,
-            };
+                var transformedResult = new TransformedTransferResult()
+                {
+                    TPSessionID = "",
+                    SupplierReference = supplierReference,
+                    TransferVehicle = comment,
+                    ReturnTime = "12:00",
+                    VehicleCost = 0,
+                    AdultCost = 0,
+                    ChildCost = 0,
+                    CurrencyCode = currency,
+                    VehicleQuantity = 1,
+                    Cost = totalPrice,
+                    BuyingChannelCost = 0,
+                    OutboundInformation = "",
+                    ReturnInformation = "",
+                    OutboundCost = 0,
+                    ReturnCost = 0,
+                    OutboundXML = "",
+                    ReturnXML = "",
+                    OutboundTransferMinutes = 0,
+                    ReturnTransferMinutes = 0,
+                };
 
-            return transformedResult;
-        }
-
-        #endregion
-
-        #region Private Functions
-        private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
-        {
-            var reference = outboundOpt + "-" + outboundRateId;
-            if (!string.IsNullOrEmpty(returnOpt))
-            {
-                reference += "|" + returnOpt + "-" + returnRateId;
-            }
-            return reference;
-        }
-
-        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
-        {
-            OptionInfoReply filterResult = new();
-            var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
-            if (result.Any())
-            {
-                filterResult.Option.AddRange(result);
-            }
-            return filterResult;
-        }
-
-        private bool filterDescription(string description, string departureName, string arrivalName)
-        {
-            bool result = false;
-            try
-            {
-                List<string> splitDescriptionLocation = SplitDescription(description);
-                result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, Constant.UnexpectedError);
+                return transformedResult;
             }
 
-            return result;
-        }
+            #endregion
 
-        private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
-        {
-            Request request = new Request();
-            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+            #region Private Functions
+            private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
             {
+                var reference = outboundOpt + "-" + outboundRateId;
+                if (!string.IsNullOrEmpty(returnOpt))
+                {
+                    reference += "|" + returnOpt + "-" + returnRateId;
+                }
+                return reference;
+            }
 
-                AgentID = _settings.AgentId(searchDetails),
-                Password = _settings.Password(searchDetails),
-                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
-                Info = Constant.Info,
-                Opt = tpLocations.LocationCode + Constant.TransferOptText,
-                RoomConfigs = new List<RoomConfiguration>()
+            private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse)
+            {
+                OptionInfoReply filterResult = new();
+                var result = deserializedResponse.Option.ToList().Where(x => filterDescription(x.OptGeneral.Description, departureName, arrivalName)).ToList();
+                if (result.Any())
+                {
+                    filterResult.Option.AddRange(result);
+                }
+                return filterResult;
+            }
+
+            private bool filterDescription(string description, string departureName, string arrivalName)
+            {
+                bool result = false;
+                try
+                {
+                    List<string> splitDescriptionLocation = SplitDescription(description);
+                    result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                }
+                catch (Exception ex)
+                {
+
+                    _logger.LogError(ex, Constant.UnexpectedError);
+                }
+
+                return result;
+            }
+
+            private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
+            {
+                Request request = new Request();
+                OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+                {
+
+                    AgentID = _settings.AgentId,
+                    Password = _settings.Password,
+                    DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
+                    Info = Constant.Info,
+                    Opt = tpLocations.LocationCode + Constant.TransferOptText,
+                    RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
                    Adults = searchDetails.Adults,
@@ -239,61 +264,61 @@
                    Infants = searchDetails.Children
                    }
                 }
-            };
+                };
 
-            request = GetXMLRequest(searchDetails);
-            var xmlDocument = Serialize(optionInfoRequest);
-            request.SetRequest(xmlDocument);
+                request = GetXMLRequest(searchDetails);
+                var xmlDocument = Serialize(optionInfoRequest);
+                request.SetRequest(xmlDocument);
 
-            return request;
-        }
-        private Request GetXMLRequest(TransferSearchDetails searchDetails)
-        {
-            return new Request()
+                return request;
+            }
+            private Request GetXMLRequest(TransferSearchDetails searchDetails)
             {
-                EndPoint = _settings.URL(searchDetails),
-                Method = RequestMethod.POST,
-                ContentType = ContentTypes.Text_xml
-
-            };
-        }
-
-        private XmlDocument Serialize(OptionInfoRequest request)
-        {
-            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
-            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
-            return xmlRequest;
-        }
-
-        private T DeSerialize<T>(XmlDocument xmlDocument) where T : class
-        {
-            var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
-            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
-            return _serializer.DeSerialize<T>(xmlResponse);
-        }
-        private List<string> SplitDescription(string description)
-        {
-            var list = new List<string>();
-
-            try
-            {
-                description = description.Replace(",", "");
-
-                var strings = description.Split(" to ");
-
-                if (strings.Length == 2)
+                return new Request()
                 {
-                    list.Add(strings[0]);
-                    list.Add(strings[1].Replace(" Transfer", ""));
-                }
+                    EndPoint = _settings.URL,
+                    Method = RequestMethod.POST,
+                    ContentType = ContentTypes.Text_xml
+
+                };
             }
-            catch
+
+            private XmlDocument Serialize(OptionInfoRequest request)
             {
+                var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
+                xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
+                return xmlRequest;
             }
 
-            return list;
-        }
-        #endregion
+            private T DeSerialize<T>(XmlDocument xmlDocument) where T : class
+            {
+                var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
+                xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
+                return _serializer.DeSerialize<T>(xmlResponse);
+            }
+            private List<string> SplitDescription(string description)
+            {
+                var list = new List<string>();
 
+                try
+                {
+                    description = description.Replace(",", "");
+
+                    var strings = description.Split(" to ");
+
+                    if (strings.Length == 2)
+                    {
+                        list.Add(strings[0]);
+                        list.Add(strings[1].Replace(" Transfer", ""));
+                    }
+                }
+                catch
+                {
+                }
+
+                return list;
+            }
+            #endregion
+
+        }
     }
-}

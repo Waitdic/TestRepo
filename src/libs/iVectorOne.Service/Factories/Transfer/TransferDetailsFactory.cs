@@ -68,6 +68,7 @@
                     Infants = transferToken.Infants,
                     //LocalCost = 123M, 
                     SupplierReference= request.SupplierReference,
+                    ThirdPartySettings= request.ThirdPartySettings
                 };
 
                 if (!transferDetails.OneWay)
@@ -177,6 +178,7 @@
                     LeadGuestMobile = leadCustomer.CustomerMobile,
                     LeadGuestEmail = leadCustomer.CustomerEmail,
                     LeadGuestPassportNumber = leadCustomer.PassportNumber,
+                    ThirdPartySettings = request.ThirdPartySettings
                 };
 
                 if (!transferDetails.OneWay)
@@ -213,6 +215,7 @@
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
                     TransferBookingID = transferToken.TransferBookingID,
+                    ThirdPartySettings = request.ThirdPartySettings
                 };
 
                 request.BookingID = transferToken.TransferBookingID;
@@ -244,6 +247,7 @@
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
                     TransferBookingID = transferToken.TransferBookingID,
+                    ThirdPartySettings = request.ThirdPartySettings
                 };
 
                 request.BookingID = transferToken.TransferBookingID;

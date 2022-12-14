@@ -2,9 +2,9 @@
 {
     public interface ITourPlanTransfersSettings
     {
-        string URL(IThirdPartyAttributeSearch tpAttributeSearch);
-        string AgentId(IThirdPartyAttributeSearch tpAttributeSearch);
-        string Password(IThirdPartyAttributeSearch tpAttributeSearch);
-        bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
+        public string URL { get; set; }
+        public string AgentId { get; set; }
+        public string Password { get; set; }
+        public bool AllowCancellation { get; set; }
     }
 }

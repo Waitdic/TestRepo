@@ -31,14 +31,13 @@
         public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
         public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
         public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");
+        public static readonly Warning ThirdPartySettingException = new Warning("ThirdPartySettingException", "The Third Party Setting: {0} must be provided.");
 
         public TourPlanTransfersBase(
-            ITourPlanTransfersSettings settings,
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
             ISerializer serializer)
         {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
@@ -49,59 +48,74 @@
             var requests = new List<Request>();
             try
             {
-                var supplierReferenceData = SplitSupplierReference(transferDetails);
-
-                var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
-
-                requests.Add(request);
-
-                await request.Send(_httpClient, _logger);
-
-                if (!ResponseHasError(transferDetails, request.ResponseXML, PrebookException))
+                if (transferDetails.ThirdPartySettings.Count == 0)
                 {
-                    var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, "AgentId"));
+                    return false;
+                }
+                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(transferDetails.ThirdPartySettings);
+                if (!thirdPartySettings.Item1)
+                {
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    return false;
+                }
+                else
+                {
+                    _settings = thirdPartySettings.Item3;
+                    var supplierReferenceData = SplitSupplierReference(transferDetails);
 
-                    if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
+                    var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
+
+                    requests.Add(request);
+
+                    await request.Send(_httpClient, _logger);
+
+                    if (!ResponseHasError(transferDetails, request.ResponseXML, PrebookException))
                     {
-                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
-                        transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
-                        transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
-                        AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
-                        AddCancellation(deserializedResponse, transferDetails, transferDetails.DepartureDate);
+                        var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
 
-                        if (!transferDetails.OneWay)
+                        if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
                         {
-                            var returnRequest = BuildOptionInfoRequest(transferDetails, supplierReferenceData.Last(), transferDetails.ReturnDate);
+                            transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
+                            transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
+                            transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+                            AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
+                            AddCancellation(deserializedResponse, transferDetails, transferDetails.DepartureDate);
 
-                            requests.Add(returnRequest);
-
-                            await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, PrebookException))
+                            if (!transferDetails.OneWay)
                             {
-                                var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
+                                var returnRequest = BuildOptionInfoRequest(transferDetails, supplierReferenceData.Last(), transferDetails.ReturnDate);
 
-                                if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
+                                requests.Add(returnRequest);
+
+                                await returnRequest.Send(_httpClient, _logger);
+                                if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, PrebookException))
                                 {
-                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
-                                    transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
-                                    AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
-                                    AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.ReturnDate);
-                                }
-                                else
-                                {
-                                    return false;
+                                    var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
+
+                                    if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
+                                    {
+                                        transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
+                                        transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                        AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
+                                        AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.ReturnDate);
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
                                 }
                             }
+                            if (transferDetails.Cancellations != null && transferDetails.Cancellations.Count > 0)
+                            {
+                                transferDetails.Cancellations.Solidify(SolidifyType.LatestStartDate, useMinutes: true);
+                            }
+                            return true;
                         }
-                        if (transferDetails.Cancellations != null && transferDetails.Cancellations.Count > 0)
+                        else
                         {
-                            transferDetails.Cancellations.Solidify(SolidifyType.LatestStartDate, useMinutes: true);
+                            return false;
                         }
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
                     }
                 }
                 return false;
@@ -131,44 +145,64 @@
             string refValue = string.Empty;
             try
             {
-                var supplierReferenceData = SplitSupplierReference(transferDetails);
-
-                var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
-                    transferDetails.DepartureDate, transferDetails.DepartureTime);
-
-                requests.Add(request);
-
-                await request.Send(_httpClient, _logger);
-
-                if (!ResponseHasError(transferDetails, request.ResponseXML, BookException))
+                if (transferDetails.ThirdPartySettings.Count == 0)
                 {
-                    var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, "AgentId"));
+                    return "failed";
+                }
+                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(transferDetails.ThirdPartySettings);
+                if (!thirdPartySettings.Item1)
+                {
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    return "failed";
+                }
+                else
+                {
+                    _settings = thirdPartySettings.Item3;
+                    var supplierReferenceData = SplitSupplierReference(transferDetails);
 
-                    if (deserializedResponse != null &&
-                        string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
+                    var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
+                        transferDetails.DepartureDate, transferDetails.DepartureTime);
+
+                    requests.Add(request);
+
+                    await request.Send(_httpClient, _logger);
+
+                    if (!ResponseHasError(transferDetails, request.ResponseXML, BookException))
                     {
-                        transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
-                        transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
-                        refValue = deserializedResponse.Ref;
+                        var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
 
-                        if (!transferDetails.OneWay)
+                        if (deserializedResponse != null &&
+                            string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
                         {
-                            var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
-                                                transferDetails.ReturnDate, transferDetails.ReturnTime);
+                            transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
+                            transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
+                            refValue = deserializedResponse.Ref;
 
-                            requests.Add(returnRequest);
-
-                            await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, BookException))
+                            if (!transferDetails.OneWay)
                             {
-                                var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
+                                var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
+                                                    transferDetails.ReturnDate, transferDetails.ReturnTime);
 
-                                if (deserializedReturnResponse != null &&
-                                    string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
+                                requests.Add(returnRequest);
+
+                                await returnRequest.Send(_httpClient, _logger);
+                                if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, BookException))
                                 {
-                                    transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
-                                    transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice;
-                                    refValue += $"|{deserializedReturnResponse.Ref}";
+                                    var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
+
+                                    if (deserializedReturnResponse != null &&
+                                        string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
+                                    {
+                                        transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
+                                        transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice;
+                                        refValue += $"|{deserializedReturnResponse.Ref}";
+                                    }
+                                    else
+                                    {
+                                        await CancelBookingAsync(transferDetails, refValue);
+                                        return "failed";
+                                    }
                                 }
                                 else
                                 {
@@ -176,17 +210,10 @@
                                     return "failed";
                                 }
                             }
-                            else
-                            {
-                                await CancelBookingAsync(transferDetails, refValue);
-                                return "failed";
-                            }
+                            return refValue;
                         }
-                        return refValue;
                     }
                 }
-
-
                 return "failed";
             }
             catch (ArgumentException ex)
@@ -231,53 +258,68 @@
             var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
             try
             {
-                string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
-                if (supplierReferenceData.Length == 0 ||
-                    supplierReferenceData.Length > 2)
+                if (transferDetails.ThirdPartySettings.Count == 0)
                 {
-                    throw new ArgumentException(InvalidSupplierReference);
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, "AgentId"));
+                    return tpCancellationResponse;
                 }
-
-                bool firstBookingCancelStatus = false, secondBookingCancelStatus = false;
-
-                var request = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[0]);
-                requests.Add(request);
-                await request.Send(_httpClient, _logger);
-
-                if (!ResponseHasError(transferDetails, request.ResponseXML, CancelException))
+                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(transferDetails.ThirdPartySettings);
+                if (!thirdPartySettings.Item1)
                 {
-                    var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
+                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    return tpCancellationResponse;
+                }
+                else
+                {
+                    _settings = thirdPartySettings.Item3;
 
-                    if (CancellationSuccessful(deserializedResponse))
+                    string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
+                    if (supplierReferenceData.Length == 0 ||
+                        supplierReferenceData.Length > 2)
                     {
-                        firstBookingCancelStatus = true;
+                        throw new ArgumentException(InvalidSupplierReference);
                     }
-                }
 
-                if (supplierReferenceData.Length > 1)
-                {
-                    var returnCancellationRequest = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[1]);
-                    requests.Add(returnCancellationRequest);
-                    await returnCancellationRequest.Send(_httpClient, _logger);
+                    bool firstBookingCancelStatus = false, secondBookingCancelStatus = false;
 
-                    if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, CancelException))
+                    var request = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[0]);
+                    requests.Add(request);
+                    await request.Send(_httpClient, _logger);
+
+                    if (!ResponseHasError(transferDetails, request.ResponseXML, CancelException))
                     {
-                        var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
+                        var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
 
-                        if (CancellationSuccessful(deserializedReturnCancellationResponse))
+                        if (CancellationSuccessful(deserializedResponse))
                         {
-                            secondBookingCancelStatus = true;
+                            firstBookingCancelStatus = true;
                         }
                     }
+
+                    if (supplierReferenceData.Length > 1)
+                    {
+                        var returnCancellationRequest = BuildCancellationRequestAsync(transferDetails, supplierReferenceData[1]);
+                        requests.Add(returnCancellationRequest);
+                        await returnCancellationRequest.Send(_httpClient, _logger);
+
+                        if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, CancelException))
+                        {
+                            var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
+
+                            if (CancellationSuccessful(deserializedReturnCancellationResponse))
+                            {
+                                secondBookingCancelStatus = true;
+                            }
+                        }
+                    }
+
+                    if (firstBookingCancelStatus && (supplierReferenceData.Length == 1 || secondBookingCancelStatus))
+                    {
+                        tpCancellationResponse.Success = true;
+                        tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
+
+                    }
                 }
-
-                if (firstBookingCancelStatus && (supplierReferenceData.Length == 1 || secondBookingCancelStatus))
-                {
-                    tpCancellationResponse.Success = true;
-                    tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
-
-                }
-
                 return tpCancellationResponse;
             }
             catch
@@ -301,7 +343,7 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.AllowCancellations(searchDetails);
+            return _settings.AllowCancellation;
         }
         private class SupplierReferenceData
         {
@@ -347,14 +389,14 @@
         {
             var cancellationData = new CancelServicesRequest
             {
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 Ref = supplierReference
             };
 
             var request = new Request
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
@@ -371,7 +413,7 @@
 
             var request = new Request()
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
@@ -385,8 +427,8 @@
         {
             var addServiceRequest = new AddServiceRequest()
             {
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 Opt = opt,
                 RateId = rateId,
                 ExistingBookingInfo = "",
@@ -461,8 +503,8 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,
                 Opt = supplierReferenceData.Opt,
@@ -478,7 +520,7 @@
 
             var request = new Request()
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
 

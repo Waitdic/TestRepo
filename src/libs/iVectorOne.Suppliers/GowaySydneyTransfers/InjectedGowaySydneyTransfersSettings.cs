@@ -1,11 +1,8 @@
 ﻿namespace iVectorOne.Suppliers.GowaySydneyTransfers
 {
     using iVectorOne.Constants;
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    public class InjectedGowaySydneyTransfersSettings : InjectedTourPlanTransfersSettings
+    public class InjectedGowaySydneyTransfersSettings 
     {
-        protected override string Source => ThirdParties.GOWAYSYDNEYTRANSFERS;
+        protected string Source => ThirdParties.GOWAYSYDNEYTRANSFERS;
     }
 }

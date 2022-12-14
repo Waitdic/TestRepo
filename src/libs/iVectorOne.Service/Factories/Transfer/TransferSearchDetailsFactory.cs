@@ -47,7 +47,8 @@
                     System = account.Environment.ToString(),
                     SearchDateAndTime = DateTime.Now,
                     //PropertiesRequested = searchRequest.Properties.Count
-                }
+                },
+                ThirdPartySettings = searchRequest.ThirdPartySettings
 
             };
 
