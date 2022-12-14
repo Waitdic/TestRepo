@@ -289,9 +289,9 @@
 
                     AgentID = _settings.AgentId,
                     Password = _settings.Password,
-                    DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
+                    DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                     Info = Constants.Info,
-                    Opt = tpLocations.LocationCode + Constant.TransferOptText,
+                    Opt = tpLocations.LocationCode + Constants.TransferOptText,
                     RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
