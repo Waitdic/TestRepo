@@ -3,11 +3,15 @@
 	@locations varchar(max)
 AS
 BEGIN
-    BEGIN TRY
-INSERT INTO IVOLocation(Source,Description,Payload) select @source, value, value FROM STRING_SPLIT(@locations,',')
-   SELECT 0
-    END TRY
-    BEGIN CATCH
-        SELECT -1
-    END CATCH
+
+	;with newLocations as (
+		select value as [Location]
+		from string_split(@locations,',')
+	)
+	
+	insert into IVOLocation(Source, [Description], Payload)
+	select @source, SUBSTRING([Location], 0, 30), [Location] 
+		from newLocations
+		where [Location] not in (select Payload from IVOLocation where Source = @source)
+	
 END
