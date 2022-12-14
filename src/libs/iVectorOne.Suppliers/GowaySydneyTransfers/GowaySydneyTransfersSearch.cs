@@ -17,12 +17,14 @@
         private readonly ISerializer _serializer;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ILocationManagerService _locationManagerService;
+        private readonly ITourPlanTransfersSettings _settings;
 
-        public GowaySydneyTransfersSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger, ILocationManagerService locationManagerService) : base(httpClient, serializer, logger, locationManagerService)
+        public GowaySydneyTransfersSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger, ILocationManagerService locationManagerService, ITourPlanTransfersSettings settings) : base(httpClient, serializer, logger, locationManagerService, settings)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
+            _settings = settings;
         }
     }
 }

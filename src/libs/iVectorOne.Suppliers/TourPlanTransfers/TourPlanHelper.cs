@@ -3,37 +3,32 @@
     using Intuitive.Helpers.Extensions;
     using System;
     using System.Collections.Generic;
+    using System.Data;
 
     public class TourPlanHelper
     {
-        public static Tuple<bool, string, ITourPlanTransfersSettings> SetThirdPartySettings(Dictionary<string, string> thirdPartySettings)
+        public static Tuple<bool, string> SetThirdPartySettings(ITourPlanTransfersSettings settings, Dictionary<string, string> thirdPartySettings)
         {
-            thirdPartySettings.TryGetValue("AgentId", out var agentId);
-            thirdPartySettings.TryGetValue("Password", out var password);
-            thirdPartySettings.TryGetValue("URL", out var url);
-            thirdPartySettings.TryGetValue("SupportsLiveCancellations", out var supportsLiveCancellations);
+            if(thirdPartySettings.Count == 0)
+            {
+                return new Tuple<bool, string>(false, nameof(ITourPlanTransfersSettings.AgentId));
+            }
+            if(!settings.SetAgentId(thirdPartySettings))
+            {
+                return new Tuple<bool, string>(false, nameof(ITourPlanTransfersSettings.AgentId));
+            }
+            if (!settings.SetPassword(thirdPartySettings))
+            {
+                return new Tuple<bool, string>(false, nameof(ITourPlanTransfersSettings.Password));
+            }
+            if (!settings.SetURL(thirdPartySettings))
+            {
+                return new Tuple<bool, string>(false, nameof(ITourPlanTransfersSettings.URL));
+            }
 
-            if (string.IsNullOrEmpty(agentId))
-            {
-                return new Tuple<bool, string, ITourPlanTransfersSettings>(false, "AgentId", null);
-            }
-            if (string.IsNullOrEmpty(password))
-            {
-                return new Tuple<bool, string, ITourPlanTransfersSettings>(false, "Password", null);
-            }
-            if (string.IsNullOrEmpty(url))
-            {
-                return new Tuple<bool, string, ITourPlanTransfersSettings>(false, "Url", null);
-            }
+            settings.SetAllowCancellation(thirdPartySettings);
 
-            var setting = new InjectedTourPlanTransfersSettings
-            {
-                URL = url,
-                Password = password,
-                AgentId = agentId,
-                AllowCancellation = supportsLiveCancellations.ToSafeBoolean()
-            };
-            return new Tuple<bool, string, ITourPlanTransfersSettings>(true, string.Empty, setting);
+            return new Tuple<bool, string>(true, string.Empty);
         }
     }
 }

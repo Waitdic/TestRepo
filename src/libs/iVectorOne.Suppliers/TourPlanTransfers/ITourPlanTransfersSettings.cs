@@ -1,10 +1,15 @@
 ﻿namespace iVectorOne.Suppliers
 {
+    using System.Collections.Generic;
     public interface ITourPlanTransfersSettings
     {
-        public string URL { get; set; }
-        public string AgentId { get; set; }
-        public string Password { get; set; }
-        public bool AllowCancellation { get; set; }
+        string URL { get; set; }
+        string AgentId { get; set; }
+        string Password { get; set; }
+        bool AllowCancellation { get; set; }
+        bool SetAgentId(Dictionary<string, string> thirdPartySettings);
+        bool SetURL(Dictionary<string, string> thirdPartySettings);
+        bool SetPassword(Dictionary<string, string> thirdPartySettings);
+        bool SetAllowCancellation(Dictionary<string, string> thirdPartySettings);
     }
 }

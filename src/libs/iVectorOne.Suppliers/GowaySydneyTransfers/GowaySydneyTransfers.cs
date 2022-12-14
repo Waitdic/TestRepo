@@ -15,15 +15,18 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
+        private readonly ITourPlanTransfersSettings _settings;
 
         public GowaySydneyTransfers(
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
-            ISerializer serializer) : base(httpClient, logger, serializer)
+            ISerializer serializer,
+            ITourPlanTransfersSettings settings) : base(httpClient, logger, serializer, settings)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _settings = Ensure.IsNotNull(settings, nameof(settings));
 
         }
     }

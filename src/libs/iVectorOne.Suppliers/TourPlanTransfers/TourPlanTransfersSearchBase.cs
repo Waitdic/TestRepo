@@ -22,7 +22,7 @@
     public abstract class TourPlanTransfersSearchBase : IThirdPartySearch, ISingleSource
     {
         #region Constructor
-        private ITourPlanTransfersSettings _settings;
+        private readonly ITourPlanTransfersSettings _settings;
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
@@ -34,15 +34,15 @@
             HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanTransfersSearchBase> logger,
-            ILocationManagerService locationManagerService
-
+            ILocationManagerService locationManagerService,
+            ITourPlanTransfersSettings settings
            )
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
-
+            _settings = Ensure.IsNotNull(settings, nameof(settings)); 
         }
         #endregion
 
@@ -53,32 +53,25 @@
         #region Public Functions
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            if (searchDetails.ThirdPartySettings.Count == 0)
-            {
-                throw new Exception(string.Format(ThirdPartySettingException, "AgentId"));
-            }
-            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(searchDetails.ThirdPartySettings);
+            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings, searchDetails.ThirdPartySettings);
             if (!thirdPartySettings.Item1)
             {
                 throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
             }
-            else
+            LocationData tpLocations = GetThirdPartyLocations(location);
+            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+            List<Request> requests = new List<Request>();
+            Outbound.ExtraInfo = Constants.Outbound;
+            requests.Add(Outbound);
+            if (!searchDetails.OneWay)
             {
-                _settings = thirdPartySettings.Item3;
-                LocationData tpLocations = GetThirdPartyLocations(location);
-                var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
-                List<Request> requests = new List<Request>();
-                Outbound.ExtraInfo = Constants.Outbound;
-                requests.Add(Outbound);
-                if (!searchDetails.OneWay)
-                {
-                    var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
-                    returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
-                    requests.Add(returnBuildOptionInfoRequest);
-                }
-
-                return Task.FromResult(requests);
+                var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
+                requests.Add(returnBuildOptionInfoRequest);
             }
+
+            return Task.FromResult(requests);
+
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
@@ -116,42 +109,35 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            if (searchDetails.ThirdPartySettings.Count == 0)
-            {
-                throw new Exception(string.Format(ThirdPartySettingException, "AgentId"));
-            }
-            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(searchDetails.ThirdPartySettings);
+            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings,searchDetails.ThirdPartySettings);
             if (!thirdPartySettings.Item1)
             {
                 throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
             }
-            else
+            TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
+            LocationData tpLocations = GetThirdPartyLocations(location);
+            bool oneway = requests.Count == 1;
+            OptionInfoReply filteredOutbound = new();
+            OptionInfoReply filteredReturn = new();
+            OptionInfoReply deserializedResponse = new();
+            List<string> uniqueLocationList = new();
+            foreach (Request request in requests)
             {
-                _settings = thirdPartySettings.Item3;
-                TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
-                LocationData tpLocations = GetThirdPartyLocations(location);
-                bool oneway = requests.Count == 1;
-                OptionInfoReply filteredOutbound = new();
-                OptionInfoReply filteredReturn = new();
-                OptionInfoReply deserializedResponse = new();
-                List<string> uniqueLocationList = new();
-                foreach (Request request in requests)
+                if (!ResponseHasExceptions(request))
                 {
-                    if (!ResponseHasExceptions(request))
-                    {
-                        deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                    deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
 
-                        if ((string)request.ExtraInfo == Constants.Outbound)
-                        {
-                            filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
-                        }
-                        if ((string)request.ExtraInfo != Constants.Outbound)
-                        {
-                            filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
-                        }
+                    if ((string)request.ExtraInfo == Constants.Outbound)
+                    {
+                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
+                    }
+                    if ((string)request.ExtraInfo != Constants.Outbound)
+                    {
+                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                     }
                 }
-                string supplierReference;
+            }
+            string supplierReference;
 
             TransformedTransferResult? transformedResult = null;
             List<TransformedTransferResult> transformedResultList = new();
@@ -185,50 +171,50 @@
                 _locationManagerService.CheckLocations(uniqueLocationList, searchDetails, tpLocations.LocationCode);
             }
 
-                return TransformedTransferResultCollection;
-            }
+            return TransformedTransferResultCollection;
+
         }
 
-            private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        {
+            var transformedResult = new TransformedTransferResult()
             {
-                var transformedResult = new TransformedTransferResult()
-                {
-                    TPSessionID = "",
-                    SupplierReference = supplierReference,
-                    TransferVehicle = comment,
-                    ReturnTime = "12:00",
-                    VehicleCost = 0,
-                    AdultCost = 0,
-                    ChildCost = 0,
-                    CurrencyCode = currency,
-                    VehicleQuantity = 1,
-                    Cost = totalPrice,
-                    BuyingChannelCost = 0,
-                    OutboundInformation = "",
-                    ReturnInformation = "",
-                    OutboundCost = 0,
-                    ReturnCost = 0,
-                    OutboundXML = "",
-                    ReturnXML = "",
-                    OutboundTransferMinutes = 0,
-                    ReturnTransferMinutes = 0,
-                };
+                TPSessionID = "",
+                SupplierReference = supplierReference,
+                TransferVehicle = comment,
+                ReturnTime = "12:00",
+                VehicleCost = 0,
+                AdultCost = 0,
+                ChildCost = 0,
+                CurrencyCode = currency,
+                VehicleQuantity = 1,
+                Cost = totalPrice,
+                BuyingChannelCost = 0,
+                OutboundInformation = "",
+                ReturnInformation = "",
+                OutboundCost = 0,
+                ReturnCost = 0,
+                OutboundXML = "",
+                ReturnXML = "",
+                OutboundTransferMinutes = 0,
+                ReturnTransferMinutes = 0,
+            };
 
-                return transformedResult;
-            }
+            return transformedResult;
+        }
 
-            #endregion
+        #endregion
 
-            #region Private Functions
-            private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
+        #region Private Functions
+        private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
+        {
+            var reference = outboundOpt + "-" + outboundRateId;
+            if (!string.IsNullOrEmpty(returnOpt))
             {
-                var reference = outboundOpt + "-" + outboundRateId;
-                if (!string.IsNullOrEmpty(returnOpt))
-                {
-                    reference += "|" + returnOpt + "-" + returnRateId;
-                }
-                return reference;
+                reference += "|" + returnOpt + "-" + returnRateId;
             }
+            return reference;
+        }
 
         private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
@@ -275,24 +261,24 @@
             catch (Exception ex)
             {
 
-                    _logger.LogError(ex, Constant.UnexpectedError);
-                }
-
-                return result;
+                _logger.LogError(ex, Constant.UnexpectedError);
             }
 
-            private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
-            {
-                Request request = new Request();
-                OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
-                {
+            return result;
+        }
 
-                    AgentID = _settings.AgentId,
-                    Password = _settings.Password,
-                    DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
-                    Info = Constants.Info,
-                    Opt = tpLocations.LocationCode + Constants.TransferOptText,
-                    RoomConfigs = new List<RoomConfiguration>()
+        private Request BuildOptionInfoRequest(TransferSearchDetails searchDetails, LocationData tpLocations, DateTime dateFrom)
+        {
+            Request request = new Request();
+            OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
+            {
+
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
+                DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
+                Info = Constants.Info,
+                Opt = tpLocations.LocationCode + Constants.TransferOptText,
+                RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
                    Adults = searchDetails.Adults,
@@ -300,61 +286,61 @@
                    Infants = searchDetails.Children
                    }
                 }
-                };
+            };
 
-                request = GetXMLRequest(searchDetails);
-                var xmlDocument = Serialize(optionInfoRequest);
-                request.SetRequest(xmlDocument);
+            request = GetXMLRequest(searchDetails);
+            var xmlDocument = Serialize(optionInfoRequest);
+            request.SetRequest(xmlDocument);
 
-                return request;
-            }
-            private Request GetXMLRequest(TransferSearchDetails searchDetails)
-            {
-                return new Request()
-                {
-                    EndPoint = _settings.URL,
-                    Method = RequestMethod.POST,
-                    ContentType = ContentTypes.Text_xml
-
-                };
-            }
-
-            private XmlDocument Serialize(OptionInfoRequest request)
-            {
-                var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
-                xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
-                return xmlRequest;
-            }
-
-            private T DeSerialize<T>(XmlDocument xmlDocument) where T : class
-            {
-                var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
-                xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
-                return _serializer.DeSerialize<T>(xmlResponse);
-            }
-            private List<string> SplitDescription(string description)
-            {
-                var list = new List<string>();
-
-                try
-                {
-                    description = description.Replace(",", "");
-
-                    var strings = description.Split(" to ");
-
-                    if (strings.Length == 2)
-                    {
-                        list.Add(strings[0]);
-                        list.Add(strings[1].Replace(" Transfer", ""));
-                    }
-                }
-                catch
-                {
-                }
-
-                return list;
-            }
-            #endregion
-
+            return request;
         }
+        private Request GetXMLRequest(TransferSearchDetails searchDetails)
+        {
+            return new Request()
+            {
+                EndPoint = _settings.URL,
+                Method = RequestMethod.POST,
+                ContentType = ContentTypes.Text_xml
+
+            };
+        }
+
+        private XmlDocument Serialize(OptionInfoRequest request)
+        {
+            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
+            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
+            return xmlRequest;
+        }
+
+        private T DeSerialize<T>(XmlDocument xmlDocument) where T : class
+        {
+            var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
+            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
+            return _serializer.DeSerialize<T>(xmlResponse);
+        }
+        private List<string> SplitDescription(string description)
+        {
+            var list = new List<string>();
+
+            try
+            {
+                description = description.Replace(",", "");
+
+                var strings = description.Split(" to ");
+
+                if (strings.Length == 2)
+                {
+                    list.Add(strings[0]);
+                    list.Add(strings[1].Replace(" Transfer", ""));
+                }
+            }
+            catch
+            {
+            }
+
+            return list;
+        }
+        #endregion
+
     }
+}

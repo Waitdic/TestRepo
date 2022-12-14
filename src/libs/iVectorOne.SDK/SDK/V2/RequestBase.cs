@@ -11,7 +11,5 @@
 
         [JsonIgnore]
         public int BookingID { get; set; }
-
-        public Dictionary<string, string> ThirdPartySettings { get; set; } = new Dictionary<string, string> { };
     }
 }

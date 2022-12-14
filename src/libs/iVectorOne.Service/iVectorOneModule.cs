@@ -226,6 +226,7 @@
             services.AddSingleton<IYouTravelSettings, InjectedYouTravelSettings>();
 
             services.AddSingleton<ITestTransferSupplierSettings, InjectedTestTransferSupplierSettings>();
+            services.AddSingleton<ITourPlanTransfersSettings, InjectedTourPlanTransfersSettings>();
         }
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)

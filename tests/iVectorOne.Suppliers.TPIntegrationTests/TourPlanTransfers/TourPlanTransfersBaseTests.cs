@@ -334,11 +334,30 @@
             ArrayList responseXML)
         {
             var mockHttpClient = SetupHttpClient(responseXML);
+            var mockITourPlanTransfersSettings = new Mock<ITourPlanTransfersSettings>();
+
+            mockITourPlanTransfersSettings.Setup(x => x.SetURL(transferDetails.ThirdPartySettings))
+                .Returns(true);
+
+            mockITourPlanTransfersSettings.Setup(x => x.SetAgentId(transferDetails.ThirdPartySettings))
+                .Returns(true);
+
+            mockITourPlanTransfersSettings.Setup(x => x.SetPassword(transferDetails.ThirdPartySettings))
+                .Returns(true);
+
+            mockITourPlanTransfersSettings.Setup(x => x.URL)
+                .Returns("https://www.testgoway.com");
+
+            mockITourPlanTransfersSettings.Setup(x => x.AgentId)
+                .Returns("TestAgentId");
+
+            mockITourPlanTransfersSettings.Setup(x => x.Password)
+                .Returns("TestPassword");
 
             var mockLogger = new Mock<ILogger<TourPlanTransfersSearchBase>>();
 
             return new GowaySydneyTransfers.GowaySydneyTransfers(mockHttpClient,
-               mockLogger.Object, _serializer);
+               mockLogger.Object, _serializer, mockITourPlanTransfersSettings.Object);
         }
         private HttpClient SetupHttpClient(ArrayList responseXML)
         {
