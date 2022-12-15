@@ -19,7 +19,7 @@
             RuleFor(x => x.Adults + x.Children).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.NoAdultsOrChildrenSpecified);
             RuleFor(x => x.Adults).LessThanOrEqualTo(15).WithMessage(WarningMessages.Only15AdultsAllowedTransfer);
             RuleFor(x => x.Children).LessThanOrEqualTo(8).WithMessage(WarningMessages.Only8ChildrenAllowedTransfer);
-            RuleFor(x => x.Children).Equal(x => x.ChildAges.Count).WithMessage(WarningMessages.InvalidChildCount);
+            RuleFor(x => x.Children).Equal(x => x.ChildAges.Count).WithMessage(WarningMessages.ChildAgesDontMatchChildren);
             RuleFor(x => x.Infants).LessThanOrEqualTo(7).WithMessage(WarningMessages.Only7InfantsAllowedTransfer);
             RuleFor(x => x.ReturnTime).NotEmpty().When(x => x.OneWay == false).WithMessage(WarningMessages.ReturnTimeSpecified);
             RuleFor(x => x.ReturnTime).Empty().When(x => x.OneWay == true).WithMessage(WarningMessages.ReturnTimeNotSpecified);
