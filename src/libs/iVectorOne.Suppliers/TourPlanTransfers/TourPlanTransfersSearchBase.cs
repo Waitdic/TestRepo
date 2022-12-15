@@ -50,12 +50,18 @@
         #endregion
 
         #region Public Functions
-        public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
+        public bool ValidateSettings(TransferSearchDetails searchDetails)
         {
             if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
             {
-                throw new Exception(_settings.GetWarnings()[0].Text);
+                searchDetails.Warnings.AddRange(_settings.GetWarnings());
+                return false;
             }
+            return true;
+        }
+
+        public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
+        {
             LocationData tpLocations = GetThirdPartyLocations(location);
             var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
@@ -107,10 +113,6 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
-            {
-                throw new Exception(_settings.GetWarnings()[0].Text);
-            }
             TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
             LocationData tpLocations = GetThirdPartyLocations(location);
             bool oneway = requests.Count == 1;

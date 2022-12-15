@@ -85,10 +85,14 @@
                     if (thirdParty != null)
                     {
                         bookDateAndTime = DateTime.Now;
-                        var supplierReference = await thirdParty.BookAsync(transferDetails);
-                        transferDetails.SupplierReference = supplierReference;
-                        success = supplierReference.ToLower() != "failed";
 
+                        requestValid = thirdParty.ValidateSettings(transferDetails);
+                        if (requestValid)
+                        {
+                            var supplierReference = await thirdParty.BookAsync(transferDetails);
+                            transferDetails.SupplierReference = supplierReference;
+                            success = supplierReference.ToLower() != "failed";
+                        }
                         if (success)
                         {
                             response = _responseFactory.Create(transferDetails);

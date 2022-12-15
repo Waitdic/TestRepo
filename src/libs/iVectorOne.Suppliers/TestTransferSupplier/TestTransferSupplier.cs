@@ -87,5 +87,10 @@
         {
             throw new System.NotImplementedException();
         }
+
+        public bool ValidateSettings(TransferDetails transferDetails)
+        {
+            return true;
+        }
     }
 }

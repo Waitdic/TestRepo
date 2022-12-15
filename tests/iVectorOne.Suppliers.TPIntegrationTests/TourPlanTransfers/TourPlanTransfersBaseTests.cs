@@ -10,6 +10,7 @@
     using Moq;
     using Moq.Protected;
     using MoreLinq;
+    using System;
     using System.Collections;
     using System.Net;
 
@@ -47,6 +48,7 @@
                 }
             };
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
+            goWayService.ValidateSettings(transferDetails);
 
             // Act
             var bookingStatus = await goWayService.BookAsync(transferDetails);
@@ -102,7 +104,7 @@
 
             // Act
             var bookingStatus = GetBookingStatusAsync(transferDetails, serviceReply);
-
+           
             //Assert
             _mockHttp.Protected().Verify("SendAsync",
             Times.Exactly(2),
@@ -329,7 +331,8 @@
         private async Task<ThirdPartyCancellationResponse> GetCancellationStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
         {
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
-
+            goWayService.ValidateSettings(transferDetails);
+            
             return await goWayService.CancelBookingAsync(transferDetails);
         }
 
@@ -547,6 +550,7 @@
         private async Task<bool> GetPreBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
         {
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
+            goWayService.ValidateSettings(transferDetails);
 
             return await goWayService.PreBookAsync(transferDetails);
         }

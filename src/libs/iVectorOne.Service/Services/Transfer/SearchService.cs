@@ -75,7 +75,7 @@
             var locationMapping = new LocationMapping();
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
-
+            Response response;
             try
             {
                 var searchDetails = _searchDetailsFactory.Create(searchRequest, searchRequest.Account, log);
@@ -85,13 +85,22 @@
 
                 var thirdPartySearch = _thirdPartyFactory.CreateSearchTPFromSupplier(searchDetails.Source);
 
-                if (thirdPartySearch != null 
-                    && !thirdPartySearch.SearchRestrictions(searchDetails) 
+                if (thirdPartySearch != null
+                    && !thirdPartySearch.SearchRestrictions(searchDetails)
                     && AccountHasSupplier(searchRequest))
                 {
                     searchDetails.Source = (thirdPartySearch as ISingleSource)!.Source;
 
                     locationMapping = await _locationMappingFactory.CreateAsync(searchDetails, searchRequest.Account);
+
+                    if (!thirdPartySearch.ValidateSettings(searchDetails))
+                    {
+                        response = new Response()
+                        {
+                            Warnings = searchDetails.Warnings.Select(w => $"{w.Title}, {w.Text}").ToList()
+                        };
+                        return response;
+                    }
 
                     taskList.Add(
                         _searchRunner.SearchAsync(
@@ -105,8 +114,7 @@
 
                 stopwatch.Restart();
 
-                var response =
-                    await _transferSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
+                response = await _transferSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
 
                 searchStoreItem.PostProcessTime += (int)stopwatch.ElapsedMilliseconds;
                 searchStoreItem.ResultsReturned = response.TransferResults.Count;

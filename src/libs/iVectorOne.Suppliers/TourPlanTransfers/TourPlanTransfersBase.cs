@@ -43,16 +43,21 @@
             _settings = new InjectedTourPlanTransfersSettings();
         }
 
+        public bool ValidateSettings(TransferDetails transferDetails)
+        {
+            if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
+            {
+                transferDetails.Warnings.AddRange(_settings.GetWarnings());
+                return false;
+            }
+            return true;
+        }
+
         public async Task<bool> PreBookAsync(TransferDetails transferDetails)
         {
             var requests = new List<Request>();
             try
             {
-                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
-                {
-                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
-                    return false;
-                }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
@@ -139,11 +144,6 @@
             string refValue = string.Empty;
             try
             {
-                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
-                {
-                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
-                    return "failed";
-                }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
@@ -242,11 +242,6 @@
             var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
             try
             {
-                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
-                {
-                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
-                    return tpCancellationResponse;
-                }
                 string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
                 if (supplierReferenceData.Length == 0 ||
                     supplierReferenceData.Length > 2)

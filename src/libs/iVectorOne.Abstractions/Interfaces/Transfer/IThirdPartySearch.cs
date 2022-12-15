@@ -44,5 +44,12 @@
         /// <param name="request">The request.</param>
         /// <returns>a boolean if the response has an exception</returns>
         bool ResponseHasExceptions(Request request);
+
+        /// <summary>
+        /// Validate the third party Settings.
+        /// </summary>
+        /// <param name="transferDetails">The transfer search details.</param>
+        /// <returns>boolean representing if the setting are present or not.</returns>
+        bool ValidateSettings(TransferSearchDetails searchDetails);
     }
 }
