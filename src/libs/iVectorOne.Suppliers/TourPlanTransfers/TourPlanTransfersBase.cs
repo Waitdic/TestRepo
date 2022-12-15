@@ -94,12 +94,16 @@
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
                                     transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                     AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
-                                    AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.ReturnDate);
+                                    AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.DepartureDate);
                                 }
                                 else
                                 {
                                     return false;
                                 }
+                            }
+                            else
+                            {
+                                return false;
                             }
                         }
                         if (transferDetails.Cancellations != null && transferDetails.Cancellations.Count > 0)
@@ -448,6 +452,11 @@
                     warning.Text : errorResponseObj.Error);
                 return true;
             }
+            else if (responseXML.OuterXml.Contains("<Error>"))
+            {
+                transferDetails.Warnings.AddNew(warning.Title, warning.Text);
+                return true;
+            }
             return false;
         }
 
@@ -548,20 +557,24 @@
                 var timeUnit = cancelPenalty.Deadline.OffsetTimeUnit;
                 var timeValue = cancelPenalty.Deadline.OffsetUnitMultiplier;
                 var linePrice = cancelPenalty.LinePrice;
-
+                DateTime deadlineDateTime = DateTime.MinValue;
                 if (linePrice != null)
                 {
                     decimal amount = decimal.Parse(linePrice) / 100m;
 
                     if (deadlineDate != null)
                     {
-                        var deadlineDateTime = DateTime.Parse(deadlineDate);
-                        cancellations.AddNew(deadlineDateTime, departureDate, amount);
+                        deadlineDateTime = DateTime.Parse(deadlineDate);
                     }
                     else if (timeUnit != null && timeValue != null)
                     {
                         TimeSpan timeOffset = GetCancellationOffset(timeUnit, timeValue);
-                        cancellations.AddNew(departureDate.Add(timeOffset), departureDate, amount);
+                        deadlineDateTime = departureDate.Add(timeOffset);
+                    }
+
+                    if (deadlineDateTime != DateTime.MinValue && deadlineDateTime < departureDate)
+                    {
+                        cancellations.AddNew(deadlineDateTime, departureDate, amount);
                     }
                 }
             }
