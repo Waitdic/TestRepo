@@ -159,8 +159,14 @@
 
                     if (thirdParty != null)
                     {
-                        var cancellationFees = await thirdParty.GetCancellationCostAsync(transferDetails);
-                        success = !transferDetails.Warnings.Any();
+                        requestValid = thirdParty.ValidateSettings(transferDetails);
+
+                        ThirdPartyCancellationFeeResult cancellationFees = new ThirdPartyCancellationFeeResult();
+                        if (requestValid)
+                        {
+                            cancellationFees = await thirdParty.GetCancellationCostAsync(transferDetails);
+                            success = !transferDetails.Warnings.Any();
+                        }
 
                         if (success)
                         {
