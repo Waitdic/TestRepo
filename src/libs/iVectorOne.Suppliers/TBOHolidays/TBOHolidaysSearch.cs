@@ -200,6 +200,7 @@
                                 TPReference = tpReference,
                                 MinimumPrice = room.RecommendedSellingRate,
                                 Cancellations = cancellationList,
+                                NonRefundableRates = !room.IsRefundable,
                                 Adjustments = room.RoomPromotion
                                     .Select(s => new TransformedResultAdjustment(
                                         AdjustmentType.Offer,
