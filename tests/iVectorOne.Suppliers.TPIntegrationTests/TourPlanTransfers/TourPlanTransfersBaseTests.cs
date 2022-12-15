@@ -39,6 +39,12 @@
             {
                 OneWay = oneWay,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
 
@@ -64,6 +70,12 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
 
             var bookingIDs = bookingId.Split('|');
@@ -112,6 +124,12 @@
             {
                 OneWay = true,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
 
             ArrayList serviceReply = new();
@@ -149,6 +167,12 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
 
             var bookingIDs = bookingId.Split('|');
@@ -223,6 +247,12 @@
             {
                 OneWay = true,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
 
             ArrayList serviceReply = new()
@@ -261,6 +291,12 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                }
             };
 
             ArrayList serviceReply = new()
@@ -551,21 +587,11 @@
         private TourPlanTransfersBase SetupGoWaySydneyTransfersService(TransferDetails transferDetails,
             ArrayList responseXML)
         {
-            var mockITourPlanTransfersSettings = new Mock<ITourPlanTransfersSettings>();
             var mockHttpClient = SetupHttpClient(responseXML);
 
             var mockLogger = new Mock<ILogger<TourPlanTransfersSearchBase>>();
 
-            mockITourPlanTransfersSettings.Setup(x => x.URL(transferDetails))
-                .Returns("https://www.testgoway.com");
-
-            mockITourPlanTransfersSettings.Setup(x => x.AgentId(transferDetails))
-                .Returns("testAgentId");
-
-            mockITourPlanTransfersSettings.Setup(x => x.Password(transferDetails))
-                .Returns("testPassword");
-
-            return new GowaySydneyTransfers.GowaySydneyTransfers(mockITourPlanTransfersSettings.Object, mockHttpClient,
+            return new GowaySydneyTransfers.GowaySydneyTransfers(mockHttpClient,
                mockLogger.Object, _serializer);
         }
         private HttpClient SetupHttpClient(ArrayList responseXML)

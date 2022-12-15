@@ -22,27 +22,26 @@
     public abstract class TourPlanTransfersSearchBase : IThirdPartySearch, ISingleSource
     {
         #region Constructor
-        private ITourPlanTransfersSettings _settings;
+        private readonly ITourPlanTransfersSettings _settings;
 
         private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
         private readonly ILocationManagerService _locationManagerService;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
+        public static readonly string ThirdPartySettingException = "The Third Party Setting: {0} must be provided.";
+
         public TourPlanTransfersSearchBase(
-            ITourPlanTransfersSettings settings,
             HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanTransfersSearchBase> logger,
             ILocationManagerService locationManagerService
-
            )
         {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
-
+            _settings = new InjectedTourPlanTransfersSettings();
         }
         #endregion
 
@@ -53,6 +52,10 @@
         #region Public Functions
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
+            if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
+            {
+                throw new Exception(_settings.GetWarnings()[0].Text);
+            }
             LocationData tpLocations = GetThirdPartyLocations(location);
             var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
@@ -66,6 +69,7 @@
             }
 
             return Task.FromResult(requests);
+
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
@@ -103,6 +107,10 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
+            if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
+            {
+                throw new Exception(_settings.GetWarnings()[0].Text);
+            }
             TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
             LocationData tpLocations = GetThirdPartyLocations(location);
             bool oneway = requests.Count == 1;
@@ -161,7 +169,8 @@
             }
 
             return TransformedTransferResultCollection;
-        }  
+
+        }
 
         private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
         {
@@ -231,8 +240,6 @@
             {
                 filterResult.Option.AddRange(result);
             }
-
-
             return filterResult;
         }
 
@@ -263,8 +270,8 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId(searchDetails),
-                Password = _settings.Password(searchDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                 Info = Constants.Info,
                 Opt = tpLocations.LocationCode + Constants.TransferOptText,
@@ -288,7 +295,7 @@
         {
             return new Request()
             {
-                EndPoint = _settings.URL(searchDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
 

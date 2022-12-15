@@ -7,7 +7,7 @@
     /// <summary>
     /// A transfer search request
     /// </summary>
-    public record Request : RequestBase, IRequest<Response>
+    public record Request : TransferRequestBase, IRequest<Response>
     {
         /// <summary>
         /// Gets or sets the departure location identifier.

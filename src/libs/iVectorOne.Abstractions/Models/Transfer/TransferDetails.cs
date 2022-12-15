@@ -261,6 +261,11 @@
         //public int BookingID { get; set; }
 
         /// <summary>
+        /// Gets or sets the third party settings
+        /// </summary>
+        public Dictionary<string, string> ThirdPartySettings { get; set; } = new Dictionary<string, string> { };
+
+        /// <summary>
         /// Adds the log.
         /// </summary>
         /// <param name="title">The title.</param>

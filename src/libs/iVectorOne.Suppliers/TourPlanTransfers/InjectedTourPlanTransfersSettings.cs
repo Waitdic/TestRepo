@@ -1,30 +1,54 @@
 ﻿namespace iVectorOne.Suppliers
 {
     using Intuitive.Helpers.Extensions;
-    using iVectorOne;
-    using iVectorOne.Constants;
-    using iVectorOne.Support;
+    using iVectorOne.Models;
+    using System.Collections.Generic;
 
-    public abstract class InjectedTourPlanTransfersSettings : SettingsBase, ITourPlanTransfersSettings
+    public class InjectedTourPlanTransfersSettings : ITourPlanTransfersSettings
     {
-        public string URL(IThirdPartyAttributeSearch tpAttributeSearch)
+        public string URL { get; set; }
+        public string AgentId { get; set; }
+        public string Password { get; set; }
+        public bool AllowCancellation { get; set; }
+
+        private Warnings Warnings;
+        private readonly Warning ThirdPartySettingException = new Warning("ThirdPartySettingException", "The Third Party Setting: {0} must be provided.");
+
+        public bool SetThirdPartySettings(Dictionary<string, string> thirdPartySettings)
         {
-            return Get_Value("URL", tpAttributeSearch);
+            AgentId = GetValue("AgentId", thirdPartySettings);
+            Password = GetValue("Password", thirdPartySettings);
+            URL = GetValue("URL", thirdPartySettings);
+            AllowCancellation = GetValue("SupportsLiveCancellations", thirdPartySettings).ToSafeBoolean();
+            return Validate();
         }
 
-        public string AgentId(IThirdPartyAttributeSearch tpAttributeSearch)
+        public Warnings GetWarnings()
         {
-            return Get_Value("AgentID", tpAttributeSearch);
+            return Warnings;
         }
 
-        public string Password(IThirdPartyAttributeSearch tpAttributeSearch)
+        private bool Validate()
         {
-            return Get_Value("Password", tpAttributeSearch);
+            Warnings = new();
+            if (string.IsNullOrEmpty(AgentId))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(AgentId)));
+
+            if (string.IsNullOrEmpty(Password))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(Password)));
+
+            if (string.IsNullOrEmpty(URL))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(URL)));
+
+            if (Warnings.Count > 0)
+                return false;
+            return true;
         }
 
-        public bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch)
+        private string GetValue(string key, Dictionary<string, string> thirdPartySettings)
         {
-            return Get_Value("SupportsLiveCancellations", tpAttributeSearch).ToSafeBoolean();
+            thirdPartySettings.TryGetValue(key, out var value);
+            return value;
         }
     }
 }

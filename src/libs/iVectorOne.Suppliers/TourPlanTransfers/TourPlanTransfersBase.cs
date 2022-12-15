@@ -21,7 +21,7 @@
     {
         public abstract string Source { get; }
 
-        private ITourPlanTransfersSettings _settings;
+        private readonly ITourPlanTransfersSettings _settings;
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
@@ -33,15 +33,14 @@
         public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");
 
         public TourPlanTransfersBase(
-            ITourPlanTransfersSettings settings,
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
             ISerializer serializer)
         {
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _settings = new InjectedTourPlanTransfersSettings();
         }
 
         public async Task<bool> PreBookAsync(TransferDetails transferDetails)
@@ -49,6 +48,11 @@
             var requests = new List<Request>();
             try
             {
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
+                {
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
+                    return false;
+                }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = BuildOptionInfoRequest(transferDetails, supplierReferenceData.First(), transferDetails.DepartureDate);
@@ -135,6 +139,11 @@
             string refValue = string.Empty;
             try
             {
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
+                {
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
+                    return "failed";
+                }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
@@ -189,8 +198,6 @@
                         return refValue;
                     }
                 }
-
-
                 return "failed";
             }
             catch (ArgumentException ex)
@@ -235,6 +242,11 @@
             var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
             try
             {
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
+                {
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
+                    return tpCancellationResponse;
+                }
                 string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
                 if (supplierReferenceData.Length == 0 ||
                     supplierReferenceData.Length > 2)
@@ -279,9 +291,7 @@
                 {
                     tpCancellationResponse.Success = true;
                     tpCancellationResponse.TPCancellationReference = transferDetails.SupplierReference;
-
                 }
-
                 return tpCancellationResponse;
             }
             catch
@@ -305,7 +315,7 @@
 
         public bool SupportsLiveCancellation(IThirdPartyAttributeSearch searchDetails, string source)
         {
-            return _settings.AllowCancellations(searchDetails);
+            return _settings.AllowCancellation;
         }
         private class SupplierReferenceData
         {
@@ -351,14 +361,14 @@
         {
             var cancellationData = new CancelServicesRequest
             {
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 Ref = supplierReference
             };
 
             var request = new Request
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
@@ -375,7 +385,7 @@
 
             var request = new Request()
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
@@ -389,8 +399,8 @@
         {
             var addServiceRequest = new AddServiceRequest()
             {
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 Opt = opt,
                 RateId = rateId,
                 ExistingBookingInfo = "",
@@ -470,8 +480,8 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId(transferDetails),
-                Password = _settings.Password(transferDetails),
+                AgentID = _settings.AgentId,
+                Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,
                 Opt = supplierReferenceData.Opt,
@@ -487,7 +497,7 @@
 
             var request = new Request()
             {
-                EndPoint = _settings.URL(transferDetails),
+                EndPoint = _settings.URL,
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
 

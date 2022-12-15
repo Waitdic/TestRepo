@@ -232,5 +232,10 @@
         /// Gets or sets the transfer search store item
         /// </summary>
         public TransferSearchStoreItem SearchStoreItem { get; set; } = new() { TransferSearchStoreId = Guid.NewGuid() };
+
+        /// <summary>
+        /// Gets or sets the third party settings
+        /// </summary>
+        public Dictionary<string, string> ThirdPartySettings { get; set; } = new Dictionary<string, string> { };
     }
 }
