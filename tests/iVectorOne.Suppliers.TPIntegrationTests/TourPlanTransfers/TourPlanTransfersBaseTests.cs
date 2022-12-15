@@ -40,12 +40,7 @@
             {
                 OneWay = oneWay,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
+
             };
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, new ArrayList());
             goWayService.ValidateSettings(transferDetails);
@@ -72,12 +67,6 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
             };
 
             var bookingIDs = bookingId.Split('|');
@@ -113,7 +102,7 @@
 
             Assert.Equal(bookingRef, await bookingStatus);
             Assert.Equal(bookingId, transferDetails.ConfirmationReference);
-            Assert.Equal(linePrice * 2, transferDetails.LocalCost);
+            Assert.Equal(linePrice.DivideBy100M() * 2, transferDetails.LocalCost);
         }
 
         [Theory]
@@ -126,12 +115,7 @@
             {
                 OneWay = true,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
+
             };
 
             ArrayList serviceReply = new();
@@ -156,7 +140,7 @@
 
             Assert.Equal(bookingRef, await bookingStatus);
             Assert.Equal(bookingId, transferDetails.ConfirmationReference);
-            Assert.Equal(linePrice, transferDetails.LocalCost);
+            Assert.Equal(linePrice.DivideBy100M(), transferDetails.LocalCost);
         }
 
         [Theory]
@@ -169,12 +153,7 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
+
             };
 
             var bookingIDs = bookingId.Split('|');
@@ -249,12 +228,7 @@
             {
                 OneWay = true,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
+
             };
 
             ArrayList serviceReply = new()
@@ -293,12 +267,7 @@
             {
                 OneWay = false,
                 SupplierReference = supplierReference,
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
-                    { "Password", "TestPassword" }
-                }
+
             };
 
             ArrayList serviceReply = new()
@@ -591,6 +560,13 @@
         private TourPlanTransfersBase SetupGoWaySydneyTransfersService(TransferDetails transferDetails,
             ArrayList responseXML)
         {
+            transferDetails.ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", "https://www.testgoway.com" },
+                    { "AgentId", "TestAgentId"},
+                    { "Password", "TestPassword" }
+                };
+
             var mockHttpClient = SetupHttpClient(responseXML);
 
             var mockLogger = new Mock<ILogger<TourPlanTransfersSearchBase>>();

@@ -124,7 +124,7 @@
             {
                 if (!ResponseHasExceptions(request))
                 {
-                    deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                    deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
 
                     if ((string)request.ExtraInfo == Constants.Outbound)
                     {
@@ -144,7 +144,7 @@
             {
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
-                    supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
+                    supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
                     transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
                     transformedResultList.Add(transformedResult);
                 }
@@ -155,7 +155,7 @@
                 {
                     foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
                     {
-                        supplierReference = CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
+                        supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
                         transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
@@ -205,16 +205,6 @@
         #endregion
 
         #region Private Functions
-        private string CreateSupplierReference(string outboundOpt, string outboundRateId, string returnOpt, string returnRateId)
-        {
-            var reference = outboundOpt + "-" + outboundRateId;
-            if (!string.IsNullOrEmpty(returnOpt))
-            {
-                reference += "|" + returnOpt + "-" + returnRateId;
-            }
-            return reference;
-        }
-
         private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
@@ -288,7 +278,7 @@
             };
 
             request = GetXMLRequest(searchDetails);
-            var xmlDocument = Serialize(optionInfoRequest);
+            var xmlDocument = Helpers.Serialize(optionInfoRequest, _serializer);
             request.SetRequest(xmlDocument);
 
             return request;
@@ -302,20 +292,6 @@
                 ContentType = ContentTypes.Text_xml
 
             };
-        }
-
-        private XmlDocument Serialize(OptionInfoRequest request)
-        {
-            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
-            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
-            return xmlRequest;
-        }
-
-        private T DeSerialize<T>(XmlDocument xmlDocument) where T : class
-        {
-            var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
-            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
-            return _serializer.DeSerialize<T>(xmlResponse);
         }
         private List<string> SplitDescription(string description)
         {
