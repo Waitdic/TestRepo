@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Suppliers
 {
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Models;
     using System.Collections.Generic;
 
     public class InjectedTourPlanTransfersSettings : ITourPlanTransfersSettings
@@ -10,54 +11,44 @@
         public string Password { get; set; }
         public bool AllowCancellation { get; set; }
 
-        public bool SetAgentId(Dictionary<string, string> thirdPartySettings)
+        private Warnings Warnings;
+        private readonly Warning ThirdPartySettingException = new Warning("ThirdPartySettingException", "The Third Party Setting: {0} must be provided.");
+
+        public bool SetThirdPartySettings(Dictionary<string, string> thirdPartySettings)
         {
-            if (GetValue("AgentId", thirdPartySettings,out var value))
-            {
-                AgentId = value;
-                return true;
-            }
-            return false;
+            AgentId = GetValue("AgentId", thirdPartySettings);
+            Password = GetValue("Password", thirdPartySettings);
+            URL = GetValue("URL", thirdPartySettings);
+            AllowCancellation = GetValue("SupportsLiveCancellations", thirdPartySettings).ToSafeBoolean();
+            return Validate();
         }
 
-        public bool SetURL(Dictionary<string, string> thirdPartySettings)
+        public Warnings GetWarnings()
         {
-            if (GetValue("URL", thirdPartySettings, out var value))
-            {
-                URL = value;
-                return true;
-            }
-            return false;
+            return Warnings;
         }
 
-        public bool SetPassword(Dictionary<string, string> thirdPartySettings)
+        private bool Validate()
         {
-            if (GetValue("Password", thirdPartySettings, out var value))
-            {
-                Password = value;
-                return true;
-            }
-            return false;
+            Warnings = new();
+            if (string.IsNullOrEmpty(AgentId))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(AgentId)));
+
+            if (string.IsNullOrEmpty(Password))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(Password)));
+
+            if (string.IsNullOrEmpty(URL))
+                Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, nameof(URL)));
+
+            if (Warnings.Count > 0)
+                return false;
+            return true;
         }
 
-        public bool SetAllowCancellation(Dictionary<string, string> thirdPartySettings)
+        private string GetValue(string key, Dictionary<string, string> thirdPartySettings)
         {
-            if (GetValue("SupportsLiveCancellations", thirdPartySettings, out var value))
-            {
-                AllowCancellation = value.ToSafeBoolean();
-                return true;
-            }
-            return false;
-        }
-
-        private bool GetValue(string key, Dictionary<string, string> thirdPartySettings, out string value)
-        {
-            thirdPartySettings.TryGetValue(key, out value);
-            if(!string.IsNullOrEmpty(value))
-            {
-                return true;
-            }
-            return false;
+            thirdPartySettings.TryGetValue(key, out var value);
+            return value;
         }
     }
 }

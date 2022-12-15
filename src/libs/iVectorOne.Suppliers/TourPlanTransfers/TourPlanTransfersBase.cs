@@ -31,18 +31,16 @@
         public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
         public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
         public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");
-        public static readonly Warning ThirdPartySettingException = new Warning("ThirdPartySettingException", "The Third Party Setting: {0} must be provided.");
 
         public TourPlanTransfersBase(
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
-            ISerializer serializer,
-            ITourPlanTransfersSettings settings)
+            ISerializer serializer)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
-            _settings = Ensure.IsNotNull(settings, nameof(settings));
+            _settings = new InjectedTourPlanTransfersSettings();
         }
 
         public async Task<bool> PreBookAsync(TransferDetails transferDetails)
@@ -50,10 +48,9 @@
             var requests = new List<Request>();
             try
             {
-                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings,transferDetails.ThirdPartySettings);
-                if (!thirdPartySettings.Item1)
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
                 {
-                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
                     return false;
                 }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
@@ -138,10 +135,9 @@
             string refValue = string.Empty;
             try
             {
-                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings, transferDetails.ThirdPartySettings);
-                if (!thirdPartySettings.Item1)
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
                 {
-                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
                     return "failed";
                 }
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
@@ -242,13 +238,11 @@
             var tpCancellationResponse = new ThirdPartyCancellationResponse() { Success = false, TPCancellationReference = "failed" };
             try
             {
-                var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings, transferDetails.ThirdPartySettings);
-                if (!thirdPartySettings.Item1)
+                if (!_settings.SetThirdPartySettings(transferDetails.ThirdPartySettings))
                 {
-                    transferDetails.Warnings.AddNew(ThirdPartySettingException.Title, string.Format(ThirdPartySettingException.Text, thirdPartySettings.Item2));
+                    transferDetails.Warnings.AddRange(_settings.GetWarnings());
                     return tpCancellationResponse;
                 }
-
                 string[] supplierReferenceData = transferDetails.SupplierReference.Split('|');
                 if (supplierReferenceData.Length == 0 ||
                     supplierReferenceData.Length > 2)

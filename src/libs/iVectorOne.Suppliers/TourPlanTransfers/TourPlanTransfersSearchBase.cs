@@ -34,15 +34,14 @@
             HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanTransfersSearchBase> logger,
-            ILocationManagerService locationManagerService,
-            ITourPlanTransfersSettings settings
+            ILocationManagerService locationManagerService
            )
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
-            _settings = Ensure.IsNotNull(settings, nameof(settings)); 
+            _settings = new InjectedTourPlanTransfersSettings();
         }
         #endregion
 
@@ -53,10 +52,9 @@
         #region Public Functions
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings, searchDetails.ThirdPartySettings);
-            if (!thirdPartySettings.Item1)
+            if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
             {
-                throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
+                throw new Exception(_settings.GetWarnings()[0].Text);
             }
             LocationData tpLocations = GetThirdPartyLocations(location);
             var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
@@ -109,10 +107,9 @@
 
         public TransformedTransferResultCollection TransformResponse(List<Request> requests, TransferSearchDetails searchDetails, LocationMapping location)
         {
-            var thirdPartySettings = TourPlanHelper.SetThirdPartySettings(_settings,searchDetails.ThirdPartySettings);
-            if (!thirdPartySettings.Item1)
+            if (!_settings.SetThirdPartySettings(searchDetails.ThirdPartySettings))
             {
-                throw new Exception(string.Format(ThirdPartySettingException, thirdPartySettings.Item2));
+                throw new Exception(_settings.GetWarnings()[0].Text);
             }
             TransformedTransferResultCollection TransformedTransferResultCollection = new TransformedTransferResultCollection();
             LocationData tpLocations = GetThirdPartyLocations(location);
