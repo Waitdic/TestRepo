@@ -82,7 +82,12 @@
                     {
                         prebookDateAndTime = DateTime.Now;
 
-                        success = await thirdParty.PreBookAsync(transferDetails);
+                        requestValid = thirdParty.ValidateSettings(transferDetails);
+
+                        if (requestValid)
+                        {
+                            success = await thirdParty.PreBookAsync(transferDetails);
+                        }
 
                         if (success)
                         {

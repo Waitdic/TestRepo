@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using iVectorOne.Factories;
+    using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
     using iVectorOne.Repositories;
     using Cancel = SDK.V2.TransferCancel;
@@ -83,9 +84,15 @@
 
                     if (thirdParty != null)
                     {
-                        var thirdPartyReponse = await thirdParty.CancelBookingAsync(transferDetails);
-                        success = thirdPartyReponse?.Success ?? false;
-
+                        ThirdPartyCancellationResponse thirdPartyReponse = new ThirdPartyCancellationResponse();
+                       
+                        requestValid = thirdParty.ValidateSettings(transferDetails);
+                        
+                        if (requestValid)
+                        {
+                            thirdPartyReponse = await thirdParty.CancelBookingAsync(transferDetails);
+                            success = thirdPartyReponse?.Success ?? false;
+                        }
                         if (success)
                         {
                             response = _responseFactory.Create(thirdPartyReponse!);

@@ -212,7 +212,7 @@
         /// <summary>
         /// Gets or sets The warnings
         /// </summary>
-        public ArrayList Warnings { get; set; } = new ArrayList();
+        public Warnings Warnings { get; set; } = new ();
 
         /// <summary>Gets or sets the settings.</summary>
         public Settings Settings { get; set; } = new();

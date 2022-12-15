@@ -114,5 +114,10 @@
         {
             return (location.DepartureData, location.ArrivalData);
         }
+
+        public bool ValidateSettings(TransferSearchDetails searchDetails)
+        {
+            return true;
+        }
     }
 }

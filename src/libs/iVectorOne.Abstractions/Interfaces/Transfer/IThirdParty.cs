@@ -44,5 +44,12 @@
         /// <param name="transferDetails">The transfer details.</param>
         /// <returns>A third party cancellation fee result</returns>
         Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(TransferDetails transferDetails);
+
+        /// <summary>
+        /// Validate the third party Settings.
+        /// </summary>
+        /// <param name="transferDetails">The transfer details.</param>
+        /// <returns>boolean representing if the setting are present or not.</returns>
+        bool ValidateSettings(TransferDetails transferDetails);
     }
 }
