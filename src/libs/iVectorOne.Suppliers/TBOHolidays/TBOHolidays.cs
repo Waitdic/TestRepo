@@ -148,9 +148,10 @@
                             var toDate = cancelPolicies.Any(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
                                 ? cancelPolicies
                                     .Where(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
-                                    .OrderBy(x => x.FromDate)
+                                    .Select(x => x.FromDate.ToSafeDate())
+                                    .OrderBy(x => x)
                                     .First()
-                                    .ToSafeDate()
+                                    .AddDays(-1)
                                 : propertyDetails.ArrivalDate;
 
                             cancellationList.AddNew(policyNode.FromDate.ToSafeDate(), toDate, amount);

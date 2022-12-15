@@ -16,6 +16,8 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.SDK.V2.PropertySearch;
     using Newtonsoft.Json;
+    using iVectorOne.Models.Property.Booking;
+    using Intuitive.Helpers.Extensions;
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {
@@ -83,7 +85,7 @@
                 HotelCodes = string.Join(',', resortSplits.SelectMany(x => x.Hotels).Select(x => x.TPKey)),
                 GuestNationality = guestNationality,
                 ResponseTime = 23.0m,
-                IsDetailedResponse = false,
+                IsDetailedResponse = true,
                 Filters =
                 {
                     Refundable = _settings.ExcludeNRF(searchDetails),
@@ -127,7 +129,7 @@
                 return transformed;
             }
 
-            transformed.TransformedResults.AddRange(BuildTransformResult(hotelResponses!));
+            transformed.TransformedResults.AddRange(BuildTransformResult(hotelResponses!, searchDetails));
             return transformed;
         }
 
@@ -141,7 +143,7 @@
             return false;
         }
 
-        private List<TransformedResult> BuildTransformResult(List<HotelResponse> result)
+        private List<TransformedResult> BuildTransformResult(List<HotelResponse> result, SearchDetails searchDetails)
         {
             var transformedResult = new List<TransformedResult>();
 
@@ -161,9 +163,31 @@
                                     .SelectMany(x => x.Where(s => s.Type == SuppChargeType.AtProperty)
                                     .ToList());
 
-                            var supplementInformation = string.Concat(supplements.Select(c => $"{c.Index},{c.Price}|"));
+                            var supplementInformation = string.Concat(supplements.Select(c => $"{c.Index},{c.Description},{c.Price},{c.Currency}|"));
                             var tpReference = string.Concat(room.BookingCode, Helper.Separators[0],
                                 supplementInformation);
+
+                            var cancellationList = new Cancellations();
+                            foreach (var policyNode in room.CancelPolicies)
+                            {
+                                var amount = policyNode.ChargeType switch
+                                {
+                                    ChargeType.Fixed => policyNode.CancellationCharge,
+                                    ChargeType.Percentage => (policyNode.CancellationCharge / 100) * room.TotalFare,
+                                    _ => 0
+                                };
+
+                                var toDate = room.CancelPolicies.Any(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
+                                    ? room.CancelPolicies
+                                        .Where(c => c.FromDate.ToSafeDate() > policyNode.FromDate.ToSafeDate())
+                                        .Select(x => x.FromDate.ToSafeDate())
+                                        .OrderBy(x => x)
+                                        .First()
+                                        .AddDays(-1)
+                                    : searchDetails.ArrivalDate;
+
+                                cancellationList.AddNew(policyNode.FromDate.ToSafeDate(), toDate, amount);
+                            }
 
                             transformedResult.Add(new TransformedResult
                             {
@@ -175,12 +199,13 @@
                                 Amount = room.TotalFare,
                                 TPReference = tpReference,
                                 MinimumPrice = room.RecommendedSellingRate,
-                                Adjustments = supplements
+                                Cancellations = cancellationList,
+                                Adjustments = room.RoomPromotion
                                     .Select(s => new TransformedResultAdjustment(
-                                        AdjustmentType.Supplement,
+                                        AdjustmentType.Offer,
+                                        s,
                                         string.Empty,
-                                        s.Description,
-                                        s.Price)).ToList()
+                                        0)).ToList()
                             });
                         }
                     }
