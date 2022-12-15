@@ -344,5 +344,9 @@
         ///   <para>"Invalid Supplier Reference</para>
         /// </summary>
         public const string InvalidSupplierReference = "Invalid Supplier Reference";
+        /// <summary>
+        ///   <para>"The count of children and their ages should match</para>
+        /// </summary>
+        public const string InvalidChildCount = "The count of children and their ages should match";
     }
 }
