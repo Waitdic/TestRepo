@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace iVectorOne.Suppliers.TourPlanTransfers
+namespace iVectorOne.Suppliers.TourPlanTransfers.Models
 {
     public class LocationData
     {

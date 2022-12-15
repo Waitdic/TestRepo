@@ -25,13 +25,7 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
-        public const string InvalidSupplierReference = "Invalid Supplier Reference";
-
-        //TODO:move these constants to the Constants class once refactoring is done
-        public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
-        public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
-        public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");
-
+        
         public TourPlanTransfersBase(
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
@@ -61,15 +55,15 @@
 
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML, PrebookException))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.PrebookException))
                 {
-                    var deserializedResponse = DeSerialize<OptionInfoReply>(request.ResponseXML);
+                    var deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
 
                     if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
                     {
                         transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
-                        transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
+                        transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
                         AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
                         AddCancellation(deserializedResponse, transferDetails, transferDetails.DepartureDate);
 
@@ -80,14 +74,14 @@
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, PrebookException))
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.PrebookException))
                             {
-                                var deserializedReturnResponse = DeSerialize<OptionInfoReply>(returnRequest.ResponseXML);
+                                var deserializedReturnResponse = Helpers.DeSerialize<OptionInfoReply>(returnRequest.ResponseXML,_serializer);
 
                                 if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
                                 {
                                     transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
-                                    transferDetails.SupplierReference = CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
+                                    transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                     AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
                                     AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.DepartureDate);
                                 }
@@ -153,15 +147,15 @@
 
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML, BookException))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.BookException))
                 {
-                    var deserializedResponse = DeSerialize<AddServiceReply>(request.ResponseXML);
+                    var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML,_serializer);
 
                     if (deserializedResponse != null &&
                         string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
                     {
                         transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
-                        transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice;
+                        transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice.DivideBy100M();
                         refValue = deserializedResponse.Ref;
 
                         if (!transferDetails.OneWay)
@@ -172,15 +166,15 @@
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
-                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, BookException))
+                            if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.BookException))
                             {
-                                var deserializedReturnResponse = DeSerialize<AddServiceReply>(returnRequest.ResponseXML);
+                                var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML,_serializer);
 
                                 if (deserializedReturnResponse != null &&
                                     string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
                                 {
                                     transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
-                                    transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice;
+                                    transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice.DivideBy100M();
                                     refValue += $"|{deserializedReturnResponse.Ref}";
                                 }
                                 else
@@ -251,7 +245,7 @@
                 if (supplierReferenceData.Length == 0 ||
                     supplierReferenceData.Length > 2)
                 {
-                    throw new ArgumentException(InvalidSupplierReference);
+                    throw new ArgumentException(Constant.InvalidSupplierReference);
                 }
 
                 bool firstBookingCancelStatus = false, secondBookingCancelStatus = false;
@@ -260,9 +254,9 @@
                 requests.Add(request);
                 await request.Send(_httpClient, _logger);
 
-                if (!ResponseHasError(transferDetails, request.ResponseXML, CancelException))
+                if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.CancelException))
                 {
-                    var deserializedResponse = DeSerialize<CancelServicesReply>(request.ResponseXML);
+                    var deserializedResponse = Helpers.DeSerialize<CancelServicesReply>(request.ResponseXML, _serializer);
 
                     if (CancellationSuccessful(deserializedResponse))
                     {
@@ -276,9 +270,9 @@
                     requests.Add(returnCancellationRequest);
                     await returnCancellationRequest.Send(_httpClient, _logger);
 
-                    if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, CancelException))
+                    if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, Constant.CancelException))
                     {
-                        var deserializedReturnCancellationResponse = DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML);
+                        var deserializedReturnCancellationResponse = Helpers.DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML,_serializer);
 
                         if (CancellationSuccessful(deserializedReturnCancellationResponse))
                         {
@@ -331,7 +325,7 @@
                 string[] supplierReferenceValues = transferDetails.SupplierReference.Split("-");
                 if (supplierReferenceValues.Length != 2)
                 {
-                    throw new ArgumentException(InvalidSupplierReference);
+                    throw new ArgumentException(Constant.InvalidSupplierReference);
                 }
                 result.Add(new SupplierReferenceData { Opt = supplierReferenceValues[0], RateId = supplierReferenceValues[1] });
             }
@@ -340,7 +334,7 @@
                 string[] legSupplierReferences = transferDetails.SupplierReference.Split("|");
                 if (legSupplierReferences.Length != 2)
                 {
-                    throw new ArgumentException(InvalidSupplierReference);
+                    throw new ArgumentException(Constant.InvalidSupplierReference);
                 }
                 foreach (string legSupplierReference in legSupplierReferences)
                 {
@@ -348,7 +342,7 @@
 
                     if (supplierReferenceValues.Length != 2)
                     {
-                        throw new ArgumentException(InvalidSupplierReference);
+                        throw new ArgumentException(Constant.InvalidSupplierReference);
                     }
                     result.Add(new SupplierReferenceData { Opt = supplierReferenceValues[0], RateId = supplierReferenceValues[1] });
                 }
@@ -372,7 +366,7 @@
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
-            var xmlDocument = Serialize(cancellationData);
+            var xmlDocument = Helpers.Serialize(cancellationData, _serializer);
             request.SetRequest(xmlDocument);
             return request;
         }
@@ -389,7 +383,7 @@
                 Method = RequestMethod.POST,
                 ContentType = ContentTypes.Text_xml
             };
-            var xmlDocument = Serialize(await bookingData);
+            var xmlDocument = Helpers.Serialize(await bookingData, _serializer);
             request.SetRequest(xmlDocument);
             return request;
         }
@@ -404,7 +398,7 @@
                 Opt = opt,
                 RateId = rateId,
                 ExistingBookingInfo = "",
-                DateFrom = departureDate.ToString("yyyy-MM-dd"),
+                DateFrom = departureDate.ToString(Constant.DateTimeFormat),
                 NewBookingInfo = new NewBookingInformation
                 {
                     Name = $"{transferDetails.LeadGuestFirstName} {transferDetails.LeadGuestLastName}"
@@ -425,34 +419,20 @@
                         }).ToList()
                     }
                 },
-                PickUp_Date = departureDate.ToString("yyyy-MM-dd"),
+                PickUp_Date = departureDate.ToString(Constant.DateTimeFormat),
                 PuTime = departureTime,
                 PuRemark = ""
             };
 
             return Task.FromResult(addServiceRequest);
         }
-
-        public XmlDocument Serialize(object request)
-        {
-            var xmlRequest = _serializer.SerializeWithoutNamespaces(request);
-            xmlRequest.InnerXml = $"<Request>{xmlRequest.InnerXml}</Request>";
-            return xmlRequest;
-        }
-        public T DeSerialize<T>(XmlDocument xmlDocument) where T : class
-        {
-            var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
-            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
-            return _serializer.DeSerialize<T>(xmlResponse);
-        }
-
         private bool ResponseHasError(TransferDetails transferDetails, XmlDocument responseXML,
             Warning warning)
         {
             if (responseXML.OuterXml.Contains("<ErrorReply>"))
             {
 
-                var errorResponseObj = DeSerialize<ErrorReply>(responseXML);
+                var errorResponseObj = Helpers.DeSerialize<ErrorReply>(responseXML, _serializer);
                 transferDetails.Warnings.AddNew(warning.Title, string.IsNullOrEmpty(errorResponseObj.Error) ?
                     warning.Text : errorResponseObj.Error);
                 return true;
@@ -502,23 +482,11 @@
                 ContentType = ContentTypes.Text_xml
 
             };
-            var xmlDocument = Serialize(optionInfoRequest);
+            var xmlDocument = Helpers.Serialize(optionInfoRequest, _serializer);
             request.SetRequest(xmlDocument);
 
             return request;
         }
-
-        // To do : Remove this method, when helper method will be created. 
-        private string CreateSupplierReference(string outBoundOpt, string outBoundRateId, string returnOpt = "", string returnRateId = "")
-        {
-            var reference = outBoundOpt + "-" + outBoundRateId;
-            if (!string.IsNullOrEmpty(returnOpt))
-            {
-                reference += "|" + returnOpt + "-" + returnRateId;
-            }
-            return reference;
-        }
-
         private bool IsValidResponse(OptionInfoReply response, string opt)
         {
             return (response != null &&
@@ -565,7 +533,7 @@
                 DateTime deadlineDateTime = DateTime.MinValue;
                 if (linePrice != null)
                 {
-                    decimal amount = decimal.Parse(linePrice) / 100m;
+                    decimal amount = decimal.Parse(linePrice).DivideBy100M();
 
                     if (deadlineDate != null)
                     {
