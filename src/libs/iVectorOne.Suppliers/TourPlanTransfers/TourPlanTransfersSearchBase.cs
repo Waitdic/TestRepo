@@ -82,7 +82,7 @@
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0)
+            if (location != null && (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0))
             {
                 string[] departureData = location.DepartureData.Split(":");
                 string[] arrivalData = location.ArrivalData.Split(":");
