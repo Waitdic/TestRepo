@@ -1,6 +1,5 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models.Search
 {
-    using System;
     using System.Xml.Serialization;
     using Common;
 
@@ -18,6 +17,6 @@
         public StayDateRange StayDateRange { get; set; } = new();
 
         [XmlElement("Rooms")]
-        public Rooms[] Rooms { get; set; } = Array.Empty<Rooms>();
+        public Rooms Rooms { get; set; } = new();
     }
 }

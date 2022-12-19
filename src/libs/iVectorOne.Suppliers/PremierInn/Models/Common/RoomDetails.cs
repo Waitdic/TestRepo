@@ -22,7 +22,7 @@
 
         [XmlAttribute]
         public int Children { get; set; }
-        public bool ShouldSerializeChildren() => GuestName != Array.Empty<GuestName>();
+        public bool ShouldSerializeChildren() => GuestName == Array.Empty<GuestName>();
 
         [XmlAttribute]
         public string Cots { get; set; } = string.Empty;

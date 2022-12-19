@@ -3,8 +3,9 @@
     using System;
     using System.Xml.Serialization;
     using Common;
+    using Soap;
 
-    public class AvailabilityResponse
+    public class AvailabilityResponse : SoapContent
     {
         public SearchResponseParameters Parameters { get; set; } = new();
     }

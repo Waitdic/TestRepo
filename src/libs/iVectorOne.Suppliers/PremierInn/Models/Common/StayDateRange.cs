@@ -5,10 +5,10 @@
 
     public class StayDateRange
     {
-        [XmlAttribute]
-        public DateTime Start { get; set; }
+        [XmlAttribute] 
+        public string Start { get; set; } = string.Empty;
 
         [XmlAttribute]
-        public DateTime End { get; set; }
+        public string End { get; set; } = string.Empty;
     }
 }
