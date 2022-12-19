@@ -1,22 +1,19 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
-    public class CancelPolicy : BasePolicy
+    public class CancelPolicy
     {
-        [XmlAttribute("RoomIndex")]
-        public string RoomIndex { get; set; } = string.Empty;
+        [JsonProperty("Index")]
+        public string Index { get; set; } = string.Empty;
 
-        [XmlAttribute("FromDate")]
+        [JsonProperty("FromDate")]
         public string FromDate { get; set; } = string.Empty;
 
-        [XmlAttribute("ToDate")]
-        public string ToDate { get; set; } = string.Empty;
-
-        [XmlAttribute("ChargeType")]
+        [JsonProperty("ChargeType")]
         public ChargeType ChargeType { get; set; }
 
-        [XmlAttribute("CancellationCharge")]
+        [JsonProperty("CancellationCharge")]
         public decimal CancellationCharge { get; set; }
     }
 }

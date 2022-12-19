@@ -1,187 +1,59 @@
-﻿URL: http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc
+﻿URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
 **HEADERS**
 
+Authorization: Basic QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1
 Timeout: 100
 
 
 **REQUEST**
 
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
-<soap:Envelope  xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-  <soap:Header>
-    <hot:Credentials UserName="testuser" Password="testpwd" />
-    <wsa:Action>http://TekTravel/HotelBookingApi/HotelSearchWithRooms</wsa:Action>
-    <wsa:To>http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc</wsa:To>
-  </soap:Header>
-  <soap:Body>
-    <hot:HotelSearchWithRoomsRequest>
-      <hot:CheckInDate>2021-09-01T12:00:00</hot:CheckInDate>
-      <hot:CheckOutDate>2021-09-06T12:00:00</hot:CheckOutDate>
-      <hot:CountryName />
-      <hot:CityName>MAD_12</hot:CityName>
-      <hot:CityId />
-      <hot:IsNearBySearchAllowed>false</hot:IsNearBySearchAllowed>
-      <hot:NoOfRooms>1</hot:NoOfRooms>
-      <hot:GuestNationality>GB</hot:GuestNationality>
-      <hot:RoomGuests>
-        <hot:RoomGuest AdultCount="1" ChildCount="0" />
-      </hot:RoomGuests>
-      <hot:PreferredCurrencyCode>GBP</hot:PreferredCurrencyCode>
-      <hot:ResultCount>0</hot:ResultCount>
-    </hot:HotelSearchWithRoomsRequest>
-  </soap:Body>
-</soap:Envelope>
-
-URL: http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc
+URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
 **HEADERS**
 
+Authorization: Basic QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1
 Timeout: 100
 
 
 **REQUEST**
 
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":2,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
-<soap:Envelope  xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-  <soap:Header>
-    <hot:Credentials UserName="testuser" Password="testpwd" />
-    <wsa:Action>http://TekTravel/HotelBookingApi/HotelSearchWithRooms</wsa:Action>
-    <wsa:To>http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc</wsa:To>
-  </soap:Header>
-  <soap:Body>
-    <hot:HotelSearchWithRoomsRequest>
-      <hot:CheckInDate>2021-09-01T12:00:00</hot:CheckInDate>
-      <hot:CheckOutDate>2021-09-06T12:00:00</hot:CheckOutDate>
-      <hot:CountryName />
-      <hot:CityName>MAD_12</hot:CityName>
-      <hot:CityId />
-      <hot:IsNearBySearchAllowed>false</hot:IsNearBySearchAllowed>
-      <hot:NoOfRooms>1</hot:NoOfRooms>
-      <hot:GuestNationality>GB</hot:GuestNationality>
-      <hot:RoomGuests>
-        <hot:RoomGuest AdultCount="2" ChildCount="0" />
-      </hot:RoomGuests>
-      <hot:PreferredCurrencyCode>GBP</hot:PreferredCurrencyCode>
-      <hot:ResultCount>0</hot:ResultCount>
-    </hot:HotelSearchWithRoomsRequest>
-  </soap:Body>
-</soap:Envelope>
-
-URL: http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc
+URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
 **HEADERS**
 
+Authorization: Basic QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1
 Timeout: 100
 
 
 **REQUEST**
 
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[8]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
-<soap:Envelope  xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-  <soap:Header>
-    <hot:Credentials UserName="testuser" Password="testpwd" />
-    <wsa:Action>http://TekTravel/HotelBookingApi/HotelSearchWithRooms</wsa:Action>
-    <wsa:To>http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc</wsa:To>
-  </soap:Header>
-  <soap:Body>
-    <hot:HotelSearchWithRoomsRequest>
-      <hot:CheckInDate>2021-09-01T12:00:00</hot:CheckInDate>
-      <hot:CheckOutDate>2021-09-06T12:00:00</hot:CheckOutDate>
-      <hot:CountryName />
-      <hot:CityName>MAD_12</hot:CityName>
-      <hot:CityId />
-      <hot:IsNearBySearchAllowed>false</hot:IsNearBySearchAllowed>
-      <hot:NoOfRooms>1</hot:NoOfRooms>
-      <hot:GuestNationality>GB</hot:GuestNationality>
-      <hot:RoomGuests>
-        <hot:RoomGuest AdultCount="1" ChildCount="1">
-          <hot:ChildAge>
-            <hot:int>8</hot:int>
-          </hot:ChildAge>
-        </hot:RoomGuest>
-      </hot:RoomGuests>
-      <hot:PreferredCurrencyCode>GBP</hot:PreferredCurrencyCode>
-      <hot:ResultCount>0</hot:ResultCount>
-    </hot:HotelSearchWithRoomsRequest>
-  </soap:Body>
-</soap:Envelope>
-
-URL: http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc
+URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
 **HEADERS**
 
+Authorization: Basic QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1
 Timeout: 100
 
 
 **REQUEST**
 
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[0]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
-<soap:Envelope  xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-  <soap:Header>
-    <hot:Credentials UserName="testuser" Password="testpwd" />
-    <wsa:Action>http://TekTravel/HotelBookingApi/HotelSearchWithRooms</wsa:Action>
-    <wsa:To>http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc</wsa:To>
-  </soap:Header>
-  <soap:Body>
-    <hot:HotelSearchWithRoomsRequest>
-      <hot:CheckInDate>2021-09-01T12:00:00</hot:CheckInDate>
-      <hot:CheckOutDate>2021-09-06T12:00:00</hot:CheckOutDate>
-      <hot:CountryName />
-      <hot:CityName>MAD_12</hot:CityName>
-      <hot:CityId />
-      <hot:IsNearBySearchAllowed>false</hot:IsNearBySearchAllowed>
-      <hot:NoOfRooms>1</hot:NoOfRooms>
-      <hot:GuestNationality>GB</hot:GuestNationality>
-      <hot:RoomGuests>
-        <hot:RoomGuest AdultCount="1" ChildCount="1">
-          <hot:ChildAge>
-            <hot:int>0</hot:int>
-          </hot:ChildAge>
-        </hot:RoomGuest>
-      </hot:RoomGuests>
-      <hot:PreferredCurrencyCode>GBP</hot:PreferredCurrencyCode>
-      <hot:ResultCount>0</hot:ResultCount>
-    </hot:HotelSearchWithRoomsRequest>
-  </soap:Body>
-</soap:Envelope>
-
-URL: http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc
+URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
 **HEADERS**
 
+Authorization: Basic QW5keXN5c1Rlc3Q6SW50QDIwODM3Mzg1
 Timeout: 100
 
 
 **REQUEST**
 
-
-<soap:Envelope  xmlns:hot="http://TekTravel/HotelBookingApi" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-  <soap:Header>
-    <hot:Credentials UserName="testuser" Password="testpwd" />
-    <wsa:Action>http://TekTravel/HotelBookingApi/HotelSearchWithRooms</wsa:Action>
-    <wsa:To>http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc</wsa:To>
-  </soap:Header>
-  <soap:Body>
-    <hot:HotelSearchWithRoomsRequest>
-      <hot:CheckInDate>2021-09-01T12:00:00</hot:CheckInDate>
-      <hot:CheckOutDate>2021-09-06T12:00:00</hot:CheckOutDate>
-      <hot:CountryName />
-      <hot:CityName>MAD_12</hot:CityName>
-      <hot:CityId />
-      <hot:IsNearBySearchAllowed>false</hot:IsNearBySearchAllowed>
-      <hot:NoOfRooms>1</hot:NoOfRooms>
-      <hot:GuestNationality>GB</hot:GuestNationality>
-      <hot:RoomGuests>
-        <hot:RoomGuest AdultCount="1" ChildCount="2">
-          <hot:ChildAge>
-            <hot:int>8</hot:int>
-            <hot:int>0</hot:int>
-          </hot:ChildAge>
-        </hot:RoomGuest>
-      </hot:RoomGuests>
-      <hot:PreferredCurrencyCode>GBP</hot:PreferredCurrencyCode>
-      <hot:ResultCount>0</hot:ResultCount>
-    </hot:HotelSearchWithRoomsRequest>
-  </soap:Body>
-</soap:Envelope>
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":2,"ChildrenAges":[8,0]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}

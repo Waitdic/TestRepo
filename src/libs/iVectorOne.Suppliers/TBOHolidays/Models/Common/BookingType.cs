@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
-    public enum BookingStatus
+    public enum BookingType
     {
         Failed,
         Confirmed,
