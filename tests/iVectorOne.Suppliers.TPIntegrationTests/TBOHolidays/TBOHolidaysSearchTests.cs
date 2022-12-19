@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Helpers;
-    using Intuitive.Helpers.Serialization;
     using Moq;
     using iVectorOne.Suppliers.TBOHolidays;
     using iVectorOne.Lookups;
@@ -22,7 +21,7 @@
             _provider,
             new List<SearchDetails> { _searchDetails },
             _settings,
-            new TBOHolidaysSearch(_settings, new Mock<ITPSupport>().Object, new Serializer()))
+            new TBOHolidaysSearch(_settings, new Mock<ITPSupport>().Object))
         {
         }
 

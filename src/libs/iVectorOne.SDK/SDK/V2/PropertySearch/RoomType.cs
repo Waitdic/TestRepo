@@ -119,5 +119,11 @@
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string SpecialOffer { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the minimum selling price.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public decimal MinimumSellingPrice { get; set; }
     }
 }
