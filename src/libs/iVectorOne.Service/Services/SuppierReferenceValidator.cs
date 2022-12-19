@@ -27,6 +27,7 @@
                 case ThirdParties.DERBYSOFTCLUBMED:
                 case ThirdParties.DERBYSOFTSYNXIS:
                 case ThirdParties.DERBYSOFTMARRIOTT:
+                case ThirdParties.DERBYSOFTTRAVELCLICK:
                 case ThirdParties.DOTW:
                 case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
@@ -146,6 +147,7 @@
                 case ThirdParties.DERBYSOFTCLUBMED:
                 case ThirdParties.DERBYSOFTMARRIOTT:
                 case ThirdParties.DERBYSOFTSYNXIS:
+                case ThirdParties.DERBYSOFTTRAVELCLICK:
                 case ThirdParties.TRAVELGATEARABIANA:
                 case ThirdParties.TRAVELGATEBOOKOHOTEL:
                 case ThirdParties.TRAVELGATEDARINA:
