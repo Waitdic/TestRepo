@@ -33,9 +33,9 @@
             return Get_Value("AllowCancellations", tpAttributeSearch).ToSafeBoolean();
         }
 
-        public int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
+        public int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch)
         {
-            return Get_Value("HotelSearchLimit", tpAttributeSearch).ToSafeInt();
+            return Get_Value("HotelBatchLimit", tpAttributeSearch).ToSafeInt();
         }
 
         public string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch)
