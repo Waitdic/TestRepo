@@ -94,6 +94,7 @@ namespace iVectorOne.Suppliers.HBSi
                     return Enumerable.Range(1, numberOfUnit).Select(_ => new
                     {
                         RoomStay = oRoomStay,
+                        RoomRate = oRoomStay.RoomRates.First(),
                         RoomTypeCode = HBSiHelper.GetRoomIdentyCode(oRoomStay, bUsePassangerAge)
                     });
                 }).ToList();
@@ -111,7 +112,8 @@ namespace iVectorOne.Suppliers.HBSi
                     {
                         RoomDetails = oRoom,
                         RoomIdentityCode = oRoom.ThirdPartyReference,
-                        RoomStay = roomStayCodePair.RoomStay
+                        RoomStay = roomStayCodePair.RoomStay,
+                        Rate = roomStayCodePair.RoomRate.Rates.First()
                     };
                 }).ToList();
 
@@ -123,7 +125,7 @@ namespace iVectorOne.Suppliers.HBSi
                         return false;
                     }
                     // 'update cost
-                    decimal roomTotal = oRoom.RoomStay.Total.AmountAfterTax.ToSafeDecimal();
+                    decimal roomTotal = oRoom.Rate.Total.AmountAfterTax.ToSafeDecimal();
                     if (oRoom.RoomDetails.LocalCost != roomTotal)
                     {
                         oRoom.RoomDetails.LocalCost = roomTotal;
