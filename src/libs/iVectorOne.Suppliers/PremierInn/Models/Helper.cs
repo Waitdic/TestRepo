@@ -1,17 +1,15 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models
 {
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.Search.Models;
     using Common;
     using Soap;
     using Intuitive.Helpers.Extensions;
-    using iVectorOne.Models;
     using System.Collections.Generic;
     using System.Linq;
 
     public static class Helper
     {
-        public static Login BuildLogin(IPremierInnSettings settings, SearchDetails searchDetails)
+        public static Login BuildLogin(IPremierInnSettings settings, IThirdPartyAttributeSearch searchDetails)
         {
             return new Login
             {
@@ -38,10 +36,9 @@
                 .Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"", "");
         }
 
-        public static List<Batch<string>> GetHotelCodes(List<ResortSplit> resortSplits, int limit)
+        public static List<Batch<string>> GetHotelCodes(IEnumerable<string> tpkeys, int limit)
         {
-            return resortSplits.SelectMany(split => split.Hotels.Select(h => h.TPKey))
-                .Distinct().Batch(limit).ToList();
+            return tpkeys.Distinct().Batch(limit).ToList();
         }
 
         public static string GetMealCode(string cellCode)

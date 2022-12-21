@@ -50,6 +50,7 @@
             public class MessageResponse
             {
                 [XmlElement(typeof(AvailabilityResponse), ElementName = "ProcessMessageResult")]
+                [XmlElement(typeof(AvailabilityUpdateResponse), ElementName = "ProcessMessageResultTest")]
                 public SoapContent SoapContent { get; set; } = new T();
 
                 [XmlIgnore]

@@ -1,8 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models.Search
 {
     using Common;
+    using Soap;
 
-    public class AvailabilityUpdateResponse
+    public class AvailabilityUpdateResponse : SoapContent
     {
         public SearchUpdateResponseParameters Parameters { get; set; } = new();
     }

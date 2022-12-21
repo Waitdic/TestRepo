@@ -9,6 +9,7 @@
 
         [XmlAttribute]
         public string CellCode { get; set; } = string.Empty;
+        public bool ShouldSerializeCellCode() => !string.IsNullOrEmpty(CellCode);
 
         public StatusWarningFlags? StatusWarningFlags { get; set; }
         public bool ShouldSerializeStatusWarningFlags() => StatusWarningFlags != null;

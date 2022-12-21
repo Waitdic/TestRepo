@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
@@ -22,11 +23,13 @@
 
         private readonly IPremierInnSettings _settings;
         private readonly ISerializer _serializer;
+        private readonly ISecretKeeper _secretKeeper;
 
-        public PremierInnSearch(IPremierInnSettings settings, ISerializer serializer)
+        public PremierInnSearch(IPremierInnSettings settings, ISerializer serializer, ISecretKeeper secretKeeper)
         {
             _settings = Ensure.IsNotNull(settings, nameof(settings));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _secretKeeper = Ensure.IsNotNull(secretKeeper, nameof(secretKeeper));
         }
 
         public string Source => ThirdParties.PREMIERINN;
@@ -48,7 +51,9 @@
             if (resortSplits.Count == 0) return Task.FromResult(new List<Request>());
 
             var requests = new List<Request>();
-            var groups = Helper.GetHotelCodes(resortSplits, _settings.HotelBatchLimit(searchDetails));
+            var groups = Helper.GetHotelCodes(
+                resortSplits.SelectMany(split => split.Hotels.Select(h => h.TPKey)),
+                _settings.HotelBatchLimit(searchDetails));
 
             for (var index = 0; index < searchDetails.Rooms; index++)
             {
@@ -101,49 +106,56 @@
             {
                 roomIndex++;
 
-                foreach (var hotelDetail in responses.SelectMany(x => x.Parameters.HotelDetails))
+                foreach (var parameters in responses.Select(x => x.Parameters))
                 {
-                    if (responseGroups
+                    foreach (var hotelDetail in parameters.HotelDetails)
+                    {
+                        if (responseGroups
                         .SelectMany(g => g.SelectMany(r => r.Parameters.HotelDetails))
                         .Where(hd => hd.HotelCode == hotelDetail.HotelCode)
                         .Any(r => r.ErrorCode != null))
-                    {
-                        continue;
-                    }
-
-                    foreach (var ratePlan in hotelDetail.RatePlan)
-                    {
-                        var room = ratePlan.Rooms.RoomDetails;
-                        var cancellations = new Cancellations();
-
-                        switch (ratePlan.CancellationPolicy.Category)
                         {
-                            case 0:
-                                cancellations.AddNew(searchDetails.BookingDate, searchDetails.ArrivalDate, 0);
-                                break;
-                            case 2:
-                            {
-                                var endDate = searchDetails.BookingDate.AddDays(ratePlan.CancellationPolicy.Days);
-                                cancellations.AddNew(searchDetails.BookingDate, endDate, 0);
-                                cancellations.AddNew(endDate.AddDays(1), searchDetails.ArrivalDate, room.Rate.TotalCost);
-                                break;
-                            }
+                            continue;
                         }
 
-                        transformedResults.Add(new TransformedResult
+                        foreach (var ratePlan in hotelDetail.RatePlan)
                         {
-                            TPKey = hotelDetail.HotelCode,
-                            PropertyRoomBookingID = roomIndex,
-                            RateCode = ratePlan.RatePlanCode,
-                            RoomTypeCode = room.RoomType,
-                            Amount = room.Rate.TotalCost,
-                            CurrencyCode = room.Rate.Currency,
-                            Adults = room.Adults,
-                            Children = room.Children,
-                            NonRefundableRates = false,
-                            Cancellations = cancellations,
-                            MealBasisCode = Helper.GetMealCode(ratePlan.CellCode)
-                        });
+                            var room = ratePlan.Rooms.RoomDetails;
+                            var cancellations = new Cancellations();
+
+                            switch (ratePlan.CancellationPolicy.Category)
+                            {
+                                case 0:
+                                    cancellations.AddNew(searchDetails.BookingDate, searchDetails.ArrivalDate, 0);
+                                    break;
+                                case 2:
+                                    {
+                                        var endDate = searchDetails.BookingDate.AddDays(ratePlan.CancellationPolicy.Days);
+                                        cancellations.AddNew(searchDetails.BookingDate, endDate, 0);
+                                        cancellations.AddNew(endDate.AddDays(1), searchDetails.ArrivalDate, room.Rate.TotalCost);
+                                        break;
+                                    }
+                            }
+
+                            var tpRef = new PremierInnTpRef(parameters.Session.ID, ratePlan.RatePlanCode,
+                                ratePlan.CancellationPolicy).Encrypt(_secretKeeper);
+
+                            transformedResults.Add(new TransformedResult
+                            {
+                                TPKey = hotelDetail.HotelCode,
+                                PropertyRoomBookingID = roomIndex,
+                                RateCode = ratePlan.RatePlanCode,
+                                RoomTypeCode = room.RoomType,
+                                Amount = room.Rate.TotalCost,
+                                CurrencyCode = room.Rate.Currency,
+                                Adults = room.Adults,
+                                Children = room.Children,
+                                NonRefundableRates = false,
+                                Cancellations = cancellations,
+                                TPReference = tpRef,
+                                MealBasisCode = Helper.GetMealCode(ratePlan.CellCode)
+                            });
+                        }
                     }
                 }
             }
