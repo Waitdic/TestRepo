@@ -99,7 +99,6 @@
         /// Gets or sets The results
         /// </summary>
         public TransferSearchResults Results { get; set; } = new TransferSearchResults();
-        ///public List<TransformedTransferResult> Results { get; set; } = new List<TransformedTransferResult>();
 
         public string Source { get; set; } = string.Empty;
 
@@ -111,66 +110,6 @@
         /// </value>
         public int Duration => OneWay ? 0 : (ReturnDate - DepartureDate).Days;
 
-
-        /// <summary>
-        /// Gets or sets the session identifier.
-        /// </summary>
-        /// <value>
-        /// The session identifier.
-        /// </value>
-        //public string SessionID { get; set; } = string.Empty;
-
-
-
-
-        /// <summary>
-        /// Gets or sets The departure secondary time
-        /// </summary>
-        //public string DepartureSecondaryTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The departure flight code
-        /// </summary>
-        //public string DepartureFlightCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The return secondary time
-        /// </summary>
-        //public string ReturnSecondaryTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets The return flight code
-        /// </summary>
-        //public string ReturnFlightCode { get; set; } = string.Empty;
-
-
-
-        /// <summary>
-        /// Gets or sets the number of youths.
-        /// </summary>
-        /// <value>
-        /// The number of youths.
-        /// </value>
-        ///public int Youths { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of seniors.
-        /// </summary>
-        /// <value>
-        /// The number of seniors.
-        /// </value>
-        //public int Seniors { get; set; }
-
-        /// <summary>
-        /// Gets or sets The supplier identifier
-        /// </summary>
-        //public int SupplierID { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets The vehicle type
-        /// </summary>
-        //public string VehicleType { get; set; } = string.Empty;
-
         /// <summary>
         /// Gets or sets the booking date.
         /// </summary>
@@ -178,23 +117,6 @@
         /// The booking date.
         /// </value>
         public DateTime BookingDate { get; set; } = DateTime.Now;
-
-        /// <summary>
-        /// Gets or sets the IATA code
-        /// </summary>
-        //public string IATACode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the arrival resort identifier
-        /// </summary>
-        //public int ArrivalResortID { get; set; } = 0;
-
-
-        /// <summary>
-        /// Gets or sets the senior ages
-        /// </summary>
-        //public List<int> SeniorAges { get; set; } = new List<int>();
-
 
         /// <summary>
         /// Gets or sets a value indicating whether is debug
