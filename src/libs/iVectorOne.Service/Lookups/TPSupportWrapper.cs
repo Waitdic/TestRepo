@@ -66,6 +66,22 @@
             return locationData;
         }
 
+        public async Task<LocationMapping> TPLocationLookupAsync(ExtraSearchDetails searchDetails)
+        {
+            LocationMapping locationData;
+
+            Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
+            location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
+            location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
+            locationData = new()
+            {
+                DepartureData = departurePayload,
+                ArrivalData = arivalPayload
+            };
+
+            return locationData;
+        }
+
         public async Task<List<string>> TPAllLocationLookup(string source)
         {
             Dictionary<int, string> location = await this.TPLocationAsync(source);
