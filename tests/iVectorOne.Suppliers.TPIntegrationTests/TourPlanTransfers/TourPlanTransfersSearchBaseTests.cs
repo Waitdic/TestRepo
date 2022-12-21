@@ -39,10 +39,10 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
 
             //Assert
-            Assert.Single(transferStatus);
+            Assert.Single(requests);
 
         }
 
@@ -59,10 +59,10 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
 
             //Assert
-            Assert.Equal(2, transferStatus.Count);
+            Assert.Equal(2, requests.Count);
 
         }
         [Theory]
@@ -81,13 +81,13 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
-            var opt = getAttributeValue(transferStatus, "Opt");
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var opt = getAttributeValue(requests, "Opt");
 
             //Assert
-            Assert.Equal(searchDetails.Adults, int.Parse(getAttributeValue(transferStatus, "Adults")));
-            Assert.Equal(searchDetails.Children, int.Parse(getAttributeValue(transferStatus, "Children")));
-            Assert.Equal(searchDetails.Infants, int.Parse(getAttributeValue(transferStatus, "Infants")));
+            Assert.Equal(searchDetails.Adults, int.Parse(getAttributeValue(requests, "Adults")));
+            Assert.Equal(searchDetails.Children, int.Parse(getAttributeValue(requests, "Children")));
+            Assert.Equal(searchDetails.Infants, int.Parse(getAttributeValue(requests, "Infants")));
             Assert.Equal(locationCode + "TR????????????", opt);
 
         }
@@ -109,12 +109,12 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
-            var opt = getAttributeValue(transferStatus, "DateFrom");
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var opt = getAttributeValue(requests, "DateFrom");
 
             //Assert
-            Assert.Equal(searchDetails.DepartureDate.Date, DateTime.Parse(getAttributeValue(transferStatus[0], "DateFrom")));
-            Assert.Equal(searchDetails.ReturnDate.Date, DateTime.Parse(getAttributeValue(transferStatus[1], "DateFrom")));
+            Assert.Equal(searchDetails.DepartureDate.Date, DateTime.Parse(getAttributeValue(requests[0], "DateFrom")));
+            Assert.Equal(searchDetails.ReturnDate.Date, DateTime.Parse(getAttributeValue(requests[1], "DateFrom")));
       
 
         }
@@ -138,10 +138,10 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, location, serviceReply);
+            var requests = await GetTransferSearchRequestAsync(searchDetails, location, serviceReply);
 
             //Assert
-            Assert.False(transferStatus.Any());
+            Assert.False(requests.Any());
 
         }
 
@@ -162,7 +162,7 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
 
             //Assert
             Assert.Equal(thirdPartySettings, searchDetails.ThirdPartySettings);
@@ -186,7 +186,7 @@
             };
 
             //Act
-            var transferStatus = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
+            var requests = await GetTransferSearchRequestAsync(searchDetails, getLocationMappingMockData(), serviceReply);
 
             //Assert
             Assert.NotEqual(thirdPartySettings, searchDetails.ThirdPartySettings);
@@ -240,7 +240,6 @@
 
             // Act
             var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
-            var result = transformResponse.TransformedResults.FirstOrDefault();
 
             //Assert
             Assert.False(transformResponse.TransformedResults.Any());
@@ -268,6 +267,7 @@
             // Act
             var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
             var result = transformResponse.TransformedResults.FirstOrDefault();
+
             Assert.Equal(result.Cost, 300);
             Assert.Equal(result.SupplierReference, supplierReference);
             Assert.True(transformResponse.TransformedResults.Any());
@@ -299,8 +299,8 @@
             return Task.CompletedTask;
         }
 
-        private string getAttributeValue(List<Request> transferStatus, string tagName)
-            => transferStatus.FirstOrDefault().RequestXML.GetElementsByTagName(tagName)[0].InnerText;
+        private string getAttributeValue(List<Request> requests, string tagName)
+            => requests.FirstOrDefault().RequestXML.GetElementsByTagName(tagName)[0].InnerText;
 
         private TransformedTransferResultCollection GetTransformResponse(TransferSearchDetails searchDetails, LocationMapping location, List<Request> requests = null, ArrayList serviceReply = null)
         {
@@ -332,8 +332,8 @@
 
             return await goWayService.BuildSearchRequestsAsync(searchDetails, locationMapping);
         }
-        private string getAttributeValue(Request transferStatus, string tagName)
-           => transferStatus.RequestXML.GetElementsByTagName(tagName)[0].InnerText;
+        private string getAttributeValue(Request requests, string tagName)
+           => requests.RequestXML.GetElementsByTagName(tagName)[0].InnerText;
         private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment)
         {
             return new OptionInfoReply()
