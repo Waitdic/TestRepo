@@ -43,5 +43,15 @@
             return resortSplits.SelectMany(split => split.Hotels.Select(h => h.TPKey))
                 .Distinct().Batch(limit).ToList();
         }
+
+        public static string GetMealCode(string cellCode)
+        {
+            return cellCode switch
+            {
+                "XMLBB" or "HUBFB" or "ZIPFB" or "DISBB" or "HUBSB" or "ZIPNF" => "BB",
+                "XMLMD" or "DISMD" => "DBB",
+                _ => "RO"
+            };
+        }
     }
 }

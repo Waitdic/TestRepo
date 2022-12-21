@@ -1,11 +1,14 @@
-﻿using System.Xml.Serialization;
-
-namespace iVectorOne.Suppliers.PremierInn.Models.Common
+﻿namespace iVectorOne.Suppliers.PremierInn.Models.Common
 {
+    using System.Xml.Serialization;
+
     public class CancellationPolicy
     {
         [XmlAttribute] 
-        public string Category { get; set; } = string.Empty;
+        public int Category { get; set; }
+        
+        [XmlAttribute]
+        public int Days { get; set; }
 
         public string Text { get; set; } = string.Empty;
     }

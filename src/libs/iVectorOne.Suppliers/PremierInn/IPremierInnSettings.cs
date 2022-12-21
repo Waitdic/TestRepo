@@ -7,7 +7,7 @@
         string GenericURL(IThirdPartyAttributeSearch tpAttributeSearch);
         bool UseGZip(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowCancellations(IThirdPartyAttributeSearch tpAttributeSearch);
-        int HotelSearchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
+        int HotelBatchLimit(IThirdPartyAttributeSearch tpAttributeSearch);
         string LanguageCode(IThirdPartyAttributeSearch tpAttributeSearch);
         bool AllowOnRequest(IThirdPartyAttributeSearch tpAttributeSearch);
     }

@@ -20,6 +20,8 @@
 
     public class HotelDetails
     {
+        public ErrorCode? ErrorCode { get; set; }
+
         [XmlAttribute]
         public string HotelCode { get; set; } = string.Empty;
 
