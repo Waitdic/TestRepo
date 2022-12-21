@@ -44,5 +44,10 @@
         [XmlArrayItem("ResGuestRPH")]
         public List<ResGuestRPH> ResGuestRPHs { get; set; } = new();
         public bool ShouldSerializeResGuestRPHs() => ResGuestRPHs != null && ResGuestRPHs.Any();
+
+        [XmlArray("SpecialRequests")]
+        [XmlArrayItem("SpecialRequest")]
+        public List<SpecialRequest> SpecialRequests { get; set; } = new();
+        public bool ShouldSerializeSpecialRequests() => SpecialRequests != null && SpecialRequests.Any();
     }
 }

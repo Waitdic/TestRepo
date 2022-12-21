@@ -651,12 +651,16 @@ namespace iVectorOne.Suppliers.HBSi
                         },
                         RoomStays = oPropertyDetails.Rooms.Select(oRoomDetails =>
                         {
-                            var tpReference = _secretKeeper.Decrypt(oRoomDetails.ThirdPartyReference);
-                            var oRoomStay = _serializer.DeSerialize<RoomStay>(tpReference);
+                            var tpReference = _secretKeeper.Decrypt(oRoomDetails.ThirdPartyReference);                            
+                            var oRoomStay = _serializer.DeSerialize<RoomStay>(tpReference);                            
                             oRoomStay.ResGuestRPHs = oRoomDetails.Passengers.Select(pax => new ResGuestRPH
                                 {
                                     RPH = guests.First(g => g.pax == pax).rph
-                                }).ToList();
+                                }).ToList();                            
+                            oRoomStay.SpecialRequests.Add(new SpecialRequest
+                            { 
+                                Text = oRoomDetails.SpecialRequest
+                            });
 
                             return oRoomStay;
                         }).ToList(),
