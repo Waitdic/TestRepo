@@ -1,0 +1,55 @@
+﻿URL: https://tst-polarisapi.avoristravel.com/avail/availability
+
+**HEADERS**
+
+Authorization: Basic bmV0OlRlc3ROZXQwMQ==
+Timeout: 100
+
+
+**REQUEST**
+
+{"hotelAvailability":{"searchAvail":{"checkIn":"2021-09-01","checkOut":"2021-09-06","destination":{"hotelCodes":["102245"],"location":{"destinationCode":"MAD_12","type":"EMPTY"}},"rooms":[{"index":1,"passengerAges":[30]}]}}}
+URL: https://tst-polarisapi.avoristravel.com/avail/availability
+
+**HEADERS**
+
+Authorization: Basic bmV0OlRlc3ROZXQwMQ==
+Timeout: 100
+
+
+**REQUEST**
+
+{"hotelAvailability":{"searchAvail":{"checkIn":"2021-09-01","checkOut":"2021-09-06","destination":{"hotelCodes":["102245"],"location":{"destinationCode":"MAD_12","type":"EMPTY"}},"rooms":[{"index":1,"passengerAges":[30,30]}]}}}
+URL: https://tst-polarisapi.avoristravel.com/avail/availability
+
+**HEADERS**
+
+Authorization: Basic bmV0OlRlc3ROZXQwMQ==
+Timeout: 100
+
+
+**REQUEST**
+
+{"hotelAvailability":{"searchAvail":{"checkIn":"2021-09-01","checkOut":"2021-09-06","destination":{"hotelCodes":["102245"],"location":{"destinationCode":"MAD_12","type":"EMPTY"}},"rooms":[{"index":1,"passengerAges":[30,8]}]}}}
+URL: https://tst-polarisapi.avoristravel.com/avail/availability
+
+**HEADERS**
+
+Authorization: Basic bmV0OlRlc3ROZXQwMQ==
+Timeout: 100
+
+
+**REQUEST**
+
+{"hotelAvailability":{"searchAvail":{"checkIn":"2021-09-01","checkOut":"2021-09-06","destination":{"hotelCodes":["102245"],"location":{"destinationCode":"MAD_12","type":"EMPTY"}},"rooms":[{"index":1,"passengerAges":[30,0]}]}}}
+URL: https://tst-polarisapi.avoristravel.com/avail/availability
+
+**HEADERS**
+
+Authorization: Basic bmV0OlRlc3ROZXQwMQ==
+Timeout: 100
+
+
+**REQUEST**
+
+{"hotelAvailability":{"searchAvail":{"checkIn":"2021-09-01","checkOut":"2021-09-06","destination":{"hotelCodes":["102245"],"location":{"destinationCode":"MAD_12","type":"EMPTY"}},"rooms":[{"index":1,"passengerAges":[30,8,0]}]}}}

@@ -671,7 +671,24 @@
           "Version": "v3",
           "ExcludeNRF": "false"
         }
-       }
+      },
+	  {
+        "Supplier": "Polaris",
+        "Configurations": {
+          "User": "net",
+          "Password": "TestNet01",
+          "SearchURL": "https://tst-polarisapi.avoristravel.com/avail/availability",
+          "PrebookURL": "https://tst-polarisapi.avoristravel.com/book/preBooking",
+          "BookingURL": "https://tst-polarisapi.avoristravel.com/book/booking",
+          "CancellationURL": "https://tst-polarisapi.avoristravel.com/book/cancellation",
+          "AllowCancellations": "true",
+          "UseGZip": "true",
+          "ExcludeNRF": "false",
+          "LeadGuestNationality": "GB",
+          "SplitMultiRoom": "true",
+          "OffsetCancellationDays": "0"
+        }
+      }
     ]
   }
 ]

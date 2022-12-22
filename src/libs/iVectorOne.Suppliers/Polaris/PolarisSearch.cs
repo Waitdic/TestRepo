@@ -126,7 +126,7 @@
                     return hotel.RoomRates.Where(roomRate => roomRate.Status == Constant.Status.Ok)
                                           .SelectMany(roomRate =>
                     {
-                        var canxs = Polaris.TransformCancellations(roomRate.CancellationPolicies);
+                        var canxs = Polaris.TransformCancellations(roomRate.CancellationPolicies, roomRate.RoomQty);
                         var isRateNonRefundable = canxs.Where(x => x.StartDate <= nowDay 
                                                                 && x.Amount >= roomRate.Pricing.Net.Price).Any();
                         var excludeNRF = _settings.ExcludeNRF(searchDetails);
@@ -145,6 +145,10 @@
                                 RoomIndex = roomIndex
                             }.Encrypt(_secretKeeper);
 
+                            var minimumSellingPrice = roomRate.Binding
+                                ? roomInfo.Pricing.Sell.Price
+                                : roomInfo.Pricing.Net.Price;
+
                             return new TransformedResult
                             {
                                 TPKey = hotel.HotelCode,
@@ -157,7 +161,8 @@
                                 MealBasisCode = roomRate.Meal.Id,
                                 TPReference = reference,
                                 Cancellations = cc,
-                                NonRefundableRates = isRateNonRefundable                            
+                                NonRefundableRates = isRateNonRefundable,
+                                MinimumPrice = minimumSellingPrice
                             };
                         });
                     });
