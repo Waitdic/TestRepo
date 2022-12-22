@@ -94,6 +94,7 @@ namespace iVectorOne.Suppliers.HBSi
                     return Enumerable.Range(1, numberOfUnit).Select(_ => new
                     {
                         RoomStay = oRoomStay,
+                        RoomRate = oRoomStay.RoomRates.First(),
                         RoomTypeCode = HBSiHelper.GetRoomIdentyCode(oRoomStay, bUsePassangerAge)
                     });
                 }).ToList();
@@ -111,7 +112,8 @@ namespace iVectorOne.Suppliers.HBSi
                     {
                         RoomDetails = oRoom,
                         RoomIdentityCode = oRoom.ThirdPartyReference,
-                        RoomStay = roomStayCodePair.RoomStay
+                        RoomStay = roomStayCodePair.RoomStay,
+                        Rate = roomStayCodePair.RoomRate.Rates.First()
                     };
                 }).ToList();
 
@@ -123,7 +125,7 @@ namespace iVectorOne.Suppliers.HBSi
                         return false;
                     }
                     // 'update cost
-                    decimal roomTotal = oRoom.RoomStay.Total.AmountAfterTax.ToSafeDecimal();
+                    decimal roomTotal = oRoom.Rate.Total.AmountAfterTax.ToSafeDecimal();
                     if (oRoom.RoomDetails.LocalCost != roomTotal)
                     {
                         oRoom.RoomDetails.LocalCost = roomTotal;
@@ -649,12 +651,16 @@ namespace iVectorOne.Suppliers.HBSi
                         },
                         RoomStays = oPropertyDetails.Rooms.Select(oRoomDetails =>
                         {
-                            var tpReference = _secretKeeper.Decrypt(oRoomDetails.ThirdPartyReference);
-                            var oRoomStay = _serializer.DeSerialize<RoomStay>(tpReference);
+                            var tpReference = _secretKeeper.Decrypt(oRoomDetails.ThirdPartyReference);                            
+                            var oRoomStay = _serializer.DeSerialize<RoomStay>(tpReference);                            
                             oRoomStay.ResGuestRPHs = oRoomDetails.Passengers.Select(pax => new ResGuestRPH
                                 {
                                     RPH = guests.First(g => g.pax == pax).rph
-                                }).ToList();
+                                }).ToList();                            
+                            oRoomStay.SpecialRequests.Add(new SpecialRequest
+                            { 
+                                Text = oRoomDetails.SpecialRequest
+                            });
 
                             return oRoomStay;
                         }).ToList(),
