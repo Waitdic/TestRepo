@@ -115,7 +115,7 @@
             //Assert
             Assert.Equal(searchDetails.DepartureDate.Date, DateTime.Parse(getAttributeValue(requests[0], "DateFrom")));
             Assert.Equal(searchDetails.ReturnDate.Date, DateTime.Parse(getAttributeValue(requests[1], "DateFrom")));
-      
+
 
         }
 
@@ -148,7 +148,7 @@
         [Fact]
         public async Task BuildSearchRequestsAsync_Check_ThirdPartySettings_When_Valid_InputsArePassed()
         {
-            Dictionary<string,string> thirdPartySettings = new Dictionary<string, string>
+            Dictionary<string, string> thirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
                     { "AgentId", "TestAgentId"},
@@ -275,8 +275,29 @@
         }
 
         [Theory]
+        [InlineData("transfervehicle1", "transfervehicle1", "SYD-Default|SYD1-Default")]
+        public Task TransformResponse_ShouldReturn_Matching_Transfer_Vehicle_When_InValid_TwoWay_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        {
+            List<Request> requests = new();
+            Request request1 = new()
+            {
+                ExtraInfo = Constant.Outbound,
+            };
+            Request request2 = new();
+            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "City Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            requests.Add(request1);
+            requests.Add(request2);
+            // Act
+            var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
+
+            Assert.False(transformResponse.TransformedResults.Any());
+            return Task.CompletedTask;
+        }
+
+        [Theory]
         [InlineData(false)]
-        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest )
+        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest)
         {
 
             List<Request> requests = new();
@@ -298,7 +319,7 @@
             // Act
             var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
             var result = transformResponse.TransformedResults.FirstOrDefault();
-           
+
             Assert.False(result.OnRequest);
             return Task.CompletedTask;
         }
@@ -366,7 +387,7 @@
         }
         private string getAttributeValue(Request requests, string tagName)
            => requests.RequestXML.GetElementsByTagName(tagName)[0].InnerText;
-        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment, string availability="OK")
+        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment, string availability = "OK")
         {
             return new OptionInfoReply()
             {
