@@ -3,6 +3,7 @@
     using Intuitive;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
@@ -47,6 +48,7 @@
 
         #region Properties
         public abstract string Source { get; }
+        public virtual string TransferOptText { get; } = Constants.TransferOptText;
         #endregion
 
         #region Public Functions
@@ -268,7 +270,7 @@
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                 Info = Constants.Info,
-                Opt = tpLocations.LocationCode + Constants.TransferOptText,
+                Opt = tpLocations.LocationCode + TransferOptText,
                 RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
@@ -295,7 +297,7 @@
 
             };
         }
-        private List<string> SplitDescription(string description)
+        public virtual List<string> SplitDescription(string description)
         {
             var list = new List<string>();
 

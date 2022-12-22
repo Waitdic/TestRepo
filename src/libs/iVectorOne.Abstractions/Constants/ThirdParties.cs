@@ -71,6 +71,10 @@
         public const string DOTW = "DOTW";
 
         /// <summary>
+        /// ExoToursTransfers
+        /// </summary>
+        public const string EXOTOURSTRANSFERS = "ExoToursTransfers";
+        /// <summary>
         /// Expedia Rapid
         /// </summary>
         public const string EXPEDIARAPID = "ExpediaRapid";
