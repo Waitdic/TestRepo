@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { orderBy as _orderBy } from 'lodash';
 import { AiOutlineClose } from 'react-icons/ai';
 //
-import type { LogDetails, LogEntries } from '@/types';
+import type { LogEntries } from '@/types';
 import type { TableListBody } from 'src/components/TableList';
 import { RootState } from '@/store';
 import Main from '@/layouts/Main';
 import { LogFilters, Modal, TableList } from '@/components';
 import { getLogViewerPayloadPopup } from './data-access';
-import getLogDetailsPayloadPopupJSON from '@/utils/getLogDetailsPayloadPopupJSON';
+import getLogDetailsPayloadPopupModel from '@/utils/getLogDetailsPayloadPopupModel';
 import { syntaxHighlight } from '@/utils/syntaxHighlight';
 
 const tableHeaderList = [
@@ -56,7 +56,7 @@ type TableOrderBy = {
 type PayloadPopup = {
   isOpen: boolean;
   variant: 'request' | 'response';
-  details: LogDetails[];
+  details: any;
 };
 
 const LogViewer: React.FC = () => {
@@ -78,7 +78,7 @@ const LogViewer: React.FC = () => {
   const [payloadPopup, setPayloadPopup] = useState<PayloadPopup>({
     isOpen: false,
     variant: 'request',
-    details: [],
+    details: {},
   });
 
   const activeTenant = useMemo(() => {
@@ -93,7 +93,7 @@ const LogViewer: React.FC = () => {
         ...prev,
         isOpen: true,
         variant,
-        details: [],
+        details: {}
       }));
 
       await getLogViewerPayloadPopup({
@@ -109,9 +109,10 @@ const LogViewer: React.FC = () => {
         },
         onSuccess: (logDetails) => {
           dispatch.app.setIsLoading(false);
+          var model = getLogDetailsPayloadPopupModel(logDetails[0]); 
           setPayloadPopup((prev) => ({
             ...prev,
-            details: logDetails,
+            details: model,
           }));
         },
         onFailed: (message, instance, title) => {
@@ -214,43 +215,55 @@ const LogViewer: React.FC = () => {
               </button>
             </div>
             <div className='px-5 py-3 border-b border-slate-200'>
-              <div className='flex justify-between items-center'>
+              <div className=''>
                 <div className='font-semibold text-slate-800'>
-                  {payloadPopup.variant === 'request' ? 'Request' : 'Response'}
+                  {payloadPopup.variant === 'request' 
+                    ? 'Request '
+                    : 'Response'}                  
+                </div>
+                <div className='text-sm text-dark-heading'>
+                  <p>{payloadPopup.details.urlPath}</p>
                 </div>
               </div>
-              {(isLoading || payloadPopup.details.length === 0) && (
+              {payloadPopup.variant === 'request' && String(payloadPopup.details.urlParams).length > 2 && 
+              (
+                <div>
+                  <div className='flex justify-between items-center'>
+                    <div className='font-semibold text-slate-800'>
+                      Url Params
+                    </div>
+                  </div>
+                
+                  <div className='text-xs lg:text-sm overflow-auto max-h-[90vh] mt-2'>
+                    <pre
+                      dangerouslySetInnerHTML={{
+                        __html: syntaxHighlight(payloadPopup.details.urlParams),
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              {(isLoading || Object.keys(payloadPopup.details).length === 0) && (
                 <div className='text-center text-sm pb-4 px-4'>
                   <p className='animate-pulse'>Loading...</p>
                 </div>
               )}
-              {payloadPopup.details.length > 0 && (
-                <div className='text-xs lg:text-sm overflow-auto max-h-[90vh] mt-2'>
-                  {payloadPopup.variant === 'request' ? (
-                    <pre
-                      dangerouslySetInnerHTML={{
-                        __html: syntaxHighlight(
-                          getLogDetailsPayloadPopupJSON(
-                            payloadPopup.details[0].requestLog,
-                            'request'
-                          )
-                        ),
-                      }}
-                    />
-                  ) : (
-                    <pre
-                      dangerouslySetInnerHTML={{
-                        __html: syntaxHighlight(
-                          getLogDetailsPayloadPopupJSON(
-                            payloadPopup.details[0].responseLog,
-                            'response'
-                          )
-                        ),
-                      }}
-                    />
-                  )}
+              <div className='flex justify-between items-center'>
+                <div className='font-semibold text-slate-800'>
+                  Content
                 </div>
-              )}
+              </div>
+              <div className='text-xs lg:text-sm overflow-auto max-h-[90vh] mt-2'>
+                <pre
+                  dangerouslySetInnerHTML={{
+                    __html: syntaxHighlight(
+                      payloadPopup.variant === 'request' 
+                      ? payloadPopup.details.requestBody
+                      : payloadPopup.details.responseBody
+                    ),
+                  }}
+                />
+              </div>
             </div>
           </div>
         </Modal>
