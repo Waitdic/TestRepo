@@ -119,5 +119,6 @@
         public string Supplier { get; set; } = String.Empty;
 
         public string EmailLogsToAddress { get; set; } = string.Empty;
+        public bool IncludeOnRequest { get; set; } = false;
     }
 }

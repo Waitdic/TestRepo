@@ -73,7 +73,8 @@
                         OutboundXML = result.OutboundXML,
                         ReturnXML = result.ReturnXML, 
                         OutboundTransferMinutes = result.OutboundTransferMinutes,
-                        ReturnTransferMinutes = result.ReturnTransferMinutes
+                        ReturnTransferMinutes = result.ReturnTransferMinutes,
+                        OnRequest = result.OnRequest,
                     };
 
                     searchDetails.Results.SearchResults.Add(searchResult);

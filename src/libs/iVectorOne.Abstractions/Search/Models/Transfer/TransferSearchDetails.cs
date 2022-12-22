@@ -159,5 +159,9 @@
         /// Gets or sets the third party settings
         /// </summary>
         public Dictionary<string, string> ThirdPartySettings { get; set; } = new Dictionary<string, string> { };
+        /// <summary>
+        /// Gets or sets the flag on request
+        /// </summary>
+        public bool IncludeOnRequest { get; set; } = false;
     }
 }

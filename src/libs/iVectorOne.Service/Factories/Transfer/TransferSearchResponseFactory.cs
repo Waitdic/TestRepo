@@ -95,7 +95,8 @@
                         OutboundXML = result.OutboundXML,
                         ReturnXML = result.ReturnXML,
                         OutboundTransferMinutes = result.OutboundTransferMinutes,
-                        ReturnTransferMinutes = result.ReturnTransferMinutes
+                        ReturnTransferMinutes = result.ReturnTransferMinutes,
+                        OnRequest = result.OnRequest,
                     };
 
                     response.TransferResults.Add(transferResult);

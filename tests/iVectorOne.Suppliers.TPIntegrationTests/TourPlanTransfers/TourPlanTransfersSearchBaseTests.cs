@@ -233,7 +233,7 @@
             };
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold City Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
@@ -259,7 +259,7 @@
             };
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold City Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
@@ -275,8 +275,8 @@
         }
 
         [Theory]
-        [InlineData("transfervehicle1", "transfervehicle1", "SYD-Default|SYD1-Default")]
-        public Task TransformResponse_ShouldReturn_Matching_Transfer_Vehicle_When_InValid_TwoWay_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        [InlineData(false)]
+        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest )
         {
 
             List<Request> requests = new();
@@ -285,20 +285,52 @@
                 ExtraInfo = Constant.Outbound,
             };
             Request request2 = new();
-            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "City Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
+            {
+                IncludeOnRequest = includeOnRequest,
+            };
+            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", "transfervehicle1")).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD", "Gold Coast Hotel to Brisbane Airport", "transfervehicle1")).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
 
             // Act
-            var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
+            var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
             var result = transformResponse.TransformedResults.FirstOrDefault();
            
-            Assert.False(transformResponse.TransformedResults.Any());
+            Assert.False(result.OnRequest);
             return Task.CompletedTask;
         }
 
+        [Theory]
+        [InlineData(true)]
+        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_OR_RQ_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest)
+        {
+
+            List<Request> requests = new();
+            Request request1 = new()
+            {
+                ExtraInfo = Constant.Outbound,
+            };
+            Request request2 = new();
+            TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
+            {
+                IncludeOnRequest = includeOnRequest,
+            };
+            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", "transfervehicle1")).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD", "Gold Coast Hotel to Brisbane Airport", "transfervehicle1", "RQ")).OuterXml);
+
+            requests.Add(request1);
+            requests.Add(request2);
+
+            // Act
+            var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
+            var result = transformResponse.TransformedResults.FirstOrDefault();
+
+            Assert.True(result.OnRequest);
+            return Task.CompletedTask;
+        }
         private string getAttributeValue(List<Request> requests, string tagName)
             => requests.FirstOrDefault().RequestXML.GetElementsByTagName(tagName)[0].InnerText;
 
@@ -334,7 +366,7 @@
         }
         private string getAttributeValue(Request requests, string tagName)
            => requests.RequestXML.GetElementsByTagName(tagName)[0].InnerText;
-        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment)
+        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment, string availability="OK")
         {
             return new OptionInfoReply()
             {
@@ -347,7 +379,7 @@
                      TotalPrice = totalPrice,
                      Currency=currency,
                      RateId = "Default",
-                     Availability= "OK"
+                     Availability= availability
 
                      },
                      OptionNotes = new OptionNotes{
