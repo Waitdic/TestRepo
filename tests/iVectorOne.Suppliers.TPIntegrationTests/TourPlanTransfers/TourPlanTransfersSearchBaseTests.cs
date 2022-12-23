@@ -222,8 +222,8 @@
         }
 
         [Theory]
-        [InlineData("transfervehicle1", "transfervehicle3", "SYD-Default|SYD1-Default")]
-        public Task TransformResponse_ShouldNotReturn_Matching_Transfer_Vehicle_When_InValid_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        [InlineData("transfervehicle1", "transfervehicle3")]
+        public Task TransformResponse_ShouldNotReturnResults_When_NonMatching_TransferVehicles_AreReturned(string commentDeparture, string commentArrival)
         {
 
             List<Request> requests = new();
@@ -275,8 +275,8 @@
         }
 
         [Theory]
-        [InlineData("transfervehicle1", "transfervehicle1", "SYD-Default|SYD1-Default")]
-        public Task TransformResponse_ShouldReturn_Matching_Transfer_Vehicle_When_InValid_TwoWay_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        [InlineData("transfervehicle1", "transfervehicle1")]
+        public Task TransformResponse_ShouldNotReturnResults_When_NonMatching_Locations_AreReturned(string commentDeparture, string commentArrival)
         {
             List<Request> requests = new();
             Request request1 = new()
