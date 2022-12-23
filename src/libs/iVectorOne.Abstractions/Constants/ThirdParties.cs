@@ -73,7 +73,7 @@
         /// <summary>
         /// ExoToursTransfers
         /// </summary>
-        public const string EXOTOURSTRANSFERS = "ExoToursTransfers";
+        public const string EXOTOURSTRANSFERS = "EXOToursTransfers";
         /// <summary>
         /// Expedia Rapid
         /// </summary>
