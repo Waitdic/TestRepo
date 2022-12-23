@@ -1,6 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models.Book
 {
-    using iVectorOne.Suppliers.PremierInn.Models.Common;
+    using Common;
 
     public class BookingConfirmRequest
     {
@@ -12,6 +12,8 @@
     public class BookRequestParameters : Parameters
     {
         public Session Session { get; set; } = new();
+
+        public PaymentCard PaymentCard { get; set; } = new();
 
         public Rooms Rooms { get; set; } = new();
 

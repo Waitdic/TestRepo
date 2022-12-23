@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Suppliers.PremierInn.Models
+﻿using System.Xml;
+
+namespace iVectorOne.Suppliers.PremierInn.Models
 {
     using Intuitive.Helpers.Serialization;
     using Common;
@@ -49,6 +51,12 @@
                 "XMLMD" or "DISMD" => "DBB",
                 _ => "RO"
             };
+        }
+
+        public static string ConvertXmlToString(XmlDocument response, string modelName)
+        {
+            return response.InnerXml
+                .Replace("ProcessMessageResult", $"{modelName}");
         }
     }
 }

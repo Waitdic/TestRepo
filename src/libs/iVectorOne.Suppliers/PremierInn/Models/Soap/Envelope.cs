@@ -49,8 +49,9 @@
 
             public class MessageResponse
             {
-                [XmlElement(typeof(AvailabilityResponse), ElementName = "ProcessMessageResult")]
-                [XmlElement(typeof(AvailabilityUpdateResponse), ElementName = "ProcessMessageResultTest")]
+                [XmlElement(typeof(AvailabilityResponse), ElementName = "AvailabilityResponse")]
+                [XmlElement(typeof(AvailabilityUpdateResponse), ElementName = "AvailabilityUpdateResponse")]
+                [XmlElement(typeof(BookingConfirmResponse), ElementName = "BookingConfirmResponse")]
                 public SoapContent SoapContent { get; set; } = new T();
 
                 [XmlIgnore]

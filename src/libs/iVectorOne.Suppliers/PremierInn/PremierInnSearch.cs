@@ -85,9 +85,9 @@
             var allResponses = requests
                 .Where(x => x.Success)
                 .GroupBy(x => (int)x.ExtraInfo!)
-                .Select(r => r
-                    .Select(g => _serializer.DeSerialize<EnvelopeResponse<AvailabilityResponse>>(_serializer.CleanXmlNamespaces(g.ResponseXML)))
-                    .Select(e => e.Body.ProcessMessageResponse.Content)
+                .Select(g => g
+                    .Select(g => Helper.ConvertXmlToString(_serializer.CleanXmlNamespaces(g.ResponseXML), nameof(AvailabilityResponse)))
+                    .Select(r => _serializer.DeSerialize<EnvelopeResponse<AvailabilityResponse>>(r).Body.ProcessMessageResponse.Content)
                     .ToArray())
                 .ToList();
 
