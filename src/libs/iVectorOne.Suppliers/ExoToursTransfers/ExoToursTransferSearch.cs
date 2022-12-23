@@ -32,7 +32,6 @@
         }
         public override List<string> SplitDescription(string description)
         {
-            var separators = new string[] { " by", " by " };
             var listOfLocations = new List<string>();
 
             var locations = description.Split(" - ");
@@ -40,7 +39,7 @@
             if (locations.Length == 2)
             {
                 listOfLocations.Add(locations[0]);
-                listOfLocations.Add(locations[1].Split(separators, StringSplitOptions.RemoveEmptyEntries)[0]);
+                listOfLocations.Add(locations[1].Split(" by ")[0]);
             }
 
             return listOfLocations;
