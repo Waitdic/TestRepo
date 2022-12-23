@@ -10,8 +10,8 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public const string OneWay = "OneWay";
         public const string Outbound = "Outbound";
         public const string UnexpectedError = "Unexpected error executing search request.";
-        public const string OK = "OK";
-        public const string RQ = "RQ";
+        public const string FreesaleCode = "OK";
+        public const string OnRequestCode = "RQ";
         public static readonly Warning BookException = new Warning("BookException", "Failed to confirm booking");
         public static readonly Warning CancelException = new Warning("CancelException", "Failed to cancel bookng");
         public static readonly Warning PrebookException = new Warning("PrebookException", "Failed to prebook");

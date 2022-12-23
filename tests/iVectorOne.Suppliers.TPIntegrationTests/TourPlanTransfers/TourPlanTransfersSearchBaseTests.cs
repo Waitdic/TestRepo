@@ -297,7 +297,7 @@
 
         [Theory]
         [InlineData(false)]
-        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest)
+        public Task TransformResponse_ShouldReturn_Only_FreesaleResults_When_IncludeOnRequest_IsFalse(bool includeOnRequest)
         {
 
             List<Request> requests = new();
@@ -326,7 +326,7 @@
 
         [Theory]
         [InlineData(true)]
-        public Task TransformResponse_ShouldReturn_Matching_OnRequest_OK_OR_RQ_Flag_When_Valid_TwoWay_InputsArePassed(bool includeOnRequest)
+        public Task TransformResponse_ShouldReturn_FreesaleAndOnRequestResults_When_IncludeOnRequest_IsTrue(bool includeOnRequest)
         {
 
             List<Request> requests = new();

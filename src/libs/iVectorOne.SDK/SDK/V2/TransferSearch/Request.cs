@@ -119,6 +119,9 @@
         public string Supplier { get; set; } = String.Empty;
 
         public string EmailLogsToAddress { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets a value indicating whether to include on request transfers in the results
+        /// </summary>
         public bool IncludeOnRequest { get; set; } = false;
     }
 }
