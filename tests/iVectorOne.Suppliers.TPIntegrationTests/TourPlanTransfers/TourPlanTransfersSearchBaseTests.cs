@@ -301,26 +301,27 @@
         {
 
             List<Request> requests = new();
-            Request request1 = new()
+            Request request = new()
             {
                 ExtraInfo = Constant.Outbound,
             };
-            Request request2 = new();
             TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
             {
                 IncludeOnRequest = includeOnRequest,
             };
-            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", "transfervehicle1")).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD", "Gold Coast Hotel to Brisbane Airport", "transfervehicle1")).OuterXml);
+            request.SetResponse(Serialize(GenerateFreesaleAndOnRequestResults()).OuterXml);
 
-            requests.Add(request1);
-            requests.Add(request2);
+            requests.Add(request);
 
             // Act
             var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
-            var result = transformResponse.TransformedResults.FirstOrDefault();
+            var freesaleCodeResponseCount = transformResponse.TransformedResults.Where(x => !x.OnRequest).Count();
+            var OnRequestCodeResponseCount = transformResponse.TransformedResults.Where(x => x.OnRequest).Count();
 
-            Assert.False(result.OnRequest);
+            //Assert
+            Assert.True(transformResponse.TransformedResults.Any());
+            Assert.Equal(3, freesaleCodeResponseCount);
+            Assert.Equal(0, OnRequestCodeResponseCount);
             return Task.CompletedTask;
         }
 
@@ -330,26 +331,27 @@
         {
 
             List<Request> requests = new();
-            Request request1 = new()
+            Request request = new()
             {
                 ExtraInfo = Constant.Outbound,
             };
-            Request request2 = new();
             TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
             {
                 IncludeOnRequest = includeOnRequest,
             };
-            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", "transfervehicle1")).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD", "Gold Coast Hotel to Brisbane Airport", "transfervehicle1", "RQ")).OuterXml);
+            request.SetResponse(Serialize(GenerateFreesaleAndOnRequestResults()).OuterXml);
 
-            requests.Add(request1);
-            requests.Add(request2);
+            requests.Add(request);
 
             // Act
             var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
-            var result = transformResponse.TransformedResults.FirstOrDefault();
+            var freesaleCodeResponseCount = transformResponse.TransformedResults.Where(x => !x.OnRequest).Count();
+            var OnRequestCodeResponseCount = transformResponse.TransformedResults.Where(x => x.OnRequest).Count();
 
-            Assert.True(result.OnRequest);
+            //Assert
+            Assert.True(transformResponse.TransformedResults.Any());
+            Assert.Equal(3, freesaleCodeResponseCount);
+            Assert.Equal(2, OnRequestCodeResponseCount);
             return Task.CompletedTask;
         }
         private string getAttributeValue(List<Request> requests, string tagName)
@@ -414,6 +416,127 @@
                      }
                      }
                      }
+            };
+        }
+
+        private OptionInfoReply GenerateFreesaleAndOnRequestResults()
+        {
+            return new OptionInfoReply()
+            {
+                Option = new List<Option> {
+                         new Option()
+                         {
+                             OptStayResults = new OptStayResults()
+                             {
+                                 TotalPrice = 200,
+                                 Currency = "Ind",
+                                 RateId = "Default",
+                                 Availability = "OK"
+
+                             },
+                             OptionNotes = new OptionNotes
+                             {
+                                 OptionNote = new List<OptionNote>()
+                             }
+                    ,
+                             Opt = "optTest",
+                             OptGeneral = new OptGeneral()
+                             {
+                                 Description = "Brisbane Airport to Gold Coast Hotel",
+                                 Comment = "transfervehicle1"
+                             }
+                         },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "OK"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "OK"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "RQ"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "RQ"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                }
+
+            }
             };
         }
         private TourPlanTransfersSearchBase SetupGoWaySydneyTransfersService(TransferSearchDetails searchDetails,
