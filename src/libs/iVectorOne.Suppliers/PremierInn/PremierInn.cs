@@ -13,6 +13,7 @@ using iVectorOne.Models;
 using iVectorOne.Models.Property.Booking;
 using iVectorOne.Suppliers.PremierInn.Models;
 using iVectorOne.Suppliers.PremierInn.Models.Book;
+using iVectorOne.Suppliers.PremierInn.Models.Cancel;
 using iVectorOne.Suppliers.PremierInn.Models.Common;
 using iVectorOne.Suppliers.PremierInn.Models.Search;
 using iVectorOne.Suppliers.PremierInn.Models.Soap;
@@ -248,14 +249,58 @@ namespace iVectorOne.Suppliers.PremierInn
             return reference;
         }
 
-        public Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
+        public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            var requests = new List<Request>();
+            var cancellationResponse = new ThirdPartyCancellationResponse();
+
+            try
+            {
+                foreach (var room in propertyDetails.Rooms)
+                {
+                    var request = BuildCancelRequest(propertyDetails, room);
+                    var webRequest = new Request
+                    {
+                        EndPoint = _settings.GenericURL(propertyDetails),
+                        Method = RequestMethod.POST,
+                        ContentType = ContentTypes.Text_xml,
+                        SoapAction = Models.Constants.SOAPAction,
+                    };
+                    webRequest.SetRequest(request);
+                    requests.Add(webRequest);
+
+                    await webRequest.Send(_httpClient, _logger);
+                }
+
+                var responses = requests
+                    .Select(r => Helper.ConvertXmlToString(_serializer.CleanXmlNamespaces(r.ResponseXML), nameof(BookingConfirmResponse)))
+                    .Select(x => _serializer.DeSerialize<EnvelopeResponse<BookingConfirmResponse>>(x))
+                    .Select(r => r.Body.ProcessMessageResponse.Content.Parameters)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                cancellationResponse.Success = false;
+                cancellationResponse.TPCancellationReference = "failed";
+                propertyDetails.Warnings.AddNew("Cancellation Exception", ex.ToString());
+            }
+            finally
+            {
+                if (requests.Any())
+                {
+                    foreach (var request in requests)
+                    {
+                        propertyDetails.AddLog("Cancellation", request);
+                    }
+                }
+            }
+
+            return cancellationResponse;
         }
 
         public Task<ThirdPartyCancellationFeeResult> GetCancellationCostAsync(PropertyDetails propertyDetails)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new ThirdPartyCancellationFeeResult());
         }
 
         public void EndSession(PropertyDetails propertyDetails)
@@ -308,6 +353,82 @@ namespace iVectorOne.Suppliers.PremierInn
             var tpRef = PremierInnTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference);
             var card = propertyDetails.GeneratedVirtualCard;
             var request = new BookingConfirmRequest
+            {
+                Login = Helper.BuildLogin(_settings, propertyDetails),
+                Parameters =
+                {
+                    Session = { ID = tpRef.SessionId },
+                    PaymentCard =
+                    {
+                        CardType = "VI",
+                        CardNumber = !string.IsNullOrEmpty(card.CardNumber) ? card.CardNumber : "4444333322221111",
+                        ExpiryDate = !string.IsNullOrEmpty(card.ExpiryMonth) ? card.ExpiryMonth + card.ExpiryYear : "0225",
+                        CardHolderName = !string.IsNullOrEmpty(card.CardHolderName) 
+                            ? card.CardHolderName 
+                            : $"{propertyDetails.LeadGuestFirstName} {propertyDetails.LeadGuestLastName}",
+                    },
+                    MessageType = "BookingConfirmRequest",
+                    Rooms =
+                    {
+                        NumberofRooms = 1,
+                        RoomDetails =
+                        {
+                            Number = 1,
+                            GuestName = room.Passengers.Select(x => new GuestName
+                            {
+                                Title = x.Title,
+                                Initials = x.FirstName[..1],
+                                Surname = x.LastName
+                            }).ToArray(),
+                        }
+                    },
+                    Address =
+                    {
+                        AddressLine1 = propertyDetails.LeadGuestAddress1,
+                        AddressLine2 = propertyDetails.LeadGuestTownCity,
+                        AddressLine3 = propertyDetails.LeadGuestCounty,
+                        AddressLine4 = propertyDetails.LeadGuestCountryCode,
+                        PostCode = propertyDetails.LeadGuestPostcode,
+                        TelephoneNumber = propertyDetails.LeadGuestPhone,
+                        MobileNumber = propertyDetails.LeadGuestMobile,
+                        EmailAddress = propertyDetails.LeadGuestEmail,
+                    },
+                    BookingCompanyName = "iVectorOne",
+                    BookerDetails =
+                    {
+                        BookerName =
+                        {
+                            Title = propertyDetails.LeadGuestTitle,
+                            Initials = propertyDetails.LeadGuestFirstName[..1],
+                            Surname = propertyDetails.LeadGuestLastName
+                        },
+                        BookerAddress = new Address
+                        {
+                            AddressLine1 = propertyDetails.LeadGuestAddress1,
+                            AddressLine2 = propertyDetails.LeadGuestTownCity,
+                            AddressLine3 = propertyDetails.LeadGuestCounty,
+                            AddressLine4 = propertyDetails.LeadGuestCountryCode,
+                            PostCode = propertyDetails.LeadGuestPostcode,
+                            TelephoneNumber = propertyDetails.LeadGuestPhone,
+                            MobileNumber = propertyDetails.LeadGuestMobile,
+                            EmailAddress = propertyDetails.LeadGuestEmail
+                        }
+                    },
+                    BookingType = "Leisure",
+                }
+            };
+            
+            var content = _serializer.CleanXmlNamespaces(_serializer.Serialize(request)).InnerXml
+                .Replace("<BookingConfirmRequest>", "")
+                .Replace("</BookingConfirmRequest>", "");
+
+            return Helper.CreateEnvelope(_serializer, content);
+        }
+
+        public string BuildCancelRequest(PropertyDetails propertyDetails, RoomDetails room)
+        {
+            var tpRef = PremierInnTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference);
+            var request = new ConfirmationNumberValidationRequest
             {
                 Login = Helper.BuildLogin(_settings, propertyDetails),
                 Parameters =
@@ -370,10 +491,10 @@ namespace iVectorOne.Suppliers.PremierInn
                     BookingType = "Leisure",
                 }
             };
-            
+
             var content = _serializer.CleanXmlNamespaces(_serializer.Serialize(request)).InnerXml
-                .Replace("<BookingConfirmRequest>", "")
-                .Replace("</BookingConfirmRequest>", "");
+                .Replace("<ConfirmationNumberValidationRequest>", "")
+                .Replace("</ConfirmationNumberValidationRequest>", "");
 
             return Helper.CreateEnvelope(_serializer, content);
         }

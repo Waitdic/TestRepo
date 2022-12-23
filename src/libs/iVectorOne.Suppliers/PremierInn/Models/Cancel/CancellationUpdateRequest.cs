@@ -1,8 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models.Cancel
 {
     using iVectorOne.Suppliers.PremierInn.Models.Common;
+    using iVectorOne.Suppliers.PremierInn.Models.Soap;
 
-    public class CancellationUpdateRequest
+    public class CancellationUpdateRequest : SoapContent
     {
         public Login Login { get; set; } = new();
 

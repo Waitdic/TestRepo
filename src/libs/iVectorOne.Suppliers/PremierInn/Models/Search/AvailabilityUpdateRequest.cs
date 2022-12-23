@@ -2,8 +2,9 @@
 {
     using System.Xml.Serialization;
     using Common;
+    using iVectorOne.Suppliers.PremierInn.Models.Soap;
 
-    public class AvailabilityUpdateRequest
+    public class AvailabilityUpdateRequest : SoapContent
     {
         public Login Login { get; set; } = new();
 

@@ -2,8 +2,10 @@
 {
     using System.Xml.Serialization;
     using iVectorOne.Suppliers.PremierInn.Models.Common;
+    using iVectorOne.Suppliers.PremierInn.Models.Soap;
 
-    public class ConfirmationNumberValidationRequest
+
+    public class ConfirmationNumberValidationRequest : SoapContent
     {
         public Login Login { get; set; } = new();
 
