@@ -233,7 +233,7 @@
             };
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold City Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Cost Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
