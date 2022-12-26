@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Intuitive;
-using Intuitive.Helpers.Net;
-using Intuitive.Helpers.Security;
-using Intuitive.Helpers.Serialization;
-using iVectorOne.Constants;
-using iVectorOne.Interfaces;
-using iVectorOne.Models;
-using iVectorOne.Models.Property.Booking;
-using iVectorOne.Suppliers.PremierInn.Models;
-using iVectorOne.Suppliers.PremierInn.Models.Book;
-using iVectorOne.Suppliers.PremierInn.Models.Cancel;
-using iVectorOne.Suppliers.PremierInn.Models.Common;
-using iVectorOne.Suppliers.PremierInn.Models.Search;
-using iVectorOne.Suppliers.PremierInn.Models.Soap;
-using Microsoft.Extensions.Logging;
-using Address = iVectorOne.Suppliers.PremierInn.Models.Common.Address;
-using Erratum = iVectorOne.Models.Property.Booking.Erratum;
-using RoomDetails = iVectorOne.Models.Property.Booking.RoomDetails;
-
-namespace iVectorOne.Suppliers.PremierInn
+﻿namespace iVectorOne.Suppliers.PremierInn
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using Intuitive;
+    using Intuitive.Helpers.Net;
+    using Intuitive.Helpers.Security;
+    using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Suppliers.OceanBeds;
+    using iVectorOne.Suppliers.PremierInn.Models;
+    using iVectorOne.Suppliers.PremierInn.Models.Book;
+    using iVectorOne.Suppliers.PremierInn.Models.Cancel;
+    using iVectorOne.Suppliers.PremierInn.Models.Common;
+    using iVectorOne.Suppliers.PremierInn.Models.Search;
+    using iVectorOne.Suppliers.PremierInn.Models.Soap;
+    using Microsoft.Extensions.Logging;
+    using Address = iVectorOne.Suppliers.PremierInn.Models.Common.Address;
+    using Erratum = iVectorOne.Models.Property.Booking.Erratum;
+    using RoomDetails = iVectorOne.Models.Property.Booking.RoomDetails;
+
     public class PremierInn : IThirdParty, ISingleSource
     {
         #region Properties
@@ -83,6 +84,8 @@ namespace iVectorOne.Suppliers.PremierInn
         }
 
         #endregion
+
+        #region Prebook
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
@@ -167,6 +170,10 @@ namespace iVectorOne.Suppliers.PremierInn
             return preBookSuccess;
         }
 
+        #endregion
+
+        #region Book
+
         public async Task<string> BookAsync(PropertyDetails propertyDetails)
         {
             string reference;
@@ -221,8 +228,18 @@ namespace iVectorOne.Suppliers.PremierInn
                     }
 
                     propertyDetails.SourceSecondaryReference = string.Join('|', sessionIds);
-                    propertyDetails.TPRef1 = $"{propertyDetails.LeadGuestLastName}|{propertyDetails.ArrivalDate:yyyy-MM-dd}"; 
+                    propertyDetails.TPRef1 = new PremierInnTpRef()
+                    {
+                        LeadGuestLastName = propertyDetails.LeadGuestLastName,
+                        ArrivalDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")
+                    }.Encrypt(_secretKeeper);
                     reference = string.Join('|', references);
+
+                    var tpRef = new PremierInnTpRef()
+                    {
+                        LeadGuestLastName = propertyDetails.LeadGuestLastName,
+                        ArrivalDate = propertyDetails.ArrivalDate.ToString("yyyy-MM-dd")
+                    };
                 }
                 else
                 {
@@ -249,6 +266,10 @@ namespace iVectorOne.Suppliers.PremierInn
 
             return reference;
         }
+
+        #endregion
+
+        #region Cancel
 
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
@@ -374,6 +395,10 @@ namespace iVectorOne.Suppliers.PremierInn
         {
         }
 
+        #endregion
+
+        #region Helper
+
         public string BuildAvailabilityUpdateRequest(PropertyDetails propertyDetails, RoomDetails room)
         {
             var tpRef = PremierInnTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference);
@@ -494,6 +519,7 @@ namespace iVectorOne.Suppliers.PremierInn
 
         public string BuildCancelRequest(PropertyDetails propertyDetails, string number)
         {
+            var tpRef = PremierInnTpRef.Decrypt(_secretKeeper, propertyDetails.TPRef1);
             var request = new ConfirmationNumberValidationRequest
             {
                 Login = Helper.BuildLogin(_settings, propertyDetails),
@@ -502,8 +528,8 @@ namespace iVectorOne.Suppliers.PremierInn
                     MessageType = "ConfirmationNumberValidationRequest",
                     Route = "Cancel",
                     ConfirmationNumber = number,
-                    ArrivalDate = propertyDetails.TPRef1.Split('|')[1],
-                    Surname = propertyDetails.TPRef1.Split('|')[0]
+                    ArrivalDate = tpRef.ArrivalDate,
+                    Surname = tpRef.LeadGuestLastName
                 }
             };
 
@@ -542,4 +568,6 @@ namespace iVectorOne.Suppliers.PremierInn
             return Helper.CreateEnvelope(_serializer, content);
         }
     }
+
+    #endregion
 }

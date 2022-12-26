@@ -23,11 +23,20 @@
 
         }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SessionId { get; set; } = string.Empty;
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string RateCode { get; set; } = string.Empty;
 
-        public Cancellation CancellationPolicy { get; set; } = new();
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public Cancellation? CancellationPolicy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string LeadGuestLastName { get; set; } = string.Empty;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string ArrivalDate { get; set; } = string.Empty;
 
         public string Encrypt(ISecretKeeper secretKeeper)
         {
