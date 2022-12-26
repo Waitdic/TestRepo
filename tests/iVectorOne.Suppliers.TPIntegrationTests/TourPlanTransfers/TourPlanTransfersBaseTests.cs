@@ -210,7 +210,7 @@
         private async Task<string> GetBookingStatusAsync(TransferDetails transferDetails, ArrayList serviceReply)
         {
             var goWayService = SetupGoWaySydneyTransfersService(transferDetails, serviceReply);
-
+            goWayService.ValidateSettings(transferDetails);
             return await goWayService.BookAsync(transferDetails);
         }
         #endregion

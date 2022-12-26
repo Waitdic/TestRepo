@@ -3,6 +3,7 @@
     using Intuitive;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
@@ -47,6 +48,7 @@
 
         #region Properties
         public abstract string Source { get; }
+        public virtual string TransferOptText { get; } = Constants.TransferOptText;
         #endregion
 
         #region Public Functions
@@ -62,25 +64,27 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            LocationData tpLocations = GetThirdPartyLocations(location);
-            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
-            Outbound.ExtraInfo = Constants.Outbound;
-            requests.Add(Outbound);
-            if (!searchDetails.OneWay)
+            LocationData tpLocations = GetThirdPartyLocations(location);
+            if (!string.IsNullOrEmpty(tpLocations.LocationCode))
             {
-                var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
-                returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
-                requests.Add(returnBuildOptionInfoRequest);
+                var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+                Outbound.ExtraInfo = Constants.Outbound;
+                requests.Add(Outbound);
+                if (!searchDetails.OneWay)
+                {
+                    var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                    returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
+                    requests.Add(returnBuildOptionInfoRequest);
+                }
             }
-
             return Task.FromResult(requests);
 
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0)
+            if (location != null && (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0))
             {
                 string[] departureData = location.DepartureData.Split(":");
                 string[] arrivalData = location.ArrivalData.Split(":");
@@ -124,7 +128,7 @@
             {
                 if (!ResponseHasExceptions(request))
                 {
-                    deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
+                    deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML, _serializer);
 
                     if ((string)request.ExtraInfo == Constants.Outbound)
                     {
@@ -180,7 +184,7 @@
             {
                 TPSessionID = "",
                 SupplierReference = supplierReference,
-                TransferVehicle = comment,
+                TransferVehicle = comment.Substring(0, comment.Length <= 50 ? comment.Length : 50),
                 ReturnTime = "12:00",
                 VehicleCost = 0,
                 AdultCost = 0,
@@ -266,7 +270,7 @@
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                 Info = Constants.Info,
-                Opt = tpLocations.LocationCode + Constants.TransferOptText,
+                Opt = tpLocations.LocationCode + TransferOptText,
                 RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
@@ -293,7 +297,7 @@
 
             };
         }
-        private List<string> SplitDescription(string description)
+        public virtual List<string> SplitDescription(string description)
         {
             var list = new List<string>();
 

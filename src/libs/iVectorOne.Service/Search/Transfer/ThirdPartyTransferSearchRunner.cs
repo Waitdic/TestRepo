@@ -84,7 +84,7 @@
                     request.LogFileName = "Search";
                     request.CreateLog = false; //TODO CS this should come from configuration
 
-                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source); 
+                    request.TimeoutInSeconds = RequestTimeOutSeconds(searchDetails, source);
                     request.UseGZip = UseGZip(searchDetails, source);
 
                     taskList.Add(_httpClient.SendAsync(request, _logger, cancellationTokenSource.Token));
@@ -170,10 +170,19 @@
         public int TimeoutSeconds(TransferSearchDetails searchDetails, string source)
         {
             var configuration = searchDetails.ThirdPartyConfigurations.FirstOrDefault(c => c.Supplier == source);
-             
-            return configuration.Configurations.ContainsKey("SearchTimeout") ? 
-                configuration.Configurations["SearchTimeout"].ToSafeInt() :
-                searchDetails.Settings.SearchTimeoutSeconds;
+
+            if (configuration is null)
+            {
+                return searchDetails.ThirdPartySettings.ContainsKey("SearchTimeout") ?
+                    searchDetails.ThirdPartySettings["SearchTimeout"].ToSafeInt() :
+                    searchDetails.Settings.SearchTimeoutSeconds;
+            }
+            else
+            {
+                return configuration.Configurations.ContainsKey("SearchTimeout") ?
+                    configuration.Configurations["SearchTimeout"].ToSafeInt() :
+                    searchDetails.Settings.SearchTimeoutSeconds;
+            }
         }
 
         /// <summary>A boolean to decide if we want to compress the request</summary>
@@ -187,9 +196,15 @@
 
             if (searchDetails != null)
             {
-                if (configuration.Configurations.ContainsKey("UseGZip"))
+                if (configuration is not null && configuration.Configurations.ContainsKey("UseGZip"))
                 {
                     useGZip = configuration.Configurations["UseGZip"].ToSafeBoolean();
+                }
+                else
+                {
+                    useGZip = searchDetails.ThirdPartySettings.ContainsKey("UseGZip") ?
+                        searchDetails.ThirdPartySettings["UseGZip"].ToSafeBoolean() :
+                        useGZip;
                 }
             }
 
