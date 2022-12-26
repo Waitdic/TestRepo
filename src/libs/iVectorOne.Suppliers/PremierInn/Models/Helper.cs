@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
+using Intuitive.Helpers.Net;
 
 namespace iVectorOne.Suppliers.PremierInn.Models
 {

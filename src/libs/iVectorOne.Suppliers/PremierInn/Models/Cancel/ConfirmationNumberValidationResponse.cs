@@ -2,8 +2,9 @@
 {
     using iVectorOne.Suppliers.PremierInn.Models.Common;
     using System.Xml.Serialization;
+    using iVectorOne.Suppliers.PremierInn.Models.Soap;
 
-    public class ConfirmationNumberValidationResponse
+    public class ConfirmationNumberValidationResponse : SoapContent
     {
         public CancelResponseParameters Parameters { get; set; } = new();
     }
@@ -14,6 +15,8 @@
         public string Route { get; set; } = string.Empty;
 
         public Session Session { get; set; } = new();
+
+        public BookerDetails BookerDetails { get; set; } = new();
 
         public ErrorCode ErrorCode { get; set; } = new();
     }

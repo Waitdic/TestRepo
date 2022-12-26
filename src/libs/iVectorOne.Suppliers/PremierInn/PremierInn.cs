@@ -221,6 +221,7 @@ namespace iVectorOne.Suppliers.PremierInn
                     }
 
                     propertyDetails.SourceSecondaryReference = string.Join('|', sessionIds);
+                    propertyDetails.TPRef1 = $"{propertyDetails.LeadGuestLastName}|{propertyDetails.ArrivalDate:yyyy-MM-dd}"; 
                     reference = string.Join('|', references);
                 }
                 else
@@ -252,13 +253,20 @@ namespace iVectorOne.Suppliers.PremierInn
         public async Task<ThirdPartyCancellationResponse> CancelBookingAsync(PropertyDetails propertyDetails)
         {
             var requests = new List<Request>();
+            var updateRequests = new List<Request>();
             var cancellationResponse = new ThirdPartyCancellationResponse();
 
             try
             {
-                foreach (var room in propertyDetails.Rooms)
+                for (var index = 0; index < propertyDetails.SourceReference.Split('|').Length; index++)
                 {
-                    var request = BuildCancelRequest(propertyDetails, room);
+                    if (propertyDetails.SourceReference.Split('|')[index] == "failed")
+                    {
+                        propertyDetails.Warnings.AddNew("Cancel failed", propertyDetails.SourceSecondaryReference.Split('|')[index]);
+                        continue;
+                    }
+                    
+                    var request = BuildCancelRequest(propertyDetails, propertyDetails.SourceReference.Split('|')[index]);
                     var webRequest = new Request
                     {
                         EndPoint = _settings.GenericURL(propertyDetails),
@@ -273,10 +281,61 @@ namespace iVectorOne.Suppliers.PremierInn
                 }
 
                 var responses = requests
-                    .Select(r => Helper.ConvertXmlToString(_serializer.CleanXmlNamespaces(r.ResponseXML), nameof(BookingConfirmResponse)))
-                    .Select(x => _serializer.DeSerialize<EnvelopeResponse<BookingConfirmResponse>>(x))
+                    .Select(r => Helper.ConvertXmlToString(_serializer.CleanXmlNamespaces(r.ResponseXML), nameof(ConfirmationNumberValidationResponse)))
+                    .Select(x => _serializer.DeSerialize<EnvelopeResponse<ConfirmationNumberValidationResponse>>(x))
                     .Select(r => r.Body.ProcessMessageResponse.Content.Parameters)
                     .ToList();
+
+                if (responses.All(x => string.IsNullOrEmpty(x.ErrorCode.Status) || x.ErrorCode.Status != "00"))
+                {
+                    cancellationResponse.Success = false;
+                    cancellationResponse.TPCancellationReference = "failed";
+                    propertyDetails.Warnings.AddNew("Cancellation Exception", responses.First().ErrorCode.Text);
+                }
+                else
+                {
+                    for (var index = 0; index < responses.Count; index++)
+                    {
+                        var request = BuildCancelUpdateRequest(
+                            propertyDetails,
+                            responses[index].BookerDetails.BookerName,
+                            propertyDetails.SourceReference.Split('|')[index],
+                            responses[index].Session.ID);
+
+                        var webRequest = new Request
+                        {
+                            EndPoint = _settings.GenericURL(propertyDetails),
+                            Method = RequestMethod.POST,
+                            ContentType = ContentTypes.Text_xml,
+                            SoapAction = Models.Constants.SOAPAction,
+                        };
+                        webRequest.SetRequest(request);
+                        updateRequests.Add(webRequest);
+
+                        await webRequest.Send(_httpClient, _logger);
+                    }
+
+                    var updateResponses = updateRequests
+                        .Select(r => Helper.ConvertXmlToString(_serializer.CleanXmlNamespaces(r.ResponseXML), nameof(CancellationUpdateResponse)))
+                        .Select(x => _serializer.DeSerialize<EnvelopeResponse<CancellationUpdateResponse>>(x))
+                        .Select(r => r.Body.ProcessMessageResponse.Content.Parameters)
+                        .ToList();
+
+                    if (updateResponses.All(x => x.ErrorCode.Status != "00"))
+                    {
+                        cancellationResponse.Success = false;
+                        propertyDetails.Warnings.AddNew("Cancellation Exception", updateResponses.First().ErrorCode.Text);
+                    }
+                    else
+                    {
+                        var cancellationsList = updateResponses
+                            .Select(response => response.ErrorCode.Status == "00" ? response.CancellationNumber : "failed")
+                            .ToList();
+
+                        cancellationResponse.Success = true;
+                        cancellationResponse.TPCancellationReference = string.Join('|', cancellationsList);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -291,6 +350,14 @@ namespace iVectorOne.Suppliers.PremierInn
                     foreach (var request in requests)
                     {
                         propertyDetails.AddLog("Cancellation", request);
+                    }
+                }
+
+                if (updateRequests.Any())
+                {
+                    foreach (var request in updateRequests)
+                    {
+                        propertyDetails.AddLog("Cancellation update", request);
                     }
                 }
             }
@@ -425,76 +492,52 @@ namespace iVectorOne.Suppliers.PremierInn
             return Helper.CreateEnvelope(_serializer, content);
         }
 
-        public string BuildCancelRequest(PropertyDetails propertyDetails, RoomDetails room)
+        public string BuildCancelRequest(PropertyDetails propertyDetails, string number)
         {
-            var tpRef = PremierInnTpRef.Decrypt(_secretKeeper, room.ThirdPartyReference);
             var request = new ConfirmationNumberValidationRequest
             {
                 Login = Helper.BuildLogin(_settings, propertyDetails),
                 Parameters =
                 {
-                    Session = { ID = tpRef.SessionId },
-                    PaymentCard =
-                    {
-                        CardType = "VI",
-                        CardNumber = "4444333322221111",
-                        ExpiryDate = "0225",
-                        CardHolderName = $"{propertyDetails.LeadGuestFirstName} {propertyDetails.LeadGuestLastName}",
-                    },
-                    MessageType = "BookingConfirmRequest",
-                    Rooms =
-                    {
-                        NumberofRooms = 1,
-                        RoomDetails =
-                        {
-                            Number = 1,
-                            GuestName = room.Passengers.Select(x => new GuestName
-                            {
-                                Title = x.Title,
-                                Initials = x.FirstName[..1],
-                                Surname = x.LastName
-                            }).ToArray(),
-                        }
-                    },
-                    Address =
-                    {
-                        AddressLine1 = propertyDetails.LeadGuestAddress1,
-                        AddressLine2 = propertyDetails.LeadGuestTownCity,
-                        AddressLine3 = propertyDetails.LeadGuestCounty,
-                        AddressLine4 = propertyDetails.LeadGuestCountryCode,
-                        PostCode = propertyDetails.LeadGuestPostcode,
-                        TelephoneNumber = propertyDetails.LeadGuestPhone,
-                        MobileNumber = propertyDetails.LeadGuestMobile,
-                        EmailAddress = propertyDetails.LeadGuestEmail,
-                    },
-                    BookingCompanyName = "iVectorOne",
-                    BookerDetails =
-                    {
-                        BookerName =
-                        {
-                            Title = propertyDetails.LeadGuestTitle,
-                            Initials = propertyDetails.LeadGuestFirstName[..1],
-                            Surname = propertyDetails.LeadGuestLastName
-                        },
-                        BookerAddress = new Address
-                        {
-                            AddressLine1 = propertyDetails.LeadGuestAddress1,
-                            AddressLine2 = propertyDetails.LeadGuestTownCity,
-                            AddressLine3 = propertyDetails.LeadGuestCounty,
-                            AddressLine4 = propertyDetails.LeadGuestCountryCode,
-                            PostCode = propertyDetails.LeadGuestPostcode,
-                            TelephoneNumber = propertyDetails.LeadGuestPhone,
-                            MobileNumber = propertyDetails.LeadGuestMobile,
-                            EmailAddress = propertyDetails.LeadGuestEmail
-                        }
-                    },
-                    BookingType = "Leisure",
+                    MessageType = "ConfirmationNumberValidationRequest",
+                    Route = "Cancel",
+                    ConfirmationNumber = number,
+                    ArrivalDate = propertyDetails.TPRef1.Split('|')[1],
+                    Surname = propertyDetails.TPRef1.Split('|')[0]
                 }
             };
 
             var content = _serializer.CleanXmlNamespaces(_serializer.Serialize(request)).InnerXml
                 .Replace("<ConfirmationNumberValidationRequest>", "")
                 .Replace("</ConfirmationNumberValidationRequest>", "");
+
+            return Helper.CreateEnvelope(_serializer, content);
+        }
+
+        public string BuildCancelUpdateRequest(
+            PropertyDetails propertyDetails,
+            GuestName bookerName,
+            string number,
+            string sessionId)
+        {
+            var request = new CancellationUpdateRequest()
+            {
+                Login = Helper.BuildLogin(_settings, propertyDetails),
+                Parameters =
+                {
+                    MessageType = "CancellationUpdateRequest",
+                    Session = { ID = sessionId },
+                    ConfirmationNumber = number,
+                    BookerDetails =
+                    {
+                        BookerName = bookerName,
+                    }
+                }
+            };
+
+            var content = _serializer.CleanXmlNamespaces(_serializer.Serialize(request)).InnerXml
+                .Replace("<CancellationUpdateRequest>", "")
+                .Replace("</CancellationUpdateRequest>", "");
 
             return Helper.CreateEnvelope(_serializer, content);
         }

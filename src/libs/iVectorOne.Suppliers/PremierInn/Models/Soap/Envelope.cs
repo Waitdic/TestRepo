@@ -52,6 +52,8 @@
                 [XmlElement(typeof(AvailabilityResponse), ElementName = "AvailabilityResponse")]
                 [XmlElement(typeof(AvailabilityUpdateResponse), ElementName = "AvailabilityUpdateResponse")]
                 [XmlElement(typeof(BookingConfirmResponse), ElementName = "BookingConfirmResponse")]
+                [XmlElement(typeof(ConfirmationNumberValidationResponse), ElementName = "ConfirmationNumberValidationResponse")]
+                [XmlElement(typeof(CancellationUpdateResponse), ElementName = "CancellationUpdateResponse")]
                 public SoapContent SoapContent { get; set; } = new T();
 
                 [XmlIgnore]
