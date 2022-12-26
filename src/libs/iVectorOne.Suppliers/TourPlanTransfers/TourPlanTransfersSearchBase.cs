@@ -191,7 +191,7 @@
                 ChildCost = 0,
                 CurrencyCode = currency,
                 VehicleQuantity = 1,
-                Cost = totalPrice,
+                Cost = totalPrice / 100m,
                 BuyingChannelCost = 0,
                 OutboundInformation = "",
                 ReturnInformation = "",

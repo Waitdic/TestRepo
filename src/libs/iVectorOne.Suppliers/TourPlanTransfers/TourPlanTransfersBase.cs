@@ -62,11 +62,11 @@
 
                 if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.PrebookException))
                 {
-                    var deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
+                    var deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML, _serializer);
 
                     if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
                     {
-                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
+                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice / 100m;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
                         AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
@@ -81,11 +81,11 @@
                             await returnRequest.Send(_httpClient, _logger);
                             if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.PrebookException))
                             {
-                                var deserializedReturnResponse = Helpers.DeSerialize<OptionInfoReply>(returnRequest.ResponseXML,_serializer);
+                                var deserializedReturnResponse = Helpers.DeSerialize<OptionInfoReply>(returnRequest.ResponseXML, _serializer);
 
                                 if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
                                 {
-                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
+                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice / 100m;
                                     transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                     AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
                                     AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.DepartureDate);
@@ -149,7 +149,7 @@
 
                 if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.BookException))
                 {
-                    var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML,_serializer);
+                    var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML, _serializer);
 
                     if (deserializedResponse != null &&
                         string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
@@ -168,7 +168,7 @@
                             await returnRequest.Send(_httpClient, _logger);
                             if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.BookException))
                             {
-                                var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML,_serializer);
+                                var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML, _serializer);
 
                                 if (deserializedReturnResponse != null &&
                                     string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
@@ -267,7 +267,7 @@
 
                     if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, Constant.CancelException))
                     {
-                        var deserializedReturnCancellationResponse = Helpers.DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML,_serializer);
+                        var deserializedReturnCancellationResponse = Helpers.DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML, _serializer);
 
                         if (CancellationSuccessful(deserializedReturnCancellationResponse))
                         {
