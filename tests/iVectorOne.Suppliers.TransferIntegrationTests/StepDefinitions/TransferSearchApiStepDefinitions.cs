@@ -1,25 +1,30 @@
-using Intuitive.Helpers.Extensions;
-using iVectorOne.SDK.V2;
-using iVectorOne.SDK.V2.TransferSearch;
-using Newtonsoft.Json;
-
 namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 {
+    using iVectorOne.SDK.V2;
+    using iVectorOne.SDK.V2.TransferSearch;
+    using Newtonsoft.Json;
+
     [Binding]
     public class TransferSearchApiStepDefinitions : TransferBaseStepDefinitions
     {
         public TransferSearchApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
-        { }
+        {
+        }
+
 
         [Given(@"Create request object for search")]
-        public void GivenCreateRequestObjectForSearch()
+        public async void GivenCreateRequestObjectForSearch()
         {
-            int departuteId = 184;
-            int arrivalId = 179;
-
+            int departureId = 0, arrivalId = 0;
+            var locations = GetLocation("gowaysydneytransfers");
+            if (locations != null && locations.Count == 2)
+            {
+                arrivalId = locations[1];
+                departureId = locations[0];
+            }
             var requestObj = new Request
             {
-                DepartureLocationID = departuteId,
+                DepartureLocationID = departureId,
                 ArrivalLocationID = arrivalId,
                 DepartureDate = DateTime.Now.AddDays(1),
                 OneWay = true,
@@ -39,26 +44,27 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
 
         [When(@"make a post request to ""([^""]*)""")]
-        public async Task WhenMakeAPostRequestTo(string p0)
+        public async Task WhenMakeAPostRequestTo(string url)
         {
-
             TransferRequestBase requestObj = (TransferRequestBase)_scenarioContext["RequestObj"];
             var requestContent = CreateRequest(requestObj);
 
-            var response = await _httpClient.PostAsync(p0, requestContent);
+            var response = await _httpClient.PostAsync(url, requestContent);
 
-            _scenarioContext["ResponseCode"] = response.StatusCode;
+            _scenarioContext["ResponseCode"] = (int)response.StatusCode;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var result = response.Content.ReadAsStringAsync().Result;
-                List<TransferResult> transferResults = JsonConvert.DeserializeObject<List<TransferResult>>(result);
+                var obj = JsonConvert.DeserializeObject<Response>(result);
+                List<TransferResult> transferResults = obj.TransferResults;
                 if (transferResults != null && transferResults.Count > 0)
                 {
-                    //Add first record in scenario context.
+                    _scenarioContext["SearchResult"] = transferResults[0];
                 }
                 else
                 {
                     GivenCreateRequestObjectForSearch();
+                    await WhenMakeAPostRequestTo("v2/transfers/search");
                 }
             }
 
@@ -66,12 +72,27 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
 
         [Then(@"the status code should be (.*)")]
-        public void ThenTheStatusCodeShouldBe(int p0)
+        public void ThenTheStatusCodeShouldBe(int status)
         {
-            Assert.Equal(_scenarioContext["ResponseCode"].ToSafeInt(), p0);
+            Assert.Equal(_scenarioContext["ResponseCode"], status);
+        }
 
-            //Now Call prebook scenario.
+        [Given(@"Create request object for prebook")]
+        public void GivenCreateRequestObjectForPrebook()
+        {
+            var requestObj = new SDK.V2.TransferPrebook.Request
+            {
+                SupplierReference = "gowaysydneytransfers",
+                BookingToken = "Test",
+                ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", URL },
+                    { "AgentId", AgentID},
+                    { "Password", Password }
+                }
+            };
 
+            _scenarioContext["PrebookObj"] = requestObj;
         }
     }
 }

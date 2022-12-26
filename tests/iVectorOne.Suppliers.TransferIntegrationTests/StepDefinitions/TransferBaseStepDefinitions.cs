@@ -1,12 +1,14 @@
 ﻿
-using iVectorOne.SDK.V2;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using System.Text;
-
 namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 {
+    using iVectorOne.SDK.V2;
+    using Microsoft.AspNetCore.Mvc.Testing;
+    using Microsoft.Data.SqlClient;
+    using Microsoft.Extensions.Configuration;
+    using Newtonsoft.Json;
+    using System.Net.Http.Headers;
+    using System.Text;
+
     public class TransferBaseStepDefinitions
     {
         private WebApplicationFactory<Program> _factory;
@@ -20,6 +22,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         private const string ReqUsername = "GoWayTest";
         private const string ReqPassword = "GoWayTest";
 
+        private IConfiguration _config;
+        public List<int> locationIds;
+
+        public List<IEnumerable<int>> IVOLocationIds;
+
         public TransferBaseStepDefinitions(ScenarioContext scenarioContext)
         {
             _factory = new WebApplicationFactory<Program>();
@@ -31,13 +38,14 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             });
             _httpClient.Timeout = TimeSpan.FromMinutes(5);
 
+            _config = InitConfiguration();
+
         }
 
         public StringContent CreateRequest(TransferRequestBase requestObj)
         {
             if (requestObj != null)
             {
-
                 var request = JsonConvert.SerializeObject(requestObj);
 
                 var authenticationString = $"{ReqUsername}:{ReqPassword}";
@@ -51,7 +59,68 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return null;
         }
 
+        public List<int> GetLocation(string source)
+        {
+            if (IVOLocationIds == null)
+            {
+                locationIds = new List<int>();
+                using (SqlConnection connection = new SqlConnection(Convert.ToString(_config["ConnectionStrings:Telemetry"])))
+                using (SqlCommand cmd = new SqlCommand(@"select IVOLocationID, Payload  from IVOLocation where Source = @source and Payload Like 'SYD%'", connection))
+                {
+                    cmd.Parameters.Add(new SqlParameter("@source", source));
+                    connection.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int iVOLocationID = reader.GetInt32(reader.GetOrdinal("IVOLocationID"));
+                                locationIds.Add(iVOLocationID);
+                            }
+                        }
+                    }
+                }
 
+                if (locationIds.Count > 0)
+                {
+                    int element = locationIds[0];
+                    locationIds.RemoveAt(0);
+                    IVOLocationIds = GetAllLocationCombinations(locationIds, locationIds.Count, element).ToList();
+                }
+            }
 
+            if (IVOLocationIds.Count > 0)
+            {
+                List<int> locations = IVOLocationIds[0].ToList();
+
+                IVOLocationIds.RemoveAt(0);
+
+                return locations;
+            }
+
+            return null;
+        }
+
+        public static IConfiguration InitConfiguration()
+        {
+            var config = new ConfigurationBuilder()
+               .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
+            return config;
+        }
+
+        public static IEnumerable<IEnumerable<int>> GetAllLocationCombinations(List<int> list, int length, int element)
+        {
+            if (length == 1)
+            {
+                return list.Select(t => new int[] { t });
+            }
+
+            return GetAllLocationCombinations(list, length - 1, element)
+                    .Select(t => t.Concat(new int[] { element }).Distinct()).ToList();
+        }
     }
 }
+
