@@ -1,52 +1,31 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models
 {
     using System;
-    using Intuitive.Helpers.Extensions;
+    using Book;
+    using Intuitive.Helpers.Net;
 
     public static class Helper
     {
         public static string[] Separators = { "~~~" };
 
-        public static ReferenceValues GetReferenceValues(string reference)
+        public static string GetAuth(string user, string password)
         {
-            return new ReferenceValues(reference);
+            return "Basic " + Convert.ToBase64String(
+                System.Text.Encoding.ASCII.GetBytes($"{user}:{password}"));
         }
 
-        public static string CleanRequest(string request)
+        public static bool CheckStatus(Models.Common.Status status)
         {
-            return request
-                .Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", "")
-                .Replace(@"xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""", "");
+            return status.Code == 200 && status.Description == "Successful";
         }
     }
 
-    public struct ReferenceValues
+    public class BookingDetailRequest
     {
-        public ReferenceValues(string reference)
-        {
-            string[] items = reference.Split(Helper.Separators, StringSplitOptions.None);
-
-            SessionId = items[0];
-            ResultIndex = items[1].ToSafeInt();
-            RoomIndex = items[2].ToSafeInt();
-            RoomTypeCode = items[3];
-            RatePlanCode = items[4];
-            RoomRateInfo = items[5];
-            SupplementInformation = items[6];
-        }
-
-        public string SessionId { get; }
-
-        public int ResultIndex { get; }
-
-        public int RoomIndex { get; }
-
-        public string RoomTypeCode { get; }
-
-        public string RatePlanCode { get; }
-
-        public string RoomRateInfo { get; set; }
-
-        public string SupplementInformation { get; set; }
+        public Request BookWebRequest { get; set; }
+        public HotelBookRequest BookRequest { get; set; }
+        public HotelBookResponse? BookResponse { get; set; }
+        public Request? BookDetailWebRequest { get; set; }
+        public HotelBookingDetailResponse? BookingDetailResponse { get; set; }
     }
 }

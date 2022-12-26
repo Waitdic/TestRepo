@@ -1,13 +1,21 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
-    using System.Xml.Serialization;
-
     public class PaymentInfo
     {
-        [XmlAttribute("VoucherBooking")]
-        public bool VoucherBooking { get; set; }
+        public string CvvNumber { get; set; } = string.Empty;
 
-        [XmlAttribute("PaymentModeType")]
-        public PaymentModeType PaymentModeType { get; set; }
+        public string CardNumber { get; set; } = string.Empty;
+
+        public string CardExpirationMonth { get; set; } = string.Empty;
+
+        public string CardHolderFirstName { get; set; } = string.Empty;
+
+        public string CardHolderlastName { get; set; } = string.Empty;
+
+        public decimal BillingAmount { get; set; }
+
+        public string BillingCurrency { get; set; } = string.Empty;
+
+        public CardHolderAddress CardHolderAddress { get; set; } = new();
     }
 }

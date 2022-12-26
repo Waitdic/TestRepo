@@ -70,8 +70,6 @@
 
             try
             {
-                var prebookResponses = new List<PrebookResponse>();
-
                 var tpRef = PolarisTpRef.Decrypt(_secretKeeper, propertyDetails.Rooms.First().ThirdPartyReference);
 
                 var preBookRequest = await CreateRequestAsync(propertyDetails, _settings.PrebookURL(propertyDetails), 
@@ -89,6 +87,15 @@
                     throw new Exception($"PreBook status is {prebookResponse.Status}");
                 }
 
+                foreach (var room in propertyDetails.Rooms) 
+                {
+                    room.ThirdPartyReference = new PolarisTpRef
+                    {
+                        BookToken = roomRate.BookToken,
+                        RoomIndex = room.PropertyRoomBookingID
+                    }.Encrypt(_secretKeeper);
+                }
+
                 //verify price
                 var isPriceChanged = false;
                 var roomIdx = 0;
@@ -98,7 +105,15 @@
                     {
                         propertyDetails.Rooms[roomIdx].LocalCost = room.Pricing.Net.Price;
                         propertyDetails.Rooms[roomIdx].GrossCost = room.Pricing.Net.Price;
+                        isPriceChanged = true;
                     }
+                    
+                    var minimumSellingPrice = roomRate.Binding
+                        ? room.Pricing.Sell.Price
+                        : room.Pricing.Net.Price;
+
+                    propertyDetails.Rooms[roomIdx].MinimumSellingPrice = minimumSellingPrice;
+
                     roomIdx++;
                 }
                 if (isPriceChanged) 
@@ -181,6 +196,15 @@
                         isPriceChanged = true;
                         room.LocalCost = roomPrice;
                         room.GrossCost = roomPrice;
+                    }
+
+                    var minimumSellingPrice = roomRate.Binding
+                        ? roomRate.Pricing.Sell.Price
+                        : roomRate.Pricing.Net.Price;
+
+                    if (!decimal.Equals(minimumSellingPrice, room.MinimumSellingPrice))
+                    {
+                        room.MinimumSellingPrice = minimumSellingPrice;
                     }
 
                     var cancellations = TransformCancellations(roomRate.CancellationPolicies);
@@ -456,15 +480,15 @@
             return request;
         }
 
-        public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations)
+        public static List<Cancellation> TransformCancellations(List<CancellationPolicy> cancellations, int roomQty = 1)
         {
             var canxs = cancellations.Select(cancellation => new Cancellation
             {
                 StartDate = cancellation.From.ToSafeDate(),
                 EndDate = cancellation.To.ToSafeDate(),
                 Amount = (cancellation.Pricing.Net != null)
-                            ? cancellation.Pricing.Net.Price
-                            : cancellation.Pricing.Sell.Price
+                            ? cancellation.Pricing.Net.Price / roomQty
+                            : cancellation.Pricing.Sell.Price / roomQty
             }).ToList();
             return canxs;
         }

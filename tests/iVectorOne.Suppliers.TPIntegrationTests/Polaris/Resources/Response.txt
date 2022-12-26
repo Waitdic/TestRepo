@@ -1,0 +1,319 @@
+{
+  "request": {
+    "hotelAvailability": {
+      "searchAvail": {
+        "checkIn": "2022-12-28",
+        "checkOut": "2022-12-29",
+        "rooms": [{ "passengerAges": [30, 7, 0], "index": 1 }],
+        "destination": {
+          "hotelCodes": ["803"],
+          "location": { "destinationCode": "AVFBK", "type": "EMPTY" }
+        },
+        "market": "GB"
+      },
+      "timeout": 16000,
+      "filterAvail": {}
+    },
+    "token": "FULL-DEFAULT-922851-5613720831349870"
+  },
+  "hotels": [
+    {
+      "hotelCode": "803",
+      "name": "K+K Hotel Central",
+      "roomRates": [
+        {
+          "rateID": "PUBLICA",
+          "rateName": "Pública",
+          "rooms": [
+            {
+              "id": "D",
+              "name": "Doble",
+              "index": 1,
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 318.31 },
+                "net": { "price": 318.31 }
+              },
+              "configuration": "1a1|30n1|7b1|0"
+            }
+          ],
+          "roomQty": 1,
+          "pricing": {
+            "commission": {
+              "comAgency": { "price": 0.0 },
+              "comTaxPercent": 0,
+              "comTaxAmount": 0
+            },
+            "sell": { "price": 318.31 },
+            "net": { "price": 318.31 },
+            "currency": "EUR"
+          },
+          "meal": { "id": "SA", "name": "Solo Alojamiento" },
+          "cancellationPolicies": [
+            {
+              "from": "2022-12-08",
+              "to": "2022-12-25",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 0.0 },
+                "net": { "price": 0.0 },
+                "currency": "EUR"
+              }
+            },
+            {
+              "from": "2022-12-26",
+              "to": "2022-12-28",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 318.31 },
+                "net": { "price": 318.31 },
+                "currency": "EUR"
+              }
+            }
+          ],
+          "bookToken": "FULL-DEFAULT-922851-5613720831349870_687578-5614079309628156$1$6$803@SA@PUBLICA@81661@1a1|30n1|7b1|0@D@28-12-2022@29-12-2022@GB@31831@30792@31831@119@es_ES",
+          "status": "OK"
+        },
+        {
+          "rateID": "PUBLICA",
+          "rateName": "Pública",
+          "rooms": [
+            {
+              "id": "D|PGUE",
+              "name": "Doble Premium Guest Room",
+              "index": 1,
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 323.04 },
+                "net": { "price": 323.04 }
+              },
+              "configuration": "1a1|30n1|7b1|0"
+            }
+          ],
+          "roomQty": 1,
+          "pricing": {
+            "commission": {
+              "comAgency": { "price": 0.0 },
+              "comTaxPercent": 0,
+              "comTaxAmount": 0
+            },
+            "sell": { "price": 323.04 },
+            "net": { "price": 323.04 },
+            "currency": "EUR"
+          },
+          "meal": { "id": "SA", "name": "Solo Alojamiento" },
+          "cancellationPolicies": [
+            {
+              "from": "2022-12-08",
+              "to": "2022-12-25",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 0.0 },
+                "net": { "price": 0.0 },
+                "currency": "EUR"
+              }
+            },
+            {
+              "from": "2022-12-26",
+              "to": "2022-12-28",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 323.04 },
+                "net": { "price": 323.04 },
+                "currency": "EUR"
+              }
+            }
+          ],
+          "bookToken": "FULL-DEFAULT-922851-5613720831349870_687578-5614079309628156$1$5$803@SA@PUBLICA@81661@1a1|30n1|7b1|0@D|PGUE@28-12-2022@29-12-2022@GB@32304@31250@32304@119@es_ES",
+          "status": "OK"
+        },
+        {
+          "rateID": "PUBLICA",
+          "rateName": "Pública",
+          "rooms": [
+            {
+              "id": "D",
+              "name": "Doble",
+              "index": 1,
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 327.79 },
+                "net": { "price": 327.79 }
+              },
+              "configuration": "1a1|30n1|7b1|0"
+            }
+          ],
+          "roomQty": 1,
+          "pricing": {
+            "commission": {
+              "comAgency": { "price": 0.0 },
+              "comTaxPercent": 0,
+              "comTaxAmount": 0
+            },
+            "sell": { "price": 327.79 },
+            "net": { "price": 327.79 },
+            "currency": "EUR"
+          },
+          "meal": { "id": "AD", "name": "Alojamiento y Desayuno" },
+          "cancellationPolicies": [
+            {
+              "from": "2022-12-08",
+              "to": "2022-12-25",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 0.0 },
+                "net": { "price": 0.0 },
+                "currency": "EUR"
+              }
+            },
+            {
+              "from": "2022-12-26",
+              "to": "2022-12-28",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 327.79 },
+                "net": { "price": 327.79 },
+                "currency": "EUR"
+              }
+            }
+          ],
+          "bookToken": "FULL-DEFAULT-922851-5613720831349870_687578-5614079309628156$1$4$803@AD@PUBLICA@81661@1a1|30n1|7b1|0@D@28-12-2022@29-12-2022@GB@32779@31709@32779@119@es_ES",
+          "status": "OK"
+        },
+        {
+          "rateID": "PUBLICA",
+          "rateName": "Pública",
+          "rooms": [
+            {
+              "id": "D|PGUE",
+              "name": "Doble Premium Guest Room",
+              "index": 1,
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 332.52 },
+                "net": { "price": 332.52 }
+              },
+              "configuration": "1a1|30n1|7b1|0"
+            }
+          ],
+          "roomQty": 1,
+          "pricing": {
+            "commission": {
+              "comAgency": { "price": 0.0 },
+              "comTaxPercent": 0,
+              "comTaxAmount": 0
+            },
+            "sell": { "price": 332.52 },
+            "net": { "price": 332.52 },
+            "currency": "EUR"
+          },
+          "meal": { "id": "AD", "name": "Alojamiento y Desayuno" },
+          "cancellationPolicies": [
+            {
+              "from": "2022-12-08",
+              "to": "2022-12-25",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 0.0 },
+                "net": { "price": 0.0 },
+                "currency": "EUR"
+              }
+            },
+            {
+              "from": "2022-12-26",
+              "to": "2022-12-28",
+              "pricing": {
+                "commission": {
+                  "comAgency": { "price": 0.0 },
+                  "comTaxPercent": 0,
+                  "comTaxAmount": 0
+                },
+                "sell": { "price": 332.52 },
+                "net": { "price": 332.52 },
+                "currency": "EUR"
+              }
+            }
+          ],
+          "bookToken": "FULL-DEFAULT-922851-5613720831349870_687578-5614079309628156$1$8$803@AD@PUBLICA@81661@1a1|30n1|7b1|0@D|PGUE@28-12-2022@29-12-2022@GB@33252@32167@33252@119@es_ES",
+          "status": "OK"
+        }
+      ],
+      "checkIn": "2022-12-28",
+      "checkOut": "2022-12-29",
+      "hotelDetails": {},
+      "info": {
+        "cat": {
+          "id": "4EST",
+          "name": "Hotel 4 Estrellas",
+          "rate": 4,
+          "rateKey": "STAR"
+        },
+        "loc": { "code": "AVFBK" }
+      },
+      "information": {
+        "cat": {
+          "id": "4EST",
+          "name": "Hotel 4 Estrellas",
+          "rate": 4,
+          "rateKey": "STAR"
+        },
+        "address": {
+          "name": "HYBERNSKA, 10",
+          "countryCode": "CGGNS",
+          "postalCode": "11000",
+          "provinceCode": "BTLMY",
+          "loc": { "code": "AVFBK" }
+        },
+        "contact": {
+          "email": "reservation.central@kkhotels.cz",
+          "phoneNumber": "-681773008"
+        }
+      }
+    }
+  ],
+  "token": "FULL-DEFAULT-922851-5613720831349870"
+}

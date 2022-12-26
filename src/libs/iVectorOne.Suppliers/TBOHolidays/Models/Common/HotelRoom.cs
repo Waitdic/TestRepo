@@ -1,19 +1,34 @@
 ﻿namespace iVectorOne.Suppliers.TBOHolidays.Models.Common
 {
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
     public class HotelRoom
     {
-        public int RoomIndex { get; set; }
+        public List<string> Name { get; set; } = new();
 
-        public string RoomTypeName { get; set; } = string.Empty;
+        public string BookingCode { get; set; } = string.Empty;
 
-        public string RoomTypeCode { get; set; } = string.Empty;
+        public string Inclusion { get; set; } = string.Empty;
 
-        public string RatePlanCode { get; set; } = string.Empty;
+        public decimal TotalFare { get; set; }
 
-        public RoomRate RoomRate { get; set; } = new();
+        public decimal TotalTax { get; set; }
 
-        public Supplements Supplements { get; set; } = new();
+        public List<string> RoomPromotion { get; set; }
 
-        public decimal Discount { get; set; }
+        public string MealType { get; set; } = string.Empty;
+
+        public bool IsRefundable { get; set; }
+
+        public decimal RecommendedSellingRate { get; set; }
+
+        [JsonProperty("Supplements")] 
+        public List<Supplement[]> Supplements { get; set; } = new();
+
+        public bool WithTransfers { get; set; }
+
+        [JsonProperty("CancelPolicies")]
+        public List<CancelPolicy> CancelPolicies { get; set; } = new();
     }
 }

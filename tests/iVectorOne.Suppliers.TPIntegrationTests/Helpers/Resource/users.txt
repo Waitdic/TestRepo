@@ -583,19 +583,21 @@
         }
       },
       {
-
         "Supplier": "TBOHolidays",
         "Configurations": {
-          "GenericURL": "http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc",
-          "Password": "testpwd",
-          "AllowCancellations": "true",
-          "OffsetCancellationDays": "0",
-          "LeadGuestNationality": "GB",
-          "User": "testuser",
-          "PaymentModeType": "Limit",
-          "ClientCode": "1",
-          "Currency": "GBP",
-          "ResultCount": "0"
+             "User": "AndysysTest",
+             "Password": "Int@20837385",
+             "SearchURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search",
+             "PrebookURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/PreBook",
+             "BookingURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Book",
+             "CancellationURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Cancel",
+             "UseGZip": "TRUE",
+             "AllowCancellations": "TRUE",
+             "ExcludeNRF": "FALSE",
+             "HotelSearchLimit": "100",
+             "RoomSearchLimit": "0",
+             "LeadGuestNationality": "GB",
+             "RequestedMealBases": "All"
         }
        },
       {
@@ -669,7 +671,24 @@
           "Version": "v3",
           "ExcludeNRF": "false"
         }
-       }
+      },
+	  {
+        "Supplier": "Polaris",
+        "Configurations": {
+          "User": "net",
+          "Password": "TestNet01",
+          "SearchURL": "https://tst-polarisapi.avoristravel.com/avail/availability",
+          "PrebookURL": "https://tst-polarisapi.avoristravel.com/book/preBooking",
+          "BookingURL": "https://tst-polarisapi.avoristravel.com/book/booking",
+          "CancellationURL": "https://tst-polarisapi.avoristravel.com/book/cancellation",
+          "AllowCancellations": "true",
+          "UseGZip": "true",
+          "ExcludeNRF": "false",
+          "LeadGuestNationality": "GB",
+          "SplitMultiRoom": "true",
+          "OffsetCancellationDays": "0"
+        }
+      }
     ]
   }
 ]
