@@ -186,7 +186,7 @@
                         NumberofRooms = 1,
                         RoomDetails = 
                         {
-                            Number = room.Children + room.Infants + room.Adults,
+                            Number = 1,
                             Adults = room.Adults,
                             Children = room.Children + room.Infants,
                             Cots = room.Infants != 0 ? "Yes" : "No",
