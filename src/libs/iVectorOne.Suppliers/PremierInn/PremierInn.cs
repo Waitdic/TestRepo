@@ -13,6 +13,7 @@
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.OceanBeds;
     using iVectorOne.Suppliers.PremierInn.Models;
     using iVectorOne.Suppliers.PremierInn.Models.Book;
@@ -127,6 +128,9 @@
                         {
                             case 0:
                                 cancellations.AddNew(DateTime.Now, propertyDetails.ArrivalDate, 0);
+                                break;
+                            case 1:
+                                cancellations.AddNew(DateTime.Now, propertyDetails.ArrivalDate, room.TotalCost);
                                 break;
                             case 2:
                             {

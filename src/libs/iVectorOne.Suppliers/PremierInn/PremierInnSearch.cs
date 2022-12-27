@@ -122,11 +122,16 @@
                         {
                             var room = ratePlan.Rooms.RoomDetails;
                             var cancellations = new Cancellations();
+                            var nrf = false;
 
                             switch (ratePlan.CancellationPolicy.Category)
                             {
                                 case 0:
                                     cancellations.AddNew(searchDetails.BookingDate, searchDetails.ArrivalDate, 0);
+                                    break;
+                                case 1: 
+                                    cancellations.AddNew(searchDetails.BookingDate, searchDetails.ArrivalDate, room.Rate.TotalCost);
+                                    nrf = true;
                                     break;
                                 case 2:
                                     {
@@ -150,7 +155,7 @@
                                 CurrencyCode = room.Rate.Currency,
                                 Adults = room.Adults,
                                 Children = room.Children,
-                                NonRefundableRates = false,
+                                NonRefundableRates = nrf,
                                 Cancellations = cancellations,
                                 TPReference = tpRef,
                                 MealBasisCode = Helper.GetMealCode(ratePlan.CellCode)
