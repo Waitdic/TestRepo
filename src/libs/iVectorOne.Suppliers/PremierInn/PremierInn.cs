@@ -146,9 +146,12 @@
                             propertyDetails.Errata.Add(new Erratum("Cancellation", tpRef.CancellationPolicy.Text));
                         }
 
-                        if (!string.IsNullOrEmpty(tpRef.StatusWarningFlag))
+                        if (tpRef.StatusWarningFlag.Length != 0)
                         {
-                            propertyDetails.Errata.Add(new Erratum("StatusWarningFlags", tpRef.StatusWarningFlag));
+                            foreach (var warning in tpRef.StatusWarningFlag)
+                            {
+                                propertyDetails.Errata.Add(new Erratum("StatusWarningFlags", warning));
+                            }
                         }
                     }
 

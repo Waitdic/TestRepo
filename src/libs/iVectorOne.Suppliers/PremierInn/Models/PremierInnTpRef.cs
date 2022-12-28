@@ -1,12 +1,13 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models
 {
+    using System;
     using Intuitive.Helpers.Security;
     using Newtonsoft.Json;
     using iVectorOne.Suppliers.PremierInn.Models.Common;
 
     public class PremierInnTpRef
     {
-        public PremierInnTpRef(string sessionId, string rateCode, CancellationPolicy cancellation, string statusWarningFlag)
+        public PremierInnTpRef(string sessionId, string rateCode, CancellationPolicy cancellation, string[] statusWarningFlag)
         {
             SessionId = sessionId;
             RateCode = rateCode;
@@ -34,7 +35,7 @@
         public Cancellation? CancellationPolicy { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string StatusWarningFlag { get; set; } = string.Empty;
+        public string[] StatusWarningFlag { get; set; } = Array.Empty<string>();
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LeadGuestLastName { get; set; } = string.Empty;

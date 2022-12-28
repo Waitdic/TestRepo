@@ -1,7 +1,11 @@
 ﻿namespace iVectorOne.Suppliers.PremierInn.Models.Common
 {
+    using System.Xml.Serialization;
+    using System;
+
     public class StatusWarningFlags
     {
-        public string Text { get; set; } = string.Empty;
+        [XmlElement("Text")]
+        public string[] Text { get; set; } = Array.Empty<string>();
     }
 }

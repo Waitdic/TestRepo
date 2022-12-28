@@ -1,4 +1,6 @@
-﻿namespace iVectorOne.Suppliers.PremierInn
+﻿using System;
+
+namespace iVectorOne.Suppliers.PremierInn
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -144,7 +146,7 @@
 
                             var statusFlag = ratePlan.StatusWarningFlags != null
                                 ? ratePlan.StatusWarningFlags.Text
-                                : string.Empty;
+                                : Array.Empty<string>();
 
                             var tpRef = new PremierInnTpRef(
                                 parameters.Session.ID,
