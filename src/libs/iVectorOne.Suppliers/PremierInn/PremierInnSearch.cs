@@ -142,8 +142,15 @@
                                     }
                             }
 
-                            var tpRef = new PremierInnTpRef(parameters.Session.ID, ratePlan.RatePlanCode,
-                                ratePlan.CancellationPolicy).Encrypt(_secretKeeper);
+                            var statusFlag = ratePlan.StatusWarningFlags != null
+                                ? ratePlan.StatusWarningFlags.Text
+                                : string.Empty;
+
+                            var tpRef = new PremierInnTpRef(
+                                parameters.Session.ID,
+                                ratePlan.RatePlanCode,
+                                ratePlan.CancellationPolicy,
+                                statusFlag).Encrypt(_secretKeeper);
 
                             transformedResults.Add(new TransformedResult
                             {

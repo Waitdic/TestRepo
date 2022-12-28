@@ -6,11 +6,12 @@
 
     public class PremierInnTpRef
     {
-        public PremierInnTpRef(string sessionId, string rateCode, CancellationPolicy cancellation)
+        public PremierInnTpRef(string sessionId, string rateCode, CancellationPolicy cancellation, string statusWarningFlag)
         {
             SessionId = sessionId;
             RateCode = rateCode;
-            CancellationPolicy = new()
+            StatusWarningFlag = statusWarningFlag;
+            CancellationPolicy = new Cancellation
             {
                 Category = cancellation.Category,
                 Days = cancellation.Days,
@@ -31,6 +32,9 @@
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Cancellation? CancellationPolicy { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string StatusWarningFlag { get; set; } = string.Empty;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string LeadGuestLastName { get; set; } = string.Empty;

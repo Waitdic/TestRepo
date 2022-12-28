@@ -90,7 +90,7 @@
 
         public async Task<bool> PreBookAsync(PropertyDetails propertyDetails)
         {
-            var preBookSuccess = false;
+            bool preBookSuccess;
             var requests = new List<Request>();
 
             try
@@ -144,6 +144,11 @@
                         if (!string.IsNullOrEmpty(tpRef.CancellationPolicy.Text))
                         {
                             propertyDetails.Errata.Add(new Erratum("Cancellation", tpRef.CancellationPolicy.Text));
+                        }
+
+                        if (!string.IsNullOrEmpty(tpRef.StatusWarningFlag))
+                        {
+                            propertyDetails.Errata.Add(new Erratum("StatusWarningFlags", tpRef.StatusWarningFlag));
                         }
                     }
 
