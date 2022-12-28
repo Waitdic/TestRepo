@@ -519,6 +519,10 @@
                         }
                     },
                     BookingType = "Leisure",
+                    SpecialRequirements =
+                    {
+                        Text = room.SpecialRequest
+                    }
                 }
             };
             

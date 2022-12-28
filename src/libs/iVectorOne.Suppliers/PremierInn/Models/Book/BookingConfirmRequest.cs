@@ -3,7 +3,6 @@
     using Common;
     using iVectorOne.Suppliers.PremierInn.Models.Soap;
 
-
     public class BookingConfirmRequest : SoapContent
     {
         public Login Login { get; set; } = new();
