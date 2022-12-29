@@ -11,7 +11,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
     public class TransferBaseStepDefinitions
     {
-        private WebApplicationFactory<Program> _factory;
         protected HttpClient _httpClient;
         protected ScenarioContext _scenarioContext;
 
@@ -26,20 +25,37 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         public List<int> locationIds;
 
         public List<IEnumerable<int>> IVOLocationIds;
-
+        public static Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
         public TransferBaseStepDefinitions(ScenarioContext scenarioContext)
         {
-            _factory = new WebApplicationFactory<Program>();
-            _scenarioContext = scenarioContext;
-            _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
 
-            });
-            _httpClient.Timeout = TimeSpan.FromMinutes(5);
+            _scenarioContext = scenarioContext;
+
 
             _config = InitConfiguration();
 
+        }
+
+        public void CreateClient(string api = "")
+        {
+            if (api == "search")
+            {
+                _httpClient = new WebApplicationFactory<Search.Program>().CreateClient(new WebApplicationFactoryClientOptions
+                {
+                    AllowAutoRedirect = false,
+
+                });
+                _httpClient.Timeout = TimeSpan.FromMinutes(5); ;
+            }
+            else
+            {
+                _httpClient = new WebApplicationFactory<Program>().CreateClient(new WebApplicationFactoryClientOptions
+                {
+                    AllowAutoRedirect = false,
+
+                });
+                _httpClient.Timeout = TimeSpan.FromMinutes(5); ;
+            }
         }
 
         public StringContent CreateRequest(TransferRequestBase requestObj)
@@ -102,7 +118,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return null;
         }
 
-        public static IConfiguration InitConfiguration()
+        public IConfiguration InitConfiguration()
         {
             var config = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json")
@@ -111,7 +127,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return config;
         }
 
-        public static IEnumerable<IEnumerable<int>> GetAllLocationCombinations(List<int> list, int length, int element)
+        public IEnumerable<IEnumerable<int>> GetAllLocationCombinations(List<int> list, int length, int element)
         {
             if (length == 1)
             {
@@ -120,6 +136,17 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
             return GetAllLocationCombinations(list, length - 1, element)
                     .Select(t => t.Concat(new int[] { element }).Distinct()).ToList();
+        }
+
+        public string GetValue(string key)
+        {
+            keyValuePairs.TryGetValue(key, out var value);
+
+            if (string.IsNullOrEmpty(value))
+            {
+                value = string.Empty;
+            }
+            return value;
         }
     }
 }

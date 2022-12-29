@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\iVectorOne-Book-Api\iVectorOne-Book-Api.csproj" />
     <ProjectReference Include="..\..\src\iVectorOne-Search-Api\iVectorOne-Search-Api.csproj" />
   </ItemGroup>
 
