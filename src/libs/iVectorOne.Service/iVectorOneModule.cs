@@ -67,6 +67,9 @@
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
     using ExtraSearch = SDK.V2.ExtraSearch;
+    using iVectorOne.Factories.Extra;
+    using iVectorOne.Suppliers.TestExtraSupplier;
+    using iVectorOne.Repositories.Extra;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -108,6 +111,11 @@
             services.AddSingleton<ITransferSearchDetailsFactory, TransferSearchDetailsFactory>();
             services.AddSingleton<ITransferThirdPartyFactory, TransferThirdPartyFactory>();
             services.AddSingleton<ITransferLocationMappingFactory, TransferLocationMappingFactory>();
+
+            services.AddSingleton<IExtraSearchResponseFactory, ExtraSearchResponseFactory>();
+            services.AddSingleton<IExtraSearchDetailsFactory, ExtraSearchDetailsFactory>();
+            services.AddSingleton<IExtraThirdPartyFactory, ExtraThirdPartyFactory>();
+            services.AddSingleton<IExtraLocationMappingFactory, ExtraLocationMappingFactory>();
         }
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
@@ -125,6 +133,8 @@
             services.AddSingleton<ITransferSearchRepository, TransferSearchRepository>();
             services.AddSingleton<ITransferSupplierLogRepository, TransferSupplierLogRepository>();
             services.AddSingleton<ITransferBookingRepository, TransferBookingRepository>();
+            services.AddSingleton<IExtraSearchStoreRepository>(_ => new ExtraSearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<IExtraSearchRepository, ExtraSearchRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -153,6 +163,10 @@
             services.AddSingleton<ITransferSearchResultsProcessor, TransferSearchResultsProcessor>();
             services.AddSingleton<IThirdPartyTransferSearchRunner, ThirdPartyTransferSearchRunner>();
 
+            services.AddSingleton<Services.Extra.ISearchService, Services.Extra.SearchService>();
+            services.AddSingleton<IExtraSearchResultsProcessor, ExtraSearchResultsProcessor>();
+            services.AddSingleton<IThirdPartyExtraSearchRunner, ThirdPartyExtraSearchRunner>();
+
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
                     .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
@@ -167,6 +181,12 @@
                 new Services.Transfer.SearchStoreService(
                     s.GetRequiredService<ILogger<Services.Transfer.SearchStoreService>>(),
                     s.GetRequiredService<ITransferSearchStoreRepository>(),
+                    context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
+
+            services.AddSingleton<Services.Extra.ISearchStoreService>(s =>
+                new Services.Extra.SearchStoreService(
+                    s.GetRequiredService<ILogger<Services.Extra.SearchStoreService>>(),
+                    s.GetRequiredService<IExtraSearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
         }
 
@@ -228,6 +248,7 @@
             services.AddSingleton<IYouTravelSettings, InjectedYouTravelSettings>();
 
             services.AddSingleton<ITestTransferSupplierSettings, InjectedTestTransferSupplierSettings>();
+            services.AddSingleton<ITestExtraSupplierSettings, InjectedExtraTestSupplierSettings>();
         }
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)
@@ -272,6 +293,7 @@
 
             services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
+            services.AddSingleton<Extra.IThirdPartySearch, TestExtraSupplierSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)

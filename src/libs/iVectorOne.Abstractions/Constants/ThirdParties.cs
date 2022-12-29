@@ -209,7 +209,12 @@
         /// The third party TestTransferProvider
         /// </summary>
         public const string TESTTRANSFERSUPPLIER = "TestTransferSupplier";
-
+        
+        /// <summary>
+        /// The third party TestExtraProvider
+        /// </summary>
+        public const string TESTEXTRASUPPLIER = "TestExtraSupplier";
+        
         /// <summary>
         /// The third party Travelgate
         /// </summary>

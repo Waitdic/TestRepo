@@ -74,12 +74,12 @@
                         SupplierID = await _support.SupplierIDLookupAsync(searchDetails.Source),
                     };
 
-                    var transferResult = new ExtraResult()
+                    var extraResult = new ExtraResult()
                     {
                         BookingToken = _tokenService.EncodeTransferToken(transferToken),
                         SupplierReference = result.SupplierReference,
                         TPSessionID = result.TPSessionID,
-                        TransferVehicle = result.TransferVehicle,
+                        ExtraVehicle = result.ExtraVehicle,
                         ReturnTime = result.ReturnTime,
                         VehicleCost = result.VehicleCost,
                         AdultCost = result.AdultCost,
@@ -94,11 +94,11 @@
                         ReturnCost = result.ReturnCost,
                         OutboundXML = result.OutboundXML,
                         ReturnXML = result.ReturnXML,
-                        OutboundTransferMinutes = result.OutboundTransferMinutes,
-                        ReturnTransferMinutes = result.ReturnTransferMinutes
+                        OutboundExtraMinutes = result.OutboundExtraMinutes,
+                        ReturnExtraMinutes = result.ReturnExtraMinutes
                     };
 
-                    response.ExtraResults.Add(transferResult);
+                    response.ExtraResults.Add(extraResult);
                 }
                 catch (Exception e)
                 {

@@ -20,12 +20,12 @@
     using iVectorOne.Services.Extra;
 
     /// <summary>
-    /// Third Party Transfer Search Runner
+    /// Third Party Extra Search Runner
     /// </summary>
     public class ThirdPartyExtraSearchRunner : IThirdPartyExtraSearchRunner
     {
         private readonly ISearchStoreService _searchStoreService;
-        private readonly ILogger<ThirdPartyTransferSearchRunner> _logger;
+        private readonly ILogger<ThirdPartyExtraSearchRunner> _logger;
 
         private readonly IEmailService _emailService;
 
@@ -35,7 +35,7 @@
 
         public ThirdPartyExtraSearchRunner(
             ISearchStoreService searchStoreService,
-            ILogger<ThirdPartyTransferSearchRunner> logger,
+            ILogger<ThirdPartyExtraSearchRunner> logger,
             IEmailService emailService,
             IExtraSearchResultsProcessor searchResultsProcessor,
             HttpClient httpClient)
@@ -145,7 +145,7 @@
         ///TODO - refactor - below are shared with properties
 
         /// <summary>Requests the time out seconds.</summary>
-        /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="searchDetails">The extra search details.</param>
         /// <param name="source">The source.</param>
         /// <returns>
         ///   The time out in seconds as an integer
@@ -162,7 +162,7 @@
         }
 
         /// <summary>Timeouts the seconds.</summary>
-        /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="searchDetails">The extra search details.</param>
         /// <param name="source">The source.</param>
         /// <returns>
         ///   The seconds as an integer
@@ -177,7 +177,7 @@
         }
 
         /// <summary>A boolean to decide if we want to compress the request</summary>
-        /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="searchDetails">The extra search details.</param>
         /// <returns>The value of the use gzip setting</returns>
         private bool UseGZip(ExtraSearchDetails searchDetails, string source)
         {

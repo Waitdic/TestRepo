@@ -12,17 +12,13 @@
         [XmlIgnore]
         public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified";
         [XmlIgnore]
-        public const string TRANSFERVEHICLEERRORMESSAGE = "No Transfer Vehicle Specified";
-        [XmlIgnore]
-        public const string MEALBASISERRORMESSAGE = "No Meal Basis Specified";
-        [XmlIgnore]
         public const string COSTERRORMESSAGE = "No Valid Cost Specified";
 
 
         public string BookingToken { get; set; } = string.Empty;
         public string TPSessionID { get; set; } = string.Empty;
         public string SupplierReference { get; set; } = string.Empty;
-        public string TransferVehicle { get; set; } = string.Empty;
+        public string ExtraVehicle { get; set; } = string.Empty;
         public string ReturnTime { get; set; } = string.Empty;
         public decimal VehicleCost { get; set; }
         public decimal AdultCost { get; set; }
@@ -37,24 +33,14 @@
         public decimal ReturnCost { get; set; }
         public string OutboundXML { get; set; } = string.Empty;
         public string ReturnXML { get; set; } = string.Empty;
-        public int OutboundTransferMinutes { get; set; }
-        public int ReturnTransferMinutes { get; set; }
+        public int OutboundExtraMinutes { get; set; }
+        public int ReturnExtraMinutes { get; set; }
 
         public void Validate()
         {
             if (string.IsNullOrEmpty(this.TPSessionID))
             {
                 this.Warnings.Add(TPSESSIONIDERRORMESSAGE);
-            }
-
-            //if (string.IsNullOrEmpty(this.CurrencyCode))
-            //{
-            //    this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
-            //}
-
-            if (string.IsNullOrEmpty(this.TransferVehicle))
-            {
-                this.Warnings.Add(TRANSFERVEHICLEERRORMESSAGE);
             }
 
             if (this.Cost == 0)

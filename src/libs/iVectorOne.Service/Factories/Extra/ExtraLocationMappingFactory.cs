@@ -9,23 +9,23 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    ///  Class responsible for building the transfer location mapping
+    ///  Class responsible for building the extra location mapping
     /// </summary>
     public class ExtraLocationMappingFactory : IExtraLocationMappingFactory
     {
-        /// <summary>The transfer search repository</summary>
-        private readonly ITransferSearchRepository _searchRepository;
+        /// <summary>The extra search repository</summary>
+        private readonly IExtraSearchRepository _searchRepository;
         private readonly ITPSupport _tpSupport;
 
         /// <summary>The log writer</summary>
-        private readonly ILogger<TransferSearchResponseFactory> _logger;
+        private readonly ILogger<ExtraSearchResponseFactory> _logger;
 
-        /// <summary>Initializes a new instance of the <see cref="TransferLocationMappingFactory" /> class.</summary>
-        /// /// <param name="searchRepository">The transfer search repository</param>
+        /// <summary>Initializes a new instance of the <see cref="ExtraLocationMappingFactory" /> class.</summary>
+        /// /// <param name="searchRepository">The extra search repository</param>
         /// <param name="logger">The log writer</param>
         public ExtraLocationMappingFactory(
-            ITransferSearchRepository searchRepository,
-            ILogger<TransferSearchResponseFactory> logger,
+            IExtraSearchRepository searchRepository,
+            ILogger<ExtraSearchResponseFactory> logger,
             ITPSupport tpSupport)
         {
             _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));

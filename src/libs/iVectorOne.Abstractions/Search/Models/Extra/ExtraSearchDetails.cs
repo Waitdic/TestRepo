@@ -13,7 +13,7 @@
     using iVectorOne.Search.Results.Models;
 
     /// <summary>
-    /// A transfer search details object
+    /// A extra search details object
     /// </summary>
     /// <seealso cref="IThirdPartyAttributeSearch" />
     public class ExtraSearchDetails : IThirdPartyAttributeSearch 
@@ -47,7 +47,7 @@
         public string DepartureTime { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the transfer is one way
+        /// Gets or sets a value indicating whether the extra is one way
         /// </summary>
         public bool OneWay { get; set; }
 

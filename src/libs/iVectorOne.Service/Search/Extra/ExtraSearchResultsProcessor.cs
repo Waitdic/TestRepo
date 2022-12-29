@@ -5,6 +5,7 @@
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Search.Results.Models.Extra;
     using iVectorOne.Utility;
     using Microsoft.Extensions.Logging;
     using System;
@@ -45,7 +46,7 @@
         /// <returns>
         /// A count of the results
         /// </returns>
-        public async Task<int> ProcessTPResultsAsync(TransformedTransferResultCollection results, ExtraSearchDetails searchDetails)
+        public async Task<int> ProcessTPResultsAsync(TransformedExtraResultCollection results, ExtraSearchDetails searchDetails)
         {        
             int resultsCount = 0;
 
@@ -57,7 +58,7 @@
                     {
                         TPSessionID = result.TPSessionID,
                         SupplierReference = result.SupplierReference,
-                        TransferVehicle = result.TransferVehicle,
+                        ExtraVehicle = result.ExtraVehicle,
                         ReturnTime = result.ReturnTime,
                         VehicleCost = result.VehicleCost,
                         AdultCost = result.AdultCost,
@@ -72,8 +73,8 @@
                         ReturnCost = result.ReturnCost,
                         OutboundXML = result.OutboundXML,
                         ReturnXML = result.ReturnXML, 
-                        OutboundTransferMinutes = result.OutboundTransferMinutes,
-                        ReturnTransferMinutes = result.ReturnTransferMinutes
+                        OutboundExtraMinutes = result.OutboundExtraMinutes,
+                        ReturnExtraMinutes = result.ReturnExtraMinutes
                     };
 
                     searchDetails.Results.SearchResults.Add(searchResult);

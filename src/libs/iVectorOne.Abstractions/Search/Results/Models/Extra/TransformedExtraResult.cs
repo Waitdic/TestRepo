@@ -1,25 +1,36 @@
-﻿namespace iVectorOne.SDK.V2.ExtraSearch
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Xml.Serialization;
+
+namespace iVectorOne.Search.Results.Models.Extra
 {
     /// <summary>
-    /// A class representing a single extra result
+    /// The transformed extra results
     /// </summary>
-    public class ExtraResult
+    [XmlType("Result")]
+    public class TransformedExtraResult
     {
         /// <summary>
-        /// Gets or sets the booking token.
+        /// The currency code error message
         /// </summary>
-        /// <value>
-        /// The booking token.
-        /// </value>
-        public string BookingToken { get; set; } = string.Empty;
+        [XmlIgnore]
+        public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified";
 
         /// <summary>
-        /// Gets or sets the supplier reference.
+        /// The cost error message
+        /// </summary>
+        [XmlIgnore]
+        public const string COSTERRORMESSAGE = "No Valid Cost Specified";
+
+        /// <summary>
+        /// Gets or sets the warnings.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The warnings.
         /// </value>
-        public string SupplierReference { get; set; } = string.Empty;
+        [XmlIgnore]
+        public List<string> Warnings { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the tp session id.
@@ -30,12 +41,20 @@
         public string TPSessionID { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the supplier reference.
+        /// </summary>
+        /// <value>
+        /// The extra vehicle.
+        /// </value>
+        public string SupplierReference { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the extra vehicle.
         /// </summary>
         /// <value>
         /// The extra vehicle.
         /// </value>
-        public string ExtraVehicle { get; set; } = string.Empty;
+        public string ExtraVehicle { get; set; } = string.Empty; //TODO confirm: Is this ExtraVehicle correct ? Should it be TransferVehicle Only ?
 
         /// <summary>
         /// Gets or sets the return time.
@@ -123,7 +142,7 @@
         /// <value>
         /// The extra vehicle.
         /// </value>
-        public decimal OutboundCost { get; set; } 
+        public decimal OutboundCost { get; set; }
 
         /// <summary>
         /// Gets or sets the return cost.
@@ -155,7 +174,7 @@
         /// <value>
         /// The extra vehicle.
         /// </value>
-        public int OutboundExtraMinutes { get; set; }
+        public int OutboundExtraMinutes { get; set; } //TODO confirm: Is this OutboundExtraMinutes correct ? Should it be OutboundTransferMinutes Only ?
 
         /// <summary>
         /// Gets or sets the return extra minutes.
@@ -163,6 +182,22 @@
         /// <value>
         /// The extra vehicle.
         /// </value>
-        public int ReturnExtraMinutes { get; set; }
+        public int ReturnExtraMinutes { get; set; } //TODO confirm: Is this ReturnExtraMinutes correct ? Should it be ReturnTransferMinutes Only ?
+
+        /// <summary>
+        /// Validates this instance.
+        /// </summary>
+        public void Validate()
+        {
+            if (string.IsNullOrEmpty(this.CurrencyCode))
+            {
+                this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
+            }
+
+            if (this.Cost == 0)
+            {
+                this.Warnings.Add(COSTERRORMESSAGE);
+            }
+        }
     }
 }

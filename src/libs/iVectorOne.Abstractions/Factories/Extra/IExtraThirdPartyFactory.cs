@@ -3,7 +3,7 @@
     using iVectorOne.Models;
     using iVectorOne.Extra;
 
-    /// <summary>Factory that takes in a source or supplier and returns the correct transfer third party search or booking class</summary>
+    /// <summary>Factory that takes in a source or supplier and returns the correct extra third party search or booking class</summary>
     public interface IExtraThirdPartyFactory
     {
         /// <summary>Creates a third party that matches the provided source</summary>

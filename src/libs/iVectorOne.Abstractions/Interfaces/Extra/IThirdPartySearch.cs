@@ -1,12 +1,11 @@
 ﻿namespace iVectorOne.Extra
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Results.Models;
+    using iVectorOne.Search.Results.Models.Extra;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines a third party transfer 
@@ -28,7 +27,7 @@
         /// /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="location">The location mapping.</param>
         /// <returns>an XML document</returns>
-        TransformedTransferResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, LocationMapping location);
+        TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, LocationMapping location);
 
         /// <summary>
         /// Check if there are any search restrictions for the third party.
