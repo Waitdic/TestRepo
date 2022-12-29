@@ -314,18 +314,18 @@ namespace iVectorOne.Suppliers.DOTW
                                         var startDate = !string.IsNullOrEmpty(policy.FromDate)
                                             ? policy.FromDate.ToSafeDate()
                                             : policy.NoShowPolicy
-                                                ? searchDetails.ArrivalDate.Date
-                                                : searchDetails.BookingDate;
+                                                ? searchDetails.ArrivalDate
+                                                : searchDetails.BookingDate.Date;
 
                                         var endDate = !string.IsNullOrEmpty(policy.ToDate)
                                             ? policy.ToDate.ToSafeDate()
                                             : cancellationDeadline != DateTimeExtensions.EmptyDate
                                                 ? cancellationDeadline
-                                                : new DateTime(2099, 12, 31);
+                                                : searchDetails.ArrivalDate;
 
                                         var charge = !string.IsNullOrEmpty(policy.Charge.Formatted)
                                             ? policy.Charge.Formatted.ToSafeMoney()
-                                            : amount;
+                                            : amount.ToSafeMoney();
 
                                         cancellations.AddNew(
                                             startDate,
@@ -334,7 +334,7 @@ namespace iVectorOne.Suppliers.DOTW
                                     }
                                 }
 
-                                //cancellations.Solidify(SolidifyType.Sum);
+                                cancellations.Solidify(SolidifyType.Sum);
 
                                 var transformedResult = new TransformedResult()
                                 {

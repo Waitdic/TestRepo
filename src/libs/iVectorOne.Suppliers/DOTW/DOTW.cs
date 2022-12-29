@@ -425,11 +425,11 @@
                     if (fromDateNode is not null)
                     {
                         // these always come back with the time as HH:mm:01 but the end dates come back as HH:mm:00, so I'm taking off a second
-                        startDate = fromDateNode.InnerText.ToSafeDate().AddSeconds(-1).Date;
+                        startDate = fromDateNode.InnerText.ToSafeDate();
                     }
                     else if (noShowPolicy)
                     {
-                        startDate = propertyDetails.ArrivalDate.Date;
+                        startDate = propertyDetails.ArrivalDate;
                     }
                     else
                     {
@@ -440,11 +440,11 @@
                     DateTime endDate;
                     if (toDateNode is not null)
                     {
-                        endDate = toDateNode.InnerText.ToSafeDate().Date.AddDays(-1); // take off a day so our date bands don't overlap
+                        endDate = toDateNode.InnerText.ToSafeDate(); // take off a day so our date bands don't overlap
                     }
                     else
                     {
-                        endDate = cancellationDeadline != DateTimeExtensions.EmptyDate ? cancellationDeadline : new DateTime(2099, 12, 31);
+                        endDate = cancellationDeadline != DateTimeExtensions.EmptyDate ? cancellationDeadline : propertyDetails.ArrivalDate;
                     }
 
                     // get the amount
@@ -463,7 +463,7 @@
                 }
 
                 // call solidify on the policy
-                policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
+                //policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
 
                 // increment the loop counter 
                 loop += 1;

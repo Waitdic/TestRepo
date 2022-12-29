@@ -81,8 +81,6 @@
 
         public class Charge
         {
-            //[XmlText]
-            //public decimal Value;
             [XmlElement("formatted")]
             public string Formatted = string.Empty;
         }
