@@ -334,8 +334,6 @@ namespace iVectorOne.Suppliers.DOTW
                                     }
                                 }
 
-                                cancellations.Solidify(SolidifyType.Sum);
-
                                 var transformedResult = new TransformedResult()
                                 {
                                     MasterID = hotel.HotelID.ToSafeInt(),
