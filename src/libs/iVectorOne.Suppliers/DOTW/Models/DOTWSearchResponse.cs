@@ -53,6 +53,38 @@
             public RateDetails RateType = new RateDetails();
             [XmlElement("minStay")]
             public string MinStay = string.Empty;
+            [XmlElement("cancellationRules")]
+            public CancellationRules CancellationRules = new CancellationRules();
+            [XmlElement("cancellation")]
+            public string Cancellation = string.Empty;
+        }
+
+        public class CancellationRules
+        {
+            [XmlElement("rule")]
+            public List<Rule> Rule = new List<Rule>();
+        }
+
+        public class Rule
+        {
+            [XmlElement("fromDate")]
+            public string FromDate = string.Empty;
+            [XmlElement("toDate")]
+            public string ToDate = string.Empty;
+            [XmlElement("charge")]
+            public Charge Charge = new Charge();
+            [XmlElement("noShowPolicy")]
+            public bool NoShowPolicy;
+            [XmlElement("cancelRestricted")]
+            public bool CancelRestricted;
+        }
+
+        public class Charge
+        {
+            //[XmlText]
+            //public decimal Value;
+            [XmlElement("formatted")]
+            public string Formatted = string.Empty;
         }
 
         public class Total

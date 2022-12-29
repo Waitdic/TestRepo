@@ -1,4 +1,7 @@
-﻿namespace iVectorOne.Suppliers.DOTW
+﻿using System.Text.RegularExpressions;
+using iVectorOne.Models.Property.Booking;
+
+namespace iVectorOne.Suppliers.DOTW
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -16,6 +19,8 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
+    using static iVectorOne.Suppliers.DOTW.Models.DOTWSearchResponse;
+    using System;
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {
@@ -290,6 +295,47 @@
                                         && !string.IsNullOrEmpty(rateBasis.TotalMinSelling.Total) ?
                                         rateBasis.TotalMinSelling.Total.ToSafeDecimal() : rateBasis.Total.TotalCost.ToSafeDecimal();
 
+                                var cancellationDeadline = DateTimeExtensions.EmptyDate;
+                                if (!string.IsNullOrEmpty(rateBasis.Cancellation) &&
+                                    rateBasis.Cancellation.StartsWith("Cancellation Deadline: "))
+                                {
+                                    cancellationDeadline = rateBasis.Cancellation[23..]
+                                        .Replace(" hrs", "")
+                                        .ToSafeDate()
+                                        .Date;
+                                }
+
+                                var cancellations = new Cancellations();
+                                var nrf = false;
+                                if (rateBasis.CancellationRules.Rule.Any())
+                                {
+                                    foreach (var policy in rateBasis.CancellationRules.Rule)
+                                    {
+                                        var startDate = !string.IsNullOrEmpty(policy.FromDate)
+                                            ? policy.FromDate.ToSafeDate()
+                                            : policy.NoShowPolicy
+                                                ? searchDetails.ArrivalDate.Date
+                                                : searchDetails.BookingDate;
+
+                                        var endDate = !string.IsNullOrEmpty(policy.ToDate)
+                                            ? policy.ToDate.ToSafeDate()
+                                            : cancellationDeadline != DateTimeExtensions.EmptyDate
+                                                ? cancellationDeadline
+                                                : new DateTime(2099, 12, 31);
+
+                                        var charge = !string.IsNullOrEmpty(policy.Charge.Formatted)
+                                            ? policy.Charge.Formatted.ToSafeMoney()
+                                            : amount;
+
+                                        cancellations.AddNew(
+                                            startDate,
+                                            endDate,
+                                            charge);
+                                    }
+                                }
+
+                                //cancellations.Solidify(SolidifyType.Sum);
+
                                 var transformedResult = new TransformedResult()
                                 {
                                     MasterID = hotel.HotelID.ToSafeInt(),
@@ -301,7 +347,9 @@
                                     MealBasisCode = rateBasis.ID,
                                     Amount = amount,
                                     DynamicProperty = rateBasis.WithinCancellationDeadline == "yes",
-                                    TPReference = roomtype.Code + "|" + rateBasis.ID
+                                    TPReference = roomtype.Code + "|" + rateBasis.ID,
+                                    Cancellations = Cancellations.MergeMultipleCancellationPolicies(cancellations),
+                                    NonRefundableRates = nrf,
                                 };
 
                                 transformedResults.Add(transformedResult);
