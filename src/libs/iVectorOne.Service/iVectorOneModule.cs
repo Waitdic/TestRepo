@@ -46,6 +46,7 @@
     using iVectorOne.Suppliers.Travelgate;
     using iVectorOne.Suppliers.YouTravel;
     using iVectorOne.Suppliers.Italcamel;
+    using iVectorOne.Suppliers.PremierInn;
     using iVectorOne.Lookups;
     using iVectorOne.Factories;
     using iVectorOne.Models.Tokens;
@@ -192,6 +193,7 @@
             services.AddSingleton<IYalagoSettings, InjectedYalagoSettings>();
             services.AddSingleton<IYouTravelSettings, InjectedYouTravelSettings>();
             services.AddSingleton<IItalcamelSettings, InjectedItalcamelSettings>();
+            services.AddSingleton<IPremierInnSettings, InjectedPremierInnSettings>();
         }
 
         private void RegsiterThirdPartySearchServices(IServiceCollection services)
@@ -236,6 +238,7 @@
             services.AddSingleton<IThirdPartySearch, YalagoSearch>();
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
             services.AddSingleton<IThirdPartySearch, ItalcamelSearch>();
+            services.AddSingleton<IThirdPartySearch, PremierInnSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -278,6 +281,7 @@
             services.AddSingleton<IThirdParty, WelcomeBeds>();
             services.AddSingleton<IThirdParty, YouTravel>();
             services.AddSingleton<IThirdParty, Italcamel>();
+            services.AddSingleton<IThirdParty, PremierInn>();
         }
 
         public void RegsiterThirdPartyUtilities(IServiceCollection services)

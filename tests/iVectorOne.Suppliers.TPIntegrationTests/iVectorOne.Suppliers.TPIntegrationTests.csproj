@@ -145,6 +145,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>PolarisRes.resx</DependentUpon>
     </Compile>
+    <Compile Update="PremierInn\PremierInn.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PremierInn.resx</DependentUpon>
+    </Compile>
     <Compile Update="RMI\RMIRes.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -308,6 +313,10 @@
     <EmbeddedResource Update="Polaris\PolarisRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>PolarisRes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PremierInn\PremierInn.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PremierInn.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="RMI\RMIRes.resx">
       <Generator>ResXFileCodeGenerator</Generator>

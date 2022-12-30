@@ -429,5 +429,10 @@
         /// The third party Italcamel
         /// </summary>
         public const string ITALCAMEL = "Italcamel";
+
+        /// <summary>
+        /// The third party PremierInn
+        /// </summary>
+        public const string PREMIERINN = "PremierInn";
     }
 }
