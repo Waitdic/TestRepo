@@ -66,10 +66,8 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
+    using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraSearch = SDK.V2.ExtraSearch;
-    using iVectorOne.Factories.Extra;
-    using iVectorOne.Suppliers.TestExtraSupplier;
-    using iVectorOne.Repositories.Extra;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -116,6 +114,9 @@
             services.AddSingleton<IExtraSearchDetailsFactory, ExtraSearchDetailsFactory>();
             services.AddSingleton<IExtraThirdPartyFactory, ExtraThirdPartyFactory>();
             services.AddSingleton<IExtraLocationMappingFactory, ExtraLocationMappingFactory>();
+            services.AddSingleton<IExtraDetailsFactory, ExtraDetailsFactory>();
+            services.AddSingleton<IExtraPrebookResponseFactory, ExtraPrebookResponseFactory>();
+            
         }
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
@@ -135,6 +136,9 @@
             services.AddSingleton<ITransferBookingRepository, TransferBookingRepository>();
             services.AddSingleton<IExtraSearchStoreRepository>(_ => new ExtraSearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
             services.AddSingleton<IExtraSearchRepository, ExtraSearchRepository>();
+            services.AddSingleton<IExtraAPILogRepository, ExtraAPILogRepository>();
+            services.AddSingleton<IExtraSupplierLogRepository, ExtraSupplierLogRepository>();
+
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -164,6 +168,7 @@
             services.AddSingleton<IThirdPartyTransferSearchRunner, ThirdPartyTransferSearchRunner>();
 
             services.AddSingleton<Services.Extra.ISearchService, Services.Extra.SearchService>();
+            services.AddSingleton<Services.Extra.IPrebookService, Services.Extra.PrebookService>();
             services.AddSingleton<IExtraSearchResultsProcessor, ExtraSearchResultsProcessor>();
             services.AddSingleton<IThirdPartyExtraSearchRunner, ThirdPartyExtraSearchRunner>();
 
@@ -205,6 +210,7 @@
             services.AddHandlerAndValidator<TransferPrecancel.Request, TransferPrecancel.Response, TransferPrecancel.Handler, TransferPrecancel.Validator>();
             services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
             services.AddHandlerAndValidator<ExtraSearch.Request, ExtraSearch.Response, ExtraSearch.Handler, ExtraSearch.Validator>();
+            services.AddHandlerAndValidator<ExtraPrebook.Request, ExtraPrebook.Response, ExtraPrebook.Handler, ExtraPrebook.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
@@ -294,6 +300,7 @@
             services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
             services.AddSingleton<Extra.IThirdPartySearch, TestExtraSupplierSearch>();
+            services.AddSingleton<Extra.IThirdParty, TestExtraSupplier>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)

@@ -1,7 +1,7 @@
-﻿using Intuitive;
-using Intuitive.Data;
-namespace iVectorOne.Repositories.Extra
+﻿namespace iVectorOne.Repositories
 {
+    using Intuitive;
+    using Intuitive.Data;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using Microsoft.Extensions.Logging;
@@ -15,7 +15,7 @@ namespace iVectorOne.Repositories.Extra
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExtraSearchRepository"/> class.
-      
+
         public ExtraSearchRepository(ISql sql, ILogger<ExtraSearchRepository> logger)
         {
             _sql = Ensure.IsNotNull(sql, nameof(sql));

@@ -18,6 +18,7 @@
     using System.Globalization;
     using iVectorOne.Models.Tokens.Transfer;
     using Intuitive.Helpers.Extensions;
+    using iVectorOne.Models.Tokens.Extra;
 
 
     /// <summary>A Service for encrypting and decrypting base 92 tokens.</summary>
@@ -425,6 +426,18 @@
             }
         }
 
+        private async Task PopulateExtraTokenFieldsAsync(ExtraToken extraToken)
+        {
+            try
+            {
+                extraToken.Source = await _support.SupplierNameLookupAsync(extraToken.SupplierID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+        }
+
         private void GetTokenValues(string tokenString)
         {
             long decimalValue = _converter.Decode(tokenString);
@@ -573,6 +586,116 @@
         private string GetTimeFromTokenValues(int hour, int minute)
         {
             return new DateTime(2022, 1, 1, hour, minute, 0).ToString("HH:mm").ToString();
+        }
+
+        public async Task<ExtraToken?> DecodeExtraTokenAsync(string tokenString, Account account)
+        {
+            ExtraToken? token = null;
+
+            try
+            {
+                _tokenValues.Clear();
+                _tokenValues.AddValue(TokenValueType.Year);
+                _tokenValues.AddValue(TokenValueType.Month);
+                _tokenValues.AddValue(TokenValueType.Day);
+                _tokenValues.AddValue(TokenValueType.Hour1);
+                _tokenValues.AddValue(TokenValueType.Minute1);
+                _tokenValues.AddValue(TokenValueType.Duration);
+                _tokenValues.AddValue(TokenValueType.OneWay);
+                _tokenValues.AddValue(TokenValueType.Hour2);
+                _tokenValues.AddValue(TokenValueType.Minute2);
+
+                GetTokenValues(tokenString.Substring(0, 8));
+
+                //TODO refactor this mess when token details settled
+                token = new ExtraToken()
+                {
+                    Duration = _tokenValues.GetValue(TokenValueType.Duration),
+                    OneWay = _tokenValues.GetValue(TokenValueType.OneWay) == 1 ? true : false,
+                };
+
+                int day = _tokenValues.GetValue(TokenValueType.Day);
+                int month = _tokenValues.GetValue(TokenValueType.Month);
+                int year = DateTime.Now.AddYears(_tokenValues.GetValue(TokenValueType.Year)).Year;
+
+                if (day > 0 && month > 0)
+                {
+                    token.DepartureDate = new DateTime(year, month, day);
+                }
+
+                int hour = _tokenValues.GetValue(TokenValueType.Hour1);
+                int minute = _tokenValues.GetValue(TokenValueType.Minute1);
+
+                token.DepartureTime = GetTimeFromTokenValues(hour, minute);
+
+                if (!token.OneWay)
+                {
+                    hour = _tokenValues.GetValue(TokenValueType.Hour2);
+                    minute = _tokenValues.GetValue(TokenValueType.Minute2);
+
+                    token.ReturnTime = GetTimeFromTokenValues(hour, minute);
+                }
+
+                _tokenValues.Clear();
+                _tokenValues.AddValue(TokenValueType.CurrencyID);
+                _tokenValues.AddValue(TokenValueType.Adults);
+                _tokenValues.AddValue(TokenValueType.Children);
+                _tokenValues.AddValue(TokenValueType.Infants);
+                _tokenValues.AddValue(TokenValueType.SupplierID);
+
+                GetTokenValues(new string(tokenString.Substring(8, tokenString.Length - 8).ToArray()));
+
+                token.ISOCurrencyID = _tokenValues.GetValue(TokenValueType.CurrencyID);
+                token.Adults = _tokenValues.GetValue(TokenValueType.Adults);
+                token.Children = _tokenValues.GetValue(TokenValueType.Children);
+                token.Infants = _tokenValues.GetValue(TokenValueType.Infants);
+                token.SupplierID = _tokenValues.GetValue(TokenValueType.SupplierID);
+
+                await PopulateExtraTokenFieldsAsync(token);
+            }
+            catch (Exception ex)
+            {
+                token = null;
+                _logger.LogError(ex, "ExtraTokenDecodeError");
+            }
+
+            return token;
+
+        }
+
+        public string EncodeExtraToken(ExtraToken extraToken)
+        {
+            (int, int) departureTime = GetTimeParts(extraToken.DepartureTime);
+            (int, int) returnTime = extraToken.OneWay ? (0, 0) : GetTimeParts(extraToken.ReturnTime);
+
+            _tokenValues.Clear();
+            _tokenValues.AddValue(TokenValueType.Year, extraToken.DepartureDate.Year - DateTime.Now.Year);
+            _tokenValues.AddValue(TokenValueType.Month, extraToken.DepartureDate.Month);
+            _tokenValues.AddValue(TokenValueType.Day, extraToken.DepartureDate.Day);
+            _tokenValues.AddValue(TokenValueType.Hour1, departureTime.Item1);
+            _tokenValues.AddValue(TokenValueType.Minute1, departureTime.Item2);
+            _tokenValues.AddValue(TokenValueType.Duration, extraToken.Duration);
+            _tokenValues.AddValue(TokenValueType.OneWay, extraToken.OneWay ? 1 : 0);
+            _tokenValues.AddValue(TokenValueType.Hour2, returnTime.Item1);
+            _tokenValues.AddValue(TokenValueType.Minute2, returnTime.Item2);
+
+            char[] timeBits = ConvertValuesToCharArray(_tokenValues.Values);
+
+            _tokenValues.Clear();
+            _tokenValues.AddValue(TokenValueType.CurrencyID, extraToken.ISOCurrencyID);
+            _tokenValues.AddValue(TokenValueType.Adults, extraToken.Adults);
+            _tokenValues.AddValue(TokenValueType.Children, extraToken.Children);
+            _tokenValues.AddValue(TokenValueType.Infants, extraToken.Infants);
+            _tokenValues.AddValue(TokenValueType.SupplierID, extraToken.SupplierID);
+
+            char[] detailsBits = ConvertValuesToCharArray(_tokenValues.Values);
+
+            string timeTokenString = new string(timeBits.Take(TokenLengths.Transfer).ToArray());
+            string detailsTokenString = new string(detailsBits.Take(TokenLengths.Transfer).ToArray());
+
+            string tokenString = timeTokenString + detailsTokenString.TrimEnd();
+
+            return tokenString;
         }
     }
 }
