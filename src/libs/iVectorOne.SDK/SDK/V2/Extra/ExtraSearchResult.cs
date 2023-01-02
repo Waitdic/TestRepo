@@ -10,11 +10,7 @@
         [XmlIgnore]
         public const string TPSESSIONIDERRORMESSAGE = "No TP Session Id Specified";
         [XmlIgnore]
-        public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified";
-        [XmlIgnore]
-        public const string TRANSFERVEHICLEERRORMESSAGE = "No Transfer Vehicle Specified";
-        [XmlIgnore]
-        public const string MEALBASISERRORMESSAGE = "No Meal Basis Specified";
+        public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified"; 
         [XmlIgnore]
         public const string COSTERRORMESSAGE = "No Valid Cost Specified";
 
@@ -51,11 +47,6 @@
             //{
             //    this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
             //}
-
-            if (string.IsNullOrEmpty(this.TransferVehicle))
-            {
-                this.Warnings.Add(TRANSFERVEHICLEERRORMESSAGE);
-            }
 
             if (this.Cost == 0)
             {

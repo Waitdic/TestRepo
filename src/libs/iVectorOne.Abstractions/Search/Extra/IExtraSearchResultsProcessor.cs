@@ -16,7 +16,7 @@
         /// <param name="source">The source.</param>
         /// <param name="searchDetails">The transfer search details.</param>
         /// <returns>A count of the results</returns>
-        Task<int> ProcessTPResultsAsync(TransformedTransferResultCollection results, ExtraSearchDetails searchDetails);
+        Task<int> ProcessTPResultsAsync(TransformedExtraResultCollection results, ExtraSearchDetails searchDetails);
 
     }
 }

@@ -45,7 +45,7 @@
         /// <returns>
         /// A count of the results
         /// </returns>
-        public async Task<int> ProcessTPResultsAsync(TransformedTransferResultCollection results, ExtraSearchDetails searchDetails)
+        public async Task<int> ProcessTPResultsAsync(TransformedExtraResultCollection results, ExtraSearchDetails searchDetails)
         {        
             int resultsCount = 0;
 
