@@ -66,6 +66,7 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
+    using ExtraBook = SDK.V2.ExtraBook;
     using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraSearch = SDK.V2.ExtraSearch;
 
@@ -116,7 +117,7 @@
             services.AddSingleton<IExtraLocationMappingFactory, ExtraLocationMappingFactory>();
             services.AddSingleton<IExtraDetailsFactory, ExtraDetailsFactory>();
             services.AddSingleton<IExtraPrebookResponseFactory, ExtraPrebookResponseFactory>();
-            
+            services.AddSingleton<IExtraBookResponseFactory, ExtraBookResponseFactory>();
         }
 
         private static void RegisterRepositories(ServicesBuilderContext context, IServiceCollection services)
@@ -138,6 +139,7 @@
             services.AddSingleton<IExtraSearchRepository, ExtraSearchRepository>();
             services.AddSingleton<IExtraAPILogRepository, ExtraAPILogRepository>();
             services.AddSingleton<IExtraSupplierLogRepository, ExtraSupplierLogRepository>();
+            services.AddSingleton<IExtraBookingRepository, ExtraBookingRepository>();
 
         }
 
@@ -169,6 +171,7 @@
 
             services.AddSingleton<Services.Extra.ISearchService, Services.Extra.SearchService>();
             services.AddSingleton<Services.Extra.IPrebookService, Services.Extra.PrebookService>();
+            services.AddSingleton<Services.Extra.IBookService, Services.Extra.BookService>();
             services.AddSingleton<IExtraSearchResultsProcessor, ExtraSearchResultsProcessor>();
             services.AddSingleton<IThirdPartyExtraSearchRunner, ThirdPartyExtraSearchRunner>();
 
@@ -211,6 +214,7 @@
             services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
             services.AddHandlerAndValidator<ExtraSearch.Request, ExtraSearch.Response, ExtraSearch.Handler, ExtraSearch.Validator>();
             services.AddHandlerAndValidator<ExtraPrebook.Request, ExtraPrebook.Response, ExtraPrebook.Handler, ExtraPrebook.Validator>();
+            services.AddHandlerAndValidator<ExtraBook.Request, ExtraBook.Response, ExtraBook.Handler, ExtraBook.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)

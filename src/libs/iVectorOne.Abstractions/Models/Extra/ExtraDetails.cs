@@ -6,6 +6,7 @@ namespace iVectorOne.Models.Extra
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models.SupplierLog;
+    using ExtraBook = iVectorOne.SDK.V2.ExtraBook;
 
     /// <summary>
     /// The extra details passed into book and pre books
@@ -227,15 +228,15 @@ namespace iVectorOne.Models.Extra
         /// </summary>
         public Errata ReturnErrata { get; set; } = new();
 
-        /////// <summary>
-        /////// Gets or sets the outbound details
-        /////// </summary>
-        //public JourneyDetails OutboundDetails { get; set; } = new();
+        ///// <summary>
+        ///// Gets or sets the outbound details
+        ///// </summary>
+        public ExtraBook.JourneyDetails OutboundDetails { get; set; } = new();
 
-        /////// <summary>
-        /////// Gets or sets the return details
-        /////// </summary>
-        //public JourneyDetails ReturnDetails { get; set; } = new();
+        ///// <summary>
+        ///// Gets or sets the return details
+        ///// </summary>
+        public ExtraBook.JourneyDetails ReturnDetails { get; set; } = new();
 
         ///// <summary>
         ///// Gets or sets The arrival date
