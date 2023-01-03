@@ -24,7 +24,7 @@
         /// Transforms the response.
         /// </summary>
         /// <param name="requests">The requests.</param>
-        /// /// <param name="searchDetails">The transfer search details.</param>
+        /// /// <param name="searchDetails">The extra search details.</param>
         /// <param name="location">The location mapping.</param>
         /// <returns>an XML document</returns>
         TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, LocationMapping location);
@@ -33,7 +33,7 @@
         /// Check if there are any search restrictions for the third party.
         /// For example; the third party can not perform multi-room bookings.
         /// </summary>
-        /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="searchDetails">The extra search details.</param>
         /// <returns>If there any search restrictions for the third party.</returns>
         bool SearchRestrictions(ExtraSearchDetails searchDetails);
 

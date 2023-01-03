@@ -73,7 +73,7 @@ namespace iVectorOne.Services.Extra
 
             if (items != null)
             {
-                await _searchStoreRepository.BulkInsertAsync(items);
+              //  await _searchStoreRepository.BulkInsertAsync(items);
             }
         }
 
@@ -92,7 +92,7 @@ namespace iVectorOne.Services.Extra
 
             if (items != null)
             {
-                await _searchStoreRepository.BulkInsertAsync(items);
+              //  await _searchStoreRepository.BulkInsertAsync(items);
             }
         }
 

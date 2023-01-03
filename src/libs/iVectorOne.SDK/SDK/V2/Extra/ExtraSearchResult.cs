@@ -10,7 +10,7 @@
         [XmlIgnore]
         public const string TPSESSIONIDERRORMESSAGE = "No TP Session Id Specified";
         [XmlIgnore]
-        public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified";
+        public const string CURRENCYCODEERRORMESSAGE = "No Currency Code Specified"; 
         [XmlIgnore]
         public const string COSTERRORMESSAGE = "No Valid Cost Specified";
 
