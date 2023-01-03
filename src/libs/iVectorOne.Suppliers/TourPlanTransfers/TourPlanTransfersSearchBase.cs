@@ -149,8 +149,10 @@
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
                     supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
-                    transformedResult = BuildTransformedResult(outboundResult.OptStayResults, supplierReference, outboundResult.OptGeneral
-                                                               .Comment, outboundResult.OptStayResults.TotalPrice);
+                    transformedResult = BuildTransformedResult(outboundResult.OptStayResults,
+                                                               supplierReference,
+                                                               outboundResult.OptGeneral.Comment,
+                                                               outboundResult.OptStayResults.TotalPrice);
                     transformedResultList.Add(transformedResult);
                 }
             }
@@ -161,10 +163,14 @@
                     foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment
                                                                              && x.OptStayResults.Availability == outboundResult.OptStayResults.Availability))
                     {
-                        supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId,
-                                                                            returnResult.Opt, returnResult.OptStayResults.RateId);
-                        transformedResult = BuildTransformedResult(returnResult.OptStayResults, supplierReference, outboundResult.OptGeneral.Comment
-                                                                   , returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                        supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt,
+                                                                            outboundResult.OptStayResults.RateId,
+                                                                            returnResult.Opt, 
+                                                                            returnResult.OptStayResults.RateId);
+                        transformedResult = BuildTransformedResult(returnResult.OptStayResults,
+                                                                   supplierReference,
+                                                                   outboundResult.OptGeneral.Comment,
+                                                                   returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
                 }
