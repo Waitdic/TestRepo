@@ -25,7 +25,7 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
-        
+
         public TourPlanTransfersBase(
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
@@ -494,13 +494,16 @@
         {
             foreach (var note in optionNotes.OptionNote)
             {
-                if (outbound)
+                if (!_settings.ExcludeNoteCategory.Contains(note.NoteCategory.ToLower()))
                 {
-                    transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
-                }
-                else
-                {
-                    transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
+                    if (outbound)
+                    {
+                        transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
+                    }
+                    else
+                    {
+                        transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
+                    }
                 }
             }
         }
