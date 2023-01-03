@@ -1,11 +1,13 @@
-﻿namespace iVectorOne.Search.Results.Models
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Serialization;
 
+namespace iVectorOne.Search.Results.Models.Extra
+{
     /// <summary>
-    /// Transformed Transfer Result Collection
+    /// Transformed Extra Result Collection
     /// </summary>
     [XmlRoot("Results")]
     public class TransformedExtraResultCollection
@@ -18,19 +20,19 @@
         }
 
         /// <summary>
-        /// Gets or sets the transformed transfer results.
+        /// Gets or sets the transformed Extra results.
         /// </summary>
         /// <value>
-        /// The transformed transfer results.
+        /// The transformed Extra results.
         /// </value>
         [XmlIgnore]
         public List<TransformedExtraResult> TransformedResults { get; set; } = new List<TransformedExtraResult>();
 
         /// <summary>
-        /// Gets the valid transfer results.
+        /// Gets the valid extra results.
         /// </summary>
         /// <value>
-        /// The valid transfer results.
+        /// The valid extra results.
         /// </value>
         [XmlElement("Result")]
         public List<TransformedExtraResult> ValidResults

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace iVectorOne.Search.Api.Endpoints.V2
 {
-    public static class ExtraEndPoints
+    public static class ExtraEndpoint
     {
         public static IEndpointRouteBuilder MapExtraEndpoints(this IEndpointRouteBuilder endpoints)
         {

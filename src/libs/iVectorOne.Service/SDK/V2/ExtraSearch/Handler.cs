@@ -16,9 +16,9 @@
             _searchService = searchService;
             _requestTracker = requestTracker;
         }
-        public Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            return _searchService.SearchAsync(request, false, _requestTracker);
+            return await _searchService.SearchAsync(request, false, _requestTracker);
         }
     }
 }

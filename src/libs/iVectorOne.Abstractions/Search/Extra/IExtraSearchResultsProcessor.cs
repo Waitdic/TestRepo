@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Search
 {
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Results.Models;
+    using iVectorOne.Search.Results.Models.Extra;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -14,7 +14,7 @@
         /// </summary>
         /// <param name="results">The results XML.</param>
         /// <param name="source">The source.</param>
-        /// <param name="searchDetails">The transfer search details.</param>
+        /// <param name="searchDetails">The extra search details.</param>
         /// <returns>A count of the results</returns>
         Task<int> ProcessTPResultsAsync(TransformedExtraResultCollection results, ExtraSearchDetails searchDetails);
 

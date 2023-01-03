@@ -1,12 +1,11 @@
 ﻿namespace iVectorOne.Extra
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
-    using iVectorOne.Search.Results.Models;
+    using iVectorOne.Search.Results.Models.Extra;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Defines a third party transfer 

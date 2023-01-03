@@ -18,7 +18,7 @@
         public string BookingToken { get; set; } = string.Empty;
         public string TPSessionID { get; set; } = string.Empty;
         public string SupplierReference { get; set; } = string.Empty;
-        public string TransferVehicle { get; set; } = string.Empty;
+        public string ExtraVehicle { get; set; } = string.Empty;
         public string ReturnTime { get; set; } = string.Empty;
         public decimal VehicleCost { get; set; }
         public decimal AdultCost { get; set; }
@@ -33,8 +33,8 @@
         public decimal ReturnCost { get; set; }
         public string OutboundXML { get; set; } = string.Empty;
         public string ReturnXML { get; set; } = string.Empty;
-        public int OutboundTransferMinutes { get; set; }
-        public int ReturnTransferMinutes { get; set; }
+        public int OutboundExtraMinutes { get; set; }
+        public int ReturnExtraMinutes { get; set; }
 
         public void Validate()
         {
@@ -42,11 +42,6 @@
             {
                 this.Warnings.Add(TPSESSIONIDERRORMESSAGE);
             }
-
-            //if (string.IsNullOrEmpty(this.CurrencyCode))
-            //{
-            //    this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
-            //}
 
             if (this.Cost == 0)
             {
