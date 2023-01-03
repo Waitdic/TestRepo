@@ -39,7 +39,7 @@
         public string ReturnXML { get; set; } = string.Empty;
         public int OutboundTransferMinutes { get; set; }
         public int ReturnTransferMinutes { get; set; }
-
+        public bool OnRequest { get; set; }
         public void Validate()
         {
             if (string.IsNullOrEmpty(this.TPSessionID))

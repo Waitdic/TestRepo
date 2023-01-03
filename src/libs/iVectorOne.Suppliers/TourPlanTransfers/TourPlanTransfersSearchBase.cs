@@ -132,11 +132,11 @@
 
                     if ((string)request.ExtraInfo == Constants.Outbound)
                     {
-                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
+                        filteredOutbound = FilterResults(searchDetails.IncludeOnRequest, tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
                     }
                     if ((string)request.ExtraInfo != Constants.Outbound)
                     {
-                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
+                        filteredReturn = FilterResults(searchDetails.IncludeOnRequest, tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                     }
                 }
             }
@@ -149,7 +149,7 @@
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
                     supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
-                    transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                    transformedResult = BuildTransformedResult(outboundResult.OptStayResults, supplierReference,outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.TotalPrice);
                     transformedResultList.Add(transformedResult);
                 }
             }
@@ -160,7 +160,7 @@
                     foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
                     {
                         supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
-                        transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                        transformedResult = BuildTransformedResult(returnResult.OptStayResults, supplierReference, outboundResult.OptGeneral.Comment, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
                 }
@@ -178,7 +178,7 @@
 
         }
 
-        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        private TransformedTransferResult BuildTransformedResult(OptStayResults optStayResult, string supplierReference,string comment, int totalPrice)
         {
             var transformedResult = new TransformedTransferResult()
             {
@@ -189,7 +189,7 @@
                 VehicleCost = 0,
                 AdultCost = 0,
                 ChildCost = 0,
-                CurrencyCode = currency,
+                CurrencyCode = optStayResult.Currency,
                 VehicleQuantity = 1,
                 Cost = totalPrice / 100m,
                 BuyingChannelCost = 0,
@@ -201,6 +201,7 @@
                 ReturnXML = "",
                 OutboundTransferMinutes = 0,
                 ReturnTransferMinutes = 0,
+                OnRequest = optStayResult.Availability == Constants.OnRequestCode,
             };
 
             return transformedResult;
@@ -209,13 +210,13 @@
         #endregion
 
         #region Private Functions
-        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
+        private OptionInfoReply FilterResults(bool includeOnRequest, string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
             List<string> filterUniqueLocation = new();
 
             List<Option> result = new();
-            foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
+            foreach (var option in deserializedResponse.Option.ToList().Where(x => getAvailabilityStatus(includeOnRequest, x.OptStayResults.Availability)))
             {
                 if (filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation))
                 {
@@ -237,6 +238,11 @@
                 filterResult.Option.AddRange(result);
             }
             return filterResult;
+        }
+
+        private bool getAvailabilityStatus(bool includeOnRequest, string availability)
+        {
+            return includeOnRequest ? (availability == Constants.FreesaleCode || availability == Constants.OnRequestCode) : availability == Constants.FreesaleCode;
         }
 
         private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)

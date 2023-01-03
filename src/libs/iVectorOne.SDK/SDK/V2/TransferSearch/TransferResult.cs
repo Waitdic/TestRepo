@@ -164,5 +164,10 @@
         /// The transfer vehicle.
         /// </value>
         public int ReturnTransferMinutes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the request flag
+        /// </summary>
+        public bool OnRequest { get; set; }
     }
 }

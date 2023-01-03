@@ -39,6 +39,7 @@
                 LoggingType = log ? "All" : "None",
                 ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? account.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
+                IncludeOnRequest= searchRequest.IncludeOnRequest,
 
                 SearchStoreItem =
                 {

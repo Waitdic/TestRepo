@@ -115,7 +115,7 @@
             //Assert
             Assert.Equal(searchDetails.DepartureDate.Date, DateTime.Parse(getAttributeValue(requests[0], "DateFrom")));
             Assert.Equal(searchDetails.ReturnDate.Date, DateTime.Parse(getAttributeValue(requests[1], "DateFrom")));
-      
+
 
         }
 
@@ -148,7 +148,7 @@
         [Fact]
         public async Task BuildSearchRequestsAsync_Check_ThirdPartySettings_When_Valid_InputsArePassed()
         {
-            Dictionary<string,string> thirdPartySettings = new Dictionary<string, string>
+            Dictionary<string, string> thirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
                     { "AgentId", "TestAgentId"},
@@ -222,8 +222,8 @@
         }
 
         [Theory]
-        [InlineData("transfervehicle1", "transfervehicle3", "SYD-Default|SYD1-Default")]
-        public Task TransformResponse_ShouldNotReturn_Matching_Transfer_Vehicle_When_InValid_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        [InlineData("transfervehicle1", "transfervehicle3")]
+        public Task TransformResponse_ShouldNotReturnResults_When_NonMatching_TransferVehicles_AreReturned(string commentDeparture, string commentArrival)
         {
 
             List<Request> requests = new();
@@ -233,7 +233,7 @@
             };
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Cost Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
@@ -259,7 +259,7 @@
             };
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold City Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
@@ -275,10 +275,9 @@
         }
 
         [Theory]
-        [InlineData("transfervehicle1", "transfervehicle1", "SYD-Default|SYD1-Default")]
-        public Task TransformResponse_ShouldReturn_Matching_Transfer_Vehicle_When_InValid_TwoWay_InputsArePassed(string commentDeparture, string commentArrival, string supplierReference)
+        [InlineData("transfervehicle1", "transfervehicle1")]
+        public Task TransformResponse_ShouldNotReturnResults_When_NonMatching_Locations_AreReturned(string commentDeparture, string commentArrival)
         {
-
             List<Request> requests = new();
             Request request1 = new()
             {
@@ -287,18 +286,74 @@
             Request request2 = new();
             request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
             request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "City Hotel to Brisbane Airport", commentArrival)).OuterXml);
-
             requests.Add(request1);
             requests.Add(request2);
-
             // Act
             var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
-            var result = transformResponse.TransformedResults.FirstOrDefault();
-           
+
             Assert.False(transformResponse.TransformedResults.Any());
             return Task.CompletedTask;
         }
 
+        [Theory]
+        [InlineData(false)]
+        public Task TransformResponse_ShouldReturn_Only_FreesaleResults_When_IncludeOnRequest_IsFalse(bool includeOnRequest)
+        {
+
+            List<Request> requests = new();
+            Request request = new()
+            {
+                ExtraInfo = Constant.Outbound,
+            };
+            TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
+            {
+                IncludeOnRequest = includeOnRequest,
+            };
+            request.SetResponse(Serialize(GenerateFreesaleAndOnRequestResults()).OuterXml);
+
+            requests.Add(request);
+
+            // Act
+            var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
+            var freesaleCodeResponseCount = transformResponse.TransformedResults.Where(x => !x.OnRequest).Count();
+            var OnRequestCodeResponseCount = transformResponse.TransformedResults.Where(x => x.OnRequest).Count();
+
+            //Assert
+            Assert.True(transformResponse.TransformedResults.Any());
+            Assert.Equal(3, freesaleCodeResponseCount);
+            Assert.Equal(0, OnRequestCodeResponseCount);
+            return Task.CompletedTask;
+        }
+
+        [Theory]
+        [InlineData(true)]
+        public Task TransformResponse_ShouldReturn_FreesaleAndOnRequestResults_When_IncludeOnRequest_IsTrue(bool includeOnRequest)
+        {
+
+            List<Request> requests = new();
+            Request request = new()
+            {
+                ExtraInfo = Constant.Outbound,
+            };
+            TransferSearchDetails transferSearchDetails = new TransferSearchDetails()
+            {
+                IncludeOnRequest = includeOnRequest,
+            };
+            request.SetResponse(Serialize(GenerateFreesaleAndOnRequestResults()).OuterXml);
+
+            requests.Add(request);
+
+            // Act
+            var transformResponse = GetTransformResponse(transferSearchDetails, getLocationMappingMockData(), requests, new());
+            var freesaleCodeResponseCount = transformResponse.TransformedResults.Where(x => !x.OnRequest).Count();
+            var OnRequestCodeResponseCount = transformResponse.TransformedResults.Where(x => x.OnRequest).Count();
+
+            //Assert
+            Assert.True(transformResponse.TransformedResults.Any());
+            Assert.Equal(3, freesaleCodeResponseCount);
+            Assert.Equal(2, OnRequestCodeResponseCount);
+            return Task.CompletedTask;
+        }
         private string getAttributeValue(List<Request> requests, string tagName)
             => requests.FirstOrDefault().RequestXML.GetElementsByTagName(tagName)[0].InnerText;
 
@@ -334,7 +389,7 @@
         }
         private string getAttributeValue(Request requests, string tagName)
            => requests.RequestXML.GetElementsByTagName(tagName)[0].InnerText;
-        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment)
+        private OptionInfoReply GenerateResponse(int totalPrice, string currency, string opt, string description, string comment, string availability = "OK")
         {
             return new OptionInfoReply()
             {
@@ -347,7 +402,7 @@
                      TotalPrice = totalPrice,
                      Currency=currency,
                      RateId = "Default",
-                     Availability= "OK"
+                     Availability= availability
 
                      },
                      OptionNotes = new OptionNotes{
@@ -361,6 +416,127 @@
                      }
                      }
                      }
+            };
+        }
+
+        private OptionInfoReply GenerateFreesaleAndOnRequestResults()
+        {
+            return new OptionInfoReply()
+            {
+                Option = new List<Option> {
+                         new Option()
+                         {
+                             OptStayResults = new OptStayResults()
+                             {
+                                 TotalPrice = 200,
+                                 Currency = "Ind",
+                                 RateId = "Default",
+                                 Availability = "OK"
+
+                             },
+                             OptionNotes = new OptionNotes
+                             {
+                                 OptionNote = new List<OptionNote>()
+                             }
+                    ,
+                             Opt = "optTest",
+                             OptGeneral = new OptGeneral()
+                             {
+                                 Description = "Brisbane Airport to Gold Coast Hotel",
+                                 Comment = "transfervehicle1"
+                             }
+                         },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "OK"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "OK"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "RQ"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                },
+                new Option()
+                {
+                    OptStayResults = new OptStayResults()
+                    {
+                        TotalPrice = 200,
+                        Currency = "Ind",
+                        RateId = "Default",
+                        Availability = "RQ"
+
+                    },
+                    OptionNotes = new OptionNotes
+                    {
+                        OptionNote = new List<OptionNote>()
+                    }
+                    ,
+                    Opt = "optTest",
+                    OptGeneral = new OptGeneral()
+                    {
+                        Description = "Brisbane Airport to Gold Coast Hotel",
+                        Comment = "transfervehicle1"
+                    }
+                }
+
+            }
             };
         }
         private TourPlanTransfersSearchBase SetupGoWaySydneyTransfersService(TransferSearchDetails searchDetails,
