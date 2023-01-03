@@ -66,6 +66,7 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
+    using ExtraSearch = SDK.V2.ExtraSearch;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -183,6 +184,7 @@
             services.AddHandlerAndValidator<TransferBook.Request, TransferBook.Response, TransferBook.Handler, TransferBook.Validator>();
             services.AddHandlerAndValidator<TransferPrecancel.Request, TransferPrecancel.Response, TransferPrecancel.Handler, TransferPrecancel.Validator>();
             services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
+            services.AddHandlerAndValidator<ExtraSearch.Request, ExtraSearch.Response, ExtraSearch.Handler, ExtraSearch.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
