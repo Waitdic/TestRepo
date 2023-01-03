@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Suppliers.TestExtraSupplier
+﻿namespace iVectorOne.Suppliers
 {
     using iVectorOne.Constants;
     using iVectorOne.Support;

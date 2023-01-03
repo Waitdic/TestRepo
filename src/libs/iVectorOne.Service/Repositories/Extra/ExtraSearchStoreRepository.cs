@@ -1,13 +1,12 @@
-﻿using iVectorOne.Models.SearchStore;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace iVectorOne.Repositories.Extra
+﻿namespace iVectorOne.Repositories
 {
+    using iVectorOne.Models.SearchStore;
+    using Microsoft.Data.SqlClient;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Text;
+    using System.Threading.Tasks;
     public class ExtraSearchStoreRepository : IExtraSearchStoreRepository
     {
         private readonly string _connectionString;

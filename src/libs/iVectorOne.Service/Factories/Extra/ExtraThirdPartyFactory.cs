@@ -1,25 +1,24 @@
 ﻿
-namespace iVectorOne.Factories.Extra
+namespace iVectorOne.Factories
 {
     using Intuitive;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using System;
+    using iVectorOne.Extra;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     public class ExtraThirdPartyFactory : IExtraThirdPartyFactory
     {
-        private readonly Dictionary<string, iVectorOne.Extra.IThirdPartySearch> _extraSearchServices;
+        private readonly Dictionary<string, IThirdPartySearch> _extraSearchServices;
         private readonly Dictionary<string, IThirdParty> _extraBookServices;
 
         public ExtraThirdPartyFactory(
-            IEnumerable<iVectorOne.Extra.IThirdPartySearch> searchServices,
+            IEnumerable<IThirdPartySearch> searchServices,
             IEnumerable<IThirdParty> bookServices)
         {
             _extraSearchServices = GetThirdPartyDictionary(searchServices);
-            //_extraBookServices = GetThirdPartyDictionary(bookServices);
+            _extraBookServices = GetThirdPartyDictionary(bookServices);
         }
         private Dictionary<string, T> GetThirdPartyDictionary<T>(IEnumerable<T> services)
         {
@@ -34,7 +33,7 @@ namespace iVectorOne.Factories.Extra
             return supplierBook;
         }
 
-        public iVectorOne.Extra.IThirdPartySearch CreateSearchTPFromSupplier(string source)
+        public IThirdPartySearch CreateSearchTPFromSupplier(string source)
         {
             _extraSearchServices.TryGetValue(source.ToLower(), out var supplierSearch);
             return supplierSearch;
