@@ -5,11 +5,15 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
     using iVectorOne.SDK.V2.TransferSearch;
     using Newtonsoft.Json;
     using System;
+    using System.Collections;
     using System.Security.Policy;
 
     [Binding]
     public class TransferSearchApiStepDefinitions : TransferBaseStepDefinitions
     {
+        private const int arrivalID = 187;
+        private const int departureID = 184;
+
         public TransferSearchApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
         {
         }
@@ -19,17 +23,10 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         public void GivenCreateRequestObjectForSearch()
         {
             CreateClient("search");
-            int departureId = 0, arrivalId = 0;
-            var locations = GetLocation("gowaysydneytransfers");
-            if (locations != null && locations.Count == 2)
-            {
-                arrivalId = 187;
-                departureId = 184;
-            }
             var requestObj = new Request
             {
-                DepartureLocationID = departureId,
-                ArrivalLocationID = arrivalId,
+                DepartureLocationID = departureID,
+                ArrivalLocationID = arrivalID,
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
@@ -50,27 +47,32 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [When(@"make a post request to ""([^""]*)""")]
         public async Task WhenMakeAPostRequestTo(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)_scenarioContext["RequestObj"];
-            var requestContent = CreateRequest(requestObj);
-
-            var response = await _httpClient.PostAsync(url, requestContent);
-
-            _scenarioContext["ResponseCode"] = (int)response.StatusCode;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("RequestObj");
+            if (requestObj != null)
             {
+                var requestContent = CreateRequest(requestObj);
+
+                var response = await _httpClient.PostAsync(url, requestContent);
+
+                _scenarioContext["ResponseCode"] = (int)response.StatusCode;
                 var result = response.Content.ReadAsStringAsync().Result;
-                var obj = JsonConvert.DeserializeObject<Response>(result);
-                List<TransferResult> transferResults = obj.TransferResults;
-                if (transferResults != null && transferResults.Count > 0)
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    _scenarioContext["SearchResult"] = transferResults[0];
-                    keyValuePairs["BookingToken"] = transferResults[0].BookingToken;
-                    keyValuePairs["SupplierReference"] = transferResults[0].SupplierReference;
+                    var obj = JsonConvert.DeserializeObject<Response>(result);
+
+                    List<TransferResult> transferResults = obj.TransferResults;
+                    _scenarioContext["SearchResult"] = transferResults;
+                    if (transferResults != null && transferResults.Count > 0)
+                    {
+                        keyValuePairs["BookingToken"] = transferResults[0].BookingToken;
+                        keyValuePairs["SupplierReference"] = transferResults[0].SupplierReference;
+                    }
                 }
+
                 else
                 {
-                    GivenCreateRequestObjectForSearch();
-                    await WhenMakeAPostRequestTo("v2/transfers/search");
+                    _scenarioContext["ErrorResponse"] = result;
                 }
             }
 
@@ -79,64 +81,86 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [Then(@"the status code should be (.*)")]
         public void ThenTheStatusCodeShouldBe(int status)
         {
-            Assert.Equal(_scenarioContext["ResponseCode"], status);
+            Assert.Equal(status, GetValueFromScenarioConext("ResponseCode"));
+            Assert.Null(GetValueFromScenarioConext("ErrorResponse"));
+        }
+
+        [Then(@"transfer results should have data")]
+        public void ThenTransferResultsShouldHaveData()
+        {
+            Assert.NotEmpty((IList<TransferResult>)GetValueFromScenarioConext("SearchResult"));
         }
 
         [Given(@"Create request object for prebook")]
         public async Task GivenCreateRequestObjectForPrebook()
         {
             GivenCreateRequestObjectForSearch();
-            await WhenMakeAPostRequestTo("v2/transfers/search");
+            await WhenMakeAPostRequestTo(SearchApi);
             CreateClient();
             string supplierReference = GetValue("SupplierReference");
             string bookingToken = GetValue("BookingToken");
-            var requestObj = new SDK.V2.TransferPrebook.Request
+            if (!string.IsNullOrEmpty(supplierReference) && !string.IsNullOrEmpty(bookingToken))
             {
-                SupplierReference = supplierReference,//"SYDTRINSSY1INTOP0-Default",
-                BookingToken = bookingToken,//"QWed#   $c['!",
-                ThirdPartySettings = new Dictionary<string, string>
+                var requestObj = new SDK.V2.TransferPrebook.Request
+                {
+                    SupplierReference = supplierReference,
+                    BookingToken = bookingToken,
+                    ThirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", URL },
                     { "AgentId", AgentID},
                     { "Password", Password }
                 }
-            };
+                };
 
-            _scenarioContext["PrebookObj"] = requestObj;
+                _scenarioContext["PrebookObj"] = requestObj;
+            }
         }
 
         [When(@"make a post request to prebook ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToPrebook(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)_scenarioContext["PrebookObj"];
-            var requestContent = CreateRequest(requestObj);
-
-            var response = await _httpClient.PostAsync(url, requestContent);
-
-            _scenarioContext["ResponseCode"] = (int)response.StatusCode;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("PrebookObj");
+            if (requestObj != null)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
-                var obj = JsonConvert.DeserializeObject<SDK.V2.TransferPrebook.Response>(result);
-                if (obj != null)
-                {
-                    _scenarioContext["PrebookResult"] = obj;
-                    keyValuePairs["BookingToken"] = obj.BookingToken;
-                    keyValuePairs["SupplierReference"] = obj.SupplierReference;
+                var requestContent = CreateRequest(requestObj);
 
+                var response = await _httpClient.PostAsync(url, requestContent);
+
+                _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var obj = JsonConvert.DeserializeObject<SDK.V2.TransferPrebook.Response>(result);
+                    if (obj != null)
+                    {
+                        _scenarioContext["PrebookResult"] = obj;
+                        keyValuePairs["BookingToken"] = obj.BookingToken;
+                        keyValuePairs["SupplierReference"] = obj.SupplierReference;
+
+                    }
                 }
             }
+        }
+
+        [Then(@"booking token and supplier reference are not empty")]
+        public void ThenBookingTokenAndSupplierReferenceAreNotEmpty()
+        {
+            Assert.NotEqual(string.Empty, GetValue("BookingToken"));
+            Assert.NotEqual(string.Empty, GetValue("SupplierReference"));
         }
 
         [Given(@"Create request object for book")]
         public async Task GivenCreateRequestObjectForBook()
         {
-            GivenCreateRequestObjectForSearch();
-            await WhenMakeAPostRequestTo("v2/transfers/search");
-            CreateClient();
+            await GivenCreateRequestObjectForPrebook();
+            await WhenMakeAPostRequestToPrebook(PrebookApi);
             string supplierReference = GetValue("SupplierReference");
             string bookingToken = GetValue("BookingToken");
-            var guestDetails = new List<GuestDetail>() {
+
+            if (!string.IsNullOrEmpty(supplierReference) && !string.IsNullOrEmpty(bookingToken))
+            {
+                var guestDetails = new List<GuestDetail>() {
                 new GuestDetail()
                 {
                     Type = GuestType.Adult,
@@ -154,58 +178,62 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 DateOfBirth = new DateTime(1990,5,6)
              }
             };
-            var requestObj = new SDK.V2.TransferBook.Request
-            {
-                BookingReference = "BookingRef2",
-                SupplierReference = supplierReference,//"SYDTRINSSY1INTOP0-Default",
-                BookingToken = bookingToken,// "QWed#   $c['!",
-                LeadCustomer = new LeadCustomer()
+                var requestObj = new SDK.V2.TransferBook.Request
                 {
-                    CustomerTitle = "Mr",
-                    CustomerFirstName = "test",
-                    CustomerLastName = "test",
-                    DateOfBirth = new DateTime(1990, 05, 05),
-                    CustomerAddress1 = "123 road",
-                    CustomerAddress2 = "test area",
-                    CustomerTownCity = "test town",
-                    CustomerCounty = "test",
-                    CustomerPostcode = "cr35ig",
-                    CustomerBookingCountryCode = "GB",
-                    CustomerPhone = "123456789",
-                    CustomerMobile = "123456789",
-                    CustomerEmail = "test@Test.com"
-                },
-                GuestDetails = guestDetails,
-                ThirdPartySettings = new Dictionary<string, string>
+                    BookingReference = "BookingRef2",
+                    SupplierReference = supplierReference,
+                    BookingToken = bookingToken,
+                    LeadCustomer = new LeadCustomer()
+                    {
+                        CustomerTitle = "Mr",
+                        CustomerFirstName = "test",
+                        CustomerLastName = "test",
+                        DateOfBirth = new DateTime(1990, 05, 05),
+                        CustomerAddress1 = "123 road",
+                        CustomerAddress2 = "test area",
+                        CustomerTownCity = "test town",
+                        CustomerCounty = "test",
+                        CustomerPostcode = "cr35ig",
+                        CustomerBookingCountryCode = "GB",
+                        CustomerPhone = "123456789",
+                        CustomerMobile = "123456789",
+                        CustomerEmail = "test@Test.com"
+                    },
+                    GuestDetails = guestDetails,
+                    ThirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", URL },
                     { "AgentId", AgentID},
                     { "Password", Password }
                 }
-            };
+                };
 
-            _scenarioContext["BookObj"] = requestObj;
+                _scenarioContext["BookObj"] = requestObj;
+            }
         }
 
         [When(@"make a post request to book ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToBook(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)_scenarioContext["BookObj"];
-            var requestContent = CreateRequest(requestObj);
-
-            var response = await _httpClient.PostAsync(url, requestContent);
-
-            _scenarioContext["ResponseCode"] = (int)response.StatusCode;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("BookObj");
+            if (requestObj != null)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
-                var obj = JsonConvert.DeserializeObject<SDK.V2.TransferBook.Response>(result);
-                if (obj != null)
-                {
-                    _scenarioContext["BookResult"] = obj;
-                    keyValuePairs["SupplierBookingReference"] = obj.SupplierBookingReference;
-                    keyValuePairs["SupplierReference"] = obj.SupplierReference;
+                var requestContent = CreateRequest(requestObj);
 
+                var response = await _httpClient.PostAsync(url, requestContent);
+
+                _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var obj = JsonConvert.DeserializeObject<SDK.V2.TransferBook.Response>(result);
+                    if (obj != null)
+                    {
+                        _scenarioContext["BookResult"] = obj;
+                        keyValuePairs["SupplierBookingReference"] = obj.SupplierBookingReference;
+                        keyValuePairs["SupplierReference"] = obj.SupplierReference;
+
+                    }
                 }
             }
 
@@ -216,44 +244,71 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         public async Task GivenCreateRequestObjectForCancel()
         {
             await GivenCreateRequestObjectForBook();
-            await WhenMakeAPostRequestToBook("v2/transfers/book");
+            await WhenMakeAPostRequestToBook(BookApi);
 
             string supplierReference = GetValue("SupplierReference");
             string supBookingRef = GetValue("SupplierBookingReference");
-            var requestObj = new SDK.V2.TransferCancel.Request
+
+            if (!string.IsNullOrEmpty(supplierReference) && !string.IsNullOrEmpty(supBookingRef))
             {
-                SupplierReference = supplierReference,//"GOCA311356",
-                SupplierBookingReference = supBookingRef,//"169180",
-                ThirdPartySettings = new Dictionary<string, string>
+
+                var requestObj = new SDK.V2.TransferCancel.Request
+                {
+                    SupplierReference = supplierReference,
+                    SupplierBookingReference = supBookingRef,
+                    ThirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", URL },
                     { "AgentId", AgentID},
                     { "Password", Password }
                 }
-            };
+                };
 
-            _scenarioContext["CancelObj"] = requestObj;
+                _scenarioContext["CancelObj"] = requestObj;
+            }
         }
 
         [When(@"make a post request to cancel ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToCancel(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)_scenarioContext["CancelObj"];
-            var requestContent = CreateRequest(requestObj);
+            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("CancelObj");
 
-            var response = await _httpClient.PostAsync(url, requestContent);
-
-            _scenarioContext["ResponseCode"] = (int)response.StatusCode;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (requestObj != null)
             {
-                var result = response.Content.ReadAsStringAsync().Result;
-                var obj = JsonConvert.DeserializeObject<SDK.V2.TransferCancel.Response>(result);
-                if (obj != null)
+                var requestContent = CreateRequest(requestObj);
+
+                var response = await _httpClient.PostAsync(url, requestContent);
+
+                _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    _scenarioContext["CancelResult"] = obj;
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var obj = JsonConvert.DeserializeObject<SDK.V2.TransferCancel.Response>(result);
+                    if (obj != null)
+                    {
+                        keyValuePairs["SupplierCancellationReference"] = obj.SupplierCancellationReference;
+                        _scenarioContext["CancelResult"] = obj;
+                    }
                 }
             }
+        }
 
+        [Then(@"Supplier Cancellation Reference should have data")]
+        public void ThenSupplierCancellationReferenceShouldHaveData()
+        {
+            Assert.NotEqual(string.Empty, GetValue("SupplierCancellationReference"));
+        }
+
+        [Given(@"Create request object")]
+        public async Task GivenCreateRequestObject()
+        {
+            await GivenCreateRequestObjectForCancel();
+        }
+
+        [When(@"make a post request to each endpoint")]
+        public async Task WhenMakeAPostRequestToEachEndpoint()
+        {
+            await WhenMakeAPostRequestToCancel(CancelApi);
         }
     }
 }

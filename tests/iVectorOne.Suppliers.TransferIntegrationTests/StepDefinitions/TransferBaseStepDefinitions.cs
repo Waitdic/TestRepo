@@ -17,23 +17,19 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         protected const string AgentID = "GOWAUD";
         protected const string Password = "koala12";
         protected const string URL = "https://pa-gowsyd.nx.tourplan.net/iCom_Test/servlet/conn";
+        protected const string SearchApi = @"v2/transfers/search";
+        protected const string BookApi = @"v2/transfers/book";
+        protected const string PrebookApi = @"v2/transfers/prebook";
+        protected const string CancelApi = @"v2/transfers/cancel";
 
         private const string ReqUsername = "GoWayTest";
         private const string ReqPassword = "GoWayTest";
-
-        private IConfiguration _config;
-        public List<int> locationIds;
-
-        public List<IEnumerable<int>> IVOLocationIds;
+        
         public static Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+
         public TransferBaseStepDefinitions(ScenarioContext scenarioContext)
         {
-
             _scenarioContext = scenarioContext;
-
-
-            _config = InitConfiguration();
-
         }
 
         public void CreateClient(string api = "")
@@ -75,69 +71,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return null;
         }
 
-        public List<int> GetLocation(string source)
-        {
-            if (IVOLocationIds == null)
-            {
-                locationIds = new List<int>();
-                using (SqlConnection connection = new SqlConnection(Convert.ToString(_config["ConnectionStrings:Telemetry"])))
-                using (SqlCommand cmd = new SqlCommand(@"select IVOLocationID, Payload  from IVOLocation where Source = @source and Payload Like 'SYD%'", connection))
-                {
-                    cmd.Parameters.Add(new SqlParameter("@source", source));
-                    connection.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                int iVOLocationID = reader.GetInt32(reader.GetOrdinal("IVOLocationID"));
-                                locationIds.Add(iVOLocationID);
-                            }
-                        }
-                    }
-                }
-
-                if (locationIds.Count > 0)
-                {
-                    int element = locationIds[0];
-                    locationIds.RemoveAt(0);
-                    IVOLocationIds = GetAllLocationCombinations(locationIds, locationIds.Count, element).ToList();
-                }
-            }
-
-            if (IVOLocationIds.Count > 0)
-            {
-                List<int> locations = IVOLocationIds[0].ToList();
-
-                IVOLocationIds.RemoveAt(0);
-
-                return locations;
-            }
-
-            return null;
-        }
-
-        public IConfiguration InitConfiguration()
-        {
-            var config = new ConfigurationBuilder()
-               .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
-            return config;
-        }
-
-        public IEnumerable<IEnumerable<int>> GetAllLocationCombinations(List<int> list, int length, int element)
-        {
-            if (length == 1)
-            {
-                return list.Select(t => new int[] { t });
-            }
-
-            return GetAllLocationCombinations(list, length - 1, element)
-                    .Select(t => t.Concat(new int[] { element }).Distinct()).ToList();
-        }
-
         public string GetValue(string key)
         {
             keyValuePairs.TryGetValue(key, out var value);
@@ -146,6 +79,13 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             {
                 value = string.Empty;
             }
+            return value;
+        }
+
+        public object GetValueFromScenarioConext(string key)
+        {
+            _scenarioContext.TryGetValue(key, out var value);
+            
             return value;
         }
     }
