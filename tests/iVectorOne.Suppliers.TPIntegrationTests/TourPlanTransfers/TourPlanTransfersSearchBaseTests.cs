@@ -151,7 +151,7 @@
             Dictionary<string, string> thirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
+                    { "AgentID", "TestAgentId"},
                     { "Password", "TestPassword" }
                 };
             ArrayList serviceReply = new();
@@ -175,7 +175,7 @@
             Dictionary<string, string> thirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId22"},
+                    { "AgentID", "TestAgentId22"},
                     { "Password", "TestPassword11" }
                 };
             ArrayList serviceReply = new();
@@ -545,7 +545,7 @@
             searchDetails.ThirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
+                    { "AgentID", "TestAgentId"},
                     { "Password", "TestPassword" }
                 };
             var mockHttpClient = new HttpClient(_mockHttp.Object);

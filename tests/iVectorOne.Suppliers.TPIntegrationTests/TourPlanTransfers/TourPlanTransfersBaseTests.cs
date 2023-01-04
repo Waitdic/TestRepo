@@ -341,9 +341,10 @@
             ItExpr.Is<HttpRequestMessage>(req => req.Content.ReadAsStringAsync().Result.Contains(nameof(OptionInfoRequest))),
             ItExpr.IsAny<CancellationToken>());
 
+
             Assert.True(bookingStatus);
             Assert.Equal(supplierReferences, transferDetails.SupplierReference);
-            Assert.Equal(totalPrice * 2, transferDetails.LocalCost);
+            Assert.Equal((totalPrice / 100M) * 2, transferDetails.LocalCost);
             Assert.Equal(currency, transferDetails.ISOCurrencyCode);
 
             for (int i = 0; i < 2; i++)
@@ -382,7 +383,7 @@
 
             Assert.True(bookingStatus);
             Assert.Equal(supplierReference, transferDetails.SupplierReference);
-            Assert.Equal(totalPrice, transferDetails.LocalCost);
+            Assert.Equal(totalPrice / 100M, transferDetails.LocalCost);
             Assert.Equal(currency, transferDetails.ISOCurrencyCode);
             Assert.Contains(transferDetails.DepartureErrata, x => x.Title == "TestNoteCategory");
             Assert.Contains(transferDetails.DepartureErrata, x => x.Text == "TestNoteText");
@@ -563,7 +564,7 @@
             transferDetails.ThirdPartySettings = new Dictionary<string, string>
                 {
                     { "URL", "https://www.testgoway.com" },
-                    { "AgentId", "TestAgentId"},
+                    { "AgentID", "TestAgentId"},
                     { "Password", "TestPassword" }
                 };
 

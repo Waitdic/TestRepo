@@ -350,7 +350,7 @@
         {
             var cancellationData = new CancelServicesRequest
             {
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 Ref = supplierReference
             };
@@ -388,7 +388,7 @@
         {
             var addServiceRequest = new AddServiceRequest()
             {
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 Opt = opt,
                 RateId = rateId,
@@ -455,7 +455,7 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,

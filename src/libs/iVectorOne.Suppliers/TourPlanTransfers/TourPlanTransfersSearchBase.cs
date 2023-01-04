@@ -282,7 +282,7 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                 Info = Constants.Info,
