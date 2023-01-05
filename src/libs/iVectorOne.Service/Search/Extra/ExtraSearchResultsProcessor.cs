@@ -58,23 +58,16 @@
                     {
                         TPSessionID = result.TPSessionID,
                         SupplierReference = result.SupplierReference,
-                        ExtraVehicle = result.ExtraVehicle,
-                        ReturnTime = result.ReturnTime,
-                        VehicleCost = result.VehicleCost,
-                        AdultCost = result.AdultCost,
-                        ChildCost = result.ChildCost,
+                        UseDate= result.UseDate,
+                        UseTime= result.UseTime,
+                        EndDate= result.EndDate,
+                        EndTime= result.EndTime,
+                        ExtraName= result.ExtraName,
+                        ExtraCategory= result.ExtraCategory,
                         CurrencyID = await ProcessorHelpers.GetISOCurrencyID(searchDetails.Source, result.CurrencyCode, searchDetails.AccountID, _currencyRepository),
-                        VehicleQuantity = result.VehicleQuantity,
                         Cost = result.Cost,
-                        BuyingChannelCost = result.BuyingChannelCost,
-                        OutboundInformation = result.OutboundInformation,
-                        ReturnInformation = result.ReturnInformation,
-                        OutboundCost = result.OutboundCost,
-                        ReturnCost = result.ReturnCost,
-                        OutboundXML = result.OutboundXML,
-                        ReturnXML = result.ReturnXML, 
-                        OutboundExtraMinutes = result.OutboundExtraMinutes,
-                        ReturnExtraMinutes = result.ReturnExtraMinutes
+                        AdditionalDetails= result.AdditionalDetails,
+                       
                     };
 
                     searchDetails.Results.SearchResults.Add(searchResult);

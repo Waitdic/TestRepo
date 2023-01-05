@@ -30,61 +30,42 @@
         public string TPSessionID { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the extra vehicle.
+        /// Gets or sets the extra name.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The extra name.
         /// </value>
-        public string ExtraVehicle { get; set; } = string.Empty;
+        public string ExtraName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the return time.
+        /// Gets or sets the extra category.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The extra category.
         /// </value>
-        public string ReturnTime { get; set; } = string.Empty;
+        public string ExtraCategory { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the vehicle cost.
+        /// Gets or sets the use date.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The use date.
         /// </value>
-        public decimal VehicleCost { get; set; }
-
+        public string UseDate { get; set; } = string.Empty;
         /// <summary>
-        /// Gets or sets the adult cost.
+        /// Gets or sets the end date
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal AdultCost { get; set; }
-
+        public string EndDate { get; set; } = string.Empty;
         /// <summary>
-        /// Gets or sets the child cost.
+        /// Gets or sets the use date
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal ChildCost { get; set; }
-
+        public string UseTime { get; set; } = string.Empty;
         /// <summary>
-        /// Gets or sets the currency code.
+        /// Gets or sets the end time
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
+        public string EndTime { get; set; } = string.Empty;
+
         public string CurrencyCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the vehicle quantity.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int VehicleQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets the cost.
         /// </summary>
@@ -96,73 +77,12 @@
         /// <summary>
         /// Gets or sets the buying channel cost.
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
         public decimal BuyingChannelCost { get; set; }
 
         /// <summary>
-        /// Gets or sets the outbound information.
+        /// Gets or sets the additional details.
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string OutboundInformation { get; set; } = string.Empty;
+        public string AdditionalDetails { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Gets or sets the return information.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string ReturnInformation { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the outbound cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal OutboundCost { get; set; } 
-
-        /// <summary>
-        /// Gets or sets the return cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal ReturnCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the outbound xml.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string OutboundXML { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the return xml.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string ReturnXML { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the outbound extra minutes
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int OutboundExtraMinutes { get; set; }
-
-        /// <summary>
-        /// Gets or sets the return extra minutes.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int ReturnExtraMinutes { get; set; }
     }
 }

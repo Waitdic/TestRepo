@@ -49,68 +49,17 @@ namespace iVectorOne.Search.Results.Models.Extra
         public string SupplierReference { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the extra vehicle.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string ExtraVehicle { get; set; } = string.Empty; //TODO confirm: Is this ExtraVehicle correct ? Should it be TransferVehicle Only ?
-
-        /// <summary>
-        /// Gets or sets the return time.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string ReturnTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the vehicle cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal VehicleCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the adult cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal AdultCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the child cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal ChildCost { get; set; }
-
-        /// <summary>
         /// Gets or sets the currency code.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The extra currency code.
         /// </value>
         public string CurrencyCode { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the vehicle quantity.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int VehicleQuantity { get; set; }
-
-        /// <summary>
         /// Gets or sets the cost.
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal Cost { get; set; }
+       public decimal Cost { get; set; }
 
         /// <summary>
         /// Gets or sets the buying channel cost.
@@ -119,70 +68,43 @@ namespace iVectorOne.Search.Results.Models.Extra
         /// The extra vehicle.
         /// </value>
         public decimal BuyingChannelCost { get; set; }
+        /// <summary>
+        /// Gets or sets the extra name.
+        /// </summary>
+        public string ExtraName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the outbound information.
+        /// Gets or sets the extra category.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The extra category.
         /// </value>
-        public string OutboundInformation { get; set; } = string.Empty;
+        public string ExtraCategory { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the return information.
+        /// Gets or sets the use date.
         /// </summary>
         /// <value>
-        /// The extra vehicle.
+        /// The use date.
         /// </value>
-        public string ReturnInformation { get; set; } = string.Empty;
+        public string UseDate { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets the end date
+        /// </summary>
+        public string EndDate { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets the use date
+        /// </summary>
+        public string UseTime { get; set; } = string.Empty;
+        /// <summary>
+        /// Gets or sets the end time
+        /// </summary>
+        public string EndTime { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the outbound cost.
+        /// Gets or sets the additional details.
         /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal OutboundCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the return cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal ReturnCost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the outbound xml.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string OutboundXML { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the return xml.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public string ReturnXML { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the outbound extra minutes
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int OutboundExtraMinutes { get; set; } //TODO confirm: Is this OutboundExtraMinutes correct ? Should it be OutboundTransferMinutes Only ?
-
-        /// <summary>
-        /// Gets or sets the return extra minutes.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public int ReturnExtraMinutes { get; set; } //TODO confirm: Is this ReturnExtraMinutes correct ? Should it be ReturnTransferMinutes Only ?
+        public string AdditionalDetails { get; set; } = string.Empty;
 
         /// <summary>
         /// Validates this instance.
