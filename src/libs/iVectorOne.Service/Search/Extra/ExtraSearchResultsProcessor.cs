@@ -64,8 +64,7 @@
                         EndTime= result.EndTime,
                         ExtraName= result.ExtraName,
                         ExtraCategory= result.ExtraCategory,
-                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(searchDetails.Source, result.CurrencyCode, searchDetails.AccountID, _currencyRepository),                        
-                        CurrencyCode= result.CurrencyCode,
+                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(searchDetails.Source, result.CurrencyCode, searchDetails.AccountID, _currencyRepository),
                         Cost = result.Cost,
                         AdditionalDetails= result.AdditionalDetails,
                        
