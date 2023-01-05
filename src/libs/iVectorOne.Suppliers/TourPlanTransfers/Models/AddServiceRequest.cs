@@ -17,6 +17,7 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public string PickUp_Date { get; set; }
         public string PuTime { get; set; }
         public string PuRemark { get; set; }
+        public string DoRemark { get; set; }
     }
 
     public class NewBookingInformation

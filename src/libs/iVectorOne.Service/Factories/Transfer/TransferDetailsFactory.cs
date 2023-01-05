@@ -67,8 +67,8 @@
                     Children = transferToken.Children,
                     Infants = transferToken.Infants,
                     //LocalCost = 123M, 
-                    SupplierReference= request.SupplierReference,
-                    ThirdPartySettings= request.ThirdPartySettings
+                    SupplierReference = request.SupplierReference,
+                    ThirdPartySettings = request.ThirdPartySettings
                 };
 
                 if (!transferDetails.OneWay)
@@ -307,21 +307,26 @@
 
         private void SetupJourneyDetails(Book.Request request, TransferDetails transferDetails)
         {
-            var outboundJourney = new JourneyDetails();
-            var returnJourney = new JourneyDetails();
+            transferDetails.OutboundPickUpDetails = SetupJourneyDetails(request.OutboundPickUpDetails);
+            transferDetails.OutboundDropoffDetails = SetupJourneyDetails(request.OutboundDropOffDetails);
+            transferDetails.ReturnPickUpDetails = SetupJourneyDetails(request.ReturnPickUpDetails);
+            transferDetails.ReturnDropOffDetails = SetupJourneyDetails(request.ReturnDropOffDetails);
+        }
 
-            if (request.OutboundDetails != null)
+        private JourneyDetails SetupJourneyDetails(Book.JourneyDetails journeyDetails)
+        {
+            if (journeyDetails is null)
             {
-                outboundJourney.FlightCode = request.OutboundDetails.FlightCode;
+                return new JourneyDetails();
             }
 
-            if (request.ReturnDetails != null)
+            return new JourneyDetails
             {
-                returnJourney.FlightCode = request.ReturnDetails.FlightCode;
-            }
-
-            transferDetails.OutboundDetails = outboundJourney;
-            transferDetails.ReturnDetails = returnJourney;
+                FlightCode = journeyDetails.FlightCode,
+                AccommodationName = journeyDetails.AccommodationName,
+                TrainDetails = journeyDetails.TrainDetails,
+                VesselName = journeyDetails.VesselName
+            };
         }
     }
 }

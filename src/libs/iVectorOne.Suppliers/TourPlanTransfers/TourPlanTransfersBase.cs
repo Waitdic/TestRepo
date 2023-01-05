@@ -141,7 +141,8 @@
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
                 var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
-                    transferDetails.DepartureDate, transferDetails.DepartureTime);
+                    transferDetails.DepartureDate, transferDetails.DepartureTime,
+                    transferDetails.OutboundPickUpDetails, transferDetails.OutboundDropoffDetails);
 
                 requests.Add(request);
 
@@ -161,7 +162,8 @@
                         if (!transferDetails.OneWay)
                         {
                             var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
-                                                transferDetails.ReturnDate, transferDetails.ReturnTime);
+                                                transferDetails.ReturnDate, transferDetails.ReturnTime,
+                                                transferDetails.ReturnPickUpDetails, transferDetails.ReturnDropOffDetails);
 
                             requests.Add(returnRequest);
 
@@ -367,10 +369,11 @@
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
-            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime)
+            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime
+            , JourneyDetails pickUpDetails, JourneyDetails dropOffDetails)
         {
             var bookingData = BuildBookingDataAsync(transferDetails, supplierReferenceData.Opt,
-                supplierReferenceData.RateId, departureDate, departureTime);
+                supplierReferenceData.RateId, departureDate, departureTime, pickUpDetails, dropOffDetails);
 
             var request = new Request()
             {
@@ -384,7 +387,8 @@
         }
 
         private Task<AddServiceRequest> BuildBookingDataAsync(TransferDetails transferDetails,
-            string opt, string rateId, DateTime departureDate, string departureTime)
+            string opt, string rateId, DateTime departureDate, string departureTime,
+            JourneyDetails pickUpDetails, JourneyDetails dropOffDetails)
         {
             var addServiceRequest = new AddServiceRequest()
             {
@@ -416,7 +420,8 @@
                 },
                 PickUp_Date = departureDate.ToString(Constant.DateTimeFormat),
                 PuTime = departureTime,
-                PuRemark = ""
+                PuRemark = BuildPickUpRemarks(pickUpDetails),
+                DoRemark = BuildDropOffRemarks(dropOffDetails)
             };
 
             return Task.FromResult(addServiceRequest);
@@ -575,6 +580,53 @@
                     }
             }
 
+        }
+
+        private string BuildPickUpRemarks(JourneyDetails journeyDetails)
+        {
+            if (!string.IsNullOrEmpty(journeyDetails.FlightCode))
+            {
+                return $"Collect from Airport. Flight number: {journeyDetails.FlightCode}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.AccommodationName))
+            {
+                return $"Collection from hotel: {journeyDetails.AccommodationName}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.TrainDetails))
+            {
+                return $"Collect from Station: {journeyDetails.TrainDetails}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.VesselName))
+            {
+                return $"Collect from Port, Vessel name: {journeyDetails.VesselName}";
+            }
+            else
+            {
+                return $"Exact collection point to be determined";
+            }
+        }
+        private string BuildDropOffRemarks(JourneyDetails journeyDetails)
+        {
+            if (!string.IsNullOrEmpty(journeyDetails.FlightCode))
+            {
+                return $"Drop off to Airport, Flight number: {journeyDetails.FlightCode}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.AccommodationName))
+            {
+                return $"Dropping off at hotel: {journeyDetails.AccommodationName}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.TrainDetails))
+            {
+                return $"Drop off to Station: {journeyDetails.TrainDetails}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.VesselName))
+            {
+                return $"Drop off to Port, Vessel name: {journeyDetails.VesselName}";
+            }
+            else
+            {
+                return $"Exact drop off point to be determined";
+            }
         }
 
     }
