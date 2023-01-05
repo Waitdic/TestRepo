@@ -41,4 +41,7 @@ finally
     Log.CloseAndFlush();
 }
 
-public partial class Program { }
+namespace iVectorOne.Search
+{
+    public partial class Program { }
+}
