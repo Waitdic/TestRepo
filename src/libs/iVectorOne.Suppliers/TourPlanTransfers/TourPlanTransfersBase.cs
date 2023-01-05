@@ -140,9 +140,12 @@
             {
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
-                var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
-                    transferDetails.DepartureDate, transferDetails.DepartureTime,
-                    transferDetails.OutboundPickUpDetails, transferDetails.OutboundDropoffDetails);
+                var request = await BuildRequestAsync(transferDetails,
+                              supplierReferenceData.First(),
+                              transferDetails.DepartureDate,
+                              transferDetails.DepartureTime,
+                              transferDetails.OutboundPickUpDetails,
+                              transferDetails.OutboundDropoffDetails);
 
                 requests.Add(request);
 
@@ -161,9 +164,12 @@
 
                         if (!transferDetails.OneWay)
                         {
-                            var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
-                                                transferDetails.ReturnDate, transferDetails.ReturnTime,
-                                                transferDetails.ReturnPickUpDetails, transferDetails.ReturnDropOffDetails);
+                            var returnRequest = await BuildRequestAsync(transferDetails,
+                                                supplierReferenceData.Last(),
+                                                transferDetails.ReturnDate,
+                                                transferDetails.ReturnTime,
+                                                transferDetails.ReturnPickUpDetails,
+                                                transferDetails.ReturnDropOffDetails);
 
                             requests.Add(returnRequest);
 
@@ -369,11 +375,19 @@
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
-            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime
-            , JourneyDetails pickUpDetails, JourneyDetails dropOffDetails)
+            SupplierReferenceData supplierReferenceData, 
+            DateTime departureDate, 
+            string departureTime, 
+            JourneyDetails pickUpDetails, 
+            JourneyDetails dropOffDetails)
         {
-            var bookingData = BuildBookingDataAsync(transferDetails, supplierReferenceData.Opt,
-                supplierReferenceData.RateId, departureDate, departureTime, pickUpDetails, dropOffDetails);
+            var bookingData = BuildBookingDataAsync(transferDetails,
+                              supplierReferenceData.Opt,
+                              supplierReferenceData.RateId,
+                              departureDate,
+                              departureTime,
+                              pickUpDetails,
+                              dropOffDetails);
 
             var request = new Request()
             {
@@ -387,8 +401,12 @@
         }
 
         private Task<AddServiceRequest> BuildBookingDataAsync(TransferDetails transferDetails,
-            string opt, string rateId, DateTime departureDate, string departureTime,
-            JourneyDetails pickUpDetails, JourneyDetails dropOffDetails)
+            string opt, 
+            string rateId, 
+            DateTime departureDate, 
+            string departureTime,
+            JourneyDetails pickUpDetails, 
+            JourneyDetails dropOffDetails)
         {
             var addServiceRequest = new AddServiceRequest()
             {
