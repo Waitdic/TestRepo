@@ -72,23 +72,17 @@
                     {
                         TPSessionID = $"TPSession_{i}",
                         SupplierReference = $"SupplierRef_{i}",
-                        ExtraVehicle = $"Car_{i}", //TODO : Confirm if it should be Transfer or Extra here
-                        ReturnTime = "15:00",
-                        VehicleCost = 150,
-                        AdultCost = 100,
-                        ChildCost = 50,
+                        UseDate = "2023-03-02",
+                        UseTime ="10:44",
+                        EndDate= "2023-03-10",
+                        EndTime= "10:44",
+                        ExtraCategory = "testExtraCategory",
+                        ExtraName = "testExtraName",
                         CurrencyCode = "GBP",
-                        VehicleQuantity = 1,
                         Cost = 200,
-                        BuyingChannelCost = 0,
-                        OutboundInformation = $"OutboundInformation_{i}",
-                        ReturnInformation = $"ReturnInformation_{i}",
-                        OutboundCost = 100,
-                        ReturnCost = 100,
-                        OutboundXML = "",
-                        ReturnXML = "",
-                        OutboundExtraMinutes = 55, //TODO : Confirm if it should be Transfer or Extra here
-                        ReturnExtraMinutes = 55 //TODO : Confirm if it should be Transfer or Extra here
+                        BuyingChannelCost = 00,
+                        AdditionalDetails = "testAdditionalDetails"
+
                     };
 
                     transformedResults.TransformedResults.Add(extra);

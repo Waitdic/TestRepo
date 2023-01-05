@@ -18,24 +18,17 @@
         public string BookingToken { get; set; } = string.Empty;
         public string TPSessionID { get; set; } = string.Empty;
         public string SupplierReference { get; set; } = string.Empty;
-        public string ExtraVehicle { get; set; } = string.Empty;
-        public string ReturnTime { get; set; } = string.Empty;
-        public decimal VehicleCost { get; set; }
-        public decimal AdultCost { get; set; }
-        public decimal ChildCost { get; set; }
         public int CurrencyID { get; set; }
-        public int VehicleQuantity { get; set; }
         public decimal Cost { get; set; }
         public decimal BuyingChannelCost { get; set; }
-        public string OutboundInformation { get; set; } = string.Empty;
-        public string ReturnInformation { get; set; } = string.Empty;
-        public decimal OutboundCost { get; set; }
-        public decimal ReturnCost { get; set; }
-        public string OutboundXML { get; set; } = string.Empty;
-        public string ReturnXML { get; set; } = string.Empty;
-        public int OutboundExtraMinutes { get; set; }
-        public int ReturnExtraMinutes { get; set; }
-
+        public string ExtraName { get; set; } = string.Empty;
+        public string ExtraCategory { get; set; } = string.Empty;
+        public string UseDate { get; set; } = string.Empty;
+        public string EndDate { get; set; } = string.Empty;
+        public string UseTime { get; set; } = string.Empty;
+        public string EndTime { get; set; } = string.Empty;
+        public string AdditionalDetails { get; set; } = string.Empty;
+        public string CurrencyCode { get; set; } = string.Empty;
         public void Validate()
         {
             if (string.IsNullOrEmpty(this.TPSessionID))
