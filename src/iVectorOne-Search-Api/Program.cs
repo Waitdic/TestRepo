@@ -40,3 +40,8 @@ finally
     Log.Information("Shut down complete");
     Log.CloseAndFlush();
 }
+
+namespace iVectorOne.Search
+{
+    public partial class Program { }
+}
