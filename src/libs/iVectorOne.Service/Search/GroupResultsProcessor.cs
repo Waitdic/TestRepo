@@ -84,7 +84,8 @@
                         MealBasisCode = await GetMealBasis(source, searchResult, searchDetails),
                         MealBasisID = await GetMealBasisID(source, searchResult, searchDetails),
                         RateCode = searchResult.RateCode,
-                        OnRequest = searchResult.OnRequest
+                        OnRequest = searchResult.OnRequest,
+                        AvailableRooms = searchResult.AvailableRooms
                     },
                     PriceData = new PriceData()
                     {
