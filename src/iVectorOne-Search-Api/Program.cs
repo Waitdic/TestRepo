@@ -28,6 +28,7 @@ try
     app.MapEndpointsV1();
     app.MapEndpoints();
     app.MapTransferEndpoints();
+    app.MapExtraEndpoints();
 
     app.BuildAndRun();
 }
