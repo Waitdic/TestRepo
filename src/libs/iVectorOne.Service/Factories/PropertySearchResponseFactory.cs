@@ -121,7 +121,10 @@
                             GrossCost = GetGrossCost(roomResult),
                             SellingPrice = roomResult.PriceData.SellingPrice,
                             MinimumSellingPrice = roomResult.PriceData.MinimumSellingPrice,
-                            RateBasis = roomResult.PriceData.RateBasis
+                            RateBasis = roomResult.PriceData.RateBasis,
+                            PayLocalRequired = roomResult.RoomData.PayLocalRequired,
+                            PayLocalAvailable = roomResult.RoomData.PayLocalAvailable,
+                            AvailableRooms = roomResult.RoomData.AvailableRooms
                         };
 
                         propertyResult.RoomTypes.Add(roomType);
