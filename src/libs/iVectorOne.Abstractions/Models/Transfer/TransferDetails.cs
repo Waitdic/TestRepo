@@ -229,14 +229,23 @@
         public Errata ReturnErrata { get; set; } = new();
 
         ///// <summary>
-        ///// Gets or sets the outbound details
+        ///// Gets or sets the outbound pickup details
         ///// </summary>
-        public JourneyDetails OutboundDetails { get; set; } = new();
+        public JourneyDetails OutboundPickUpDetails { get; set; } = new();
 
         ///// <summary>
-        ///// Gets or sets the return details
+        ///// Gets or sets the outbound drop off details
         ///// </summary>
-        public JourneyDetails ReturnDetails { get; set; } = new();
+        public JourneyDetails OutboundDropoffDetails { get; set; } = new();
+
+        ///// <summary>
+        ///// Gets or sets the return pickup details
+        ///// </summary>
+        public JourneyDetails ReturnPickUpDetails { get; set; } = new();
+        ///// <summary>
+        ///// Gets or sets the return drop off details
+        ///// </summary>
+        public JourneyDetails ReturnDropOffDetails { get; set; } = new();
 
         ///// <summary>
         ///// Gets or sets The arrival date

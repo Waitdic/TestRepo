@@ -25,7 +25,7 @@
         private readonly HttpClient _httpClient;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         private readonly ISerializer _serializer;
-        
+
         public TourPlanTransfersBase(
             HttpClient httpClient,
             ILogger<TourPlanTransfersSearchBase> logger,
@@ -62,11 +62,11 @@
 
                 if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.PrebookException))
                 {
-                    var deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
+                    var deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML, _serializer);
 
                     if (IsValidResponse(deserializedResponse, supplierReferenceData.First().Opt))
                     {
-                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice;
+                        transferDetails.LocalCost = deserializedResponse.Option[0].OptStayResults.TotalPrice / 100m;
                         transferDetails.ISOCurrencyCode = deserializedResponse.Option[0].OptStayResults.Currency;
                         transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId);
                         AddErrata(deserializedResponse.Option[0].OptionNotes, transferDetails, true);
@@ -81,11 +81,11 @@
                             await returnRequest.Send(_httpClient, _logger);
                             if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.PrebookException))
                             {
-                                var deserializedReturnResponse = Helpers.DeSerialize<OptionInfoReply>(returnRequest.ResponseXML,_serializer);
+                                var deserializedReturnResponse = Helpers.DeSerialize<OptionInfoReply>(returnRequest.ResponseXML, _serializer);
 
                                 if (IsValidResponse(deserializedReturnResponse, supplierReferenceData.Last().Opt))
                                 {
-                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice;
+                                    transferDetails.LocalCost += deserializedReturnResponse.Option[0].OptStayResults.TotalPrice / 100m;
                                     transferDetails.SupplierReference = Helpers.CreateSupplierReference(deserializedResponse.Option[0].Opt, deserializedResponse.Option[0].OptStayResults.RateId, deserializedReturnResponse.Option[0].Opt, deserializedReturnResponse.Option[0].OptStayResults.RateId);
                                     AddErrata(deserializedReturnResponse.Option[0].OptionNotes, transferDetails, false);
                                     AddCancellation(deserializedReturnResponse, transferDetails, transferDetails.DepartureDate);
@@ -140,8 +140,12 @@
             {
                 var supplierReferenceData = SplitSupplierReference(transferDetails);
 
-                var request = await BuildRequestAsync(transferDetails, supplierReferenceData.First(),
-                    transferDetails.DepartureDate, transferDetails.DepartureTime);
+                var request = await BuildRequestAsync(transferDetails,
+                              supplierReferenceData.First(),
+                              transferDetails.DepartureDate,
+                              transferDetails.DepartureTime,
+                              transferDetails.OutboundPickUpDetails,
+                              transferDetails.OutboundDropoffDetails);
 
                 requests.Add(request);
 
@@ -149,7 +153,7 @@
 
                 if (!ResponseHasError(transferDetails, request.ResponseXML, Constant.BookException))
                 {
-                    var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML,_serializer);
+                    var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML, _serializer);
 
                     if (deserializedResponse != null &&
                         string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
@@ -160,15 +164,19 @@
 
                         if (!transferDetails.OneWay)
                         {
-                            var returnRequest = await BuildRequestAsync(transferDetails, supplierReferenceData.Last(),
-                                                transferDetails.ReturnDate, transferDetails.ReturnTime);
+                            var returnRequest = await BuildRequestAsync(transferDetails,
+                                                supplierReferenceData.Last(),
+                                                transferDetails.ReturnDate,
+                                                transferDetails.ReturnTime,
+                                                transferDetails.ReturnPickUpDetails,
+                                                transferDetails.ReturnDropOffDetails);
 
                             requests.Add(returnRequest);
 
                             await returnRequest.Send(_httpClient, _logger);
                             if (!ResponseHasError(transferDetails, returnRequest.ResponseXML, Constant.BookException))
                             {
-                                var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML,_serializer);
+                                var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML, _serializer);
 
                                 if (deserializedReturnResponse != null &&
                                     string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
@@ -267,7 +275,7 @@
 
                     if (!ResponseHasError(transferDetails, returnCancellationRequest.ResponseXML, Constant.CancelException))
                     {
-                        var deserializedReturnCancellationResponse = Helpers.DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML,_serializer);
+                        var deserializedReturnCancellationResponse = Helpers.DeSerialize<CancelServicesReply>(returnCancellationRequest.ResponseXML, _serializer);
 
                         if (CancellationSuccessful(deserializedReturnCancellationResponse))
                         {
@@ -350,7 +358,7 @@
         {
             var cancellationData = new CancelServicesRequest
             {
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 Ref = supplierReference
             };
@@ -367,10 +375,19 @@
         }
 
         private async Task<Request> BuildRequestAsync(TransferDetails transferDetails,
-            SupplierReferenceData supplierReferenceData, DateTime departureDate, string departureTime)
+            SupplierReferenceData supplierReferenceData, 
+            DateTime departureDate, 
+            string departureTime, 
+            JourneyDetails pickUpDetails, 
+            JourneyDetails dropOffDetails)
         {
-            var bookingData = BuildBookingDataAsync(transferDetails, supplierReferenceData.Opt,
-                supplierReferenceData.RateId, departureDate, departureTime);
+            var bookingData = BuildBookingDataAsync(transferDetails,
+                              supplierReferenceData.Opt,
+                              supplierReferenceData.RateId,
+                              departureDate,
+                              departureTime,
+                              pickUpDetails,
+                              dropOffDetails);
 
             var request = new Request()
             {
@@ -384,11 +401,16 @@
         }
 
         private Task<AddServiceRequest> BuildBookingDataAsync(TransferDetails transferDetails,
-            string opt, string rateId, DateTime departureDate, string departureTime)
+            string opt, 
+            string rateId, 
+            DateTime departureDate, 
+            string departureTime,
+            JourneyDetails pickUpDetails, 
+            JourneyDetails dropOffDetails)
         {
             var addServiceRequest = new AddServiceRequest()
             {
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 Opt = opt,
                 RateId = rateId,
@@ -416,7 +438,8 @@
                 },
                 PickUp_Date = departureDate.ToString(Constant.DateTimeFormat),
                 PuTime = departureTime,
-                PuRemark = ""
+                PuRemark = BuildPickUpRemarks(pickUpDetails),
+                DoRemark = BuildDropOffRemarks(dropOffDetails)
             };
 
             return Task.FromResult(addServiceRequest);
@@ -455,7 +478,7 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,
@@ -494,13 +517,16 @@
         {
             foreach (var note in optionNotes.OptionNote)
             {
-                if (outbound)
+                if (!_settings.ExcludeNoteCategory.Contains(note.NoteCategory.ToLower()))
                 {
-                    transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
-                }
-                else
-                {
-                    transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
+                    if (outbound)
+                    {
+                        transferDetails.DepartureErrata.AddNew(note.NoteCategory, note.NoteText);
+                    }
+                    else
+                    {
+                        transferDetails.ReturnErrata.AddNew(note.NoteCategory, note.NoteText);
+                    }
                 }
             }
         }
@@ -572,6 +598,53 @@
                     }
             }
 
+        }
+
+        private string BuildPickUpRemarks(JourneyDetails journeyDetails)
+        {
+            if (!string.IsNullOrEmpty(journeyDetails.FlightCode))
+            {
+                return $"Collect from Airport. Flight number: {journeyDetails.FlightCode}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.AccommodationName))
+            {
+                return $"Collection from hotel: {journeyDetails.AccommodationName}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.TrainDetails))
+            {
+                return $"Collect from Station: {journeyDetails.TrainDetails}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.VesselName))
+            {
+                return $"Collect from Port, Vessel name: {journeyDetails.VesselName}";
+            }
+            else
+            {
+                return $"Exact collection point to be determined";
+            }
+        }
+        private string BuildDropOffRemarks(JourneyDetails journeyDetails)
+        {
+            if (!string.IsNullOrEmpty(journeyDetails.FlightCode))
+            {
+                return $"Drop off to Airport, Flight number: {journeyDetails.FlightCode}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.AccommodationName))
+            {
+                return $"Dropping off at hotel: {journeyDetails.AccommodationName}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.TrainDetails))
+            {
+                return $"Drop off to Station: {journeyDetails.TrainDetails}";
+            }
+            else if (!string.IsNullOrEmpty(journeyDetails.VesselName))
+            {
+                return $"Drop off to Port, Vessel name: {journeyDetails.VesselName}";
+            }
+            else
+            {
+                return $"Exact drop off point to be determined";
+            }
         }
 
     }

@@ -66,6 +66,7 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
+    using iVectorOne.Suppliers.ExoToursTransfers;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -271,6 +272,7 @@
             services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, PacificDestinationsTransferSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, ExoToursTransferSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)
@@ -314,6 +316,7 @@
             services.AddSingleton<Transfer.IThirdParty, GowaySydneyTransfers>();
             services.AddSingleton<Transfer.IThirdParty, PacificDestinationsTransfer>();
             services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
+            services.AddSingleton<Transfer.IThirdParty, ExoToursTransfer>();
         }
 
         public void RegsiterThirdPartyUtilities(IServiceCollection services)
