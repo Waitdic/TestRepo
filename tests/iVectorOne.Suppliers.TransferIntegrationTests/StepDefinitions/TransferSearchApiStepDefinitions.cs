@@ -5,8 +5,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
     using iVectorOne.SDK.V2.TransferSearch;
     using Newtonsoft.Json;
     using System;
-    using System.Collections;
-    using System.Security.Policy;
 
     [Binding]
     public class TransferSearchApiStepDefinitions : TransferBaseStepDefinitions
@@ -32,13 +30,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 OneWay = true,
                 Adults = 2,
                 Supplier = supplier,
-                DepartureTime = "10:00",
-                ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", URL },
-                    { "AgentId", AgentID},
-                    { "Password", Password }
-                }
+                DepartureTime = "10:00"
             };
 
             _scenarioContext["RequestObj"] = requestObj;
@@ -82,8 +74,8 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [Then(@"the status code should be (.*)")]
         public void ThenTheStatusCodeShouldBe(int status)
         {
-            Assert.Equal(status, GetValueFromScenarioConext("ResponseCode"));
             Assert.Null(GetValueFromScenarioConext("ErrorResponse"));
+            Assert.Equal(status, GetValueFromScenarioConext("ResponseCode"));
         }
 
         [Then(@"transfer results should have data")]
@@ -105,13 +97,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 var requestObj = new SDK.V2.TransferPrebook.Request
                 {
                     SupplierReference = supplierReference,
-                    BookingToken = bookingToken,
-                    ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", URL },
-                    { "AgentId", AgentID},
-                    { "Password", Password }
-                }
+                    BookingToken = bookingToken
                 };
 
                 _scenarioContext["PrebookObj"] = requestObj;
@@ -129,9 +115,9 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 var response = await _httpClient.PostAsync(url, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                var result = response.Content.ReadAsStringAsync().Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
                     var obj = JsonConvert.DeserializeObject<SDK.V2.TransferPrebook.Response>(result);
                     if (obj != null)
                     {
@@ -140,6 +126,10 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                         keyValuePairs["SupplierReference"] = obj.SupplierReference;
 
                     }
+                }
+                else
+                {
+                    _scenarioContext["ErrorResponse"] = result;
                 }
             }
         }
@@ -200,13 +190,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                         CustomerMobile = "123456789",
                         CustomerEmail = "test@Test.com"
                     },
-                    GuestDetails = guestDetails,
-                    ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", URL },
-                    { "AgentId", AgentID},
-                    { "Password", Password }
-                }
+                    GuestDetails = guestDetails
                 };
 
                 _scenarioContext["BookObj"] = requestObj;
@@ -224,9 +208,9 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 var response = await _httpClient.PostAsync(url, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                var result = response.Content.ReadAsStringAsync().Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
                     var obj = JsonConvert.DeserializeObject<SDK.V2.TransferBook.Response>(result);
                     if (obj != null)
                     {
@@ -235,6 +219,10 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                         keyValuePairs["SupplierReference"] = obj.SupplierReference;
 
                     }
+                }
+                else
+                {
+                    _scenarioContext["ErrorResponse"] = result;
                 }
             }
 
@@ -256,13 +244,8 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 var requestObj = new SDK.V2.TransferCancel.Request
                 {
                     SupplierReference = supplierReference,
-                    SupplierBookingReference = supBookingRef,
-                    ThirdPartySettings = new Dictionary<string, string>
-                {
-                    { "URL", URL },
-                    { "AgentId", AgentID},
-                    { "Password", Password }
-                }
+                    SupplierBookingReference = supBookingRef
+                    
                 };
 
                 _scenarioContext["CancelObj"] = requestObj;
@@ -281,15 +264,20 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 var response = await _httpClient.PostAsync(url, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                var result = response.Content.ReadAsStringAsync().Result;
+
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var result = response.Content.ReadAsStringAsync().Result;
                     var obj = JsonConvert.DeserializeObject<SDK.V2.TransferCancel.Response>(result);
                     if (obj != null)
                     {
                         keyValuePairs["SupplierCancellationReference"] = obj.SupplierCancellationReference;
                         _scenarioContext["CancelResult"] = obj;
                     }
+                }
+                else
+                {
+                    _scenarioContext["ErrorResponse"] = result;
                 }
             }
         }
