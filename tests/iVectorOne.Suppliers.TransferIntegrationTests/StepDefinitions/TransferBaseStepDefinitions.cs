@@ -3,8 +3,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 {
     using iVectorOne.SDK.V2;
     using Microsoft.AspNetCore.Mvc.Testing;
-    using Microsoft.Data.SqlClient;
-    using Microsoft.Extensions.Configuration;
     using Newtonsoft.Json;
     using System.Net.Http.Headers;
     using System.Text;
@@ -58,6 +56,12 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (requestObj != null)
             {
+                requestObj.ThirdPartySettings = new Dictionary<string, string>
+                {
+                    { "URL", URL },
+                    { "AgentID", AgentID},
+                    { "Password", Password }
+                };
                 var request = JsonConvert.SerializeObject(requestObj);
 
                 var authenticationString = $"{ReqUsername}:{ReqPassword}";
