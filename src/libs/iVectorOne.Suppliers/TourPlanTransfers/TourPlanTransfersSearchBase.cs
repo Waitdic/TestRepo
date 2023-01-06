@@ -3,6 +3,7 @@
     using Intuitive;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
@@ -47,6 +48,7 @@
 
         #region Properties
         public abstract string Source { get; }
+        public virtual string TransferOptText { get; } = Constants.TransferOptText;
         #endregion
 
         #region Public Functions
@@ -62,25 +64,27 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(TransferSearchDetails searchDetails, LocationMapping location)
         {
-            LocationData tpLocations = GetThirdPartyLocations(location);
-            var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
             List<Request> requests = new List<Request>();
-            Outbound.ExtraInfo = Constants.Outbound;
-            requests.Add(Outbound);
-            if (!searchDetails.OneWay)
+            LocationData tpLocations = GetThirdPartyLocations(location);
+            if (!string.IsNullOrEmpty(tpLocations.LocationCode))
             {
-                var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
-                returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
-                requests.Add(returnBuildOptionInfoRequest);
+                var Outbound = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.DepartureDate);
+                Outbound.ExtraInfo = Constants.Outbound;
+                requests.Add(Outbound);
+                if (!searchDetails.OneWay)
+                {
+                    var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, tpLocations, searchDetails.ReturnDate);
+                    returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
+                    requests.Add(returnBuildOptionInfoRequest);
+                }
             }
-
             return Task.FromResult(requests);
 
         }
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0)
+            if (location != null && (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0))
             {
                 string[] departureData = location.DepartureData.Split(":");
                 string[] arrivalData = location.ArrivalData.Split(":");
@@ -124,15 +128,15 @@
             {
                 if (!ResponseHasExceptions(request))
                 {
-                    deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML,_serializer);
+                    deserializedResponse = Helpers.DeSerialize<OptionInfoReply>(request.ResponseXML, _serializer);
 
                     if ((string)request.ExtraInfo == Constants.Outbound)
                     {
-                        filteredOutbound = FilterResults(tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
+                        filteredOutbound = FilterResults(searchDetails.IncludeOnRequest, tpLocations.DepartureName, tpLocations.ArrivalName, deserializedResponse, ref uniqueLocationList);
                     }
                     if ((string)request.ExtraInfo != Constants.Outbound)
                     {
-                        filteredReturn = FilterResults(tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
+                        filteredReturn = FilterResults(searchDetails.IncludeOnRequest, tpLocations.ArrivalName, tpLocations.DepartureName, deserializedResponse, ref uniqueLocationList);
                     }
                 }
             }
@@ -145,7 +149,10 @@
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
                     supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, "", "");
-                    transformedResult = BuildTransformedResult(supplierReference, outboundResult.OptGeneral.Comment, outboundResult.OptStayResults.Currency, outboundResult.OptStayResults.TotalPrice);
+                    transformedResult = BuildTransformedResult(outboundResult.OptStayResults,
+                                                               supplierReference,
+                                                               outboundResult.OptGeneral.Comment,
+                                                               outboundResult.OptStayResults.TotalPrice);
                     transformedResultList.Add(transformedResult);
                 }
             }
@@ -153,10 +160,17 @@
             {
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
-                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment))
+                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment
+                                                                             && x.OptStayResults.Availability == outboundResult.OptStayResults.Availability))
                     {
-                        supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt, outboundResult.OptStayResults.RateId, returnResult.Opt, returnResult.OptStayResults.RateId);
-                        transformedResult = BuildTransformedResult(supplierReference, returnResult.OptGeneral.Comment, returnResult.OptStayResults.Currency, returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
+                        supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt,
+                                                                            outboundResult.OptStayResults.RateId,
+                                                                            returnResult.Opt, 
+                                                                            returnResult.OptStayResults.RateId);
+                        transformedResult = BuildTransformedResult(returnResult.OptStayResults,
+                                                                   supplierReference,
+                                                                   outboundResult.OptGeneral.Comment,
+                                                                   returnResult.OptStayResults.TotalPrice + outboundResult.OptStayResults.TotalPrice);
                         transformedResultList.Add(transformedResult);
                     }
                 }
@@ -174,20 +188,20 @@
 
         }
 
-        private TransformedTransferResult BuildTransformedResult(string supplierReference, string comment, string currency, int totalPrice)
+        private TransformedTransferResult BuildTransformedResult(OptStayResults optStayResult, string supplierReference, string comment, int totalPrice)
         {
             var transformedResult = new TransformedTransferResult()
             {
                 TPSessionID = "",
                 SupplierReference = supplierReference,
-                TransferVehicle = comment,
+                TransferVehicle = comment.Substring(0, comment.Length <= 50 ? comment.Length : 50),
                 ReturnTime = "12:00",
                 VehicleCost = 0,
                 AdultCost = 0,
                 ChildCost = 0,
-                CurrencyCode = currency,
+                CurrencyCode = optStayResult.Currency,
                 VehicleQuantity = 1,
-                Cost = totalPrice,
+                Cost = totalPrice / 100m,
                 BuyingChannelCost = 0,
                 OutboundInformation = "",
                 ReturnInformation = "",
@@ -197,6 +211,7 @@
                 ReturnXML = "",
                 OutboundTransferMinutes = 0,
                 ReturnTransferMinutes = 0,
+                OnRequest = optStayResult.Availability == Constants.OnRequestCode,
             };
 
             return transformedResult;
@@ -205,13 +220,13 @@
         #endregion
 
         #region Private Functions
-        private OptionInfoReply FilterResults(string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
+        private OptionInfoReply FilterResults(bool includeOnRequest, string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
             List<string> filterUniqueLocation = new();
 
             List<Option> result = new();
-            foreach (var option in deserializedResponse.Option.ToList().Where(x => x.OptStayResults.Availability == "OK"))
+            foreach (var option in deserializedResponse.Option.ToList().Where(x => getAvailabilityStatus(includeOnRequest, x.OptStayResults.Availability)))
             {
                 if (filterDescription(option.OptGeneral.Description, departureName, arrivalName, ref filterUniqueLocation))
                 {
@@ -233,6 +248,11 @@
                 filterResult.Option.AddRange(result);
             }
             return filterResult;
+        }
+
+        private bool getAvailabilityStatus(bool includeOnRequest, string availability)
+        {
+            return includeOnRequest ? (availability == Constants.FreesaleCode || availability == Constants.OnRequestCode) : availability == Constants.FreesaleCode;
         }
 
         private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)
@@ -262,11 +282,11 @@
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
             {
 
-                AgentID = _settings.AgentId,
+                AgentID = _settings.AgentID,
                 Password = _settings.Password,
                 DateFrom = dateFrom.ToString(Constants.DateTimeFormat),
                 Info = Constants.Info,
-                Opt = tpLocations.LocationCode + Constants.TransferOptText,
+                Opt = tpLocations.LocationCode + TransferOptText,
                 RoomConfigs = new List<RoomConfiguration>()
                 {
                    new RoomConfiguration() {
@@ -293,7 +313,7 @@
 
             };
         }
-        private List<string> SplitDescription(string description)
+        public virtual List<string> SplitDescription(string description)
         {
             var list = new List<string>();
 

@@ -23,6 +23,7 @@
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
+            _logger = Ensure.IsNotNull(logger, nameof(logger));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));
         }
     }
