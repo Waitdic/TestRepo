@@ -13,6 +13,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
     {
         private const int arrivalID = 187;
         private const int departureID = 184;
+        private const string supplier = "gowaysydneytransfers";
 
         public TransferSearchApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
         {
@@ -30,7 +31,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
-                Supplier = "gowaysydneytransfers",
+                Supplier = supplier,
                 DepartureTime = "10:00",
                 ThirdPartySettings = new Dictionary<string, string>
                 {
