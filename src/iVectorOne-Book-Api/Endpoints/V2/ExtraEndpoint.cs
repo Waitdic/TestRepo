@@ -53,9 +53,6 @@
             //    .ProducesValidationProblem(StatusCodes.Status400BadRequest)
             //    .Produces(StatusCodes.Status200OK);
 
-            // todo - integrate with health checks
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
-
             return endpoints;
         }
     }

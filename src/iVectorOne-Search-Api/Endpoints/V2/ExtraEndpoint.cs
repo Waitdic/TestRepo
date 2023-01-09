@@ -12,8 +12,6 @@ namespace iVectorOne.Search.Api.Endpoints.V2
         {
             RegisterSearchEndpointsForDomain(endpoints, EndpointBase.ExtrasDomain);
 
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
-
             return endpoints;
         }
 
