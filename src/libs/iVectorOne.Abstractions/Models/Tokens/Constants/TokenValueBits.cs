@@ -18,6 +18,12 @@
         /// <summary>Days are stored in 5 bits, which allows 0-31 (perfect) to be stored.</summary>
         public const int DayBits = 5;
 
+        /// <summary>Hours are stored in 5 bits, which allows 0-31 to be stored (using 0 - 24).</summary>
+        public const int HourBits = 5;
+
+        /// <summary>Minutes are stored in 6 bits, which allows 0-63 to be stored (using 0 - 60).</summary>
+        public const int MinuteBits = 6;
+
         /// <summary>
         ///   <para>Durations are stored in 6 bits, which allows 0-63 to be stored, if we need to support larger searches than this, we will need to increase it.</para>
         /// </summary>
@@ -52,5 +58,11 @@
 
         /// <summary>MealBasis ids are stored in 12 bits which allow 0-4095 to be stored</summary>
         public const int MealBasis = 12;
+
+        /// <summary>Supplier ids are stored in 12 bits which allow 0-127 to be stored</summary>
+        public const int SupplierBits = 7;
+
+        /// <summary>The OneWay flag will be stored in one bit</summary>
+        public const int OneWayBits = 1;
     }
 }

@@ -17,6 +17,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class YalagoSearch : IThirdPartySearch, ISingleSource
     {
@@ -176,7 +177,7 @@
                                        hotel.establishmentInfo.LocationId.ToSafeString() + "|" + room.Code + "|" +
                                        searchDetails.OpaqueSearch.ToSafeString() + "|" + board.Type.ToSafeString();
 
-                        var cancellations = new List<iVectorOne.Models.Property.Booking.Cancellation>();
+                        var cancellations = new List<iVectorOne.Models.Cancellation>();
                         var orderedCancellations = new List<YalagoAvailabilityResponse.CancellationCharge>();
                         if (board.cancellationPolicy != null)
                         {
@@ -194,7 +195,7 @@
                                 endDate = orderedCancellations[iCanx + 1].ExpiryDate.Date.AddDays(-1);
                             }
 
-                            cancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation()
+                            cancellations.Add(new iVectorOne.Models.Cancellation()
                             {
                                 Amount = Math.Round(100 * cancellation.charge.Amount / amount, 2),
                                 StartDate = cancellation.ExpiryDate.Date,

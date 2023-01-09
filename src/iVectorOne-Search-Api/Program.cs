@@ -27,6 +27,8 @@ try
     //Load application specific endpoints
     app.MapEndpointsV1();
     app.MapEndpoints();
+    app.MapTransferEndpoints();
+    app.MapExtraEndpoints();
 
     app.BuildAndRun();
 }
@@ -38,4 +40,9 @@ finally
 {
     Log.Information("Shut down complete");
     Log.CloseAndFlush();
+}
+
+namespace iVectorOne.Search
+{
+    public partial class Program { }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace iVectorOne.Suppliers.HBSi
+﻿namespace iVectorOne.Suppliers.HBSi
 {
     using Intuitive;
     using Intuitive.Helpers.Extensions;
@@ -9,6 +8,7 @@ namespace iVectorOne.Suppliers.HBSi
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.HBSi.Models;
     using Microsoft.Extensions.Logging;
@@ -382,7 +382,6 @@ namespace iVectorOne.Suppliers.HBSi
 
         #endregion
 
-
         #region "OtherMethods"
 
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
@@ -405,7 +404,6 @@ namespace iVectorOne.Suppliers.HBSi
         }
 
         #endregion
-
 
         #region "Helper Functions"
 

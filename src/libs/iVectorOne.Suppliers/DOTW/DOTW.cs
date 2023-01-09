@@ -17,6 +17,7 @@
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class DOTW : IThirdParty, ISingleSource
     {

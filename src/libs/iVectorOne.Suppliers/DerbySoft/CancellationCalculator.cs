@@ -6,6 +6,7 @@
     using Intuitive.Helpers.Extensions;
     using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
 
     public class CancellationCalculator
     {

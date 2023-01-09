@@ -17,6 +17,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using static RestelCommon;
+    using iVectorOne.Models.Property;
 
     public class RestelSearch : IThirdPartySearch, ISingleSource
     {

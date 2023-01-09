@@ -12,9 +12,8 @@
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.Search.Models;
-    using iVectorOne.Suppliers.OceanBeds;
     using iVectorOne.Suppliers.PremierInn.Models;
     using iVectorOne.Suppliers.PremierInn.Models.Book;
     using iVectorOne.Suppliers.PremierInn.Models.Cancel;

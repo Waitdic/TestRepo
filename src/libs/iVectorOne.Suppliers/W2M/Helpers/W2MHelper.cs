@@ -14,6 +14,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using Log = iVectorOne.Models.Log;
+    using iVectorOne.Models.Property;
 
     public class W2MHelper
     {

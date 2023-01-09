@@ -14,6 +14,7 @@
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.MTS.Models.Search;
     using iVectorOne.Suppliers.MTS.Models.Common;
+    using iVectorOne.Models.Property;
 
     public class MTSSearch : IThirdPartySearch, ISingleSource
     {

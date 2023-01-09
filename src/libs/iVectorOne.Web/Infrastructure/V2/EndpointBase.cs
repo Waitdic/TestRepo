@@ -26,6 +26,9 @@
     {
         public const string Version = "v2";
         public const string Domain = "properties";
+        //TODO refactor endpoints
+        public const string TransferDomain = "transfers";
+        public const string ExtrasDomain = "extras";
 
         public static IHostBuilder SetupLogging(this IHostBuilder host)
         {

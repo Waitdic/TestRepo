@@ -76,6 +76,10 @@
         public const string DOTW = "DOTW";
 
         /// <summary>
+        /// ExoToursTransfers
+        /// </summary>
+        public const string EXOTOURSTRANSFERS = "EXOToursTransfers";
+        /// <summary>
         /// Expedia Rapid
         /// </summary>
         public const string EXPEDIARAPID = "ExpediaRapid";
@@ -89,6 +93,11 @@
         /// The third party GoGlobal
         /// </summary>
         public const string GOGLOBAL = "GoGlobal";
+
+        /// <summary>
+        /// The third party GowaySydneyTransfers
+        /// </summary>
+        public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
 
         /// <summary>
         /// The third party HBSiAMR
@@ -260,6 +269,16 @@
         /// </summary>
         public const string TEAMAMERICA = "TeamAmerica";
 
+        /// <summary>
+        /// The third party TestExtraProvider
+        /// </summary>
+        public const string TESTEXTRASUPPLIER = "TestExtraSupplier";
+
+        /// <summary>
+        /// The third party TestTransferProvider
+        /// </summary>
+        public const string TESTTRANSFERSUPPLIER = "TestTransferSupplier";
+      
         /// <summary>
         /// The third party Travelgate
         /// </summary>

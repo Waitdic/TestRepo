@@ -16,6 +16,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
+    using iVectorOne.Models.Property;
 
     public class SunHotels : IThirdParty, ISingleSource
     {

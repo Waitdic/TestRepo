@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace iVectorOne.Suppliers.PremierInn
+﻿namespace iVectorOne.Suppliers.PremierInn
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace iVectorOne.Suppliers.PremierInn
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.PremierInn.Models;

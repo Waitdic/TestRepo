@@ -10,6 +10,9 @@
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Transfer;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -45,6 +48,44 @@
                 countryCode = country.TPCountryCode;
             }
             return countryCode;
+        }
+
+        public async Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails)
+        {
+            LocationMapping locationData;
+
+            Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
+            location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
+            location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
+            locationData = new()
+            {
+                DepartureData = departurePayload,
+                ArrivalData = arivalPayload
+            };
+
+            return locationData;
+        }
+
+        public async Task<LocationMapping> TPLocationLookupAsync(ExtraSearchDetails searchDetails)
+        {
+            LocationMapping locationData;
+
+            Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
+            location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
+            location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
+            locationData = new()
+            {
+                DepartureData = departurePayload,
+                ArrivalData = arivalPayload
+            };
+
+            return locationData;
+        }
+
+        public async Task<List<string>> TPAllLocationLookup(string source)
+        {
+            Dictionary<int, string> location = await this.TPLocationAsync(source);
+            return location.Select(x => x.Value).ToList();
         }
 
         /// <inheritdoc />
@@ -102,6 +143,24 @@
         {
             // todo - implement or remove
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public async Task<string> SupplierNameLookupAsync(int supplierId)
+        {
+            (await SupplierAsync()).TryGetValue(supplierId, out string source);
+            return source;
+        }
+
+        public async Task<int> SupplierIDLookupAsync(string supplierName)
+        {
+            return (await SupplierAsync()).FirstOrDefault(x => x.Value == supplierName).Key;
+        }
+
+        public void RemoveLocationCache(string source)
+        {
+            string cacheKey = "TPLocationLookup_" + source;
+            _cache.Remove(cacheKey);
         }
 
         private bool IsSingleTenant(string source)
@@ -196,6 +255,21 @@
             return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
         }
 
+        private async Task<Dictionary<int, string>> TPLocationAsync(string source)
+        {
+            string cacheKey = "TPLocationLookup_" + source;
+
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select IVOLocationID, Payload  from IVOLocation where Source = @source",
+                    async r => (await r.ReadAllAsync<LocationLookup>()).ToDictionary(x => x.IVOLocationID, x => x.Payload),
+                    new CommandSettings().WithParameters(new { source }));
+            }
+
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
+        }
+
         private async Task<Dictionary<(int, string), AccountCountry>> AccountCountryAsync()
         {
             string cacheKey = "AccountCountryLookup";
@@ -211,6 +285,33 @@
             var cache = await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
 
             return cache;
+        }
+
+        /// <summary>Supplier name lookup</summary>
+        /// <returns>A dictionary of suppliers</returns>
+        private async Task<Dictionary<int, string>> SupplierAsync()
+        {
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select SupplierID, SupplierName from Supplier",
+                    async r => (await r.ReadAllAsync<Supplier>()).ToDictionary(x => x.SupplierID, x => x.SupplierName),
+                    new CommandSettings());
+            }
+
+            return await _cache.GetOrCreateAsync("SupplierCache", cacheBuilder, _timeout);
+        }
+
+        public async Task<TransferBookingDetails> GetTransferBookingDetailsAsync(string supplierBookingReference)
+        {
+            return await _sql.ReadSingleAsync<TransferBookingDetails>(
+                        "TransferBooking_GetData",
+                        new CommandSettings()
+                        .IsStoredProcedure()
+                        .WithParameters(new
+                        {
+                            supplierBookingReference = supplierBookingReference
+                        }));
         }
 
         #endregion
@@ -254,12 +355,24 @@
             public string Country { get; set; } = string.Empty;
         }
 
+        private class LocationLookup
+        {
+            public int IVOLocationID { get; set; }
+            public string Payload { get; set; } = string.Empty;
+        }
+
         private class AccountCountry
         {
             public int AccountID { get; set; }
             public string CountryCode { get; set; } = string.Empty;
             public string ISOCountryCode { get; set; } = string.Empty;
             public string Country { get; set; } = string.Empty;
+        }
+
+        private class Supplier
+        {
+            public int SupplierID { get; set; }
+            public string SupplierName { get; set; } = string.Empty;
         }
 
         #endregion

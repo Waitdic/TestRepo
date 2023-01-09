@@ -21,6 +21,7 @@
     using static RestelThirdPartyReference;
     using static RestelCommon;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class Restel : IThirdParty, ISingleSource
     {

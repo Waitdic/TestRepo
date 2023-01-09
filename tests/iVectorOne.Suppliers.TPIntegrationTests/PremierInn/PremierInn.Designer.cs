@@ -61,23 +61,16 @@ namespace iVectorOne.Tests.PremierInn {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to URL: https://tst-polarisapi.avoristravel.com/avail/availability
+        ///   Looks up a localized string similar to URL: https://xml.alturaspain.com/xml/xml-interface.php
         ///
         ///**HEADERS**
         ///
-        ///Authorization: Basic bmV0OlRlc3ROZXQwMQ==
         ///Timeout: 100
         ///
         ///
         ///**REQUEST**
         ///
-        ///{&quot;hotelAvailability&quot;:{&quot;searchAvail&quot;:{&quot;checkIn&quot;:&quot;2021-09-01&quot;,&quot;checkOut&quot;:&quot;2021-09-06&quot;,&quot;destination&quot;:{&quot;hotelCodes&quot;:[&quot;102245&quot;],&quot;location&quot;:{&quot;destinationCode&quot;:&quot;MAD_12&quot;,&quot;type&quot;:&quot;EMPTY&quot;}},&quot;rooms&quot;:[{&quot;index&quot;:1,&quot;passengerAges&quot;:[30]}]}}}
-        ///URL: https://tst-polarisapi.avoristravel.com/avail/availability
-        ///
-        ///**HEADERS**
-        ///
-        ///Authorization: Basic bmV0OlRlc3ROZXQwMQ==
-        ///Tim [rest of string was truncated]&quot;;.
+        ///&lt;soapenv:Envelope  xmlns:red=&quot;http://www.redskyit.com&quot; xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soapenv:Header /&gt;&lt;soapenv:Body&gt;&lt;red:ProcessMessage&gt;&lt;red:XMLIn&gt;&lt;![CDATA[&lt;Login UserName=&quot;testdiversitytravel&quot; Password=&quot;qtweqwrqwasd&quot;&gt;&lt;/Login&gt;&lt;Parameters MessageType=&quot;AvailabilityRequest&quot;&gt;&lt;HotelCode&gt;102245&lt;/HotelCode&gt;&lt;StayDateRange Start=&quot;2021-09-01&quot; End=&quot;2021-09-06&quot;&gt;&lt;/StayDateRange&gt;&lt;Rooms Nu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {
@@ -86,25 +79,15 @@ namespace iVectorOne.Tests.PremierInn {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;request&quot;: {
-        ///    &quot;hotelAvailability&quot;: {
-        ///      &quot;searchAvail&quot;: {
-        ///        &quot;checkIn&quot;: &quot;2022-12-28&quot;,
-        ///        &quot;checkOut&quot;: &quot;2022-12-29&quot;,
-        ///        &quot;rooms&quot;: [{ &quot;passengerAges&quot;: [30, 7, 0], &quot;index&quot;: 1 }],
-        ///        &quot;destination&quot;: {
-        ///          &quot;hotelCodes&quot;: [&quot;803&quot;],
-        ///          &quot;location&quot;: { &quot;destinationCode&quot;: &quot;AVFBK&quot;, &quot;type&quot;: &quot;EMPTY&quot; }
-        ///        },
-        ///        &quot;market&quot;: &quot;GB&quot;
-        ///      },
-        ///      &quot;timeout&quot;: 16000,
-        ///      &quot;filterAvail&quot;: {}
-        ///    },
-        ///    &quot;token&quot;: &quot;FULL-DEFAULT-922851-5613720831349870&quot;
-        ///  },
-        ///  &quot;hotels&quot;: [ [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+        ///&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV=&apos;http://schemas.xmlsoap.org/soap/envelope/&apos; xmlns:xsi=&apos;http://www.w3.org/2001/XMLSchema-instance&apos; xmlns:s=&apos;http://www.w3.org/2001/XMLSchema&apos;&gt;
+        ///  &lt;SOAP-ENV:Body&gt;&lt;ProcessMessageResponse xmlns=&quot;http://www.redskyit.com&quot;&gt;&lt;ProcessMessageResult&gt;
+        ///&lt;Parameters MessageType=&quot;AvailabilityResponse&quot;&gt;
+        ///	&lt;Session ID=&quot;cKBLo7jTO34h0SHm&quot;/&gt;
+        ///	&lt;HotelDetails HotelCode=&quot;ABEMAI&quot;&gt;
+        ///		&lt;RatePlan RatePlanCode=&quot;RT001&quot;&gt;
+        ///			&lt;StatusWarningFlags&gt;
+        ///				&lt;Text&gt;There i [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Response {
             get {
@@ -113,7 +96,7 @@ namespace iVectorOne.Tests.PremierInn {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Results&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;803&quot; CC=&quot;EUR&quot; RTC=&quot;D&quot; RT=&quot;Doble&quot; MBC=&quot;SA&quot; AMT=&quot;318.31&quot; TPR=&quot;wFn1g/zm0AJpNodzSp3DKL/fb3DWj1x8O0At9qhpeVYvdDpMSR7qeoKyIHdo0V08wlOn1whDBK1f209jjLsk0Q+9G6RGULkcw8222K/ip3S2OBdfwkFQdLO7EBoeRbabiDSBWfHQS6zzfSLUIZ+iSNV+fs9XDo9WBNeBIVuV+wIIYSFJ/SVHYfPZ35cZSg6lH/mc9D84yLIxPz9WRw3ahoXNx74qiB8Yjr+MnEGZfem8Dw8Qw8x7yu0j3v08GaUt&quot; DSC=&quot;0&quot; COM=&quot;0&quot; DP=&quot;false&quot; NRF=&quot;false&quot; FIXPR=&quot;false&quot; SELLPR=&quot;0&quot; NETPR=&quot;0&quot; FREEC=&quot;false&quot; TPRC=&quot;PUBLICA&quot; RQ=&quot;false&quot; PLA=&quot;false&quot; PLR=&quot;false&quot; MSP=&quot;318.31&quot;&gt;&lt;Cs&gt;&lt;C SD=&quot;20 [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;Results&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;ABEMAI&quot; CC=&quot;GBP&quot; PRBID=&quot;1&quot; RTC=&quot;DBS&quot; RT=&quot;&quot; MBC=&quot;RO&quot; AD=&quot;1&quot; AMT=&quot;436.00&quot; TPR=&quot;qp/kTom5P/8idehm7p+pwyUOidj15F2pLIsKgt1c31Em/7pmxGIHD1vPPMGEV3GJ1gsWRm11zeepKKGL8BXElzeJK9c/4H5K2vkp5HEl8lf7dw87GAKiezxnCn0fziq2PMO2KsQYdBg1pITQF7iCeipwFziAvd2lJbGqpWcl2EtrtxptpORdrtYTaBPfJV24rpPNyPaxNAA+rlLN6r6ekYEGp4DOR/v0oZIHnrJZR/BYbIA31SUGQRL3k2a2TTQM9jc7yE7sZZa7o7ehthB3XdLxioi/f5dpSd0XsMvllEoGFJpZo6VB5c3U47lJQDKdeVnS1/2nmWnUZD891ZEzn1IVeh1Eh4z4OJoL87NfCDiNFWpzwD7zFqW99y4L4ivwJhSwhfjv71Elj1I0uv9Uv [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TransformedResponse {
             get {
