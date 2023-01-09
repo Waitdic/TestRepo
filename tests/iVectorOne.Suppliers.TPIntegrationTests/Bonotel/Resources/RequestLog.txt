@@ -10,7 +10,7 @@ Timeout: 58
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sep-2021</checkIn><checkOut>06-Sep-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>0</childNum></roomInfo></roomsInformation></availabilityRequest>
+<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sept-2021</checkIn><checkOut>06-Sept-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>0</childNum></roomInfo></roomsInformation></availabilityRequest>
 
 URL: http://xmltest.bonotel.com/bonotelapps/bonotel/reservation/GetAvailability.do
 
@@ -26,7 +26,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sep-2021</checkIn><checkOut>06-Sep-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>2</adultsNum><childNum>0</childNum></roomInfo></roomsInformation></availabilityRequest>
+<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sept-2021</checkIn><checkOut>06-Sept-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>2</adultsNum><childNum>0</childNum></roomInfo></roomsInformation></availabilityRequest>
 
 URL: http://xmltest.bonotel.com/bonotelapps/bonotel/reservation/GetAvailability.do
 
@@ -42,7 +42,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sep-2021</checkIn><checkOut>06-Sep-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>1</childNum><childAges><childAge>8</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
+<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sept-2021</checkIn><checkOut>06-Sept-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>1</childNum><childAges><childAge>8</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
 
 URL: http://xmltest.bonotel.com/bonotelapps/bonotel/reservation/GetAvailability.do
 
@@ -58,7 +58,7 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sep-2021</checkIn><checkOut>06-Sep-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>1</childNum><childAges><childAge>0</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
+<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sept-2021</checkIn><checkOut>06-Sept-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>1</childNum><childAges><childAge>0</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
 
 URL: http://xmltest.bonotel.com/bonotelapps/bonotel/reservation/GetAvailability.do
 
@@ -74,5 +74,5 @@ Timeout: 1
 
 **REQUEST**
 
-<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sep-2021</checkIn><checkOut>06-Sep-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>2</childNum><childAges><childAge>8</childAge><childAge>0</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
+<?xml version="1.0" encoding="UTF-8"?><availabilityRequest><control><userName>trvlpths_xml</userName><passWord>trvl20p0809</passWord></control><checkIn>01-Sept-2021</checkIn><checkOut>06-Sept-2021</checkOut><noOfRooms>1</noOfRooms><noOfNights>5</noOfNights><city>MAD_12</city><hotelCodes><hotelCode>102245</hotelCode></hotelCodes><roomsInformation><roomInfo><roomTypeId>0</roomTypeId><bedTypeId>0</bedTypeId> <adultsNum>1</adultsNum><childNum>2</childNum><childAges><childAge>8</childAge><childAge>0</childAge></childAges></roomInfo></roomsInformation></availabilityRequest>
 
