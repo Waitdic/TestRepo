@@ -56,6 +56,7 @@
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
+    using iVectorOne.Suppliers.ExoToursTransfers;
     using iVectorOne.Utility;
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;
@@ -73,6 +74,7 @@
     using ExtraBook = SDK.V2.ExtraBook;
     using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraSearch = SDK.V2.ExtraSearch;
+    using LocationContent = SDK.V2.LocationContent;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -146,6 +148,7 @@
             services.AddSingleton<IExtraSupplierLogRepository, ExtraSupplierLogRepository>();
             services.AddSingleton<IExtraBookingRepository, ExtraBookingRepository>();
 
+            services.AddSingleton<ILocationRepository, LocationRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -201,6 +204,8 @@
                     s.GetRequiredService<ILogger<Services.Extra.SearchStoreService>>(),
                     s.GetRequiredService<IExtraSearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
+
+            services.AddSingleton<ILocationContentService, LocationContentService>();
         }
 
         private static void RegisterMediators(IServiceCollection services)
@@ -220,6 +225,7 @@
             services.AddHandlerAndValidator<ExtraSearch.Request, ExtraSearch.Response, ExtraSearch.Handler, ExtraSearch.Validator>();
             services.AddHandlerAndValidator<ExtraPrebook.Request, ExtraPrebook.Response, ExtraPrebook.Handler, ExtraPrebook.Validator>();
             services.AddHandlerAndValidator<ExtraBook.Request, ExtraBook.Response, ExtraBook.Handler, ExtraBook.Validator>();
+            services.AddHandlerAndValidator<LocationContent.Request, LocationContent.Response, LocationContent.Handler, LocationContent.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
