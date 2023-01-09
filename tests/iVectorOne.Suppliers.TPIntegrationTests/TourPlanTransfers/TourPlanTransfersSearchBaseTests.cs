@@ -202,7 +202,7 @@
                 ArrivalData = arrivalData,
                 DepartureData = departureData
             };
-            OptionInfoReply optionInfoReply = GenerateResponse(100, "INR", opt, description, comment);
+            OptionInfoReply optionInfoReply = GenerateResponse(11500, "INR", opt, description, comment);
             List<Request> requests = new();
             Request request = new()
             {
@@ -214,9 +214,8 @@
             var transformResponse = GetTransformResponse(new TransferSearchDetails(), locationMapping, requests, new());
             var option = optionInfoReply.Option.FirstOrDefault();
 
-            Assert.Equal(option.OptStayResults.TotalPrice, transformResponse.TransformedResults[0].Cost);
+            Assert.Equal(option.OptStayResults.TotalPrice / 100m, transformResponse.TransformedResults[0].Cost);
             Assert.Equal(option.OptStayResults.Currency, transformResponse.TransformedResults[0].CurrencyCode);
-            Assert.Equal(option.OptStayResults.TotalPrice, transformResponse.TransformedResults[0].Cost);
             Assert.Equal(option.Opt + "-" + option.OptStayResults.RateId, transformResponse.TransformedResults[0].SupplierReference);
             return Task.CompletedTask;
         }
@@ -258,8 +257,8 @@
                 ExtraInfo = Constant.Outbound,
             };
             Request request2 = new();
-            request1.SetResponse(Serialize(GenerateResponse(100, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
-            request2.SetResponse(Serialize(GenerateResponse(200, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
+            request1.SetResponse(Serialize(GenerateResponse(11500, "INR", "SYD", "Brisbane Airport to Gold Coast Hotel", commentDeparture)).OuterXml);
+            request2.SetResponse(Serialize(GenerateResponse(21500, "INR", "SYD1", "Gold Coast Hotel to Brisbane Airport", commentArrival)).OuterXml);
 
             requests.Add(request1);
             requests.Add(request2);
@@ -268,7 +267,7 @@
             var transformResponse = GetTransformResponse(new TransferSearchDetails(), getLocationMappingMockData(), requests, new());
             var result = transformResponse.TransformedResults.FirstOrDefault();
 
-            Assert.Equal(result.Cost, 300);
+            Assert.Equal(result.Cost, 330);
             Assert.Equal(result.SupplierReference, supplierReference);
             Assert.True(transformResponse.TransformedResults.Any());
             return Task.CompletedTask;

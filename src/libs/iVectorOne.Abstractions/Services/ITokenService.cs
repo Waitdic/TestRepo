@@ -4,6 +4,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
     using Transfers = Models.Tokens.Transfer;
+    using Extras = Models.Tokens.Extra;
 
     /// <summary>Token Service, responsible for encoding and decoding tokens</summary>
     public interface ITokenService
@@ -58,5 +59,16 @@
         /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
         Task<Transfers.TransferToken?> PopulateTransferTokenAsync(string supplierBookingReference);
+        
+        /// <summary>Decodes the extra token.</summary>
+        /// <param name="tokenString">The token string.</param>
+        /// <param name="account">The account making the request</param>
+        /// <returns>a Property Token object</returns>
+        Task<Extras.ExtraToken?> DecodeExtraTokenAsync(string tokenString, Account account);
+
+        /// <summary>Encodes the transfer token.</summary>
+        /// <param name="transferToken">The transfer token.</param>
+        /// <returns>An encoded property token.</returns>
+        string EncodeExtraToken(Extras.ExtraToken extraToken);
     }
 }

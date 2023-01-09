@@ -28,6 +28,13 @@
         /// <param name="searchDetails"></param>
         /// <returns></returns>
         Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails);
+
+        /// <summary>
+        /// Get location mapping
+        /// </summary>
+        /// <param name="searchDetails"></param>
+        /// <returns></returns>
+        Task<LocationMapping> TPLocationLookupAsync(ExtraSearchDetails searchDetails);
         /// <summary>
         /// Get all locations list
         /// </summary>
