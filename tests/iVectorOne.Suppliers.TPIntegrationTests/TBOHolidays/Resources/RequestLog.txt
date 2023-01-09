@@ -8,7 +8,7 @@ Timeout: 100
 
 **REQUEST**
 
-{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":true,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
 URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
@@ -20,7 +20,7 @@ Timeout: 100
 
 **REQUEST**
 
-{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":2,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":2,"Children":0,"ChildrenAges":[]}],"ResponseTime":23.0,"IsDetailedResponse":true,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
 URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
@@ -32,7 +32,7 @@ Timeout: 100
 
 **REQUEST**
 
-{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[8]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[8]}],"ResponseTime":23.0,"IsDetailedResponse":true,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
 URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
@@ -44,7 +44,7 @@ Timeout: 100
 
 **REQUEST**
 
-{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[0]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":1,"ChildrenAges":[0]}],"ResponseTime":23.0,"IsDetailedResponse":true,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
 
 URL: http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search
 
@@ -56,4 +56,4 @@ Timeout: 100
 
 **REQUEST**
 
-{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":2,"ChildrenAges":[8,0]}],"ResponseTime":23.0,"IsDetailedResponse":false,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
+{"CheckIn":"2021-09-01","CheckOut":"2021-09-06","HotelCodes":"102245","GuestNationality":"GB","PaxRooms":[{"Adults":1,"Children":2,"ChildrenAges":[8,0]}],"ResponseTime":23.0,"IsDetailedResponse":true,"Filters":{"Refundable":false,"NoOfRooms":0,"MealType":"All"}}
