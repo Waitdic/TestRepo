@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace iVectorOne.Suppliers.TourPlanTransfers.Models
@@ -14,12 +15,12 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         /// <summary>
         /// Gets or sets the departure name.
         /// </summary>
-        public string DepartureName { get; set; } = string.Empty;
+        public List<string> DepartureName { get; set; } = new List<string>();
 
         /// <summary>
         /// Gets or sets the arrival name.
         /// </summary>
-        public string ArrivalName { get; set; } = string.Empty;
+        public List<string> ArrivalName { get; set; } = new List<string>();
 
         /// <summary>
         /// Validate the fields 
@@ -27,8 +28,8 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         public bool Validation()
         {
             return !string.IsNullOrEmpty(LocationCode)
-                && !string.IsNullOrEmpty(DepartureName)
-                && !string.IsNullOrEmpty(ArrivalName);
+                && DepartureName.All(x => !string.IsNullOrEmpty(x))
+                && ArrivalName.All(x => !string.IsNullOrEmpty(x));
         }
 
         /// <summary>
@@ -36,9 +37,14 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         /// </summary>
         /// <param name="locationData"></param>
         /// <returns></returns>
-        public bool IsLocationDataValid(string[] locationData)
+        public bool IsLocationDataValid(List<string[]> locationData)
         {
-            return locationData.Length == 2;
+            return locationData.All(x => x.Length == 2);
+        }
+
+        public bool IsLocationDataValid(string PrimaryLocationCode, string SecondaryLocationCode)
+        {
+            return PrimaryLocationCode.Equals(SecondaryLocationCode);
         }
     }
 }

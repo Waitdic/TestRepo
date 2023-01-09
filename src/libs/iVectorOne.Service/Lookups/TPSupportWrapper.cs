@@ -57,10 +57,15 @@
             Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
             location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
             location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
+            var AdditionalDeparturePayload = location.Where(x => searchDetails.AdditionalDepartureLocationIDs.Contains(x.Key)).Select(x => x.Value).ToList();
+            var AdditionalArrivalPayload = location.Where(x => searchDetails.AdditionalArrivalLocationIDs.Contains(x.Key)).Select(x => x.Value).ToList();
+
             locationData = new()
             {
                 DepartureData = departurePayload,
-                ArrivalData = arivalPayload
+                ArrivalData = arivalPayload,
+                AdditionalDepartureData = AdditionalDeparturePayload,
+                AdditionalArrivalData = AdditionalArrivalPayload,
             };
 
             return locationData;
