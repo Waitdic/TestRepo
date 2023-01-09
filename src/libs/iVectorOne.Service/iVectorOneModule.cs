@@ -53,6 +53,7 @@
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
+    using iVectorOne.Suppliers.ExoToursTransfers;
     using iVectorOne.Utility;
     using Book = SDK.V2.PropertyBook;
     using Cancel = SDK.V2.PropertyCancel;
@@ -66,7 +67,7 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
-    using iVectorOne.Suppliers.ExoToursTransfers;
+    using LocationContent = SDK.V2.LocationContent;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -125,6 +126,7 @@
             services.AddSingleton<ITransferSearchRepository, TransferSearchRepository>();
             services.AddSingleton<ITransferSupplierLogRepository, TransferSupplierLogRepository>();
             services.AddSingleton<ITransferBookingRepository, TransferBookingRepository>();
+            services.AddSingleton<ILocationRepository, LocationRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -168,6 +170,8 @@
                     s.GetRequiredService<ILogger<Services.Transfer.SearchStoreService>>(),
                     s.GetRequiredService<ITransferSearchStoreRepository>(),
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
+
+            services.AddSingleton<ILocationContentService, LocationContentService>();
         }
 
         private static void RegisterMediators(IServiceCollection services)
@@ -184,6 +188,7 @@
             services.AddHandlerAndValidator<TransferBook.Request, TransferBook.Response, TransferBook.Handler, TransferBook.Validator>();
             services.AddHandlerAndValidator<TransferPrecancel.Request, TransferPrecancel.Response, TransferPrecancel.Handler, TransferPrecancel.Validator>();
             services.AddHandlerAndValidator<TransferCancel.Request, TransferCancel.Response, TransferCancel.Handler, TransferCancel.Validator>();
+            services.AddHandlerAndValidator<LocationContent.Request, LocationContent.Response, LocationContent.Handler, LocationContent.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
