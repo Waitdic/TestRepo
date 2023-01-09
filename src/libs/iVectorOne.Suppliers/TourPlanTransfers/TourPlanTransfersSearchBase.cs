@@ -160,7 +160,7 @@
             {
                 foreach (var outboundResult in filteredOutbound.Option)
                 {
-                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment == outboundResult.OptGeneral.Comment
+                    foreach (var returnResult in filteredReturn.Option.Where(x => x.OptGeneral.Comment.ToLower() == outboundResult.OptGeneral.Comment.ToLower()
                                                                              && x.OptStayResults.Availability == outboundResult.OptStayResults.Availability))
                     {
                         supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt,

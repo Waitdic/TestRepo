@@ -93,7 +93,7 @@
         /// The third party GowaySydneyTransfers
         /// </summary>
         public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
-        public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfer";
+        public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfers";
 
         /// <summary>
         /// The third party HotelBedsV2
