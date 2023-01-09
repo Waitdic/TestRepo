@@ -99,8 +99,8 @@
                 {
                     locationData.LocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
 
-                    PopulateLocationData(locationData, location.AdditionalDepartureData, ref departureData);
-                    PopulateLocationData(locationData, location.AdditionalArrivalData, ref arrivalData);
+                    AddAdditionalLocationData(locationData, location.AdditionalDepartureData, ref departureData);
+                    AddAdditionalLocationData(locationData, location.AdditionalArrivalData, ref arrivalData);
 
                     if (locationData.IsLocationDataValid(arrivalData) && locationData.IsLocationDataValid(departureData))
                     {
@@ -230,7 +230,7 @@
         #endregion
 
         #region Private Functions
-        private void PopulateLocationData(LocationData locationData, List<string> locations, ref List<string[]> dataList)
+        private void AddAdditionalLocationData(LocationData locationData, List<string> locations, ref List<string[]> dataList)
         {
             foreach (var item in locations)
             {
