@@ -6,6 +6,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Content = SDK.V2.PropertyContent;
     using List = SDK.V2.PropertyList;
+    using LocationContent = SDK.V2.LocationContent;
 
     public static class Endpoint
     {
@@ -48,6 +49,17 @@
                         })
                 .RequireAuthorization()
                 .WithName("Property Content")
+                .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+                .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status200OK);
+
+            _ = endpoints
+                .MapPost(
+                    $"/{EndpointBase.Version}/{EndpointBase.LocationDomain}",
+                    async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] LocationContent.Request request)
+                        => await EndpointBase.ExecuteRequest<LocationContent.Request, LocationContent.Response>(httpContext, mediator, request))
+                .RequireAuthorization()
+                .WithName("Location Content")
                 .ProducesValidationProblem(StatusCodes.Status400BadRequest)
                 .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
                 .Produces(StatusCodes.Status200OK);
