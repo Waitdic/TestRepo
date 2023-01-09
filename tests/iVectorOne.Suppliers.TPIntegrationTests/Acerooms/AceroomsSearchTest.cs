@@ -7,6 +7,11 @@
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
     using iVectorOne.Suppliers.Acerooms;
     using iVectorOne.Tests.Acerooms;
+    using iVector.Search.Property;
+    using Intuitive.Helpers.Serialization;
+    using iVectorOne.Models;
+    using System.Text.RegularExpressions;
+    using Intuitive.Helpers.Net;
 
     public class AceroomsSearchTest : ThirdPartyPropertySearchBaseTest
     {
@@ -47,7 +52,27 @@
         public void TransformResponseTest()
         {
             // Assert 
-            Assert.True(base.ValidTransformResponse(AceroomsRes.Response, AceroomsRes.TransformedResponse, SearchDetailsList[0]));
+            Assert.True(ValidTransformResponse(AceroomsRes.Response, AceroomsRes.TransformedResponse, SearchDetailsList[0], null!, Helper.CreateResortSplits(Supplier, new List<Hotel>(), string.Empty)));
+        }
+
+        private new bool ValidTransformResponse(string response, string mockResponse, SearchDetails searchDetails, object extraInfo, List<ResortSplit> resortSplits)
+        {
+            // Arrange 
+            var request = CreateResponseWebRequest(response, searchDetails, extraInfo);
+
+            // Act
+            var transformedResponse = SearchClass.TransformResponse(new List<Request> { request }, searchDetails, resortSplits);
+            var serializer = new Serializer();
+            var responseXml = serializer.SerializeWithoutNamespaces(transformedResponse).InnerXml;
+
+            var format = "SD=\"{0}\"";
+            var patterns = string.Format(format, @"(\S+?)");
+            var replacements = string.Format(format, string.Empty);
+
+            responseXml = Regex.Replace(responseXml, patterns, replacements); // remove
+            
+            // Assert
+            return Helper.IsValidResponse(mockResponse, responseXml);
         }
     }
 }
