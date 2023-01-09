@@ -42,7 +42,7 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
             return locationData.All(x => x.Length == 2);
         }
 
-        public bool IsLocationDataValid(string PrimaryLocationCode, string SecondaryLocationCode)
+        public bool IsLocationDataCodeValid(string PrimaryLocationCode, string SecondaryLocationCode)
         {
             return PrimaryLocationCode.Equals(SecondaryLocationCode);
         }

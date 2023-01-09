@@ -12,6 +12,7 @@
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
+    using MoreLinq;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -93,35 +94,18 @@
                 List<string[]> departureData = new() { location.DepartureData.Split(":") };
                 List<string[]> arrivalData = new() { location.ArrivalData.Split(":") };
 
-                foreach (var item in location.AdditionalDepartureData)
+                if (locationData.IsLocationDataCodeValid(arrivalData.FirstOrDefault().FirstOrDefault(),
+                       departureData.FirstOrDefault().FirstOrDefault()))
                 {
-                    var locationValues = item.Split(":");
+                    locationData.LocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
 
-                    if (locationData.IsLocationDataValid(locationValues.First(), departureData.First().FirstOrDefault()))
+                    PopulateLocationData(locationData, location.AdditionalDepartureData, ref departureData);
+                    PopulateLocationData(locationData, location.AdditionalArrivalData, ref arrivalData);
+
+                    if (locationData.IsLocationDataValid(arrivalData) && locationData.IsLocationDataValid(departureData))
                     {
-                        departureData.Add(locationValues);
-                    }
-                }
-                foreach (var item in location.AdditionalArrivalData)
-                {
-                    var locationValues = item.Split(":");
-
-                    if (locationData.IsLocationDataValid(locationValues.First(), arrivalData.First().FirstOrDefault()))
-                    {
-                        arrivalData.Add(locationValues);
-                    }
-                }
-
-                if (locationData.IsLocationDataValid(arrivalData) &&
-                    locationData.IsLocationDataValid(departureData))
-                {
-                    locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
-                    locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
-
-                    if (locationData.IsLocationDataValid(arrivalData.FirstOrDefault().FirstOrDefault(),
-                        departureData.FirstOrDefault().FirstOrDefault()))
-                    {
-                        locationData.LocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
+                        locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
+                        locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
                     }
                 }
             }
@@ -246,6 +230,18 @@
         #endregion
 
         #region Private Functions
+        private void PopulateLocationData(LocationData locationData, List<string> locations, ref List<string[]> dataList)
+        {
+            foreach (var item in locations)
+            {
+                var locationValues = item.Split(":");
+
+                if (locationData.IsLocationDataCodeValid(locationValues.First(), dataList.First().FirstOrDefault()))
+                {
+                    dataList.Add(locationValues);
+                }
+            }
+        }
         private OptionInfoReply FilterResults(bool includeOnRequest, List<string> departureName, List<string> arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
