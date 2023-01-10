@@ -93,7 +93,6 @@
         /// The third party GowaySydneyTransfers
         /// </summary>
         public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
-        public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfers";
 
         /// <summary>
         /// The third party HotelBedsV2
@@ -169,6 +168,11 @@
         /// The own stock source
         /// </summary>
         public const string OWNSTOCK = "Own";
+
+        /// <summary>
+        /// The third party Pacific Destinations
+        /// </summary>
+        public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfers";
 
         /// <summary>
         /// The third party Portimar
