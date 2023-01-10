@@ -37,14 +37,14 @@ namespace iVectorOne.Suppliers.TourPlanTransfers.Models
         /// </summary>
         /// <param name="locationData"></param>
         /// <returns></returns>
-        public bool IsLocationDataValid(List<string[]> locationData)
+        public static bool IsLocationDataValid(List<string[]> locationData)
         {
             return locationData.All(x => x.Length == 2);
         }
 
-        public bool IsLocationDataCodeValid(string PrimaryLocationCode, string SecondaryLocationCode)
+        public static bool IsLocationDataCodeValid(string firstLocationCode, string secondLocationCode)
         {
-            return PrimaryLocationCode.Equals(SecondaryLocationCode);
+            return firstLocationCode.Equals(secondLocationCode);
         }
     }
 }

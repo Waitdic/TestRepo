@@ -94,15 +94,17 @@
                 List<string[]> departureData = new() { location.DepartureData.Split(":") };
                 List<string[]> arrivalData = new() { location.ArrivalData.Split(":") };
 
-                if (locationData.IsLocationDataCodeValid(arrivalData.FirstOrDefault().FirstOrDefault(),
-                       departureData.FirstOrDefault().FirstOrDefault()))
+                string primaryArrivalDataLocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
+                string primaryDepartureDataLocationCode = departureData.FirstOrDefault().FirstOrDefault();
+
+                if (LocationData.IsLocationDataCodeValid(primaryArrivalDataLocationCode, primaryDepartureDataLocationCode))
                 {
-                    locationData.LocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
+                    locationData.LocationCode = primaryArrivalDataLocationCode;
 
-                    AddAdditionalLocationData(locationData, location.AdditionalDepartureData, ref departureData);
-                    AddAdditionalLocationData(locationData, location.AdditionalArrivalData, ref arrivalData);
+                    AddAdditionalLocationData(location.AdditionalDepartureData, ref departureData);
+                    AddAdditionalLocationData(location.AdditionalArrivalData, ref arrivalData);
 
-                    if (locationData.IsLocationDataValid(arrivalData) && locationData.IsLocationDataValid(departureData))
+                    if (LocationData.IsLocationDataValid(arrivalData) && LocationData.IsLocationDataValid(departureData))
                     {
                         locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
                         locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
@@ -230,15 +232,16 @@
         #endregion
 
         #region Private Functions
-        private void AddAdditionalLocationData(LocationData locationData, List<string> locations, ref List<string[]> dataList)
+        private void AddAdditionalLocationData(List<string> locations, ref List<string[]> locationData)
         {
+            string locationCode = locationData.First().FirstOrDefault();
             foreach (var item in locations)
             {
                 var locationValues = item.Split(":");
 
-                if (locationData.IsLocationDataCodeValid(locationValues.First(), dataList.First().FirstOrDefault()))
+                if (LocationData.IsLocationDataCodeValid(locationValues.First(), locationCode))
                 {
-                    dataList.Add(locationValues);
+                    locationData.Add(locationValues);
                 }
             }
         }
