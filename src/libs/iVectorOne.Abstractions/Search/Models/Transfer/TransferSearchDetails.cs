@@ -34,6 +34,22 @@
         public int ArrivalLocationId { get; set; }
 
         /// <summary>
+        /// Gets or sets the additional departure location identifiers.
+        /// </summary>
+        /// <value>
+        /// Additional departure locations.
+        /// </value>
+        public List<int> AdditionalDepartureLocationIDs { get; set; } = new List<int>();
+
+        /// <summary>
+        /// Gets or sets the additional arrival location identifiers.
+        /// </summary>
+        /// <value>
+        /// Additional arrival locations.
+        /// </value>
+        public List<int> AdditionalArrivalLocationIDs { get; set; } = new List<int>();
+
+        /// <summary>
         /// Gets or sets the departure date.
         /// </summary>
         /// <value>

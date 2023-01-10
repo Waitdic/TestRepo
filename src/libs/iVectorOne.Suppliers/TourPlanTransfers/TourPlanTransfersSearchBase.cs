@@ -12,6 +12,7 @@
     using iVectorOne.Suppliers.TourPlanTransfers.Models;
     using iVectorOne.Transfer;
     using Microsoft.Extensions.Logging;
+    using MoreLinq;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -84,18 +85,29 @@
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location != null && (location.DepartureData.Length > 0 && location.ArrivalData.Length > 0))
+            if (location != null &&
+                location.DepartureData.Length > 0 &&
+                location.ArrivalData.Length > 0 &&
+                location.AdditionalArrivalData.All(x => x.Length > 0) &&
+                location.AdditionalDepartureData.All(x => x.Length > 0))
             {
-                string[] departureData = location.DepartureData.Split(":");
-                string[] arrivalData = location.ArrivalData.Split(":");
-                if (locationData.IsLocationDataValid(arrivalData) &&
-                    locationData.IsLocationDataValid(departureData))
+                List<string[]> departureData = new() { location.DepartureData.Split(":") };
+                List<string[]> arrivalData = new() { location.ArrivalData.Split(":") };
+
+                string primaryArrivalDataLocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
+                string primaryDepartureDataLocationCode = departureData.FirstOrDefault().FirstOrDefault();
+
+                if (LocationData.IsLocationDataCodeValid(primaryArrivalDataLocationCode, primaryDepartureDataLocationCode))
                 {
-                    locationData.ArrivalName = arrivalData[1].TrimStart();
-                    locationData.DepartureName = departureData[1].TrimStart();
-                    if (arrivalData[0].Equals(departureData[0]))
+                    locationData.LocationCode = primaryArrivalDataLocationCode;
+
+                    AddAdditionalLocationData(location.AdditionalDepartureData, ref departureData);
+                    AddAdditionalLocationData(location.AdditionalArrivalData, ref arrivalData);
+
+                    if (LocationData.IsLocationDataValid(arrivalData) && LocationData.IsLocationDataValid(departureData))
                     {
-                        locationData.LocationCode = arrivalData[0];
+                        locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
+                        locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
                     }
                 }
             }
@@ -165,7 +177,7 @@
                     {
                         supplierReference = Helpers.CreateSupplierReference(outboundResult.Opt,
                                                                             outboundResult.OptStayResults.RateId,
-                                                                            returnResult.Opt, 
+                                                                            returnResult.Opt,
                                                                             returnResult.OptStayResults.RateId);
                         transformedResult = BuildTransformedResult(returnResult.OptStayResults,
                                                                    supplierReference,
@@ -220,7 +232,20 @@
         #endregion
 
         #region Private Functions
-        private OptionInfoReply FilterResults(bool includeOnRequest, string departureName, string arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
+        private void AddAdditionalLocationData(List<string> locations, ref List<string[]> locationData)
+        {
+            string locationCode = locationData.First().FirstOrDefault();
+            foreach (var item in locations)
+            {
+                var locationValues = item.Split(":");
+
+                if (LocationData.IsLocationDataCodeValid(locationValues.First(), locationCode))
+                {
+                    locationData.Add(locationValues);
+                }
+            }
+        }
+        private OptionInfoReply FilterResults(bool includeOnRequest, List<string> departureName, List<string> arrivalName, OptionInfoReply deserializedResponse, ref List<string> uniqueLocationList)
         {
             OptionInfoReply filterResult = new();
             List<string> filterUniqueLocation = new();
@@ -234,7 +259,7 @@
                 }
                 else
                 {
-                    filterUniqueLocation = filterUniqueLocation.Where(x => x != arrivalName && x != departureName).Except(uniqueLocationList).ToList();
+                    filterUniqueLocation = filterUniqueLocation.Where(x => !arrivalName.Contains(x) && !departureName.Contains(x)).Except(uniqueLocationList).ToList();
                 }
 
                 if (filterUniqueLocation.Any())
@@ -255,13 +280,13 @@
             return includeOnRequest ? (availability == Constants.FreesaleCode || availability == Constants.OnRequestCode) : availability == Constants.FreesaleCode;
         }
 
-        private bool filterDescription(string description, string departureName, string arrivalName, ref List<string> filterUniqueLocation)
+        private bool filterDescription(string description, List<string> departureName, List<string> arrivalName, ref List<string> filterUniqueLocation)
         {
             bool result = false;
             try
             {
                 List<string> splitDescriptionLocation = SplitDescription(description);
-                result = splitDescriptionLocation.Count == 2 ? (splitDescriptionLocation[0] == departureName && splitDescriptionLocation[1] == arrivalName) : false;
+                result = splitDescriptionLocation.Count == 2 ? (departureName.Contains(splitDescriptionLocation[0]) && arrivalName.Contains(splitDescriptionLocation[1])) : false;
                 if (!result && splitDescriptionLocation.Count == 2)
                 {
                     filterUniqueLocation = new() { splitDescriptionLocation[0], splitDescriptionLocation[1] };

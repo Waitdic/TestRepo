@@ -23,6 +23,8 @@
             {
                 DepartureLocationId = searchRequest.DepartureLocationID,
                 ArrivalLocationId = searchRequest.ArrivalLocationID,
+                AdditionalDepartureLocationIDs = searchRequest.AdditionalDepartureLocationIDs,
+                AdditionalArrivalLocationIDs = searchRequest.AdditionalArrivalLocationIDs,
 
                 OneWay = searchRequest.OneWay,
 
@@ -39,7 +41,7 @@
                 LoggingType = log ? "All" : "None",
                 ISOCurrencyCode = string.IsNullOrEmpty(searchRequest.CurrencyCode) ? account.TPSettings.CurrencyCode : searchRequest.CurrencyCode,
                 EmailLogsToAddress = searchRequest.EmailLogsToAddress,
-                IncludeOnRequest= searchRequest.IncludeOnRequest,
+                IncludeOnRequest = searchRequest.IncludeOnRequest,
 
                 SearchStoreItem =
                 {
