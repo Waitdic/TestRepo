@@ -327,10 +327,17 @@ namespace iVectorOne.Suppliers.DOTW
                                             ? policy.Charge.Formatted.ToSafeMoney()
                                             : amount.ToSafeMoney();
 
-                                        cancellations.AddNew(
-                                            startDate,
-                                            endDate,
-                                            charge);
+                                        if (cancellations.Any(x => x.Amount == charge))
+                                        {
+                                            cancellations.First(x => x.Amount == charge).EndDate = endDate;
+                                        }
+                                        else
+                                        {
+                                            cancellations.AddNew(
+                                                startDate,
+                                                endDate,
+                                                charge);
+                                        }
                                     }
                                 }
 
@@ -346,7 +353,7 @@ namespace iVectorOne.Suppliers.DOTW
                                     Amount = amount,
                                     DynamicProperty = rateBasis.WithinCancellationDeadline == "yes",
                                     TPReference = roomtype.Code + "|" + rateBasis.ID,
-                                    Cancellations = Cancellations.MergeMultipleCancellationPolicies(cancellations),
+                                    Cancellations = cancellations,
                                     NonRefundableRates = nrf,
                                 };
 

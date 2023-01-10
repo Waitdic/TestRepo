@@ -17,6 +17,7 @@
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models;
     using System.Threading.Tasks;
+    using System.Linq;
 
     public class DOTW : IThirdParty, ISingleSource
     {
@@ -459,18 +460,35 @@
                     }
 
                     // add the rule into the policy
-                    policies[loop].AddNew(startDate, endDate, amount);
+                    if (policies[loop].Any(x => x.Amount == amount))
+                    {
+                        policies[loop].First(x => x.Amount == amount).EndDate = endDate;
+                    }
+                    else
+                    {
+                        policies[loop].AddNew(startDate, endDate, amount);
+                    }
                 }
 
                 // call solidify on the policy
-                //policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
+                policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
 
                 // increment the loop counter 
                 loop += 1;
             }
 
             // merge the policies and return
-            return Cancellations.MergeMultipleCancellationPolicies(policies);
+            var finalCancellations =  Cancellations.MergeMultipleCancellationPolicies(policies);
+
+            for (var i = 0; i < finalCancellations.Count - 1; i++)
+            {
+                if ((finalCancellations[i + 1].StartDate - finalCancellations[i].EndDate).TotalHours == 24)
+                {
+                    finalCancellations[i].EndDate = finalCancellations[i + 1].StartDate.AddSeconds(-1);
+                }
+            }
+
+            return finalCancellations;
         }
 
         #endregion
