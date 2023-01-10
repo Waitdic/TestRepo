@@ -170,6 +170,11 @@
         public const string OWNSTOCK = "Own";
 
         /// <summary>
+        /// The third party Pacific Destinations
+        /// </summary>
+        public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfers";
+
+        /// <summary>
         /// The third party Portimar
         /// </summary>
         public const string PORTIMAR = "Portimar";

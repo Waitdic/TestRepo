@@ -309,6 +309,7 @@
             services.AddSingleton<IThirdPartySearch, YouTravelSearch>();
 
             services.AddSingleton<Transfer.IThirdPartySearch, GowaySydneyTransfersSearch>();
+            services.AddSingleton<Transfer.IThirdPartySearch, PacificDestinationsTransferSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, TestTransferSupplierSearch>();
             services.AddSingleton<Transfer.IThirdPartySearch, ExoToursTransferSearch>();
             services.AddSingleton<Extra.IThirdPartySearch, TestExtraSupplierSearch>();
@@ -354,6 +355,7 @@
             services.AddSingleton<IThirdParty, YouTravel>();
 
             services.AddSingleton<Transfer.IThirdParty, GowaySydneyTransfers>();
+            services.AddSingleton<Transfer.IThirdParty, PacificDestinationsTransfer>();
             services.AddSingleton<Transfer.IThirdParty, TestTransferSupplier>();
             services.AddSingleton<Transfer.IThirdParty, ExoToursTransfer>();
         }

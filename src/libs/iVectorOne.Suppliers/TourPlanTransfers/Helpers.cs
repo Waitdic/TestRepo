@@ -18,7 +18,16 @@ namespace iVectorOne.Suppliers.TourPlanTransfers
         public static T DeSerialize<T>(XmlDocument xmlDocument, ISerializer _serializer) where T : class
         {
             var xmlResponse = _serializer.CleanXmlNamespaces(xmlDocument);
-            xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
+            if (xmlResponse.ChildNodes[0].ChildNodes.Count > 1)
+            {
+                XmlNode node = xmlResponse.SelectSingleNode("/Reply/" + typeof(T).Name);
+                xmlResponse.RemoveAll();
+                xmlResponse.AppendChild(node);
+            }
+            else
+            {
+                xmlResponse.InnerXml = xmlResponse.InnerXml.Replace("<Reply>", "").Replace("</Reply>", "");
+            }
             return _serializer.DeSerialize<T>(xmlResponse);
         }
 
