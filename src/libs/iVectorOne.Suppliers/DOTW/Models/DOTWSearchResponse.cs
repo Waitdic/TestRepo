@@ -67,6 +67,8 @@
 
         public class Rule
         {
+            [XmlAttribute("runno")]
+            public int Runno;
             [XmlElement("fromDate")]
             public string FromDate = string.Empty;
             [XmlElement("toDate")]

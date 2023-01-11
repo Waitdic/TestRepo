@@ -1,8 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using iVectorOne.Models.Property.Booking;
-
-namespace iVectorOne.Suppliers.DOTW
+﻿namespace iVectorOne.Suppliers.DOTW
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -19,8 +17,8 @@ namespace iVectorOne.Suppliers.DOTW
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
-    using static iVectorOne.Suppliers.DOTW.Models.DOTWSearchResponse;
-    using System;
+    using iVectorOne.Models.Property.Booking;
+
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {
@@ -309,8 +307,10 @@ namespace iVectorOne.Suppliers.DOTW
                                 var nrf = false;
                                 if (rateBasis.CancellationRules.Rule.Any())
                                 {
-                                    foreach (var policy in rateBasis.CancellationRules.Rule)
+                                    var rules = rateBasis.CancellationRules.Rule;
+                                    foreach (var policy in rules)
                                     {
+                                        var cancelRestricted = policy.CancelRestricted;
                                         var startDate = !string.IsNullOrEmpty(policy.FromDate)
                                             ? policy.FromDate.ToSafeDate()
                                             : policy.NoShowPolicy
@@ -321,11 +321,14 @@ namespace iVectorOne.Suppliers.DOTW
                                             ? policy.ToDate.ToSafeDate()
                                             : cancellationDeadline != DateTimeExtensions.EmptyDate
                                                 ? cancellationDeadline
-                                                : searchDetails.ArrivalDate;
+                                                : GetEndDate(rules, policy, startDate);
 
-                                        var charge = !string.IsNullOrEmpty(policy.Charge.Formatted)
-                                            ? policy.Charge.Formatted.ToSafeMoney()
-                                            : amount.ToSafeMoney();
+                                        var formatted = policy.Charge.Formatted;
+                                        var charge = !string.IsNullOrEmpty(formatted)
+                                            ? formatted.ToSafeMoney()
+                                            : cancelRestricted 
+                                                ? amount.ToSafeMoney()
+                                                : 0;
 
                                         if (cancellations.Any(x => x.Amount == charge))
                                         {
@@ -337,6 +340,8 @@ namespace iVectorOne.Suppliers.DOTW
                                                 startDate,
                                                 endDate,
                                                 charge);
+
+                                            if(cancelRestricted) break;
                                         }
                                     }
                                 }
@@ -365,6 +370,22 @@ namespace iVectorOne.Suppliers.DOTW
             }
 
             return transformedResults;
+        }
+
+        private static DateTime GetEndDate(
+            List<DOTWSearchResponse.Rule> rules,
+            DOTWSearchResponse.Rule policy,
+            DateTime startDate)
+        {
+            var endDate = policy.CancelRestricted 
+                ? new DateTime(2099, 12, 31) 
+                : rules.Any(x => x.FromDate.ToSafeDate() > startDate) 
+                    ? rules.Where(x => x.FromDate.ToSafeDate() > startDate)
+                        .Select(x => x.FromDate.ToSafeDate())
+                        .OrderBy(x => x.Date).First().AddSeconds(-1)
+                    : new DateTime(2099, 12, 31);
+
+            return endDate;
         }
 
         #endregion

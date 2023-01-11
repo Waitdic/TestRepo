@@ -445,7 +445,7 @@
                     }
                     else
                     {
-                        endDate = cancellationDeadline != DateTimeExtensions.EmptyDate ? cancellationDeadline : propertyDetails.ArrivalDate;
+                        endDate = cancellationDeadline != DateTimeExtensions.EmptyDate ? cancellationDeadline : new DateTime(2099, 12, 31);
                     }
 
                     // get the amount
@@ -468,10 +468,9 @@
                     {
                         policies[loop].AddNew(startDate, endDate, amount);
                     }
-                }
 
-                // call solidify on the policy
-                policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
+                    if(nonRefundable) break;
+                }
 
                 // increment the loop counter 
                 loop += 1;
