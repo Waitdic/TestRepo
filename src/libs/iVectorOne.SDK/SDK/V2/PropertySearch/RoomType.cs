@@ -125,5 +125,21 @@
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public decimal MinimumSellingPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [pay local required].
+        /// </summary>
+        public bool PayLocalRequired { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [pay local available].
+        /// </summary>
+        public bool PayLocalAvailable { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of available rooms.
+        /// </summary>
+        public int AvailableRooms { get; set; }
     }
 }

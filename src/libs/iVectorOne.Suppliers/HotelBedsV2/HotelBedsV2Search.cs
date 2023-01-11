@@ -18,6 +18,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class HotelBedsV2Search : IThirdPartySearch, ISingleSource
     {
@@ -203,7 +204,7 @@
                                         endDate = orderedCancellations[iCanx + 1].from.AddDays(-1);
                                     }
 
-                                    cancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation
+                                    cancellations.Add(new iVectorOne.Models.Cancellation
                                     {
                                         Amount = 100 * cancellation.amount.ToSafeDecimal() / amount,
                                         StartDate = cancellation.from,

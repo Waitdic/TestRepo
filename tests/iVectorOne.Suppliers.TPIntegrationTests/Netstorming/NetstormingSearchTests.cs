@@ -2,16 +2,16 @@
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
-    using Suppliers.Netstorming;
     using Helpers;
-    using Intuitive.Helpers.Serialization;
     using Intuitive.Helpers.Net;
-    using Moq;
+    using Intuitive.Helpers.Serialization;
+    using iVector.Search.Property;
     using iVectorOne.Lookups;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Tests.Netstorming;
-    using iVectorOne.Models;
-    using iVector.Search.Property;
+    using Moq;
+    using Suppliers.Netstorming;
 
     public class NetstormingSearchTests : ThirdPartyPropertySearchBaseTest
     {

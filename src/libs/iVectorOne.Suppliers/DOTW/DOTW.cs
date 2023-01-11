@@ -18,6 +18,7 @@
     using iVectorOne.Models;
     using System.Threading.Tasks;
     using System.Linq;
+    using iVectorOne.Models.Property;
 
     public class DOTW : IThirdParty, ISingleSource
     {

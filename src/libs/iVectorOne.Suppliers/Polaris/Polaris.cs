@@ -18,6 +18,7 @@
     using iVectorOne.Suppliers.Polaris.Models;
     using System.Text;
     using Newtonsoft.Json;
+    using iVectorOne.Models.Property;
 
     public class Polaris : IThirdParty, ISingleSource
     {
@@ -435,6 +436,7 @@
         #endregion
 
         #region "Other Funcitons"
+
         public ThirdPartyBookingSearchResults BookingSearch(BookingSearchDetails bookingSearchDetails)
         {
             return new();

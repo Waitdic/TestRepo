@@ -17,7 +17,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
 
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource

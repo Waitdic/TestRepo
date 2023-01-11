@@ -617,6 +617,19 @@
           "Version": "v3",
           "ExcludeNRF": "false"
         }
+       },
+       {
+        "Supplier": "PremierInn",
+        "Configurations": {
+          "User": "testdiversitytravel",
+          "Password": "qtweqwrqwasd",
+          "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",
+          "UseGZip": "true",
+          "AllowCancellations": "true",
+          "HotelBatchLimit": "10",
+          "LanguageCode": "GB",
+          "AllowOnRequest": "false"
+        }
        }
     ]
   }

@@ -18,6 +18,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using static iVectorOne.Suppliers.AceRooms.Models.AceroomsAvailabilityRequest;
+    using iVectorOne.Models.Property;
 
     public class AceroomsSearch : IThirdPartySearch, ISingleSource
     {

@@ -14,8 +14,9 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.GoGlobal.Models;
-    using Cancellation = iVectorOne.Models.Property.Booking.Cancellation;
+    using Cancellation = iVectorOne.Models.Cancellation;
     using Newtonsoft.Json;
+    using iVectorOne.Models.Property;
 
     public partial class GoGlobalSearch : IThirdPartySearch, ISingleSource
     {

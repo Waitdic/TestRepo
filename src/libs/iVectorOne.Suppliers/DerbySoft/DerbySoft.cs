@@ -16,6 +16,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class DerbySoft : IThirdParty, IMultiSource
     {

@@ -1,0 +1,54 @@
+﻿URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:red="http://www.redskyit.com" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><red:ProcessMessage><red:XMLIn><![CDATA[<Login UserName="testdiversitytravel" Password="qtweqwrqwasd"></Login><Parameters MessageType="AvailabilityRequest"><HotelCode>102245</HotelCode><StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange><Rooms NumberofRooms="1"><RoomDetails Number="1" Adults="1" Children="0" Cots="No" Disabled="No" Double="Yes"></RoomDetails></Rooms></Parameters>]]></red:XMLIn></red:ProcessMessage></soapenv:Body></soapenv:Envelope>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:red="http://www.redskyit.com" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><red:ProcessMessage><red:XMLIn><![CDATA[<Login UserName="testdiversitytravel" Password="qtweqwrqwasd"></Login><Parameters MessageType="AvailabilityRequest"><HotelCode>102245</HotelCode><StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange><Rooms NumberofRooms="1"><RoomDetails Number="2" Adults="2" Children="0" Cots="No" Disabled="No" Double="Yes"></RoomDetails></Rooms></Parameters>]]></red:XMLIn></red:ProcessMessage></soapenv:Body></soapenv:Envelope>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:red="http://www.redskyit.com" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><red:ProcessMessage><red:XMLIn><![CDATA[<Login UserName="testdiversitytravel" Password="qtweqwrqwasd"></Login><Parameters MessageType="AvailabilityRequest"><HotelCode>102245</HotelCode><StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange><Rooms NumberofRooms="1"><RoomDetails Number="2" Adults="1" Children="1" Cots="No" Disabled="No" Double="No"></RoomDetails></Rooms></Parameters>]]></red:XMLIn></red:ProcessMessage></soapenv:Body></soapenv:Envelope>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:red="http://www.redskyit.com" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><red:ProcessMessage><red:XMLIn><![CDATA[<Login UserName="testdiversitytravel" Password="qtweqwrqwasd"></Login><Parameters MessageType="AvailabilityRequest"><HotelCode>102245</HotelCode><StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange><Rooms NumberofRooms="1"><RoomDetails Number="2" Adults="1" Children="1" Cots="Yes" Disabled="No" Double="Yes"></RoomDetails></Rooms></Parameters>]]></red:XMLIn></red:ProcessMessage></soapenv:Body></soapenv:Envelope>
+
+URL: https://xml.alturaspain.com/xml/xml-interface.php
+
+**HEADERS**
+
+Timeout: 100
+
+
+**REQUEST**
+
+<soapenv:Envelope  xmlns:red="http://www.redskyit.com" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header /><soapenv:Body><red:ProcessMessage><red:XMLIn><![CDATA[<Login UserName="testdiversitytravel" Password="qtweqwrqwasd"></Login><Parameters MessageType="AvailabilityRequest"><HotelCode>102245</HotelCode><StayDateRange Start="2021-09-01" End="2021-09-06"></StayDateRange><Rooms NumberofRooms="1"><RoomDetails Number="3" Adults="1" Children="2" Cots="Yes" Disabled="No" Double="No"></RoomDetails></Rooms></Parameters>]]></red:XMLIn></red:ProcessMessage></soapenv:Body></soapenv:Envelope>

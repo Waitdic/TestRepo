@@ -21,6 +21,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
 
     public class ExpediaRapidSearch : IThirdPartySearch, ISingleSource
     {

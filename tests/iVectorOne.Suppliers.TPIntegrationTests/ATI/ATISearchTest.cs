@@ -1,18 +1,18 @@
 ﻿namespace iVectorOne.Suppliers.TPIntegrationTests.ATI
 {
     using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.Suppliers.ATI;
+    using iVector.Search.Property;
     using iVectorOne.Search.Models;
+    using iVectorOne.Suppliers.ATI;
     using iVectorOne.Suppliers.TPIntegrationTests.Helpers;
-    using Xunit;
+    using iVectorOne.Tests.ATI;
+    using iVectorOne.Models.Property;
     using Microsoft.Extensions.Caching.Memory;
     using Moq;
-    using iVectorOne.Tests.ATI;
-    using Intuitive.Helpers.Net;
-    using iVector.Search.Property;
-    using iVectorOne.Models;
-    using System.Text.RegularExpressions;
+    using Xunit;
 
     public class ATISearchTest : ThirdPartyPropertySearchBaseTest
     {

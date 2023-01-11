@@ -7,7 +7,6 @@
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
-    using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.Italcamel.Models.Common;
@@ -15,6 +14,7 @@
     using iVectorOne.Interfaces;
     using System.Linq;
     using iVectorOne.Suppliers.Italcamel.Models.Search;
+    using iVectorOne.Models.Property;
 
     public class ItalcamelSearch : IThirdPartySearch, ISingleSource
     {

@@ -16,6 +16,7 @@
     using iVectorOne.Lookups;
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
 
     public class WelcomeBeds : IThirdParty, ISingleSource
     {

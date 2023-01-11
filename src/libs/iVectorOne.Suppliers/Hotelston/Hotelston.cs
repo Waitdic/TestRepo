@@ -18,6 +18,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using RoomDetails = iVectorOne.Models.Property.Booking.RoomDetails;
+    using iVectorOne.Models.Property;
 
     public class Hotelston : IThirdParty, ISingleSource
     {

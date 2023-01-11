@@ -14,6 +14,7 @@
     using iVectorOne.Suppliers.Models.W2M;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
+    using iVectorOne.Models.Property;
 
     internal class SearchRequestBuilder
     {

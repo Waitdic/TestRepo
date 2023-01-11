@@ -15,8 +15,9 @@
     using iVectorOne.Suppliers.AceRooms.Models;
     using iVectorOne.Interfaces;
     using iVectorOne.Lookups;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
 
     public class Acerooms : IThirdParty, ISingleSource
     {

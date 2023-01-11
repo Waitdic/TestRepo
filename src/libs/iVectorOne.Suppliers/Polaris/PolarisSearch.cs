@@ -1,5 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.Polaris
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
@@ -7,15 +11,11 @@
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.Polaris.Models;
     using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class PolarisSearch : IThirdPartySearch, ISingleSource
     {
