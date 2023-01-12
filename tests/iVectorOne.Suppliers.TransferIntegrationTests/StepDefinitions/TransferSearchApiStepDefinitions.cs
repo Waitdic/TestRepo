@@ -310,12 +310,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.NotEqual(string.Empty, GetValue("SupplierCancellationReference"));
         }
 
-        //[Given(@"Create request object")]
-        //public async Task GivenCreateRequestObject()
-        //{
-        //    await GivenCreateRequestObjectForCancelFor();
-        //}
-
         [When(@"make a post request to each endpoint")]
         public async Task WhenMakeAPostRequestToEachEndpoint()
         {
