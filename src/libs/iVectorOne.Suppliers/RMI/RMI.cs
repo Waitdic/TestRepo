@@ -423,7 +423,7 @@
                 AuthenticationMode = AuthenticationMode.Basic,
                 UserName = _settings.Login(propertyDetails),
                 Password = _settings.Password(propertyDetails),
-                UseGZip = true,
+                UseGZip = _settings.UseGZip(propertyDetails),
                 CreateLog = true,
                 LogFileName = logFilename
             };
