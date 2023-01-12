@@ -644,6 +644,7 @@
                 return $"Exact drop off point to be determined";
             }
         }
+
         private bool getFreesaleOnRequestStatus(string availability)
         {
             return (availability.ToUpper() == Constant.FreesaleCode || availability.ToUpper() == Constant.OnRequestCode);
