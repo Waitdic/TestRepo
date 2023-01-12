@@ -12,7 +12,7 @@
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.RMI.Models;
     using iVectorOne.Interfaces;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
 
