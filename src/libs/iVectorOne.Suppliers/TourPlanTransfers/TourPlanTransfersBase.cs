@@ -155,7 +155,7 @@
                 {
                     var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML, _serializer);
 
-                    if (deserializedResponse != null && getFreesaleOnRequestStatus(deserializedResponse.Status))
+                    if (deserializedResponse != null && CheckFreesaleOnRequestStatus(deserializedResponse.Status))
                     {
                         transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
                         transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice.DivideBy100M();
@@ -177,7 +177,7 @@
                             {
                                 var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML, _serializer);
 
-                                if (deserializedReturnResponse != null && getFreesaleOnRequestStatus(deserializedResponse.Status))
+                                if (deserializedReturnResponse != null && CheckFreesaleOnRequestStatus(deserializedResponse.Status))
                                 {
                                     transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
                                     transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice.DivideBy100M();
@@ -645,7 +645,7 @@
             }
         }
 
-        private bool getFreesaleOnRequestStatus(string availability)
+        private bool CheckFreesaleOnRequestStatus(string availability)
         {
             return (availability.ToUpper() == Constant.FreesaleCode || availability.ToUpper() == Constant.OnRequestCode);
         }
