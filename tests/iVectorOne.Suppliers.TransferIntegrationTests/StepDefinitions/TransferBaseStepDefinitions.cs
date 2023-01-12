@@ -1,20 +1,30 @@
 ﻿
 namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 {
+    using iVectorOne.Constants;
     using iVectorOne.SDK.V2;
+    using iVectorOne.Suppliers.TransferIntegrationTests.Models;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Newtonsoft.Json;
     using System.Net.Http.Headers;
     using System.Text;
+    using TechTalk.SpecFlow;
 
     public class TransferBaseStepDefinitions
     {
         protected HttpClient _httpClient;
         protected ScenarioContext _scenarioContext;
 
-        protected const string AgentID = "GOWAUD";
-        protected const string Password = "koala12";
-        protected const string URL = "https://pa-gowsyd.nx.tourplan.net/iCom_Test/servlet/conn";
+        protected const string GoWayAgentID = "GOWAUD";
+        protected const string GoWayPassword = "koala12";
+        protected const string GoWayURL = "https://pa-gowsyd.nx.tourplan.net/iCom_Test/servlet/conn";
+        protected const string ExoToursAgentID = "goway_test";
+        protected const string ExoToursPassword = "fV5bR9uA";
+        protected const string ExoToursURL = "https://stage-xml.exotravel.com/Thailand/servlet/conn";
+        protected const string PacificAgentID = "GOWNZD";
+        protected const string PacificPassword = "kiwi12";
+        protected const string PacificURL = "https://pa-pacakl.nx.tourplan.net/iCom_Test/servlet/conn";
+
         protected const string SearchApi = @"v2/transfers/search";
         protected const string BookApi = @"v2/transfers/book";
         protected const string PrebookApi = @"v2/transfers/prebook";
@@ -22,7 +32,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
         private const string ReqUsername = "GoWayTest";
         private const string ReqPassword = "GoWayTest";
-        
+
         public static Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
 
         public TransferBaseStepDefinitions(ScenarioContext scenarioContext)
@@ -56,11 +66,12 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (requestObj != null)
             {
+                var thirdPartySettings = GetThirdPartySettings();
                 requestObj.ThirdPartySettings = new Dictionary<string, string>
                 {
-                    { "URL", URL },
-                    { "AgentID", AgentID},
-                    { "Password", Password }
+                    { "URL", thirdPartySettings.URL },
+                    { "AgentID", thirdPartySettings.AgentID},
+                    { "Password", thirdPartySettings.Password }
                 };
                 var request = JsonConvert.SerializeObject(requestObj);
 
@@ -89,8 +100,48 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         public object GetValueFromScenarioConext(string key)
         {
             _scenarioContext.TryGetValue(key, out var value);
-            
+
             return value;
+        }
+
+        public ThirdPartySettings GetThirdPartySettings()
+        {
+            string source = (string)GetValueFromScenarioConext("Source");
+            var thirdPartySettings = new ThirdPartySettings();
+            if (!string.IsNullOrEmpty(source))
+            {
+                switch (source)
+                {
+                    case ThirdParties.GOWAYSYDNEYTRANSFERS:
+                        thirdPartySettings.AgentID = GoWayAgentID;
+                        thirdPartySettings.Password = GoWayPassword;
+                        thirdPartySettings.URL = GoWayURL;
+                        break;
+                    case ThirdParties.EXOTOURSTRANSFERS:
+                        thirdPartySettings.AgentID = ExoToursAgentID;
+                        thirdPartySettings.Password = ExoToursPassword;
+                        thirdPartySettings.URL = ExoToursURL;
+                        break;
+                    case ThirdParties.PACIFICDESTINATIONSTRANSFER:
+                        thirdPartySettings.AgentID = PacificAgentID;
+                        thirdPartySettings.Password = PacificPassword;
+                        thirdPartySettings.URL = PacificURL;
+                        break;
+                    default:
+                        thirdPartySettings.AgentID = GoWayAgentID;
+                        thirdPartySettings.Password = GoWayPassword;
+                        thirdPartySettings.URL = GoWayURL;
+                        break;
+                }
+            }
+            return thirdPartySettings;
+        }
+
+        public void SetSourceAndLocationIds(string source, Table table)
+        {
+            _scenarioContext["DepartureID"] = table.Rows[0]["DepartureID"];
+            _scenarioContext["ArrivalID"] = table.Rows[0]["ArrivalID"];
+            _scenarioContext["Source"] = source;
         }
     }
 }

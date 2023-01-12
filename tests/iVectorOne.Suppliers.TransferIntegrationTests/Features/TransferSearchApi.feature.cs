@@ -110,16 +110,22 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
+                TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table1.AddRow(new string[] {
+                            "184",
+                            "187"});
 #line 7
- testRunner.Given("Create request object for search", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 8
-  testRunner.When("make a post request to \"v2/transfers/search\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 9
- testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Given("Create request object for search for \"GowaySydneyTransfers\"", ((string)(null)), table1, "Given ");
 #line hidden
 #line 10
+  testRunner.When("make a post request to \"v2/transfers/search\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 11
+ testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 12
  testRunner.And("transfer results should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -136,7 +142,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "TransferSearch"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Prebook record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 13
+#line 15
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -156,16 +162,22 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 14
- testRunner.Given("Create request object for prebook", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table2.AddRow(new string[] {
+                            "184",
+                            "187"});
+#line 16
+ testRunner.Given("Create request object for prebook for \"GowaySydneyTransfers\"", ((string)(null)), table2, "Given ");
 #line hidden
-#line 15
+#line 19
  testRunner.When("make a post request to prebook \"v2/transfers/prebook\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 16
+#line 20
  testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 17
+#line 21
  testRunner.And("booking token and supplier reference are not empty", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -182,7 +194,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "TransferSearch"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Book record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 20
+#line 24
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -202,16 +214,22 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 21
- testRunner.Given("Create request object for book", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table3.AddRow(new string[] {
+                            "184",
+                            "187"});
+#line 25
+ testRunner.Given("Create request object for book for \"GowaySydneyTransfers\"", ((string)(null)), table3, "Given ");
 #line hidden
-#line 22
+#line 28
  testRunner.When("make a post request to book \"v2/transfers/book\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 23
+#line 29
  testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 24
+#line 30
  testRunner.And("booking token and supplier reference are not empty", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -228,7 +246,7 @@ this.ScenarioInitialize(scenarioInfo);
                     "TransferSearch"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Cancel record", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 27
+#line 33
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -248,33 +266,39 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 28
- testRunner.Given("Create request object for cancel", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table4.AddRow(new string[] {
+                            "184",
+                            "187"});
+#line 34
+ testRunner.Given("Create request object for cancel for \"GowaySydneyTransfers\"", ((string)(null)), table4, "Given ");
 #line hidden
-#line 29
+#line 37
  testRunner.When("make a post request to cancel \"v2/transfers/cancel\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 30
+#line 38
  testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 31
+#line 39
  testRunner.And("Supplier Cancellation Reference should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Complete booking journey")]
+        [Xunit.SkippableFactAttribute(DisplayName="Goway Complete booking journey")]
         [Xunit.TraitAttribute("FeatureTitle", "TransferSearchApi")]
-        [Xunit.TraitAttribute("Description", "Complete booking journey")]
-        [Xunit.TraitAttribute("Category", "smoke")]
-        public virtual void CompleteBookingJourney()
+        [Xunit.TraitAttribute("Description", "Goway Complete booking journey")]
+        [Xunit.TraitAttribute("Category", "GowayCompleteBookingJourney")]
+        public virtual void GowayCompleteBookingJourney()
         {
             string[] tagsOfScenario = new string[] {
-                    "smoke"};
+                    "GowayCompleteBookingJourney"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Complete booking journey", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 34
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Goway Complete booking journey", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 42
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -294,22 +318,144 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 35
- testRunner.Given("Create request object", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+                TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table5.AddRow(new string[] {
+                            "184",
+                            "187"});
+#line 43
+ testRunner.Given("Create request object for \"GowaySydneyTransfers\"", ((string)(null)), table5, "Given ");
 #line hidden
-#line 36
+#line 46
  testRunner.When("make a post request to each endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 37
+#line 47
  testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 38
+#line 48
  testRunner.And("transfer results should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 39
+#line 49
  testRunner.And("booking token and supplier reference are not empty", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 40
+#line 50
+ testRunner.And("Supplier Cancellation Reference should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="ExoTours Complete booking journey")]
+        [Xunit.TraitAttribute("FeatureTitle", "TransferSearchApi")]
+        [Xunit.TraitAttribute("Description", "ExoTours Complete booking journey")]
+        [Xunit.TraitAttribute("Category", "ExoToursCompleteBookingJourney")]
+        public virtual void ExoToursCompleteBookingJourney()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "ExoToursCompleteBookingJourney"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("ExoTours Complete booking journey", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 54
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+                TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table6.AddRow(new string[] {
+                            "244",
+                            "257"});
+#line 55
+ testRunner.Given("Create request object for \"EXOToursTransfers\"", ((string)(null)), table6, "Given ");
+#line hidden
+#line 58
+ testRunner.When("make a post request to each endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 59
+ testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 60
+ testRunner.And("transfer results should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 61
+ testRunner.And("booking token and supplier reference are not empty", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 62
+ testRunner.And("Supplier Cancellation Reference should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Xunit.SkippableFactAttribute(DisplayName="PacificDestination Complete booking journey")]
+        [Xunit.TraitAttribute("FeatureTitle", "TransferSearchApi")]
+        [Xunit.TraitAttribute("Description", "PacificDestination Complete booking journey")]
+        [Xunit.TraitAttribute("Category", "PacificDestinationCompleteBookingJourney")]
+        public virtual void PacificDestinationCompleteBookingJourney()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "PacificDestinationCompleteBookingJourney"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("PacificDestination Complete booking journey", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 65
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+                TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                            "DepartureID",
+                            "ArrivalID"});
+                table7.AddRow(new string[] {
+                            "741",
+                            "737"});
+#line 66
+ testRunner.Given("Create request object for \"PacificDestinationsTransfers\"", ((string)(null)), table7, "Given ");
+#line hidden
+#line 69
+ testRunner.When("make a post request to each endpoint", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 70
+ testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 71
+ testRunner.And("transfer results should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 72
+ testRunner.And("booking token and supplier reference are not empty", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 73
  testRunner.And("Supplier Cancellation Reference should have data", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }

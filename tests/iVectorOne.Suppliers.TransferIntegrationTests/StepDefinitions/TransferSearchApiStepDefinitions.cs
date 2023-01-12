@@ -11,26 +11,34 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
     {
         private const int arrivalID = 187;
         private const int departureID = 184;
-        private const string supplier = "gowaysydneytransfers";
 
         public TransferSearchApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
         {
         }
 
 
-        [Given(@"Create request object for search")]
-        public void GivenCreateRequestObjectForSearch()
+        [Given(@"Create request object for search for ""([^""]*)""")]
+        public void GivenCreateRequestObjectForSearchFor(string src = "", Table table = null)
         {
+            if (!string.IsNullOrEmpty(src) && table != null)
+            {
+                SetSourceAndLocationIds(src, table);
+            }
+            string source = (string)GetValueFromScenarioConext("Source");
+            int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int dID);
+            int.TryParse((string)GetValueFromScenarioConext("ArrivalID"), out int aID);
+
             CreateClient("search");
             var requestObj = new Request
             {
-                DepartureLocationID = departureID,
-                ArrivalLocationID = arrivalID,
+                DepartureLocationID = dID == 0 ? departureID : dID,
+                ArrivalLocationID = aID == 0 ? arrivalID : aID,
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
-                Supplier = supplier,
-                DepartureTime = "10:00"
+                Supplier = source,
+                DepartureTime = "10:00",
+                IncludeOnRequest = true,
             };
 
             _scenarioContext["RequestObj"] = requestObj;
@@ -84,10 +92,14 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.NotEmpty((IList<TransferResult>)GetValueFromScenarioConext("SearchResult"));
         }
 
-        [Given(@"Create request object for prebook")]
-        public async Task GivenCreateRequestObjectForPrebook()
+        [Given(@"Create request object for prebook for ""([^""]*)""")]
+        public async Task GivenCreateRequestObjectForPrebookFor(string src = "", Table table = null)
         {
-            GivenCreateRequestObjectForSearch();
+            if (!string.IsNullOrEmpty(src) && table != null)
+            {
+                SetSourceAndLocationIds(src, table);
+            }
+            GivenCreateRequestObjectForSearchFor();
             await WhenMakeAPostRequestTo(SearchApi);
             CreateClient();
             string supplierReference = GetValue("SupplierReference");
@@ -141,10 +153,15 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.NotEqual(string.Empty, GetValue("SupplierReference"));
         }
 
-        [Given(@"Create request object for book")]
-        public async Task GivenCreateRequestObjectForBook()
+        [Given(@"Create request object for book for ""([^""]*)""")]
+        public async Task GivenCreateRequestObjectForBookFor(string src = "", Table table = null)
         {
-            await GivenCreateRequestObjectForPrebook();
+            if (!string.IsNullOrEmpty(src) && table != null)
+            {
+                SetSourceAndLocationIds(src, table);
+            }
+
+            await GivenCreateRequestObjectForPrebookFor();
             await WhenMakeAPostRequestToPrebook(PrebookApi);
             string supplierReference = GetValue("SupplierReference");
             string bookingToken = GetValue("BookingToken");
@@ -229,10 +246,16 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
 
-        [Given(@"Create request object for cancel")]
-        public async Task GivenCreateRequestObjectForCancel()
+
+        [Given(@"Create request object for cancel for ""([^""]*)""")]
+        public async Task GivenCreateRequestObjectForCancelFor(string src = "", Table table = null)
         {
-            await GivenCreateRequestObjectForBook();
+            if (!string.IsNullOrEmpty(src) && table != null)
+            {
+                SetSourceAndLocationIds(src, table);
+            }
+
+            await GivenCreateRequestObjectForBookFor();
             await WhenMakeAPostRequestToBook(BookApi);
 
             string supplierReference = GetValue("SupplierReference");
@@ -245,7 +268,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 {
                     SupplierReference = supplierReference,
                     SupplierBookingReference = supBookingRef
-                    
+
                 };
 
                 _scenarioContext["CancelObj"] = requestObj;
@@ -288,16 +311,24 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.NotEqual(string.Empty, GetValue("SupplierCancellationReference"));
         }
 
-        [Given(@"Create request object")]
-        public async Task GivenCreateRequestObject()
-        {
-            await GivenCreateRequestObjectForCancel();
-        }
+        //[Given(@"Create request object")]
+        //public async Task GivenCreateRequestObject()
+        //{
+        //    await GivenCreateRequestObjectForCancelFor();
+        //}
 
         [When(@"make a post request to each endpoint")]
         public async Task WhenMakeAPostRequestToEachEndpoint()
         {
             await WhenMakeAPostRequestToCancel(CancelApi);
         }
+
+        [Given(@"Create request object for ""([^""]*)""")]
+        public async Task GivenCreateRequestObjectFor(string source, Table table)
+        {
+            SetSourceAndLocationIds(source, table);
+            await GivenCreateRequestObjectForCancelFor();
+        }
+
     }
 }
