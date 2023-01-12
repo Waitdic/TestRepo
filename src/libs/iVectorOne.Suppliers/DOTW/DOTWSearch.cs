@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.DOTW
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -17,6 +18,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Models.Property;
+
 
     public class DOTWSearch : IThirdPartySearch, ISingleSource
     {
@@ -291,6 +293,59 @@
                                         && !string.IsNullOrEmpty(rateBasis.TotalMinSelling.Total) ?
                                         rateBasis.TotalMinSelling.Total.ToSafeDecimal() : rateBasis.Total.TotalCost.ToSafeDecimal();
 
+                                var cancellationDeadline = DateTimeExtensions.EmptyDate;
+                                if (!string.IsNullOrEmpty(rateBasis.Cancellation) &&
+                                    rateBasis.Cancellation.StartsWith("Cancellation Deadline: "))
+                                {
+                                    cancellationDeadline = rateBasis.Cancellation[23..]
+                                        .Replace(" hrs", "")
+                                        .ToSafeDate()
+                                        .Date;
+                                }
+
+                                var cancellations = new Cancellations();
+                                var nrf = false;
+                                if (rateBasis.CancellationRules.Rule.Any())
+                                {
+                                    var rules = rateBasis.CancellationRules.Rule;
+                                    foreach (var policy in rules)
+                                    {
+                                        var cancelRestricted = policy.CancelRestricted;
+                                        var startDate = !string.IsNullOrEmpty(policy.FromDate)
+                                            ? policy.FromDate.ToSafeDate()
+                                            : policy.NoShowPolicy
+                                                ? searchDetails.ArrivalDate
+                                                : searchDetails.BookingDate.Date;
+
+                                        var endDate = !string.IsNullOrEmpty(policy.ToDate)
+                                            ? policy.ToDate.ToSafeDate()
+                                            : cancellationDeadline != DateTimeExtensions.EmptyDate
+                                                ? cancellationDeadline
+                                                : GetEndDate(rules, policy, startDate);
+
+                                        var formatted = policy.Charge.Formatted;
+                                        var charge = !string.IsNullOrEmpty(formatted)
+                                            ? formatted.ToSafeMoney()
+                                            : cancelRestricted 
+                                                ? amount.ToSafeMoney()
+                                                : 0;
+
+                                        if (cancellations.Any(x => x.Amount == charge))
+                                        {
+                                            cancellations.First(x => x.Amount == charge).EndDate = endDate;
+                                        }
+                                        else
+                                        {
+                                            cancellations.AddNew(
+                                                startDate,
+                                                endDate,
+                                                charge);
+
+                                            if(cancelRestricted) break;
+                                        }
+                                    }
+                                }
+
                                 var transformedResult = new TransformedResult()
                                 {
                                     MasterID = hotel.HotelID.ToSafeInt(),
@@ -302,7 +357,9 @@
                                     MealBasisCode = rateBasis.ID,
                                     Amount = amount,
                                     DynamicProperty = rateBasis.WithinCancellationDeadline == "yes",
-                                    TPReference = roomtype.Code + "|" + rateBasis.ID
+                                    TPReference = roomtype.Code + "|" + rateBasis.ID,
+                                    Cancellations = cancellations,
+                                    NonRefundableRates = nrf,
                                 };
 
                                 transformedResults.Add(transformedResult);
@@ -313,6 +370,22 @@
             }
 
             return transformedResults;
+        }
+
+        private static DateTime GetEndDate(
+            List<DOTWSearchResponse.Rule> rules,
+            DOTWSearchResponse.Rule policy,
+            DateTime startDate)
+        {
+            var endDate = policy.CancelRestricted 
+                ? new DateTime(2099, 12, 31) 
+                : rules.Any(x => x.FromDate.ToSafeDate() > startDate) 
+                    ? rules.Where(x => x.FromDate.ToSafeDate() > startDate)
+                        .Select(x => x.FromDate.ToSafeDate())
+                        .OrderBy(x => x.Date).First().AddSeconds(-1)
+                    : new DateTime(2099, 12, 31);
+
+            return endDate;
         }
 
         #endregion
