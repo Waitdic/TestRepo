@@ -155,8 +155,7 @@
                 {
                     var deserializedResponse = Helpers.DeSerialize<AddServiceReply>(request.ResponseXML, _serializer);
 
-                    if (deserializedResponse != null &&
-                        string.Equals(deserializedResponse.Status.ToUpper(), "OK"))
+                    if (deserializedResponse != null && getFreesaleOnRequestStatus(deserializedResponse.Status))
                     {
                         transferDetails.ConfirmationReference = deserializedResponse.BookingId.ToSafeString();
                         transferDetails.LocalCost = deserializedResponse.Services.Service.LinePrice.DivideBy100M();
@@ -178,8 +177,7 @@
                             {
                                 var deserializedReturnResponse = Helpers.DeSerialize<AddServiceReply>(returnRequest.ResponseXML, _serializer);
 
-                                if (deserializedReturnResponse != null &&
-                                    string.Equals(deserializedReturnResponse.Status.ToUpper(), "OK"))
+                                if (deserializedReturnResponse != null && getFreesaleOnRequestStatus(deserializedResponse.Status))
                                 {
                                     transferDetails.ConfirmationReference += $"|{deserializedReturnResponse.BookingId.ToSafeString()}";
                                     transferDetails.LocalCost += deserializedReturnResponse.Services.Service.LinePrice.DivideBy100M();
@@ -645,6 +643,10 @@
             {
                 return $"Exact drop off point to be determined";
             }
+        }
+        private bool getFreesaleOnRequestStatus(string availability)
+        {
+            return (availability.ToUpper() == Constant.FreesaleCode || availability.ToUpper() == Constant.OnRequestCode);
         }
 
     }
