@@ -167,6 +167,7 @@
                 EndPoint = _settings.URL(searchDetails),
                 Method = RequestMethod.POST,
                 AuthenticationMode = AuthenticationMode.Basic,
+                UseGZip = _settings.UseGZip(searchDetails)
             };
 
             webRequest.SetRequest(request);
