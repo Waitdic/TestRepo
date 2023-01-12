@@ -4,7 +4,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive;
     using iVectorOne.Suppliers.DerbySoft.Models;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Search.Models;
 

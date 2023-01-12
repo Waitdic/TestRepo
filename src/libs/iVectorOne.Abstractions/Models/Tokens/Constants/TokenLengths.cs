@@ -20,5 +20,8 @@
 
         /// <summary>Local cost tokens are 8 characters (supports local costs up to 14 digits with 2 decimal places)</summary>
         public const int LocalCost = 8;
+
+        /// <summary>Transfer tokens are 8 characters</summary>
+        public const int Transfer = 8;
     }
 }

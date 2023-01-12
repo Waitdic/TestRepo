@@ -1,19 +1,19 @@
 ﻿namespace iVectorOne.Suppliers.HBSi
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Serialization;
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Suppliers.HBSi.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class HBSiSearch : IThirdPartySearch, IMultiSource
     {

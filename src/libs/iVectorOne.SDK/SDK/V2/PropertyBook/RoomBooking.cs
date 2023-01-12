@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
+    using iVectorOne.SDK.V2.Book;
     using System.Collections.Generic;
 
     /// <summary>

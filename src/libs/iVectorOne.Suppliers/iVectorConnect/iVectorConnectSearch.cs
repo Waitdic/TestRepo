@@ -14,6 +14,7 @@
     using booking = iVectorOne.Models.Property.Booking;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class iVectorConnectSearch : IThirdPartySearch, IMultiSource
     {
@@ -136,7 +137,7 @@
                         NonRefundableRates = roomType.NonRefundable,
                         Discount = roomType.Adjustments.Where(a => a.AdjustmentType == "Offer").Sum(a => -a.Total),
                         Cancellations = roomType.SupplierCancellations
-                            .Select(c => new booking.Cancellation(c.StartDate, c.EndDate, c.Amount))
+                            .Select(c => new iVectorOne.Models.Cancellation(c.StartDate, c.EndDate, c.Amount))
                             .ToList(),
                     });
                 }

@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Suppliers.RMI
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -14,7 +15,6 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using System;
 
     public class RMISearch : IThirdPartySearch, ISingleSource
     {

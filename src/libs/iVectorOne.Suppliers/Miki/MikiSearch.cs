@@ -20,6 +20,7 @@
     using iVectorOne.Search.Results.Models;
     using Result = Models.Common.Result;
     using RoomDetail = iVector.Search.Property.RoomDetail;
+    using iVectorOne.Models.Property;
 
     public class MikiSearch : IThirdPartySearch, ISingleSource
     {

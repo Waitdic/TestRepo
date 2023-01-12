@@ -17,6 +17,7 @@
     using iVectorOne.Suppliers.JonView.Models;
     using iVectorOne.Suppliers.JonView.Models.Prebook;
     using Intuitive.Helpers.Serialization;
+    using iVectorOne.Models.Property;
 
     public class JonView : IThirdParty, ISingleSource
     {

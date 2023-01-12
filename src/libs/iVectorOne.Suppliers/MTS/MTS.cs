@@ -21,6 +21,7 @@
     using iVectorOne.Suppliers.MTS.Models.Prebook;
     using iVectorOne.Suppliers.MTS.Models.Book;
     using iVectorOne.Suppliers.MTS.Models.Cancel;
+    using iVectorOne.Models.Property;
 
     public partial class MTS : IThirdParty, ISingleSource
     {

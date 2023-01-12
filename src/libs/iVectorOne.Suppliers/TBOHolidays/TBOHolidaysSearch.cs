@@ -4,20 +4,20 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Intuitive;
+    using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
+    using iVectorOne.Constants;
+    using iVectorOne.Interfaces;
+    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
+    using iVectorOne.SDK.V2.PropertySearch;
+    using iVectorOne.Search.Models;
+    using iVectorOne.Search.Results.Models;
     using Lookups;
     using Models;
     using Models.Common;
     using Models.Search;
-    using iVectorOne.Constants;
-    using iVectorOne.Interfaces;
-    using iVectorOne.Models;
-    using iVectorOne.Search.Models;
-    using iVectorOne.Search.Results.Models;
-    using iVectorOne.SDK.V2.PropertySearch;
     using Newtonsoft.Json;
-    using iVectorOne.Models.Property.Booking;
-    using Intuitive.Helpers.Extensions;
 
     public class TBOHolidaysSearch : IThirdPartySearch, ISingleSource
     {

@@ -16,6 +16,7 @@
     using iVectorOne.Models.Property.Booking;
     using System;
     using System.Text.RegularExpressions;
+    using iVectorOne.Models.Property;
 
     public class JonViewSearch : IThirdPartySearch, ISingleSource
     {

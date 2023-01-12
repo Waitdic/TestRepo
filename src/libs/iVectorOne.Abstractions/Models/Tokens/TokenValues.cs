@@ -105,6 +105,14 @@
                 case TokenValueType.Day:
                     bits = TokenValueBits.DayBits;
                     break;
+                case TokenValueType.Hour1:
+                case TokenValueType.Hour2:
+                    bits = TokenValueBits.HourBits;
+                    break;
+                case TokenValueType.Minute1:
+                case TokenValueType.Minute2:
+                    bits = TokenValueBits.MinuteBits;
+                    break;
                 case TokenValueType.Duration:
                     bits = TokenValueBits.DurationBits;
                     break;
@@ -133,6 +141,9 @@
                 case TokenValueType.MealBasisID:
                     bits = TokenValueBits.MealBasis;
                     break;
+                case TokenValueType.SupplierID:
+                    bits = TokenValueBits.SupplierBits;
+                    break;
                 case TokenValueType.ChildAge1:
                 case TokenValueType.ChildAge2:
                 case TokenValueType.ChildAge3:
@@ -142,6 +153,9 @@
                 case TokenValueType.ChildAge7:
                 case TokenValueType.ChildAge8:
                     bits = TokenValueBits.ChildAgeBits;
+                    break;
+                case TokenValueType.OneWay:
+                    bits = TokenValueBits.OneWayBits;
                     break;
                 default:
                     break;

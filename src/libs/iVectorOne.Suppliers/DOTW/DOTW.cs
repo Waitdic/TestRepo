@@ -17,6 +17,8 @@
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Models;
     using System.Threading.Tasks;
+    using System.Linq;
+    using iVectorOne.Models.Property;
 
     public class DOTW : IThirdParty, ISingleSource
     {
@@ -425,11 +427,11 @@
                     if (fromDateNode is not null)
                     {
                         // these always come back with the time as HH:mm:01 but the end dates come back as HH:mm:00, so I'm taking off a second
-                        startDate = fromDateNode.InnerText.ToSafeDate().AddSeconds(-1).Date;
+                        startDate = fromDateNode.InnerText.ToSafeDate();
                     }
                     else if (noShowPolicy)
                     {
-                        startDate = propertyDetails.ArrivalDate.Date;
+                        startDate = propertyDetails.ArrivalDate;
                     }
                     else
                     {
@@ -440,7 +442,7 @@
                     DateTime endDate;
                     if (toDateNode is not null)
                     {
-                        endDate = toDateNode.InnerText.ToSafeDate().Date.AddDays(-1); // take off a day so our date bands don't overlap
+                        endDate = toDateNode.InnerText.ToSafeDate(); // take off a day so our date bands don't overlap
                     }
                     else
                     {
@@ -459,18 +461,34 @@
                     }
 
                     // add the rule into the policy
-                    policies[loop].AddNew(startDate, endDate, amount);
-                }
+                    if (policies[loop].Any(x => x.Amount == amount))
+                    {
+                        policies[loop].First(x => x.Amount == amount).EndDate = endDate;
+                    }
+                    else
+                    {
+                        policies[loop].AddNew(startDate, endDate, amount);
+                    }
 
-                // call solidify on the policy
-                policies[loop].Solidify(SolidifyType.Sum, new DateTime(2099, 12, 31), roomDetails.LocalCost);
+                    if(nonRefundable) break;
+                }
 
                 // increment the loop counter 
                 loop += 1;
             }
 
             // merge the policies and return
-            return Cancellations.MergeMultipleCancellationPolicies(policies);
+            var finalCancellations =  Cancellations.MergeMultipleCancellationPolicies(policies);
+
+            for (var i = 0; i < finalCancellations.Count - 1; i++)
+            {
+                if ((finalCancellations[i + 1].StartDate - finalCancellations[i].EndDate).TotalHours == 24)
+                {
+                    finalCancellations[i].EndDate = finalCancellations[i + 1].StartDate.AddSeconds(-1);
+                }
+            }
+
+            return finalCancellations;
         }
 
         #endregion
