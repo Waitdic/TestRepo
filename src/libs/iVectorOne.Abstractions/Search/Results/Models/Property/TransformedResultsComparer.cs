@@ -20,7 +20,7 @@
         /// </returns>
         public bool Equals(TransformedResult x, TransformedResult y)
         {
-            return x.MasterID == y.MasterID && x.TPKey == y.TPKey && x.CurrencyCode == y.CurrencyCode && x.RoomTypeCode == y.RoomTypeCode && x.RoomType == y.RoomType && x.PropertyRoomBookingID == y.PropertyRoomBookingID && x.MealBasisCode == y.MealBasisCode;
+            return x.MasterID == y.MasterID && x.TPKey == y.TPKey && x.CurrencyCode == y.CurrencyCode && x.RoomTypeCode == y.RoomTypeCode && x.RoomType == y.RoomType && x.PropertyRoomBookingID == y.PropertyRoomBookingID && x.MealBasisCode == y.MealBasisCode && x.Amount == y.Amount;
         }
 
         /// <summary>
