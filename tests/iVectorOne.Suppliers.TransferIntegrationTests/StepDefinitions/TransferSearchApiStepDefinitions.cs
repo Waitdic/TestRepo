@@ -70,7 +70,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                         keyValuePairs["SupplierReference"] = transferResults[0].SupplierReference;
                     }
                 }
-
                 else
                 {
                     _scenarioContext["ErrorResponse"] = result;
