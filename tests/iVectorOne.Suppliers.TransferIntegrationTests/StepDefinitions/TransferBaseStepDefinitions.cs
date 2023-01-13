@@ -3,7 +3,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 {
     using iVectorOne.Constants;
     using iVectorOne.SDK.V2;
-    using iVectorOne.Suppliers.TransferIntegrationTests.Models;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Newtonsoft.Json;
     using System.Net.Http.Headers;
@@ -104,10 +103,10 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return value;
         }
 
-        public ThirdPartySettings GetThirdPartySettings()
+        public InjectedTourPlanTransfersSettings GetThirdPartySettings()
         {
             string source = (string)GetValueFromScenarioConext("Source");
-            var thirdPartySettings = new ThirdPartySettings();
+            var thirdPartySettings = new InjectedTourPlanTransfersSettings();
             if (!string.IsNullOrEmpty(source))
             {
                 switch (source)

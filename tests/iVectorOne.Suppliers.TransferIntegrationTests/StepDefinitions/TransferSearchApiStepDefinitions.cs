@@ -241,10 +241,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                     _scenarioContext["ErrorResponse"] = result;
                 }
             }
-
         }
-
-
 
         [Given(@"Create request object for cancel for ""([^""]*)""")]
         public async Task GivenCreateRequestObjectForCancelFor(string src = "", Table table = null)
