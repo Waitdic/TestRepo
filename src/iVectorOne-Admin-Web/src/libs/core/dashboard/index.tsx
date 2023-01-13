@@ -47,6 +47,18 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     name: 'Today',
     isActive: true,
   });
+  const [refreshTimer, setRefreshTimer] = useState<{
+    options: { id: number; name: string }[];
+    selected?: { id: number; name: string };
+  }>({
+    options: [
+      { id: 1, name: 'Manual' },
+      { id: 2, name: '5 min' },
+      { id: 3, name: '15 min' },
+      { id: 4, name: '30 min' },
+    ],
+    selected: { id: 1, name: 'Manual' },
+  });
 
   const activeTenant = useMemo(
     () => user?.tenants?.find((t) => t.isSelected),
@@ -124,6 +136,16 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     });
   }, []);
 
+  const handleChangeRefreshTimer = useCallback(
+    (id: number) => {
+      setRefreshTimer({
+        ...refreshTimer,
+        selected: refreshTimer.options.find((o) => o.id === Number(id)),
+      });
+    },
+    [refreshTimer]
+  );
+
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant) return;
     await getAccounts(
@@ -153,7 +175,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
     );
   }, [activeTenant]);
 
-  const fetchChartData = useCallback(async () => {
+  const fetchPageData = useCallback(async () => {
     if (!userKey || !accounts || !activeTenant) return;
 
     const selectedAccount = accounts.find((a) => a.isSelected);
@@ -200,7 +222,7 @@ const Dashboard: React.FC<Props> = ({ error }) => {
   }, [fetchAccounts]);
 
   useEffect(() => {
-    const timer = setTimeout(() => fetchChartData(), 500);
+    const timer = setTimeout(() => fetchPageData(), 500);
 
     return () => {
       setBookingsByHoursChartData(null);
@@ -209,7 +231,35 @@ const Dashboard: React.FC<Props> = ({ error }) => {
       setSupplierTableData(null);
       clearTimeout(timer);
     };
-  }, [fetchChartData]);
+  }, [fetchPageData]);
+
+  useEffect(() => {
+    if (!refreshTimer.selected?.id) return;
+
+    let interval = 0;
+    switch (refreshTimer.selected?.id) {
+      case 2:
+        interval = 5 * 60 * 1000;
+        break;
+      case 3:
+        interval = 15 * 60 * 1000;
+        break;
+      case 4:
+        interval = 30 * 60 * 1000;
+        break;
+      default:
+        break;
+    }
+    if (interval === 0) return;
+
+    const intervalId = setInterval(async () => {
+      await fetchPageData();
+    }, interval);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [refreshTimer?.selected]);
 
   return (
     <MainLayout>
@@ -239,8 +289,19 @@ const Dashboard: React.FC<Props> = ({ error }) => {
             )}
           </div>
           {summaryTableData && (
-            <div>
-              <Button text='Refresh' onClick={fetchChartData} />
+            <div className='flex items-end gap-4'>
+              <div className='flex-1'>
+                <Select
+                  id='refreshTimer'
+                  name='refreshTimer'
+                  options={refreshTimer.options}
+                  labelText='Auto Refresh'
+                  onUncontrolledChange={handleChangeRefreshTimer}
+                />
+              </div>
+              {refreshTimer.selected?.id === 1 && (
+                <Button text='Refresh Now' onClick={fetchPageData} />
+              )}
             </div>
           )}
         </div>

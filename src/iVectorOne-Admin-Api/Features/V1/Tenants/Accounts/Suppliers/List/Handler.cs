@@ -1,6 +1,8 @@
-﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.List
+﻿using iVectorOne_Admin_Api.Features.Shared;
+
+namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.List
 {
-    public class Handler : IRequestHandler<Request, Response>
+    public class Handler : IRequestHandler<Request, ResponseBase>
     {
         private readonly AdminContext _context;
         private readonly IMapper _mapper;
@@ -11,28 +13,28 @@
             _mapper = mapper;
         }
 
-        public Task<Response> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
         {
-            var response = new Response();
+            var response = new ResponseBase();
 
-            var account = _context.Accounts
+            var account = await _context.Accounts
                 .Where(x => x.TenantId == request.TenantId && x.AccountId == request.AccountId)
                 .Include(x => x.AccountSuppliers)
                 .ThenInclude(x => x.Supplier)
                 .AsNoTracking()
-                .FirstOrDefault();
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
             if (account == null)
             {
                 response.NotFound();
-                return Task.FromResult(response);
+                return response;
             }
 
             var suppliers = _mapper.Map<List<SupplierDto>>(account.AccountSuppliers);
 
-            response.Default(new AccountDto { AccountId = request.AccountId, AccountSuppliers = suppliers});
+            response.Ok(new ResponseModel { AccountId = request.AccountId, AccountSuppliers = suppliers});
 
-            return Task.FromResult(response);
+            return response;
         }
     }
 }

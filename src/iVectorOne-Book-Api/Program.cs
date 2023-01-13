@@ -30,6 +30,9 @@ try
     app.MapTransferEndpoints();
     app.MapExtraEndpoints();
 
+    // todo - integrate with health checks
+    _ = app.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
+
     app.BuildAndRun();
 }
 catch (Exception ex)

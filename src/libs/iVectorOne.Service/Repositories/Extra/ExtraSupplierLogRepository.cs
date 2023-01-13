@@ -5,6 +5,7 @@
     using Intuitive;
     using Intuitive.Data;
     using iVectorOne.Models.Extra;
+    using iVectorOne.Models.Logging;
     using Microsoft.Extensions.Logging;
 
     public class ExtraSupplierLogRepository : IExtraSupplierLogRepository

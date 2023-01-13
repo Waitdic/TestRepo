@@ -8,10 +8,6 @@
     /// <summary>A class that represents the transfer token, will be encrypted in responses/requests</summary>
     public class ExtraToken
     {
-        /// <summary>Gets or sets the source</summary>
-        [JsonPropertyName("S")]
-        public string Source { get; set; } = string.Empty;
-
         /// <summary>Gets or sets the departure date</summary>
         /// <value>The departure date.</value>
         [JsonProperty("DD")]

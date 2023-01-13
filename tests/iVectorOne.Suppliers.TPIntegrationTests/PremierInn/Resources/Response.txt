@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:s='http://www.w3.org/2001/XMLSchema'>
+  <SOAP-ENV:Body><ProcessMessageResponse xmlns="http://www.redskyit.com"><ProcessMessageResult>
+<Parameters MessageType="AvailabilityResponse">
+	<Session ID="cKBLo7jTO34h0SHm"/>
+	<HotelDetails HotelCode="ABEMAI">
+		<RatePlan RatePlanCode="RT001">
+			<StatusWarningFlags>
+				<Text>There is no lift at this hotel.</Text>
+				<Text>There is no air conditioning at this hotel.</Text>
+				<Text>All twin rooms at this hotel consist of a double bed and a single sofa bed.</Text>
+			</StatusWarningFlags>
+			<CancellationPolicy Category="0">
+				<Text>If you need to cancel or change your reservation, you can do so before 1:00 pm  on your arrival date. If you cancel after 1:00 pm  you will be charged for a night&#39;s accommodation for each room you have booked. Cancellation references should be kept as proof of cancellation.</Text>
+			</CancellationPolicy>
+			<Rooms NumberofRooms="1">
+				<RoomDetails Number="1" RoomType="DBS" Adults="1" Children="0" Cots="No" Smoking="No" Disabled="No" Double="Yes">
+					<Text>Double room, non-smoking</Text>
+					<Rate TotalCost="436.00" Currency="GBP" VATRate="20.00"/>
+					<DailyRates>
+						<DailyRate Date="2023-01-28" Rate="68.00"/>
+						<DailyRate Date="2023-01-29" Rate="59.00"/>
+						<DailyRate Date="2023-01-30" Rate="59.00"/>
+						<DailyRate Date="2023-01-31" Rate="66.00"/>
+						<DailyRate Date="2023-02-01" Rate="66.00"/>
+						<DailyRate Date="2023-02-02" Rate="59.00"/>
+						<DailyRate Date="2023-02-03" Rate="59.00"/>
+					</DailyRates>
+					<AvailabilityStatus Status="01">
+						<Text>Guaranteed Good Match</Text>
+					</AvailabilityStatus>
+				</RoomDetails>
+			</Rooms>
+		</RatePlan>
+		<BreakfastOptions>
+			<Breakfast Code="11" Type="Premier Inn Breakfast" UnitCost="9.50"/>
+			<Breakfast Code="12" Type="Continental Breakfast" UnitCost="7.50"/>
+			<Breakfast Code="17" Type="Meal Deal" UnitCost="23.99"/>
+		</BreakfastOptions>
+		<DinnerAvailable>Yes</DinnerAvailable>
+		<DinnerAvailableNonBA>Yes</DinnerAvailableNonBA>
+	</HotelDetails>
+</Parameters></ProcessMessageResult></ProcessMessageResponse></SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -18,14 +18,15 @@ Timeout: 1
     </timestamp>
   </header>
   <query type="availability" product="hotel">
-    <city code="MAD_12" />
+    <city code="MAD_12"></city>
+    <nationality>ES</nationality>
     <filters>
       <filter>AVAILONLY</filter>
     </filters>
-    <checkin date="2021-09-01" />
-    <checkout date="2021-09-06" />
+    <checkin date="2021-09-01"></checkin>
+    <checkout date="2021-09-06"></checkout>
     <details>
-      <room type="sgl" required="1" />
+      <room type="sgl" required="1"></room>
     </details>
   </query>
 </envelope>
@@ -50,14 +51,15 @@ Timeout: 1
     </timestamp>
   </header>
   <query type="availability" product="hotel">
-    <city code="MAD_12" />
+    <city code="MAD_12"></city>
+    <nationality>ES</nationality>
     <filters>
       <filter>AVAILONLY</filter>
     </filters>
-    <checkin date="2021-09-01" />
-    <checkout date="2021-09-06" />
+    <checkin date="2021-09-01"></checkin>
+    <checkout date="2021-09-06"></checkout>
     <details>
-      <room type="twn" required="1" />
+      <room type="twn" required="1"></room>
     </details>
   </query>
 </envelope>
@@ -82,14 +84,15 @@ Timeout: 1
     </timestamp>
   </header>
   <query type="availability" product="hotel">
-    <city code="MAD_12" />
+    <city code="MAD_12"></city>
+    <nationality>ES</nationality>
     <filters>
       <filter>AVAILONLY</filter>
     </filters>
-    <checkin date="2021-09-01" />
-    <checkout date="2021-09-06" />
+    <checkin date="2021-09-01"></checkin>
+    <checkout date="2021-09-06"></checkout>
     <details>
-      <room type="twn" required="1" />
+      <room type="twn" required="1"></room>
     </details>
   </query>
 </envelope>
@@ -114,14 +117,15 @@ Timeout: 1
     </timestamp>
   </header>
   <query type="availability" product="hotel">
-    <city code="MAD_12" />
+    <city code="MAD_12"></city>
+    <nationality>ES</nationality>
     <filters>
       <filter>AVAILONLY</filter>
     </filters>
-    <checkin date="2021-09-01" />
-    <checkout date="2021-09-06" />
+    <checkin date="2021-09-01"></checkin>
+    <checkout date="2021-09-06"></checkout>
     <details>
-      <room type="tsu" required="1" cot="true" />
+      <room type="tsu" required="1" cot="true"></room>
     </details>
   </query>
 </envelope>
@@ -146,14 +150,15 @@ Timeout: 1
     </timestamp>
   </header>
   <query type="availability" product="hotel">
-    <city code="MAD_12" />
+    <city code="MAD_12"></city>
+    <nationality>ES</nationality>
     <filters>
       <filter>AVAILONLY</filter>
     </filters>
-    <checkin date="2021-09-01" />
-    <checkout date="2021-09-06" />
+    <checkin date="2021-09-01"></checkin>
+    <checkout date="2021-09-06"></checkout>
     <details>
-      <room type="twn" required="1" cot="true" />
+      <room type="twn" required="1" cot="true"></room>
     </details>
   </query>
 </envelope>

@@ -1,7 +1,5 @@
 ﻿namespace iVectorOne.Services
 {
-    using System.Threading.Tasks;
-    using iVectorOne.Models;
     using iVectorOne.Models.Tokens;
     using Transfers = Models.Tokens.Transfer;
     using Extras = Models.Tokens.Extra;
@@ -11,16 +9,13 @@
     {
         /// <summary>Decodes the book token.</summary>
         /// <param name="tokenString">The token string.</param>
-        /// <param name="account">The account making the request</param>
-        /// <param name="supplierBookingReference">The supplier booking reference</param>
         /// <returns>a book Token object</returns>
-        Task<BookToken?> DecodeBookTokenAsync(string tokenString, Account account, string supplierBookingReference);
+        BookToken? DecodeBookToken(string tokenString);
 
         /// <summary>Decodes the property token.</summary>
         /// <param name="tokenString">The token string.</param>
-        /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
-        Task<PropertyToken?> DecodePropertyTokenAsync(string tokenString, Account account);
+        PropertyToken? DecodePropertyToken(string tokenString);
 
         /// <summary>Decodes the room token.</summary>
         /// <param name="tokenString">The token string.</param>
@@ -45,26 +40,18 @@
 
         /// <summary>Decodes the transfer token.</summary>
         /// <param name="tokenString">The token string.</param>
-        /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
-        Task<Transfers.TransferToken?> DecodeTransferTokenAsync(string tokenString, Account account);
+        Transfers.TransferToken? DecodeTransferToken(string tokenString);
 
         /// <summary>Encodes the transfer token.</summary>
         /// <param name="transferToken">The transfer token.</param>
         /// <returns>An encoded property token.</returns>
         string EncodeTransferToken(Transfers.TransferToken transferToken);
 
-        /// <summary>Decodes the property token.</summary>
-        /// <param name="supplierBookingReference">The supplier booking reference.</param>
-        /// <param name="account">The account making the request</param>
-        /// <returns>a Property Token object</returns>
-        Task<Transfers.TransferToken?> PopulateTransferTokenAsync(string supplierBookingReference);
-        
         /// <summary>Decodes the extra token.</summary>
         /// <param name="tokenString">The token string.</param>
-        /// <param name="account">The account making the request</param>
         /// <returns>a Property Token object</returns>
-        Task<Extras.ExtraToken?> DecodeExtraTokenAsync(string tokenString, Account account);
+        Extras.ExtraToken? DecodeExtraToken(string tokenString);
 
         /// <summary>Encodes the transfer token.</summary>
         /// <param name="transferToken">The transfer token.</param>

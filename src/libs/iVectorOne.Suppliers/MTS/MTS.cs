@@ -81,12 +81,6 @@
                         overrideCountriesList.Add(country);
                     }
                 }
-                else
-                {
-                    overrideCountriesList.Add("United Arab Emirates");
-                    overrideCountriesList.Add("Turkey");
-                    overrideCountriesList.Add("Egypt");
-                }
             }
             return overrideCountriesList;
         }

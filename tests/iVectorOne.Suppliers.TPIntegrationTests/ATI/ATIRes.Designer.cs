@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace iVectorOne.Suppliers.TPIntegrationTests.ATI {
+namespace iVectorOne.Tests.ATI {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.ATI {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ThirdParty.Suppliers.TPIntegrationTests.ATI.ATIRes", typeof(ATIRes).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("iVectorOne.Tests.ATI.ATIRes", typeof(ATIRes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,7 +70,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.ATI {
         ///
         ///**REQUEST**
         ///
-        ///&lt;soap:Envelope xmlns=&quot;&quot; xmlns:ns1=&quot;http://www.opentravel.org/OTA/2003/05&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Header /&gt;&lt;soap:Body&gt;&lt;ns1:OTA_HotelAvailRQ Version=&quot;v3&quot;&gt;&lt;POS&gt;&lt;Source ERSP_UserID=&quot;qwcas12g&quot; /&gt;&lt;/POS&gt;&lt;AvailRequestSegments&gt;&lt;AvailRequestSegment&gt;&lt;StayDateRange Start=&quot;2021-09-01&quot; Duration=&quot;P0Y0M5D&quot; /&gt;&lt;RoomStayCandidates&gt;&lt;RoomStayCandidate&gt;&lt;GuestCounts&gt;&lt;GuestCount AgeQualifyi [rest of string was truncated]&quot;;.
+        ///&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;soap:Envelope xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:ns1=&quot;http://www.opentravel.org/OTA/2003/05&quot; xmlns=&quot;&quot; xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Header /&gt;&lt;soap:Body&gt;&lt;ns1:OTA_HotelAvailRQ Version=&quot;v3&quot;&gt;&lt;POS&gt;&lt;Source ERSP_UserID=&quot;qwcas12g&quot; /&gt;&lt;/POS&gt;&lt;AvailRequestSegments&gt;&lt;AvailRequestS [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RequestLog {
             get {
@@ -98,7 +98,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests.ATI {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;Results&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;12&quot; CC=&quot;GBP&quot; PRBID=&quot;1&quot; RTC=&quot;12-14&quot; RT=&quot;Room Description 1&quot; MBC=&quot;RO&quot; AD=&quot;1&quot; AMT=&quot;12.5&quot; TPR=&quot;14&quot; DSC=&quot;0&quot; COM=&quot;0&quot; DP=&quot;false&quot; NPA=&quot;0&quot; NRF=&quot;false&quot; FIXPR=&quot;false&quot; FREEC=&quot;false&quot; RQ=&quot;false&quot; PLA=&quot;false&quot; PLR=&quot;false&quot; MSP=&quot;0&quot;&gt;&lt;Adjustments&gt;&lt;Adjustment AID=&quot;0&quot; AT=&quot;O&quot; AN=&quot;2 - 4&quot; AA=&quot;0&quot; PL=&quot;false&quot; DSC=&quot;Discount Description 1&quot; /&gt;&lt;Adjustment AID=&quot;0&quot; AT=&quot;O&quot; AN=&quot;6 - 5&quot; AA=&quot;0&quot; PL=&quot;false&quot; DSC=&quot;Discount Description 2&quot; /&gt;&lt;/Adjustments&gt;&lt;Cs /&gt;&lt;/Result&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;13&quot; CC=&quot;GBP&quot; PRBID=&quot;1&quot; RTC=&quot;13-1 [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &lt;Results&gt;&lt;Result MID=&quot;0&quot; TPK=&quot;12&quot; CC=&quot;GBP&quot; PRBID=&quot;1&quot; RTC=&quot;12-14&quot; RT=&quot;Room Description 1&quot; MBC=&quot;2399&quot; AD=&quot;1&quot; AMT=&quot;12.5&quot; TPR=&quot;&quot; DSC=&quot;0&quot; COM=&quot;0&quot; DP=&quot;false&quot; NRF=&quot;false&quot; FIXPR=&quot;false&quot; SELLPR=&quot;0&quot; NETPR=&quot;0&quot; FREEC=&quot;false&quot; RQ=&quot;false&quot; PLA=&quot;false&quot; PLR=&quot;false&quot; MSP=&quot;0&quot;&gt;&lt;Adjustments&gt;&lt;Adjustment AT=&quot;Offer&quot; AN=&quot;2 - 4&quot; AA=&quot;0&quot; DSC=&quot;Discount Description 1&quot;&gt;&lt;/Adjustment&gt;&lt;Adjustment AT=&quot;Offer&quot; AN=&quot;6 - 5&quot; AA=&quot;0&quot; DSC=&quot;Discount Description 2&quot;&gt;&lt;/Adjustment&gt;&lt;/Adjustments&gt;&lt;Cs&gt;&lt;C SD=&quot;&quot; AMT=&quot;0&quot;&gt;&lt;/C&gt;&lt;C SD=&quot;&quot; AMT=&quot;12.5&quot;&gt;&lt;/C&gt;&lt;/Cs&gt;&lt;/Result&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string TransformedResultXML {
             get {

@@ -166,7 +166,7 @@ const LineChart02: React.FC<Props> = ({ data, title, width, height }) => {
     });
     return () => chart.destroy();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   return (
     <React.Fragment>

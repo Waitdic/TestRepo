@@ -213,11 +213,11 @@ export interface SupplierSearchResults {
 
 export type LogViewerFilters = {
   accountId: number;
+  supplier: number;
   logDateRange: Date | Date[];
-  supplier: 'All';
-  system: 'All' | 'Live Only' | 'Test Only';
-  type: 'All' | 'Prebook Only' | 'Book Only';
-  responseSuccess: 'All' | 'Successful Only' | 'Unsuccessful Only';
+  system: 'all' | 'Live Only' | 'Test Only';
+  type: 'all' | 'Prebook Only' | 'Book Only';
+  responseSuccess: 'all' | 'Successful Only' | 'Unsuccessful Only';
 };
 
 export interface LogEntries {
@@ -225,10 +225,17 @@ export interface LogEntries {
   timestamp: string;
   supplierName: string;
   type: string;
+  succesful: boolean;
   responseTime: number;
   supplierBookingReference: string;
   leadGuestName: string;
-  apiLogId?: number;
+  id?: number;
+  supplierApiLogId?: number;
+}
+
+export interface LogDetails {
+  requestLog: string;
+  responseLog: string;
 }
 
 //* App State

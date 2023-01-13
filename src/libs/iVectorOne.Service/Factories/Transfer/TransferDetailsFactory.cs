@@ -49,17 +49,19 @@
         {
             var transferDetails = new TransferDetails();
 
-            var transferToken = await _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.Account);
+            var transferToken = _tokenService.DecodeTransferToken(request.BookingToken);
 
             if (transferToken is not null)
             {
+                string source = await _support.SupplierNameLookupAsync(transferToken.SupplierID);
+
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
                     DepartureDate = transferToken.DepartureDate,
                     DepartureTime = transferToken.DepartureTime,
                     OneWay = transferToken.OneWay,
-                    Source = transferToken.Source,
+                    Source = source,
                     SupplierID = transferToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
@@ -143,10 +145,11 @@
             var transferDetails = new TransferDetails();
 
             var leadCustomer = request.LeadCustomer;
-            var transferToken = await _tokenService.DecodeTransferTokenAsync(request.BookingToken, request.Account);
+            var transferToken = _tokenService.DecodeTransferToken(request.BookingToken);
 
             if (transferToken is not null)
             {
+                string source = await _support.SupplierNameLookupAsync(transferToken.SupplierID);
 
                 transferDetails = new TransferDetails()
                 {
@@ -154,7 +157,7 @@
                     DepartureDate = transferToken.DepartureDate,
                     DepartureTime = transferToken.DepartureTime,
                     OneWay = transferToken.OneWay,
-                    Source = transferToken.Source,
+                    Source = source,
                     SupplierID = transferToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
@@ -201,24 +204,24 @@
         {
             var transferDetails = new TransferDetails();
 
-            var transferToken = await _tokenService.PopulateTransferTokenAsync(request.SupplierBookingReference);
+            var transferbookingDetails = await _support.GetTransferBookingDetailsAsync(request.SupplierBookingReference);
 
-            if (transferToken is not null && !string.IsNullOrEmpty(transferToken.Source))
+            if (transferbookingDetails is not null && !string.IsNullOrEmpty(transferbookingDetails.Source))
             {
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
                     ConfirmationReference = request.SupplierBookingReference,
                     SupplierReference = request.SupplierReference,
-                    Source = transferToken.Source,
-                    SupplierID = transferToken.SupplierID,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
+                    Source = transferbookingDetails.Source,
+                    SupplierID = transferbookingDetails.SupplierID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferbookingDetails.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
-                    TransferBookingID = transferToken.TransferBookingID,
+                    TransferBookingID = transferbookingDetails.TransferBookingID,
                     ThirdPartySettings = request.ThirdPartySettings
                 };
 
-                request.BookingID = transferToken.TransferBookingID;
+                request.BookingID = transferbookingDetails.TransferBookingID;
             }
             else
             {
@@ -233,24 +236,24 @@
         {
             var transferDetails = new TransferDetails();
 
-            var transferToken = await _tokenService.PopulateTransferTokenAsync(request.SupplierBookingReference);
+            var transferbookingDetails = await _support.GetTransferBookingDetailsAsync(request.SupplierBookingReference);
 
-            if (transferToken is not null && !string.IsNullOrEmpty(transferToken.Source))
+            if (transferbookingDetails is not null && !string.IsNullOrEmpty(transferbookingDetails.Source))
             {
                 transferDetails = new TransferDetails()
                 {
                     AccountID = request.Account.AccountID,
                     ConfirmationReference = request.SupplierBookingReference,
                     SupplierReference = request.SupplierReference,
-                    Source = transferToken.Source,
-                    SupplierID = transferToken.SupplierID,
-                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferToken.ISOCurrencyID),
+                    Source = transferbookingDetails.Source,
+                    SupplierID = transferbookingDetails.SupplierID,
+                    ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(transferbookingDetails.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
-                    TransferBookingID = transferToken.TransferBookingID,
+                    TransferBookingID = transferbookingDetails.TransferBookingID,
                     ThirdPartySettings = request.ThirdPartySettings
                 };
 
-                request.BookingID = transferToken.TransferBookingID;
+                request.BookingID = transferbookingDetails.TransferBookingID;
             }
             else
             {

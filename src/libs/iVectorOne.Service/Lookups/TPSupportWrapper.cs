@@ -10,9 +10,9 @@
     using Intuitive.Helpers.Extensions;
     using Microsoft.Extensions.Caching.Memory;
     using iVectorOne.Constants;
-    using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.Search.Models;
     using iVectorOne.Models;
+    using iVectorOne.Models.Transfer;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -307,10 +307,10 @@
             return await _cache.GetOrCreateAsync("SupplierCache", cacheBuilder, _timeout);
         }
 
-        public async Task<TransferToken?> GetTransferTokenDetails(string supplierBookingReference)
+        public async Task<TransferBookingDetails> GetTransferBookingDetailsAsync(string supplierBookingReference)
         {
-            return await _sql.ReadSingleAsync<TransferToken>(
-                        "TransferBooking_GetTokenData",
+            return await _sql.ReadSingleAsync<TransferBookingDetails>(
+                        "TransferBooking_GetData",
                         new CommandSettings()
                         .IsStoredProcedure()
                         .WithParameters(new
@@ -359,6 +359,7 @@
             public string TPCountryCode { get; set; } = string.Empty;
             public string Country { get; set; } = string.Empty;
         }
+
         private class LocationLookup
         {
             public int IVOLocationID { get; set; }

@@ -24,7 +24,7 @@
         public const string ArrivalDateInThePast = "An Arrival Date on or after today must be specified";
 
         /// <summary>
-        /// An Arrival Date on or after today must be specified
+        /// An Arrival Date not too far in the future must be specified
         /// </summary>
         public const string ArrivalDateToFarInTheFuture = "The arrival date can not be more than 3 years in the future";
 
@@ -298,6 +298,11 @@
         public const string InvalidDedupeMethod = "The dedupe method in the request is unknown";
 
         /// <summary>
+        /// <para></para>
+        /// </summary>
+        public const string InvalidRoomCombination = "Multi-room bookings must be for a single supplier";
+
+        /// <summary>
         ///   <para>The supplier is required</para>
         /// </summary>
         public const string InvalidSupplier = "The supplier is required";
@@ -336,10 +341,12 @@
         ///   <para>"The return date cannot be more than 62 days after the departure date</para>
         /// </summary>
         public const string InvalidDuration = "The return date cannot be more than 62 days after the departure date";
+
         /// <summary>
         ///   <para>"The return date not before departure date</para>
         /// </summary>
         public const string ReturnDateNotBeforeDepartureDate = "The return date cannot be before the departure date";
+
         /// <summary>
         ///   <para>"Invalid Supplier Reference</para>
         /// </summary>

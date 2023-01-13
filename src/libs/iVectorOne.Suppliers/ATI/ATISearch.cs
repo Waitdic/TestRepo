@@ -40,6 +40,11 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return Task.FromResult(new List<Request>());
+            }
+
             string userID = _settings.User(searchDetails);
             string version = _settings.Version(searchDetails, false);
             string password = _settings.Password(searchDetails);

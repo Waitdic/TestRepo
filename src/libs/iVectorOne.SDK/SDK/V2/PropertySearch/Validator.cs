@@ -9,7 +9,7 @@
         public Validator()
         {
             RuleFor(x => x.ArrivalDate).NotNull().WithMessage(WarningMessages.ArrivalDateNotSpecified);
-            RuleFor(x => x.ArrivalDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.ArrivalDateInThePast);
+            RuleFor(x => x.ArrivalDate).GreaterThanOrEqualTo(DateTime.Now.Date).WithMessage(WarningMessages.ArrivalDateInThePast);
             RuleFor(x => x.ArrivalDate).LessThan(DateTime.Now.AddYears(3).Date).WithMessage(WarningMessages.ArrivalDateToFarInTheFuture);
             RuleFor(x => x.Duration).GreaterThanOrEqualTo(0).WithMessage(WarningMessages.DurationNotSpecified);
             RuleFor(x => x.Duration).LessThan(63).WithMessage(WarningMessages.DurationInvalid);

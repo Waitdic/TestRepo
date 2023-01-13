@@ -16,6 +16,11 @@
         /// </summary>
         public string BookingReference { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Gets or sets the Booking Reference Component Number.
+        /// </summary>
+        public string ComponentNumber { get; set; } = string.Empty;
+
         /// <summary>Gets or sets the supplier reference1.</summary>
         public string SupplierReference1 { get; set; } = string.Empty;
 

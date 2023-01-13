@@ -4,9 +4,9 @@ namespace iVectorOne.Models.Extra
     using System;
     using System.Collections.Generic;
     using Intuitive.Helpers.Net;
+    using iVectorOne.Models.Logging;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.Models.SupplierLog;
-    using ExtraBook = iVectorOne.SDK.V2.ExtraBook;
+    using ExtraBook = SDK.V2.ExtraBook;
 
     /// <summary>
     /// The extra details passed into book and pre books

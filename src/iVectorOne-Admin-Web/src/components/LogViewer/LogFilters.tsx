@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortBy } from 'lodash';
 //
-import type { Account, LogEntries, LogViewerFilters } from '@/types';
+import type { Account, LogEntries, LogViewerFilters, Supplier } from '@/types';
 import { getAccounts } from '@/libs/core/data-access/account';
 import { RootState } from '@/store';
 import { NotificationStatus } from '@/constants';
@@ -13,13 +13,18 @@ import {
   Tabs,
   UncontrolledTextField,
 } from '@/components';
-import { getBookingsLogEntries } from '@/libs/log-viewer/data-access';
+import {
+  getBookingsLogEntries,
+  getFilteredLogEntries,
+} from '@/libs/log-viewer/data-access';
+import { getSuppliersByAccount } from '@/libs/core/data-access/supplier';
 
 type Props = {
   setResults: React.Dispatch<React.SetStateAction<LogEntries[]>>;
+  setAccountId: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const LogFilters: React.FC<Props> = ({ setResults }) => {
+const LogFilters: React.FC<Props> = ({ setResults, setAccountId }) => {
   const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.app.user);
@@ -28,25 +33,27 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [refreshLogs, setRefreshLogs] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<LogViewerFilters>({
     accountId: -1,
-    logDateRange: new Date(),
-    supplier: 'All',
-    system: 'All',
-    type: 'All',
-    responseSuccess: 'All',
+    logDateRange: [new Date(), new Date()],
+    supplier: 0,
+    system: 'all',
+    type: 'all',
+    responseSuccess: 'all',
   });
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [tabs, setTabs] = useState([
     {
-      name: 'Search',
-      href: 'search',
+      name: 'Filter',
+      href: 'filter',
       current: true,
     },
     {
-      name: 'Filters',
-      href: 'filters',
+      name: 'Booking Search',
+      href: 'search',
       current: false,
     },
   ]);
@@ -79,10 +86,14 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
   );
 
   const handleOnFilterChange = (name: string, optionId: number) => {
-    setFilters((prevFilters: any) => ({
+    setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: optionId,
     }));
+
+    if (name === 'accountId') {
+      setAccountId(Number(optionId));
+    }
   };
 
   const handleOnSearchQueryChange = (
@@ -124,6 +135,57 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     });
   }, [isLoading, activeTenant, userKey, filters, searchQuery]);
 
+  const handleOnLogRefresh = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1 || !refreshLogs)
+      return;
+
+    await getFilteredLogEntries({
+      tenant: { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      accountId: filters.accountId,
+      filters,
+      onInit: () => {
+        dispatch.app.setIsLoading(true);
+        setRefreshLogs(false);
+      },
+      onSuccess: (logEntries) => {
+        dispatch.app.setIsLoading(false);
+        setResults(logEntries);
+      },
+      onFailed: (message) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+        });
+      },
+    });
+  }, [activeTenant, userKey, filters, refreshLogs]);
+
+  const fetchSuppliers = useCallback(async () => {
+    if (!activeTenant || !userKey || filters.accountId === -1) return;
+    await getSuppliersByAccount(
+      { id: activeTenant.tenantId, key: activeTenant.tenantKey },
+      userKey,
+      filters.accountId,
+      () => {
+        dispatch.app.setIsLoading(true);
+      },
+      (suppliers) => {
+        dispatch.app.setIsLoading(false);
+        setSuppliers(suppliers);
+      },
+      (message, instance) => {
+        dispatch.app.setIsLoading(false);
+        dispatch.app.setNotification({
+          status: NotificationStatus.ERROR,
+          message,
+          instance,
+        });
+      }
+    );
+  }, [activeTenant, filters.accountId, userKey]);
+
   const fetchAccounts = useCallback(async () => {
     if (!activeTenant || !userKey) return;
     await getAccounts(
@@ -138,10 +200,18 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
       (accounts) => {
         dispatch.app.setIsLoading(false);
         setAccounts(accounts);
-        setFilters((prev) => ({
-          ...prev,
-          accountId: accounts[0].accountId,
-        }));
+
+        if (accounts.length === 0) {
+          dispatch.app.setNotification({
+            status: NotificationStatus.ERROR,
+            message: 'Get started by creating a new account.',
+          });
+        } else {
+          setFilters((prev) => ({
+            ...prev,
+            accountId: accounts[0].accountId,
+          }));
+        }
       },
       (error, instance) => {
         dispatch.app.setIsLoading(false);
@@ -158,12 +228,20 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
     };
   }, [fetchAccounts]);
 
+  useEffect(() => {
+    handleOnLogRefresh();
+  }, [handleOnLogRefresh]);
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, [fetchSuppliers]);
+
   return (
-    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 min-w-[380px] md:space-y-3'>
+    <div className='no-scrollbar relative px-3 pb-6 pt-0 border-b md:border-b-0 md:border-r border-slate-200 md:min-w-[380px] sm:space-y-3'>
       <Tabs tabs={tabs} onTabChange={handleOnTabChange} />
 
-      {isActiveTab('filters') && (
-        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
+      {isActiveTab('filter') && (
+        <div className='flex flex-col sm:grid md:grid-cols-2 lg:grid-cols-4 gap-3 pb-5'>
           <div>
             <Select
               id='accountId'
@@ -187,6 +265,9 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               mode='range'
               label='Log Date Range'
               onChange={handleChangeLogDateRange}
+              maxDate={new Date()}
+              minDate={null}
+              defaultDate={filters.logDateRange}
             />
           </div>
           <div>
@@ -199,10 +280,14 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
                   id: 0,
                   name: 'All',
                 },
+                ...suppliers?.map((s) => ({
+                  id: s.supplierID as number,
+                  name: s.name as string,
+                })),
               ]}
               defaultValue={{
                 id: filters.supplier,
-                name: filters.supplier,
+                name: filters.supplier.toString(),
               }}
               onUncontrolledChange={(optionId) =>
                 handleOnFilterChange('supplier', optionId)
@@ -216,7 +301,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='System'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
@@ -244,7 +329,7 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Type'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
@@ -272,15 +357,15 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
               labelText='Response Success'
               options={[
                 {
-                  id: 'All',
+                  id: 'all',
                   name: 'All',
                 },
                 {
-                  id: 'Successful Only',
+                  id: 'successful',
                   name: 'Successful Only',
                 },
                 {
-                  id: 'Unsuccessful Only',
+                  id: 'unsuccessful',
                   name: 'Unsuccessful Only',
                 },
               ]}
@@ -294,15 +379,12 @@ const LogFilters: React.FC<Props> = ({ setResults }) => {
             />
           </div>
           <div className='col-span-2 flex justify-end items-end'>
-            <Button text='Refresh' onClick={handleOnSearch} />
+            <Button text='Refresh' onClick={() => setRefreshLogs(true)} />
           </div>
         </div>
       )}
       {isActiveTab('search') && (
         <div className='grid lg:grid-cols-4'>
-          <h3 className='col-span-full text-2xl font-semibold'>
-            Booking Search
-          </h3>
           <div className='col-span-full text-sm mb-2'>
             <p>
               Please input a booking reference, supplier booking reference or

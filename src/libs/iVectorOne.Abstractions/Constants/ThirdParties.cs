@@ -66,6 +66,11 @@
         public const string DERBYSOFTSYNXIS = "DerbySoftSynxis";
 
         /// <summary>
+        /// The third party DerbySoftTravelClick
+        /// </summary>
+        public const string DERBYSOFTTRAVELCLICK = "DerbySoftTravelClick";
+
+        /// <summary>
         /// The third party DOTW
         /// </summary>
         public const string DOTW = "DOTW";
@@ -93,6 +98,56 @@
         /// The third party GowaySydneyTransfers
         /// </summary>
         public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
+
+        /// <summary>
+        /// The third party HBSiAMR
+        /// </summary>
+        public const string HBSIAMR = "HBSiAMR";
+
+        /// <summary>
+        /// The third party HBSiBestWestern
+        /// </summary>
+        public const string HBSIBESTWESTERN = "HBSiBestWestern";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSICET = "HBSiCET";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSICOUPLES = "HBSiCouples";
+
+        /// <summary>
+        /// The third party HBSiCET
+        /// </summary>
+        public const string HBSIPALACERESORTS = "HBSiPalaceResorts";
+
+        /// <summary>
+        /// The third party HBSiSandals
+        /// </summary>
+        public const string HBSISANDALS = "HBSiSandals";
+
+        /// <summary>
+        /// The third party HBSiStarwood
+        /// </summary>
+        public const string HBSISTARWOOD = "HBSiStarwood";
+
+        /// <summary>
+        /// The third party HBSiStationCasinos
+        /// </summary>
+        public const string HBSISTATIONCASINOS = "HBSiStationCasinos";
+
+        /// <summary>
+        /// The third party HBSiUniversal
+        /// </summary>
+        public const string HBSIUNIVERSAL = "HBSiUniversal";
+
+        /// <summary>
+        /// The third party HBSiVenetian
+        /// </summary>
+        public const string HBSIVENETIAN = "HBSiVenetian";
 
         /// <summary>
         /// The third party HotelBedsV2
@@ -173,6 +228,10 @@
         /// The third party Pacific Destinations
         /// </summary>
         public const string PACIFICDESTINATIONSTRANSFER = "PacificDestinationsTransfers";
+        
+        /// The third party Polaris
+        /// </summary>
+        public const string POLARIS = "Polaris";
 
         /// <summary>
         /// The third party Portimar
@@ -388,5 +447,15 @@
         /// The third party YouTravel
         /// </summary>
         public const string YOUTRAVEL = "YouTravel";
+
+        /// <summary>
+        /// The third party Italcamel
+        /// </summary>
+        public const string ITALCAMEL = "Italcamel";
+
+        /// <summary>
+        /// The third party PremierInn
+        /// </summary>
+        public const string PREMIERINN = "PremierInn";
     }
 }

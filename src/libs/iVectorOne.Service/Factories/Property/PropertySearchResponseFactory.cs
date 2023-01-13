@@ -89,13 +89,14 @@
                     {
                         var roomToken = new RoomToken()
                         {
+                            PropertyID = roomResult.RoomData.PropertyID,
                             Adults = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].Adults,
                             Children = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].Children,
                             Infants = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].Infants,
                             ChildAges = searchDetails.RoomDetails[roomResult.RoomData.PropertyRoomBookingID - 1].ChildAges,
                             PropertyRoomBookingID = roomResult.RoomData.PropertyRoomBookingID,
-                            LocalCost = PropertyFactoryHelper.SplitNumberToNDigitList((int)(roomResult.PriceData.TotalCost * 100), 7),
-                            MealBasisID = PropertyFactoryHelper.SplitNumberToNDigitList(roomResult.RoomData.MealBasisID, 2)
+                            LocalCost = roomResult.PriceData.TotalCost,
+                            MealBasisID = roomResult.RoomData.MealBasisID,
                         };
 
                         var roomType = new RoomType()
@@ -120,7 +121,11 @@
                             OnRequest = roomResult.RoomData.OnRequest,
                             GrossCost = GetGrossCost(roomResult),
                             SellingPrice = roomResult.PriceData.SellingPrice,
-                            RateBasis = roomResult.PriceData.RateBasis
+                            MinimumSellingPrice = roomResult.PriceData.MinimumSellingPrice,
+                            RateBasis = roomResult.PriceData.RateBasis,
+                            PayLocalRequired = roomResult.RoomData.PayLocalRequired,
+                            PayLocalAvailable = roomResult.RoomData.PayLocalAvailable,
+                            AvailableRooms = roomResult.RoomData.AvailableRooms
                         };
 
                         propertyResult.RoomTypes.Add(roomType);

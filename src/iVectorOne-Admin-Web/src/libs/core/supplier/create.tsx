@@ -6,7 +6,12 @@ import { sortBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import { renderConfigurationFormFields } from '@/utils/render-configuration-form-fields';
-import { Supplier, SupplierConfiguration, SupplierFormFields } from '@/types';
+import type {
+  Account,
+  Supplier,
+  SupplierConfiguration,
+  SupplierFormFields,
+} from '@/types';
 import { ButtonColors, ButtonVariants, NotificationStatus } from '@/constants';
 import MainLayout from '@/layouts/Main';
 import { SectionTitle, Select, Button, Spinner } from '@/components';
@@ -22,11 +27,11 @@ type Props = {};
 const SupplierCreate: React.FC<Props> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
-  const accounts = useSelector((state: RootState) => state.app.accounts);
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
   const {
@@ -41,6 +46,7 @@ const SupplierCreate: React.FC<Props> = () => {
     [user]
   );
 
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [draftSupplier, setDraftSupplier] = useState<{
     accountId: number;
@@ -111,8 +117,9 @@ const SupplierCreate: React.FC<Props> = () => {
 
   const handleAccountChange = (optionId: number) => {
     const selectedSub = accounts.find(
-      (account) => account.accountId === optionId
+      (account) => account.accountId === Number(optionId)
     );
+
     if (selectedSub) {
       const supplierIds = selectedSub?.suppliers?.map(
         (supplier) => supplier.supplierID
@@ -171,16 +178,16 @@ const SupplierCreate: React.FC<Props> = () => {
   };
 
   const fetchAccountsWithSuppliers = useCallback(async () => {
-    if (!activeTenant) return;
+    if (!activeTenant || !userKey) return;
     await Promise.all([
       getAccountsWithSuppliers(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-        userKey as string,
+        userKey,
         () => {
           dispatch.app.setIsLoading(true);
         },
         (accs) => {
-          dispatch.app.updateAccounts(accs);
+          setAccounts(accs);
           dispatch.app.setIsLoading(false);
         },
         (err) => {
@@ -189,7 +196,7 @@ const SupplierCreate: React.FC<Props> = () => {
       ),
       getSuppliers(
         { id: activeTenant.tenantId, key: activeTenant.tenantKey },
-        userKey as string,
+        userKey,
         () => {
           dispatch.app.setIsLoading(true);
         },
@@ -202,12 +209,15 @@ const SupplierCreate: React.FC<Props> = () => {
         }
       ),
     ]);
-  }, [activeTenant]);
+  }, [activeTenant, userKey]);
 
   useEffect(() => {
-    fetchAccountsWithSuppliers();
     setValue('account', 0);
     setValue('supplier', 0);
+
+    if (!!userKey && !!activeTenant) {
+      fetchAccountsWithSuppliers();
+    }
 
     return () => {
       setValue('account', 0);
@@ -220,7 +230,7 @@ const SupplierCreate: React.FC<Props> = () => {
       });
       dispatch.app.setError(null);
     };
-  }, [fetchAccountsWithSuppliers]);
+  }, [userKey, activeTenant]);
 
   return (
     <>

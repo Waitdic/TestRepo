@@ -1,9 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.RMI
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -12,11 +12,9 @@
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.RMI.Models;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using iVectorOne.Models.Property;
 
     public class RMISearch : IThirdPartySearch, ISingleSource
     {
@@ -52,24 +50,27 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            var requests = new List<Request>();
             var hotels = resortSplits.SelectMany(resort => resort.Hotels).ToList();
-            var requestedMealBasisIds = _settings.RequestedMealBases(searchDetails)
-                                                                    .Split(',')
-                                                                    .Select(mb => mb.ToSafeInt())
-                                                                    .Where(mb => mb != 0)
-                                                                    .Take(10).ToList();
-
-            if (!requestedMealBasisIds.Any())
+            if (hotels.Any()) 
             {
-                requestedMealBasisIds.Add(0);
+                var requestedMealBasisIds = _settings.RequestedMealBases(searchDetails)
+                                                                        .Split(',')
+                                                                        .Select(mb => mb.ToSafeInt())
+                                                                        .Where(mb => mb != 0)
+                                                                        .Take(10).ToList();
+
+                if (!requestedMealBasisIds.Any())
+                {
+                    requestedMealBasisIds.Add(0);
+                }
+
+                requests = requestedMealBasisIds.Select(mealBasisId =>
+                {
+                    string request = BuildSearchXml(searchDetails, hotels, mealBasisId);
+                    return BuildRequest(searchDetails, request);
+                }).ToList();
             }
-
-            var requests = requestedMealBasisIds.Select(mealBasisId =>
-            {
-                string request = BuildSearchXml(searchDetails, hotels, mealBasisId);
-                return BuildRequest(searchDetails, request);
-            }).ToList();
-
             return Task.FromResult(requests);
         }
 
@@ -98,14 +99,28 @@
                             PropertyRoomBookingID = roomType.RoomsAppliesTo.RoomRequest,
                             SpecialOffer = string.Join(",", roomType.SpecialOffers.Select(offer => offer.Name)),
                             Discount = roomType.SpecialOffers.Sum(offer => offer.Total.ToSafeDecimal()),
-                            MasterID = propertyResult.PropertyId.ToSafeInt()
+                            MasterID = propertyResult.PropertyId.ToSafeInt(),
+                            NonRefundableRates = IsNonRefundable(roomType)
                         };
                     });
                 });
             }).ToList();
-            transformedResults.TransformedResults.AddRange(xmls);
+            transformedResults.TransformedResults.AddRange(xmls);            
 
             return transformedResults;
+        }
+
+        private bool IsNonRefundable(RoomType roomType)
+        {
+            var fullFeeForNow = roomType.CancellationPolicies.Any(canx =>
+            {
+                DateTime startDate = canx.CancelBy.ToSafeDate();
+                DateTime now = DateTime.Now;
+                decimal fee = canx.Penalty.ToSafeDecimal();
+                return startDate < now && fee >= roomType.Total;
+            });
+
+            return fullFeeForNow;
         }
 
         public string BuildSearchXml(SearchDetails searchDetails, List<Hotel> hotels, int mealBasisId)
@@ -152,6 +167,7 @@
                 EndPoint = _settings.URL(searchDetails),
                 Method = RequestMethod.POST,
                 AuthenticationMode = AuthenticationMode.Basic,
+                UseGZip = _settings.UseGZip(searchDetails)
             };
 
             webRequest.SetRequest(request);

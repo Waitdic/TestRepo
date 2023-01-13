@@ -25,20 +25,24 @@ const UserCreate: React.FC<Props> = () => {
     formState: { errors },
   } = useForm<UserFormFields>();
 
+  const user = useSelector((state: RootState) => state.app.user);
   const userKey = useSelector(
     (state: RootState) => state.app.awsAmplify.username
   );
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const activeTenant = useMemo(() => {
+    return user?.tenants.find((tenant) => tenant.isSelected);
+  }, [user]);
   const isValidUser = useMemo(() => {
-    return !!userKey && !isLoading;
-  }, [userKey, isLoading]);
+    return !!userKey && !isLoading && !!activeTenant;
+  }, [userKey, isLoading, activeTenant]);
 
   const onSubmit: SubmitHandler<UserFormFields> = useCallback(
     async (data) => {
       if (!isValidUser) return;
       await createUser(
-        userKey as string,
+        activeTenant?.tenantKey as string,
         userKey as string,
         data,
         () => {

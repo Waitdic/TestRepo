@@ -4,12 +4,12 @@
 
     public class HotelResult
     {
-        public HotelInfo HotelInfo { get; set; } = new();
+        public string HotelCode { get; set; } = string.Empty;
 
-        public OptionsForBooking OptionsForBooking { get; set; } = new();
+        public string Currency { get; set; } = string.Empty;
 
-        public HotelRoom[] HotelRooms { get; set; } = Array.Empty<HotelRoom>();
+        public HotelRoom[] Rooms { get; set; } = Array.Empty<HotelRoom>();
 
-        public int ResultIndex { get; set; }
+        public string[] RateConditions { get; set; } = Array.Empty<string>();
     }
 }

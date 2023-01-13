@@ -1,4 +1,4 @@
-﻿namespace iVectorOne.Service
+﻿namespace iVectorOne
 {
     using System.Security.Cryptography;
     using Intuitive;
@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
-    using iVectorOne;
     using iVectorOne.Suppliers;
     using iVectorOne.Suppliers.AbreuV2;
     using iVectorOne.Suppliers.Acerooms;
@@ -24,9 +23,12 @@
     using iVectorOne.Suppliers.ExpediaRapid;
     using iVectorOne.Suppliers.FastPayHotels;
     using iVectorOne.Suppliers.GoGlobal;
+    using iVectorOne.Suppliers.GowaySydneyTransfers;
+    using iVectorOne.Suppliers.HBSi;
     using iVectorOne.Suppliers.HotelBedsV2;
     using iVectorOne.Suppliers.HotelsProV2;
     using iVectorOne.Suppliers.Hotelston;
+    using iVectorOne.Suppliers.Italcamel;
     using iVectorOne.Suppliers.iVectorConnect;
     using iVectorOne.Suppliers.JonView;
     using iVectorOne.Suppliers.Jumbo;
@@ -35,6 +37,8 @@
     using iVectorOne.Suppliers.Miki;
     using iVectorOne.Suppliers.Netstorming;
     using iVectorOne.Suppliers.OceanBeds;
+    using iVectorOne.Suppliers.Polaris;
+    using iVectorOne.Suppliers.PremierInn;
     using iVectorOne.Suppliers.Restel;
     using iVectorOne.Suppliers.RMI;
     using iVectorOne.Suppliers.Serhs;
@@ -42,10 +46,9 @@
     using iVectorOne.Suppliers.SunHotels;
     using iVectorOne.Suppliers.TBOHolidays;
     using iVectorOne.Suppliers.TeamAmerica;
+    using iVectorOne.Suppliers.TourPlanTransfers;
     using iVectorOne.Suppliers.Travelgate;
     using iVectorOne.Suppliers.YouTravel;
-    using iVectorOne.Suppliers.TourPlanTransfers;
-    using iVectorOne.Suppliers.GowaySydneyTransfers;
     using iVectorOne.Lookups;
     using iVectorOne.Factories;
     using iVectorOne.Models.Tokens;
@@ -61,7 +64,7 @@
     using List = SDK.V2.PropertyList;
     using Prebook = SDK.V2.PropertyPrebook;
     using Precancel = SDK.V2.PropertyPrecancel;
-    using Search = SDK.V2.PropertySearch;
+    using SearchSDK = SDK.V2.PropertySearch;
     using TransferBook = SDK.V2.TransferBook;
     using TransferCancel = SDK.V2.TransferCancel;
     using TransferPrebook = SDK.V2.TransferPrebook;
@@ -75,10 +78,11 @@
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
-        public const string IVectorOne = "iVectorOne";
-
         public iVectorOneModule()
-            : base(new ModuleId(IVectorOne), IVectorOne, dependencies: new[] { CoreInfo.CoreModuleId, DataInfo.DataModuleId })
+            : base(
+                iVectorOneInfo.IVectorOneModuleId,
+                iVectorOneInfo.IVectorOne,
+                dependencies: new[] { CoreInfo.CoreModuleId, DataInfo.DataModuleId })
         {
         }
 
@@ -130,8 +134,8 @@
             services.AddSingleton<IMealBasisLookupRepository, MealBasisLookupRepository>();
             services.AddSingleton<IPropertyContentRepository, PropertyContentRepository>();
             services.AddSingleton<ISearchRepository, SearchRepository>();
-            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
-            services.AddSingleton<ITransferSearchStoreRepository>(_ => new TransferSearchStoreRepository(context.Configuration.GetConnectionString("Telemetry")));
+            services.AddSingleton<ISearchStoreRepository>(_ => new SearchStoreRepository(context.Configuration.GetConnectionString(iVectorOneInfo.TelemetryContext)));
+            services.AddSingleton<ITransferSearchStoreRepository>(_ => new TransferSearchStoreRepository(context.Configuration.GetConnectionString(iVectorOneInfo.TelemetryContext)));
             services.AddSingleton<ISupplierLogRepository, SupplierLogRepository>();
             services.AddSingleton<IBookingRepository, BookingRepository>();
             services.AddSingleton<ITransferAPILogRepository, TransferAPILogRepository>();
@@ -181,7 +185,7 @@
 
             services.AddSingleton((s)
                 => s.GetService<ISecretKeeperFactory>()!
-                    .CreateSecretKeeper("FireyNebulaIsGod", EncryptionType.Aes, CipherMode.ECB));
+                    .CreateSecretKeeper(iVectorOneInfo.SecurityKey, EncryptionType.Aes, CipherMode.ECB));
 
             services.AddSingleton<ISearchStoreService>(s =>
                 new SearchStoreService(
@@ -208,7 +212,7 @@
         {
             services.AddHandler<List.Request, List.Response, List.Handler>();
             services.AddHandlerAndValidator<Content.Request, Content.Response, Content.Handler, Content.Validator>();
-            services.AddHandlerAndValidator<Search.Request, Search.Response, Search.Handler, Search.Validator>();
+            services.AddHandlerAndValidator<SearchSDK.Request, SearchSDK.Response, SearchSDK.Handler, SearchSDK.Validator>();
             services.AddHandlerAndValidator<Prebook.Request, Prebook.Response, Prebook.Handler, Prebook.Validator>();
             services.AddHandlerAndValidator<Book.Request, Book.Response, Book.Handler, Book.Validator>();
             services.AddHandlerAndValidator<Precancel.Request, Precancel.Response, Precancel.Handler, Precancel.Validator>();
@@ -239,9 +243,11 @@
             services.AddSingleton<IExpediaRapidSettings, InjectedExpediaRapidSettings>();
             services.AddSingleton<IFastPayHotelsSettings, InjectedFastPayHotelsSettings>();
             services.AddSingleton<IGoGlobalSettings, InjectedGoGlobalSettings>();
+            services.AddSingleton<IHBSiSettings, InjectedHBSiSettings>();
             services.AddSingleton<IHotelBedsV2Settings, InjectedHotelBedsV2Settings>();
             services.AddSingleton<IHotelsProV2Settings, InjectedHotelsProV2Settings>();
             services.AddSingleton<IHotelstonSettings, InjectedHotelstonSettings>();
+            services.AddSingleton<IItalcamelSettings, InjectedItalcamelSettings>();
             services.AddSingleton<IiVectorConnectSettings, InjectediVectorConnectSettings>();
             services.AddSingleton<IJonViewSettings, InjectedJonViewSettings>();
             services.AddSingleton<IJumboSettings, InjectedJumboSettings>();
@@ -251,6 +257,8 @@
             services.AddSingleton<IMikiSettings, InjectedMikiSettings>();
             services.AddSingleton<IMTSSettings, InjectedMTSSettings>();
             services.AddSingleton<IOceanBedsSettings, InjectedOceanBedsSettings>();
+            services.AddSingleton<IPolarisSettings, InjectedPolarisSettings>();
+            services.AddSingleton<IPremierInnSettings, InjectedPremierInnSettings>();
             services.AddSingleton<IRestelSettings, InjectedRestelSettings>();
             services.AddSingleton<IRMISettings, InjectedRMISettings>();
             services.AddSingleton<ISerhsSettings, InjectedSerhsSettings>();
@@ -283,9 +291,11 @@
             services.AddSingleton<IThirdPartySearch, ExpediaRapidSearch>();
             services.AddSingleton<IThirdPartySearch, FastPayHotelsSearch>();
             services.AddSingleton<IThirdPartySearch, GoGlobalSearch>();
+            services.AddSingleton<IThirdPartySearch, HBSiSearch>();
             services.AddSingleton<IThirdPartySearch, HotelBedsV2Search>();
             services.AddSingleton<IThirdPartySearch, HotelsProV2Search>();
             services.AddSingleton<IThirdPartySearch, HotelstonSearch>();
+            services.AddSingleton<IThirdPartySearch, ItalcamelSearch>();
             services.AddSingleton<IThirdPartySearch, iVectorConnectSearch>();
             services.AddSingleton<IThirdPartySearch, JonViewSearch>();
             services.AddSingleton<IThirdPartySearch, JumboSearch>();
@@ -295,6 +305,8 @@
             services.AddSingleton<IThirdPartySearch, MikiSearch>();
             services.AddSingleton<IThirdPartySearch, MTSSearch>();
             services.AddSingleton<IThirdPartySearch, OceanBedsSearch>();
+            services.AddSingleton<IThirdPartySearch, PolarisSearch>();
+            services.AddSingleton<IThirdPartySearch, PremierInnSearch>();
             services.AddSingleton<IThirdPartySearch, RestelSearch>();
             services.AddSingleton<IThirdPartySearch, RMISearch>();
             services.AddSingleton<IThirdPartySearch, SerhsSearch>();
@@ -331,9 +343,11 @@
             services.AddSingleton<IThirdParty, ExpediaRapid>();
             services.AddSingleton<IThirdParty, FastPayHotels>();
             services.AddSingleton<IThirdParty, GoGlobal>();
+            services.AddSingleton<IThirdParty, HBSi>();
             services.AddSingleton<IThirdParty, HotelBedsV2>();
             services.AddSingleton<IThirdParty, HotelsProV2>();
             services.AddSingleton<IThirdParty, Hotelston>();
+            services.AddSingleton<IThirdParty, Italcamel>();
             services.AddSingleton<IThirdParty, iVectorConnect>();
             services.AddSingleton<IThirdParty, JonView>();
             services.AddSingleton<IThirdParty, Jumbo>();
@@ -342,6 +356,8 @@
             services.AddSingleton<IThirdParty, MTS>();
             services.AddSingleton<IThirdParty, Netstorming>();
             services.AddSingleton<IThirdParty, OceanBeds>();
+            services.AddSingleton<IThirdParty, Polaris>();
+            services.AddSingleton<IThirdParty, PremierInn>();
             services.AddSingleton<IThirdParty, Restel>();
             services.AddSingleton<IThirdParty, RMI>();
             services.AddSingleton<IThirdParty, Serhs>();

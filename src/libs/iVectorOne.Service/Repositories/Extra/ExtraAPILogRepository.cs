@@ -5,10 +5,12 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Data;
+    using iVectorOne.Models.Logging;
     using iVectorOne.SDK.V2;
-    using Microsoft.Extensions.Logging;
     using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraBook = SDK.V2.ExtraBook;
+    using Microsoft.Extensions.Logging;
+
     //using ExtraPrecancel = SDK.V2.ExtraPrecancel;
     //using ExtraCancel = SDK.V2.ExtraCancel;
 

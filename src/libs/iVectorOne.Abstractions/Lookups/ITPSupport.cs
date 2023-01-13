@@ -1,7 +1,7 @@
 ﻿namespace iVectorOne.Lookups
 {
     using iVectorOne.Models;
-    using iVectorOne.Models.Tokens.Transfer;
+    using iVectorOne.Models.Transfer;
     using iVectorOne.Search.Models;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -126,7 +126,7 @@
         /// <returns>
         /// The supplier identifier
         /// </returns>
-        Task<TransferToken?> GetTransferTokenDetails(string supplierBookingReference);
+        Task<TransferBookingDetails> GetTransferBookingDetailsAsync(string supplierBookingReference);
 
         /// <summary>
         /// Remove the location cache data.

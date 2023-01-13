@@ -5,12 +5,13 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Data;
+    using iVectorOne.Models.Logging;
     using iVectorOne.SDK.V2;
-    using Microsoft.Extensions.Logging;
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferBook = SDK.V2.TransferBook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferCancel = SDK.V2.TransferCancel;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A repository responsible for logging book, pre book and cancellation logs to the database

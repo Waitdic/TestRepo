@@ -28,6 +28,9 @@ try
     app.MapEndpointsV1();
     app.MapEndpoints();
 
+    // todo - integrate with health checks
+    _ = app.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
+
     app.BuildAndRun();
 }
 catch (Exception ex)

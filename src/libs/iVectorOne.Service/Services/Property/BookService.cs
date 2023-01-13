@@ -67,7 +67,6 @@
             bool requestValid = true;
             bool success = false;
             var propertyDetails = new PropertyDetails();
-            var bookDateAndTime = DateTime.Now;
 
             try
             {
@@ -91,7 +90,6 @@
 
                     if (thirdParty != null)
                     {
-                        bookDateAndTime = DateTime.Now;
                         var supplierReference = await thirdParty.BookAsync(propertyDetails);
                         propertyDetails.SupplierSourceReference = supplierReference;
                         success = supplierReference.ToLower() != "failed";
@@ -129,7 +127,7 @@
                 }
                 else if (requestValid)
                 {
-                    //response.Warnings = null!;
+                    response.Warnings = null!;
                 }
             }
 

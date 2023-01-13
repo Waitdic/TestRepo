@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Intuitive;
     using Intuitive.Data;
+    using iVectorOne.Models.Logging;
     using iVectorOne.Models.Transfer;
     using Microsoft.Extensions.Logging;
 

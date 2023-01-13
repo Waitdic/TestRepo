@@ -23,7 +23,9 @@
         {
             if (totalDecimal < 0 || totalDecimal > MaxValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(totalDecimal), totalDecimal,
+                throw new ArgumentOutOfRangeException(
+                    nameof(totalDecimal),
+                    totalDecimal,
                     "The value to encode is outside of the range of allowed values.");
             }
 
@@ -74,6 +76,5 @@
 
             return decimalValue;
         }
-
     }
 }

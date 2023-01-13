@@ -26,7 +26,7 @@
 
         /// <summary>Gets or sets the Local cost</summary>
         [JsonPropertyName("AMT")]
-        public List<int> LocalCost { get; set; } = new();
+        public decimal LocalCost { get; set; } = new();
 
         /// <summary>Gets or sets the property room booking id</summary>
         [JsonPropertyName("PRI")]
@@ -34,6 +34,10 @@
 
         /// <summary>Gets or sets the mealbasis</summary>
         [JsonPropertyName("MBC")]
-        public List<int> MealBasisID { get; set; } = new();
+        public int MealBasisID { get; set; } = new();
+
+        /// <summary>Gets or sets the property identifier</summary>
+        [JsonPropertyName("P")]
+        public int PropertyID { get; set; }
     }
 }

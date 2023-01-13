@@ -1,38 +1,47 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { orderBy as _orderBy } from 'lodash';
 //
 import { RootState } from '@/store';
 import type { SearchDetails, SupplierSearchResults } from '@/types';
+import type { TableBodyListItems } from 'src/components/TableList';
 import Main from '@/layouts/Main';
 import { SearchFilters, TableList } from '@/components';
 
 const tableHeaderList = [
   {
     name: 'Supplier',
+    original: 'supplier',
     align: 'left',
   },
   {
     name: 'Room Code',
+    original: 'roomCode',
     align: 'left',
   },
   {
     name: 'Room Type',
+    original: 'roomType',
     align: 'left',
   },
   {
     name: 'Meal Basis',
+    original: 'mealBasis',
     align: 'left',
   },
   {
     name: 'Currency',
+    original: 'currency',
     align: 'left',
   },
   {
     name: 'Cost',
+    original: 'cost',
     align: 'left',
   },
   {
     name: 'Non-Ref',
+    original: 'nonRef',
     align: 'left',
   },
 ];
@@ -40,6 +49,13 @@ const tableHeaderList = [
 const Search: React.FC = () => {
   const isLoading = useSelector((state: RootState) => state.app.isLoading);
 
+  const [orderBy, setOrderBy] = useState<{
+    by: string | null;
+    order: 'asc' | 'desc';
+  }>({
+    by: null,
+    order: 'asc',
+  });
   const [searchResults, setSearchResults] = useState<SupplierSearchResults[]>(
     []
   );
@@ -60,20 +76,51 @@ const Search: React.FC = () => {
   });
 
   const tableBody = useMemo(() => {
-    let rows: { id: number; name: string; items: string[] }[] = [];
-    searchResults.forEach((result, idx) => {
-      let items: any[] = [];
-      Object.entries(result).forEach(([key, value], idx) => {
-        items.push(value);
+    let rows: {
+      id: number;
+      name: string;
+      items: TableBodyListItems[];
+    }[] = [];
+    let results: any[] = searchResults;
+    let orderByKey = orderBy.by;
+    if (orderByKey === 'nonRef') {
+      orderByKey = 'nonRefundable';
+    } else if (orderByKey === 'cost') {
+      orderByKey = 'totalCost';
+    }
+
+    const sortedResults = _orderBy(searchResults, [orderByKey], orderBy.order);
+    if (orderBy.by !== null) {
+      results = sortedResults;
+    }
+
+    results.forEach((result, idx) => {
+      let items: TableBodyListItems[] = [];
+      Object.entries(result).forEach(([key, value]) => {
+        if (key === 'totalCost') {
+          items.push({
+            name: key,
+            value,
+            align: 'right',
+          });
+        } else {
+          items.push({ name: key, value });
+        }
       });
+      const name = Object.keys(result)[0];
       rows.push({
         id: idx,
-        name: Object.keys(result)[idx],
+        name,
         items,
       });
     });
+
     return rows;
-  }, [searchResults]);
+  }, [searchResults, orderBy]);
+
+  const handleOrderChange = (orderBy: string, order: 'asc' | 'desc') => {
+    setOrderBy({ by: orderBy, order });
+  };
 
   return (
     <Main title='Search Tester'>
@@ -96,6 +143,9 @@ const Search: React.FC = () => {
                 bodyList={tableBody}
                 showOnEmpty
                 initText='Please input some search details and perform a search'
+                onOrderChange={handleOrderChange}
+                orderBy={orderBy}
+                minWidth='1100px'
               />
             </div>
           )}

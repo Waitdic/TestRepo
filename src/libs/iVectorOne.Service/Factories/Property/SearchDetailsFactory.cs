@@ -24,7 +24,7 @@ namespace iVectorOne.Factories
             {
                 Duration = searchRequest.Duration,
                 ISONationalityCode = searchRequest.NationalityID,
-                AccountID = account.AccountID,
+                Account = account,
                 Settings = account.TPSettings,
                 ThirdPartyConfigurations = account.Configurations,
                 LoggingType = log ? "All" : "None",

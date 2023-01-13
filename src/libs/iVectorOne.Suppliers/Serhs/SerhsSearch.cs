@@ -33,6 +33,11 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return Task.FromResult(new List<Request>());
+            }
+
             string version = _settings.Version(searchDetails);
             string clientCode = _settings.ClientCode(searchDetails);
             string password = _settings.Password(searchDetails);

@@ -16,6 +16,10 @@
             AdjustmentAmount = amount;
         }
 
+        protected TransformedResultAdjustment()
+        {
+        }
+
         /// <summary>
         /// Gets or sets the type of the adjustment.
         /// </summary>

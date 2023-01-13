@@ -1,27 +1,14 @@
-﻿using iVectorOne_Admin_Api.Config.Requests;
-using iVectorOne_Admin_Api.Config.Responses;
-
-namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Info
+﻿namespace iVectorOne_Admin_Api.Features.V1.Tenants.Accounts.Suppliers.Info
 {
     public static class Endpoints
     {
         public static IEndpointRouteBuilder MapTenantAccountSupplierInfoV1Endpoint(this IEndpointRouteBuilder endpoints)
         {
-            _ = endpoints.MapGet("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}", async (IMediator mediator, HttpContext httpContext, int tenantid, int accountid, int supplierid) =>
+            _ = endpoints.MapGet("v1/tenants/{tenantid}/accounts/{accountid}/suppliers/{supplierid}", async (IMediator mediator, int tenantid, int accountid, int supplierid) =>
             {
-                SupplierResponse response = null!;
+                var response = await mediator.Send(new Request { TenantID = tenantid, AccountID = accountid, SupplierID = supplierid });
+                return response.Result;
 
-                try
-                {
-                    var request = new SupplierRequest(tenantid) { AccountId = accountid, SupplierId = supplierid };
-                    response = await mediator.Send(request);
-                }
-                catch (Exception e)
-                {
-                    return Results.Problem(e.ToString());
-                }
-
-                return Results.Ok(response);
             }).RequireAuthorization();
 
             return endpoints;

@@ -103,7 +103,7 @@
                 roomList.Add(room);
             }
 
-            string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, searchDetails.SellingCountry, searchDetails.AccountID);
+            string sourceMarket = await _support.TPCountryCodeLookupAsync(ThirdParties.YALAGO, searchDetails.SellingCountry, searchDetails.Account.AccountID);
 
             if (string.IsNullOrEmpty(sourceMarket))
             {

@@ -32,7 +32,7 @@
                 {
                     return Results.UnprocessableEntity();
                 }
-                else if (response.Warnings.Any())
+                else if (response.Warnings?.Any() ?? false)
                 {
                     return Results.BadRequest(new ErrorMessage(
                         string.Join(Environment.NewLine, response.Warnings)));

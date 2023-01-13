@@ -123,7 +123,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests
             var serializer = new Serializer();
 
             // Assert
-            return Helper.IsValidResponse(mockResponse, serializer.Serialize(transformedResponse).InnerXml);
+            return Helper.IsValidResponse(mockResponse, serializer.SerializeWithoutNamespaces(transformedResponse).InnerXml);
         }
 
         public static Request CreateResponseWebRequest(string responseString, object searchDetails, object extraInfo)
@@ -131,6 +131,7 @@ namespace iVectorOne.Suppliers.TPIntegrationTests
             var request = new Request
             {
                 ExtraInfo = extraInfo ?? searchDetails,
+                IsSuccessStatusCode = true
             };
 
             request.SetResponse(responseString);

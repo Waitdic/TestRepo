@@ -11,13 +11,11 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
     {
         private readonly AdminContext _context;
         private readonly IValidator<Request> _validator;
-        private readonly IMapper _mapper;
 
-        public Handler(AdminContext context, IValidator<Request> validator, IMapper mapper)
+        public Handler(AdminContext context, IValidator<Request> validator)
         {
             _context = context;
             _validator = validator;
-            _mapper = mapper;
         }
 
         public async Task<ResponseBase> Handle(Request request, CancellationToken cancellationToken)
@@ -50,7 +48,18 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.BookingViewer
              .AsNoTracking()
              .ToListAsync(cancellationToken: cancellationToken);
 
-            var LogEntryList = _mapper.Map<List<LogEntry>>(bookings);
+            var LogEntryList = bookings.Select(x => new LogEntry
+            {
+                SupplierApiLogId = x.SupplierApiLogId,
+                SupplierName = x.SupplierName,
+                LeadGuestName = x.LeadGuestName ?? "",
+                Succesful = x.Success,
+                ResponseTime = $"{string.Format("{0:#,0}", x.ResponseTime)}ms",
+                ResponseTimeValue = x.ResponseTime,
+                Type = x.Type,
+                SupplierBookingReference = x.SupplierBookingReference ?? "",
+                Timestamp = x.BookingDateTime.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
+            }).ToList();
 
             response.Ok(new ResponseModel() { Success = true, LogEntries = LogEntryList });
             return response;

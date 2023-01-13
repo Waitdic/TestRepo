@@ -47,6 +47,11 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return Task.FromResult(new List<Request>());
+            }
+
             List<Request> requests = new();
 
             var hotels = resortSplits.SelectMany(split => split.Hotels);

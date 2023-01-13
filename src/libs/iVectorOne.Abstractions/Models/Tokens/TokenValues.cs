@@ -138,9 +138,7 @@
                 case TokenValueType.CurrencyID:
                     bits = TokenValueBits.CurrencyBits;
                     break;
-                case TokenValueType.MealBasisID1:
-                case TokenValueType.MealBasisID2:
-                case TokenValueType.MealBasisID3:
+                case TokenValueType.MealBasisID:
                     bits = TokenValueBits.MealBasis;
                     break;
                 case TokenValueType.SupplierID:

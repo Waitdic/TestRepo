@@ -15,8 +15,6 @@
         {
             RegisterSearchEndpointsForDomain(endpoints, EndpointBase.TransferDomain);
 
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
-
             return endpoints;
         }
 

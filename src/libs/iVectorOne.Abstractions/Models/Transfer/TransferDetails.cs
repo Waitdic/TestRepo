@@ -2,11 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Intuitive.Helpers.Extensions;
+    using iVectorOne.Models.Logging;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.Booking;
-    using iVectorOne.Models.SupplierLog;
 
     /// <summary>
     /// The transfer details passed into book and pre books

@@ -18,6 +18,8 @@
     public class Configuration
     {
         public string? Supplier { get; set; }
+        public int SupplierID { get; set; }
+        public bool LogSearchRequests { get; set; }
         public List<Attribute>? Attributes { get; set; } = new();
     }
 

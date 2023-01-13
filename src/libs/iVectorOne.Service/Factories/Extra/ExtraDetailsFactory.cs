@@ -38,10 +38,11 @@ namespace iVectorOne.Factories
             var extraDetails = new ExtraDetails();
 
             var leadCustomer = request.LeadCustomer;
-            var extraToken = await _tokenService.DecodeExtraTokenAsync(request.BookingToken, request.Account);
+            var extraToken = _tokenService.DecodeExtraToken(request.BookingToken);
 
             if (extraToken is not null)
             {
+                string source = await _support.SupplierNameLookupAsync(extraToken.SupplierID);
 
                 extraDetails = new ExtraDetails()
                 {
@@ -49,7 +50,7 @@ namespace iVectorOne.Factories
                     DepartureDate = extraToken.DepartureDate,
                     DepartureTime = extraToken.DepartureTime,
                     OneWay = extraToken.OneWay,
-                    Source = extraToken.Source,
+                    Source = source,
                     SupplierID = extraToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(extraToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,
@@ -95,17 +96,19 @@ namespace iVectorOne.Factories
         {
             var extraDetails = new ExtraDetails();
 
-            var extraToken = await _tokenService.DecodeExtraTokenAsync(request.BookingToken, request.Account);
+            var extraToken = _tokenService.DecodeExtraToken(request.BookingToken);
 
             if (extraToken is not null)
             {
+                string source = await _support.SupplierNameLookupAsync(extraToken.SupplierID);
+
                 extraDetails = new ExtraDetails()
                 {
                     AccountID = request.Account.AccountID,
                     DepartureDate = extraToken.DepartureDate,
                     DepartureTime = extraToken.DepartureTime,
                     OneWay = extraToken.OneWay,
-                    Source = extraToken.Source,
+                    Source = source,
                     SupplierID = extraToken.SupplierID,
                     ISOCurrencyCode = await _support.ISOCurrencyCodeLookupAsync(extraToken.ISOCurrencyID),
                     ThirdPartyConfigurations = request.Account.Configurations,

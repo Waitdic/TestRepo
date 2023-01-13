@@ -6,7 +6,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models.Property.VirtualCreditCards;
-    using iVectorOne.Models.SupplierLog;
+    using iVectorOne.Models.Logging;
 
     /// <summary>
     /// The property details passed into book and pre books
@@ -103,6 +103,11 @@
         /// Gets or sets The booking reference
         /// </summary>
         public string BookingReference { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the Booking Reference Component Number.
+        /// </summary>
+        public string ComponentNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets The source

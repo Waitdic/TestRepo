@@ -163,16 +163,19 @@
       {
        "Supplier": "TBOHolidays",
        "Configurations": {
-         "GenericURL": "http://api.tbotechnology.in/hotelapi_v7/hotelservice.svc",
-         "Password": "testpwd",
-         "AllowCancellations": "true",
-         "OffsetCancellationDays": "0",
+         "User": "AndysysTest",
+         "Password": "Int@20837385",
+         "SearchURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Search",
+         "PrebookURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/PreBook",
+         "BookingURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Book",
+         "CancellationURL": "http://api.tbotechnology.in/TBOHolidays_HotelAPI/Cancel",
+         "UseGZip": "TRUE",
+         "AllowCancellations": "TRUE",
+         "ExcludeNRF": "FALSE",
+         "HotelSearchLimit": "100",
+         "RoomSearchLimit": "0",
          "LeadGuestNationality": "GB",
-         "User": "testuser",
-         "PaymentModeType": "Limit",
-         "ClientCode": "1",
-         "Currency": "GBP",
-         "ResultCount": "0"
+         "RequestedMealBases": "All"
        }
       },
       {
@@ -584,7 +587,50 @@
           "LeadGuestNationality": "GB",
           "CountryOfResidence": "GB"
         }
-      }
+      },
+      {
+        "Supplier": "Italcamel",
+        "Configurations": {
+          "GenericURL": "http://webservice.test.italcamel.com/Service_5_1.asmx",
+          "Login": "test1",
+          "Password": "APIintuitive",
+          "LanguageID": "345d39f6-f05f-42c6-a61b-2bd7ffc24859",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": "0",
+          "MaximumHotelSearchNumber": "200",
+          "MaximumNumberOfNights": "28",
+          "MaximumRoomGuestNumber": "4",
+          "MaximumRoomNumber": "4",
+          "ExcludeNRF": "false",
+          "PackageRates": "true",
+          "DeltaPrice": "0.0"
+        }
+      },
+      {
+        "Supplier": "ATI",
+        "Configurations": {
+          "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",
+          "AllowCancellations": "true",
+          "OffsetCancellationDays": 7,
+          "User": "qwcas12g",
+          "Password": "qtweqwrqwasd",
+          "Version": "v3",
+          "ExcludeNRF": "false"
+        }
+       },
+       {
+        "Supplier": "PremierInn",
+        "Configurations": {
+          "User": "testdiversitytravel",
+          "Password": "qtweqwrqwasd",
+          "GenericURL": "https://xml.alturaspain.com/xml/xml-interface.php",
+          "UseGZip": "true",
+          "AllowCancellations": "true",
+          "HotelBatchLimit": "10",
+          "LanguageCode": "GB",
+          "AllowOnRequest": "false"
+        }
+       }
     ]
   }
 ]

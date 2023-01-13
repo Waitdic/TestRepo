@@ -439,3 +439,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+src/*/aws-logger-errors.txt

@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{ed91db50-23e7-4513-8b15-3657b43e22d8}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -70,7 +70,6 @@
     <Build Include="dbo\Tables\Currency.sql" />
     <Build Include="dbo\Tables\MealBasis.sql" />
     <Build Include="dbo\Tables\PropertyDedupe.sql" />
-    <Build Include="dbo\Tables\APILog.sql" />
     <Build Include="dbo\Tables\BookingCountryLookup.sql" />
     <Build Include="dbo\Tables\ISOCurrency.sql" />
     <Build Include="dbo\Stored Procedures\Get_TPMealBasisCache.sql" />
@@ -95,12 +94,29 @@
     <Build Include="dbo\Stored Procedures\Get_Configurations.sql" />
     <Build Include="dbo\Tables\Booking.sql" />
     <Build Include="dbo\Stored Procedures\Booking_Upsert.sql" />
+    <Build Include="dbo\Stored Procedures\Booking_Get.sql" />
+    <Build Include="dbo\Stored Procedures\Search_SwitchLoggingOff.sql" />
     <Build Include="dbo\Tables\IVOLocation.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_GetLocationMapping.sql" />
     <Build Include="dbo\Tables\TransferBooking.sql" />
     <Build Include="dbo\Stored Procedures\TransferBooking_Upsert.sql" />
-    <Build Include="dbo\Stored Procedures\TransferBooking_GetTokenData.sql" />
+    <Build Include="dbo\Stored Procedures\TransferBooking_GetData.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_AddNewLocations.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_AddLocations.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Telemetry\Telemetry.sqlproj">
+      <Name>Telemetry</Name>
+      <Project>{ba23a014-55f0-48b4-8ba3-6f1f89442f69}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>Telemetry</DatabaseSqlCmdVariable>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="Telemetry">
+      <DefaultValue>Telemetry</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
   </ItemGroup>
 </Project>

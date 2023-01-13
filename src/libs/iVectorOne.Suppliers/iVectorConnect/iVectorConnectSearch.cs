@@ -33,7 +33,7 @@
         {
             string source = resortSplits.First().ThirdPartySupplier;
             var requests = new List<Request>();
-            string url = _settings.SearchURL(searchDetails, source);
+            string url = _settings.GenericURL(searchDetails, source);
 
             var searchRequest = BuildSearchRequest(searchDetails, resortSplits, source);
 

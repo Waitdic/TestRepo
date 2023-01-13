@@ -55,6 +55,11 @@
 
         public async Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return new List<Request>();
+            }
+
             var requests = new List<Request>();
             var hotelIDList = new List<int>();
             int batchLimit = _settings.HotelBatchLimit(searchDetails);
@@ -214,7 +219,6 @@
                                 MealBasisCode = rate.boardCode,
                                 RoomType = room.name,
                                 Amount = amount,
-                                SellingPrice = amount,
                                 NetPrice = amount,
                                 MinimumPrice = rate.hotelMandatory ? rate.sellingRate.ToSafeDecimal() : 0,
                                 CurrencyCode = hotel.currency,

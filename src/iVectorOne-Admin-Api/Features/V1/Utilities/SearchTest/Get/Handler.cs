@@ -57,7 +57,7 @@ namespace iVectorOne_Admin_Api.Features.V1.Utilities.SearchTest.Get
                                 RoomType = roomType.SupplierRoomType,
                                 MealBasis = roomType.MealBasisCode,
                                 Currency = roomType.CurrencyCode,
-                                TotalCost = roomType.TotalCost,
+                                TotalCost = $"{string.Format("{0:#,0}", roomType.TotalCost)}",
                                 NonRefundable = roomType.NonRefundable
                             });
                         }

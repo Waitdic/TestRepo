@@ -85,7 +85,8 @@
                         MealBasisCode = await GetMealBasis(source, searchResult, searchDetails),
                         MealBasisID = await GetMealBasisID(source, searchResult, searchDetails),
                         RateCode = searchResult.RateCode,
-                        OnRequest = searchResult.OnRequest
+                        OnRequest = searchResult.OnRequest,
+                        AvailableRooms = searchResult.AvailableRooms
                     },
                     PriceData = new PriceData()
                     {
@@ -95,9 +96,10 @@
                         Discount = searchResult.Discount,
                         CommissionPercentage = searchResult.CommissionPercentage,
                         GrossCost = searchResult.GrossCost,
-                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(result.PropertyData.Source, searchResult.CurrencyCode, searchDetails.AccountID, _currencyRepository),
+                        CurrencyID = await ProcessorHelpers.GetISOCurrencyID(result.PropertyData.Source, searchResult.CurrencyCode, searchDetails.Account.AccountID, _currencyRepository),
                         SellingPrice = searchResult.SellingPrice,
-                        RateBasis = searchResult.PackageRateBasis,                        
+                        RateBasis = searchResult.PackageRateBasis,
+                        MinimumSellingPrice = searchResult.MinimumPrice
                     },
                     Cancellations = searchResult.Cancellations.Select(x => new Cancellation()
                     {
@@ -127,12 +129,12 @@
 
         private async Task<string> GetMealBasis(string source, TransformedResult searchResult, SearchDetails searchDetails)
         {
-            return await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.AccountID);
+            return await _mealbasisRepository.GetMealBasisfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.Account.AccountID);
         }
 
         private async Task<int> GetMealBasisID(string source, TransformedResult searchResult, SearchDetails searchDetails)
         {
-            return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.AccountID);
+            return await _mealbasisRepository.GetMealBasisIDfromTPMealbasisCodeAsync(source, searchResult.MealBasisCode, searchDetails.Account.AccountID);
         }
 
         /// <summary>Gets the property room booking identifier.</summary>

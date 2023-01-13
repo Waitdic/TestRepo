@@ -104,22 +104,34 @@
                             {
                                 throw new Exception("Room price not found");
                             }
-
-                            foreach (var oCancellationPolicy in room.CancellationPolicies)
+                            var freeCanx = new CancellationPolicy
                             {
-                                var cancelBy = oCancellationPolicy.CancelBy.ToSafeDate();
-                                var penalty = oCancellationPolicy.Penalty.ToSafeDecimal();
-                                var now = DateTime.Now;
+                                CancelBy = "1990-01-01",
+                                Penalty = "0"
+                            };
 
-                                if (cancelBy > now)
+                            var canxRaw = room.CancellationPolicies
+                                .Concat(new List<CancellationPolicy> { freeCanx })
+                                .Select(x => new
                                 {
-                                    cancellations.AddNew(now, cancelBy, penalty);
-                                }
-                                else
-                                {
-                                    cancellations.AddNew(cancelBy, now, penalty);
-                                }
-                            }
+                                    StartDate = x.CancelBy.ToSafeDate(),
+                                    Amount = x.Penalty.ToSafeDecimal()
+                                }).OrderBy(x => x.StartDate).ToArray();
+
+
+                            var now = DateTime.Now;
+                            var nowDateStart = new DateTime(now.Year, now.Month, now.Day);
+
+                            var canx = canxRaw.Select((x, i) => new Cancellation
+                            {
+                                StartDate = x.StartDate,
+                                Amount = x.Amount,
+                                EndDate = ReferenceEquals(x, canxRaw.Last())
+                                    ? propertyDetails.ArrivalDate
+                                    : canxRaw[i + 1].StartDate.AddSeconds(-1)
+                            }).Where(x => x.EndDate > nowDateStart);
+
+                            cancellations.AddRange(canx);
                         }
 
                         var errataItems = searchResponse.PropertyResults
@@ -412,7 +424,7 @@
                 AuthenticationMode = AuthenticationMode.Basic,
                 UserName = _settings.Login(propertyDetails),
                 Password = _settings.Password(propertyDetails),
-                UseGZip = true,
+                UseGZip = _settings.UseGZip(propertyDetails),
                 CreateLog = true,
                 LogFileName = logFilename
             };

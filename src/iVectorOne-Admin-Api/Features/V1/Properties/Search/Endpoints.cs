@@ -12,16 +12,15 @@ namespace iVectorOne_Admin_Api.Features.V1.Properties.Search
                 int accountId,
                 [FromQuery] string? query) =>
             {
-                var request = new Request
+                var response = await mediator.Send(new Request
                 {
-                    AccountID = accountId,
+                    TenantId = tenantId,
+                    AccountId = accountId,
                     Query = query
-                };
-
-                var response = await mediator.Send(request);
+                });
 
                 return response.Result;
-            });//.RequireAuthorization();
+            });
 
             return endpoints;
         }

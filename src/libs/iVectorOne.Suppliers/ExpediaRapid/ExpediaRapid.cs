@@ -365,7 +365,7 @@
                 {
                     room.LocalCost = inclusiveTotal.TotalInBillableCurrency.Amount;
                     room.GrossCost = inclusiveTotal.TotalInBillableCurrency.Amount;
-                    room.RateBasis = "Gross NetDown";
+                    room.RateBasis = "Gross Margin";
                     room.CommissionPercentage = marketingFee.TotalInBillableCurrency.Amount /
                                                     inclusiveTotal.TotalInBillableCurrency.Amount * 100;
                 }

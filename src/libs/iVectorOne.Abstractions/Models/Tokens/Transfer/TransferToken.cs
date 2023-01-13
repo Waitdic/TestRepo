@@ -1,18 +1,12 @@
 ﻿namespace iVectorOne.Models.Tokens.Transfer
 {
     using System;
-    using System.Collections.Generic;
     using System.Text.Json.Serialization;
     using Newtonsoft.Json;
 
     /// <summary>A class that represents the transfer token, will be encrypted in responses/requests</summary>
     public class TransferToken
     {
-        /// <summary>Gets or sets the source</summary>
-        [JsonPropertyName("S")]
-        public string Source { get; set; } = string.Empty;
-
-        /// <summary>Gets or sets the departure date</summary>
         /// <value>The departure date.</value>
         [JsonProperty("DD")]
         public DateTime DepartureDate { get; set; }

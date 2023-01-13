@@ -4,13 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Amazon.Runtime.Internal.Util;
     using Intuitive;
     using iVectorOne.Factories;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Repositories;
     using iVectorOne.SDK.V2.PropertyPrebook;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///   <para>The service responsible for handling the pre book</para>
@@ -59,7 +57,6 @@
             bool requestValid = true;
             bool success = false;
             var propertyDetails = new PropertyDetails();
-            var prebookDateAndTime = DateTime.Now;
 
             try
             {
@@ -82,8 +79,6 @@
 
                     if (thirdParty != null)
                     {
-                        prebookDateAndTime = DateTime.Now;
-
                         success = await thirdParty.PreBookAsync(propertyDetails);
 
                         if (success)
@@ -115,7 +110,7 @@
                 }
                 else if (requestValid)
                 {
-                    //response.Warnings = null!;
+                    response.Warnings = null!;
                 }
             }
 

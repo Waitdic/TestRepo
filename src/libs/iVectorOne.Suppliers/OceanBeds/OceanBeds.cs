@@ -301,7 +301,7 @@
 
             foreach (var room in propertyDetails.Rooms)
             {
-                var booking = new Booking
+                var booking = new Models.Common.Booking
                 {
                     CheckInDate = propertyDetails.ArrivalDate.ToDateString(),
                     CheckOutDate = propertyDetails.DepartureDate.ToDateString(),

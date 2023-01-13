@@ -27,6 +27,7 @@
                 case ThirdParties.DERBYSOFTCLUBMED:
                 case ThirdParties.DERBYSOFTSYNXIS:
                 case ThirdParties.DERBYSOFTMARRIOTT:
+                case ThirdParties.DERBYSOFTTRAVELCLICK:
                 case ThirdParties.DOTW:
                 case ThirdParties.FASTPAYHOTELS:
                 case ThirdParties.GOGLOBAL:
@@ -43,6 +44,15 @@
                 case ThirdParties.YOUTRAVEL:
                     break; // neither required
                 case ThirdParties.BOOKABED:
+                case ThirdParties.HBSISANDALS:
+                case ThirdParties.HBSIBESTWESTERN:
+                case ThirdParties.HBSICET:
+                case ThirdParties.HBSISTARWOOD:
+                case ThirdParties.HBSISTATIONCASINOS:
+                case ThirdParties.HBSIUNIVERSAL:
+                case ThirdParties.HBSIVENETIAN:
+                case ThirdParties.HBSIAMR:
+                case ThirdParties.HBSICOUPLES:
                 case ThirdParties.IMPERATORE:
                 case ThirdParties.JUNIPERECTRAVEL:
                 case ThirdParties.JUNIPERELEVATE:
@@ -137,6 +147,7 @@
                 case ThirdParties.DERBYSOFTCLUBMED:
                 case ThirdParties.DERBYSOFTMARRIOTT:
                 case ThirdParties.DERBYSOFTSYNXIS:
+                case ThirdParties.DERBYSOFTTRAVELCLICK:
                 case ThirdParties.TRAVELGATEARABIANA:
                 case ThirdParties.TRAVELGATEBOOKOHOTEL:
                 case ThirdParties.TRAVELGATEDARINA:
