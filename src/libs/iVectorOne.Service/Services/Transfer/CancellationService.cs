@@ -27,9 +27,6 @@
         /// <summary>Builds the cancellation response</summary>
         private readonly ICancelTransferResponseFactory _responseFactory;
 
-        /// <summary>The reference validator</summary>
-        ////private readonly ISuppierReferenceValidator _referenceValidator;
-
         /// <summary>The supplier log repository</summary>
         private readonly ITransferSupplierLogRepository _supplierLogRepository;
 
@@ -65,7 +62,6 @@
             try
             {
                 transferDetails = await _transferDetailsFactory.CreateAsync(cancelRequest);
-                //_referenceValidator.ValidateCancel(transferDetails);
 
                 if (transferDetails.Warnings.Any())
                 {
@@ -140,7 +136,6 @@
             try
             {
                 transferDetails = await _transferDetailsFactory.CreateAsync(preCancelRequest);
-                //_referenceValidator.ValidateCancel(transferDetails);
 
                 if (transferDetails.Warnings.Any())
                 {
