@@ -21,6 +21,10 @@
         [XmlElement("confirmedBooking")]
         public string ConfirmedBooking { get; set; } = string.Empty;
 
+        [XmlElement("clientNationality")]
+        public string ClientNationality { get; set; } = string.Empty;
+        public bool ShouldSerializeClientNationality() => !string.IsNullOrEmpty(ClientNationality);
+
         [XmlElement("contactPerson")]
         public ContactPerson ContactPerson { get; set; } = new();
 
