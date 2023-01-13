@@ -25,9 +25,6 @@
         private readonly ISearchStoreService _searchStoreService;
 
         /// <summary>The search repository</summary>
-        private readonly ISearchRepository _searchRepository;
-
-        /// <summary>The search repository</summary>
         private readonly IExtraLocationMappingFactory _locationMappingFactory;
 
         /// <summary>The Extra search details factory</summary>
@@ -53,8 +50,7 @@
             IExtraSearchResponseFactory extraSearchResponseFactory,
             IExtraThirdPartyFactory thirdPartyFactory,
             IThirdPartyExtraSearchRunner searchRunner,
-            ISearchStoreService searchStoreService,
-            ISearchRepository searchRepository)
+            ISearchStoreService searchStoreService)
         {
             _locationMappingFactory = Ensure.IsNotNull(locationMappingFactory, nameof(locationMappingFactory));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
@@ -62,7 +58,6 @@
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
             _searchRunner = Ensure.IsNotNull(searchRunner, nameof(searchRunner));
             _searchStoreService = Ensure.IsNotNull(searchStoreService, nameof(searchStoreService));
-            _searchRepository = Ensure.IsNotNull(searchRepository, nameof(searchRepository));
         }
 
         /// <inheritdoc />
