@@ -13,6 +13,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
+    using SkiaSharp;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -71,20 +72,12 @@
             return locationData;
         }
 
-        public async Task<LocationMapping> TPLocationLookupAsync(ExtraSearchDetails searchDetails)
+        public async Task<List<string>> TPExtraLookupAsync(ExtraSearchDetails searchDetails)
         {
-            LocationMapping locationData;
+            Dictionary<int, string> extras = await this.TPExtrasAsync(searchDetails.Source);
+            List<string> extrasList = extras.Where(x => searchDetails.ExtraIDs.Contains(x.Key)).Select(x => x.Value).ToList();
 
-            Dictionary<int, string> location = await this.TPLocationAsync(searchDetails.Source);
-            location.TryGetValue(searchDetails.DepartureLocationId, out var departurePayload);
-            location.TryGetValue(searchDetails.ArrivalLocationId, out var arivalPayload);
-            locationData = new()
-            {
-                DepartureData = departurePayload,
-                ArrivalData = arivalPayload
-            };
-
-            return locationData;
+            return extrasList;
         }
 
         public async Task<List<string>> TPAllLocationLookup(string source)
@@ -307,6 +300,24 @@
             return await _cache.GetOrCreateAsync("SupplierCache", cacheBuilder, _timeout);
         }
 
+        /// <summary>Extras lookup</summary>
+        /// <returns>A Collection of Extras</returns>
+        private async Task<Dictionary<int, string>> TPExtrasAsync(string source)
+        {
+            string cacheKey = "TPExtrasLookup_" + source;
+
+            async Task<Dictionary<int, string>> cacheBuilder()
+            {
+                return await _sql.ReadSingleMappedAsync(
+                    "select IVOExtraID, ExtraName  from IVOExtra where Source = @source",
+                    async r => (await r.ReadAllAsync<Extra>()).ToDictionary(x => x.IVOExtraID, x => x.ExtraName),
+                    new CommandSettings().WithParameters(new { source }));
+            }
+
+            return await _cache.GetOrCreateAsync(cacheKey, cacheBuilder, _timeout);
+        }
+
+
         public async Task<TransferBookingDetails> GetTransferBookingDetailsAsync(string supplierBookingReference)
         {
             return await _sql.ReadSingleAsync<TransferBookingDetails>(
@@ -379,6 +390,13 @@
             public int SupplierID { get; set; }
             public string SupplierName { get; set; } = string.Empty;
         }
+
+        private class Extra
+        {
+            public int IVOExtraID { get; set; }
+            public string ExtraName { get; set; }
+        }
+
 
         #endregion
     }

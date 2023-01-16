@@ -50,8 +50,8 @@
                   .IsStoredProcedure()
                   .WithParameters(new
                   {
-                      departureLocationID = searchDetails.DepartureLocationId,
-                      arrivalLocationID = searchDetails.ArrivalLocationId,
+                      departureLocationID = 0,// searchDetails.DepartureLocationId,
+                      arrivalLocationID = 0,//searchDetails.ArrivalLocationId,
                       source = searchDetails.Source,
                   }));
 

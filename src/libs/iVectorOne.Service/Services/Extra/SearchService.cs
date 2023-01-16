@@ -25,7 +25,7 @@
         private readonly ISearchStoreService _searchStoreService;
 
         /// <summary>The search repository</summary>
-        private readonly IExtraLocationMappingFactory _locationMappingFactory;
+        private readonly IExtraFactory _extraFactory;
 
         /// <summary>The Extra search details factory</summary>
         private readonly IExtraSearchDetailsFactory _searchDetailsFactory;
@@ -39,20 +39,20 @@
         private readonly IThirdPartyExtraSearchRunner _searchRunner;
 
         /// <summary>Initializes a new instance of the <see cref="ExtraSearchService" /> class.</summary>
-        /// <param name="locationMappingFactory">The location mapping factory.</param>
+        /// <param name="extraFactory">The extra factory.</param>
         /// <param name="searchDetailsFactory">The search details factory.</param>
         /// <param name="ExtraSearchResponseFactory">The factory that produces the response using the results returned from the results processor</param>
         /// <param name="thirdPartyFactory">Takes in a source and return the third party search class</param>
         /// <param name="searchStoreService">The service to store the search </param>
         public SearchService(
-            IExtraLocationMappingFactory locationMappingFactory,
+            IExtraFactory extraFactory,
             IExtraSearchDetailsFactory searchDetailsFactory,
             IExtraSearchResponseFactory extraSearchResponseFactory,
             IExtraThirdPartyFactory thirdPartyFactory,
             IThirdPartyExtraSearchRunner searchRunner,
             ISearchStoreService searchStoreService)
         {
-            _locationMappingFactory = Ensure.IsNotNull(locationMappingFactory, nameof(locationMappingFactory));
+            _extraFactory = Ensure.IsNotNull(extraFactory, nameof(extraFactory));
             _searchDetailsFactory = Ensure.IsNotNull(searchDetailsFactory, nameof(searchDetailsFactory));
             _extraSearchResponseFactory = Ensure.IsNotNull(extraSearchResponseFactory, nameof(extraSearchResponseFactory));
             _thirdPartyFactory = Ensure.IsNotNull(thirdPartyFactory, nameof(thirdPartyFactory));
@@ -67,7 +67,7 @@
             var stopwatch = Stopwatch.StartNew();
             ExtraSearchStoreItem searchStoreItem = null!;
 
-            var locationMapping = new LocationMapping();
+            var extras = new List<string>();
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
             Response response;
@@ -86,7 +86,7 @@
                 {
                     searchDetails.Source = (thirdPartySearch as ISingleSource)!.Source;
 
-                    locationMapping = await _locationMappingFactory.CreateAsync(searchDetails, searchRequest.Account);
+                    extras = await _extraFactory.CreateAsync(searchDetails, searchRequest.Account);
 
                     if (!thirdPartySearch.ValidateSettings(searchDetails))
                     {
@@ -100,7 +100,7 @@
                     taskList.Add(
                         _searchRunner.SearchAsync(
                             searchDetails,
-                            locationMapping,
+                            extras,
                             thirdPartySearch,
                             cancellationTokenSource));
                 }
@@ -109,7 +109,7 @@
 
                 stopwatch.Restart();
 
-                response = await _extraSearchResponseFactory.CreateAsync(searchDetails, locationMapping, requestTracker);
+                response = await _extraSearchResponseFactory.CreateAsync(searchDetails, extras, requestTracker);
 
                 searchStoreItem.PostProcessTime += (int)stopwatch.ElapsedMilliseconds;
                 searchStoreItem.ResultsReturned = response.ExtraResults.Count;

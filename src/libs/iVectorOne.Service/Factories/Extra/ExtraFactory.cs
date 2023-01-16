@@ -6,12 +6,13 @@
     using iVectorOne.Repositories;
     using iVectorOne.Search.Models;
     using Microsoft.Extensions.Logging;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     /// <summary>
     ///  Class responsible for building the extra location mapping
     /// </summary>
-    public class ExtraLocationMappingFactory : IExtraLocationMappingFactory
+    public class ExtraFactory : IExtraFactory
     {
         /// <summary>The extra search repository</summary>
         private readonly IExtraSearchRepository _searchRepository;
@@ -20,10 +21,10 @@
         /// <summary>The log writer</summary>
         private readonly ILogger<ExtraSearchResponseFactory> _logger;
 
-        /// <summary>Initializes a new instance of the <see cref="ExtraLocationMappingFactory" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ExtraFactory" /> class.</summary>
         /// /// <param name="searchRepository">The extra search repository</param>
         /// <param name="logger">The log writer</param>
-        public ExtraLocationMappingFactory(
+        public ExtraFactory(
             IExtraSearchRepository searchRepository,
             ILogger<ExtraSearchResponseFactory> logger,
             ITPSupport tpSupport)
@@ -33,9 +34,9 @@
             _tpSupport = Ensure.IsNotNull(tpSupport, nameof(tpSupport));
         }
 
-        public async Task<LocationMapping> CreateAsync(ExtraSearchDetails searchDetails, Account account)
+        public async Task<List<string>> CreateAsync(ExtraSearchDetails searchDetails, Account account)
         {
-            return await _tpSupport.TPLocationLookupAsync(searchDetails);
+            return await _tpSupport.TPExtraLookupAsync(searchDetails);
         }
     }
 }

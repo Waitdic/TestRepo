@@ -21,9 +21,7 @@
         {
             var searchDetails = new ExtraSearchDetails()
             {
-                DepartureLocationId = searchRequest.DepartureLocationID,
-                ArrivalLocationId = searchRequest.ArrivalLocationID,
-
+                ExtraIDs = searchRequest.ExtraIDs,
                 OneWay = searchRequest.OneWay,
 
                 Adults = searchRequest.Adults,

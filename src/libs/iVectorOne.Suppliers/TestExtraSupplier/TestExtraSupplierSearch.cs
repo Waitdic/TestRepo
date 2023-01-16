@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
@@ -33,10 +34,10 @@
             _sqlFactory = Ensure.IsNotNull(sqlFactory, nameof(sqlFactory));
         }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, LocationMapping location)
+        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<string> extras)
         {
-            (string, string) tpLocations = ((string, string))GetThirdPartyLocations(searchDetails, location);
-            bool returnResults = tpLocations.Item1.ToLower() == "airport1" && tpLocations.Item2.ToLower() == "resort1";
+            string tpExtra = GetThirdPartyExtras(extras);
+            bool returnResults = !string.IsNullOrEmpty(tpExtra);
 
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return Task.FromResult(new List<Request>() { new Request() {
@@ -55,7 +56,7 @@
             return false;
         }
 
-        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, LocationMapping location)
+        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<string> extras)
         {
             var transformedResults = new TransformedExtraResultCollection();
 
@@ -96,9 +97,9 @@
         {
             return true;
         }
-        private object GetThirdPartyLocations(ExtraSearchDetails searchDetails, LocationMapping location)
+        private string GetThirdPartyExtras(List<string> extras)
         {
-            return (location.DepartureData, location.ArrivalData);
+            return extras.FirstOrDefault();
         }
     }
 }

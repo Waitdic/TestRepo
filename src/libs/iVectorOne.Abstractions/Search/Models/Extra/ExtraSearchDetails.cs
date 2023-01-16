@@ -24,14 +24,9 @@
         public int AccountID { get; set; }
 
         /// <summary>
-        /// Gets or sets the departure location identifier
+        /// Gets or sets the list of extra IDs
         /// </summary>
-        public int DepartureLocationId { get; set; }
-
-        // <summary>
-        /// Gets or sets the arrival location identifier
-        /// </summary>
-        public int ArrivalLocationId { get; set; }
+        public List<int> ExtraIDs { get; set; }
 
         /// <summary>
         /// Gets or sets the departure date.
