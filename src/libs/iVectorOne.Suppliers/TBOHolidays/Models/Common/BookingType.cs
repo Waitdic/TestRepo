@@ -4,7 +4,7 @@
     {
         Failed,
         Confirmed,
-        Vouchered,
+        Voucher,
         Pending
     }
 }
