@@ -81,6 +81,7 @@
                 request.Criteria.CheckIn = propertyDetails.ArrivalDate.ToString(HotelstonHelper.DateFormatString);
                 request.Criteria.CheckOut = propertyDetails.DepartureDate.ToString(HotelstonHelper.DateFormatString);
                 request.Criteria.HotelId = propertyDetails.TPKey;
+                request.Criteria.ClientNationality = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[3];
 
                 foreach (var roomDetail in propertyDetails.Rooms)
                 {
@@ -334,12 +335,9 @@
                         break;
                     }
 
-                    decimal preBookRoomCost = room.Price;
-                    if (prebookSuccess && preBookRoomCost != searchRoomCost)
+                    if (prebookSuccess && room.Price != searchRoomCost)
                     {
-                        prebookSuccess = false;
-                        errorType = "Room Price Does Not Match";
-                        break;
+                        propertyRoom.LocalCost = room.Price;
                     }
 
                     count += 1;
@@ -366,6 +364,8 @@
 
                 request.HotelId = propertyDetails.TPKey;
                 request.SearchId = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[1];
+                var paxNationality = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[3];
+                propertyDetails.Rooms.ForEach(x => x.ThirdPartyReference = x.ThirdPartyReference.Replace($"|{paxNationality}", ""));
 
                 foreach (var roomDetails in propertyDetails.Rooms)
                 {
@@ -402,6 +402,7 @@
 
                 if (success)
                 {
+                    propertyDetails.Rooms.ForEach(x => x.ThirdPartyReference += $"|{paxNationality}");
                     propertyDetails.LocalCost = propertyDetails.Rooms.Sum(r => r.LocalCost);
                     ProcessBookingTerms(response, propertyDetails);
                 }
@@ -473,6 +474,7 @@
                 request.ContactPerson.Lastname = lastName;
                 request.ContactPerson.Email = email;
                 request.ContactPerson.Phone = phone;
+                request.ClientNationality = propertyDetails.Rooms[0].ThirdPartyReference.Split('|')[5];
 
                 foreach (var roomDetails in propertyDetails.Rooms)
                 {
