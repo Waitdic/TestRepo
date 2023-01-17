@@ -318,9 +318,9 @@
         public const string InvalidArrivalLocationID = "An arrival location ID is required";
 
         /// <summary>
-        ///   <para>A valid extra id is required</para>
+        ///   <para>Extra IDs must be greater than zero</para>
         /// </summary>
-        public const string InvalidExtraID = "A valid extra id is required";
+        public const string InvalidExtraID = "Extra IDs must be greater than zero";
 
         /// <summary>
         ///   <para>An adult or child is required</para>
