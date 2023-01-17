@@ -65,7 +65,6 @@
                         CurrencyID = await ProcessorHelpers.GetISOCurrencyID(searchDetails.Source, result.CurrencyCode, searchDetails.AccountID, _currencyRepository),
                         VehicleQuantity = result.VehicleQuantity,
                         Cost = result.Cost,
-                        BuyingChannelCost = result.BuyingChannelCost,
                         OutboundInformation = result.OutboundInformation,
                         ReturnInformation = result.ReturnInformation,
                         OutboundCost = result.OutboundCost,

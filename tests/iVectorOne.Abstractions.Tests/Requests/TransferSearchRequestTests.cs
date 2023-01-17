@@ -368,7 +368,7 @@
                 Adults = 2,
                 Children = 1,
                 Infants = 0,
-                ChildAges = new List<int>() { 1,2,3,4,5,6,7 }
+                ChildAges = new List<int>() { 7 }
             };
 
             Validator validator = new Validator();

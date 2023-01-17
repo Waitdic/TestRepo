@@ -87,7 +87,6 @@
                         CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(result.CurrencyID),
                         VehicleQuantity = result.VehicleQuantity,
                         Cost = result.Cost,
-                        BuyingChannelCost = result.BuyingChannelCost,
                         OutboundInformation = result.OutboundInformation,
                         ReturnInformation = result.ReturnInformation,
                         OutboundCost = result.OutboundCost,

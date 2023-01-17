@@ -72,17 +72,15 @@
                     {
                         TPSessionID = $"TPSession_{i}",
                         SupplierReference = $"SupplierRef_{i}",
-                        UseDate = "2023-03-02",
-                        UseTime ="10:44",
-                        EndDate= "2023-03-10",
-                        EndTime= "10:44",
-                        ExtraCategory = "testExtraCategory",
                         ExtraName = "testExtraName",
+                        ExtraCategory = "testExtraCategory",
+                        //UseDate = "2023-03-02",
+                        //UseTime ="10:44",
+                        //EndDate= "2023-03-10",
+                        //EndTime= "10:44",
                         CurrencyCode = "GBP",
                         Cost = 200,
-                        BuyingChannelCost = 00,
                         AdditionalDetails = "testAdditionalDetails"
-
                     };
 
                     transformedResults.TransformedResults.Add(extra);

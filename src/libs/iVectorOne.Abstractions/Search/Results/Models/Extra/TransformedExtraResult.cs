@@ -12,6 +12,12 @@ namespace iVectorOne.Search.Results.Models.Extra
     public class TransformedExtraResult
     {
         /// <summary>
+        /// The extra name error message
+        /// </summary>
+        [XmlIgnore]
+        public const string EXTRANAMEERRORMESSAGE = "No extra name Specified";
+
+        /// <summary>
         /// The currency code error message
         /// </summary>
         [XmlIgnore]
@@ -62,13 +68,6 @@ namespace iVectorOne.Search.Results.Models.Extra
        public decimal Cost { get; set; }
 
         /// <summary>
-        /// Gets or sets the buying channel cost.
-        /// </summary>
-        /// <value>
-        /// The extra vehicle.
-        /// </value>
-        public decimal BuyingChannelCost { get; set; }
-        /// <summary>
         /// Gets or sets the extra name.
         /// </summary>
         public string ExtraName { get; set; } = string.Empty;
@@ -114,6 +113,11 @@ namespace iVectorOne.Search.Results.Models.Extra
             if (string.IsNullOrEmpty(this.CurrencyCode))
             {
                 this.Warnings.Add(CURRENCYCODEERRORMESSAGE);
+            }
+
+            if (string.IsNullOrEmpty(this.ExtraName))
+            {
+                this.Warnings.Add(ExtraName);
             }
 
             if (this.Cost == 0)

@@ -20,7 +20,6 @@
         public string SupplierReference { get; set; } = string.Empty;
         public int CurrencyID { get; set; }
         public decimal Cost { get; set; }
-        public decimal BuyingChannelCost { get; set; }
         public string ExtraName { get; set; } = string.Empty;
         public string ExtraCategory { get; set; } = string.Empty;
         public string UseDate { get; set; } = string.Empty;

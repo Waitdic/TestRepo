@@ -214,7 +214,6 @@
                 CurrencyCode = optStayResult.Currency,
                 VehicleQuantity = 1,
                 Cost = totalPrice / 100m,
-                BuyingChannelCost = 0,
                 OutboundInformation = "",
                 ReturnInformation = "",
                 OutboundCost = 0,

@@ -75,11 +75,6 @@
         public decimal Cost { get; set; }
 
         /// <summary>
-        /// Gets or sets the buying channel cost.
-        /// </summary>
-        public decimal BuyingChannelCost { get; set; }
-
-        /// <summary>
         /// Gets or sets the additional details.
         /// </summary>
         public string AdditionalDetails { get; set; } = string.Empty;
