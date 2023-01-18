@@ -1,5 +1,6 @@
 ﻿namespace iVectorOne.Search
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using iVectorOne.Extra;
@@ -15,13 +16,13 @@
         /// Runs the third party searches
         /// </summary>
         /// <param name="searchDetails">The extra search details</param>
-        /// <param name="locationMapping">The extra location mapping</param>
+        /// <param name="extras">The extras from database</param>
         /// <param name="thirdPartySearch">The third party search adapter to run</param>
         /// <param name="cancellationTokenSource">The cancellation token source</param>
         /// <returns>The Task representing the search result</returns>
         Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            LocationMapping locationMapping,
+            List<string> extras,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }

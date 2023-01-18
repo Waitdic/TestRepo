@@ -318,6 +318,16 @@
         public const string InvalidArrivalLocationID = "An arrival location ID is required";
 
         /// <summary>
+        ///   <para>Extra IDs must be greater than zero</para>
+        /// </summary>
+        public const string InvalidExtraID = "Extra IDs must be greater than zero";
+
+        /// <summary>
+        ///   <para>At least one Extra ID is required</para>
+        /// </summary>
+        public const string ExtraIDRequired = "At least one Extra ID is required";
+
+        /// <summary>
         ///   <para>An adult or child is required</para>
         /// </summary>
         public const string NoAdultsOrChildrenSpecified = "At least one adult or child must be specified";

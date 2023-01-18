@@ -30,11 +30,11 @@
         Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails);
 
         /// <summary>
-        /// Get location mapping
+        /// Get extras
         /// </summary>
         /// <param name="searchDetails"></param>
-        /// <returns></returns>
-        Task<LocationMapping> TPLocationLookupAsync(ExtraSearchDetails searchDetails);
+        /// <returns>List of extras filtered by ExtraIDs passed in search details</returns>
+        Task<List<string>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
         /// <summary>
         /// Get all locations list
         /// </summary>

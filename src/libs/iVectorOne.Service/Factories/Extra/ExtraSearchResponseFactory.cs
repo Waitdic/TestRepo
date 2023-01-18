@@ -45,12 +45,12 @@
 
         /// <summary>Creates the specified results.</summary>
         /// <param name="searchDetails">The search details, used to retrieve information about the search e.g. duration that is not on the results</param>
-        /// <param name="locationMapping">The extra location mapping containing the third party location data</param>
+        /// <param name="extras">The extras containing the third party extra names</param>
         /// <param name="requestTracker">The request tracker, allows for analysis of reponse times</param>
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, LocationMapping locationMapping, IRequestTracker requestTracker)
+        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<string> extras, IRequestTracker requestTracker)
         {
             var response = new Response();
             var createResponseTimer = new ThirdPartyRequestTime("CreateResponse");

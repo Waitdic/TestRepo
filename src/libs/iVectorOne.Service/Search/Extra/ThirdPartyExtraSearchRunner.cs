@@ -60,7 +60,7 @@
         /// <inheritdoc />
         public async Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            LocationMapping locationMapping,
+            List<string> extras,
             Extra.IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {
@@ -73,7 +73,7 @@
                 var taskList = new List<Task>();
                 string source = searchDetails.Source;
 
-                var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, locationMapping);
+                var requests = await thirdPartySearch.BuildSearchRequestsAsync(searchDetails, extras);
 
                 var preprocessTime = (int)stopwatch.ElapsedMilliseconds;
                 stopwatch.Restart();
@@ -105,7 +105,7 @@
                         }
                     }
 
-                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, locationMapping);
+                    var transformedResponses = thirdPartySearch.TransformResponse(requests, searchDetails, extras);
 
                     var postProcessTime = (int)stopwatch.ElapsedMilliseconds;
                     stopwatch.Restart();
