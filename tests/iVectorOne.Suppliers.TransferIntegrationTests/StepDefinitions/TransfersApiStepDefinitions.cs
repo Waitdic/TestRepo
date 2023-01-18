@@ -7,12 +7,9 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
     using System;
 
     [Binding]
-    public class TransferSearchApiStepDefinitions : TransferBaseStepDefinitions
+    public class TransfersApiStepDefinitions : TransferBaseStepDefinitions
     {
-        private const int arrivalID = 187;
-        private const int departureID = 184;
-
-        public TransferSearchApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
+        public TransfersApiStepDefinitions(ScenarioContext scenarioContext) : base(scenarioContext)
         {
         }
 
@@ -22,7 +19,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (!string.IsNullOrEmpty(src) && table != null)
             {
-                SetSourceAndLocationIds(src, table);
+                SetDataFromStep(src, table);
             }
             string source = (string)GetValueFromScenarioConext("Source");
             int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int dID);
@@ -31,8 +28,8 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             CreateClient("search");
             var requestObj = new Request
             {
-                DepartureLocationID = dID == 0 ? departureID : dID,
-                ArrivalLocationID = aID == 0 ? arrivalID : aID,
+                DepartureLocationID = dID,
+                ArrivalLocationID = aID,
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
@@ -96,7 +93,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (!string.IsNullOrEmpty(src) && table != null)
             {
-                SetSourceAndLocationIds(src, table);
+                SetDataFromStep(src, table);
             }
             GivenCreateRequestObjectForSearchFor();
             await WhenMakeAPostRequestTo(SearchApi);
@@ -157,7 +154,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (!string.IsNullOrEmpty(src) && table != null)
             {
-                SetSourceAndLocationIds(src, table);
+                SetDataFromStep(src, table);
             }
 
             await GivenCreateRequestObjectForPrebookFor();
@@ -175,19 +172,22 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                     FirstName ="Test",
                     LastName = "Test",
                     DateOfBirth = new DateTime(1990,5,5)
-             } ,
-             new GuestDetail()
-             {
-                Type = GuestType.Adult,
-                Title ="Mrs",
-                FirstName ="Test",
-                LastName = "Test",
-                DateOfBirth = new DateTime(1990,5,6)
-             }
-            };
+                } ,
+                new GuestDetail()
+                {
+                    Type = GuestType.Adult,
+                    Title ="Mrs",
+                    FirstName ="Test",
+                    LastName = "Test",
+                    DateOfBirth = new DateTime(1990,5,6)
+                }
+                };
+
+                string bookingRef = (string)GetValueFromScenarioConext("BookingReference");
+
                 var requestObj = new SDK.V2.TransferBook.Request
                 {
-                    BookingReference = "BookingRef2",
+                    BookingReference = bookingRef,
                     SupplierReference = supplierReference,
                     BookingToken = bookingToken,
                     LeadCustomer = new LeadCustomer()
@@ -248,7 +248,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
             if (!string.IsNullOrEmpty(src) && table != null)
             {
-                SetSourceAndLocationIds(src, table);
+                SetDataFromStep(src, table);
             }
 
             await GivenCreateRequestObjectForBookFor();
@@ -316,7 +316,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [Given(@"Create request object for ""([^""]*)""")]
         public async Task GivenCreateRequestObjectFor(string source, Table table)
         {
-            SetSourceAndLocationIds(source, table);
+            SetDataFromStep(source, table);
             await GivenCreateRequestObjectForCancelFor();
         }
 

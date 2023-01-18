@@ -136,10 +136,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             return thirdPartySettings;
         }
 
-        public void SetSourceAndLocationIds(string source, Table table)
+        public void SetDataFromStep(string source, Table table)
         {
             _scenarioContext["DepartureID"] = table.Rows[0]["DepartureID"];
             _scenarioContext["ArrivalID"] = table.Rows[0]["ArrivalID"];
+            _scenarioContext["BookingReference"] = table.Rows[0].Keys.Contains("BookingReference") ? table.Rows[0]["BookingReference"] : string.Empty;
             _scenarioContext["Source"] = source;
         }
     }
