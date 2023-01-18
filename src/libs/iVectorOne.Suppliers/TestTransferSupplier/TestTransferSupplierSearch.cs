@@ -82,7 +82,6 @@
                         CurrencyCode = "GBP",
                         VehicleQuantity = 1,
                         Cost = 200,
-                        BuyingChannelCost = 0,
                         OutboundInformation = $"OutboundInformation_{i}",
                         ReturnInformation = $"ReturnInformation_{i}",
                         OutboundCost = 100,

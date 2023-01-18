@@ -81,9 +81,7 @@
                         EndTime= "10:44",
                         CurrencyCode = "GBP",
                         Cost = 200,
-                        BuyingChannelCost = 00,
                         AdditionalDetails = "testAdditionalDetails"
-
                     };
 
                     transformedResults.TransformedResults.Add(result);

@@ -13,6 +13,10 @@
 
         [XmlElement("cityId")]
         public string CityId { get; set; } = string.Empty;
+        
+        [XmlElement("clientNationality")]
+        public string ClientNationality { get; set; } = string.Empty;
+        public bool ShouldSerializeClientNationality() => !string.IsNullOrEmpty(ClientNationality);
 
         public bool ShouldSerializeCityId() => !string.IsNullOrEmpty(CityId);
 

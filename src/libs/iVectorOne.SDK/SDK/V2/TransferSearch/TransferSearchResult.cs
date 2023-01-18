@@ -30,7 +30,6 @@
         public int CurrencyID { get; set; }
         public int VehicleQuantity { get; set; }
         public decimal Cost { get; set; }
-        public decimal BuyingChannelCost { get; set; }
         public string OutboundInformation { get; set; } = string.Empty;
         public string ReturnInformation { get; set; } = string.Empty;
         public decimal OutboundCost { get; set; }

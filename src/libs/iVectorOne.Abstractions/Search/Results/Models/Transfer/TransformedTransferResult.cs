@@ -123,14 +123,6 @@
         public decimal Cost { get; set; }
 
         /// <summary>
-        /// Gets or sets the buying channel cost.
-        /// </summary>
-        /// <value>
-        /// The transfer vehicle.
-        /// </value>
-        public decimal BuyingChannelCost { get; set; }
-
-        /// <summary>
         /// Gets or sets the outbound information.
         /// </summary>
         /// <value>

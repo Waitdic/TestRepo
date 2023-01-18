@@ -88,7 +88,6 @@
                         AdditionalDetails= result.AdditionalDetails,
                         CurrencyCode = await _support.ISOCurrencyCodeLookupAsync(result.CurrencyID),
                         Cost = result.Cost,
-                        BuyingChannelCost = result.BuyingChannelCost,
                     };
 
                     response.ExtraResults.Add(extraResult);

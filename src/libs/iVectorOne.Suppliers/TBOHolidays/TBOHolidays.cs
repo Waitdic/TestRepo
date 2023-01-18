@@ -458,7 +458,7 @@
                 TotalFare = room.LocalCost,
                 EmailId = propertyDetails.LeadGuestEmail,
                 PhoneNumber = propertyDetails.LeadGuestPhone,
-                BookingType = BookingType.Vouchered.ToString(),
+                BookingType = BookingType.Voucher.ToString(),
                 PaymentMode = PaymentMode.Limit.ToString(),
             };
 
