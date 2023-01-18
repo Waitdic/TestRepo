@@ -67,18 +67,18 @@
                     return transformedResults;
                 }
 
-                for (int i = 0; i < 3; i++)
+                foreach (var extra in extras)
                 {
-                    var extra = new TransformedExtraResult()
+                    var result = new TransformedExtraResult()
                     {
-                        TPSessionID = $"TPSession_{i}",
-                        SupplierReference = $"SupplierRef_{i}",
+                        TPSessionID = $"TPSession_{extra}",
+                        SupplierReference = $"SupplierRef_{extra}",
+                        ExtraName = extra,
+                        ExtraCategory = "testExtraCategory",
                         UseDate = "2023-03-02",
                         UseTime ="10:44",
                         EndDate= "2023-03-10",
                         EndTime= "10:44",
-                        ExtraCategory = "testExtraCategory",
-                        ExtraName = "testExtraName",
                         CurrencyCode = "GBP",
                         Cost = 200,
                         BuyingChannelCost = 00,
@@ -86,7 +86,7 @@
 
                     };
 
-                    transformedResults.TransformedResults.Add(extra);
+                    transformedResults.TransformedResults.Add(result);
                 }
             }
 
