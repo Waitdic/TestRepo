@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using iVectorOne.Extra;
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.Search.Models;
 
     /// <summary>
@@ -22,7 +23,7 @@
         /// <returns>The Task representing the search result</returns>
         Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            List<string> extras,
+            List<Extras> extras,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }

@@ -75,6 +75,7 @@
     using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraSearch = SDK.V2.ExtraSearch;
     using LocationContent = SDK.V2.LocationContent;
+    using iVectorOne.Suppliers.GowaySydneyExtras;
 
     public class iVectorOneModule : ModuleBase, IServicesBuilder
     {
@@ -326,6 +327,7 @@
             services.AddSingleton<Transfer.IThirdPartySearch, ExoToursTransferSearch>();
             services.AddSingleton<Extra.IThirdPartySearch, TestExtraSupplierSearch>();
             services.AddSingleton<Extra.IThirdParty, TestExtraSupplier>();
+            services.AddSingleton<Extra.IThirdPartySearch, GowaySydneyExtrasSearch>();
         }
 
         private void RegsiterThirdPartyBookServices(IServiceCollection services)

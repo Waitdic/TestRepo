@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Lookups
 {
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.Models.Transfer;
     using iVectorOne.Search.Models;
     using System.Collections.Generic;
@@ -34,7 +35,7 @@
         /// </summary>
         /// <param name="searchDetails"></param>
         /// <returns>List of extras filtered by ExtraIDs passed in search details</returns>
-        Task<List<string>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
+        Task<List<Extras>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
         /// <summary>
         /// Get all locations list
         /// </summary>

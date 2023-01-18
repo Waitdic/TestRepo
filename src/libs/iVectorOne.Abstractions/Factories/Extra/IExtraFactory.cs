@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Factories
 {
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
     using System.Collections.Generic;
@@ -15,6 +16,6 @@
         /// <param name="searchDetails">The search details.</param>
         /// <param name="account">The account</param>
         /// <returns>A list of extras</returns>
-        Task<List<string>> CreateAsync(ExtraSearchDetails searchDetails, Account account);
+        Task<List<Extras>> CreateAsync(ExtraSearchDetails searchDetails, Account account);
     }
 }

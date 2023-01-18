@@ -13,6 +13,7 @@
     using iVectorOne.Extra;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models.Extra;
 
@@ -34,10 +35,10 @@
             _sqlFactory = Ensure.IsNotNull(sqlFactory, nameof(sqlFactory));
         }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<string> extras)
+        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extras> extras)
         {
-            string tpExtra = GetThirdPartyExtras(extras);
-            bool returnResults = !string.IsNullOrEmpty(tpExtra);
+            Extras tpExtra = GetThirdPartyExtras(extras);
+            bool returnResults = (tpExtra is not null && !string.IsNullOrEmpty(tpExtra.ExtraName));
 
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
             return Task.FromResult(new List<Request>() { new Request() {
@@ -56,7 +57,7 @@
             return false;
         }
 
-        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<string> extras)
+        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extras> extras)
         {
             var transformedResults = new TransformedExtraResultCollection();
 
@@ -71,9 +72,9 @@
                 {
                     var result = new TransformedExtraResult()
                     {
-                        TPSessionID = $"TPSession_{extra}",
-                        SupplierReference = $"SupplierRef_{extra}",
-                        ExtraName = extra,
+                        TPSessionID = $"TPSession_{extra.ExtraName}",
+                        SupplierReference = $"SupplierRef_{extra.ExtraName}",
+                        ExtraName = extra.ExtraName,
                         ExtraCategory = "testExtraCategory",
                         UseDate = "2023-03-02",
                         UseTime ="10:44",
@@ -95,7 +96,7 @@
         {
             return true;
         }
-        private string GetThirdPartyExtras(List<string> extras)
+        private Extras GetThirdPartyExtras(List<Extras> extras)
         {
             return extras.FirstOrDefault();
         }

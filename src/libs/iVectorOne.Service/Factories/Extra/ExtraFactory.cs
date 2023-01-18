@@ -3,6 +3,7 @@
     using Intuitive;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.Repositories;
     using iVectorOne.Search.Models;
     using Microsoft.Extensions.Logging;
@@ -34,7 +35,7 @@
             _tpSupport = Ensure.IsNotNull(tpSupport, nameof(tpSupport));
         }
 
-        public async Task<List<string>> CreateAsync(ExtraSearchDetails searchDetails, Account account)
+        public async Task<List<Extras>> CreateAsync(ExtraSearchDetails searchDetails, Account account)
         {
             return await _tpSupport.TPExtraLookupAsync(searchDetails);
         }

@@ -4,6 +4,7 @@
     using iVectorOne.Factories;
     using iVectorOne.Lookups;
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.Models.Tokens.Transfer;
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
@@ -50,7 +51,7 @@
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<string> extras, IRequestTracker requestTracker)
+        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<Extras> extras, IRequestTracker requestTracker)
         {
             var response = new Response();
             var createResponseTimer = new ThirdPartyRequestTime("CreateResponse");
