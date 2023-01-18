@@ -8,6 +8,7 @@
     {
         public Validator()
         {
+            RuleFor(x => x.ExtraIDs).NotEmpty().WithMessage(WarningMessages.ExtraIDRequired);
             RuleForEach(x => x.ExtraIDs).GreaterThanOrEqualTo(1).WithMessage(WarningMessages.InvalidExtraID);
             RuleFor(x => x.DepartureDate).NotNull().WithMessage(WarningMessages.DepartureDateNotSpecified);
             RuleFor(x => x.DepartureDate).GreaterThan(DateTime.Now.Date).WithMessage(WarningMessages.DepartureDateInThePast);

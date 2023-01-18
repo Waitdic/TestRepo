@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    ///  Class responsible for building the extra location mapping
+    ///  Class responsible for building the extra factory
     /// </summary>
     public class ExtraFactory : IExtraFactory
     {

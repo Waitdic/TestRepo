@@ -13,7 +13,6 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
-    using SkiaSharp;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -309,8 +308,8 @@
             async Task<Dictionary<int, string>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select IVOExtraID, ExtraName  from IVOExtra where Source = @source",
-                    async r => (await r.ReadAllAsync<Extra>()).ToDictionary(x => x.IVOExtraID, x => x.ExtraName),
+                    "select ExtraID, ExtraName  from Extra where Source = @source",
+                    async r => (await r.ReadAllAsync<Extra>()).ToDictionary(x => x.ExtraID, x => x.ExtraName),
                     new CommandSettings().WithParameters(new { source }));
             }
 
@@ -393,7 +392,7 @@
 
         private class Extra
         {
-            public int IVOExtraID { get; set; }
+            public int ExtraID { get; set; }
             public string ExtraName { get; set; }
         }
 

@@ -41,21 +41,5 @@
                 _logger.LogError(ex, "Error occured during adding the new locations.");
             }
         }
-
-        public async Task<LocationMapping> GetLocationMappingAsync(ExtraSearchDetails searchDetails)
-        {
-            var results = await _sql.ReadSingleAsync<LocationMapping>(
-              "Extra_GetLocationMapping",
-              new CommandSettings()
-                  .IsStoredProcedure()
-                  .WithParameters(new
-                  {
-                      departureLocationID = 0,// searchDetails.DepartureLocationId,
-                      arrivalLocationID = 0,//searchDetails.ArrivalLocationId,
-                      source = searchDetails.Source,
-                  }));
-
-            return results;
-        }
     }
 }

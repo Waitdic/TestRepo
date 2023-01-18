@@ -24,7 +24,7 @@
     {
         private readonly ISearchStoreService _searchStoreService;
 
-        /// <summary>The search repository</summary>
+        /// <summary>The Extra factory</summary>
         private readonly IExtraFactory _extraFactory;
 
         /// <summary>The Extra search details factory</summary>
