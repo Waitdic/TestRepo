@@ -61,7 +61,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             }
         }
 
-        public StringContent CreateRequest(TransferRequestBase requestObj)
+        public StringContent CreateRequest(ComponentRequestBase requestObj)
         {
             if (requestObj != null)
             {

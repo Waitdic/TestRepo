@@ -48,7 +48,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [When(@"make a post request to ""([^""]*)""")]
         public async Task WhenMakeAPostRequestTo(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("RequestObj");
+            ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("RequestObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
@@ -118,7 +118,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [When(@"make a post request to prebook ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToPrebook(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("PrebookObj");
+            ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("PrebookObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
@@ -216,7 +216,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [When(@"make a post request to book ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToBook(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("BookObj");
+            ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("BookObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
@@ -274,7 +274,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [When(@"make a post request to cancel ""([^""]*)""")]
         public async Task WhenMakeAPostRequestToCancel(string url)
         {
-            TransferRequestBase requestObj = (TransferRequestBase)GetValueFromScenarioConext("CancelObj");
+            ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("CancelObj");
 
             if (requestObj != null)
             {

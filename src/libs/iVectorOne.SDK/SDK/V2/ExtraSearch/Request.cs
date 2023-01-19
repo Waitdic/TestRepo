@@ -7,7 +7,7 @@
     /// <summary>
     /// A transfer search request
     /// </summary>
-    public record Request : TransferRequestBase, IRequest<Response>
+    public record Request : ComponentRequestBase, IRequest<Response>
     {
         /// <summary>
         /// Gets or sets the Extra IDs.

@@ -26,12 +26,7 @@
             extraDetails.SupplierReference += "_prebooked";
             extraDetails.LocalCost = 200M;
             extraDetails.Cancellations.AddNew(DateTime.Now, extraDetails.DepartureDate, extraDetails.LocalCost);
-            extraDetails.DepartureErrata.AddNew("Departure", "Departure Notes");
-            
-            if (!extraDetails.OneWay)
-            {
-                extraDetails.ReturnErrata.AddNew("Return", "Return Notes");
-            }
+            extraDetails.Errata.AddNew("Errata", "Notes");
 
             return prebookSuccess;
         }

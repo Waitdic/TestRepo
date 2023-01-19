@@ -39,21 +39,15 @@
         /// <returns>A pre book response</returns>
         public async Task<Response> CreateAsync(ExtraDetails extraDetails)
         {
-            var departureErrata = new List<string>();
-            var returnErrata = new List<string>();
+            var errata = new List<string>();
             var cancellationTerms = new List<CancellationTerm>();
 
             int isoCurrencyId = !string.IsNullOrEmpty(extraDetails.ISOCurrencyCode) ?
                 await _support.ISOCurrencyIDLookupAsync(extraDetails.ISOCurrencyCode) : 0;
 
-            foreach (var erratum in extraDetails.DepartureErrata)
+            foreach (var erratum in extraDetails.Errata)
             {
-                departureErrata.Add(string.Join(": ", erratum.Title, erratum.Text));
-            }
-
-            foreach (var erratum in extraDetails.ReturnErrata)
-            {
-                returnErrata.Add(string.Join(": ", erratum.Title, erratum.Text));
+                errata.Add(string.Join(": ", erratum.Title, erratum.Text));
             }
 
             foreach (var cancellation in extraDetails.Cancellations)
@@ -87,8 +81,7 @@
                 SupplierReference = extraDetails.SupplierReference,
                 TotalCost = extraDetails.LocalCost + 0.00M,
                 CancellationTerms = cancellationTerms,
-                DepartureErrata = departureErrata,
-                ReturnErrata = returnErrata,
+                Errata = errata,
             };
 
             return response;
