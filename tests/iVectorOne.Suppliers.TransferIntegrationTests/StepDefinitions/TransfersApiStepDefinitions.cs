@@ -15,25 +15,29 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
 
 
         [Given(@"Create request object for search for ""([^""]*)""")]
-        public void GivenCreateRequestObjectForSearchFor(string src = "", Table table = null)
+        public void GivenCreateRequestObjectForSearchFor(string source = "", Table scenarioData = null)
         {
-            if (!string.IsNullOrEmpty(src) && table != null)
+            string supplier;
+            if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
-                SetDataFromStep(src, table);
+                SetDataFromStep(source, scenarioData);
+                supplier = source;
             }
-            string source = (string)GetValueFromScenarioConext("Source");
-            int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int dID);
-            int.TryParse((string)GetValueFromScenarioConext("ArrivalID"), out int aID);
+            else
+                supplier = (string)GetValueFromScenarioConext("Source");
+
+            int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int departureLocationID);
+            int.TryParse((string)GetValueFromScenarioConext("ArrivalID"), out int arrivalLocationID);
 
             CreateClient("search");
             var requestObj = new Request
             {
-                DepartureLocationID = dID,
-                ArrivalLocationID = aID,
+                DepartureLocationID = departureLocationID,
+                ArrivalLocationID = arrivalLocationID,
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
-                Supplier = source,
+                Supplier = supplier,
                 DepartureTime = "10:00",
                 IncludeOnRequest = true,
             };
@@ -89,11 +93,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
         [Given(@"Create request object for prebook for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForPrebookFor(string src = "", Table table = null)
+        public async Task GivenCreateRequestObjectForPrebookFor(string source = "", Table scenarioData = null)
         {
-            if (!string.IsNullOrEmpty(src) && table != null)
+            if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
-                SetDataFromStep(src, table);
+                SetDataFromStep(source, scenarioData);
             }
             GivenCreateRequestObjectForSearchFor();
             await WhenMakeAPostRequestTo(SearchApi);
@@ -150,11 +154,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
         [Given(@"Create request object for book for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForBookFor(string src = "", Table table = null)
+        public async Task GivenCreateRequestObjectForBookFor(string source = "", Table scenarioData = null)
         {
-            if (!string.IsNullOrEmpty(src) && table != null)
+            if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
-                SetDataFromStep(src, table);
+                SetDataFromStep(source, scenarioData);
             }
 
             await GivenCreateRequestObjectForPrebookFor();
@@ -244,11 +248,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
         [Given(@"Create request object for cancel for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForCancelFor(string src = "", Table table = null)
+        public async Task GivenCreateRequestObjectForCancelFor(string source = "", Table scenarioData = null)
         {
-            if (!string.IsNullOrEmpty(src) && table != null)
+            if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
-                SetDataFromStep(src, table);
+                SetDataFromStep(source, scenarioData);
             }
 
             await GivenCreateRequestObjectForBookFor();
@@ -314,9 +318,9 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
         [Given(@"Create request object for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectFor(string source, Table table)
+        public async Task GivenCreateRequestObjectFor(string source, Table scenarioData)
         {
-            SetDataFromStep(source, table);
+            SetDataFromStep(source, scenarioData);
             await GivenCreateRequestObjectForCancelFor();
         }
 
