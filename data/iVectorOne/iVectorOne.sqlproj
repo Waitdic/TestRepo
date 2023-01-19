@@ -111,13 +111,7 @@
       <Project>{ba23a014-55f0-48b4-8ba3-6f1f89442f69}</Project>
       <Private>True</Private>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseSqlCmdVariable>Telemetry</DatabaseSqlCmdVariable>
+      <DatabaseVariableLiteralValue>Telemetry</DatabaseVariableLiteralValue>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <SqlCmdVariable Include="Telemetry">
-      <DefaultValue>Telemetry</DefaultValue>
-      <Value>$(SqlCmdVar__1)</Value>
-    </SqlCmdVariable>
   </ItemGroup>
 </Project>
