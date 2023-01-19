@@ -58,7 +58,7 @@
             var transformedResult = new TransformedResult
             {
                 RoomTypeCode = roomRate.RoomId,
-                MealBasisCode = roomRate.MealPlan,
+                MealBasisCode = roomRate.MealPlan?? string.Empty,
                 Amount = amount,
                 SellingPrice = amount,
                 NetPrice = amount,
