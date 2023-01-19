@@ -1,11 +1,9 @@
 ﻿namespace iVectorOne.Factories
 {
     using Intuitive;
-    using iVectorOne.Factories;
     using iVectorOne.Lookups;
-    using iVectorOne.Models;
     using iVectorOne.Models.Extra;
-    using iVectorOne.Models.Tokens.Transfer;
+    using iVectorOne.Models.Tokens.Extra;
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
@@ -61,7 +59,7 @@
             {
                 try
                 {
-                    var transferToken = new TransferToken()
+                    var extraToken = new ExtraToken()
                     {
                         DepartureDate = searchDetails.DepartureDate,
                         DepartureTime = searchDetails.DepartureTime,
@@ -77,7 +75,7 @@
 
                     var extraResult = new ExtraResult()
                     {
-                        BookingToken = _tokenService.EncodeTransferToken(transferToken),
+                        BookingToken = _tokenService.EncodeExtraToken(extraToken),
                         SupplierReference = result.SupplierReference,
                         TPSessionID = result.TPSessionID,
                         UseDate= result.UseDate,

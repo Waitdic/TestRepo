@@ -85,30 +85,29 @@
         public LocationData GetThirdPartyLocations(LocationMapping location)
         {
             LocationData locationData = new LocationData();
-            if (location != null &&
-                location.DepartureData.Length > 0 &&
-                location.ArrivalData.Length > 0 &&
-                location.AdditionalArrivalData.All(x => x.Length > 0) &&
-                location.AdditionalDepartureData.All(x => x.Length > 0))
+
+            if (location == null || !location.IsValid())
             {
-                List<string[]> departureData = new() { location.DepartureData.Split(":") };
-                List<string[]> arrivalData = new() { location.ArrivalData.Split(":") };
+                return locationData;
+            }
 
-                string primaryArrivalDataLocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
-                string primaryDepartureDataLocationCode = departureData.FirstOrDefault().FirstOrDefault();
+            List<string[]> departureData = new() { location.DepartureData.Split(":") };
+            List<string[]> arrivalData = new() { location.ArrivalData.Split(":") };
 
-                if (LocationData.IsLocationDataCodeValid(primaryArrivalDataLocationCode, primaryDepartureDataLocationCode))
+            string primaryArrivalDataLocationCode = arrivalData.FirstOrDefault().FirstOrDefault();
+            string primaryDepartureDataLocationCode = departureData.FirstOrDefault().FirstOrDefault();
+
+            if (LocationData.IsLocationDataCodeValid(primaryArrivalDataLocationCode, primaryDepartureDataLocationCode))
+            {
+                locationData.LocationCode = primaryArrivalDataLocationCode;
+
+                AddAdditionalLocationData(location.AdditionalDepartureData, ref departureData);
+                AddAdditionalLocationData(location.AdditionalArrivalData, ref arrivalData);
+
+                if (LocationData.IsLocationDataValid(arrivalData) && LocationData.IsLocationDataValid(departureData))
                 {
-                    locationData.LocationCode = primaryArrivalDataLocationCode;
-
-                    AddAdditionalLocationData(location.AdditionalDepartureData, ref departureData);
-                    AddAdditionalLocationData(location.AdditionalArrivalData, ref arrivalData);
-
-                    if (LocationData.IsLocationDataValid(arrivalData) && LocationData.IsLocationDataValid(departureData))
-                    {
-                        locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
-                        locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
-                    }
+                    locationData.ArrivalName = arrivalData.Select(x => x[1].TrimStart()).ToList();
+                    locationData.DepartureName = departureData.Select(x => x[1].TrimStart()).ToList();
                 }
             }
 
