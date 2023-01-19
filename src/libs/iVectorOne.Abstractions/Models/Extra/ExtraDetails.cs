@@ -221,44 +221,7 @@ namespace iVectorOne.Models.Extra
         /// <summary>
         /// Gets or sets The errata
         /// </summary>
-        public Errata DepartureErrata { get; set; } = new();
-
-        /// <summary>
-        /// Gets or sets The errata
-        /// </summary>
-        public Errata ReturnErrata { get; set; } = new();
-
-        ///// <summary>
-        ///// Gets or sets the outbound details
-        ///// </summary>
-        public ExtraBook.JourneyDetails OutboundDetails { get; set; } = new();
-
-        ///// <summary>
-        ///// Gets or sets the return details
-        ///// </summary>
-        public ExtraBook.JourneyDetails ReturnDetails { get; set; } = new();
-
-        ///// <summary>
-        ///// Gets or sets The arrival date
-        ///// </summary>
-        //public DateTime ArrivalDate { get; set; }
-
-
-        ///// <summary>
-        ///// Gets the duration.
-        ///// </summary>
-        //public int Duration => (this.DepartureDate - this.ArrivalDate).TotalDays.ToSafeInt();
-
-
-        ///// <summary>
-        ///// Gets or sets the selling country.
-        ///// </summary>
-        //public string SellingCountry { get; set; } = string.Empty;
-
-        ///// <summary>
-        ///// Gets or sets the booking identifier
-        ///// </summary>
-        //public int BookingID { get; set; }
+        public Errata Errata { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the third party settings

@@ -1,7 +1,6 @@
 ﻿namespace iVectorOne.SDK.V2.ExtraPrebook
 {
     using System.Collections.Generic;
-    //using iVectorOne.SDK.V2.PropertySearch;
 
     public record Response : ResponseBase
     {
@@ -26,12 +25,6 @@
         /// <summary>
         /// Gets or sets the errata.
         /// </summary>
-        public List<string> DepartureErrata { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Gets or sets the errata.
-        /// </summary>
-        public List<string> ReturnErrata { get; set; } = new List<string>();
-
+        public List<string> Errata { get; set; } = new List<string>();
     }
 }

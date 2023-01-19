@@ -4,7 +4,7 @@
     using iVectorOne.SDK.V2.Book;
     using MediatR;
 
-    public record Request : TransferRequestBase, IRequest<Response>
+    public record Request : ComponentRequestBase, IRequest<Response>
     {
         /// <summary>
         /// Gets or sets the booking token.
@@ -28,25 +28,5 @@
         /// Gets or sets the guest details.
         /// </summary>
         public List<GuestDetail> GuestDetails { get; set; } = new();
-
-        /// <summary>
-        /// Gets or sets the outbound details.
-        /// </summary>
-        public JourneyDetails OutboundDetails { get; set; } = new();
-
-        /// <summary>
-        /// Gets or sets the return details.
-        /// </summary>
-        public JourneyDetails ReturnDetails { get; set; } = new();
-
-        /// <summary>
-        /// Get or sets the unique nationality identifier 
-        /// </summary>
-        ///public string NationalityID { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the selling country.
-        /// </summary>
-        ///public string SellingCountry { get; set; } = string.Empty;
     }
 }

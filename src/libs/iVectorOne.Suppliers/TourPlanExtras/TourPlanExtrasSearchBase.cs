@@ -14,7 +14,7 @@
     {
         public abstract string Source { get; }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, LocationMapping location)
+        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<string> extras)
         {
             throw new NotImplementedException();
         }
@@ -29,7 +29,7 @@
             throw new NotImplementedException();
         }
 
-        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, LocationMapping location)
+        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<string> extras)
         {
             throw new NotImplementedException();
         }

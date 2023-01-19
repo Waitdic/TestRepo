@@ -4,7 +4,7 @@
     using iVectorOne.SDK.V2.Book;
     using MediatR;
 
-    public record Request : TransferRequestBase, IRequest<Response>
+    public record Request : ComponentRequestBase, IRequest<Response>
     {
         /// <summary>
         /// Gets or sets the booking token.

@@ -103,6 +103,7 @@
     <Build Include="dbo\Stored Procedures\TransferBooking_GetData.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_AddNewLocations.sql" />
     <Build Include="dbo\Stored Procedures\Transfer_AddLocations.sql" />
+    <Build Include="dbo\Tables\Extra.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telemetry\Telemetry.sqlproj">

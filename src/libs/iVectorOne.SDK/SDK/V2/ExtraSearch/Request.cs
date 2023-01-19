@@ -7,23 +7,15 @@
     /// <summary>
     /// A transfer search request
     /// </summary>
-    public record Request : TransferRequestBase, IRequest<Response>
+    public record Request : ComponentRequestBase, IRequest<Response>
     {
         /// <summary>
-        /// Gets or sets the departure location identifier.
+        /// Gets or sets the Extra IDs.
         /// </summary>
         /// <value>
-        /// The departure location.
-        /// </value>DepartureL
-        public int DepartureLocationID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the arrival location identifier.
-        /// </summary>
-        /// <value>
-        /// The arrival location.
+        /// The Extra IDs.
         /// </value>
-        public int ArrivalLocationID { get; set; }
+        public List<int> ExtraIDs { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the departure date.

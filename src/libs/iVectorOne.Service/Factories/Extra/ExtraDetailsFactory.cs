@@ -84,7 +84,6 @@ namespace iVectorOne.Factories
                 }
 
                 SetupGuests(request, extraToken, extraDetails);
-                SetupJourneyDetails(request, extraDetails);
             }
 
             this.Validate(extraToken!, extraDetails);
@@ -115,7 +114,6 @@ namespace iVectorOne.Factories
                     Adults = extraToken.Adults,
                     Children = extraToken.Children,
                     Infants = extraToken.Infants,
-                    //LocalCost = 123M, 
                     SupplierReference = request.SupplierReference,
                     ThirdPartySettings = request.ThirdPartySettings
                 };
@@ -181,25 +179,6 @@ namespace iVectorOne.Factories
             {
                 extraDetails.Warnings.AddNew("Validate failure", $"The guest details do not match what was searched for");
             }
-        }
-
-        private void SetupJourneyDetails(Book.Request request, ExtraDetails extraDetails)
-        {
-            var outboundJourney = new Book.JourneyDetails();
-            var returnJourney = new Book.JourneyDetails();
-
-            if (request.OutboundDetails != null)
-            {
-                outboundJourney.FlightCode = request.OutboundDetails.FlightCode;
-            }
-
-            if (request.ReturnDetails != null)
-            {
-                returnJourney.FlightCode = request.ReturnDetails.FlightCode;
-            }
-
-            extraDetails.OutboundDetails = outboundJourney;
-            extraDetails.ReturnDetails = returnJourney;
         }
         #endregion
     }

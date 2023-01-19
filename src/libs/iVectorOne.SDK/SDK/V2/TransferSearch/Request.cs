@@ -7,7 +7,7 @@
     /// <summary>
     /// A transfer search request
     /// </summary>
-    public record Request : TransferRequestBase, IRequest<Response>
+    public record Request : ComponentRequestBase, IRequest<Response>
     {
         /// <summary>
         /// Gets or sets the departure location identifier.
@@ -117,14 +117,6 @@
         /// The currency code.
         /// </value>
         public string CurrencyCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Gets or sets the selling country.
-        /// </summary>
-        /// <value>
-        /// The ISO 3166-2 country code.
-        /// </value>
-        //public string SellingCountry { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the supplier.

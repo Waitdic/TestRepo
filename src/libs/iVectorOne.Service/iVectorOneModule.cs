@@ -121,7 +121,7 @@
             services.AddSingleton<IExtraSearchResponseFactory, ExtraSearchResponseFactory>();
             services.AddSingleton<IExtraSearchDetailsFactory, ExtraSearchDetailsFactory>();
             services.AddSingleton<IExtraThirdPartyFactory, ExtraThirdPartyFactory>();
-            services.AddSingleton<IExtraLocationMappingFactory, ExtraLocationMappingFactory>();
+            services.AddSingleton<IExtraFactory, ExtraFactory>();
             services.AddSingleton<IExtraDetailsFactory, ExtraDetailsFactory>();
             services.AddSingleton<IExtraPrebookResponseFactory, ExtraPrebookResponseFactory>();
             services.AddSingleton<IExtraBookResponseFactory, ExtraBookResponseFactory>();
