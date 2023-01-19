@@ -17,15 +17,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         [Given(@"Create request object for search for ""([^""]*)""")]
         public void GivenCreateRequestObjectForSearchFor(string source = "", Table scenarioData = null)
         {
-            string supplier;
             if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
                 SetDataFromStep(source, scenarioData);
-                supplier = source;
             }
-            else
-                supplier = (string)GetValueFromScenarioConext("Source");
-
+            
             int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int departureLocationID);
             int.TryParse((string)GetValueFromScenarioConext("ArrivalID"), out int arrivalLocationID);
 
@@ -37,7 +33,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
                 DepartureDate = DateTime.Now.AddMonths(1),
                 OneWay = true,
                 Adults = 2,
-                Supplier = supplier,
+                Supplier = (string)GetValueFromScenarioConext("Source"),
                 DepartureTime = "10:00",
                 IncludeOnRequest = true,
             };
