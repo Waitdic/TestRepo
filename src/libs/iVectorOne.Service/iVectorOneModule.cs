@@ -70,8 +70,8 @@
     using TransferPrebook = SDK.V2.TransferPrebook;
     using TransferPrecancel = SDK.V2.TransferPrecancel;
     using TransferSearch = SDK.V2.TransferSearch;
-    using iVectorOne.Suppliers.ExoToursTransfers;
     using ExtraBook = SDK.V2.ExtraBook;
+    using ExtraContent = SDK.V2.ExtraContent;
     using ExtraPrebook = SDK.V2.ExtraPrebook;
     using ExtraSearch = SDK.V2.ExtraSearch;
     using LocationContent = SDK.V2.LocationContent;
@@ -147,8 +147,8 @@
             services.AddSingleton<IExtraAPILogRepository, ExtraAPILogRepository>();
             services.AddSingleton<IExtraSupplierLogRepository, ExtraSupplierLogRepository>();
             services.AddSingleton<IExtraBookingRepository, ExtraBookingRepository>();
-
             services.AddSingleton<ILocationRepository, LocationRepository>();
+            services.AddSingleton<IExtraRepository, ExtraRepository>();
         }
 
         private static void RegisterServices(ServicesBuilderContext context, IServiceCollection services)
@@ -206,6 +206,7 @@
                     context.Configuration.GetValue<int>("SearchStoreBulkInsertSize")));
 
             services.AddSingleton<ILocationContentService, LocationContentService>();
+            services.AddSingleton<IExtraContentService, ExtraContentService>();
         }
 
         private static void RegisterMediators(IServiceCollection services)
@@ -226,6 +227,7 @@
             services.AddHandlerAndValidator<ExtraPrebook.Request, ExtraPrebook.Response, ExtraPrebook.Handler, ExtraPrebook.Validator>();
             services.AddHandlerAndValidator<ExtraBook.Request, ExtraBook.Response, ExtraBook.Handler, ExtraBook.Validator>();
             services.AddHandlerAndValidator<LocationContent.Request, LocationContent.Response, LocationContent.Handler, LocationContent.Validator>();
+            services.AddHandlerAndValidator<ExtraContent.Request, ExtraContent.Response, ExtraContent.Handler, ExtraContent.Validator>();
         }
 
         private void RegsiterThirdPartyConfigs(IServiceCollection services)
