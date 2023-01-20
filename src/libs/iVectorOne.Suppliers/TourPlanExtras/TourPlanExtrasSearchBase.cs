@@ -20,18 +20,15 @@
     {
         private readonly ITourPlanTransfersSettings _settings;
 
-        private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
         private readonly ILogger<TourPlanExtrasSearchBase> _logger;
         public static readonly string ThirdPartySettingException = "The Third Party Setting: {0} must be provided.";
 
         public TourPlanExtrasSearchBase(
-            HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanExtrasSearchBase> logger
            )
         {
-            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _settings = new InjectedTourPlanTransfersSettings();
@@ -39,23 +36,18 @@
 
         public abstract string Source { get; }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extras> extras)
+        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extra> extras)
         {
             List<Request> requests = new List<Request>();
-            if (extras is not null && extras.Any())
+            if (extras == null)
             {
-                foreach (var payload in extras.Select(x => x.Payload).Distinct())
-                {
-                    var Outbound = BuildOptionInfoRequest(searchDetails, payload, searchDetails.DepartureDate);
-                    Outbound.ExtraInfo = Constant.Outbound;
-                    requests.Add(Outbound);
-                    if (!searchDetails.OneWay)
-                    {
-                        var returnBuildOptionInfoRequest = BuildOptionInfoRequest(searchDetails, payload, searchDetails.ReturnDate);
-                        returnBuildOptionInfoRequest.ExtraInfo = string.Empty;
-                        requests.Add(returnBuildOptionInfoRequest);
-                    }
-                }
+                return Task.FromResult(requests);
+            }
+            foreach (var payload in extras.Select(x => x.Payload).Distinct())
+            {
+                var request = BuildOptionInfoRequest(searchDetails, payload);
+                request.ExtraInfo = payload;
+                requests.Add(request);
             }
             return Task.FromResult(requests);
         }
@@ -70,7 +62,7 @@
             return false;
         }
 
-        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extras> extras)
+        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extra> extras)
         {
             throw new NotImplementedException();
         }
@@ -86,7 +78,7 @@
         }
 
         #region private methods
-        private Request BuildOptionInfoRequest(ExtraSearchDetails searchDetails, string payload, DateTime dateFrom)
+        private Request BuildOptionInfoRequest(ExtraSearchDetails searchDetails, string payload)
         {
             Request request = new Request();
             OptionInfoRequest optionInfoRequest = new OptionInfoRequest()
@@ -94,7 +86,6 @@
 
                 AgentID = _settings.AgentID,
                 Password = _settings.Password,
-                DateFrom = dateFrom.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,
                 Opt = payload + Constant.ExtraOptText,
                 RoomConfigs = new List<RoomConfiguration>()

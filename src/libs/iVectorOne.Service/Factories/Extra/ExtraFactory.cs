@@ -35,7 +35,7 @@
             _tpSupport = Ensure.IsNotNull(tpSupport, nameof(tpSupport));
         }
 
-        public async Task<List<Extras>> CreateAsync(ExtraSearchDetails searchDetails, Account account)
+        public async Task<List<Extra>> CreateAsync(ExtraSearchDetails searchDetails, Account account)
         {
             return await _tpSupport.TPExtraLookupAsync(searchDetails);
         }

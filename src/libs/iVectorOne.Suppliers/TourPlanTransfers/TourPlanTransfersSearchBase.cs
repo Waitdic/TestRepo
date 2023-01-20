@@ -26,20 +26,17 @@
         #region Constructor
         private readonly ITourPlanTransfersSettings _settings;
 
-        private readonly HttpClient _httpClient;
         private readonly ISerializer _serializer;
         private readonly ILocationManagerService _locationManagerService;
         private readonly ILogger<TourPlanTransfersSearchBase> _logger;
         public static readonly string ThirdPartySettingException = "The Third Party Setting: {0} must be provided.";
 
         public TourPlanTransfersSearchBase(
-            HttpClient httpClient,
             ISerializer serializer,
             ILogger<TourPlanTransfersSearchBase> logger,
             ILocationManagerService locationManagerService
            )
         {
-            _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
             _logger = Ensure.IsNotNull(logger, nameof(logger));
             _locationManagerService = Ensure.IsNotNull(locationManagerService, nameof(locationManagerService));

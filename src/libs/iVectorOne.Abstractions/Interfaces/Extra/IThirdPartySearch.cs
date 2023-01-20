@@ -19,7 +19,7 @@
         /// <param name="searchDetails">The transfer search details.</param>
         /// <param name="extras">The extras from database.</param>
         /// <returns>A list of request</returns>
-        Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extras> extras);
+        Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extra> extras);
 
         /// <summary>
         /// Transforms the response.
@@ -28,7 +28,7 @@
         /// /// <param name="searchDetails">The extra search details.</param>
         /// <param name="extras">The extra names.</param>
         /// <returns>an XML document</returns>
-        TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extras> extras);
+        TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extra> extras);
 
         /// <summary>
         /// Check if there are any search restrictions for the third party.

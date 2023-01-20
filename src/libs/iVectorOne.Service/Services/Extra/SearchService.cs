@@ -68,7 +68,7 @@
             var stopwatch = Stopwatch.StartNew();
             ExtraSearchStoreItem searchStoreItem = null!;
 
-            var extras = new List<Extras>();
+            var extras = new List<Extra>();
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
             Response response;

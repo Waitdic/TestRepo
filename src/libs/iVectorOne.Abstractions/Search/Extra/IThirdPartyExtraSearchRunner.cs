@@ -23,7 +23,7 @@
         /// <returns>The Task representing the search result</returns>
         Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            List<Extras> extras,
+            List<Extra> extras,
             IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource);
     }

@@ -16,6 +16,6 @@
         /// <param name="searchDetails">The search details.</param>
         /// <param name="account">The account</param>
         /// <returns>A list of extras</returns>
-        Task<List<Extras>> CreateAsync(ExtraSearchDetails searchDetails, Account account);
+        Task<List<Extra>> CreateAsync(ExtraSearchDetails searchDetails, Account account);
     }
 }

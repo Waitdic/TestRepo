@@ -61,7 +61,7 @@
         /// <inheritdoc />
         public async Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            List<Extras> extras,
+            List<Models.Extra.Extra> extras,
             Extra.IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {

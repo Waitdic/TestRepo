@@ -35,7 +35,7 @@
         /// </summary>
         /// <param name="searchDetails"></param>
         /// <returns>List of extras filtered by ExtraIDs passed in search details</returns>
-        Task<List<Extras>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
+        Task<List<Extra>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
         /// <summary>
         /// Get all locations list
         /// </summary>

@@ -72,12 +72,12 @@
             return locationData;
         }
 
-        public async Task<List<Extras>> TPExtraLookupAsync(ExtraSearchDetails searchDetails)
+        public async Task<List<Extra>> TPExtraLookupAsync(ExtraSearchDetails searchDetails)
         {
             var extras = await this.TPExtrasAsync(searchDetails.Source);
-            List<Extras> extrasFilteredList = extras.Where(x => searchDetails.ExtraIDs.Contains(x.ExtraID)).ToList();
+            List<Extra> filteredExtras = extras.Where(x => searchDetails.ExtraIDs.Contains(x.ExtraID)).ToList();
 
-            return extrasFilteredList;
+            return filteredExtras;
         }
 
         public async Task<List<string>> TPAllLocationLookup(string source)
@@ -302,15 +302,15 @@
 
         /// <summary>Extras lookup</summary>
         /// <returns>A Collection of Extras</returns>
-        private async Task<List<Extras>> TPExtrasAsync(string source)
+        private async Task<List<Extra>> TPExtrasAsync(string source)
         {
             string cacheKey = "TPExtrasLookup_" + source;
 
-            async Task<List<Extras>> cacheBuilder()
+            async Task<List<Extra>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
                     "select ExtraID, ExtraName,Payload  from Extra where Source = @source",
-                    async r => (await r.ReadAllAsync<Extras>()).ToList(),
+                    async r => (await r.ReadAllAsync<Extra>()).ToList(),
                     new CommandSettings().WithParameters(new { source }));
             }
 

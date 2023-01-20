@@ -15,7 +15,7 @@
         private readonly ISerializer _serializer;
         private readonly ILogger<TourPlanExtrasSearchBase> _logger;
 
-        public GowaySydneyExtrasSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanExtrasSearchBase> logger) : base(httpClient, serializer, logger)
+        public GowaySydneyExtrasSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanExtrasSearchBase> logger) : base(serializer, logger)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));

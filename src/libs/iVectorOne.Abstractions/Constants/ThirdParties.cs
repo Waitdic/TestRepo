@@ -93,17 +93,17 @@
         /// The third party GoGlobal
         /// </summary>
         public const string GOGLOBAL = "GoGlobal";
-
-        /// <summary>
-        /// The third party GowaySydneyTransfers
-        /// </summary>
-        public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
         
         /// <summary>
         /// The third party GowaySydneyExtras
         /// </summary>
         public const string GOWAYSYDNEYEXTRAS = "GowaySydneyExtras";
-
+        
+        /// <summary>
+        /// The third party GowaySydneyTransfers
+        /// </summary>
+        public const string GOWAYSYDNEYTRANSFERS = "GowaySydneyTransfers";
+        
         /// <summary>
         /// The third party HBSiAMR
         /// </summary>

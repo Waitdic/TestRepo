@@ -35,9 +35,9 @@
             _sqlFactory = Ensure.IsNotNull(sqlFactory, nameof(sqlFactory));
         }
 
-        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extras> extras)
+        public Task<List<Request>> BuildSearchRequestsAsync(ExtraSearchDetails searchDetails, List<Extra> extras)
         {
-            Extras tpExtra = GetThirdPartyExtras(extras);
+            Extra tpExtra = GetThirdPartyExtras(extras);
             bool returnResults = (tpExtra is not null && !string.IsNullOrEmpty(tpExtra.ExtraName));
 
             System.Threading.Thread.Sleep(_settings.SearchTimeMilliseconds(searchDetails));
@@ -57,7 +57,7 @@
             return false;
         }
 
-        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extras> extras)
+        public TransformedExtraResultCollection TransformResponse(List<Request> requests, ExtraSearchDetails searchDetails, List<Extra> extras)
         {
             var transformedResults = new TransformedExtraResultCollection();
 
@@ -96,7 +96,7 @@
         {
             return true;
         }
-        private Extras GetThirdPartyExtras(List<Extras> extras)
+        private Extra GetThirdPartyExtras(List<Extra> extras)
         {
             return extras.FirstOrDefault();
         }
