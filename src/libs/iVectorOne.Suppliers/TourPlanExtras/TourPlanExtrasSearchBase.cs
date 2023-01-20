@@ -86,6 +86,7 @@
 
                 AgentID = _settings.AgentID,
                 Password = _settings.Password,
+                DateFrom = searchDetails.DepartureDate.ToString(Constant.DateTimeFormat),
                 Info = Constant.Info,
                 Opt = payload + Constant.ExtraOptText,
                 RoomConfigs = new List<RoomConfiguration>()
