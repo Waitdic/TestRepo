@@ -13,7 +13,6 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         {
         }
 
-
         [Given(@"Create request object for search for ""([^""]*)""")]
         public void GivenCreateRequestObjectForSearchFor(string source = "", Table scenarioData = null)
         {
@@ -21,7 +20,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             {
                 SetDataFromStep(source, scenarioData);
             }
-            
+
             int.TryParse((string)GetValueFromScenarioConext("DepartureID"), out int departureLocationID);
             int.TryParse((string)GetValueFromScenarioConext("ArrivalID"), out int arrivalLocationID);
 
@@ -42,15 +41,15 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
 
-        [When(@"make a post request to ""([^""]*)""")]
-        public async Task WhenMakeAPostRequestTo(string url)
+        [When(@"a transfer search request is sent")]
+        public async Task WhenATransferSearchRequestIsSent()
         {
             ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("RequestObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
 
-                var response = await _httpClient.PostAsync(url, requestContent);
+                var response = await _httpClient.PostAsync(SearchApi, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -82,21 +81,20 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.Equal(status, GetValueFromScenarioConext("ResponseCode"));
         }
 
-        [Then(@"transfer results should have data")]
-        public void ThenTransferResultsShouldHaveData()
+        [Then(@"transfer results should be returned")]
+        public void ThenTransferResultsShouldBeReturned()
         {
             Assert.NotEmpty((IList<TransferResult>)GetValueFromScenarioConext("SearchResult"));
         }
 
         [Given(@"Create request object for prebook for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForPrebookFor(string source = "", Table scenarioData = null)
+        public void GivenCreateRequestObjectForPrebookFor(string source = "", Table scenarioData = null)
         {
             if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
                 SetDataFromStep(source, scenarioData);
             }
-            GivenCreateRequestObjectForSearchFor();
-            await WhenMakeAPostRequestTo(SearchApi);
+
             CreateClient();
             string supplierReference = GetValue("SupplierReference");
             string bookingToken = GetValue("BookingToken");
@@ -112,15 +110,16 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             }
         }
 
-        [When(@"make a post request to prebook ""([^""]*)""")]
-        public async Task WhenMakeAPostRequestToPrebook(string url)
+        [When(@"a transfer prebook request is sent")]
+        public async Task WhenATransferPrebookRequestIsSent()
         {
+            GivenCreateRequestObjectForPrebookFor();
             ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("PrebookObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
 
-                var response = await _httpClient.PostAsync(url, requestContent);
+                var response = await _httpClient.PostAsync(PrebookApi, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -142,23 +141,20 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             }
         }
 
-        [Then(@"booking token and supplier reference are not empty")]
-        public void ThenBookingTokenAndSupplierReferenceAreNotEmpty()
+        [Then(@"a booking token and supplier reference are returned")]
+        public void ThenABookingTokenAndSupplierReferenceAreReturned()
         {
             Assert.NotEqual(string.Empty, GetValue("BookingToken"));
             Assert.NotEqual(string.Empty, GetValue("SupplierReference"));
         }
 
         [Given(@"Create request object for book for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForBookFor(string source = "", Table scenarioData = null)
+        public void GivenCreateRequestObjectForBookFor(string source = "", Table scenarioData = null)
         {
             if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
                 SetDataFromStep(source, scenarioData);
             }
-
-            await GivenCreateRequestObjectForPrebookFor();
-            await WhenMakeAPostRequestToPrebook(PrebookApi);
             string supplierReference = GetValue("SupplierReference");
             string bookingToken = GetValue("BookingToken");
 
@@ -213,15 +209,16 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             }
         }
 
-        [When(@"make a post request to book ""([^""]*)""")]
-        public async Task WhenMakeAPostRequestToBook(string url)
+        [When(@"a transfer book request is sent")]
+        public async Task WhenATransferBookRequestIsSent()
         {
+            GivenCreateRequestObjectForBookFor();
             ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("BookObj");
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
 
-                var response = await _httpClient.PostAsync(url, requestContent);
+                var response = await _httpClient.PostAsync(BookApi, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -244,16 +241,12 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         }
 
         [Given(@"Create request object for cancel for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectForCancelFor(string source = "", Table scenarioData = null)
+        public void GivenCreateRequestObjectForCancelFor(string source = "", Table scenarioData = null)
         {
             if (!string.IsNullOrEmpty(source) && scenarioData != null)
             {
                 SetDataFromStep(source, scenarioData);
             }
-
-            await GivenCreateRequestObjectForBookFor();
-            await WhenMakeAPostRequestToBook(BookApi);
-
             string supplierReference = GetValue("SupplierReference");
             string supBookingRef = GetValue("SupplierBookingReference");
 
@@ -271,16 +264,48 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             }
         }
 
-        [When(@"make a post request to cancel ""([^""]*)""")]
-        public async Task WhenMakeAPostRequestToCancel(string url)
+        [When(@"a transfer precancel request is sent")]
+        public async Task WhenATransferPrecancelRequestIsSent()
         {
+            GivenCreateRequestObjectForCancelFor();
             ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("CancelObj");
 
             if (requestObj != null)
             {
                 var requestContent = CreateRequest(requestObj);
 
-                var response = await _httpClient.PostAsync(url, requestContent);
+                var response = await _httpClient.PostAsync(PrecancelApi, requestContent);
+
+                _scenarioContext["ResponseCode"] = (int)response.StatusCode;
+                var result = response.Content.ReadAsStringAsync().Result;
+
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var obj = JsonConvert.DeserializeObject<SDK.V2.TransferPrecancel.Response>(result);
+                    if (obj != null)
+                    {
+                        keyValuePairs["Amount"] = Convert.ToString(obj.Amount);
+                        _scenarioContext["PrecancelResult"] = obj;
+                    }
+                }
+                else
+                {
+                    _scenarioContext["ErrorResponse"] = result;
+                }
+            }
+        }
+
+        [When(@"a transfer cancel request is sent")]
+        public async Task WhenATransferCancelRequestIsSent()
+        {
+            GivenCreateRequestObjectForCancelFor();
+            ComponentRequestBase requestObj = (ComponentRequestBase)GetValueFromScenarioConext("CancelObj");
+
+            if (requestObj != null)
+            {
+                var requestContent = CreateRequest(requestObj);
+
+                var response = await _httpClient.PostAsync(CancelApi, requestContent);
 
                 _scenarioContext["ResponseCode"] = (int)response.StatusCode;
                 var result = response.Content.ReadAsStringAsync().Result;
@@ -307,17 +332,11 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
             Assert.NotEqual(string.Empty, GetValue("SupplierCancellationReference"));
         }
 
-        [When(@"make a post request to each endpoint")]
-        public async Task WhenMakeAPostRequestToEachEndpoint()
-        {
-            await WhenMakeAPostRequestToCancel(CancelApi);
-        }
-
         [Given(@"Create request object for ""([^""]*)""")]
-        public async Task GivenCreateRequestObjectFor(string source, Table scenarioData)
+        public void GivenCreateRequestObjectFor(string source, Table scenarioData)
         {
             SetDataFromStep(source, scenarioData);
-            await GivenCreateRequestObjectForCancelFor();
+            GivenCreateRequestObjectForSearchFor();
         }
 
     }
