@@ -106,7 +106,9 @@
 
                 var roomRate = availabilityResponse?.RoomRates?.FirstOrDefault(r =>
                     !string.IsNullOrWhiteSpace(r.RoomId) && r.RoomId == roomDetails.RoomTypeCode &&
-                    !string.IsNullOrWhiteSpace(r.MealPlan) && (r.MealPlan == roomDetails.MealBasisCode || r.MealPlan == "RO" && roomDetails.MealBasisCode == "NA") &&
+                    (!string.IsNullOrWhiteSpace(r.MealPlan) && 
+                    (r.MealPlan == roomDetails.MealBasisCode || r.MealPlan == "RO" && roomDetails.MealBasisCode == "NA")
+                    || availabilityResponse.Header.SupplierId == "TRAVELCLICK") &&
                     !string.IsNullOrWhiteSpace(r.RateId) && r.RateId == preBookHelper.RoomRate.RateId &&
                     (!r.Inventory.HasValue || r.Inventory.Value > 0));
 
