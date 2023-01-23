@@ -1,10 +1,9 @@
 ﻿namespace iVectorOne.Factories
 {
     using Intuitive;
-    using iVectorOne.Factories;
     using iVectorOne.Lookups;
-    using iVectorOne.Models;
-    using iVectorOne.Models.Tokens.Transfer;
+    using iVectorOne.Models.Extra;
+    using iVectorOne.Models.Tokens.Extra;
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
     using iVectorOne.Services;
@@ -14,7 +13,7 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    ///  Class responsible for building the transfer search response
+    ///  Class responsible for building the extra search response
     /// </summary>
     public class ExtraSearchResponseFactory : IExtraSearchResponseFactory
     {
@@ -50,7 +49,7 @@
         /// <returns>
         ///   <br />
         /// </returns>
-        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<string> extras, IRequestTracker requestTracker)
+        public async Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<Extra> extras, IRequestTracker requestTracker)
         {
             var response = new Response();
             var createResponseTimer = new ThirdPartyRequestTime("CreateResponse");
@@ -60,7 +59,7 @@
             {
                 try
                 {
-                    var transferToken = new TransferToken()
+                    var extraToken = new ExtraToken()
                     {
                         DepartureDate = searchDetails.DepartureDate,
                         DepartureTime = searchDetails.DepartureTime,
@@ -76,7 +75,7 @@
 
                     var extraResult = new ExtraResult()
                     {
-                        BookingToken = _tokenService.EncodeTransferToken(transferToken),
+                        BookingToken = _tokenService.EncodeExtraToken(extraToken),
                         SupplierReference = result.SupplierReference,
                         TPSessionID = result.TPSessionID,
                         UseDate= result.UseDate,

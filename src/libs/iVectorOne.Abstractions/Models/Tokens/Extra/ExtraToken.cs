@@ -29,14 +29,6 @@
         [JsonProperty("RT")]
         public string ReturnTime { get; set; } = string.Empty;
 
-        /// <summary>Gets or sets the departure location id</summary>
-        //[JsonPropertyName("DL")]
-        //public int DepartureLocationID { get; set; }
-
-        /// <summary>Gets or sets the arrival location id</summary>
-        //[JsonPropertyName("A")]
-        //public int ArrivalLocationID { get; set; }
-
         /// <summary>Gets or sets the currency id</summary>
         [JsonPropertyName("CI")]
         public int ISOCurrencyID { get; set; }
@@ -52,14 +44,6 @@
         /// <summary>Gets or sets the number of infants</summary>
         [JsonPropertyName("I")]
         public int Infants { get; set; }
-
-        /// <summary>Gets or sets the child ages</summary>
-        //[JsonPropertyName("CA")]
-        //public List<int> ChildAges { get; set; } = new();
-
-        /// <summary>Gets or sets the Local cost</summary>
-        //[JsonPropertyName("AMT")]
-        //public List<int> LocalCost { get; set; } = new();
 
         /// <summary>Gets or sets the supplier id</summary>
         [JsonPropertyName("SI")]

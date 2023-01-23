@@ -26,7 +26,7 @@
         /// <summary>
         /// Gets or sets the list of extra IDs
         /// </summary>
-        public List<int> ExtraIDs { get; set; }
+        public List<int> ExtraIDs { get; set; } = new List<int>();
 
         /// <summary>
         /// Gets or sets the departure date.

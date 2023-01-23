@@ -13,6 +13,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Models;
     using iVectorOne.Models.Transfer;
+    using iVectorOne.Models.Extra;
 
     /// <summary>
     /// An implementation of the third party support, which is used to inject access to settings
@@ -71,12 +72,12 @@
             return locationData;
         }
 
-        public async Task<List<string>> TPExtraLookupAsync(ExtraSearchDetails searchDetails)
+        public async Task<List<Extra>> TPExtraLookupAsync(ExtraSearchDetails searchDetails)
         {
-            Dictionary<int, string> extras = await this.TPExtrasAsync(searchDetails.Source);
-            List<string> extrasList = extras.Where(x => searchDetails.ExtraIDs.Contains(x.Key)).Select(x => x.Value).ToList();
+            var extras = await this.TPExtrasAsync(searchDetails.Source);
+            List<Extra> filteredExtras = extras.Where(x => searchDetails.ExtraIDs.Contains(x.ExtraID)).ToList();
 
-            return extrasList;
+            return filteredExtras;
         }
 
         public async Task<List<string>> TPAllLocationLookup(string source)
@@ -301,15 +302,15 @@
 
         /// <summary>Extras lookup</summary>
         /// <returns>A Collection of Extras</returns>
-        private async Task<Dictionary<int, string>> TPExtrasAsync(string source)
+        private async Task<List<Extra>> TPExtrasAsync(string source)
         {
             string cacheKey = "TPExtrasLookup_" + source;
 
-            async Task<Dictionary<int, string>> cacheBuilder()
+            async Task<List<Extra>> cacheBuilder()
             {
                 return await _sql.ReadSingleMappedAsync(
-                    "select ExtraID, ExtraName  from Extra where Source = @source",
-                    async r => (await r.ReadAllAsync<Extra>()).ToDictionary(x => x.ExtraID, x => x.ExtraName),
+                    "select ExtraID, ExtraName,Payload  from Extra where Source = @source",
+                    async r => (await r.ReadAllAsync<Extra>()).ToList(),
                     new CommandSettings().WithParameters(new { source }));
             }
 
@@ -389,14 +390,6 @@
             public int SupplierID { get; set; }
             public string SupplierName { get; set; } = string.Empty;
         }
-
-        private class Extra
-        {
-            public int ExtraID { get; set; }
-            public string ExtraName { get; set; }
-        }
-
-
         #endregion
     }
 }

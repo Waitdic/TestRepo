@@ -24,7 +24,7 @@
         private readonly ITourPlanTransfersSettings _settings;
 
         public ExoToursTransferSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger,
-            ILocationManagerService locationManagerService) : base(httpClient, serializer, logger, locationManagerService)
+            ILocationManagerService locationManagerService) : base(serializer, logger, locationManagerService)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));

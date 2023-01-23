@@ -15,6 +15,7 @@
     using iVectorOne.Models.SearchStore;
     using System;
     using iVectorOne.Repositories;
+    using iVectorOne.Models.Extra;
 
     /// <summary>
     /// The main Extra search service, responsible for doing all the searching
@@ -67,7 +68,7 @@
             var stopwatch = Stopwatch.StartNew();
             ExtraSearchStoreItem searchStoreItem = null!;
 
-            var extras = new List<string>();
+            var extras = new List<Extra>();
             var taskList = new List<Task>();
             var cancellationTokenSource = new CancellationTokenSource();
             Response response;

@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.Factories
 {
     using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
     using iVectorOne.SDK.V2.ExtraSearch;
     using iVectorOne.Search.Models;
     using System.Collections.Generic;
@@ -15,7 +16,7 @@
         /// <param name="searchDetails">The search details, which contains the results used for building the response</param>
         /// <param name="extras">The extras containing the third party extra names</param>
         /// <param name="requestTracker">The request tracker, allows for analysis of response times</param>
-        /// <returns>A property search responses</returns>
-        Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<string> extras, IRequestTracker requestTracker);
+        /// <returns>An extra search response</returns>
+        Task<Response> CreateAsync(ExtraSearchDetails searchDetails, List<Extra> extras, IRequestTracker requestTracker);
     }
 }

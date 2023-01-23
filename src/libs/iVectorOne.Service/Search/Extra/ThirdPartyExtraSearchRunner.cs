@@ -18,6 +18,7 @@
     using iVectorOne.Search;
     using iVectorOne.Search.Models;
     using iVectorOne.Services.Extra;
+    using iVectorOne.Models.Extra;
 
     /// <summary>
     /// Third Party Extra Search Runner
@@ -60,7 +61,7 @@
         /// <inheritdoc />
         public async Task SearchAsync(
             ExtraSearchDetails searchDetails,
-            List<string> extras,
+            List<Models.Extra.Extra> extras,
             Extra.IThirdPartySearch thirdPartySearch,
             CancellationTokenSource cancellationTokenSource)
         {

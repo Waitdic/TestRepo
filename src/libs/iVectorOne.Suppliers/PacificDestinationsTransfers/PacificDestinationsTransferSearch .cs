@@ -19,7 +19,7 @@
         private readonly ILocationManagerService _locationManagerService;
         private readonly ITourPlanTransfersSettings _settings;
 
-        public PacificDestinationsTransferSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger, ILocationManagerService locationManagerService) : base(httpClient, serializer, logger, locationManagerService)
+        public PacificDestinationsTransferSearch(HttpClient httpClient, ISerializer serializer, ILogger<TourPlanTransfersSearchBase> logger, ILocationManagerService locationManagerService) : base(serializer, logger, locationManagerService)
         {
             _httpClient = Ensure.IsNotNull(httpClient, nameof(httpClient));
             _serializer = Ensure.IsNotNull(serializer, nameof(serializer));
