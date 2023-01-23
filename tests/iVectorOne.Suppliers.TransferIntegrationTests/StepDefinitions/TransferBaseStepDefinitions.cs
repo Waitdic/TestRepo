@@ -27,6 +27,7 @@ namespace iVectorOne.Suppliers.TransferIntegrationTests.StepDefinitions
         protected const string SearchApi = @"v2/transfers/search";
         protected const string BookApi = @"v2/transfers/book";
         protected const string PrebookApi = @"v2/transfers/prebook";
+        protected const string PrecancelApi = @"v2/transfers/precancel";
         protected const string CancelApi = @"v2/transfers/cancel";
 
         private const string ReqUsername = "GoWayTest";
