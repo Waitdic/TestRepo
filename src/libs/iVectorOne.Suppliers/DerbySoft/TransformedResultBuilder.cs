@@ -51,6 +51,11 @@
                 return null;
             }
 
+            if (roomRate.MealPlan == null)
+            {
+                roomRate.MealPlan = _settings.DefaultMealPlan(searchDetails, _source);
+            }
+
             var cancellationCalculator = new CancellationCalculator();
             var cancellations =
                 cancellationCalculator.GetCancellations(roomRate.CancelPolicy, rates, searchDetails.ArrivalDate);
@@ -58,7 +63,7 @@
             var transformedResult = new TransformedResult
             {
                 RoomTypeCode = roomRate.RoomId,
-                MealBasisCode = roomRate.MealPlan?? _settings.DefaultMealPlan(searchDetails, _source),
+                MealBasisCode = roomRate.MealPlan,
                 Amount = amount,
                 SellingPrice = amount,
                 NetPrice = amount,

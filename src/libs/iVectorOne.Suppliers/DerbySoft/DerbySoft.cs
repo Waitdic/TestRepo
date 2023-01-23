@@ -104,6 +104,16 @@
                         _settings.SearchURL(propertyDetails, propertyDetails.Source),
                         "Prebook - Availability");
 
+                foreach (var room_Rate in availabilityResponse.RoomRates)
+                {
+                    if (room_Rate.MealPlan == null)
+                    {
+                        {
+                            room_Rate.MealPlan = _settings.DefaultMealPlan(propertyDetails, propertyDetails.Source);
+                        }
+                    }
+                }
+
                 var roomRate = availabilityResponse?.RoomRates?.FirstOrDefault(r =>
                     !string.IsNullOrWhiteSpace(r.RoomId) && r.RoomId == roomDetails.RoomTypeCode &&
                     !string.IsNullOrWhiteSpace(r.MealPlan) && (r.MealPlan == roomDetails.MealBasisCode || r.MealPlan == "RO" && roomDetails.MealBasisCode == "NA") &&
