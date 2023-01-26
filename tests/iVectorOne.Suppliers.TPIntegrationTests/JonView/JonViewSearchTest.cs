@@ -34,7 +34,7 @@
         public void TransformResponseTest()
         {
             // Assert 
-            Assert.True(base.ValidTransformResponse(JonViewRes.SearchResponse, JonViewRes.TransformedResult, SearchDetailsList[0]));
+            Assert.True(base.ValidTransformResponse(JonViewRes.SearchResponse, JonViewRes.TransformedResult, SearchDetailsList[0], "MAD_YTOTI_102245"));
         }
     }
 }
