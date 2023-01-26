@@ -41,6 +41,11 @@
 
         public Task<List<Request>> BuildSearchRequestsAsync(SearchDetails searchDetails, List<ResortSplit> resortSplits)
         {
+            if (resortSplits.Count == 0)
+            {
+                return Task.FromResult(new List<Request>());
+            }
+
             string source = resortSplits.First().ThirdPartySupplier;
             int iMaxHotelsPerRequest = _settings.HotelBatchLimit(searchDetails, source);
 

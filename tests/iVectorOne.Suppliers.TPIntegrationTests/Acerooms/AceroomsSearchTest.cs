@@ -12,6 +12,7 @@
     using iVectorOne.Models;
     using System.Text.RegularExpressions;
     using Intuitive.Helpers.Net;
+    using iVectorOne.Models.Property;
 
     public class AceroomsSearchTest : ThirdPartyPropertySearchBaseTest
     {
