@@ -29,6 +29,45 @@
         public const string ArrivalDateToFarInTheFuture = "The arrival date can not be more than 3 years in the future";
 
         /// <summary>
+        /// An Departure Date must be specified
+        /// </summary>
+        public const string DepartureDateNotSpecified = "An Departure Date must be specified";
+
+        /// <summary>
+        /// An Return Date must be specified
+        /// </summary>
+        public const string ReturnDateSpecified = "A return date must be specified when the transfer is not one way";
+
+        /// <summary>
+        /// An Return Time must be specified
+        /// </summary>
+        public const string ReturnTimeSpecified = "A return time must be specified when the transfer is not one way";
+
+        /// <summary>
+        /// An Return Date cannot be specified
+        /// </summary>
+        public const string ReturnDateNotSpecified = "A return date cannot be specified when the transfer is one way";
+
+        /// <summary>
+        /// A return time cannot be specified when the transfer is one way
+        /// </summary>
+        public const string ReturnTimeNotSpecified = "A return time cannot be specified when the transfer is one way";
+        /// <summary>
+        /// An Departure Date on or after today must be specified
+        /// </summary>
+        public const string DepartureDateInThePast = "An Departure Date on or after today must be specified";
+
+        /// <summary>
+        /// An Departure Date on or after today must be specified
+        /// </summary>
+        public const string DepartureDateToFarInTheFuture = "The Departure date can not be more than 3 years in the future";
+
+        /// <summary>
+        /// Return Date must be on or after the departure date
+        /// </summary>
+        public const string ReturnDateBeforeDepartureDate = "The Return date cannot be before the Departure date";
+
+        /// <summary>
         /// A Duration must be specified
         /// </summary>
         public const string DurationNotSpecified = "A Duration must be specified";
@@ -54,14 +93,29 @@
         public const string Only15AdultsAllowed = "A Maximum of 15 adults can be specified in a single room";
 
         /// <summary>
-        /// At least one Adult per room must be specified
+        /// A Maximum of 15 adults can be specified"
+        /// </summary>
+        public const string Only15AdultsAllowedTransfer = "A Maximum of 15 adults can be specified";
+
+        /// <summary>
+        /// /// Only 8 children cab be specified in a room
         /// </summary>
         public const string Only8ChildrenAllowed = "A Maximum of 8 children can be specified in a single room";
 
         /// <summary>
-        /// At least one Adult per room must be specified
+        /// Only 8 children can be specified
+        /// </summary>
+        public const string Only8ChildrenAllowedTransfer = "A Maximum of 8 children can be specified";
+
+        /// <summary>
+        /// Only 7 infants can be specified in a room
         /// </summary>
         public const string Only7InfantsAllowed = "A Maximum of 7 infants can be specified in a single room";
+
+        /// <summary>
+        /// Only 7 infants can be specified in a room
+        /// </summary>
+        public const string Only7InfantsAllowedTransfer = "A Maximum of 7 infants can be specified";
 
         /// <summary>
         /// The number of Child Ages must match the number of Children
@@ -124,9 +178,9 @@
         public const string InvalidBookingReference = "A Booking Reference is required";
 
         /// <summary>
-        ///   <para>Every cancel request must have a supplier booking reference</para>
+        ///   <para>Every transfer prebook, transfer book or cancel request must have a supplier booking reference</para>
         /// </summary>
-        public const string InvalidSupplierBookingReference = "A Supplier Booking Reference is required";
+        public const string InvalidSupplierBookingReference = "A valid Supplier Booking Reference is required";
 
         /// <summary>
         ///   <para>Every book request must have a supplier reference 1</para>
@@ -247,5 +301,65 @@
         /// <para></para>
         /// </summary>
         public const string InvalidRoomCombination = "Multi-room bookings must be for a single supplier";
+
+        /// <summary>
+        ///   <para>The supplier is required</para>
+        /// </summary>
+        public const string InvalidSupplier = "The supplier is required";
+
+        /// <summary>
+        ///   <para>A departure location ID is required</para>
+        /// </summary>
+        public const string InvalidDepartureLocationID = "A departure location ID is required";
+
+        /// <summary>
+        ///   <para>An arrival location ID is required</para>
+        /// </summary>
+        public const string InvalidArrivalLocationID = "An arrival location ID is required";
+
+        /// <summary>
+        ///   <para>Extra IDs must be greater than zero</para>
+        /// </summary>
+        public const string InvalidExtraID = "Extra IDs must be greater than zero";
+
+        /// <summary>
+        ///   <para>At least one Extra ID is required</para>
+        /// </summary>
+        public const string ExtraIDRequired = "At least one Extra ID is required";
+
+        /// <summary>
+        ///   <para>An adult or child is required</para>
+        /// </summary>
+        public const string NoAdultsOrChildrenSpecified = "At least one adult or child must be specified";
+        
+        /// <summary>
+        ///   <para>"Return Time must be in correct format</para>
+        /// </summary>
+        public const string ReturnTimeInvalid = "Return time must be in the format HH:mm";
+
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeInvalid = "Departure time must be in the format HH:mm";
+        
+        /// <summary>
+        ///   <para>"Departure Time must be in correct format</para>
+        /// </summary>
+        public const string DepartureTimeRequired = "A departure time is required";
+
+        /// <summary>
+        ///   <para>"The return date cannot be more than 62 days after the departure date</para>
+        /// </summary>
+        public const string InvalidDuration = "The return date cannot be more than 62 days after the departure date";
+
+        /// <summary>
+        ///   <para>"The return date not before departure date</para>
+        /// </summary>
+        public const string ReturnDateNotBeforeDepartureDate = "The return date cannot be before the departure date";
+
+        /// <summary>
+        ///   <para>"Invalid Supplier Reference</para>
+        /// </summary>
+        public const string InvalidSupplierReference = "Invalid Supplier Reference";
     }
 }

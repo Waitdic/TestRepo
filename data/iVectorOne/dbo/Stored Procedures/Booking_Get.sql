@@ -17,9 +17,9 @@ select *
 	where Booking.BookingID = @bookingId
 
 select *
-	from APILog
-	where APILog.BookingID = @bookingId
+	from [$(Telemetry)].dbo.APILog
+	where BookingID = @bookingId
 
 select *
-	from SupplierAPILog
-	where SupplierAPILog.BookingID = @bookingId
+	from [$(Telemetry)].dbo.SupplierAPILog
+	where BookingID = @bookingId

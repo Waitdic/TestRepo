@@ -1,6 +1,7 @@
 ﻿namespace iVectorOne.SDK.V2.PropertyBook
 {
     using System.Collections.Generic;
+    using iVectorOne.SDK.V2.Book;
     using MediatR;
 
     public record Request : RequestBase, IRequest<Response>

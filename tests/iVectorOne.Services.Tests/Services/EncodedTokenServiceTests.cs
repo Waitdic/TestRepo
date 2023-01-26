@@ -9,6 +9,8 @@
     using iVectorOne.Repositories;
     using iVectorOne.Services;
     using iVectorOne.Utility;
+    using iVectorOne.Models.Property;
+    using iVectorOne.Lookups;
 
     public class EncodedTokenServiceTests
     {

@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
 
     public class PreBookHelper
     {

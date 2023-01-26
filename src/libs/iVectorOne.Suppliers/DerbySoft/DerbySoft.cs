@@ -16,6 +16,7 @@
     using iVectorOne.Models;
     using iVectorOne.Models.Property.Booking;
     using System.Threading.Tasks;
+    using iVectorOne.Models.Property;
 
     public class DerbySoft : IThirdParty, IMultiSource
     {
@@ -102,6 +103,16 @@
                         availabilityDeserialisedRequest,
                         _settings.SearchURL(propertyDetails, propertyDetails.Source),
                         "Prebook - Availability");
+
+                foreach (var room_Rate in availabilityResponse.RoomRates)
+                {
+                    if (room_Rate.MealPlan == null)
+                    {
+                        {
+                            room_Rate.MealPlan = _settings.DefaultMealPlan(propertyDetails, propertyDetails.Source);
+                        }
+                    }
+                }
 
                 var roomRate = availabilityResponse?.RoomRates?.FirstOrDefault(r =>
                     !string.IsNullOrWhiteSpace(r.RoomId) && r.RoomId == roomDetails.RoomTypeCode &&

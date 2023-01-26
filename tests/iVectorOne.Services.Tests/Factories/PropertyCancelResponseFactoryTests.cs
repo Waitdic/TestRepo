@@ -5,6 +5,7 @@
     using iVectorOne.Factories;
     using iVectorOne.Repositories;
     using iVectorOne.Lookups;
+    using iVectorOne.Models.Property;
 
     public class CancelPropertyResponseFactoryTests
     {

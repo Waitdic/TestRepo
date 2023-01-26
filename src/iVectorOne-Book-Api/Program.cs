@@ -27,6 +27,11 @@ try
     //Load application specific endpoints
     app.MapEndpointsV1();
     app.MapEndpoints();
+    app.MapTransferEndpoints();
+    app.MapExtraEndpoints();
+
+    // todo - integrate with health checks
+    _ = app.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
 
     app.BuildAndRun();
 }
@@ -39,3 +44,5 @@ finally
     Log.Information("Shut down complete");
     Log.CloseAndFlush();
 }
+public partial class Program
+{ }

@@ -1,5 +1,9 @@
 ﻿namespace iVectorOne.Lookups
 {
+    using iVectorOne.Models;
+    using iVectorOne.Models.Extra;
+    using iVectorOne.Models.Transfer;
+    using iVectorOne.Search.Models;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -19,6 +23,25 @@
         /// </returns>
         Task<string> TPCountryCodeLookupAsync(string source, string isoCode, int accountId);
 
+        /// <summary>
+        /// Get location mapping
+        /// </summary>
+        /// <param name="searchDetails"></param>
+        /// <returns></returns>
+        Task<LocationMapping> TPLocationLookupAsync(TransferSearchDetails searchDetails);
+
+        /// <summary>
+        /// Get extras
+        /// </summary>
+        /// <param name="searchDetails"></param>
+        /// <returns>List of extras filtered by ExtraIDs passed in search details</returns>
+        Task<List<Extra>> TPExtraLookupAsync(ExtraSearchDetails searchDetails);
+        /// <summary>
+        /// Get all locations list
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        Task<List<string>> TPAllLocationLookup(string source);
         /// <summary>
         /// The country lookup.
         /// </summary>
@@ -78,5 +101,38 @@
         /// <param name="currencyId">The ISO currency id.</param>
         /// <returns>The currency code of corresponding currency id</returns>
         Task<string> ISOCurrencyCodeLookupAsync(int currencyId);
+
+        /// <summary>
+        /// The supplier name lookup.
+        /// </summary>
+        /// <param name="supplierId">The suplier identifier.</param>
+        /// <returns>
+        /// The supplier name
+        /// </returns>
+        Task<string> SupplierNameLookupAsync(int supplierId);
+
+        /// <summary>
+        /// The supplier identifier lookup.
+        /// </summary>
+        /// <param name="supplierName">The suplier name.</param>
+        /// <returns>
+        /// The supplier identifier
+        /// </returns>
+        Task<int> SupplierIDLookupAsync(string supplierName);
+
+        /// <summary>
+        /// Gets the transfer token details for a transfer booking table.
+        /// </summary>
+        /// <param name="supplierBookingReference">The suplier booking reference.</param>
+        /// <returns>
+        /// The supplier identifier
+        /// </returns>
+        Task<TransferBookingDetails> GetTransferBookingDetailsAsync(string supplierBookingReference);
+
+        /// <summary>
+        /// Remove the location cache data.
+        /// </summary>
+        /// <param name="source"></param>
+        void RemoveLocationCache(string source);
     }
 }

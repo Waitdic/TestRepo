@@ -17,6 +17,7 @@
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class SunHotelsSearch : IThirdPartySearch, ISingleSource
     {
@@ -315,10 +316,10 @@
 
                             foreach (var meal in room.meals)
                             {
-                                var resultCancellations = new List<iVectorOne.Models.Property.Booking.Cancellation>();
+                                var resultCancellations = new List<iVectorOne.Models.Cancellation>();
                                 foreach (var cancellation in cancellations)
                                 {
-                                    resultCancellations.Add(new iVectorOne.Models.Property.Booking.Cancellation()
+                                    resultCancellations.Add(new iVectorOne.Models.Cancellation()
                                     {
                                         Amount = cancellation.Percentage,
                                         StartDate = cancellation.StartDate,

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
 
     public class YouTravelSupport
     {

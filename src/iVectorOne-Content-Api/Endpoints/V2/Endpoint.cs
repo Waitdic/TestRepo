@@ -6,6 +6,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Content = SDK.V2.PropertyContent;
     using List = SDK.V2.PropertyList;
+    using LocationContent = SDK.V2.LocationContent;
+    using ExtraContent = SDK.V2.ExtraContent;
 
     public static class Endpoint
     {
@@ -52,8 +54,27 @@
                 .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
                 .Produces(StatusCodes.Status200OK);
 
-            // todo - integrate with health checks
-            _ = endpoints.MapGet("/healthcheck", () => "Hello World!").AllowAnonymous();
+            _ = endpoints
+                .MapPost(
+                    $"/{EndpointBase.Version}/{EndpointBase.LocationDomain}",
+                    async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] LocationContent.Request request)
+                        => await EndpointBase.ExecuteRequest<LocationContent.Request, LocationContent.Response>(httpContext, mediator, request))
+                .RequireAuthorization()
+                .WithName("Location Content")
+                .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+                .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status200OK);
+
+            _ = endpoints
+                .MapPost(
+                    $"/{EndpointBase.Version}/{EndpointBase.ExtrasDomain}",
+                    async (HttpContext httpContext, [FromServices] IMediator mediator, [FromBody] ExtraContent.Request request)
+                        => await EndpointBase.ExecuteRequest<ExtraContent.Request, ExtraContent.Response>(httpContext, mediator, request))
+                .RequireAuthorization()
+                .WithName("Extra Content")
+                .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+                .ProducesValidationProblem(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status200OK);
 
             return endpoints;
         }

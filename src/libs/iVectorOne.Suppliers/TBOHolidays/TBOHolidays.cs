@@ -14,6 +14,7 @@
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.TBOHolidays.Models.Prebook;
     using iVectorOne.Suppliers.TBOHolidays.Models.Book;
@@ -457,7 +458,7 @@
                 TotalFare = room.LocalCost,
                 EmailId = propertyDetails.LeadGuestEmail,
                 PhoneNumber = propertyDetails.LeadGuestPhone,
-                BookingType = BookingType.Vouchered.ToString(),
+                BookingType = BookingType.Voucher.ToString(),
                 PaymentMode = PaymentMode.Limit.ToString(),
             };
 

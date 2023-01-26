@@ -11,9 +11,9 @@
     using iVectorOne.Suppliers.Hotelston.Models;
     using iVectorOne.Suppliers.Hotelston.Models.Common;
     using iVectorOne.Interfaces;
-    using iVectorOne.Models;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
+    using iVectorOne.Models.Property;
 
     public class HotelstonSearch : IThirdPartySearch, ISingleSource
     {
@@ -81,6 +81,10 @@
 
         private IEnumerable<TransformedResult> GetResultFromResponse(SearchHotelsResponse response, SearchDetails searchDetails)
         {
+            var paxNationality = !string.IsNullOrEmpty(searchDetails.ISONationalityCode)
+                ? searchDetails.ISONationalityCode
+                : searchDetails.SellingCountry;
+
             return (
                 from hotel in response.Hotels
                 from room in hotel.Rooms
@@ -93,10 +97,10 @@
                     RoomTypeCode = $"{room.Id}|{room.RoomType.Id}",
                     MealBasisCode = room.BoardType.Id,
                     Amount = room.Price,
-                    SpecialOffer = room.SpecialOffer
+                    SpecialOffer = room.SpecialOffer && room.SpecifficSpecialOffers != null
                         ? string.Join(".  ", room.SpecifficSpecialOffers.Select(specialOffer => specialOffer.Details))
                         : string.Empty,
-                    TPReference = $"{hotel.Id}|{response.SearchId}|{room.BoardType.Id}",
+                    TPReference = $"{hotel.Id}|{response.SearchId}|{room.BoardType.Id}|{paxNationality}",
                 }).ToList();
         }
 
@@ -107,6 +111,10 @@
 
             request.Criteria.CheckIn = searchDetails.ArrivalDate.ToString(HotelstonHelper.DateFormatString);
             request.Criteria.CheckOut = searchDetails.DepartureDate.ToString(HotelstonHelper.DateFormatString);
+
+            request.Criteria.ClientNationality = !string.IsNullOrEmpty(searchDetails.ISONationalityCode)
+                ? searchDetails.ISONationalityCode
+                : searchDetails.SellingCountry;
 
             if (resortSplit.Hotels.Count > 1)
             {

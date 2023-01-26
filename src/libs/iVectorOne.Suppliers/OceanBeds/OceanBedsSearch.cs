@@ -15,6 +15,7 @@
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
     using static OceanBedsHelper;
+    using iVectorOne.Models.Property;
 
     public class OceanBedsSearch : IThirdPartySearch, ISingleSource
     {

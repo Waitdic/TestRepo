@@ -4,7 +4,7 @@
     using Intuitive.Helpers.Extensions;
     using Intuitive;
     using iVectorOne.Suppliers.DerbySoft.Models;
-    using iVectorOne.Models.Property.Booking;
+    using iVectorOne.Models;
     using iVectorOne.Search.Results.Models;
     using iVectorOne.Search.Models;
 
@@ -49,6 +49,11 @@
             if (amount == 0)
             {
                 return null;
+            }
+
+            if (roomRate.MealPlan == null)
+            {
+                roomRate.MealPlan = _settings.DefaultMealPlan(searchDetails, _source);
             }
 
             var cancellationCalculator = new CancellationCalculator();

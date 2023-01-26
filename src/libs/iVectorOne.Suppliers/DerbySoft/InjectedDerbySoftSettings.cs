@@ -87,5 +87,10 @@
         {
             return Get_Value("EnableUtilitySearch", tpAttributeSearch, source).ToSafeBoolean();
         }
+
+        public string DefaultMealPlan(IThirdPartyAttributeSearch thirdPartyAttributeSearch, string source)
+        {
+            return Get_Value("DefaultMealPlan", thirdPartyAttributeSearch, source);
+        }
     }
 }

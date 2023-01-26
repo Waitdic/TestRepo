@@ -5,6 +5,7 @@
     using System.Linq;
     using Intuitive.Helpers.Extensions;
     using iVectorOne.SDK.V2;
+    using iVectorOne.SDK.V2.Book;
     using iVectorOne.SDK.V2.PropertyBook;
     using iVectorOne.Tests.Models;
 

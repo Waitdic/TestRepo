@@ -10,6 +10,7 @@
     using iVectorOne.Suppliers.DerbySoft.Models;
     using iVectorOne.Models;
     using iVectorOne.Search.Models;
+    using iVectorOne.Models.Property;
 
     public class BookingUsbV4AvailabilityRequestBuilder : ISearchRequestBuilder
     {

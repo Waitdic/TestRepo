@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Intuitive.Helpers.Net;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
 
     public interface ISearchRequestBuilder

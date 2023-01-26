@@ -1,11 +1,10 @@
-﻿using Intuitive.Helpers.Net;
-using iVector.Search.Property;
-
-namespace iVectorOne.Tests.PremierInn
+﻿namespace iVectorOne.Tests.PremierInn
 {
+    using Intuitive.Helpers.Net;
     using Intuitive.Helpers.Security;
     using Intuitive.Helpers.Serialization;
-    using iVectorOne.Models;
+    using iVector.Search.Property;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Suppliers.PremierInn;
     using iVectorOne.Suppliers.TPIntegrationTests;

@@ -10,6 +10,7 @@
     using iVectorOne.Constants;
     using iVectorOne.Interfaces;
     using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Models.Property.Booking;
     using iVectorOne.Suppliers.Italcamel.Models.Cancel;
     using iVectorOne.Suppliers.Italcamel.Models.Common;

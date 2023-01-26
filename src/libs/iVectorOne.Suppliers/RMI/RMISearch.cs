@@ -1,9 +1,9 @@
 ﻿namespace iVectorOne.Suppliers.RMI
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Xml;
     using Intuitive;
     using Intuitive.Helpers.Extensions;
     using Intuitive.Helpers.Serialization;
@@ -12,11 +12,9 @@
     using iVectorOne.Constants;
     using iVectorOne.Suppliers.RMI.Models;
     using iVectorOne.Interfaces;
-    using iVectorOne.Lookups;
-    using iVectorOne.Models;
+    using iVectorOne.Models.Property;
     using iVectorOne.Search.Models;
     using iVectorOne.Search.Results.Models;
-    using System;
 
     public class RMISearch : IThirdPartySearch, ISingleSource
     {
@@ -169,6 +167,7 @@
                 EndPoint = _settings.URL(searchDetails),
                 Method = RequestMethod.POST,
                 AuthenticationMode = AuthenticationMode.Basic,
+                UseGZip = _settings.UseGZip(searchDetails)
             };
 
             webRequest.SetRequest(request);

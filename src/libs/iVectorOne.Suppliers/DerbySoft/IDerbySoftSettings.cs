@@ -18,5 +18,6 @@
         bool AllowCancellations(IThirdPartyAttributeSearch thirdPartyAttributeSearch, string source);
         int SecondaryHotelBatchLimit(IThirdPartyAttributeSearch thirdPartyAttributeSearch, string source);
         int OffsetCancellationDays(IThirdPartyAttributeSearch thirdPartyAttributeSearch, string source);
+        string DefaultMealPlan(IThirdPartyAttributeSearch thirdPartyAttributeSearch, string source);
     }
 }

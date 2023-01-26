@@ -96,6 +96,14 @@
     <Build Include="dbo\Stored Procedures\Booking_Upsert.sql" />
     <Build Include="dbo\Stored Procedures\Booking_Get.sql" />
     <Build Include="dbo\Stored Procedures\Search_SwitchLoggingOff.sql" />
+    <Build Include="dbo\Tables\IVOLocation.sql" />
+    <Build Include="dbo\Stored Procedures\Transfer_GetLocationMapping.sql" />
+    <Build Include="dbo\Tables\TransferBooking.sql" />
+    <Build Include="dbo\Stored Procedures\TransferBooking_Upsert.sql" />
+    <Build Include="dbo\Stored Procedures\TransferBooking_GetData.sql" />
+    <Build Include="dbo\Stored Procedures\Transfer_AddNewLocations.sql" />
+    <Build Include="dbo\Stored Procedures\Transfer_AddLocations.sql" />
+    <Build Include="dbo\Tables\Extra.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Telemetry\Telemetry.sqlproj">
